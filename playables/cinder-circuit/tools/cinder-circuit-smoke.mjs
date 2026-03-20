@@ -103,6 +103,18 @@ game.applyForgeChoice(run, scatterChoice);
 assert.equal(run.build.coreId, "scatter");
 assert.equal(game.getBenchCount(run.build, "scatter"), 0);
 assert.equal(game.computeWeaponStats(run.build).attunedCopies, 2);
+assert.equal(game.computeWeaponStats(run.build).benchSyncLevel, 1);
+
+game.applyForgeChoice(run, {
+  type: "core",
+  coreId: "lance",
+  benchCopies: 1,
+});
+assert.equal(run.build.coreId, "lance");
+assert.equal(run.build.attunedCoreId, "lance");
+assert.equal(run.build.attunedCopies, 1);
+assert.equal(game.getBenchCount(run.build, "lance"), 0);
+assert.equal(game.computeWeaponStats(run.build).benchSyncLevel, 0);
 
 const recycleRun = {
   build: game.createInitialBuild(),
@@ -144,7 +156,7 @@ const weapon = game.computeWeaponStats(run.build);
 const playerStats = game.computePlayerStats(run.build);
 
 assert.ok(weapon.damage > 0);
-assert.equal(weapon.benchSyncLevel, 1);
+assert.equal(weapon.benchSyncLevel, 0);
 assert.equal(playerStats.pickupRadius, 60);
 assert.equal(playerStats.maxHp, 108);
 assert.ok(playerStats.maxHp >= 100);

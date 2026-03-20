@@ -2606,6 +2606,10 @@
     }
 
     for (const drop of state.drops) {
+      const maxLife = drop.kind === "core" ? 12 : 10;
+      const fadeRatio = clamp(drop.life / maxLife, 0, 1);
+      const blink = drop.life < 2.2 ? 0.45 + Math.abs(Math.sin(performance.now() * 0.02)) * 0.55 : 1;
+      context.globalAlpha = clamp(fadeRatio * blink, 0.18, 1);
       if (drop.kind === "scrap") {
         context.fillStyle = "rgba(255, 209, 102, 0.9)";
         context.fillRect(drop.x - 4, drop.y - 4, 8, 8);
@@ -2617,6 +2621,7 @@
         context.fillRect(-8, -8, 16, 16);
         context.restore();
       }
+      context.globalAlpha = 1;
     }
 
     for (const projectile of state.projectiles) {
