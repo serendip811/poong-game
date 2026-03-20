@@ -2241,14 +2241,6 @@
       state.resources.scrap >= 40 ? "ready" : "stable"
     );
 
-    const signature = getSignatureDef(state.build.signatureId);
-    elements.signatureSlot.innerHTML = `
-      <p class="forge-card__tag">${signature.tag}</p>
-      <strong>${signature.label}</strong>
-      <p class="summary-copy">${signature.description}</p>
-      <p class="summary-note">${signature.perkText}</p>
-    `;
-
     const activeCore = CORE_DEFS[state.build.coreId];
     const weapon = state.weapon;
     const traitSummary = traitLabels.join(" · ");
@@ -2262,7 +2254,6 @@
           weapon.benchSyncLevel > 0 ? "summary-chip--hot" : ""
         }">${weapon.benchSyncLabel}</span>
       </div>
-      <p class="summary-copy">${activeCore.description}</p>
       <div class="status-list">
         ${createStatusRow("위력", String(weapon.damage))}
         ${createStatusRow("연사", `${weapon.cooldown}s`)}
@@ -2275,9 +2266,7 @@
             : createMiniPill("TRAIT", "직선 탄도")
         }
       </div>
-      <p class="summary-note">벤치 ${weapon.benchCopies}개 · ${
-        weapon.benchSyncLevel > 0 ? "동기화 활성" : "추가 동기화 없음"
-      }</p>
+      <p class="summary-note">${getSignatureDef(state.build.signatureId).short} · 벤치 ${weapon.benchCopies}개</p>
     `;
     elements.arenaCoreLabel.textContent = activeCore.label;
     elements.arenaCoreTrait.textContent = traitSummary || "직선 탄도";
@@ -2299,7 +2288,7 @@
 
     elements.upgradeList.innerHTML = state.build.upgrades.length
       ? state.build.upgrades
-          .slice(-6)
+          .slice(-4)
           .map((upgrade) => `<li>${upgrade}</li>`)
           .join("")
       : `<li>아직 포지 보강이 없다.</li>`;
@@ -2312,8 +2301,6 @@
           Hazard ${state.hazards.length}
         </span>
       </div>
-      <p class="summary-copy">${waveConfig.note}</p>
-      <p class="summary-note">${waveConfig.directive}</p>
       <div class="status-list">
         ${createStatusRow("남은 스폰", String(enemiesLeft))}
         ${createStatusRow("현재 적", String(state.enemies.length))}
@@ -2341,13 +2328,6 @@
         ${createStatusRow("코어 수집", String(state.stats.coresCollected))}
         ${createStatusRow("사용 Scrap", String(Math.round(state.stats.scrapSpent)))}
       </div>
-      <p class="summary-note">${
-        state.player.overdriveActiveTime > 0
-          ? `오버드라이브 활성 ${state.player.overdriveActiveTime.toFixed(1)}초`
-          : state.player.drive >= 100
-            ? "`F`로 즉시 폭주 가능"
-            : `드라이브 ${Math.round(state.player.drive)}% 충전`
-      }</p>
       <p class="summary-note ${
         state.player.overheated ? "summary-note--danger" : ""
       }">${state.player.overheated ? "사격 정지: 열을 비워야 한다." : "과열 전까지 자동 사격 유지."}</p>
@@ -2692,12 +2672,14 @@
     startRun();
   });
 
-  elements.cycleSignature.addEventListener("pointerdown", () => {
-    const signatureIds = Object.keys(SIGNATURE_DEFS);
-    const currentIndex = signatureIds.indexOf(selectedSignatureId);
-    const nextSignatureId = signatureIds[(currentIndex + 1) % signatureIds.length];
-    selectSignature(nextSignatureId);
-  });
+  if (elements.cycleSignature) {
+    elements.cycleSignature.addEventListener("pointerdown", () => {
+      const signatureIds = Object.keys(SIGNATURE_DEFS);
+      const currentIndex = signatureIds.indexOf(selectedSignatureId);
+      const nextSignatureId = signatureIds[(currentIndex + 1) % signatureIds.length];
+      selectSignature(nextSignatureId);
+    });
+  }
 
   elements.backToTitle.addEventListener("pointerdown", () => {
     state = createAppState(selectedSignatureId);

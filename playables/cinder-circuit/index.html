@@ -17,44 +17,16 @@
     <main class="app-shell">
       <section id="title-screen" class="screen screen--active">
         <div class="hero-card">
-          <div class="hero-layout">
-            <section class="hero-main">
-              <p class="eyebrow">FORGED ARENA RUN</p>
-              <h1>Cinder Circuit</h1>
-              <p class="hero-copy">시동 회로를 고르고 바로 투입하세요.</p>
-
-              <div class="hero-actions">
-                <button id="start-run" class="button button--primary" type="button">
-                  회로 투입
-                </button>
-                <button id="cycle-signature" class="button button--ghost" type="button">
-                  시동 회로 순환
-                </button>
-                <p class="hero-note">
-                  <code>WASD</code> 이동 · <code>Space</code> 대시 · <code>F</code>
-                  오버드라이브
-                </p>
-              </div>
-            </section>
-
-            <aside class="hero-side">
-              <section class="signature-section signature-section--spotlight">
-                <div class="panel__header">
-                  <p class="panel__eyebrow">ACTIVE LOADOUT</p>
-                  <h2>선택 중</h2>
-                </div>
-                <div id="signature-spotlight" class="signature-spotlight"></div>
-              </section>
-
-              <section class="signature-section">
-                <div class="panel__header">
-                  <p class="panel__eyebrow">RUN SIGNATURE</p>
-                  <h2>시동 회로 선택</h2>
-                </div>
-                <div id="signature-cards" class="signature-grid"></div>
-              </section>
-            </aside>
-          </div>
+          <section class="title-stack">
+            <p class="eyebrow">FORGED ARENA RUN</p>
+            <h1>Cinder Circuit</h1>
+            <div id="signature-cards" class="signature-grid"></div>
+            <div class="hero-actions hero-actions--center">
+              <button id="start-run" class="button button--primary" type="button">
+                회로 투입
+              </button>
+            </div>
+          </section>
         </div>
       </section>
 
@@ -121,28 +93,18 @@
 
         <div class="layout">
           <aside class="panel panel--left">
-            <div class="panel__header">
-              <p class="panel__eyebrow">BUILD</p>
-              <h2>장착 회로</h2>
-            </div>
-
             <section class="panel-block">
-              <p class="panel-block__label">런 시그니처</p>
-              <div id="signature-slot" class="status-card"></div>
-            </section>
-
-            <section class="panel-block">
-              <p class="panel-block__label">활성 코어</p>
+              <p class="panel-block__label">코어</p>
               <div id="active-core" class="core-summary"></div>
             </section>
 
             <section class="panel-block">
-              <p class="panel-block__label">무기 벤치</p>
+              <p class="panel-block__label">벤치</p>
               <div id="pending-cores" class="chip-list"></div>
             </section>
 
             <section class="panel-block">
-              <p class="panel-block__label">누적 보강</p>
+              <p class="panel-block__label">보강</p>
               <ul id="upgrade-list" class="stack-list"></ul>
             </section>
           </aside>
@@ -236,31 +198,14 @@
           </main>
 
           <aside class="panel panel--right">
-            <div class="panel__header">
-              <p class="panel__eyebrow">PRESSURE</p>
-              <h2>전투 상황</h2>
-            </div>
-
             <section class="panel-block">
-              <p class="panel-block__label">웨이브 목표</p>
+              <p class="panel-block__label">목표</p>
               <div id="wave-objective" class="status-card"></div>
             </section>
 
             <section class="panel-block">
-              <p class="panel-block__label">실시간 수치</p>
+              <p class="panel-block__label">전투 수치</p>
               <div id="live-readout" class="status-card"></div>
-            </section>
-
-            <section class="panel-block">
-              <p class="panel-block__label">조작 힌트</p>
-              <ul class="tip-list">
-                <li>코어 드랍은 잠시 뒤 사라진다.</li>
-                <li><code>F</code>는 드라이브가 100%일 때만 발동된다.</li>
-                <li>포지는 <code>Infuse / Improve / Reforge / Recycle</code> 계열로 나뉜다.</li>
-                <li>같은 코어를 더 주우면 벤치 <code>SYNC</code>가 올라가고 접속 효율이 좋아진다.</li>
-                <li>과열 중에는 사격이 멈추니 열을 비워야 한다.</li>
-                <li>포지 카드는 <code>1/2/3</code>으로도 고를 수 있다.</li>
-              </ul>
             </section>
           </aside>
         </div>
