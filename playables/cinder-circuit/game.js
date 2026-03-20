@@ -1167,7 +1167,6 @@
       shake: 0,
       result: null,
       paused: false,
-      hudDetailUntil: 0,
       hudInspect: false,
       feed: [],
       weapon: computeWeaponStats(build),
@@ -1175,16 +1174,11 @@
     };
   }
 
-  function expandHudDetail(duration = 2.4) {
-    state.hudDetailUntil = Math.max(state.hudDetailUntil, duration);
-    renderHudPanels();
-  }
-
   function renderHudPanels() {
     if (!elements.arenaStage) {
       return;
     }
-    const expanded = state.hudInspect || state.hudDetailUntil > 0 || state.paused;
+    const expanded = state.hudInspect || state.paused;
     elements.arenaStage.classList.toggle("arena-stage--hud-detail", expanded);
   }
 
@@ -1427,7 +1421,6 @@
     if (typeof signature.onRunStart === "function") {
       signature.onRunStart(state);
     }
-    expandHudDetail(3.2);
     pushCombatFeed(`${signature.label} 투입 승인. 제련 회로를 연다.`, "DROP");
     showScreen("game");
     renderPauseOverlay();
@@ -1471,7 +1464,6 @@
     state.player.fireCooldown = 0;
     state.player.dashCharges = state.player.dashMax;
     state.player.dashCooldownTimer = 0;
-    expandHudDetail(2.8);
     pushCombatFeed(`${config.label} 진입. ${config.note}`, `W${index + 1}`);
     setBanner(config.label, 1.4);
     renderForgeOverlay();
@@ -1775,7 +1767,6 @@
     state.player.heat = Math.max(0, state.player.heat - 28);
     state.player.overheated = false;
     state.stats.overdrivesUsed += 1;
-    expandHudDetail(2.2);
     pushCombatFeed("오버드라이브 점화. 짧은 화력 창을 최대한 밀어붙인다.", "DRIVE");
     setBanner("OVERDRIVE", 1);
     state.shake = Math.max(state.shake, 7);
@@ -1794,7 +1785,6 @@
     state.player.heat = Math.max(0, state.player.heat - 44);
     state.player.overheated = false;
     state.player.fireCooldown = Math.max(state.player.fireCooldown, 0.24);
-    expandHudDetail(2.2);
     pushCombatFeed("수동 벤트 실행. 드라이브를 태워 과열을 진정시켰다.", "VENT");
     setBanner("벤트", 0.55);
   }
@@ -1846,7 +1836,6 @@
     state.player.fireCooldown = weapon.cooldown * (driveActive ? 0.6 : 1);
     if (state.player.heat >= 100) {
       state.player.overheated = true;
-      expandHudDetail(2.4);
       pushCombatFeed("과열 발생. 사격 회복 전까지 회피와 냉각이 우선이다.", "HEAT");
       setBanner("과열", 0.7);
     }
@@ -2247,7 +2236,6 @@
       if (stored) {
         state.stats.coresCollected += 1;
         refreshDerivedStats(false);
-        expandHudDetail(3);
         pushCombatFeed(`${CORE_DEFS[drop.coreId].label} 확보. 벤치 접속 옵션이 확장됐다.`, "CORE");
         setBanner(
           `${CORE_DEFS[drop.coreId].short} 벤치 x${getBenchCount(
@@ -2291,7 +2279,6 @@
         state.waveClearTimer = POST_WAVE_LOOT_GRACE;
         state.hazards = [];
         state.stats.wavesCleared = state.waveIndex + 1;
-        expandHudDetail(2.8);
         setBanner("전장 정리", 0.9);
         pushCombatFeed("적 반응 정지. 남은 스크랩을 회수할 짧은 여유가 생겼다.", "CLEAR");
         return;
@@ -2759,13 +2746,6 @@
       state.banner.time -= dt;
       if (state.banner.time <= 0) {
         clearBanner();
-      }
-    }
-
-    if (state.hudDetailUntil > 0) {
-      state.hudDetailUntil = Math.max(0, state.hudDetailUntil - dt);
-      if (state.hudDetailUntil <= 0) {
-        renderHudPanels();
       }
     }
 
