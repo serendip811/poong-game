@@ -101,7 +101,8 @@ const run = {
 
 game.applyForgeChoice(run, scatterChoice);
 assert.equal(run.build.coreId, "scatter");
-assert.equal(game.getBenchCount(run.build, "scatter"), 2);
+assert.equal(game.getBenchCount(run.build, "scatter"), 0);
+assert.equal(game.computeWeaponStats(run.build).attunedCopies, 2);
 
 const recycleRun = {
   build: game.createInitialBuild(),

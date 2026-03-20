@@ -402,10 +402,14 @@
       short: "반사·드라이브",
       description: "벽 반사와 오버드라이브 회전을 빠르게 여는 시동 회로.",
       perkText: "Ricochet 벤치 x2 · Drive +18% · Overdrive +0.6s",
+      startCoreId: "ricochet",
       seedCores: ["ricochet", "ricochet"],
       apply(build) {
         build.driveGainBonus += 0.18;
         build.overdriveDurationBonus += 0.6;
+      },
+      onRunStart(run) {
+        run.player.drive = 24;
       },
     },
     scrap_pact: {
@@ -415,11 +419,15 @@
       short: "회수·지속",
       description: "스크랩 회수와 근거리 압박을 안정적으로 여는 수거 회로.",
       perkText: "Scatter 벤치 x2 · Scrap +8% · Pickup +18",
+      startCoreId: "scatter",
       seedCores: ["scatter", "scatter"],
       apply(build) {
         build.scrapMultiplier += 0.08;
         build.pickupBonus += 18;
         build.maxHpBonus += 8;
+      },
+      onRunStart(run) {
+        run.resources.scrap += 10;
       },
     },
     rail_zeal: {
@@ -429,10 +437,14 @@
       short: "연쇄·냉각",
       description: "관통탄에 연쇄 전류를 얹어 후반 돌파 라인을 여는 냉각 회로.",
       perkText: "Lance 벤치 x2 · Chain +1 · Cool +4",
+      startCoreId: "lance",
       seedCores: ["lance", "lance"],
       apply(build) {
         build.chainBonus += 1;
         build.coolRateBonus += 4;
+      },
+      onRunStart(run) {
+        run.player.heat = Math.max(0, run.player.heat - 12);
       },
     },
   };
@@ -442,6 +454,8 @@
   const BASE_BUILD = {
     signatureId: DEFAULT_SIGNATURE_ID,
     coreId: "ember",
+    attunedCoreId: "ember",
+    attunedCopies: 1,
     pendingCores: [],
     upgrades: [],
     damageBonus: 0,
@@ -589,11 +603,32 @@
     return true;
   }
 
+  function removeBenchCopies(build, coreId, count) {
+    if (!build || !Array.isArray(build.pendingCores) || !CORE_DEFS[coreId]) {
+      return 0;
+    }
+    let remaining = Math.max(0, count || 0);
+    let removed = 0;
+    const next = [];
+    for (const storedCoreId of build.pendingCores) {
+      if (storedCoreId === coreId && remaining > 0) {
+        remaining -= 1;
+        removed += 1;
+        continue;
+      }
+      next.push(storedCoreId);
+    }
+    build.pendingCores = sanitizeBenchCoreIds(next);
+    return removed;
+  }
+
   function createInitialBuild(signatureId = DEFAULT_SIGNATURE_ID) {
     return applySignatureToBuild(
       {
         signatureId: BASE_BUILD.signatureId,
         coreId: BASE_BUILD.coreId,
+        attunedCoreId: BASE_BUILD.attunedCoreId,
+        attunedCopies: BASE_BUILD.attunedCopies,
         pendingCores: [],
         upgrades: [],
         damageBonus: BASE_BUILD.damageBonus,
@@ -621,6 +656,9 @@
     const signature =
       SIGNATURE_DEFS[signatureId] || SIGNATURE_DEFS[DEFAULT_SIGNATURE_ID];
     nextBuild.signatureId = signature.id;
+    nextBuild.coreId = signature.startCoreId || nextBuild.coreId || BASE_BUILD.coreId;
+    nextBuild.attunedCoreId = nextBuild.coreId;
+    nextBuild.attunedCopies = 1;
     nextBuild.pendingCores = sanitizeBenchCoreIds(
       (Array.isArray(nextBuild.pendingCores) ? nextBuild.pendingCores : []).concat(
         signature.seedCores || []
@@ -658,13 +696,16 @@
     const core = CORE_DEFS[build.coreId] || CORE_DEFS.ember;
     const baseDamage = 24 + build.damageBonus;
     const baseCooldown = clamp(0.28 - build.cooldownBonus, 0.12, 0.4);
+    const attunedCopies =
+      build.attunedCoreId === core.id ? Math.max(1, build.attunedCopies || 1) : 1;
     const benchCopies = getBenchCount(build, core.id);
-    const benchSyncLevel = getBenchSyncLevel(build, core.id);
+    const benchSyncLevel = clamp(attunedCopies - 1, 0, 2);
     const syncedBaseCooldown = clamp(baseCooldown - benchSyncLevel * 0.012, 0.12, 0.4);
     const syncedHeatFactor = 1 - benchSyncLevel * 0.06;
     return {
       core,
       benchCopies,
+      attunedCopies,
       benchSyncLevel,
       benchSyncLabel: formatSyncLabel(benchSyncLevel),
       damage: round((baseDamage + benchSyncLevel * 3) * core.damageFactor, 1),
@@ -693,11 +734,11 @@
       verb: "INFUSE",
       tag: "INFUSE",
       title: core.label,
-      description: `${core.description} 벤치 x${benchCopies}. ${syncLevel > 0 ? `${syncLabel}로 접속 위력이 오른다.` : "첫 접속이라 추가 동기화는 없다."}`,
+      description: `${core.description} 벤치 x${benchCopies}. 접속 시 벤치 복제본을 소모해 ${syncLabel} 위력을 굳힌다.`,
       slotText:
         build.coreId === coreId
-          ? `현재 코어 재접속 · x${benchCopies} · ${syncLabel}`
-          : `무기 벤치 접속 · x${benchCopies} · ${syncLabel}`,
+          ? `현재 코어 재조율 · x${benchCopies} 소모 · ${syncLabel}`
+          : `벤치 소모 접속 · x${benchCopies} · ${syncLabel}`,
       coreId,
       benchCopies,
       syncLevel,
@@ -867,11 +908,12 @@
     }
 
     if (choice.type === "core") {
+      const consumedCopies = Math.max(1, removeBenchCopies(run.build, choice.coreId, choice.benchCopies));
       run.build.coreId = choice.coreId;
+      run.build.attunedCoreId = choice.coreId;
+      run.build.attunedCopies = consumedCopies;
       run.build.upgrades.push(
-        `코어 접속: ${CORE_DEFS[choice.coreId].label} · ${formatSyncLabel(
-          getBenchSyncLevel(run.build, choice.coreId)
-        )}`
+        `코어 접속: ${CORE_DEFS[choice.coreId].label} · ${formatSyncLabel(clamp(consumedCopies - 1, 0, 2))}`
       );
       if (run.player) {
         run.player.heat = Math.max(0, run.player.heat - 18);
@@ -1364,7 +1406,11 @@
     state.paused = false;
     state.player = createPlayer(state.build);
     refreshDerivedStats(false);
-    pushCombatFeed(`${getSignatureDef(selectedSignatureId).label} 투입 승인. 제련 회로를 연다.`, "DROP");
+    const signature = getSignatureDef(selectedSignatureId);
+    if (typeof signature.onRunStart === "function") {
+      signature.onRunStart(state);
+    }
+    pushCombatFeed(`${signature.label} 투입 승인. 제련 회로를 연다.`, "DROP");
     showScreen("game");
     renderPauseOverlay();
     beginWave(0);
@@ -1556,6 +1602,7 @@
       hp: def.hp * (1 + state.waveIndex * 0.08),
       radius: def.radius,
       contactCooldown: 0,
+      attackCooldown: Math.random() * 0.8,
       wobble: Math.random() * Math.PI * 2,
       defeated: false,
     });
@@ -1712,6 +1759,23 @@
     pushCombatFeed("오버드라이브 점화. 짧은 화력 창을 최대한 밀어붙인다.", "DRIVE");
     setBanner("OVERDRIVE", 1);
     state.shake = Math.max(state.shake, 7);
+  }
+
+  function ventHeat() {
+    if (
+      state.phase !== "wave" ||
+      !state.player ||
+      state.player.drive < 24 ||
+      state.player.heat < 18
+    ) {
+      return;
+    }
+    state.player.drive = Math.max(0, state.player.drive - 24);
+    state.player.heat = Math.max(0, state.player.heat - 44);
+    state.player.overheated = false;
+    state.player.fireCooldown = Math.max(state.player.fireCooldown, 0.24);
+    pushCombatFeed("수동 벤트 실행. 드라이브를 태워 과열을 진정시켰다.", "VENT");
+    setBanner("벤트", 0.55);
   }
 
   function fireWeapon() {
@@ -1896,6 +1960,24 @@
     }
   }
 
+  function spawnEnemyShot(enemy, heavy) {
+    const dx = state.player.x - enemy.x;
+    const dy = state.player.y - enemy.y;
+    const distance = Math.hypot(dx, dy) || 1;
+    const speed = heavy ? 218 : 192;
+    state.projectiles.push({
+      owner: "enemy",
+      x: enemy.x,
+      y: enemy.y,
+      vx: (dx / distance) * speed,
+      vy: (dy / distance) * speed,
+      radius: heavy ? 7 : 5,
+      damage: heavy ? 12 : 8,
+      life: heavy ? 2.6 : 2.2,
+      color: heavy ? "#ffd166" : "#8ae7ff",
+    });
+  }
+
   function updateEnemies(dt) {
     for (const enemy of state.enemies) {
       if (enemy.defeated) {
@@ -1915,8 +1997,16 @@
       enemy.x += Math.cos(angle) * speed * dt;
       enemy.y += Math.sin(angle) * speed * dt;
       enemy.contactCooldown = Math.max(0, enemy.contactCooldown - dt);
+      enemy.attackCooldown = Math.max(0, enemy.attackCooldown - dt);
 
       const distance = Math.hypot(state.player.x - enemy.x, state.player.y - enemy.y);
+      if ((enemy.type === "shrike" || enemy.type === "elite") && enemy.attackCooldown <= 0) {
+        const projectileRange = enemy.type === "elite" ? 260 : 220;
+        if (distance < projectileRange) {
+          spawnEnemyShot(enemy, enemy.type === "elite");
+          enemy.attackCooldown = enemy.type === "elite" ? 1.6 : 2.1;
+        }
+      }
       if (
         distance < enemy.radius + state.player.radius &&
         enemy.contactCooldown <= 0 &&
@@ -1977,30 +2067,38 @@
       }
 
       let consumed = false;
-      for (const enemy of state.enemies) {
-        if (consumed) {
-          break;
+      if (projectile.owner === "enemy") {
+        const distance = Math.hypot(projectile.x - state.player.x, projectile.y - state.player.y);
+        if (distance < projectile.radius + state.player.radius && state.player.invulnerableTime <= 0) {
+          takePlayerDamage(projectile.damage, "shot");
+          consumed = true;
         }
-        if (enemy.defeated) {
-          continue;
-        }
-        const distance = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y);
-        if (distance < projectile.radius + enemy.radius) {
-          enemy.hp -= projectile.damage;
-          if (enemy.hp <= 0) {
-            destroyEnemy(enemy);
-          }
-          const chained = tryChainProjectile(projectile, enemy);
-          if (chained) {
-            if (projectile.pierce > 0) {
-              projectile.pierce -= 1;
-            }
+      } else {
+        for (const enemy of state.enemies) {
+          if (consumed) {
             break;
           }
-          if (projectile.pierce > 0) {
-            projectile.pierce -= 1;
-          } else {
-            consumed = true;
+          if (enemy.defeated) {
+            continue;
+          }
+          const distance = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y);
+          if (distance < projectile.radius + enemy.radius) {
+            enemy.hp -= projectile.damage;
+            if (enemy.hp <= 0) {
+              destroyEnemy(enemy);
+            }
+            const chained = tryChainProjectile(projectile, enemy);
+            if (chained) {
+              if (projectile.pierce > 0) {
+                projectile.pierce -= 1;
+              }
+              break;
+            }
+            if (projectile.pierce > 0) {
+              projectile.pierce -= 1;
+            } else {
+              consumed = true;
+            }
           }
         }
       }
@@ -2267,6 +2365,7 @@
           ${createStatusRow("위력", String(weapon.damage))}
           ${createStatusRow("연사", `${weapon.cooldown}s`)}
           ${createStatusRow("발열", String(weapon.heatPerShot))}
+          ${createStatusRow("동조", `${weapon.attunedCopies} Commit`)}
         </div>
         <div class="mini-pill-row">
           ${
@@ -2275,7 +2374,7 @@
               : createMiniPill("TRAIT", "직선 탄도")
           }
         </div>
-        <p class="summary-note">${getSignatureDef(state.build.signatureId).short} · 벤치 ${weapon.benchCopies}개</p>
+        <p class="summary-note">${getSignatureDef(state.build.signatureId).short} · 벤치 ${weapon.benchCopies}개 대기</p>
       `;
     }
 
@@ -2342,6 +2441,7 @@
           ${createStatusRow("처치", String(state.stats.kills))}
           ${createStatusRow("코어 수집", String(state.stats.coresCollected))}
           ${createStatusRow("사용 Scrap", String(Math.round(state.stats.scrapSpent)))}
+          ${createStatusRow("벤트", "Q / 24 Drive")}
         </div>
         <p class="summary-note ${
           state.player.overheated ? "summary-note--danger" : ""
@@ -2373,12 +2473,12 @@
           .join(" · ")
       : "EMPTY BENCH";
     elements.forgeSubtitle.textContent =
-      `스크랩 ${Math.round(state.resources.scrap)} 보유. INFUSE는 무기 벤치 접속, IMPROVE는 직접 강화, REFORGE/RECYCLE은 벤치 재편이다.`;
+      `스크랩 ${Math.round(state.resources.scrap)} 보유. INFUSE는 벤치 복제본을 소모해 현재 코어를 확정하고, IMPROVE는 직접 강화, REFORGE/RECYCLE은 벤치 재편이다.`;
     elements.forgeContext.innerHTML = `
       <article class="forge-context__card">
         <p class="panel__eyebrow">ACTIVE CORE</p>
         <strong>${activeCore.label}</strong>
-        <p>${traitSummary}</p>
+        <p>${traitSummary} · ${state.weapon.benchSyncLabel} · Commit ${state.weapon.attunedCopies}</p>
       </article>
       <article class="forge-context__card">
         <p class="panel__eyebrow">BENCH SYNC</p>
@@ -2515,6 +2615,11 @@
       context.beginPath();
       context.arc(projectile.x, projectile.y, projectile.radius, 0, Math.PI * 2);
       context.fill();
+      if (projectile.owner === "enemy") {
+        context.strokeStyle = "rgba(255,255,255,0.38)";
+        context.lineWidth = 1.5;
+        context.stroke();
+      }
     }
 
     for (const enemy of state.enemies) {
@@ -2756,6 +2861,9 @@
     }
     if (event.code === "KeyF" && !event.repeat) {
       activateOverdrive();
+    }
+    if (event.code === "KeyQ" && !event.repeat) {
+      ventHeat();
     }
     if (event.code === "Enter" && state.screen !== "game") {
       startRun();

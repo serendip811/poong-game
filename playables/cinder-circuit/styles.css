@@ -509,6 +509,16 @@ body[data-overdrive="true"] .backdrop__glow--right {
   right: 12px;
 }
 
+.hud-overlay--bottom {
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  display: grid;
+  grid-template-columns: minmax(280px, 1.05fr) minmax(260px, 0.95fr);
+  gap: 12px;
+  align-items: end;
+}
+
 .hud-strip {
   display: flex;
   align-items: stretch;
@@ -626,6 +636,57 @@ body[data-overdrive="true"] .backdrop__glow--right {
 
 .stat-chip--wave {
   min-width: 132px;
+}
+
+.build-panel {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.build-panel--right {
+  justify-items: end;
+}
+
+.core-summary--overlay,
+.status-card--overlay,
+.stack-list--overlay {
+  width: min(100%, 360px);
+  padding: 10px 12px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(11, 10, 9, 0.72);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.24);
+}
+
+.build-panel--left .core-summary--overlay,
+.build-panel--left .chip-list--overlay {
+  justify-self: start;
+}
+
+.build-panel--right .status-card--overlay,
+.build-panel--right .stack-list--overlay {
+  justify-self: end;
+}
+
+.chip-list--overlay {
+  max-width: 360px;
+  padding: 0;
+}
+
+.chip-list--overlay .chip {
+  background: rgba(11, 10, 9, 0.72);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.stack-list--overlay {
+  max-width: 360px;
+}
+
+.stack-list--overlay li {
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .stat-chip[data-state="warning"] {
@@ -963,7 +1024,7 @@ body[data-overdrive="true"] .backdrop__glow--right {
 
 .message-banner {
   position: absolute;
-  top: 88px;
+  top: 74px;
   left: 50%;
   transform: translateX(-50%);
   min-width: 260px;
@@ -1224,6 +1285,15 @@ body[data-overdrive="true"] .backdrop__glow--right {
     width: min(100%, calc((100vh - 48px) * 16 / 9));
     max-height: min(66vh, 660px);
   }
+
+  .hud-overlay--bottom {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .build-panel--right {
+    justify-items: stretch;
+  }
 }
 
 @media (max-width: 900px) {
@@ -1249,6 +1319,12 @@ body[data-overdrive="true"] .backdrop__glow--right {
     top: 10px;
     left: 10px;
     right: 10px;
+  }
+
+  .hud-overlay--bottom {
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
   }
 
   .message-banner {
