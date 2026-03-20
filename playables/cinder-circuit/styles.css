@@ -642,6 +642,8 @@ body[data-overdrive="true"] .backdrop__glow--right {
   display: grid;
   gap: 8px;
   min-width: 0;
+  opacity: 0.88;
+  transition: opacity 180ms ease, transform 180ms ease;
 }
 
 .build-panel--right {
@@ -687,6 +689,38 @@ body[data-overdrive="true"] .backdrop__glow--right {
 
 .stack-list--overlay li {
   background: rgba(255, 255, 255, 0.03);
+}
+
+.arena-stage:not(.arena-stage--hud-detail) .core-summary--overlay,
+.arena-stage:not(.arena-stage--hud-detail) .status-card--overlay {
+  width: min(100%, 220px);
+  padding: 8px 10px;
+}
+
+.arena-stage:not(.arena-stage--hud-detail) .stack-list--overlay {
+  display: none;
+}
+
+.arena-stage:not(.arena-stage--hud-detail) .core-summary--overlay .status-list,
+.arena-stage:not(.arena-stage--hud-detail) .core-summary--overlay .mini-pill-row,
+.arena-stage:not(.arena-stage--hud-detail) .core-summary--overlay .summary-note,
+.arena-stage:not(.arena-stage--hud-detail) .status-card--overlay .status-list,
+.arena-stage:not(.arena-stage--hud-detail) .status-card--overlay .summary-note {
+  display: none;
+}
+
+.arena-stage:not(.arena-stage--hud-detail) .chip-list--overlay {
+  max-width: 220px;
+  gap: 6px;
+}
+
+.arena-stage:not(.arena-stage--hud-detail) .chip-list--overlay .chip {
+  padding: 6px 8px;
+}
+
+.arena-stage:not(.arena-stage--hud-detail) .chip-list--overlay .chip__count,
+.arena-stage:not(.arena-stage--hud-detail) .chip-list--overlay .chip__sync {
+  display: none;
 }
 
 .stat-chip[data-state="warning"] {
@@ -958,6 +992,10 @@ body[data-overdrive="true"] .backdrop__glow--right {
   max-width: 100%;
   max-height: calc(100vh - 48px);
   margin: 0 auto;
+}
+
+.arena-stage--hud-detail .build-panel {
+  opacity: 1;
 }
 
 .arena-frame {
