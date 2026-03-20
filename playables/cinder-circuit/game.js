@@ -137,6 +137,7 @@
   ];
 
   const MAX_WAVES = WAVE_CONFIG.length;
+  const POST_WAVE_LOOT_GRACE = 2.4;
 
   const ENEMY_DEFS = {
     scuttler: {
@@ -1098,6 +1099,7 @@
       player: null,
       waveIndex: 0,
       wave: null,
+      waveClearTimer: 0,
       enemies: [],
       projectiles: [],
       drops: [],
@@ -1387,10 +1389,12 @@
       eliteEvery: config.eliteEvery,
       mix: config.mix,
       cleanupPhase: false,
+      awaitingForge: false,
       driveGainFactor: config.driveGainFactor || 1,
       hazard: config.hazard,
       hazardTimer: config.hazard ? config.hazard.interval * 0.8 : Number.POSITIVE_INFINITY,
     };
+    state.waveClearTimer = 0;
     state.enemies = [];
     state.projectiles = [];
     state.drops = [];
@@ -1594,7 +1598,12 @@
   }
 
   function maybeSpawnHazards(dt) {
-    if (state.phase !== "wave" || !state.wave || !state.wave.hazard) {
+    if (
+      state.phase !== "wave" ||
+      !state.wave ||
+      !state.wave.hazard ||
+      state.wave.awaitingForge
+    ) {
       return;
     }
 
@@ -2150,16 +2159,29 @@
     state.shake = Math.max(0, state.shake - dt * 18);
   }
 
-  function maybeAdvancePhase() {
+  function maybeAdvancePhase(dt) {
     if (state.phase !== "wave" || !state.wave) {
       return;
     }
     if (state.wave.spawned >= state.wave.spawnBudget && state.enemies.length === 0) {
-      state.stats.wavesCleared = state.waveIndex + 1;
-      if (state.waveIndex >= MAX_WAVES - 1) {
-        finishRun(true);
-      } else {
-        enterForge();
+      if (!state.wave.awaitingForge) {
+        state.wave.awaitingForge = true;
+        state.wave.cleanupPhase = true;
+        state.waveClearTimer = POST_WAVE_LOOT_GRACE;
+        state.hazards = [];
+        state.stats.wavesCleared = state.waveIndex + 1;
+        setBanner("전장 정리", 0.9);
+        pushCombatFeed("적 반응 정지. 남은 스크랩을 회수할 짧은 여유가 생겼다.", "CLEAR");
+        return;
+      }
+
+      state.waveClearTimer = Math.max(0, state.waveClearTimer - dt);
+      if (state.waveClearTimer <= 0) {
+        if (state.waveIndex >= MAX_WAVES - 1) {
+          finishRun(true);
+        } else {
+          enterForge();
+        }
       }
     }
   }
@@ -2627,7 +2649,7 @@
       updateDrops(dt);
       updateHazards(dt);
       updateParticles(dt);
-      maybeAdvancePhase();
+      maybeAdvancePhase(dt);
     } else if (state.phase === "forge") {
       state.player.heat = Math.max(0, state.player.heat - state.player.coolRate * dt * 1.4);
       updateParticles(dt);
