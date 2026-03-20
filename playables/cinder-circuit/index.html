@@ -34,99 +34,97 @@
         <div class="layout layout--single">
           <main class="arena-panel">
             <div class="arena-frame">
-              <div class="hud-overlay hud-overlay--top">
-                <div class="hud-brand">
-                  <span class="badge">Cinder Circuit</span>
-                  <strong id="wave-label">Wave 1</strong>
+              <div class="arena-stage">
+                <canvas
+                  id="game-canvas"
+                  width="960"
+                  height="540"
+                  aria-label="Cinder Circuit game arena"
+                ></canvas>
+
+                <div class="hud-overlay hud-overlay--top">
+                  <div class="hud-strip">
+                    <div class="stat-chip stat-chip--overlay stat-chip--wave">
+                      <span class="stat-chip__label">Wave</span>
+                      <strong id="wave-label">Wave 1</strong>
+                    </div>
+                    <article id="hp-meter" class="meter-card meter-card--hp meter-card--overlay">
+                      <div class="meter-card__head">
+                        <span class="stat-chip__label">Hull</span>
+                        <strong id="hp-stat">100 / 100</strong>
+                      </div>
+                      <div class="meter-card__bar">
+                        <span id="hp-fill" class="meter-card__fill"></span>
+                      </div>
+                    </article>
+                    <article id="heat-meter" class="meter-card meter-card--heat meter-card--overlay">
+                      <div class="meter-card__head">
+                        <span class="stat-chip__label">Heat</span>
+                        <strong id="heat-stat">0%</strong>
+                      </div>
+                      <div class="meter-card__bar">
+                        <span id="heat-fill" class="meter-card__fill"></span>
+                      </div>
+                    </article>
+                    <article id="drive-meter" class="meter-card meter-card--drive meter-card--overlay">
+                      <div class="meter-card__head">
+                        <span class="stat-chip__label">Drive</span>
+                        <strong id="drive-stat">0%</strong>
+                      </div>
+                      <div class="meter-card__bar">
+                        <span id="drive-fill" class="meter-card__fill"></span>
+                      </div>
+                    </article>
+                    <div class="stat-chip stat-chip--overlay">
+                      <span class="stat-chip__label">Dash</span>
+                      <strong id="dash-stat">2 / 2</strong>
+                    </div>
+                    <div class="stat-chip stat-chip--overlay">
+                      <span class="stat-chip__label">Time</span>
+                      <strong id="timer-stat">55.0s</strong>
+                    </div>
+                    <div class="stat-chip stat-chip--overlay">
+                      <span class="stat-chip__label">Scrap</span>
+                      <strong id="scrap-stat">0</strong>
+                    </div>
+                  </div>
                 </div>
 
-                <div class="hud-meters">
-                  <article id="hp-meter" class="meter-card meter-card--hp meter-card--overlay">
-                    <div class="meter-card__head">
-                      <span class="stat-chip__label">Hull</span>
-                      <strong id="hp-stat">100 / 100</strong>
-                    </div>
-                    <div class="meter-card__bar">
-                      <span id="hp-fill" class="meter-card__fill"></span>
-                    </div>
-                  </article>
-                  <article id="heat-meter" class="meter-card meter-card--heat meter-card--overlay">
-                    <div class="meter-card__head">
-                      <span class="stat-chip__label">Heat</span>
-                      <strong id="heat-stat">0%</strong>
-                    </div>
-                    <div class="meter-card__bar">
-                      <span id="heat-fill" class="meter-card__fill"></span>
-                    </div>
-                  </article>
-                  <article id="drive-meter" class="meter-card meter-card--drive meter-card--overlay">
-                    <div class="meter-card__head">
-                      <span class="stat-chip__label">Drive</span>
-                      <strong id="drive-stat">0%</strong>
-                    </div>
-                    <div class="meter-card__bar">
-                      <span id="drive-fill" class="meter-card__fill"></span>
-                    </div>
-                  </article>
-                </div>
+                <div id="message-banner" class="message-banner hidden" role="status"></div>
 
-                <div class="hud-stats">
-                  <div class="stat-chip stat-chip--overlay">
-                    <span class="stat-chip__label">Dash</span>
-                    <strong id="dash-stat">2 / 2</strong>
-                  </div>
-                  <div class="stat-chip stat-chip--overlay">
-                    <span class="stat-chip__label">Time</span>
-                    <strong id="timer-stat">55.0s</strong>
-                  </div>
-                  <div class="stat-chip stat-chip--overlay">
-                    <span class="stat-chip__label">Scrap</span>
-                    <strong id="scrap-stat">0</strong>
+                <div id="forge-overlay" class="forge-overlay hidden">
+                  <div class="forge-overlay__panel">
+                    <div class="forge-overlay__header">
+                      <p class="panel__eyebrow">FORGE PAUSE</p>
+                      <h2>회로 포지 선택</h2>
+                      <p id="forge-subtitle" class="forge-overlay__copy">
+                        카드 하나를 골라 다음 웨이브 전에 빌드를 바꾼다.
+                      </p>
+                    </div>
+
+                    <div id="forge-context" class="forge-context"></div>
+                    <div id="forge-cards" class="forge-cards"></div>
                   </div>
                 </div>
-              </div>
 
-              <canvas
-                id="game-canvas"
-                width="960"
-                height="540"
-                aria-label="Cinder Circuit game arena"
-              ></canvas>
-
-              <div id="message-banner" class="message-banner hidden" role="status"></div>
-
-              <div id="forge-overlay" class="forge-overlay hidden">
-                <div class="forge-overlay__panel">
-                  <div class="forge-overlay__header">
-                    <p class="panel__eyebrow">FORGE PAUSE</p>
-                    <h2>회로 포지 선택</h2>
-                    <p id="forge-subtitle" class="forge-overlay__copy">
-                      카드 하나를 골라 다음 웨이브 전에 빌드를 바꾼다.
+                <div id="pause-overlay" class="pause-overlay hidden">
+                  <div class="pause-overlay__panel">
+                    <p class="panel__eyebrow">SYSTEM HOLD</p>
+                    <h2>회로 일시 정지</h2>
+                    <p class="forge-overlay__copy">
+                      전투 시뮬레이션을 잠시 멈췄다. 재개하거나 즉시 다시 투입할 수 있다.
                     </p>
-                  </div>
-
-                  <div id="forge-context" class="forge-context"></div>
-                  <div id="forge-cards" class="forge-cards"></div>
-                </div>
-              </div>
-
-              <div id="pause-overlay" class="pause-overlay hidden">
-                <div class="pause-overlay__panel">
-                  <p class="panel__eyebrow">SYSTEM HOLD</p>
-                  <h2>회로 일시 정지</h2>
-                  <p class="forge-overlay__copy">
-                    전투 시뮬레이션을 잠시 멈췄다. 재개하거나 즉시 다시 투입할 수 있다.
-                  </p>
-                  <div class="pause-actions">
-                    <button id="resume-run" class="button button--primary" type="button">
-                      전투 재개
-                    </button>
-                    <button id="pause-restart" class="button button--ghost" type="button">
-                      다시 투입
-                    </button>
-                    <button id="pause-title" class="button button--ghost" type="button">
-                      타이틀로
-                    </button>
+                    <div class="pause-actions">
+                      <button id="resume-run" class="button button--primary" type="button">
+                        전투 재개
+                      </button>
+                      <button id="pause-restart" class="button button--ghost" type="button">
+                        다시 투입
+                      </button>
+                      <button id="pause-title" class="button button--ghost" type="button">
+                        타이틀로
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>

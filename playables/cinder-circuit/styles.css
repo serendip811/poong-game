@@ -504,38 +504,21 @@ body[data-overdrive="true"] .backdrop__glow--right {
 }
 
 .hud-overlay--top {
-  top: 14px;
-  left: 14px;
-  right: 14px;
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: 12px;
-  align-items: start;
+  top: 12px;
+  left: 12px;
+  right: 12px;
 }
 
-.hud-brand {
+.hud-strip {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-width: 0;
-}
-
-.hud-brand strong {
-  font-size: 1.15rem;
-  letter-spacing: -0.03em;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
-}
-
-.hud-meters {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
   gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
 
-.hud-stats {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(78px, auto));
-  gap: 8px;
+.hud-strip::-webkit-scrollbar {
+  display: none;
 }
 
 .meter-card {
@@ -556,10 +539,13 @@ body[data-overdrive="true"] .backdrop__glow--right {
   background: rgba(11, 10, 9, 0.72);
   backdrop-filter: blur(10px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.24);
+  pointer-events: none;
 }
 
 .meter-card--overlay {
   min-width: 0;
+  width: 148px;
+  flex: 0 0 148px;
 }
 
 .meter-card__head {
@@ -631,6 +617,15 @@ body[data-overdrive="true"] .backdrop__glow--right {
   margin-top: 4px;
   font-size: 0.98rem;
   font-variant-numeric: tabular-nums;
+}
+
+.stat-chip--overlay {
+  min-width: 88px;
+  flex: 0 0 auto;
+}
+
+.stat-chip--wave {
+  min-width: 132px;
 }
 
 .stat-chip[data-state="warning"] {
@@ -896,6 +891,14 @@ body[data-overdrive="true"] .backdrop__glow--right {
   min-width: 0;
 }
 
+.arena-stage {
+  position: relative;
+  width: min(100%, calc((100vh - 48px) * 16 / 9));
+  max-width: 100%;
+  max-height: calc(100vh - 48px);
+  margin: 0 auto;
+}
+
 .arena-frame {
   display: flex;
   flex-direction: column;
@@ -910,10 +913,9 @@ body[data-overdrive="true"] .backdrop__glow--right {
 
 #game-canvas {
   display: block;
-  width: min(100%, calc((100vh - 48px) * 16 / 9));
+  width: 100%;
   max-width: 100%;
   max-height: calc(100vh - 48px);
-  margin: 0 auto;
   aspect-ratio: 16 / 9;
   border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -1193,13 +1195,9 @@ body[data-overdrive="true"] .backdrop__glow--right {
 }
 
 @media (max-width: 1320px) {
-  .hud-overlay--top {
-    grid-template-columns: 1fr;
-  }
-
-  .hud-meters,
-  .hud-stats {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .meter-card--overlay {
+    width: 136px;
+    flex-basis: 136px;
   }
 }
 
@@ -1219,6 +1217,10 @@ body[data-overdrive="true"] .backdrop__glow--right {
   }
 
   #game-canvas {
+    max-height: min(66vh, 660px);
+  }
+
+  .arena-stage {
     width: min(100%, calc((100vh - 48px) * 16 / 9));
     max-height: min(66vh, 660px);
   }
@@ -1247,11 +1249,6 @@ body[data-overdrive="true"] .backdrop__glow--right {
     top: 10px;
     left: 10px;
     right: 10px;
-  }
-
-  .hud-meters,
-  .hud-stats {
-    grid-template-columns: 1fr;
   }
 
   .message-banner {
@@ -1288,11 +1285,20 @@ body[data-overdrive="true"] .backdrop__glow--right {
     width: 100%;
   }
 
-  .hud-brand strong {
-    font-size: 1rem;
+  .hud-strip {
+    gap: 6px;
+  }
+
+  .meter-card--overlay {
+    width: 124px;
+    flex-basis: 124px;
   }
 
   #game-canvas {
+    max-height: 52vh;
+  }
+
+  .arena-stage {
     max-height: 52vh;
   }
 }
