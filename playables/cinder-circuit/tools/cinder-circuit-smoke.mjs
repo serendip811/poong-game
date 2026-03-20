@@ -35,6 +35,7 @@ assert.equal(signatureBuild.signatureId, "scrap_pact");
 assert.equal(signatureBuild.maxHpBonus, 8);
 assert.equal(signatureBuild.pickupBonus, 18);
 assert.equal(signatureBuild.scrapMultiplier, 1.08);
+assert.equal(JSON.stringify(signatureBuild.affixes), JSON.stringify(["salvage_link"]));
 
 const build = game.createInitialBuild("scrap_pact");
 build.pendingCores = game.sanitizeBenchCoreIds(build.pendingCores.concat(["lance"]));
@@ -72,8 +73,12 @@ assert.equal(scatterChoice.benchCopies, 2);
 assert.equal(scatterChoice.syncLevel, 2);
 assert.ok(scatterChoice.cost < game.CORE_DEFS.scatter.cost);
 
-const recycleChoice = choices.find((choice) => choice.action === "recycle");
-assert.ok(recycleChoice);
+const affixBuild = game.createInitialBuild("relay_oath");
+game.applyForgeChoice(
+  { build: affixBuild, player: null, resources: { scrap: 999 }, stats: {} },
+  { type: "affix", affixId: "arc_link" }
+);
+assert.ok(affixBuild.affixes.includes("arc_link"));
 
 const lowBankChoices = game.buildForgeChoices(build, rng, 0);
 assert.ok(lowBankChoices.some((choice) => choice.cost === 0));
@@ -168,10 +173,11 @@ const playerStats = game.computePlayerStats(run.build);
 
 assert.ok(weapon.damage > 0);
 assert.equal(weapon.benchSyncLevel, 0);
-assert.equal(playerStats.pickupRadius, 60);
+assert.equal(playerStats.pickupRadius, 76);
 assert.equal(playerStats.maxHp, 108);
 assert.ok(playerStats.maxHp >= 100);
 assert.ok(playerStats.overdriveDuration >= 5.5);
+assert.ok(Array.isArray(weapon.affixLabels));
 
 const waveSummary = game.WAVE_CONFIG.map((wave) => ({
   wave: wave.label,

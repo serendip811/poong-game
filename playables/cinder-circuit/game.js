@@ -394,6 +394,79 @@
     },
   };
 
+  const AFFIX_DEFS = {
+    hotshot: {
+      id: "hotshot",
+      label: "Hotshot",
+      tag: "POWER",
+      cost: 38,
+      description: "무기 위력이 크게 오르지만 열도 더 오른다.",
+      applyWeapon(stats) {
+        stats.damage *= 1.18;
+        stats.heatPerShot *= 1.12;
+      },
+    },
+    overclock: {
+      id: "overclock",
+      label: "Overclock",
+      tag: "RATE",
+      cost: 36,
+      description: "연사가 빨라지고 드라이브 순환도 조금 빨라진다.",
+      applyWeapon(stats) {
+        stats.cooldown *= 0.9;
+      },
+      applyPlayer(stats) {
+        stats.driveGainMultiplier += 0.12;
+      },
+    },
+    phase_rounds: {
+      id: "phase_rounds",
+      label: "Phase Rounds",
+      tag: "PIERCE",
+      cost: 34,
+      description: "탄속과 관통이 늘어 전열을 더 깊게 찢는다.",
+      applyWeapon(stats) {
+        stats.pierce += 1;
+        stats.projectileSpeed *= 1.1;
+      },
+    },
+    arc_link: {
+      id: "arc_link",
+      label: "Arc Link",
+      tag: "CHAIN",
+      cost: 40,
+      description: "연쇄 전류가 추가되어 군집 처리력이 오른다.",
+      applyWeapon(stats) {
+        stats.chain += 1;
+        stats.chainRange += 28;
+      },
+    },
+    thermal_weave: {
+      id: "thermal_weave",
+      label: "Thermal Weave",
+      tag: "COOL",
+      cost: 32,
+      description: "발열이 줄고 냉각이 빨라져 오래 버틴다.",
+      applyWeapon(stats) {
+        stats.heatPerShot *= 0.82;
+      },
+      applyPlayer(stats) {
+        stats.coolRate += 7;
+      },
+    },
+    salvage_link: {
+      id: "salvage_link",
+      label: "Salvage Link",
+      tag: "SALVAGE",
+      cost: 30,
+      description: "고철 회수력과 픽업 반경이 늘어 경제가 좋아진다.",
+      applyPlayer(stats) {
+        stats.pickupRadius += 16;
+        stats.scrapMultiplier += 0.14;
+      },
+    },
+  };
+
   const SIGNATURE_DEFS = {
     relay_oath: {
       id: "relay_oath",
@@ -403,6 +476,7 @@
       description: "벽 반사와 오버드라이브 회전을 빠르게 여는 시동 회로.",
       perkText: "Ricochet 보관 x2 · Drive +18% · Overdrive +0.6s",
       startCoreId: "ricochet",
+      startAffixes: ["phase_rounds"],
       seedCores: ["ricochet", "ricochet"],
       apply(build) {
         build.driveGainBonus += 0.18;
@@ -420,6 +494,7 @@
       description: "고철 회수와 근거리 압박을 안정적으로 여는 수거 회로.",
       perkText: "Scatter 보관 x2 · 고철 +8% · Pickup +18",
       startCoreId: "scatter",
+      startAffixes: ["salvage_link"],
       seedCores: ["scatter", "scatter"],
       apply(build) {
         build.scrapMultiplier += 0.08;
@@ -438,6 +513,7 @@
       description: "관통탄에 연쇄 전류를 얹어 후반 돌파 라인을 여는 냉각 회로.",
       perkText: "Lance 보관 x2 · Chain +1 · Cool +4",
       startCoreId: "lance",
+      startAffixes: ["thermal_weave"],
       seedCores: ["lance", "lance"],
       apply(build) {
         build.chainBonus += 1;
@@ -456,6 +532,7 @@
     coreId: "ember",
     attunedCoreId: "ember",
     attunedCopies: 1,
+    affixes: [],
     pendingCores: [],
     upgrades: [],
     damageBonus: 0,
@@ -534,6 +611,36 @@
       next.push(coreId);
     }
     return next;
+  }
+
+  function sanitizeAffixIds(affixIds) {
+    const next = [];
+    const seen = new Set();
+    for (const affixId of affixIds || []) {
+      if (!AFFIX_DEFS[affixId] || seen.has(affixId)) {
+        continue;
+      }
+      seen.add(affixId);
+      next.push(affixId);
+      if (next.length >= 2) {
+        break;
+      }
+    }
+    return next;
+  }
+
+  function getAffixDefs(build) {
+    return sanitizeAffixIds(build && build.affixes).map((affixId) => AFFIX_DEFS[affixId]);
+  }
+
+  function getWeaponTierLabel(attunedCopies) {
+    if (attunedCopies >= 3) {
+      return "Epic";
+    }
+    if (attunedCopies >= 2) {
+      return "Rare";
+    }
+    return "Standard";
   }
 
   function getBenchCount(build, coreId) {
@@ -629,6 +736,7 @@
         coreId: BASE_BUILD.coreId,
         attunedCoreId: BASE_BUILD.attunedCoreId,
         attunedCopies: BASE_BUILD.attunedCopies,
+        affixes: BASE_BUILD.affixes.slice(),
         pendingCores: [],
         upgrades: [],
         damageBonus: BASE_BUILD.damageBonus,
@@ -659,6 +767,11 @@
     nextBuild.coreId = signature.startCoreId || nextBuild.coreId || BASE_BUILD.coreId;
     nextBuild.attunedCoreId = nextBuild.coreId;
     nextBuild.attunedCopies = 1;
+    nextBuild.affixes = sanitizeAffixIds(
+      (Array.isArray(nextBuild.affixes) ? nextBuild.affixes : []).concat(
+        signature.startAffixes || []
+      )
+    );
     nextBuild.pendingCores = sanitizeBenchCoreIds(
       (Array.isArray(nextBuild.pendingCores) ? nextBuild.pendingCores : []).concat(
         signature.seedCores || []
@@ -678,7 +791,7 @@
   }
 
   function computePlayerStats(build) {
-    return {
+    const stats = {
       maxHp: 100 + build.maxHpBonus,
       moveSpeed: 248 + build.moveSpeedBonus,
       dashMax: 2 + build.dashMaxBonus,
@@ -690,6 +803,14 @@
       overdriveDuration: 5.5 + build.overdriveDurationBonus,
       hazardMitigation: clamp(build.hazardMitigation, 0, 0.45),
     };
+    getAffixDefs(build).forEach((affix) => {
+      if (typeof affix.applyPlayer === "function") {
+        affix.applyPlayer(stats, build);
+      }
+    });
+    stats.scrapMultiplier = round(stats.scrapMultiplier, 2);
+    stats.driveGainMultiplier = round(stats.driveGainMultiplier, 2);
+    return stats;
   }
 
   function computeWeaponStats(build) {
@@ -702,12 +823,14 @@
     const benchSyncLevel = clamp(attunedCopies - 1, 0, 2);
     const syncedBaseCooldown = clamp(baseCooldown - benchSyncLevel * 0.012, 0.12, 0.4);
     const syncedHeatFactor = 1 - benchSyncLevel * 0.06;
-    return {
+    const stats = {
       core,
       benchCopies,
       attunedCopies,
       benchSyncLevel,
       benchSyncLabel: formatSyncLabel(benchSyncLevel),
+      tierLabel: getWeaponTierLabel(attunedCopies),
+      affixIds: sanitizeAffixIds(build.affixes),
       damage: round((baseDamage + benchSyncLevel * 3) * core.damageFactor, 1),
       cooldown: round(syncedBaseCooldown * core.cooldownFactor, 3),
       heatPerShot: round(14 * build.heatFactor * core.heatFactor * syncedHeatFactor, 1),
@@ -720,6 +843,17 @@
       chainRange: build.chainBonus > 0 ? (core.id === "lance" ? 188 : 164) : 0,
       color: core.color,
     };
+    getAffixDefs(build).forEach((affix) => {
+      if (typeof affix.applyWeapon === "function") {
+        affix.applyWeapon(stats, build);
+      }
+    });
+    stats.damage = round(stats.damage, 1);
+    stats.cooldown = round(stats.cooldown, 3);
+    stats.heatPerShot = round(stats.heatPerShot, 1);
+    stats.projectileSpeed = round(stats.projectileSpeed, 1);
+    stats.affixLabels = stats.affixIds.map((affixId) => AFFIX_DEFS[affixId].label);
+    return stats;
   }
 
   function createCoreChoice(coreId, build) {
@@ -762,6 +896,57 @@
       slotText: `직접 성능 보강 · ${mod.tag}`,
       modId,
       cost: mod.cost,
+    };
+  }
+
+  function createAffixChoice(affixId, build) {
+    const affix = AFFIX_DEFS[affixId];
+    const currentAffixes = sanitizeAffixIds(build.affixes);
+    const willReplace = currentAffixes.length >= 2;
+    const replaceTarget = willReplace ? currentAffixes[0] : null;
+    return {
+      type: "affix",
+      id: `affix:${affixId}`,
+      verb: "각인",
+      tag: "각인",
+      title: affix.label,
+      description: willReplace
+        ? `${affix.description} 현재 첫 속성 ${AFFIX_DEFS[replaceTarget].label} 대신 새 각인을 새긴다.`
+        : `${affix.description} 현재 무기에 새 속성을 추가한다.`,
+      slotText: willReplace ? `속성 교체 · ${AFFIX_DEFS[replaceTarget].label} -> ${affix.label}` : `속성 추가 · ${affix.tag}`,
+      affixId,
+      replaceTarget,
+      cost: affix.cost,
+    };
+  }
+
+  function createAffixReforgeChoice(build, rng) {
+    const currentAffixes = sanitizeAffixIds(build.affixes);
+    if (currentAffixes.length === 0) {
+      return null;
+    }
+    const random = typeof rng === "function" ? rng : Math.random;
+    const targetId = currentAffixes[Math.floor(random() * currentAffixes.length)];
+    const candidateIds = shuffle(
+      Object.keys(AFFIX_DEFS).filter((affixId) => affixId !== targetId && !currentAffixes.includes(affixId)),
+      random
+    );
+    const nextAffixId = candidateIds[0];
+    if (!nextAffixId) {
+      return null;
+    }
+    return {
+      type: "utility",
+      action: "affix_reforge",
+      id: "utility:affix_reforge",
+      verb: "재각인",
+      tag: "재각인",
+      title: "Signal Reforge",
+      description: `${AFFIX_DEFS[targetId].label}를 ${AFFIX_DEFS[nextAffixId].label}(으)로 바꿔 무기 결을 튼다.`,
+      slotText: `속성 재굴림 · ${AFFIX_DEFS[targetId].tag} -> ${AFFIX_DEFS[nextAffixId].tag}`,
+      cost: 22,
+      targetAffixId: targetId,
+      nextAffixId,
     };
   }
 
@@ -864,8 +1049,9 @@
     const supportChoices = [];
     const recycleChoice = createRecycleChoice(build);
     const reforgeChoice = createReforgeChoice(build, random);
-    if (recycleChoice || reforgeChoice) {
-      const utilityChoices = [recycleChoice, reforgeChoice].filter(Boolean);
+    const affixReforgeChoice = createAffixReforgeChoice(build, random);
+    if (recycleChoice || reforgeChoice || affixReforgeChoice) {
+      const utilityChoices = [recycleChoice, reforgeChoice, affixReforgeChoice].filter(Boolean);
       if (Number.isFinite(scrapBank) && scrapBank < 32 && recycleChoice) {
         supportChoices.push(recycleChoice);
         utilityChoices
@@ -875,6 +1061,14 @@
         shuffle(utilityChoices, random).forEach((choice) => supportChoices.push(choice));
       }
     }
+
+    const affixChoices = shuffle(
+      Object.keys(AFFIX_DEFS)
+        .filter((affixId) => !sanitizeAffixIds(build.affixes).includes(affixId))
+        .map((affixId) => createAffixChoice(affixId, build)),
+      random
+    );
+    affixChoices.slice(0, 2).forEach((choice) => supportChoices.push(choice));
 
     shuffle(Object.keys(MOD_DEFS), random)
       .map((modId) => createModChoice(modId))
@@ -936,6 +1130,19 @@
       return choice;
     }
 
+    if (choice.type === "affix") {
+      const currentAffixes = sanitizeAffixIds(run.build.affixes);
+      run.build.affixes = choice.replaceTarget
+        ? sanitizeAffixIds(
+            currentAffixes.map((affixId) =>
+              affixId === choice.replaceTarget ? choice.affixId : affixId
+            )
+          )
+        : sanitizeAffixIds(currentAffixes.concat(choice.affixId));
+      run.build.upgrades.push(`속성 각인: ${AFFIX_DEFS[choice.affixId].label}`);
+      return choice;
+    }
+
     if (choice.type === "utility" && choice.action === "reforge") {
       if (Array.isArray(choice.nextCoreIds) && choice.nextCoreIds.length > 0) {
         run.build.pendingCores = sanitizeBenchCoreIds(choice.nextCoreIds);
@@ -945,6 +1152,18 @@
           run.player.overheated = false;
         }
       }
+      return choice;
+    }
+
+    if (choice.type === "utility" && choice.action === "affix_reforge") {
+      run.build.affixes = sanitizeAffixIds(
+        (run.build.affixes || []).map((affixId) =>
+          affixId === choice.targetAffixId ? choice.nextAffixId : affixId
+        )
+      );
+      run.build.upgrades.push(
+        `재각인: ${AFFIX_DEFS[choice.targetAffixId].label} -> ${AFFIX_DEFS[choice.nextAffixId].label}`
+      );
       return choice;
     }
 
@@ -998,6 +1217,7 @@
     WAVE_CONFIG,
     ENEMY_DEFS,
     CORE_DEFS,
+    AFFIX_DEFS,
     MOD_DEFS,
     SIGNATURE_DEFS,
     DEFAULT_SIGNATURE_ID,
@@ -1510,6 +1730,7 @@
       overdrivesUsed: state.stats.overdrivesUsed,
       signature: signature.short,
       core: CORE_DEFS[state.build.coreId].label,
+      tier: state.weapon.tierLabel,
     };
     const grade = getRunGrade(state.result);
     elements.resultTitle.textContent = victory
@@ -1530,11 +1751,12 @@
     elements.resultBuild.innerHTML = `
       <p class="panel__eyebrow">FINAL LOADOUT</p>
       <div class="result-build__grade">${grade.grade}</div>
-      <strong>${signature.label} / ${CORE_DEFS[state.build.coreId].label}</strong>
+      <strong>${signature.label} / ${CORE_DEFS[state.build.coreId].label} / ${state.weapon.tierLabel}</strong>
       <p>${grade.note}</p>
       <div class="result-build__chips">
         <span class="micro-chip">남은 고철 ${state.result.scrapBanked}</span>
         <span class="micro-chip">Drive ${state.result.overdrivesUsed}회</span>
+        <span class="micro-chip">${state.weapon.affixLabels.join(" · ") || "속성 없음"}</span>
         <span class="micro-chip">${
           benchEntries.length ? summarizeBenchCoreIds(state.build.pendingCores) : "보관 코어 없음"
         }</span>
@@ -2365,6 +2587,7 @@
     const activeCore = CORE_DEFS[state.build.coreId];
     const weapon = state.weapon;
     const traitSummary = traitLabels.join(" · ");
+    const affixSummary = weapon.affixLabels.length ? weapon.affixLabels.join(" · ") : "속성 없음";
     if (elements.activeCore) {
       elements.activeCore.innerHTML = `
         <div class="summary-head">
@@ -2374,13 +2597,13 @@
           </div>
           <span class="summary-chip ${
             weapon.benchSyncLevel > 0 ? "summary-chip--hot" : ""
-          }">${weapon.benchSyncLabel}</span>
+          }">${weapon.tierLabel}</span>
         </div>
         <div class="status-list">
           ${createStatusRow("위력", String(weapon.damage))}
           ${createStatusRow("연사", `${weapon.cooldown}s`)}
           ${createStatusRow("발열", String(weapon.heatPerShot))}
-          ${createStatusRow("강화", `${weapon.attunedCopies}단계`)}
+          ${createStatusRow("등급", `${weapon.tierLabel} / ${weapon.benchSyncLabel}`)}
         </div>
         <div class="mini-pill-row">
           ${
@@ -2388,8 +2611,9 @@
               ? traitLabels.map((label) => createMiniPill("TRAIT", label, "accent")).join("")
               : createMiniPill("TRAIT", "직선 탄도")
           }
+          ${weapon.affixLabels.map((label) => createMiniPill("속성", label, "cool")).join("")}
         </div>
-        <p class="summary-note">${getSignatureDef(state.build.signatureId).short} · 보관 ${weapon.benchCopies}개 대기</p>
+        <p class="summary-note">${affixSummary} · 보관 ${weapon.benchCopies}개 대기</p>
       `;
     }
 
@@ -2479,6 +2703,9 @@
     }
     const activeCore = CORE_DEFS[state.build.coreId];
     const traitSummary = getWeaponTraitLabels(state.weapon).join(" · ") || "직선 탄도";
+    const affixSummary = state.weapon.affixLabels.length
+      ? state.weapon.affixLabels.join(" · ")
+      : "속성 없음";
     const benchEntries = getBenchEntries(state.build);
     const benchSummary = benchEntries.length
       ? benchEntries
@@ -2489,17 +2716,17 @@
           .join(" · ")
       : "보관 코어 없음";
     elements.forgeSubtitle.textContent =
-      `고철 ${Math.round(state.resources.scrap)} 보유. 장착은 보관 코어를 소모해 현재 무기를 바꾸고, 강화는 직접 성능을 올리며, 재구성/분해는 보관 코어를 정리한다.`;
+      `고철 ${Math.round(state.resources.scrap)} 보유. 장착은 무기 등급을 올리거나 바꾸고, 각인은 속성을 붙이며, 재구성/분해는 보관 코어를 정리한다.`;
     elements.forgeContext.innerHTML = `
       <article class="forge-context__card">
         <p class="panel__eyebrow">현재 무기</p>
         <strong>${activeCore.label}</strong>
-        <p>${traitSummary} · ${state.weapon.benchSyncLabel} · ${state.weapon.attunedCopies}단계</p>
+        <p>${state.weapon.tierLabel} · ${state.weapon.benchSyncLabel} · ${traitSummary}</p>
       </article>
       <article class="forge-context__card">
-        <p class="panel__eyebrow">보관 코어</p>
-        <strong>${benchSummary}</strong>
-        <p>분해 예상 고철 ${getRecycleValue(state.build)} · 보관 ${benchEntries.length}종</p>
+        <p class="panel__eyebrow">속성 패키지</p>
+        <strong>${affixSummary}</strong>
+        <p>보관 ${benchEntries.length}종 · 분해 예상 고철 ${getRecycleValue(state.build)}</p>
       </article>
     `;
     elements.forgeCards.innerHTML = state.forgeChoices
