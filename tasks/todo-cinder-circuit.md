@@ -1,0 +1,104 @@
+# TODO - Cinder Circuit
+
+## Current Task
+
+- [x] 원작 분석: `Grind Survivors` 레퍼런스를 브라우저 범위로 줄일 핵심 루프를 정리한다.
+- [x] 설계 확정: `Cinder Circuit` 콘셉트와 범위, 웨이브 구조, 포지 구조를 문서로 고정한다.
+- [x] 정책 명시: 엔진 사용 여부와 외부 에셋 사용 원칙을 전용 문서에 적는다.
+- [x] 화면 구조: 타이틀, HUD, 캔버스 아레나, 포지 오버레이, 결과 화면을 만든다.
+- [x] 전투 구현: 이동, 자동 사격, 과열, 대시, 적 스폰, 충돌을 구현한다.
+- [x] 빌드 구현: 스크랩, 코어 드랍, 포지 선택, 무기 코어 교체를 구현한다.
+- [x] 연출 구현: 파티클, 화면 흔들림, 피격/처치 피드백, 웨이브 전환 연출을 넣는다.
+- [x] 검증: 문법 체크와 스모크 검증을 실행한다.
+- [x] 리뷰 정리: 구현 결과와 남은 리스크를 기록한다.
+- [x] 확장 범위 재설계: 러닝 길이와 판단을 늘릴 새 루프를 문서로 다시 고정한다.
+- [x] 웨이브 확장: `5웨이브 + 4포지`로 러닝 길이와 난이도 곡선을 확장한다.
+- [x] 경제/판단 추가: 스크랩을 점수 전용이 아니라 포지 비용 자원으로 바꾼다.
+- [x] 액티브 시스템 추가: `F` 오버드라이브로 중반 이후 판단 포인트를 넣는다.
+- [x] 환경 압박 추가: 웨이브별 제련 폭주 지형으로 이동 결정을 더 만든다.
+- [x] 검증 재실행: 문법과 스모크 검증을 다시 돌린다.
+- [x] 리뷰 추가: 확장 결과와 새 리스크를 기록한다.
+- [x] 출처 정리: 위키 기반 무기/포지/룬/캐릭터/바이옴 구조를 다시 추출한다.
+- [x] 적용 문서화: 출처 구조를 `Cinder Circuit`에 어떻게 번역할지 별도 문서로 정리한다.
+- [x] 밸런스 방향 고정: 웨이브별 파워 브래킷, 스크랩 경제, 위험 지형, 오버드라이브 목표치를 문서에 적는다.
+- [x] 리뷰 기록: 이번 턴 문서화 결과와 다음 구현 우선순위를 리뷰에 남긴다.
+- [x] 경제 정규화: 적 스크랩 드랍과 포지 비용을 새 목표 구간에 맞춰 줄인다.
+- [x] 포지 verb 분리: `Infuse / Improve / Reforge / Recycle` 계열이 카드에서 직접 읽히게 만든다.
+- [x] UI 반영: 포지 오버레이와 인게임 힌트를 새 행동 계열 기준으로 갱신한다.
+- [x] 검증 재실행: 문법 체크와 스모크를 변경 후 다시 통과시킨다.
+- [x] 문서 동기화: 설계/출처 적용 문서와 리뷰 우선순위를 현재 구현 기준으로 갱신한다.
+- [x] 벤치 구현: 코어 드랍을 무시하지 않고 `weapon bench` 저장층으로 누적되게 바꾼다.
+- [x] 중복 압력 추가: 같은 코어 중복이 `SYNC`와 비용 할인, 분해 가치로 이어지게 만든다.
+- [x] HUD/포지 반영: 좌측 패널, 포지 설명, 힌트를 `weapon bench` 기준으로 갱신한다.
+- [x] 검증 재실행: 벤치 구조 변경 후 문법과 스모크를 다시 통과시킨다.
+- [x] 문서 동기화: 벤치 구조와 다음 우선순위를 설계/출처 적용 문서에 반영한다.
+- [x] 시그니처 구현: 런 시작 전에 `run-start signature`를 고르게 만든다.
+- [x] 시작 빌드 압축: 시그니처가 `초기 벤치 2장 + 작은 패시브`를 직접 주게 만든다.
+- [x] UI 반영: 타이틀 선택 UI, 좌측 패널, 결과 화면에 시그니처 정보를 반영한다.
+- [x] 검증 재실행: 시그니처 추가 후 문법과 스모크를 다시 통과시킨다.
+- [x] 문서 동기화: 시그니처 추가 후 남은 갭과 다음 우선순위를 문서에 반영한다.
+- [x] 후반 재튜닝: `Wave 4-5` 밀도, 엘리트 빈도, hazard cadence를 다시 맞춘다.
+- [x] 드라이브 창 조정: 후반 웨이브에서 `Overdrive` 타이밍이 더 분명히 생기게 drive gain bias를 넣는다.
+- [x] 검증 재실행: 후반 재튜닝 후 문법과 스모크를 다시 통과시킨다.
+- [x] 문서 동기화: 새 후반 곡선과 다음 우선순위를 설계/출처 문서에 반영한다.
+- [x] 엔드 스테이트 점검: 세 가지 목표 빌드 축이 실제로 분리되는지 스크립트로 검증한다.
+- [x] 부족 축 보강: `chain / cooldown` 축이 비지 않도록 최소 콘텐츠를 추가한다.
+- [x] 검증 확장: 빌드 축 전용 audit 스크립트를 추가하고 통과시킨다.
+- [x] 문서 동기화: audit 결과와 새 archetype 보강 내용을 문서에 반영한다.
+- [x] UI/UX 감사: 현재 타이틀, HUD, 포지, 결과 화면이 왜 프로토타입처럼 읽히는지 구조 문제를 정리한다.
+- [x] 비주얼 방향 고정: `industrial command deck` 톤으로 색, 타이포, 패널 언어를 다시 잡는다.
+- [x] HUD 재구성: 상단 지표, 중앙 아레나 프레임, 좌우 패널을 실제 게임 HUD처럼 다시 배치한다.
+- [x] 포지/결과 화면 개편: 선택 카드와 런 리포트를 더 강한 계층과 피드백으로 바꾼다.
+- [x] 동적 상태 반영: 열 경고, 드라이브 준비, 핵심 빌드 정보가 시각적으로 바로 읽히게 만든다.
+- [x] 검증 재실행: 문법과 스모크를 UI 개편 후 다시 통과시킨다.
+- [x] 문서 동기화: UI/UX 방향과 남은 리스크를 설계 문서와 리뷰에 반영한다.
+- [ ] UI/UX 진단: 현재 타이틀, HUD, 포지, 결과 화면의 정보 계층과 게임성 전달 문제를 정리한다.
+- [ ] 시각 방향 재설계: 프로토타입을 더 완성형 게임처럼 보이게 할 공통 비주얼 언어를 정한다.
+- [ ] 화면 개편: 타이틀, 전투 HUD, 패널, 포지, 결과 화면의 구조와 스타일을 새 방향에 맞게 개편한다.
+- [ ] 피드백 보강: 상태 배지, 키 힌트, 선택 affordance, 모바일 축약 레이아웃을 보강한다.
+- [ ] 검증 재실행: UI 개편 후 문법 체크와 스모크를 다시 통과시킨다.
+- [ ] 문서 동기화: UI/UX 개편 결과와 남은 리스크를 설계 문서와 리뷰에 반영한다.
+
+## Review
+
+- `docs/games/cinder-circuit-source-analysis.md`, `docs/games/cinder-circuit-design.md`를 새로 만들어 `Grind Survivors`에서 유지할 축을 `회피 + 코어 드랍 + 포지 선택`으로 닫았다.
+- 문서에는 `MVP는 외부 JS 게임 엔진 없이 Canvas 2D`, `외부 아트/오디오 에셋 없이 도형 기반`이라는 정책을 명시했다.
+- 구현은 `playables/cinder-circuit/` 아래 단일 캔버스 아레나 구조로 넣었고, 타이틀, 3웨이브 전투, 2번의 포지 선택, 결과 화면까지 잇는 루프를 만들었다.
+- 전투에는 `WASD` 이동, 자동 사격, `Space` 대시, 과열, `Scuttler/Brute/Shrike/Elite Husk` 적 구성, 스크랩과 코어 드랍, 무기 코어 교체를 반영했다.
+- 포지 선택은 대기 코어 최대 2장과 보강 카드 풀에서 1장을 섞는 방식으로 구성했고, `Scatter`, `Lance`, `Ricochet` 코어가 무기 패턴을 분명히 바꾸게 잡았다.
+- 런타임 보강으로는 동일 프레임 중복 처치 방지와 캔버스 파티클 색 처리 문제를 추가 수정했다.
+- 검증은 `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`로 마쳤다.
+- 추가로 로컬 정적 서버 기동은 승인 후 성공했지만, 샌드박스 loopback 제약 때문에 `curl http://127.0.0.1:4180/` 연결 확인은 실패했다. 따라서 인터랙티브 브라우저 플레이 확인은 이번 턴에서 끝내지 못했다.
+- 확장 패치에서는 러닝을 `5웨이브 + 4포지`로 늘리고, 웨이브별 `directive`와 `hazard` 설정을 넣어 후반부가 단순 적 밀도 증가만으로 끝나지 않게 바꿨다.
+- 스크랩은 이제 누적 점수이면서 포지 비용 자원도 되게 바꿨고, 카드별 비용과 스크랩 부족 시 무료 `Emergency Vent` 안전장치를 넣어 포지에서 막히지 않게 했다.
+- 전투에는 `F` 오버드라이브를 추가해 처치와 스크랩 회수로 채운 드라이브를 원하는 타이밍에 화력 폭주로 바꿀 수 있게 했다.
+- 환경 압박은 `Cinder Surge` 위험 지형으로 구현해, 텔레그래프 후 활성되는 원형 제련 폭주 지형을 피하면서 적 각도까지 같이 읽게 만들었다.
+- UI는 상단 `Drive` 칩, 포지 카드 비용, 결과 화면의 소비 스크랩/오버드라이브 사용 횟수까지 보이도록 갱신했다.
+- 검증은 확장 후에도 `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`를 다시 통과했다.
+- 남은 리스크는 실제 브라우저 플레이 기준 난이도와 포지 비용 균형이 아직 손으로 검증되지 않았다는 점이다. 현재 스모크는 구조 검증만 보장한다.
+- 이번 턴에는 구현 대신 [cinder-circuit-source-application.md](/Users/seren.kim/work_personal/poong_game/docs/games/cinder-circuit-source-application.md#L1)로 위키 기반 적용 원칙과 밸런스 계획을 먼저 고정했다.
+- 문서에서는 `weapon class + rarity + affix`, `Infuse/Improve/Reforge/Recycle`, `character + rune + build`, `biome bracket` 구조를 우리 게임에 어떻게 압축 번역할지 정리했다.
+- 특히 현재 웨이브 테이블 기준 예상 총 스크랩이 `277 / 438 / 590 / 761 / 954` 수준이라, 현재 비용대는 판단층으로는 너무 느슨하다는 점을 기록했다.
+- 이번 구현에서는 적 스크랩 드랍을 `Scuttler 1 / Brute 3 / Shrike 2 / Elite 5`로 내리고, 포지 비용도 `24~52 Scrap` 대역으로 다시 맞췄다.
+- 포지 카드는 이제 `INFUSE`, `IMPROVE`, `REFORGE`, `RECYCLE` 태그를 직접 보여주고, `Reforge`는 후보 코어 재조합, `Recycle`은 후보 코어를 즉시 스크랩으로 바꾸는 선택으로 분리했다.
+- 검증은 변경 후에도 `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`를 다시 통과했다.
+- 이번 벤치 패치에서는 코어 드랍이 `weapon bench`에 최대 타입당 `3개`까지 쌓이고, 중복 코어는 `SYNC I~II`, `Infuse` 비용 할인, `Recycle` 가치로 읽히게 만들었다.
+- 활성 코어와 같은 타입을 더 주우면 벤치 `SYNC`가 올라가 무기 수치가 같이 강해지고, 초과 복사본은 `Scrap +6`으로 자동 분해되게 처리했다.
+- 포지 `Reforge`는 이제 벤치 구성을 다시 굴리고, `Recycle`은 벤치 전체를 갈아 Scrap으로 바꾸는 식으로 역할이 분명해졌다.
+- 이번 시그니처 패치에서는 타이틀에서 `Relay Oath / Scrap Pact / Rail Zeal` 중 하나를 고르게 하고, 각 선택이 초기 벤치 2장과 작은 패시브를 제공하게 만들었다.
+- 시그니처는 원작의 `character + rune` 압축판으로 취급하고, 결과 화면과 좌측 패널에서도 현재 러닝 방향을 바로 읽을 수 있게 남겼다.
+- 검증은 시그니처 추가 후에도 `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`를 다시 통과했다.
+- 이번 후반 재튜닝에서는 `Wave 4`를 브루트 전열 + 이중 폭주에 더 맞게 조여 sustain/mobility 체크로 만들고, `Wave 5`는 엘리트 돌파 + Overdrive 창 관리가 읽히도록 raw attrition을 조금 낮췄다.
+- 수치로는 `Wave 4 activeCap 28 / hazard 10.2s / driveGainFactor 1.08`, `Wave 5 activeCap 33 / hazard 8.4s / driveGainFactor 1.18`로 조정했고, 예상 gross scrap도 `244 / 305`로 목표 대역에 그대로 맞췄다.
+- 검증은 재튜닝 후에도 `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`를 다시 통과했다.
+- 엔드 스테이트 audit에서는 `precision / bounce`, `spread / sustain`은 이미 분리됐지만, 세 번째 축이 실제로는 `chain / cooldown`이 아니라 `pierce / cooling`에 가까웠다는 점을 확인했다.
+- 그래서 이번 턴에는 `Arc Array` 연쇄 보강과 `Rail Zeal` 시그니처 재정의를 추가해 세 번째 축을 실제 `chain / cooldown` archetype으로 바꿨다.
+- 전용 검증 스크립트 `playables/cinder-circuit/tools/cinder-circuit-endstate-audit.mjs`를 추가했고, 세 목표 빌드 축이 각각 다른 수치 패턴으로 도달 가능한지 확인했다.
+- 검증은 `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, `node --check playables/cinder-circuit/tools/cinder-circuit-endstate-audit.mjs`, `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, `node playables/cinder-circuit/tools/cinder-circuit-endstate-audit.mjs`로 통과했다.
+- 다음 구현 우선순위는 `추가 passive layer 필요성 판단 -> 브라우저 손플레이 검증 -> tier ladder 필요성 판단` 순서로 갱신한다.
+- 이번 UI/UX 패스에서는 전체 화면 톤을 `industrial command deck`으로 다시 잡고, 타이틀을 `mission board`, 인게임 상단을 `command deck`, 결과 화면을 `debrief card` 구조로 재배치했다.
+- 상단 HUD는 `Hull / Heat / Drive` 미터와 `Dash / Time / Scrap` 보조 칩으로 재구성했고, 열 경고와 드라이브 준비 상태는 데이터 상태 기반 시각 강조로 바로 읽히게 만들었다.
+- 중앙 아레나는 `arena feed` 헤더와 컨트롤 레일을 추가해, 전투 중에도 현재 페이즈와 활성 무기 성격이 캔버스와 분리된 한 줄 요약으로 읽히게 했다.
+- 포지 오버레이는 현재 코어와 벤치 상태를 먼저 보여 준 뒤 카드 3장을 제시하는 흐름으로 바꿨고, 결과 화면은 등급과 최종 로드아웃 요약을 함께 보여 주는 디브리프 카드로 바꿨다.
+- 검증은 UI 개편 후에도 `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, `node --check playables/cinder-circuit/tools/cinder-circuit-endstate-audit.mjs`, `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, `node playables/cinder-circuit/tools/cinder-circuit-endstate-audit.mjs`로 통과했다.
+- 남은 리스크는 이번 턴에서도 실제 브라우저 손플레이와 뷰포트별 시각 밀도 검증을 직접 하지 못했다는 점이다. 현재 검증은 DOM/게임 로직 구조와 스크립트 통과까지만 보장한다.

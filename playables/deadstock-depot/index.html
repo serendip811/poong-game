@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>데드스톡 디포</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="backdrop">
+      <div class="backdrop__grid"></div>
+      <div class="backdrop__glow backdrop__glow--left"></div>
+      <div class="backdrop__glow backdrop__glow--right"></div>
+    </div>
+
+    <div class="app-shell">
+      <section id="title-screen" class="screen screen--title">
+        <div class="hero-card">
+          <p class="eyebrow" data-i18n="title.eyebrow">폐허 속 생존 상점</p>
+          <h1 data-i18n="app.title">데드스톡 디포</h1>
+          <p class="hero-copy" data-i18n="title.copy">
+            무너진 국도 옆 폐창고를 임시 상점으로 꾸려 버티고 있다. 낮에는
+            떠돌이 손님에게 물건을 팔아 연료와 판자를 마련하고, 밤에는 불빛을
+            보고 몰려오는 것들을 막아내야 한다. 6일만 버티면 구호 트럭이
+            도착한다.
+          </p>
+
+          <div class="hero-grid">
+            <div class="hero-panel">
+              <h2 data-i18n="title.loopTitle">핵심 루프</h2>
+              <p data-i18n="title.loopCopy">
+                재고를 채우고, 장사하고, 밤을 버틴다.
+              </p>
+            </div>
+            <div class="hero-panel">
+              <h2 data-i18n="title.controlsTitle">조작</h2>
+              <p data-i18n-html="title.controlsCopyHtml">
+                <code>1-8</code>번 물건 구매/판매, <code>Q/W</code> 방어 도구
+                전환, <code>E</code> 플래시 램프 사용.
+              </p>
+            </div>
+            <div class="hero-panel">
+              <h2 data-i18n="title.pressureTitle">압박</h2>
+              <p data-i18n="title.pressureCopy">
+                손님을 놓치거나 엉뚱한 물건을 내주면 밤이 훨씬 버거워진다.
+              </p>
+            </div>
+          </div>
+
+          <div class="signal-grid">
+            <article class="signal-card">
+              <p class="panel__eyebrow" data-i18n="title.signal1Eyebrow">마지막 거점</p>
+              <p data-i18n="title.signal1Copy">
+                남쪽 검문소가 무너진 뒤, 이 창고는 국도 위 마지막 보급 거점이 됐다.
+              </p>
+            </article>
+            <article class="signal-card">
+              <p class="panel__eyebrow" data-i18n="title.signal2Eyebrow">낮 근무</p>
+              <p data-i18n="title.signal2Copy">
+                손님이 원하는 물건을 맞춰 팔아 코인을 벌고, 해 지기 전 판자와
+                장비를 챙겨야 한다.
+              </p>
+            </article>
+            <article class="signal-card">
+              <p class="panel__eyebrow" data-i18n="title.signal3Eyebrow">밤의 대가</p>
+              <p data-i18n="title.signal3Copy">
+                재고가 비거나 잘못 팔면 밤에 더 큰 대가를 치르게 된다. 6일만
+                버티면 된다.
+              </p>
+            </article>
+          </div>
+
+          <div class="hero-actions">
+            <button id="start-run" class="button button--primary" data-i18n="title.start">교대 시작</button>
+            <button id="open-briefing" class="button button--ghost" data-i18n="title.openBriefing">브리핑 보기</button>
+            <div class="locale-switch" role="group" aria-label="Language switch">
+              <span class="locale-switch__label" data-i18n="app.language">언어</span>
+              <button
+                type="button"
+                class="locale-switch__button locale-switch__button--active"
+                data-action="language"
+                data-language="ko"
+                aria-pressed="true"
+              >
+                <span data-language-label="ko">한글</span>
+              </button>
+              <button
+                type="button"
+                class="locale-switch__button"
+                data-action="language"
+                data-language="en"
+                aria-pressed="false"
+              >
+                <span data-language-label="en">ENG</span>
+              </button>
+            </div>
+            <p class="hero-note" data-i18n="title.note">
+              원작을 그대로 옮기지 않고, 브라우저 플레이에 맞게 재구성한 버전이다.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="game-screen" class="screen screen--game hidden">
+        <header class="topbar">
+          <div class="topbar__group">
+            <span class="badge" data-i18n="app.title">데드스톡 디포</span>
+            <span id="day-pill" class="pill">1일차</span>
+            <span id="phase-pill" class="pill pill--accent">준비</span>
+          </div>
+          <div class="topbar__group topbar__group--stats">
+            <div id="coin-chip" class="stat-chip">
+              <span class="stat-chip__label" data-i18n="hud.coins">코인</span>
+              <strong id="coin-count">0</strong>
+              <span id="coin-burst" class="hud-burst"></span>
+            </div>
+            <div id="base-chip" class="stat-chip">
+              <span class="stat-chip__label" data-i18n="hud.base">기지</span>
+              <strong id="base-count">0</strong>
+              <span id="base-burst" class="hud-burst"></span>
+            </div>
+            <div class="stat-chip stat-chip--wide">
+              <span class="stat-chip__label" data-i18n="hud.phaseTime">남은 시간</span>
+              <strong id="phase-timer">0.0초</strong>
+            </div>
+          </div>
+          <div class="topbar__group topbar__group--locale">
+            <div class="locale-switch locale-switch--compact" role="group" aria-label="Language switch">
+              <span class="locale-switch__label" data-i18n="app.language">언어</span>
+              <button
+                type="button"
+                class="locale-switch__button locale-switch__button--active"
+                data-action="language"
+                data-language="ko"
+                aria-pressed="true"
+              >
+                <span data-language-label="ko">한글</span>
+              </button>
+              <button
+                type="button"
+                class="locale-switch__button"
+                data-action="language"
+                data-language="en"
+                aria-pressed="false"
+              >
+                <span data-language-label="en">ENG</span>
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <div class="layout">
+          <aside class="panel panel--left">
+            <div class="panel__header">
+              <p class="panel__eyebrow" data-i18n="panels.inventoryEyebrow">재고</p>
+              <h2 data-i18n="panels.inventoryTitle">판매 선반</h2>
+            </div>
+            <div id="item-list" class="item-list"></div>
+            <button id="phase-advance" class="button button--secondary">영업 시작</button>
+          </aside>
+
+          <main class="panel panel--center">
+            <div class="panel__header">
+              <p class="panel__eyebrow" data-i18n="panels.feedEyebrow">상황판</p>
+              <h2 id="phase-title">영업 준비</h2>
+            </div>
+
+            <section class="status-strip">
+              <div id="complaint-block" class="meter-block">
+                <div class="meter-block__label-row">
+                  <span data-i18n="hud.nightPressure">야간 압박</span>
+                  <strong id="complaint-value">0%</strong>
+                </div>
+                <div class="meter">
+                  <div id="complaint-fill" class="meter__fill meter__fill--danger"></div>
+                </div>
+                <span id="complaint-burst" class="hud-burst hud-burst--inline"></span>
+              </div>
+
+              <div id="energy-block" class="meter-block">
+                <div class="meter-block__label-row">
+                  <span data-i18n="hud.defenseEnergy">방어 에너지</span>
+                  <strong id="energy-value">0 / 0</strong>
+                </div>
+                <div class="meter">
+                  <div id="energy-fill" class="meter__fill meter__fill--cool"></div>
+                </div>
+                <span id="energy-burst" class="hud-burst hud-burst--inline"></span>
+              </div>
+            </section>
+
+            <section class="story-callout">
+              <p id="flavor-text">줄이 몰리기 전에 창문부터 점검하자.</p>
+            </section>
+
+            <section id="stage-view" class="mode-card mode-card--stock"></section>
+
+            <section class="log-panel">
+              <div class="panel__header panel__header--compact">
+                <p class="panel__eyebrow" data-i18n="panels.logEyebrow">현장 기록</p>
+                <h2 data-i18n="panels.logTitle">이벤트 로그</h2>
+              </div>
+              <ul id="event-log" class="event-log"></ul>
+            </section>
+          </main>
+
+          <aside class="panel panel--right">
+            <div class="panel__header">
+              <p class="panel__eyebrow" data-i18n="panels.defenseEyebrow">야간 방어</p>
+              <h2 data-i18n="panels.defenseTitle">방어 장비</h2>
+            </div>
+
+            <div id="action-list" class="action-list"></div>
+
+            <div class="panel__header panel__header--compact">
+              <p class="panel__eyebrow" data-i18n="panels.upgradesEyebrow">보강</p>
+              <h2 data-i18n="panels.upgradesTitle">설치된 보강</h2>
+            </div>
+            <div id="upgrade-list" class="upgrade-list"></div>
+
+            <div class="keycard">
+              <p class="keycard__title" data-i18n="keys.title">단축키</p>
+              <p data-i18n="keys.space">Space: 준비 단계 진행 / 재시작</p>
+              <p data-i18n="keys.qw">Q/W: 수리 모드 / 공격 모드</p>
+              <p data-i18n="keys.e">E: 플래시 램프 사용</p>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </div>
+
+    <div id="upgrade-modal" class="overlay hidden" aria-hidden="true">
+      <div class="modal-card">
+        <p class="eyebrow" data-i18n="modals.between">새벽 정비</p>
+        <h2 data-i18n="modals.chooseUpgrade">업그레이드 선택</h2>
+        <p id="upgrade-summary" class="modal-copy"></p>
+        <div id="upgrade-options" class="upgrade-options"></div>
+        <button id="skip-upgrade" class="button button--ghost" data-i18n="modals.skipUpgrade">건너뛰고 다음 날로</button>
+      </div>
+    </div>
+
+    <div id="briefing-modal" class="overlay hidden" aria-hidden="true">
+      <div class="modal-card modal-card--briefing">
+        <p class="eyebrow" data-i18n="briefing.eyebrow">교대 브리핑</p>
+        <h2 data-i18n="briefing.title">불빛이 적을 끌어들이기 전에 준비해라</h2>
+        <p class="modal-copy" data-i18n="briefing.copy">
+          이 디포는 폐허가 된 도로 위 마지막 보급 상점이다. 낮에는 장사를 해
+          코인과 자재를 모으고, 밤에는 불빛을 보고 몰려오는 것들을 막아내야
+          한다.
+        </p>
+        <div class="briefing-grid">
+          <article class="briefing-card">
+            <span class="mini-tag" data-i18n="briefing.card1Tag">마지막 보급 거점</span>
+            <p data-i18n="briefing.card1Copy">
+              남쪽 검문소가 무너진 뒤, 이 창고는 길 위 마지막 보급 거점이 됐다.
+            </p>
+          </article>
+          <article class="briefing-card">
+            <span class="mini-tag" data-i18n="briefing.card2Tag">낮의 규칙</span>
+            <p data-i18n="briefing.card2Copy">
+              낮에는 재고를 돌려 코인을 벌고, 해 지기 전 창문과 장비를 보강해라.
+            </p>
+          </article>
+          <article class="briefing-card">
+            <span class="mini-tag" data-i18n="briefing.card3Tag">밤의 비용</span>
+            <p data-i18n="briefing.card3Copy">
+              손님을 놓칠수록 소문이 퍼지고, 밤이면 더 많은 것들이 불빛을
+              따라온다. 6일만 버티면 된다.
+            </p>
+          </article>
+        </div>
+        <div class="briefing-actions">
+          <button id="briefing-start" class="button button--primary" data-i18n="briefing.start">근무 시작</button>
+          <button id="briefing-dismiss" class="button button--ghost" data-i18n="briefing.dismiss">나중에 보기</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="result-modal" class="overlay hidden" aria-hidden="true">
+      <div class="modal-card">
+        <p id="result-tag" class="eyebrow">방어 실패</p>
+        <h2 id="result-title">디포의 불이 꺼졌다</h2>
+        <p id="result-copy" class="modal-copy"></p>
+        <div id="result-stats" class="result-grid"></div>
+        <button id="restart-run" class="button button--primary" data-i18n="modals.restart">다시 시작</button>
+      </div>
+    </div>
+
+    <script src="./game.js"></script>
+  </body>
+</html>

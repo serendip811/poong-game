@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hexfall March</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="backdrop" aria-hidden="true">
+      <div class="backdrop__veil"></div>
+      <div class="backdrop__grid"></div>
+      <div class="backdrop__flare backdrop__flare--left"></div>
+      <div class="backdrop__flare backdrop__flare--right"></div>
+    </div>
+
+    <main class="app-shell">
+      <section id="title-screen" class="screen screen--active">
+        <div class="hero-card">
+          <p class="eyebrow">CURSED ROUTE DECK RUN</p>
+          <h1>Hexfall March</h1>
+          <p class="hero-copy">
+            무너지는 회랑을 따라 전진하며 적의 의도를 읽고 카드를 얹어 버텨라.
+            쉬어 갈지, 대장간에서 카드를 벼릴지, 더 위험한 적을 밟고 유물을 챙길지
+            매 단계마다 결정해야 한다.
+          </p>
+
+          <div class="hero-grid">
+            <article class="hero-panel">
+              <h2>핵심 루프</h2>
+              <p>노드 선택, 카드 전투, 전투 후 보상 1장 드래프트를 6단계 안에 압축한다.</p>
+            </article>
+            <article class="hero-panel">
+              <h2>조작</h2>
+              <p><code>1-5</code> 카드 사용, <code>E</code> 턴 종료, 마우스로 노드와 보상을 선택한다.</p>
+            </article>
+            <article class="hero-panel">
+              <h2>긴장 지점</h2>
+              <p>체력을 아껴 쉬어 갈지, 엘리트를 밟아 유물을 챙길지 판단이 계속 흔들린다.</p>
+            </article>
+          </div>
+
+          <div class="signal-grid">
+            <article class="signal-card">
+              <p class="signal-card__eyebrow">INTENT</p>
+              <p>모든 적은 다음 행동을 드러낸다. 막을 턴과 밀어붙일 턴을 읽어야 한다.</p>
+            </article>
+            <article class="signal-card">
+              <p class="signal-card__eyebrow">MARCH</p>
+              <p>휴식, 대장간, 엘리트 분기를 짧게 고르며 러닝의 성격을 직접 비튼다.</p>
+            </article>
+            <article class="signal-card">
+              <p class="signal-card__eyebrow">DRAFT</p>
+              <p>전투 뒤 추가하는 카드 한 장이 다음 전투의 생존 방식까지 바꿔야 한다.</p>
+            </article>
+          </div>
+
+          <div class="walkthrough">
+            <article class="walkthrough-step">
+              <p class="walkthrough-step__index">1</p>
+              <div>
+                <h2>길 하나를 고른다</h2>
+                <p>전투는 카드 보상, 엘리트는 카드와 유물, 휴식은 회복, 대장간은 카드 강화를 준다.</p>
+              </div>
+            </article>
+            <article class="walkthrough-step">
+              <p class="walkthrough-step__index">2</p>
+              <div>
+                <h2>적 intent를 먼저 읽는다</h2>
+                <p>위쪽 Intent와 중앙 적 카드가 다음 턴 행동을 보여 준다. 막을지, 바로 밀지 먼저 판단한다.</p>
+              </div>
+            </article>
+            <article class="walkthrough-step">
+              <p class="walkthrough-step__index">3</p>
+              <div>
+                <h2>아래 손패를 써서 턴을 끝낸다</h2>
+                <p>카드를 클릭하거나 <code>1-5</code>, 다 썼으면 <code>E</code>. 전투 후엔 보상 1장 또는 Skip을 고른다.</p>
+              </div>
+            </article>
+          </div>
+
+          <div class="hero-actions">
+            <button id="start-run" class="button button--primary" type="button">행군 시작</button>
+            <p class="hero-note">
+              원작 구조를 그대로 복제하지 않고, 브라우저 한 화면용 카드 러닝으로 재구성한 버전이다.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="game-screen" class="screen hidden">
+        <header class="topbar">
+          <div class="topbar__brand">
+            <span class="badge">Hexfall March</span>
+            <strong id="phase-pill">ROUTE</strong>
+          </div>
+
+          <div class="topbar__stats">
+            <div class="stat-chip">
+              <span class="stat-chip__label">Step</span>
+              <strong id="step-stat">1 / 6</strong>
+            </div>
+            <div class="stat-chip">
+              <span class="stat-chip__label">HP</span>
+              <strong id="hp-stat">68 / 68</strong>
+            </div>
+            <div class="stat-chip">
+              <span class="stat-chip__label">Block</span>
+              <strong id="block-stat">0</strong>
+            </div>
+            <div class="stat-chip">
+              <span class="stat-chip__label">Energy</span>
+              <strong id="energy-stat">0 / 3</strong>
+            </div>
+            <div class="stat-chip stat-chip--wide">
+              <span class="stat-chip__label">Piles</span>
+              <strong id="pile-stat">Draw 0 · Discard 0</strong>
+            </div>
+            <div class="stat-chip stat-chip--wide">
+              <span class="stat-chip__label">Intent</span>
+              <strong id="intent-stat">다음 노드를 고르라.</strong>
+            </div>
+          </div>
+        </header>
+
+        <div class="layout">
+          <aside class="panel panel--left">
+            <div class="panel__header">
+              <p class="panel__eyebrow">ROUTE</p>
+              <h2>행군 기록</h2>
+            </div>
+            <div id="route-panel" class="route-panel"></div>
+
+            <div class="panel__header panel__header--compact">
+              <p class="panel__eyebrow">RELICS</p>
+              <h2>보유 유물</h2>
+            </div>
+            <div id="relic-panel" class="relic-panel"></div>
+          </aside>
+
+          <main class="panel panel--center">
+            <div class="panel__header panel__header--hero">
+              <div>
+                <p class="panel__eyebrow">STAGE</p>
+                <h2 id="phase-title">다음 경로를 선택하라</h2>
+              </div>
+              <p id="phase-copy" class="panel__copy">
+                휴식, 대장간, 엘리트 분기 중 이번 러닝에 필요한 쪽을 정한다.
+              </p>
+            </div>
+
+            <section id="coach-panel" class="coach-panel"></section>
+            <div class="scene-stack">
+              <section id="stage-view" class="stage-view"></section>
+              <section id="overlay-panel" class="overlay-panel"></section>
+            </div>
+
+            <section class="hand-shell">
+              <div id="hand-panel" class="hand-panel"></div>
+            </section>
+          </main>
+
+          <aside class="panel panel--right">
+            <div class="panel__header">
+              <p class="panel__eyebrow">LEDGER</p>
+              <h2>인장 장부</h2>
+            </div>
+            <div id="deck-panel" class="deck-panel"></div>
+
+            <div class="panel__header panel__header--compact">
+              <p class="panel__eyebrow">INTEL</p>
+              <h2>전장 정보</h2>
+            </div>
+            <div id="intel-panel" class="intel-panel"></div>
+
+            <div class="panel__header panel__header--compact">
+              <p class="panel__eyebrow">LOG</p>
+              <h2>기록</h2>
+            </div>
+            <ul id="log-panel" class="log-panel"></ul>
+          </aside>
+        </div>
+
+      </section>
+
+      <section id="result-screen" class="screen hidden">
+        <div class="result-card">
+          <p class="eyebrow">RUN REPORT</p>
+          <h2 id="result-title">행군 성공</h2>
+          <p id="result-copy" class="result-copy"></p>
+          <div id="result-stats" class="result-grid"></div>
+
+          <div class="hero-actions">
+            <button id="restart-run" class="button button--primary" type="button">다시 행군</button>
+            <button id="back-to-title" class="button button--ghost" type="button">타이틀로</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="./game.js"></script>
+  </body>
+</html>

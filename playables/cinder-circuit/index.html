@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cinder Circuit</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="backdrop" aria-hidden="true">
+      <div class="backdrop__grid"></div>
+      <div class="backdrop__glow backdrop__glow--left"></div>
+      <div class="backdrop__glow backdrop__glow--right"></div>
+      <div class="backdrop__band"></div>
+    </div>
+
+    <main class="app-shell">
+      <section id="title-screen" class="screen screen--active">
+        <div class="hero-card">
+          <div class="hero-layout">
+            <section class="hero-main">
+              <p class="eyebrow">FORGED ARENA RUN</p>
+              <h1>Cinder Circuit</h1>
+              <p class="hero-copy">
+                꺼지지 않는 제련 회로 안으로 뛰어들어라. 웨이브를 버티며
+                스크랩과 코어를 주워 무기를 재구성하고, 다섯 번째 폭주
+                구간까지 살아남으면 회로를 닫을 수 있다.
+              </p>
+
+              <div class="signal-grid">
+                <article class="signal-card">
+                  <p class="signal-card__eyebrow">IGNITION</p>
+                  <p>첫 웨이브는 과열과 대시 감각을 익히는 구간이다.</p>
+                </article>
+                <article class="signal-card">
+                  <p class="signal-card__eyebrow">FORGE</p>
+                  <p>엘리트 코어를 벤치에 쌓고 포지에서 무기 방향을 고정한다.</p>
+                </article>
+                <article class="signal-card">
+                  <p class="signal-card__eyebrow">MELTDOWN</p>
+                  <p>후반은 적 밀도와 폭주 지형이 함께 겹쳐 경로 판단을 강제한다.</p>
+                </article>
+              </div>
+
+              <div class="hero-actions">
+                <button id="start-run" class="button button--primary" type="button">
+                  회로 투입
+                </button>
+                <p class="hero-note">
+                  외부 에셋 없이 캔버스와 도형으로 구축한 industrial arena
+                  prototype.
+                </p>
+              </div>
+            </section>
+
+            <aside class="hero-side">
+              <section class="mission-panel">
+                <div class="panel__header">
+                  <p class="panel__eyebrow">MISSION BOARD</p>
+                  <h2>전개 브리핑</h2>
+                </div>
+
+                <div class="hero-grid hero-grid--stack">
+                  <article class="hero-panel">
+                    <h2>루프</h2>
+                    <p>회피, 자동 사격, 드랍 회수, 포지 선택을 6분 러닝에 압축한다.</p>
+                  </article>
+                  <article class="hero-panel">
+                    <h2>조작</h2>
+                    <p><code>WASD</code> 이동, <code>Space</code> 대시, <code>F</code> 오버드라이브.</p>
+                  </article>
+                  <article class="hero-panel">
+                    <h2>핵심 리스크</h2>
+                    <p>코어를 주우러 깊이 들어갈수록 후속 포지 선택이 더 강하게 바뀐다.</p>
+                  </article>
+                </div>
+              </section>
+
+              <section class="signature-section">
+                <div class="panel__header">
+                  <p class="panel__eyebrow">RUN SIGNATURE</p>
+                  <h2>시동 회로 선택</h2>
+                </div>
+                <p class="hero-copy signature-copy">
+                  원작의 캐릭터와 룬을 압축한 출발 특성이다. 초기 벤치 2장과
+                  작은 패시브를 받아 첫 포지 방향을 먼저 고정한다.
+                </p>
+                <div id="signature-cards" class="signature-grid"></div>
+              </section>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section id="game-screen" class="screen hidden">
+        <header class="topbar">
+          <div class="topbar__brand">
+            <p class="panel__eyebrow">FOUNDRY COMMAND DECK</p>
+            <div class="topbar__titleline">
+              <span class="badge">Cinder Circuit</span>
+              <strong id="wave-label">Wave 1</strong>
+            </div>
+            <p id="wave-directive" class="topbar__directive">
+              회로 예열 중. 첫 구간에서 무기 축을 정한다.
+            </p>
+          </div>
+
+          <div class="topbar__deck">
+            <div class="meter-cluster">
+              <article id="hp-meter" class="meter-card meter-card--hp">
+                <div class="meter-card__head">
+                  <span class="stat-chip__label">Hull</span>
+                  <strong id="hp-stat">100 / 100</strong>
+                </div>
+                <div class="meter-card__bar">
+                  <span id="hp-fill" class="meter-card__fill"></span>
+                </div>
+              </article>
+              <article id="heat-meter" class="meter-card meter-card--heat">
+                <div class="meter-card__head">
+                  <span class="stat-chip__label">Heat</span>
+                  <strong id="heat-stat">0%</strong>
+                </div>
+                <div class="meter-card__bar">
+                  <span id="heat-fill" class="meter-card__fill"></span>
+                </div>
+              </article>
+              <article id="drive-meter" class="meter-card meter-card--drive">
+                <div class="meter-card__head">
+                  <span class="stat-chip__label">Drive</span>
+                  <strong id="drive-stat">0%</strong>
+                </div>
+                <div class="meter-card__bar">
+                  <span id="drive-fill" class="meter-card__fill"></span>
+                </div>
+              </article>
+            </div>
+
+            <div class="topbar__stats">
+              <div class="stat-chip">
+                <span class="stat-chip__label">Dash</span>
+                <strong id="dash-stat">2 / 2</strong>
+              </div>
+              <div class="stat-chip stat-chip--wide">
+                <span class="stat-chip__label">Time</span>
+                <strong id="timer-stat">55.0s</strong>
+              </div>
+              <div class="stat-chip">
+                <span class="stat-chip__label">Scrap</span>
+                <strong id="scrap-stat">0</strong>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div class="layout">
+          <aside class="panel panel--left">
+            <div class="panel__header">
+              <p class="panel__eyebrow">BUILD</p>
+              <h2>장착 회로</h2>
+            </div>
+
+            <section class="panel-block">
+              <p class="panel-block__label">런 시그니처</p>
+              <div id="signature-slot" class="status-card"></div>
+            </section>
+
+            <section class="panel-block">
+              <p class="panel-block__label">활성 코어</p>
+              <div id="active-core" class="core-summary"></div>
+            </section>
+
+            <section class="panel-block">
+              <p class="panel-block__label">무기 벤치</p>
+              <div id="pending-cores" class="chip-list"></div>
+            </section>
+
+            <section class="panel-block">
+              <p class="panel-block__label">누적 보강</p>
+              <ul id="upgrade-list" class="stack-list"></ul>
+            </section>
+          </aside>
+
+          <main class="arena-panel">
+            <div class="arena-frame">
+              <div class="arena-head">
+                <div class="arena-head__block">
+                  <p class="panel__eyebrow">ARENA FEED</p>
+                  <strong id="mode-label">전투 진행 중</strong>
+                  <p id="arena-directive" class="arena-head__copy">
+                    웨이브 지시와 위험 구간이 여기에 표시된다.
+                  </p>
+                </div>
+                <div class="arena-head__block arena-head__block--compact">
+                  <p class="panel__eyebrow">ACTIVE CIRCUIT</p>
+                  <strong id="arena-core-label">Ember Spindle</strong>
+                  <p id="arena-core-trait" class="arena-head__copy">직선 탄도</p>
+                </div>
+              </div>
+
+              <canvas
+                id="game-canvas"
+                width="960"
+                height="540"
+                aria-label="Cinder Circuit game arena"
+              ></canvas>
+
+              <div id="message-banner" class="message-banner hidden" role="status"></div>
+
+              <div id="forge-overlay" class="forge-overlay hidden">
+                <div class="forge-overlay__panel">
+                  <div class="forge-overlay__header">
+                    <p class="panel__eyebrow">FORGE PAUSE</p>
+                    <h2>회로 포지 선택</h2>
+                    <p id="forge-subtitle" class="forge-overlay__copy">
+                      카드 하나를 골라 다음 웨이브 전에 빌드를 바꾼다.
+                    </p>
+                  </div>
+
+                  <div id="forge-context" class="forge-context"></div>
+                  <div id="forge-cards" class="forge-cards"></div>
+                </div>
+              </div>
+
+              <div class="arena-foot">
+                <span><code>WASD</code> Move</span>
+                <span><code>Space</code> Dash</span>
+                <span><code>F</code> Overdrive</span>
+                <span><code>1-3</code> Forge Pick</span>
+              </div>
+            </div>
+          </main>
+
+          <aside class="panel panel--right">
+            <div class="panel__header">
+              <p class="panel__eyebrow">PRESSURE</p>
+              <h2>전투 상황</h2>
+            </div>
+
+            <section class="panel-block">
+              <p class="panel-block__label">웨이브 목표</p>
+              <div id="wave-objective" class="status-card"></div>
+            </section>
+
+            <section class="panel-block">
+              <p class="panel-block__label">실시간 수치</p>
+              <div id="live-readout" class="status-card"></div>
+            </section>
+
+            <section class="panel-block">
+              <p class="panel-block__label">조작 힌트</p>
+              <ul class="tip-list">
+                <li>코어 드랍은 잠시 뒤 사라진다.</li>
+                <li><code>F</code>는 드라이브가 100%일 때만 발동된다.</li>
+                <li>포지는 <code>Infuse / Improve / Reforge / Recycle</code> 계열로 나뉜다.</li>
+                <li>같은 코어를 더 주우면 벤치 <code>SYNC</code>가 올라가고 접속 효율이 좋아진다.</li>
+                <li>과열 중에는 사격이 멈추니 열을 비워야 한다.</li>
+                <li>포지 카드는 <code>1/2/3</code>으로도 고를 수 있다.</li>
+              </ul>
+            </section>
+          </aside>
+        </div>
+      </section>
+
+      <section id="result-screen" class="screen hidden">
+        <div class="result-card">
+          <div class="result-layout">
+            <section class="result-main">
+              <p class="eyebrow">RUN REPORT</p>
+              <h2 id="result-title">회로 봉인 성공</h2>
+              <p id="result-copy" class="result-copy"></p>
+              <div id="result-stats" class="result-grid"></div>
+            </section>
+
+            <aside class="result-side">
+              <div id="result-build" class="status-card result-build"></div>
+            </aside>
+          </div>
+
+          <div class="hero-actions">
+            <button id="restart-run" class="button button--primary" type="button">
+              다시 투입
+            </button>
+            <button id="back-to-title" class="button button--ghost" type="button">
+              타이틀로
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="./game.js"></script>
+  </body>
+</html>
