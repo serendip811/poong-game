@@ -69,7 +69,7 @@ assert.ok(choices.every((choice) => typeof choice.cost === "number"));
 const scatterChoice = choices.find((choice) => choice.type === "core" && choice.coreId === "scatter");
 assert.ok(scatterChoice);
 assert.equal(scatterChoice.benchCopies, 2);
-assert.equal(scatterChoice.syncLevel, 1);
+assert.equal(scatterChoice.syncLevel, 2);
 assert.ok(scatterChoice.cost < game.CORE_DEFS.scatter.cost);
 
 const recycleChoice = choices.find((choice) => choice.action === "recycle");
@@ -102,8 +102,19 @@ const run = {
 game.applyForgeChoice(run, scatterChoice);
 assert.equal(run.build.coreId, "scatter");
 assert.equal(game.getBenchCount(run.build, "scatter"), 0);
-assert.equal(game.computeWeaponStats(run.build).attunedCopies, 2);
-assert.equal(game.computeWeaponStats(run.build).benchSyncLevel, 1);
+assert.equal(game.computeWeaponStats(run.build).attunedCopies, 3);
+assert.equal(game.computeWeaponStats(run.build).benchSyncLevel, 2);
+
+run.build.pendingCores = game.sanitizeBenchCoreIds(run.build.pendingCores.concat(["scatter"]));
+const sameCoreChoice = game.buildForgeChoices(run.build, rng, 180).find(
+  (choice) => choice.type === "core" && choice.coreId === "scatter"
+);
+assert.ok(sameCoreChoice);
+game.applyForgeChoice(run, sameCoreChoice);
+assert.equal(run.build.coreId, "scatter");
+assert.equal(run.build.attunedCopies, 3);
+assert.equal(game.computeWeaponStats(run.build).benchSyncLevel, 2);
+assert.equal(game.getBenchCount(run.build, "scatter"), 0);
 
 game.applyForgeChoice(run, {
   type: "core",

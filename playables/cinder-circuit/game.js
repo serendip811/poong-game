@@ -725,7 +725,10 @@
   function createCoreChoice(coreId, build) {
     const core = CORE_DEFS[coreId];
     const benchCopies = getBenchCount(build, coreId);
-    const syncLevel = getBenchSyncLevel(build, coreId);
+    const baseAttunedCopies =
+      build.coreId === coreId ? Math.max(1, build.attunedCopies || 1) : 0;
+    const resultingCopies = clamp(baseAttunedCopies + benchCopies, 1, 3);
+    const syncLevel = clamp(resultingCopies - 1, 0, 2);
     const syncLabel = formatSyncLabel(syncLevel);
     const discountedCost = Math.max(18, core.cost - syncLevel * 8);
     return {
@@ -734,13 +737,14 @@
       verb: "장착",
       tag: "장착",
       title: core.label,
-      description: `${core.description} 보관 코어 x${benchCopies}. 장착 시 보관분을 소모해 ${syncLabel} 단계로 강화한다.`,
+      description: `${core.description} 보관 코어 x${benchCopies}. 장착 시 보관분을 소모해 최종 ${syncLabel} 무기로 맞춘다.`,
       slotText:
         build.coreId === coreId
-          ? `현재 무기 재장착 · x${benchCopies} 소모 · ${syncLabel}`
-          : `보관분 소모 장착 · x${benchCopies} · ${syncLabel}`,
+          ? `현재 무기 강화 · x${benchCopies} 소모 · 최종 ${syncLabel}`
+          : `보관분 소모 장착 · x${benchCopies} · 최종 ${syncLabel}`,
       coreId,
       benchCopies,
+      resultingCopies,
       syncLevel,
       cost: discountedCost,
     };
@@ -909,11 +913,14 @@
 
     if (choice.type === "core") {
       const consumedCopies = Math.max(1, removeBenchCopies(run.build, choice.coreId, choice.benchCopies));
+      const existingCopies =
+        run.build.coreId === choice.coreId ? Math.max(1, run.build.attunedCopies || 1) : 0;
+      const totalCopies = clamp(existingCopies + consumedCopies, 1, 3);
       run.build.coreId = choice.coreId;
       run.build.attunedCoreId = choice.coreId;
-      run.build.attunedCopies = consumedCopies;
+      run.build.attunedCopies = totalCopies;
       run.build.upgrades.push(
-        `무기 장착: ${CORE_DEFS[choice.coreId].label} · ${formatSyncLabel(clamp(consumedCopies - 1, 0, 2))}`
+        `무기 장착: ${CORE_DEFS[choice.coreId].label} · ${formatSyncLabel(clamp(totalCopies - 1, 0, 2))}`
       );
       if (run.player) {
         run.player.heat = Math.max(0, run.player.heat - 18);
