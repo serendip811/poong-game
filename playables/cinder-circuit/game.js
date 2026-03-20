@@ -334,7 +334,7 @@
       tag: "SALVAGE",
       verb: "IMPROVE",
       cost: 30,
-      description: "픽업 반경이 늘고 스크랩 획득량이 늘어난다.",
+      description: "픽업 반경이 늘고 고철 획득량이 늘어난다.",
       apply(build) {
         build.pickupBonus += 26;
         build.scrapMultiplier += 0.12;
@@ -401,7 +401,7 @@
       tag: "RICOCHET",
       short: "반사·드라이브",
       description: "벽 반사와 오버드라이브 회전을 빠르게 여는 시동 회로.",
-      perkText: "Ricochet 벤치 x2 · Drive +18% · Overdrive +0.6s",
+      perkText: "Ricochet 보관 x2 · Drive +18% · Overdrive +0.6s",
       startCoreId: "ricochet",
       seedCores: ["ricochet", "ricochet"],
       apply(build) {
@@ -414,11 +414,11 @@
     },
     scrap_pact: {
       id: "scrap_pact",
-      label: "Scrap Pact",
+      label: "Salvage Pact",
       tag: "SALVAGE",
       short: "회수·지속",
-      description: "스크랩 회수와 근거리 압박을 안정적으로 여는 수거 회로.",
-      perkText: "Scatter 벤치 x2 · Scrap +8% · Pickup +18",
+      description: "고철 회수와 근거리 압박을 안정적으로 여는 수거 회로.",
+      perkText: "Scatter 보관 x2 · 고철 +8% · Pickup +18",
       startCoreId: "scatter",
       seedCores: ["scatter", "scatter"],
       apply(build) {
@@ -436,7 +436,7 @@
       tag: "LANCE",
       short: "연쇄·냉각",
       description: "관통탄에 연쇄 전류를 얹어 후반 돌파 라인을 여는 냉각 회로.",
-      perkText: "Lance 벤치 x2 · Chain +1 · Cool +4",
+      perkText: "Lance 보관 x2 · Chain +1 · Cool +4",
       startCoreId: "lance",
       seedCores: ["lance", "lance"],
       apply(build) {
@@ -552,12 +552,12 @@
 
   function formatSyncLabel(level) {
     if (level >= 2) {
-      return "SYNC II";
+      return "2강";
     }
     if (level >= 1) {
-      return "SYNC I";
+      return "1강";
     }
-    return "SYNC 0";
+    return "0강";
   }
 
   function getBenchEntries(build) {
@@ -731,14 +731,14 @@
     return {
       type: "core",
       id: `core:${coreId}`,
-      verb: "INFUSE",
-      tag: "INFUSE",
+      verb: "장착",
+      tag: "장착",
       title: core.label,
-      description: `${core.description} 벤치 x${benchCopies}. 접속 시 벤치 복제본을 소모해 ${syncLabel} 위력을 굳힌다.`,
+      description: `${core.description} 보관 코어 x${benchCopies}. 장착 시 보관분을 소모해 ${syncLabel} 단계로 강화한다.`,
       slotText:
         build.coreId === coreId
-          ? `현재 코어 재조율 · x${benchCopies} 소모 · ${syncLabel}`
-          : `벤치 소모 접속 · x${benchCopies} · ${syncLabel}`,
+          ? `현재 무기 재장착 · x${benchCopies} 소모 · ${syncLabel}`
+          : `보관분 소모 장착 · x${benchCopies} · ${syncLabel}`,
       coreId,
       benchCopies,
       syncLevel,
@@ -751,8 +751,8 @@
     return {
       type: "mod",
       id: `mod:${modId}`,
-      verb: mod.verb || "IMPROVE",
-      tag: mod.verb || "IMPROVE",
+      verb: mod.verb || "강화",
+      tag: mod.verb || "강화",
       title: mod.label,
       description: mod.description,
       slotText: `직접 성능 보강 · ${mod.tag}`,
@@ -809,11 +809,11 @@
       type: "utility",
       action: "reforge",
       id: "utility:flux_reforge",
-      verb: "REFORGE",
-      tag: "REFORGE",
+      verb: "재구성",
+      tag: "재구성",
       title: "Flux Reforge",
-      description: `무기 벤치 구성을 ${preview}(으)로 재조합한다. 현재 장착 코어는 유지된다.`,
-      slotText: "무기 벤치 재조합",
+      description: `보관 코어 구성을 ${preview}(으)로 재조합한다. 현재 무기는 유지된다.`,
+      slotText: "보관 코어 재조합",
       cost: 18,
       nextCoreIds,
     };
@@ -836,11 +836,11 @@
       type: "utility",
       action: "recycle",
       id: "utility:scrap_reclaimer",
-      verb: "RECYCLE",
-      tag: "RECYCLE",
-      title: "Scrap Reclaimer",
-      description: `무기 벤치 코어 ${pending.length}개를 분해해 Scrap +${scrapValue}를 얻고 열을 식힌다.`,
-      slotText: "무기 벤치 분해",
+      verb: "분해",
+      tag: "분해",
+      title: "고철 회수",
+      description: `보관 코어 ${pending.length}개를 분해해 고철 +${scrapValue}를 얻고 열을 식힌다.`,
+      slotText: "보관 코어 분해",
       cost: 0,
       scrapValue,
     };
@@ -891,7 +891,7 @@
       choices[choices.length - 1] = {
         type: "fallback",
         id: "fallback:emergency_vent",
-        tag: "FREE",
+        tag: "무료",
         title: "Emergency Vent",
         description: "무료 안정화. 열을 크게 빼고 체력을 조금 회복한다.",
         slotText: "무료 정비",
@@ -913,7 +913,7 @@
       run.build.attunedCoreId = choice.coreId;
       run.build.attunedCopies = consumedCopies;
       run.build.upgrades.push(
-        `코어 접속: ${CORE_DEFS[choice.coreId].label} · ${formatSyncLabel(clamp(consumedCopies - 1, 0, 2))}`
+        `무기 장착: ${CORE_DEFS[choice.coreId].label} · ${formatSyncLabel(clamp(consumedCopies - 1, 0, 2))}`
       );
       if (run.player) {
         run.player.heat = Math.max(0, run.player.heat - 18);
@@ -950,7 +950,7 @@
       if (run.stats) {
         run.stats.scrapCollected += scrapValue;
       }
-      run.build.upgrades.push(`Recycle: Scrap +${scrapValue}`);
+      run.build.upgrades.push(`분해: 고철 +${scrapValue}`);
       if (run.player) {
         run.player.hp = Math.min(run.player.maxHp, run.player.hp + 10);
         run.player.heat = Math.max(0, run.player.heat - 35);
@@ -1395,7 +1395,7 @@
       </div>
       <div class="mini-pill-row">
         ${signature.seedCores
-          .map((coreId) => createMiniPill("BENCH", CORE_DEFS[coreId].short, "accent"))
+          .map((coreId) => createMiniPill("보관", CORE_DEFS[coreId].short, "accent"))
           .join("")}
       </div>
     `;
@@ -1514,7 +1514,7 @@
     elements.resultStats.innerHTML = [
       createResultStat("Waves", String(state.result.wavesCleared)),
       createResultStat("Kills", String(state.result.kills)),
-      createResultStat("Scrap+", String(state.result.scrapCollected)),
+      createResultStat("고철+", String(state.result.scrapCollected)),
       createResultStat("Spent", String(state.result.scrapSpent)),
       createResultStat("Drive", String(state.result.overdrivesUsed)),
       createResultStat("Sig", state.result.signature),
@@ -1526,10 +1526,10 @@
       <strong>${signature.label} / ${CORE_DEFS[state.build.coreId].label}</strong>
       <p>${grade.note}</p>
       <div class="result-build__chips">
-        <span class="micro-chip">Bank ${state.result.scrapBanked} Scrap</span>
+        <span class="micro-chip">남은 고철 ${state.result.scrapBanked}</span>
         <span class="micro-chip">Drive ${state.result.overdrivesUsed}회</span>
         <span class="micro-chip">${
-          benchEntries.length ? summarizeBenchCoreIds(state.build.pendingCores) : "EMPTY BENCH"
+          benchEntries.length ? summarizeBenchCoreIds(state.build.pendingCores) : "보관 코어 없음"
         }</span>
       </div>
       <div class="mini-pill-row">
@@ -1539,7 +1539,7 @@
           .join("")}
       </div>
       <div class="status-list">
-        ${createStatusRow("잔여 Scrap", String(state.result.scrapBanked))}
+        ${createStatusRow("잔여 고철", String(state.result.scrapBanked))}
         ${createStatusRow("Overdrive", String(state.result.overdrivesUsed))}
       </div>
     `;
@@ -1576,7 +1576,7 @@
       return;
     }
     if (state.resources.scrap < choice.cost) {
-      setBanner("스크랩 부족", 0.8);
+      setBanner("고철 부족", 0.8);
       return;
     }
     state.resources.scrap -= choice.cost;
@@ -2227,7 +2227,7 @@
       state.resources.scrap += value;
       state.stats.scrapCollected += value;
       gainDrive(value * 0.24);
-      setBanner(`Scrap +${value}`, 0.45);
+      setBanner(`고철 +${value}`, 0.45);
       return;
     }
 
@@ -2236,9 +2236,9 @@
       if (stored) {
         state.stats.coresCollected += 1;
         refreshDerivedStats(false);
-        pushCombatFeed(`${CORE_DEFS[drop.coreId].label} 확보. 벤치 접속 옵션이 확장됐다.`, "CORE");
+        pushCombatFeed(`${CORE_DEFS[drop.coreId].label} 확보. 보관 코어 선택지가 늘었다.`, "CORE");
         setBanner(
-          `${CORE_DEFS[drop.coreId].short} 벤치 x${getBenchCount(
+          `${CORE_DEFS[drop.coreId].short} 보관 x${getBenchCount(
             state.build,
             drop.coreId
           )}`,
@@ -2248,10 +2248,7 @@
         state.resources.scrap += CORE_OVERFLOW_SCRAP;
         state.stats.scrapCollected += CORE_OVERFLOW_SCRAP;
         gainDrive(CORE_OVERFLOW_SCRAP * 0.24);
-        setBanner(
-          `${CORE_DEFS[drop.coreId].short} 초과분 분해 +${CORE_OVERFLOW_SCRAP}`,
-          0.8
-        );
+        setBanner(`${CORE_DEFS[drop.coreId].short} 초과분 분해 +${CORE_OVERFLOW_SCRAP}`, 0.8);
       }
     }
   }
@@ -2280,7 +2277,7 @@
         state.hazards = [];
         state.stats.wavesCleared = state.waveIndex + 1;
         setBanner("전장 정리", 0.9);
-        pushCombatFeed("적 반응 정지. 남은 스크랩을 회수할 짧은 여유가 생겼다.", "CLEAR");
+        pushCombatFeed("적 반응 정지. 남은 고철을 회수할 짧은 여유가 생겼다.", "CLEAR");
         return;
       }
 
@@ -2376,7 +2373,7 @@
           ${createStatusRow("위력", String(weapon.damage))}
           ${createStatusRow("연사", `${weapon.cooldown}s`)}
           ${createStatusRow("발열", String(weapon.heatPerShot))}
-          ${createStatusRow("동조", `${weapon.attunedCopies} Commit`)}
+          ${createStatusRow("강화", `${weapon.attunedCopies}단계`)}
         </div>
         <div class="mini-pill-row">
           ${
@@ -2385,7 +2382,7 @@
               : createMiniPill("TRAIT", "직선 탄도")
           }
         </div>
-        <p class="summary-note">${getSignatureDef(state.build.signatureId).short} · 벤치 ${weapon.benchCopies}개 대기</p>
+        <p class="summary-note">${getSignatureDef(state.build.signatureId).short} · 보관 ${weapon.benchCopies}개 대기</p>
       `;
     }
 
@@ -2451,7 +2448,7 @@
         <div class="status-list">
           ${createStatusRow("처치", String(state.stats.kills))}
           ${createStatusRow("코어 수집", String(state.stats.coresCollected))}
-          ${createStatusRow("사용 Scrap", String(Math.round(state.stats.scrapSpent)))}
+          ${createStatusRow("쓴 고철", String(Math.round(state.stats.scrapSpent)))}
           ${createStatusRow("벤트", "Q / 24 Drive")}
         </div>
         <p class="summary-note ${
@@ -2483,19 +2480,19 @@
               `${CORE_DEFS[entry.coreId].short} x${entry.copies} ${formatSyncLabel(entry.syncLevel)}`
           )
           .join(" · ")
-      : "EMPTY BENCH";
+      : "보관 코어 없음";
     elements.forgeSubtitle.textContent =
-      `스크랩 ${Math.round(state.resources.scrap)} 보유. INFUSE는 벤치 복제본을 소모해 현재 코어를 확정하고, IMPROVE는 직접 강화, REFORGE/RECYCLE은 벤치 재편이다.`;
+      `고철 ${Math.round(state.resources.scrap)} 보유. 장착은 보관 코어를 소모해 현재 무기를 바꾸고, 강화는 직접 성능을 올리며, 재구성/분해는 보관 코어를 정리한다.`;
     elements.forgeContext.innerHTML = `
       <article class="forge-context__card">
-        <p class="panel__eyebrow">ACTIVE CORE</p>
+        <p class="panel__eyebrow">현재 무기</p>
         <strong>${activeCore.label}</strong>
-        <p>${traitSummary} · ${state.weapon.benchSyncLabel} · Commit ${state.weapon.attunedCopies}</p>
+        <p>${traitSummary} · ${state.weapon.benchSyncLabel} · ${state.weapon.attunedCopies}단계</p>
       </article>
       <article class="forge-context__card">
-        <p class="panel__eyebrow">BENCH SYNC</p>
+        <p class="panel__eyebrow">보관 코어</p>
         <strong>${benchSummary}</strong>
-        <p>Recycle 예상 ${getRecycleValue(state.build)} Scrap · 벤치 ${benchEntries.length}종</p>
+        <p>분해 예상 고철 ${getRecycleValue(state.build)} · 보관 ${benchEntries.length}종</p>
       </article>
     `;
     elements.forgeCards.innerHTML = state.forgeChoices
@@ -2514,8 +2511,8 @@
             <span class="forge-card__meta">${choice.slotText}</span>
             <span class="forge-card__slot">${
               state.resources.scrap < choice.cost
-                ? `${index + 1}번 선택 · Scrap 부족`
-                : `${index + 1}번 선택 · ${choice.cost} Scrap`
+                ? `${index + 1}번 선택 · 고철 부족`
+                : `${index + 1}번 선택 · 고철 ${choice.cost}`
             }</span>
           </button>
         `
