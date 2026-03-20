@@ -31,63 +31,61 @@
       </section>
 
       <section id="game-screen" class="screen hidden">
-        <header class="topbar">
-          <div class="topbar__brand topbar__brand--compact">
-            <span class="badge">Cinder Circuit</span>
-            <strong id="wave-label">Wave 1</strong>
-          </div>
-
-          <div class="topbar__deck">
-            <div class="meter-cluster">
-              <article id="hp-meter" class="meter-card meter-card--hp">
-                <div class="meter-card__head">
-                  <span class="stat-chip__label">Hull</span>
-                  <strong id="hp-stat">100 / 100</strong>
-                </div>
-                <div class="meter-card__bar">
-                  <span id="hp-fill" class="meter-card__fill"></span>
-                </div>
-              </article>
-              <article id="heat-meter" class="meter-card meter-card--heat">
-                <div class="meter-card__head">
-                  <span class="stat-chip__label">Heat</span>
-                  <strong id="heat-stat">0%</strong>
-                </div>
-                <div class="meter-card__bar">
-                  <span id="heat-fill" class="meter-card__fill"></span>
-                </div>
-              </article>
-              <article id="drive-meter" class="meter-card meter-card--drive">
-                <div class="meter-card__head">
-                  <span class="stat-chip__label">Drive</span>
-                  <strong id="drive-stat">0%</strong>
-                </div>
-                <div class="meter-card__bar">
-                  <span id="drive-fill" class="meter-card__fill"></span>
-                </div>
-              </article>
-            </div>
-
-            <div class="topbar__stats">
-              <div class="stat-chip">
-                <span class="stat-chip__label">Dash</span>
-                <strong id="dash-stat">2 / 2</strong>
-              </div>
-              <div class="stat-chip stat-chip--wide">
-                <span class="stat-chip__label">Time</span>
-                <strong id="timer-stat">55.0s</strong>
-              </div>
-              <div class="stat-chip">
-                <span class="stat-chip__label">Scrap</span>
-                <strong id="scrap-stat">0</strong>
-              </div>
-            </div>
-          </div>
-        </header>
-
         <div class="layout layout--single">
           <main class="arena-panel">
             <div class="arena-frame">
+              <div class="hud-overlay hud-overlay--top">
+                <div class="hud-brand">
+                  <span class="badge">Cinder Circuit</span>
+                  <strong id="wave-label">Wave 1</strong>
+                </div>
+
+                <div class="hud-meters">
+                  <article id="hp-meter" class="meter-card meter-card--hp meter-card--overlay">
+                    <div class="meter-card__head">
+                      <span class="stat-chip__label">Hull</span>
+                      <strong id="hp-stat">100 / 100</strong>
+                    </div>
+                    <div class="meter-card__bar">
+                      <span id="hp-fill" class="meter-card__fill"></span>
+                    </div>
+                  </article>
+                  <article id="heat-meter" class="meter-card meter-card--heat meter-card--overlay">
+                    <div class="meter-card__head">
+                      <span class="stat-chip__label">Heat</span>
+                      <strong id="heat-stat">0%</strong>
+                    </div>
+                    <div class="meter-card__bar">
+                      <span id="heat-fill" class="meter-card__fill"></span>
+                    </div>
+                  </article>
+                  <article id="drive-meter" class="meter-card meter-card--drive meter-card--overlay">
+                    <div class="meter-card__head">
+                      <span class="stat-chip__label">Drive</span>
+                      <strong id="drive-stat">0%</strong>
+                    </div>
+                    <div class="meter-card__bar">
+                      <span id="drive-fill" class="meter-card__fill"></span>
+                    </div>
+                  </article>
+                </div>
+
+                <div class="hud-stats">
+                  <div class="stat-chip stat-chip--overlay">
+                    <span class="stat-chip__label">Dash</span>
+                    <strong id="dash-stat">2 / 2</strong>
+                  </div>
+                  <div class="stat-chip stat-chip--overlay">
+                    <span class="stat-chip__label">Time</span>
+                    <strong id="timer-stat">55.0s</strong>
+                  </div>
+                  <div class="stat-chip stat-chip--overlay">
+                    <span class="stat-chip__label">Scrap</span>
+                    <strong id="scrap-stat">0</strong>
+                  </div>
+                </div>
+              </div>
+
               <canvas
                 id="game-canvas"
                 width="960"
