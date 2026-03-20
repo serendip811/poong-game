@@ -402,8 +402,9 @@
       cost: 38,
       description: "무기 위력이 크게 오르지만 열도 더 오른다.",
       applyWeapon(stats) {
-        stats.damage *= 1.18;
-        stats.heatPerShot *= 1.12;
+        stats.damage *= 1.26;
+        stats.heatPerShot *= 1.16;
+        stats.projectileSpeed *= 1.08;
       },
     },
     overclock: {
@@ -413,10 +414,16 @@
       cost: 36,
       description: "연사가 빨라지고 드라이브 순환도 조금 빨라진다.",
       applyWeapon(stats) {
-        stats.cooldown *= 0.9;
+        stats.cooldown *= 0.82;
+        if (stats.core.id === "scatter") {
+          stats.pellets += 1;
+        }
+        if (stats.core.id === "ricochet") {
+          stats.bounce += 1;
+        }
       },
       applyPlayer(stats) {
-        stats.driveGainMultiplier += 0.12;
+        stats.driveGainMultiplier += 0.18;
       },
     },
     phase_rounds: {
@@ -427,7 +434,8 @@
       description: "탄속과 관통이 늘어 전열을 더 깊게 찢는다.",
       applyWeapon(stats) {
         stats.pierce += 1;
-        stats.projectileSpeed *= 1.1;
+        stats.projectileSpeed *= 1.18;
+        stats.damage *= 1.08;
       },
     },
     arc_link: {
@@ -438,7 +446,10 @@
       description: "연쇄 전류가 추가되어 군집 처리력이 오른다.",
       applyWeapon(stats) {
         stats.chain += 1;
-        stats.chainRange += 28;
+        stats.chainRange += 44;
+        if (stats.core.id === "ricochet") {
+          stats.bounce += 1;
+        }
       },
     },
     thermal_weave: {
@@ -448,10 +459,11 @@
       cost: 32,
       description: "발열이 줄고 냉각이 빨라져 오래 버틴다.",
       applyWeapon(stats) {
-        stats.heatPerShot *= 0.82;
+        stats.heatPerShot *= 0.72;
+        stats.cooldown *= 0.94;
       },
       applyPlayer(stats) {
-        stats.coolRate += 7;
+        stats.coolRate += 10;
       },
     },
     salvage_link: {
@@ -461,8 +473,9 @@
       cost: 30,
       description: "고철 회수력과 픽업 반경이 늘어 경제가 좋아진다.",
       applyPlayer(stats) {
-        stats.pickupRadius += 16;
-        stats.scrapMultiplier += 0.14;
+        stats.pickupRadius += 24;
+        stats.scrapMultiplier += 0.22;
+        stats.driveGainMultiplier += 0.08;
       },
     },
   };
@@ -641,6 +654,49 @@
       return "Rare";
     }
     return "Standard";
+  }
+
+  function createForgePreviewRows(choice) {
+    if (!choice) {
+      return [];
+    }
+    if (choice.type === "core") {
+      return [
+        { label: "결과", value: `${CORE_DEFS[choice.coreId].short} / ${getWeaponTierLabel(choice.resultingCopies)} / ${formatSyncLabel(choice.syncLevel)}` },
+        { label: "소모", value: `보관 ${choice.benchCopies}개` },
+      ];
+    }
+    if (choice.type === "affix") {
+      return [
+        { label: "속성", value: AFFIX_DEFS[choice.affixId].label },
+        { label: "방식", value: choice.replaceTarget ? `교체 ${AFFIX_DEFS[choice.replaceTarget].label}` : "새 속성 추가" },
+      ];
+    }
+    if (choice.type === "mod") {
+      return [
+        { label: "분류", value: MOD_DEFS[choice.modId].tag },
+        { label: "효과", value: "현재 무기 직접 강화" },
+      ];
+    }
+    if (choice.type === "utility" && choice.action === "reforge") {
+      return [
+        { label: "보관", value: "코어 구성 재조합" },
+        { label: "무기", value: "현재 무기 유지" },
+      ];
+    }
+    if (choice.type === "utility" && choice.action === "affix_reforge") {
+      return [
+        { label: "교체", value: AFFIX_DEFS[choice.targetAffixId].label },
+        { label: "신규", value: AFFIX_DEFS[choice.nextAffixId].label },
+      ];
+    }
+    if (choice.type === "utility" && choice.action === "recycle") {
+      return [
+        { label: "획득", value: `고철 ${choice.scrapValue}` },
+        { label: "대상", value: "보관 코어 전체" },
+      ];
+    }
+    return [{ label: "효과", value: choice.slotText || choice.description || "선택" }];
   }
 
   function getBenchCount(build, coreId) {
@@ -2731,10 +2787,24 @@
     `;
     elements.forgeCards.innerHTML = state.forgeChoices
       .map(
-        (choice, index) => `
+        (choice, index) => {
+          const kind =
+            choice.type === "utility" ? choice.action || "utility" : choice.type || "choice";
+          const previewRows = createForgePreviewRows(choice)
+            .map(
+              (row) => `
+                <div class="forge-card__row">
+                  <span>${row.label}</span>
+                  <strong>${row.value}</strong>
+                </div>
+              `
+            )
+            .join("");
+          return `
           <button
             type="button"
             class="forge-card forge-card--${choice.tag.toLowerCase()}"
+            data-kind="${kind}"
             data-index="${index}"
             data-verb="${choice.verb}"
             ${state.resources.scrap < choice.cost ? "disabled" : ""}
@@ -2742,6 +2812,7 @@
             <span class="forge-card__tag">${choice.tag}</span>
             <h3>${choice.title}</h3>
             <p>${choice.description}</p>
+            <div class="forge-card__preview">${previewRows}</div>
             <span class="forge-card__meta">${choice.slotText}</span>
             <span class="forge-card__slot">${
               state.resources.scrap < choice.cost
@@ -2749,7 +2820,8 @@
                 : `${index + 1}번 선택 · 고철 ${choice.cost}`
             }</span>
           </button>
-        `
+        `;
+        }
       )
       .join("");
   }

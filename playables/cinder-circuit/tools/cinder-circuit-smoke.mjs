@@ -173,7 +173,7 @@ const playerStats = game.computePlayerStats(run.build);
 
 assert.ok(weapon.damage > 0);
 assert.equal(weapon.benchSyncLevel, 0);
-assert.equal(playerStats.pickupRadius, 76);
+assert.equal(playerStats.pickupRadius, 84);
 assert.equal(playerStats.maxHp, 108);
 assert.ok(playerStats.maxHp >= 100);
 assert.ok(playerStats.overdriveDuration >= 5.5);
