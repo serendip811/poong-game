@@ -978,9 +978,11 @@
     gameScreen: document.getElementById("game-screen"),
     resultScreen: document.getElementById("result-screen"),
     startRun: document.getElementById("start-run"),
+    cycleSignature: document.getElementById("cycle-signature"),
     restartRun: document.getElementById("restart-run"),
     backToTitle: document.getElementById("back-to-title"),
     signatureCards: document.getElementById("signature-cards"),
+    signatureSpotlight: document.getElementById("signature-spotlight"),
     signatureSlot: document.getElementById("signature-slot"),
     waveLabel: document.getElementById("wave-label"),
     waveDirective: document.getElementById("wave-directive"),
@@ -1009,6 +1011,13 @@
     forgeSubtitle: document.getElementById("forge-subtitle"),
     forgeContext: document.getElementById("forge-context"),
     forgeCards: document.getElementById("forge-cards"),
+    pauseOverlay: document.getElementById("pause-overlay"),
+    resumeRun: document.getElementById("resume-run"),
+    pauseRestart: document.getElementById("pause-restart"),
+    pauseTitle: document.getElementById("pause-title"),
+    runTrackLabel: document.getElementById("run-track-label"),
+    waveTrack: document.getElementById("wave-track"),
+    combatFeed: document.getElementById("combat-feed"),
     messageBanner: document.getElementById("message-banner"),
     resultTitle: document.getElementById("result-title"),
     resultCopy: document.getElementById("result-copy"),
@@ -1118,9 +1127,91 @@
       },
       shake: 0,
       result: null,
+      paused: false,
+      feed: [],
       weapon: computeWeaponStats(build),
       playerStats: computePlayerStats(build),
     };
+  }
+
+  function pushCombatFeed(text, stamp) {
+    if (!text) {
+      return;
+    }
+    const nextStamp = stamp || (state.phase === "forge" ? "FORGE" : state.wave ? `W${state.waveIndex + 1}` : "RUN");
+    state.feed = [{ stamp: nextStamp, text }, ...state.feed].slice(0, 6);
+  }
+
+  function renderCombatFeed() {
+    if (!elements.combatFeed) {
+      return;
+    }
+    const items = state.feed.length
+      ? state.feed
+      : [{ stamp: "BOOT", text: "시동 회로를 고르면 전개 로그가 여기에 누적된다." }];
+    elements.combatFeed.innerHTML = items
+      .map(
+        (entry) => `
+          <article class="combat-feed__row">
+            <span class="combat-feed__stamp">${entry.stamp}</span>
+            <div class="combat-feed__text">${entry.text}</div>
+          </article>
+        `
+      )
+      .join("");
+  }
+
+  function renderWaveTrack() {
+    if (!elements.waveTrack || !elements.runTrackLabel) {
+      return;
+    }
+    const label =
+      state.phase === "forge"
+        ? `Forge Stop · Wave ${state.waveIndex + 1}`
+        : state.phase === "result"
+          ? "Run Complete"
+          : `Wave ${state.waveIndex + 1} / ${MAX_WAVES}`;
+    elements.runTrackLabel.textContent = label;
+    elements.waveTrack.innerHTML = WAVE_CONFIG.map((wave, index) => {
+      const stateName =
+        state.phase === "result"
+          ? index < state.stats.wavesCleared
+            ? "done"
+            : "upcoming"
+          : index < state.waveIndex
+            ? "done"
+            : index === state.waveIndex
+              ? "current"
+              : "upcoming";
+      return `
+        <article class="wave-track__node" data-state="${stateName}">
+          <p class="panel__eyebrow">Wave ${index + 1}</p>
+          <strong>${wave.id.toUpperCase()}</strong>
+          <p>${wave.note}</p>
+        </article>
+      `;
+    }).join("");
+  }
+
+  function renderPauseOverlay() {
+    if (!elements.pauseOverlay) {
+      return;
+    }
+    elements.pauseOverlay.classList.toggle("hidden", !state.paused);
+  }
+
+  function togglePause(force) {
+    if (state.screen !== "game" || state.phase === "result") {
+      return;
+    }
+    state.paused = typeof force === "boolean" ? force : !state.paused;
+    if (state.paused) {
+      input.keys.clear();
+      input.pointer.inside = false;
+      pushCombatFeed("전투 시뮬레이션 정지. 재개 명령을 기다린다.", "PAUSE");
+    }
+    renderPauseOverlay();
+    updateHUD();
   }
 
   function createPlayer(build) {
@@ -1226,21 +1317,60 @@
       .join("");
   }
 
+  function renderSignatureSpotlight() {
+    if (!elements.signatureSpotlight) {
+      return;
+    }
+    const signature = getSignatureDef(selectedSignatureId);
+    const seededCore = CORE_DEFS[signature.seedCores[0]];
+    elements.signatureSpotlight.innerHTML = `
+      <div class="signature-spotlight__header">
+        <div>
+          <p class="panel__eyebrow">${signature.tag}</p>
+          <h3>${signature.label}</h3>
+        </div>
+        <span class="summary-chip summary-chip--cool">${signature.short}</span>
+      </div>
+      <p class="signature-spotlight__summary">${signature.description}</p>
+      <div class="signature-spotlight__grid">
+        <article class="signature-spotlight__card">
+          <p class="panel__eyebrow">SEED CORE</p>
+          <strong>${seededCore.label}</strong>
+          <p>${summarizeBenchCoreIds(signature.seedCores)}</p>
+        </article>
+        <article class="signature-spotlight__card">
+          <p class="panel__eyebrow">PASSIVE</p>
+          <strong>Startup Perk</strong>
+          <p>${signature.perkText}</p>
+        </article>
+      </div>
+      <div class="mini-pill-row">
+        ${signature.seedCores
+          .map((coreId) => createMiniPill("BENCH", CORE_DEFS[coreId].short, "accent"))
+          .join("")}
+      </div>
+    `;
+  }
+
   function selectSignature(signatureId) {
     if (!SIGNATURE_DEFS[signatureId]) {
       return;
     }
     selectedSignatureId = signatureId;
     renderSignaturePicker();
+    renderSignatureSpotlight();
   }
 
   function startRun() {
     state = createAppState(selectedSignatureId);
     state.screen = "game";
     state.phase = "wave";
+    state.paused = false;
     state.player = createPlayer(state.build);
     refreshDerivedStats(false);
+    pushCombatFeed(`${getSignatureDef(selectedSignatureId).label} 투입 승인. 제련 회로를 연다.`, "DROP");
     showScreen("game");
+    renderPauseOverlay();
     beginWave(0);
   }
 
@@ -1279,6 +1409,7 @@
     state.player.fireCooldown = 0;
     state.player.dashCharges = state.player.dashMax;
     state.player.dashCooldownTimer = 0;
+    pushCombatFeed(`${config.label} 진입. ${config.note}`, `W${index + 1}`);
     setBanner(config.label, 1.4);
     renderForgeOverlay();
     updateHUD();
@@ -1296,6 +1427,7 @@
     state.projectiles = [];
     state.player.heat = Math.max(0, state.player.heat - 20);
     state.player.overheated = false;
+    pushCombatFeed("웨이브 종료. 포지 카드로 다음 화력 축을 고른다.", "FORGE");
     setBanner("포지 정지", 1.2);
     renderForgeOverlay();
     updateHUD();
@@ -1356,6 +1488,10 @@
         ${createStatusRow("Overdrive", String(state.result.overdrivesUsed))}
       </div>
     `;
+    pushCombatFeed(
+      victory ? "최종 회로 봉인 성공. 전술 기록을 결과 패널로 이관한다." : "회로 붕괴. 손실 보고를 마친 뒤 재투입 가능.",
+      victory ? "CLEAR" : "FAIL"
+    );
     showScreen("result");
   }
 
@@ -1391,6 +1527,7 @@
     state.resources.scrap -= choice.cost;
     state.stats.scrapSpent += choice.cost;
     applyForgeChoice(state, choice);
+    pushCombatFeed(`${choice.tag} · ${choice.title} 적용.`, "FORGE");
     refreshDerivedStats(false);
     beginWave(state.waveIndex + 1);
   }
@@ -1569,6 +1706,7 @@
     state.player.heat = Math.max(0, state.player.heat - 28);
     state.player.overheated = false;
     state.stats.overdrivesUsed += 1;
+    pushCombatFeed("오버드라이브 점화. 짧은 화력 창을 최대한 밀어붙인다.", "DRIVE");
     setBanner("OVERDRIVE", 1);
     state.shake = Math.max(state.shake, 7);
   }
@@ -1620,6 +1758,7 @@
     state.player.fireCooldown = weapon.cooldown * (driveActive ? 0.6 : 1);
     if (state.player.heat >= 100) {
       state.player.overheated = true;
+      pushCombatFeed("과열 발생. 사격 회복 전까지 회피와 냉각이 우선이다.", "HEAT");
       setBanner("과열", 0.7);
     }
   }
@@ -1985,6 +2124,7 @@
       if (stored) {
         state.stats.coresCollected += 1;
         refreshDerivedStats(false);
+        pushCombatFeed(`${CORE_DEFS[drop.coreId].label} 확보. 벤치 접속 옵션이 확장됐다.`, "CORE");
         setBanner(
           `${CORE_DEFS[drop.coreId].short} 벤치 x${getBenchCount(
             state.build,
@@ -2218,6 +2358,9 @@
         ? "포지 카드 1장을 골라 다음 웨이브의 화력 축을 정한다."
         : `${waveConfig.note} ${waveConfig.directive}`;
 
+    renderWaveTrack();
+    renderCombatFeed();
+    renderPauseOverlay();
     syncBodyState();
   }
 
@@ -2501,6 +2644,10 @@
       return;
     }
 
+    if (state.paused) {
+      return;
+    }
+
     if (state.phase === "wave") {
       updatePlayer(dt);
       maybeSpawnEnemies(dt);
@@ -2545,9 +2692,32 @@
     startRun();
   });
 
+  elements.cycleSignature.addEventListener("pointerdown", () => {
+    const signatureIds = Object.keys(SIGNATURE_DEFS);
+    const currentIndex = signatureIds.indexOf(selectedSignatureId);
+    const nextSignatureId = signatureIds[(currentIndex + 1) % signatureIds.length];
+    selectSignature(nextSignatureId);
+  });
+
   elements.backToTitle.addEventListener("pointerdown", () => {
     state = createAppState(selectedSignatureId);
     renderSignaturePicker();
+    renderSignatureSpotlight();
+    showScreen("title");
+  });
+
+  elements.resumeRun.addEventListener("pointerdown", () => {
+    togglePause(false);
+  });
+
+  elements.pauseRestart.addEventListener("pointerdown", () => {
+    startRun();
+  });
+
+  elements.pauseTitle.addEventListener("pointerdown", () => {
+    state = createAppState(selectedSignatureId);
+    renderSignaturePicker();
+    renderSignatureSpotlight();
     showScreen("title");
   });
 
@@ -2579,6 +2749,11 @@
   });
 
   document.addEventListener("keydown", (event) => {
+    if ((event.code === "Escape" || event.code === "KeyP") && state.screen === "game") {
+      event.preventDefault();
+      togglePause();
+      return;
+    }
     if (event.code === "Space") {
       event.preventDefault();
       if (!event.repeat) {
@@ -2593,6 +2768,9 @@
     }
     if (event.code === "KeyR" && state.screen !== "title") {
       startRun();
+    }
+    if (state.paused) {
+      return;
     }
     if (
       state.screen === "title" &&
@@ -2619,6 +2797,7 @@
   });
 
   renderSignaturePicker();
+  renderSignatureSpotlight();
   showScreen("title");
   requestAnimationFrame(frame);
 })();

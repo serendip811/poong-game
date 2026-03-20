@@ -300,6 +300,96 @@ body[data-overdrive="true"] .backdrop__glow--right {
   color: var(--muted);
 }
 
+.launch-panel {
+  margin-top: 24px;
+  padding: 20px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(180deg, rgba(255, 145, 88, 0.08), transparent 32%),
+    rgba(255, 255, 255, 0.03);
+}
+
+.launch-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.launch-card {
+  padding: 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.launch-card strong {
+  display: block;
+  margin-top: 10px;
+  font-size: 1rem;
+}
+
+.launch-card p:last-child {
+  margin: 10px 0 0;
+  color: var(--muted);
+  line-height: 1.56;
+}
+
+.signature-section--spotlight {
+  background:
+    linear-gradient(180deg, rgba(121, 213, 223, 0.09), transparent 28%),
+    rgba(255, 255, 255, 0.03);
+}
+
+.signature-spotlight {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.signature-spotlight__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.signature-spotlight__header h3 {
+  margin: 8px 0 0;
+  font-size: 1.42rem;
+  letter-spacing: -0.04em;
+}
+
+.signature-spotlight__summary {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.62;
+}
+
+.signature-spotlight__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.signature-spotlight__card {
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.signature-spotlight__card strong {
+  display: block;
+  margin-top: 8px;
+}
+
+.signature-spotlight__card p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  line-height: 1.54;
+}
+
 .button {
   border-radius: 999px;
   padding: 14px 22px;
@@ -879,6 +969,150 @@ body[data-overdrive="true"] .backdrop__glow--right {
     0 18px 60px rgba(0, 0, 0, 0.32);
 }
 
+.progress-strip,
+.combat-feed-panel {
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 55%),
+    rgba(255, 255, 255, 0.03);
+}
+
+.progress-strip__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.progress-strip__header strong {
+  font-size: 0.95rem;
+}
+
+.wave-track {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.wave-track__node {
+  position: relative;
+  padding: 12px 12px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.035);
+  overflow: hidden;
+}
+
+.wave-track__node::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.wave-track__node strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.98rem;
+}
+
+.wave-track__node p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.wave-track__node[data-state="done"] {
+  border-color: rgba(121, 213, 223, 0.24);
+  background: rgba(121, 213, 223, 0.08);
+}
+
+.wave-track__node[data-state="done"]::before {
+  background: var(--accent-cool);
+}
+
+.wave-track__node[data-state="current"] {
+  border-color: rgba(255, 179, 92, 0.34);
+  background:
+    linear-gradient(180deg, rgba(255, 145, 88, 0.12), transparent 55%),
+    rgba(255, 255, 255, 0.04);
+}
+
+.wave-track__node[data-state="current"]::before {
+  background: var(--accent);
+}
+
+.wave-track__node[data-state="upcoming"]::before {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.combat-feed {
+  display: grid;
+  gap: 10px;
+}
+
+.combat-feed__row {
+  display: grid;
+  grid-template-columns: 80px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.combat-feed__stamp {
+  color: #ffd3b1;
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.combat-feed__text {
+  color: var(--muted-strong);
+  line-height: 1.54;
+}
+
+.pause-overlay {
+  position: absolute;
+  inset: 80px 16px 52px;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(7, 7, 7, 0.74);
+  backdrop-filter: blur(10px);
+  z-index: 3;
+}
+
+.pause-overlay__panel {
+  width: min(520px, 100%);
+  padding: 26px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    linear-gradient(180deg, rgba(121, 213, 223, 0.08), transparent 20%),
+    rgba(24, 19, 17, 0.96);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.38);
+}
+
+.pause-overlay__panel h2 {
+  margin: 8px 0 12px;
+  font-size: clamp(2rem, 4vw, 2.6rem);
+}
+
+.pause-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+}
+
 .message-banner {
   position: absolute;
   top: 88px;
@@ -1178,8 +1412,11 @@ body[data-overdrive="true"] .backdrop__glow--right {
   }
 
   .signal-grid,
+  .launch-grid,
   .signature-grid,
+  .signature-spotlight__grid,
   .meter-cluster,
+  .wave-track,
   .forge-context,
   .forge-cards {
     grid-template-columns: 1fr;
@@ -1198,6 +1435,11 @@ body[data-overdrive="true"] .backdrop__glow--right {
     inset: 70px 10px 44px;
     padding: 12px;
   }
+
+  .pause-overlay {
+    inset: 70px 10px 44px;
+    padding: 12px;
+  }
 }
 
 @media (max-width: 640px) {
@@ -1211,6 +1453,10 @@ body[data-overdrive="true"] .backdrop__glow--right {
   }
 
   .hero-actions .button {
+    width: 100%;
+  }
+
+  .pause-actions .button {
     width: 100%;
   }
 
@@ -1233,5 +1479,9 @@ body[data-overdrive="true"] .backdrop__glow--right {
 
   #game-canvas {
     max-height: 52vh;
+  }
+
+  .combat-feed__row {
+    grid-template-columns: 1fr;
   }
 }
