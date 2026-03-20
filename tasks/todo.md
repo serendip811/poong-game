@@ -1,5 +1,35 @@
 # TODO
 
+## GitHub Pages Task
+
+- [x] 배포 방식 확정: GitHub Pages에서 루트 허브와 `playables/`를 어떤 방식으로 공개할지 정한다.
+- [x] 자동 배포 구성: 기본 브랜치 푸시 시 Pages로 배포되는 GitHub Actions 워크플로우를 추가한다.
+- [x] 배포 범위 정리: 공개할 정적 파일만 아티팩트에 포함되게 구성한다.
+- [x] 검증: 워크플로우 YAML과 배포 대상 구조를 점검한다.
+- [x] 리뷰 기록: 실제 배포 전제와 사용자 후속 작업을 정리한다.
+
+### GitHub Pages Review
+
+- [deploy-pages.yml](/Users/seren.kim/work_personal/poong_game/.github/workflows/deploy-pages.yml#L1)을 추가해 `main` 브랜치 push 또는 수동 실행 시 GitHub Pages 배포가 돌도록 구성했다.
+- 배포 아티팩트는 루트 [index.html](/Users/seren.kim/work_personal/poong_game/index.html#L1)과 `playables/`만 포함하고, `tasks/`, `docs/` 같은 작업 파일은 공개 페이지에 실리지 않게 분리했다.
+- 산출물 생성 단계에서 `.DS_Store`를 제거하고 `.nojekyll`을 추가해 정적 파일만 깔끔하게 올라가게 했다.
+- 로컬 검증은 Ruby YAML 파싱으로 워크플로우 문법을 확인했고, 임시 `dist` 생성으로 최종 공개 파일 목록이 `index.html`과 각 게임의 `index.html`/`styles.css`/`game.js`만 남는 것을 확인했다.
+- 실제 공개 URL은 프로젝트 Pages 기준으로 `https://serendip811.github.io/poong-game/`가 된다. GitHub 저장소 설정에서 Pages Source를 `GitHub Actions`로 한 번 지정해야 첫 배포가 정상 반영된다.
+
+## Hub Landing Task
+
+- [x] 엔트리 확인: 루트 허브에서 연결할 현재 플레이어블 목록과 상대 경로를 확정한다.
+- [x] 허브 구현: 루트 `index.html`에 게임 허브/홈 역할의 랜딩 페이지를 만든다.
+- [x] 링크 연결: 각 게임 소개 카드와 진입 링크를 연결한다.
+- [x] 검증: 문서 구조와 각 링크 대상 파일 존재 여부를 확인한다.
+- [x] 리뷰 기록: 이번 허브 페이지 작업 결과와 확인 내용을 정리한다.
+
+### Hub Landing Review
+
+- 루트 [index.html](/Users/seren.kim/work_personal/poong_game/index.html#L1)에 `Poong Game Hub` 랜딩 페이지를 새로 만들고, 현재 플레이 가능한 4개 프로토타입을 카드형 링크로 연결했다.
+- 카드마다 장르, 한 줄 설명, 대표 조작을 붙여 허브에서 바로 성격이 읽히게 했고, 링크는 모두 `./playables/<slug>/index.html` 상대 경로로 통일했다.
+- 검증은 `perl` 추출 + 파일 존재 확인으로 `./playables/cinder-circuit/index.html`, `./playables/deadstock-depot/index.html`, `./playables/deadstock-depot-canvas/index.html`, `./playables/hexfall-march/index.html` 4개 링크가 모두 실제 파일로 이어지는 것을 확인했다.
+
 ## Current Task
 
 - [x] 구현 계획: `Deadstock Depot` 프로토타입의 범위와 파일 구조를 확정한다.
