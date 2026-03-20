@@ -487,10 +487,10 @@ body[data-overdrive="true"] .backdrop__glow--right {
 
 .topbar {
   display: grid;
-  grid-template-columns: minmax(320px, 1fr) minmax(560px, 1.28fr);
-  gap: 18px;
+  grid-template-columns: minmax(220px, 0.85fr) minmax(0, 1.15fr);
+  gap: 14px;
   align-items: stretch;
-  padding: 18px 22px;
+  padding: 14px 18px;
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
   background:
@@ -527,7 +527,7 @@ body[data-overdrive="true"] .backdrop__glow--right {
 }
 
 .topbar__brand strong {
-  font-size: 2rem;
+  font-size: 1.7rem;
   letter-spacing: -0.04em;
 }
 
@@ -541,18 +541,18 @@ body[data-overdrive="true"] .backdrop__glow--right {
 
 .topbar__deck {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 250px;
-  gap: 14px;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  gap: 10px;
 }
 
 .meter-cluster {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+  gap: 10px;
 }
 
 .meter-card {
-  padding: 14px;
+  padding: 12px;
   border-radius: var(--radius-md);
   border: 1px solid rgba(255, 255, 255, 0.08);
   background:
@@ -574,13 +574,13 @@ body[data-overdrive="true"] .backdrop__glow--right {
 .meter-card strong {
   display: block;
   text-align: right;
-  font-size: 1.02rem;
+  font-size: 0.96rem;
   font-variant-numeric: tabular-nums;
 }
 
 .meter-card__bar {
-  margin-top: 12px;
-  height: 10px;
+  margin-top: 10px;
+  height: 8px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.08);
   overflow: hidden;
@@ -623,12 +623,12 @@ body[data-overdrive="true"] .backdrop__glow--right {
 
 .topbar__stats {
   display: grid;
-  gap: 12px;
+  gap: 10px;
   align-content: start;
 }
 
 .stat-chip {
-  padding: 12px 14px;
+  padding: 10px 12px;
   border-radius: var(--radius-sm);
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.04);
@@ -636,8 +636,8 @@ body[data-overdrive="true"] .backdrop__glow--right {
 
 .stat-chip strong {
   display: block;
-  margin-top: 6px;
-  font-size: 1.05rem;
+  margin-top: 4px;
+  font-size: 0.98rem;
   font-variant-numeric: tabular-nums;
 }
 
@@ -654,6 +654,10 @@ body[data-overdrive="true"] .backdrop__glow--right {
   grid-template-columns: 230px minmax(0, 1fr) 240px;
   gap: 18px;
   align-items: start;
+}
+
+.layout--single {
+  grid-template-columns: 1fr;
 }
 
 .panel,
@@ -903,9 +907,9 @@ body[data-overdrive="true"] .backdrop__glow--right {
 .arena-frame {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  min-height: min(860px, calc(100vh - 188px));
-  padding: 16px;
+  gap: 10px;
+  min-height: min(860px, calc(100vh - 176px));
+  padding: 12px;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 30%),
     var(--panel);
@@ -914,12 +918,12 @@ body[data-overdrive="true"] .backdrop__glow--right {
 
 .arena-head {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 250px;
-  gap: 12px;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  gap: 10px;
 }
 
 .arena-head__block {
-  padding: 14px 16px;
+  padding: 10px 12px;
   border-radius: var(--radius-md);
   border: 1px solid rgba(255, 255, 255, 0.08);
   background:
@@ -929,21 +933,22 @@ body[data-overdrive="true"] .backdrop__glow--right {
 
 .arena-head__block strong {
   display: block;
-  margin-top: 8px;
-  font-size: 1.08rem;
+  margin-top: 6px;
+  font-size: 1rem;
 }
 
 .arena-head__copy {
-  margin: 8px 0 0;
+  margin: 6px 0 0;
   color: var(--muted);
-  line-height: 1.56;
+  line-height: 1.35;
+  font-size: 0.88rem;
 }
 
 #game-canvas {
   display: block;
-  width: min(100%, calc((100vh - 332px) * 16 / 9));
+  width: min(100%, calc((100vh - 286px) * 16 / 9));
   max-width: 100%;
-  max-height: calc(100vh - 332px);
+  max-height: calc(100vh - 286px);
   margin: 0 auto;
   aspect-ratio: 16 / 9;
   border-radius: 24px;
@@ -958,7 +963,7 @@ body[data-overdrive="true"] .backdrop__glow--right {
 
 .progress-strip,
 .combat-feed-panel {
-  padding: 14px 16px;
+  padding: 10px 12px;
   border-radius: var(--radius-md);
   border: 1px solid rgba(255, 255, 255, 0.08);
   background:
@@ -971,22 +976,22 @@ body[data-overdrive="true"] .backdrop__glow--right {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .progress-strip__header strong {
-  font-size: 0.95rem;
+  font-size: 0.88rem;
 }
 
 .wave-track {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 10px;
+  gap: 8px;
 }
 
 .wave-track__node {
   position: relative;
-  padding: 12px 12px 14px;
+  padding: 8px 10px 10px;
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.035);
@@ -1003,15 +1008,49 @@ body[data-overdrive="true"] .backdrop__glow--right {
 
 .wave-track__node strong {
   display: block;
-  margin-top: 8px;
-  font-size: 0.98rem;
+  margin-top: 5px;
+  font-size: 0.86rem;
 }
 
 .wave-track__node p {
-  margin: 6px 0 0;
+  margin: 4px 0 0;
   color: var(--muted);
-  font-size: 0.84rem;
-  line-height: 1.45;
+  font-size: 0.76rem;
+  line-height: 1.3;
+}
+
+.arena-dock {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr 0.9fr 0.9fr;
+  gap: 10px;
+}
+
+.dock-card {
+  min-width: 0;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 60%),
+    rgba(255, 255, 255, 0.03);
+}
+
+.dock-card--wide {
+  grid-column: span 2;
+}
+
+.status-card--compact,
+.core-summary--compact {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.stack-list--compact {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
 }
 
 .wave-track__node[data-state="done"] {
@@ -1040,15 +1079,15 @@ body[data-overdrive="true"] .backdrop__glow--right {
 
 .combat-feed {
   display: grid;
-  gap: 10px;
+  gap: 8px;
 }
 
 .combat-feed__row {
   display: grid;
   grid-template-columns: 80px minmax(0, 1fr);
-  gap: 10px;
+  gap: 8px;
   align-items: start;
-  padding: 10px 12px;
+  padding: 8px 10px;
   border-radius: 14px;
   border: 1px solid rgba(255, 255, 255, 0.06);
   background: rgba(255, 255, 255, 0.03);
@@ -1063,7 +1102,8 @@ body[data-overdrive="true"] .backdrop__glow--right {
 
 .combat-feed__text {
   color: var(--muted-strong);
-  line-height: 1.54;
+  line-height: 1.4;
+  font-size: 0.88rem;
 }
 
 .pause-overlay {
@@ -1338,8 +1378,8 @@ body[data-overdrive="true"] .backdrop__glow--right {
     grid-template-columns: 1fr;
   }
 
-  .layout {
-    grid-template-columns: 260px minmax(0, 1fr) 280px;
+  .arena-dock {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -1359,29 +1399,25 @@ body[data-overdrive="true"] .backdrop__glow--right {
     grid-template-columns: 1fr;
   }
 
-  .panel {
-    max-height: none;
-  }
-
-  .arena-panel {
-    order: 1;
-  }
-
-  .panel--left {
-    order: 2;
-  }
-
-  .panel--right {
-    order: 3;
-  }
-
   .arena-frame {
     min-height: auto;
   }
 
+  .arena-dock {
+    grid-template-columns: 1fr;
+  }
+
+  .dock-card--wide {
+    grid-column: auto;
+  }
+
+  .stack-list--compact {
+    grid-template-columns: 1fr;
+  }
+
   #game-canvas {
-    width: min(100%, calc((100vh - 292px) * 16 / 9));
-    max-height: min(64vh, 620px);
+    width: min(100%, calc((100vh - 252px) * 16 / 9));
+    max-height: min(66vh, 660px);
   }
 }
 
@@ -1393,7 +1429,6 @@ body[data-overdrive="true"] .backdrop__glow--right {
   .hero-card,
   .result-card,
   .topbar,
-  .panel,
   .arena-frame {
     padding: 18px;
   }
@@ -1409,6 +1444,10 @@ body[data-overdrive="true"] .backdrop__glow--right {
   }
 
   .arena-head {
+    grid-template-columns: 1fr;
+  }
+
+  .arena-dock {
     grid-template-columns: 1fr;
   }
 

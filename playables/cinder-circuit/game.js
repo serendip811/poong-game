@@ -1139,7 +1139,7 @@
       return;
     }
     const nextStamp = stamp || (state.phase === "forge" ? "FORGE" : state.wave ? `W${state.waveIndex + 1}` : "RUN");
-    state.feed = [{ stamp: nextStamp, text }, ...state.feed].slice(0, 6);
+    state.feed = [{ stamp: nextStamp, text }, ...state.feed].slice(0, 4);
   }
 
   function renderCombatFeed() {
@@ -2335,8 +2335,8 @@
 
     elements.arenaDirective.textContent =
       state.phase === "forge"
-        ? "포지 카드 1장을 골라 다음 웨이브의 화력 축을 정한다."
-        : `${waveConfig.note} ${waveConfig.directive}`;
+        ? "포지 카드 1장 선택"
+        : waveConfig.directive;
 
     renderWaveTrack();
     renderCombatFeed();

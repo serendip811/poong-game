@@ -91,24 +91,7 @@
           </div>
         </header>
 
-        <div class="layout">
-          <aside class="panel panel--left">
-            <section class="panel-block">
-              <p class="panel-block__label">코어</p>
-              <div id="active-core" class="core-summary"></div>
-            </section>
-
-            <section class="panel-block">
-              <p class="panel-block__label">벤치</p>
-              <div id="pending-cores" class="chip-list"></div>
-            </section>
-
-            <section class="panel-block">
-              <p class="panel-block__label">보강</p>
-              <ul id="upgrade-list" class="stack-list"></ul>
-            </section>
-          </aside>
-
+        <div class="layout layout--single">
           <main class="arena-panel">
             <div class="arena-frame">
               <div class="arena-head">
@@ -139,6 +122,33 @@
                   <strong id="run-track-label">Wave Progress</strong>
                 </div>
                 <div id="wave-track" class="wave-track"></div>
+              </section>
+
+              <section class="arena-dock">
+                <article class="dock-card dock-card--wide">
+                  <p class="panel__eyebrow">CORE</p>
+                  <div id="active-core" class="core-summary core-summary--compact"></div>
+                </article>
+
+                <article class="dock-card">
+                  <p class="panel__eyebrow">BENCH</p>
+                  <div id="pending-cores" class="chip-list"></div>
+                </article>
+
+                <article class="dock-card">
+                  <p class="panel__eyebrow">OBJECTIVE</p>
+                  <div id="wave-objective" class="status-card status-card--compact"></div>
+                </article>
+
+                <article class="dock-card">
+                  <p class="panel__eyebrow">COMBAT</p>
+                  <div id="live-readout" class="status-card status-card--compact"></div>
+                </article>
+
+                <article class="dock-card dock-card--wide">
+                  <p class="panel__eyebrow">MODS</p>
+                  <ul id="upgrade-list" class="stack-list stack-list--compact"></ul>
+                </article>
               </section>
 
               <div id="message-banner" class="message-banner hidden" role="status"></div>
@@ -196,18 +206,6 @@
               </div>
             </div>
           </main>
-
-          <aside class="panel panel--right">
-            <section class="panel-block">
-              <p class="panel-block__label">목표</p>
-              <div id="wave-objective" class="status-card"></div>
-            </section>
-
-            <section class="panel-block">
-              <p class="panel-block__label">전투 수치</p>
-              <div id="live-readout" class="status-card"></div>
-            </section>
-          </aside>
         </div>
       </section>
 
