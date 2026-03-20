@@ -215,7 +215,7 @@ body[data-overdrive="true"] .backdrop__glow--right {
 .hero-main {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .signal-grid,
@@ -300,41 +300,6 @@ body[data-overdrive="true"] .backdrop__glow--right {
   color: var(--muted);
 }
 
-.launch-panel {
-  margin-top: 24px;
-  padding: 20px;
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background:
-    linear-gradient(180deg, rgba(255, 145, 88, 0.08), transparent 32%),
-    rgba(255, 255, 255, 0.03);
-}
-
-.launch-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.launch-card {
-  padding: 16px;
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.035);
-}
-
-.launch-card strong {
-  display: block;
-  margin-top: 10px;
-  font-size: 1rem;
-}
-
-.launch-card p:last-child {
-  margin: 10px 0 0;
-  color: var(--muted);
-  line-height: 1.56;
-}
-
 .signature-section--spotlight {
   background:
     linear-gradient(180deg, rgba(121, 213, 223, 0.09), transparent 28%),
@@ -363,7 +328,8 @@ body[data-overdrive="true"] .backdrop__glow--right {
 .signature-spotlight__summary {
   margin: 0;
   color: var(--muted);
-  line-height: 1.62;
+  line-height: 1.5;
+  font-size: 0.95rem;
 }
 
 .signature-spotlight__grid {
@@ -382,12 +348,14 @@ body[data-overdrive="true"] .backdrop__glow--right {
 .signature-spotlight__card strong {
   display: block;
   margin-top: 8px;
+  font-size: 0.96rem;
 }
 
 .signature-spotlight__card p {
   margin: 6px 0 0;
   color: var(--muted);
-  line-height: 1.54;
+  line-height: 1.45;
+  font-size: 0.88rem;
 }
 
 .button {
@@ -1412,7 +1380,6 @@ body[data-overdrive="true"] .backdrop__glow--right {
   }
 
   .signal-grid,
-  .launch-grid,
   .signature-grid,
   .signature-spotlight__grid,
   .meter-cluster,

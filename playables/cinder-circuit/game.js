@@ -1331,7 +1331,7 @@
         </div>
         <span class="summary-chip summary-chip--cool">${signature.short}</span>
       </div>
-      <p class="signature-spotlight__summary">${signature.description}</p>
+      <p class="signature-spotlight__summary">${signature.perkText}</p>
       <div class="signature-spotlight__grid">
         <article class="signature-spotlight__card">
           <p class="panel__eyebrow">SEED CORE</p>
@@ -1339,9 +1339,9 @@
           <p>${summarizeBenchCoreIds(signature.seedCores)}</p>
         </article>
         <article class="signature-spotlight__card">
-          <p class="panel__eyebrow">PASSIVE</p>
-          <strong>Startup Perk</strong>
-          <p>${signature.perkText}</p>
+          <p class="panel__eyebrow">START</p>
+          <strong>초기 보너스</strong>
+          <p>${signature.description}</p>
         </article>
       </div>
       <div class="mini-pill-row">
