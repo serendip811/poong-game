@@ -983,9 +983,7 @@
     backToTitle: document.getElementById("back-to-title"),
     signatureCards: document.getElementById("signature-cards"),
     signatureSpotlight: document.getElementById("signature-spotlight"),
-    signatureSlot: document.getElementById("signature-slot"),
     waveLabel: document.getElementById("wave-label"),
-    waveDirective: document.getElementById("wave-directive"),
     hpMeter: document.getElementById("hp-meter"),
     hpStat: document.getElementById("hp-stat"),
     hpFill: document.getElementById("hp-fill"),
@@ -1003,10 +1001,6 @@
     upgradeList: document.getElementById("upgrade-list"),
     waveObjective: document.getElementById("wave-objective"),
     liveReadout: document.getElementById("live-readout"),
-    modeLabel: document.getElementById("mode-label"),
-    arenaDirective: document.getElementById("arena-directive"),
-    arenaCoreLabel: document.getElementById("arena-core-label"),
-    arenaCoreTrait: document.getElementById("arena-core-trait"),
     forgeOverlay: document.getElementById("forge-overlay"),
     forgeSubtitle: document.getElementById("forge-subtitle"),
     forgeContext: document.getElementById("forge-context"),
@@ -2186,7 +2180,6 @@
     const traitLabels = getWeaponTraitLabels(state.weapon);
 
     elements.waveLabel.textContent = waveLabel;
-    elements.waveDirective.textContent = waveConfig.directive;
     elements.hpStat.textContent = `${Math.ceil(state.player.hp)} / ${state.player.maxHp}`;
     elements.heatStat.textContent = `${Math.round(state.player.heat)}%`;
     elements.dashStat.textContent = `${state.player.dashCharges} / ${state.player.dashMax}`;
@@ -2198,13 +2191,6 @@
       ? `${state.wave.timeLeft.toFixed(1)}s`
       : "--";
     elements.scrapStat.textContent = String(Math.round(state.resources.scrap));
-    elements.modeLabel.textContent =
-      state.phase === "forge"
-        ? "FORGE PAUSE"
-        : state.player.overdriveActiveTime > 0
-          ? "OVERDRIVE LIVE"
-          : "COMBAT LIVE";
-
     setFill(elements.hpFill, hpRatio);
     setFill(elements.heatFill, heatRatio);
     setFill(elements.driveFill, driveRatio);
@@ -2244,99 +2230,102 @@
     const activeCore = CORE_DEFS[state.build.coreId];
     const weapon = state.weapon;
     const traitSummary = traitLabels.join(" · ");
-    elements.activeCore.innerHTML = `
-      <div class="summary-head">
-        <div>
-          <p class="forge-card__tag">${activeCore.tag}</p>
-          <h3>${activeCore.label}</h3>
+    if (elements.activeCore) {
+      elements.activeCore.innerHTML = `
+        <div class="summary-head">
+          <div>
+            <p class="forge-card__tag">${activeCore.tag}</p>
+            <h3>${activeCore.label}</h3>
+          </div>
+          <span class="summary-chip ${
+            weapon.benchSyncLevel > 0 ? "summary-chip--hot" : ""
+          }">${weapon.benchSyncLabel}</span>
         </div>
-        <span class="summary-chip ${
-          weapon.benchSyncLevel > 0 ? "summary-chip--hot" : ""
-        }">${weapon.benchSyncLabel}</span>
-      </div>
-      <div class="status-list">
-        ${createStatusRow("위력", String(weapon.damage))}
-        ${createStatusRow("연사", `${weapon.cooldown}s`)}
-        ${createStatusRow("발열", String(weapon.heatPerShot))}
-      </div>
-      <div class="mini-pill-row">
-        ${
-          traitLabels.length
-            ? traitLabels.map((label) => createMiniPill("TRAIT", label, "accent")).join("")
-            : createMiniPill("TRAIT", "직선 탄도")
-        }
-      </div>
-      <p class="summary-note">${getSignatureDef(state.build.signatureId).short} · 벤치 ${weapon.benchCopies}개</p>
-    `;
-    elements.arenaCoreLabel.textContent = activeCore.label;
-    elements.arenaCoreTrait.textContent = traitSummary || "직선 탄도";
+        <div class="status-list">
+          ${createStatusRow("위력", String(weapon.damage))}
+          ${createStatusRow("연사", `${weapon.cooldown}s`)}
+          ${createStatusRow("발열", String(weapon.heatPerShot))}
+        </div>
+        <div class="mini-pill-row">
+          ${
+            traitLabels.length
+              ? traitLabels.map((label) => createMiniPill("TRAIT", label, "accent")).join("")
+              : createMiniPill("TRAIT", "직선 탄도")
+          }
+        </div>
+        <p class="summary-note">${getSignatureDef(state.build.signatureId).short} · 벤치 ${weapon.benchCopies}개</p>
+      `;
+    }
 
     const benchEntries = getBenchEntries(state.build);
-    elements.pendingCores.innerHTML = benchEntries.length
-      ? benchEntries
-          .map(
-            (entry) => `
-              <span class="chip ${entry.coreId === state.build.coreId ? "chip--active" : ""}">
-                <strong>${CORE_DEFS[entry.coreId].short}</strong>
-                <span class="chip__count">x${entry.copies}</span>
-                <span class="chip__sync">${formatSyncLabel(entry.syncLevel)}</span>
-              </span>
-            `
-          )
-          .join("")
-      : `<span class="chip">없음</span>`;
+    if (elements.pendingCores) {
+      elements.pendingCores.innerHTML = benchEntries.length
+        ? benchEntries
+            .map(
+              (entry) => `
+                <span class="chip ${entry.coreId === state.build.coreId ? "chip--active" : ""}">
+                  <strong>${CORE_DEFS[entry.coreId].short}</strong>
+                  <span class="chip__count">x${entry.copies}</span>
+                  <span class="chip__sync">${formatSyncLabel(entry.syncLevel)}</span>
+                </span>
+              `
+            )
+            .join("")
+        : `<span class="chip">없음</span>`;
+    }
 
-    elements.upgradeList.innerHTML = state.build.upgrades.length
-      ? state.build.upgrades
-          .slice(-4)
-          .map((upgrade) => `<li>${upgrade}</li>`)
-          .join("")
-      : `<li>아직 포지 보강이 없다.</li>`;
+    if (elements.upgradeList) {
+      elements.upgradeList.innerHTML = state.build.upgrades.length
+        ? state.build.upgrades
+            .slice(-4)
+            .map((upgrade) => `<li>${upgrade}</li>`)
+            .join("")
+        : `<li>아직 포지 보강이 없다.</li>`;
+    }
 
     const enemiesLeft = Math.max(0, state.wave ? state.wave.spawnBudget - state.wave.spawned : 0);
-    elements.waveObjective.innerHTML = `
-      <div class="summary-head">
-        <strong>${waveConfig.label}</strong>
-        <span class="summary-chip ${state.hazards.length > 0 ? "summary-chip--hot" : ""}">
-          Hazard ${state.hazards.length}
-        </span>
-      </div>
-      <div class="status-list">
-        ${createStatusRow("남은 스폰", String(enemiesLeft))}
-        ${createStatusRow("현재 적", String(state.enemies.length))}
-        ${createStatusRow("드랍", String(state.drops.length))}
-      </div>
-    `;
+    if (elements.waveObjective) {
+      elements.waveObjective.innerHTML = `
+        <div class="summary-head">
+          <strong>${waveConfig.label}</strong>
+          <span class="summary-chip ${state.hazards.length > 0 ? "summary-chip--hot" : ""}">
+            Hazard ${state.hazards.length}
+          </span>
+        </div>
+        <div class="status-list">
+          ${createStatusRow("남은 스폰", String(enemiesLeft))}
+          ${createStatusRow("현재 적", String(state.enemies.length))}
+          ${createStatusRow("드랍", String(state.drops.length))}
+        </div>
+      `;
+    }
 
-    elements.liveReadout.innerHTML = `
-      <div class="summary-head">
-        <strong>${state.phase === "forge" ? "포지 선택 중" : "전투 진행 중"}</strong>
-        <span class="summary-chip ${
-          state.player.overdriveActiveTime > 0 || state.player.drive >= 100
-            ? "summary-chip--cool"
-            : ""
-        }">${
-          state.player.overdriveActiveTime > 0
-            ? "Drive Live"
-            : state.player.drive >= 100
-              ? "Drive Ready"
-              : "Drive Charge"
-        }</span>
-      </div>
-      <div class="status-list">
-        ${createStatusRow("처치", String(state.stats.kills))}
-        ${createStatusRow("코어 수집", String(state.stats.coresCollected))}
-        ${createStatusRow("사용 Scrap", String(Math.round(state.stats.scrapSpent)))}
-      </div>
-      <p class="summary-note ${
-        state.player.overheated ? "summary-note--danger" : ""
-      }">${state.player.overheated ? "사격 정지: 열을 비워야 한다." : "과열 전까지 자동 사격 유지."}</p>
-    `;
-
-    elements.arenaDirective.textContent =
-      state.phase === "forge"
-        ? "포지 카드 1장 선택"
-        : waveConfig.directive;
+    if (elements.liveReadout) {
+      elements.liveReadout.innerHTML = `
+        <div class="summary-head">
+          <strong>${state.phase === "forge" ? "포지 선택 중" : "전투 진행 중"}</strong>
+          <span class="summary-chip ${
+            state.player.overdriveActiveTime > 0 || state.player.drive >= 100
+              ? "summary-chip--cool"
+              : ""
+          }">${
+            state.player.overdriveActiveTime > 0
+              ? "Drive Live"
+              : state.player.drive >= 100
+                ? "Drive Ready"
+                : "Drive Charge"
+          }</span>
+        </div>
+        <div class="status-list">
+          ${createStatusRow("처치", String(state.stats.kills))}
+          ${createStatusRow("코어 수집", String(state.stats.coresCollected))}
+          ${createStatusRow("사용 Scrap", String(Math.round(state.stats.scrapSpent)))}
+        </div>
+        <p class="summary-note ${
+          state.player.overheated ? "summary-note--danger" : ""
+        }">${state.player.overheated ? "사격 정지: 열을 비워야 한다." : "과열 전까지 자동 사격 유지."}</p>
+      `;
+    }
 
     renderWaveTrack();
     renderCombatFeed();
@@ -2351,6 +2340,7 @@
       return;
     }
     const activeCore = CORE_DEFS[state.build.coreId];
+    const traitSummary = getWeaponTraitLabels(state.weapon).join(" · ") || "직선 탄도";
     const benchEntries = getBenchEntries(state.build);
     const benchSummary = benchEntries.length
       ? benchEntries
@@ -2366,7 +2356,7 @@
       <article class="forge-context__card">
         <p class="panel__eyebrow">ACTIVE CORE</p>
         <strong>${activeCore.label}</strong>
-        <p>${elements.arenaCoreTrait.textContent}</p>
+        <p>${traitSummary}</p>
       </article>
       <article class="forge-context__card">
         <p class="panel__eyebrow">BENCH SYNC</p>

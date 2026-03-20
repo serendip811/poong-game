@@ -32,15 +32,9 @@
 
       <section id="game-screen" class="screen hidden">
         <header class="topbar">
-          <div class="topbar__brand">
-            <p class="panel__eyebrow">FOUNDRY COMMAND DECK</p>
-            <div class="topbar__titleline">
-              <span class="badge">Cinder Circuit</span>
-              <strong id="wave-label">Wave 1</strong>
-            </div>
-            <p id="wave-directive" class="topbar__directive">
-              회로 예열 중. 첫 구간에서 무기 축을 정한다.
-            </p>
+          <div class="topbar__brand topbar__brand--compact">
+            <span class="badge">Cinder Circuit</span>
+            <strong id="wave-label">Wave 1</strong>
           </div>
 
           <div class="topbar__deck">
@@ -94,62 +88,12 @@
         <div class="layout layout--single">
           <main class="arena-panel">
             <div class="arena-frame">
-              <div class="arena-head">
-                <div class="arena-head__block">
-                  <p class="panel__eyebrow">ARENA FEED</p>
-                  <strong id="mode-label">전투 진행 중</strong>
-                  <p id="arena-directive" class="arena-head__copy">
-                    웨이브 지시와 위험 구간이 여기에 표시된다.
-                  </p>
-                </div>
-                <div class="arena-head__block arena-head__block--compact">
-                  <p class="panel__eyebrow">ACTIVE CIRCUIT</p>
-                  <strong id="arena-core-label">Ember Spindle</strong>
-                  <p id="arena-core-trait" class="arena-head__copy">직선 탄도</p>
-                </div>
-              </div>
-
               <canvas
                 id="game-canvas"
                 width="960"
                 height="540"
                 aria-label="Cinder Circuit game arena"
               ></canvas>
-
-              <section class="progress-strip" aria-label="run progress">
-                <div class="progress-strip__header">
-                  <p class="panel__eyebrow">RUN TRACK</p>
-                  <strong id="run-track-label">Wave Progress</strong>
-                </div>
-                <div id="wave-track" class="wave-track"></div>
-              </section>
-
-              <section class="arena-dock">
-                <article class="dock-card dock-card--wide">
-                  <p class="panel__eyebrow">CORE</p>
-                  <div id="active-core" class="core-summary core-summary--compact"></div>
-                </article>
-
-                <article class="dock-card">
-                  <p class="panel__eyebrow">BENCH</p>
-                  <div id="pending-cores" class="chip-list"></div>
-                </article>
-
-                <article class="dock-card">
-                  <p class="panel__eyebrow">OBJECTIVE</p>
-                  <div id="wave-objective" class="status-card status-card--compact"></div>
-                </article>
-
-                <article class="dock-card">
-                  <p class="panel__eyebrow">COMBAT</p>
-                  <div id="live-readout" class="status-card status-card--compact"></div>
-                </article>
-
-                <article class="dock-card dock-card--wide">
-                  <p class="panel__eyebrow">MODS</p>
-                  <ul id="upgrade-list" class="stack-list stack-list--compact"></ul>
-                </article>
-              </section>
 
               <div id="message-banner" class="message-banner hidden" role="status"></div>
 
@@ -187,22 +131,6 @@
                     </button>
                   </div>
                 </div>
-              </div>
-
-              <section class="combat-feed-panel">
-                <div class="progress-strip__header">
-                  <p class="panel__eyebrow">TACTICAL FEED</p>
-                  <strong>실시간 전개</strong>
-                </div>
-                <div id="combat-feed" class="combat-feed"></div>
-              </section>
-
-              <div class="arena-foot">
-                <span><code>WASD</code> Move</span>
-                <span><code>Space</code> Dash</span>
-                <span><code>F</code> Overdrive</span>
-                <span><code>1-3</code> Forge Pick</span>
-                <span><code>P / Esc</code> Pause</span>
               </div>
             </div>
           </main>
