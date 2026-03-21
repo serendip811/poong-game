@@ -116,6 +116,24 @@ assert.equal(artilleryWaveTwelve.label, "Wave 12 · Lance Crown");
 assert.equal(artilleryWaveTwelve.hazard.type, "relay");
 assert.ok(artilleryWaveTwelve.mix.mortar >= artilleryWaveTwelve.mix.warden);
 assert.equal(artilleryWaveTwelve.hazard.count, 4);
+const systemsForgeBuild = game.createInitialBuild("scrap_pact");
+systemsForgeBuild.bastionDoctrineId = "kiln_bastion";
+const systemsForgeChoices = game.buildBastionDraftChoices(systemsForgeBuild, () => 0, 6);
+const siegePactChoice = systemsForgeChoices.find((choice) => choice.action === "bastion_pact");
+assert.ok(siegePactChoice);
+assert.equal(siegePactChoice.debtWaves, 3);
+assert.match(siegePactChoice.description, /Siege Debt/);
+const initialMaxHpBonus = systemsForgeBuild.maxHpBonus;
+const pactRun = {
+  build: systemsForgeBuild,
+  resources: { scrap: 0 },
+  stats: { scrapCollected: 0 },
+  player: { hp: 100, maxHp: 100, heat: 10, overheated: false },
+};
+game.applyForgeChoice(pactRun, siegePactChoice);
+assert.equal(pactRun.build.bastionPactDebtWaves, 3);
+assert.equal(pactRun.resources.scrap, 56);
+assert.equal(pactRun.build.maxHpBonus, initialMaxHpBonus - 22);
 const artilleryFrameBuild = game.createInitialBuild("rail_zeal");
 artilleryFrameBuild.bastionDoctrineId = "storm_artillery";
 artilleryFrameBuild.coreId = "lance";

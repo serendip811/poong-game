@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 08:30 KST
+  Findings:
+  - The run is still pretending to be a longer-form roguelite without actually paying that fantasy off soon enough. `Wave 6-8` doctrine pursuit, `Late Break Armory`, and final capstones mean the player spends too much of a 12-wave run assembling permission to become powerful instead of getting several waves to enjoy a broken form.
+  - Doctrine identity is clearer on paper than in repeated play because the branch rules over-script bay access and offer pools. Locking the first two support bays behind doctrine bias until `Wave 9` makes many mid-runs feel like approved loadout assembly rather than risky machine-building with meaningful pivots, greed, and rescue plays.
+  - Combat space has grown, but the game still overloads that room with route-maintenance pressure. `activeCap 41-49` plus bastion, mortar, relay, and warden overlap keeps too many late fights focused on reopening safe corridors instead of choosing when to dive, hold, rotate, or overextend for scrap and shard pickups.
+  - The design target is still underselling the implementation ceiling. `docs/games/cinder-circuit-design.md` still frames a `5웨이브` short run, which is exactly the mindset the current loop needs to escape if it wants 20-30 wave ambition, stronger bracket identities, and real build hunger instead of extended prototype pacing.
+  Top Priority: Rebuild the `Wave 6` stop into an irreversible mid-run ascension where the player must choose one of three run-shaping futures: a main-weapon monster form, an expanded subsystem chassis with an immediate extra bay, or a greed contract that grants both power and a lasting combat tax for the next 2-3 waves.
+  Why Now: Until the run delivers a real midpoint power commitment with time left to exploit it, more waves and more labels will only stretch the prototype feeling.
+  Do Not Repeat: Do not solve this with another doctrine wrapper, another late capstone, or more branch bias that still delays the first truly outrageous payoff.
+
 - 2026-03-22 23:10 KST
   Findings:
   - The run still feels too pre-authored in the middle. `Architecture Draft`, `Act Break Armory`, `Bastion Draft` at `Wave 6/8`, `Late Break Armory`, and `Catalyst Crucible` script nearly every major spike, so repeat runs risk becoming bracket memorization instead of greed, denial, and improvisation.
@@ -661,6 +671,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 08:43 KST
+  Changed: upgraded the `Wave 6` `Siege Salvage Pact` in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from a one-shot scrap bribe into a real mid-run greed contract. Taking the pact now stores a `3`-wave `Siege Debt`, and the next three combat waves open with extra spawn budget, higher active caps, faster enemy movement, stronger hazard ticks, and `+24%` incoming damage. I also surfaced that debt in the `Wave 6` forge copy, the combat feed, and the wave objective panel so the tax is readable instead of hidden. [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts that the `Wave 6` systems-forge still offers the pact and that applying it really grants the debt state.
+  Why: the newest critique’s Top Priority called for the `Wave 6` ascension to include a greed contract that grants power now but carries a lasting combat tax for the next `2-3` waves. The highest-value bounded interpretation was to harden the existing greed lane instead of widening the forge again, because the run already had the three-way choice shape but not the actual punishment that makes choosing greed exciting.
+  Follow-up risk: the pact tax is now real, but the greed lane is still mostly an economy commitment rather than a visually transformative power spike. If critique keeps pushing on midpoint ascension fantasy, the next pass should pair this debt with a more outrageous immediate combat-facing payoff instead of only raising the tax further.
 
 - 2026-03-22 23:28 KST
   Changed: turned the `Wave 6` `Bastion Draft` stop into a true mid-run `Systems Forge` in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). Doctrine runs at that stop now always get exactly one direct weapon mutation, one non-weapon subsystem line through `Auxiliary Junction`, and one painful greed contract through `Siege Salvage Pact`. `Auxiliary Junction` immediately unlocks the third `support bay` two waves early and installs or upgrades a real support system at a discount, so the player can break out of the old `Wave 9` bay bottleneck before the middle third calcifies. I also updated the forge overlay/combat-feed copy to explain the new choice shape and refreshed [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so it asserts the new `Wave 6` systems-forge contract plus the delayed `Wave 8` doctrine pursuit offer.

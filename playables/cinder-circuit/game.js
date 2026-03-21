@@ -3287,6 +3287,7 @@
     doctrinePursuitExpired: false,
     overcommitUnlocked: false,
     overcommitResolved: false,
+    bastionPactDebtWaves: 0,
     supportBayCap: 2,
     supportSystemId: null,
     supportSystemTier: 0,
@@ -4218,6 +4219,7 @@
         doctrinePursuitExpired: BASE_BUILD.doctrinePursuitExpired,
         overcommitUnlocked: BASE_BUILD.overcommitUnlocked,
         overcommitResolved: BASE_BUILD.overcommitResolved,
+        bastionPactDebtWaves: BASE_BUILD.bastionPactDebtWaves,
         supportBayCap: BASE_BUILD.supportBayCap,
         supportSystemId: BASE_BUILD.supportSystemId,
         supportSystemTier: BASE_BUILD.supportSystemTier,
@@ -6007,13 +6009,14 @@
       tag: "PACT",
       title: "Siege Salvage Pact",
       description:
-        "즉시 고철 +56과 회수 효율 +12%를 얻지만, 최대 체력 -22와 현재 체력 18 피해를 영구적으로 감수한다. 다음 Armory까지 greed를 강제하는 Act 2 계약.",
-      slotText: "고철 +56 · 회수 +12% · 최대 체력 -22",
+        "즉시 고철 +56과 회수 효율 +12%를 얻지만, 최대 체력 -22와 현재 체력 18 피해를 영구적으로 감수한다. 이후 3개 웨이브 동안 적 밀도와 incoming damage가 같이 오르는 Siege Debt를 짊어진다.",
+      slotText: "고철 +56 · 회수 +12% · 3웨이브 Siege Debt",
       cost: 0,
       scrapGain: 56,
       scrapMultiplierGain: 0.12,
       maxHpPenalty: 22,
       hpLoss: 18,
+      debtWaves: 3,
       laneLabel: "Siege Pact",
       forgeLaneLabel: "고통 계약",
     };
@@ -6629,8 +6632,12 @@
       }
       run.build.scrapMultiplier += choice.scrapMultiplierGain || 0;
       run.build.maxHpBonus -= Math.max(0, choice.maxHpPenalty || 0);
+      run.build.bastionPactDebtWaves = Math.max(
+        run.build.bastionPactDebtWaves || 0,
+        Math.max(0, choice.debtWaves || 0)
+      );
       run.build.upgrades.push(
-        `Bastion Pact: 고철 +${Math.max(0, choice.scrapGain || 0)} / 최대 체력 -${Math.max(0, choice.maxHpPenalty || 0)}`
+        `Bastion Pact: 고철 +${Math.max(0, choice.scrapGain || 0)} / 최대 체력 -${Math.max(0, choice.maxHpPenalty || 0)} / Siege Debt ${Math.max(0, choice.debtWaves || 0)}웨이브`
       );
       if (run.player) {
         run.player.hp = Math.max(1, run.player.hp - Math.max(0, choice.hpLoss || 0));
@@ -7603,9 +7610,24 @@
   }
 
   function beginWave(index) {
-    const config = resolveWaveConfig(index, state.build);
+    const resolvedConfig = resolveWaveConfig(index, state.build);
+    const config = {
+      ...resolvedConfig,
+      hazard: resolvedConfig.hazard ? { ...resolvedConfig.hazard } : null,
+    };
     const arena = getArenaSize(config);
     const waveNumber = index + 1;
+    const pactDebtWavesBefore = Math.max(0, state.build.bastionPactDebtWaves || 0);
+    const pactDebtActive = pactDebtWavesBefore > 0;
+    if (pactDebtActive) {
+      config.spawnBudget += 18;
+      config.activeCap += 4;
+      config.baseSpawnInterval = Math.max(config.spawnIntervalMin, config.baseSpawnInterval * 0.92);
+      if (config.hazard) {
+        config.hazard.interval = Math.max(4.8, config.hazard.interval * 0.86);
+        config.hazard.damage += 3;
+      }
+    }
     state.waveIndex = index;
     state.phase = "wave";
     state.pendingFinalForge = false;
@@ -7629,6 +7651,15 @@
       driveGainFactor: config.driveGainFactor || 1,
       hazard: config.hazard,
       hazardTimer: config.hazard ? config.hazard.interval * 0.8 : Number.POSITIVE_INFINITY,
+      bastionPactDebt: pactDebtActive
+        ? {
+            wavesRemaining: Math.max(0, pactDebtWavesBefore - 1),
+            damageTakenMultiplier: 1.24,
+            enemySpeedMultiplier: 1.1,
+            spawnBudgetBonus: 18,
+            activeCapBonus: 4,
+          }
+        : null,
       combatCache: shouldUseFieldGrant({ nextWave: waveNumber + 1, finalForge: false })
         ? {
             armed: true,
@@ -7647,6 +7678,13 @@
     state.slagPools = [];
     state.particles = [];
     state.supportDeployables = [];
+    if (pactDebtActive) {
+      state.build.bastionPactDebtWaves = Math.max(0, pactDebtWavesBefore - 1);
+      pushCombatFeed(
+        `Siege Debt 활성화. 이번 웨이브는 적 예산 +18, active cap +4, incoming damage +24%로 열린다. 남은 debt ${state.build.bastionPactDebtWaves}웨이브.`,
+        "PACT"
+      );
+    }
     resetDoctrinePursuitState(state);
     if (shouldRunOvercommitTrial(state.build, waveNumber)) {
       armOvercommitTrial(state);
@@ -8025,7 +8063,7 @@
           ? choice.type === "fallback"
             ? `${grantLabel} 적용. Bastion Draft를 안정화로 넘기고 다음 웨이브를 바로 연다.`
             : choice.action === "bastion_pact"
-              ? `${grantLabel} 적용. 최대 체력을 깎아 고철을 쥐고 다음 웨이브를 연다.`
+              ? `${grantLabel} 적용. 최대 체력을 깎아 고철을 쥔 대신 3웨이브 Siege Debt를 떠안고 다음 웨이브를 연다.`
               : choice.action === "bastion_bay_forge"
                 ? `${grantLabel} 적용. 세 번째 support bay를 조기 개방하고 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 먼저 장착한 채 다음 웨이브를 연다.`
               : choice.action === "bastion_doctrine"
@@ -9948,7 +9986,11 @@
         }
       }
 
-      const speed = def.speed * (1 + state.waveIndex * 0.06) * speedMultiplier;
+      const pactSpeedMultiplier =
+        state.wave && state.wave.bastionPactDebt
+          ? state.wave.bastionPactDebt.enemySpeedMultiplier || 1
+          : 1;
+      const speed = def.speed * (1 + state.waveIndex * 0.06) * speedMultiplier * pactSpeedMultiplier;
       enemy.x += Math.cos(angle) * speed * dt;
       enemy.y += Math.sin(angle) * speed * dt;
       enemy.contactCooldown = Math.max(0, enemy.contactCooldown - dt);
@@ -10000,10 +10042,14 @@
   }
 
   function takePlayerDamage(amount, source) {
+    const pactAdjusted =
+      state.wave && state.wave.bastionPactDebt
+        ? amount * (state.wave.bastionPactDebt.damageTakenMultiplier || 1)
+        : amount;
     const hazardMitigated =
       source === "hazard"
-        ? amount * (1 - state.player.hazardMitigation)
-        : amount;
+        ? pactAdjusted * (1 - state.player.hazardMitigation)
+        : pactAdjusted;
     const mitigated = hazardMitigated * (1 - (state.player.bastionDamageMitigation || 0));
     state.player.hp = Math.max(0, state.player.hp - mitigated);
     state.player.invulnerableTime = 0.36;
@@ -10644,9 +10690,19 @@
       const overcommitRows = [];
       const pursuitRows = [];
       const combatCacheRows = [];
+      const pactRows = [];
       let overcommitNote = "";
       let pursuitNote = "";
       let combatCacheNote = "";
+      let pactNote = "";
+      if (state.wave && state.wave.bastionPactDebt) {
+        pactRows.push(createStatusRow("Siege Debt", `${state.wave.bastionPactDebt.wavesRemaining} left`));
+        pactRows.push(createStatusRow("Debt Tax", "+24% damage / +4 cap"));
+        pactNote = "Siege Salvage Pact 후유증이 유지 중이다. 적 밀도와 위험이 같이 올라 scrap greed의 청구서를 지금 받는다.";
+      } else if ((state.build.bastionPactDebtWaves || 0) > 0) {
+        pactRows.push(createStatusRow("Siege Debt", `${state.build.bastionPactDebtWaves} queued`));
+        pactNote = "다음 웨이브에 Siege Debt가 다시 이어진다.";
+      }
       if (state.overcommit.active) {
         overcommitRows.push(
           createStatusRow(
@@ -10721,10 +10777,11 @@
           ${createStatusRow("드랍", String(state.drops.length))}
           ${createStatusRow(hazardStatus.detailLabel, hazardStatus.detailValue)}
           ${combatCacheRows.join("")}
+          ${pactRows.join("")}
           ${overcommitRows.join("")}
           ${pursuitRows.join("")}
         </div>
-        <p class="summary-note">${combatCacheNote || pursuitNote || overcommitNote || hazardStatus.note}</p>
+        <p class="summary-note">${combatCacheNote || pactNote || pursuitNote || overcommitNote || hazardStatus.note}</p>
       `;
     }
 
@@ -10841,7 +10898,7 @@
           ? state.build.overcommitUnlocked && !state.build.doctrineChaseClaimed
             ? "Bastion Draft · 회수한 contraband salvage를 장기 Forge Pursuit 계약으로 바꾸거나, 계약/안정화로 greed를 접는다"
             : state.waveIndex + 2 === 6
-              ? "Systems Forge · 무기 변이, 조기 support bay 확장, 고통 계약 중 1픽으로 Act 2 중반의 빌드 폭을 직접 비튼다"
+              ? "Systems Forge · 무기 변이, 조기 support bay 확장, 3웨이브 Siege Debt greed 계약 중 1픽으로 Act 2 중반의 빌드 폭을 직접 비튼다"
             : "Bastion Draft · 기존 교리 위에 추가 spike 또는 고통 계약을 더 얹어 Act 2 greed를 강제한다"
           : "Bastion Draft · 시그니처 교리 1장, 고통 계약 1장, 무료 안정화 1장 중 1픽으로 Act 2 posture를 기울이고 late wildcard bay를 예고한다"
         : state.forgeDraftType === "catalyst_draft"
@@ -10868,7 +10925,7 @@
           ? state.build.overcommitUnlocked && !state.build.doctrineChaseClaimed
             ? `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. Wave 5에서 회수한 contraband salvage가 살아 있어 장기 Forge Pursuit 계약이 열렸다. 지금 pursuit를 걸고 Wave 6-8 marked elite에서 shard를 모아 조기 monster form을 완성할지, Siege Salvage Pact나 무료 안정화로 greed를 접을지 정한다.`
             : state.waveIndex + 2 === 6
-              ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 6 Systems Forge다. 한 장은 주무장 변이를 바로 당겨 중반 화력 실루엣을 바꾸고, 한 장은 세 번째 support bay를 조기 개방하면서 시스템을 즉시 꽂아 Wave 7-8 조합 폭을 넓히며, 마지막 한 장은 최대 체력과 현재 체력을 태워 고철을 훔쳐 오는 Siege Salvage Pact다. 지금 무기, 시스템, greed 중 무엇으로 Act 2를 비틀지 정한다.`
+              ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 6 Systems Forge다. 한 장은 주무장 변이를 바로 당겨 중반 화력 실루엣을 바꾸고, 한 장은 세 번째 support bay를 조기 개방하면서 시스템을 즉시 꽂아 Wave 7-8 조합 폭을 넓히며, 마지막 한 장은 최대 체력과 현재 체력을 태워 고철을 훔쳐 온 뒤 3웨이브 동안 Siege Debt를 떠안는 계약이다. 지금 무기, 시스템, greed 중 무엇으로 Act 2를 비틀지 정한다.`
             : `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 이미 채택한 교리 위에 추가 spike 1장과 Siege Salvage Pact, 무료 안정화가 다시 뜬다. 지금 더 깊게 묶일지, 체력을 태워 greed를 당길지 결정한다.`
           : `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 한 장은 시그니처 전용 교리라 즉시 spike를 확보하면서 초반 support bay와 이후 포지 후보를 한 계통 쪽으로 강하게 기울이고, Late Break Armory에서는 마지막 bay 1칸만 우회 조합용으로 풀어 준다. 한 장은 최대 체력을 깎고 고철을 당겨오는 Siege Salvage Pact, 마지막 한 장은 무료 안정화다. Act 2 posture를 잠글지, 더 아프게 탐욕할지 직접 정한다.`
         : state.forgeDraftType === "catalyst_draft"
