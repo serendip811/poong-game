@@ -1,3 +1,3 @@
-Added a new critique entry to [cinder-circuit-loop.md](/Users/seren/workspace/poong-game/tasks/automation/cinder-circuit-loop.md) under `## Latest Critique`. It pushes harder on the current ceiling: 5-wave structure is still too short, the arena is still too cramped under late pressure, and the new support system is acknowledged but criticized as too narrow and too late to count as real run-shaping depth.
+Updated `tasks/automation/cinder-circuit-loop.md` with a new critique focused on the core ceiling problem: support systems still arrive too late and too randomly inside the same cramped 5-wave structure, so the game still lacks intentional multi-axis build hunger and enough combat space for a release-feeling loop.
 
-Summary: added a critique calling for multiple mid-run support-system families as a true second build axis, and warned not to treat `Ember Ring` alone as solved depth.
+Added critique: make forge choices truly multi-axis from mid-run, with explicit subsystem competition, visible tier breakpoints, and stronger long-run escalation ambition.

@@ -398,6 +398,7 @@
     },
   };
 
+  const MAX_SUPPORT_SYSTEM_TIER = 3;
   const SUPPORT_SYSTEM_DEFS = {
     ember_ring: {
       id: "ember_ring",
@@ -456,6 +457,31 @@
           interceptPulseRadius: 0,
           previewText: "위성 2기 + 자동 볼트",
           statusNote: "Ember Ring Mk.II가 두 갈래 궤도로 전열을 긁고 자동 점화 볼트까지 보탠다.",
+        },
+        3: {
+          tier: 3,
+          label: "Ember Ring Mk.III",
+          title: "Ember Ring Mk.III",
+          cost: 68,
+          description:
+            "Ember Ring을 3기 삼각 편대로 증설한다. 궤도가 한층 넓어지고 자동 점화 볼트 주기가 짧아져 근접 전열과 측면 잔당을 동시에 태운다.",
+          slotText: "보조 시스템 증설 · 위성 3기 + 연쇄 자동 볼트",
+          orbitCount: 3,
+          orbitRadius: 74,
+          orbitSpeed: 2.5,
+          satelliteRadius: 9,
+          touchDamage: 24,
+          touchCooldown: 0.18,
+          shotCooldown: 0.78,
+          shotRange: 288,
+          shotDamage: 15,
+          shotSpeed: 620,
+          interceptRange: 0,
+          interceptCooldown: 0,
+          interceptPulseDamage: 0,
+          interceptPulseRadius: 0,
+          previewText: "위성 3기 + 고속 볼트",
+          statusNote: "Ember Ring Mk.III가 3기 편대로 외곽을 태우며 더 빠른 자동 볼트를 쏟아낸다.",
         },
       },
     },
@@ -516,6 +542,31 @@
           interceptPulseRadius: 48,
           previewText: "요격 2기 + 방호 파동",
           statusNote: "Aegis Halo Mk.II가 탄환을 끊을 때마다 방호 파동을 터뜨려 근접 압박까지 밀어낸다.",
+        },
+        3: {
+          tier: 3,
+          label: "Aegis Halo Mk.III",
+          title: "Aegis Halo Mk.III",
+          cost: 66,
+          description:
+            "Aegis Halo를 3기 삼각 방호진으로 증설한다. 요격 범위와 반응 속도가 다시 늘고, 파동이 더 멀리 퍼져 탄막과 근접 적을 함께 비운다.",
+          slotText: "보조 시스템 증설 · 요격 3기 + 확장 방호 파동",
+          orbitCount: 3,
+          orbitRadius: 58,
+          orbitSpeed: 2.15,
+          satelliteRadius: 10,
+          touchDamage: 12,
+          touchCooldown: 0.22,
+          shotCooldown: 0,
+          shotRange: 0,
+          shotDamage: 0,
+          shotSpeed: 0,
+          interceptRange: 42,
+          interceptCooldown: 0.09,
+          interceptPulseDamage: 20,
+          interceptPulseRadius: 62,
+          previewText: "요격 3기 + 대형 파동",
+          statusNote: "Aegis Halo Mk.III가 삼각 방호진으로 탄막을 지우고 더 큰 파동으로 주변 적까지 밀어낸다.",
         },
       },
     },
@@ -1594,7 +1645,7 @@
     if (!system) {
       return null;
     }
-    const tier = clamp(build.supportSystemTier || 0, 0, 2);
+    const tier = clamp(build.supportSystemTier || 0, 0, MAX_SUPPORT_SYSTEM_TIER);
     const tierDef = system.tiers[tier];
     if (!tierDef) {
       return null;
@@ -1635,7 +1686,9 @@
     return candidateIds
       .map((systemId) => {
         const system = SUPPORT_SYSTEM_DEFS[systemId];
-        const nextTier = currentSystem ? clamp((build.supportSystemTier || 0) + 1, 0, 2) : 1;
+        const nextTier = currentSystem
+          ? clamp((build.supportSystemTier || 0) + 1, 0, MAX_SUPPORT_SYSTEM_TIER)
+          : 1;
         const tierDef = system && system.tiers[nextTier];
         if (
           !system ||
@@ -1665,10 +1718,20 @@
       return false;
     }
     const nextWave = options && Number.isFinite(options.nextWave) ? options.nextWave : 0;
-    if (!build.supportSystemId) {
-      return nextWave >= 2;
+    if (nextWave < FORGE_PACKAGE_START_WAVE) {
+      return false;
     }
-    return (build.supportSystemTier || 0) < 2 && nextWave >= 4;
+    if (!build.supportSystemId) {
+      return true;
+    }
+    return (build.supportSystemTier || 0) < MAX_SUPPORT_SYSTEM_TIER && nextWave >= 4;
+  }
+
+  function shouldForceForgePackage(options) {
+    if (!options || options.finalForge) {
+      return false;
+    }
+    return (options.nextWave || 0) >= FORGE_PACKAGE_START_WAVE;
   }
 
   function createForgePreviewRows(choice) {
@@ -2547,6 +2610,7 @@
     const guaranteedMidrunChase = shouldGuaranteeMidrunChase(options)
       ? createGuaranteedChaseChoice(build)
       : null;
+    const packagePrimary = shouldForceForgePackage(options) && (options.packageStep || 1) === 1;
     pushChoiceIfOpen(commitCandidates, guaranteedMidrunChase || finisherChoice, choiceCatalog);
 
     const sameCoreChoice = createCoreChoice(build.coreId, build);
@@ -2621,6 +2685,80 @@
       });
     }
 
+    if (packagePrimary) {
+      const choices = [];
+      const takenIds = new Set();
+      const primaryChoices = [
+        takeFirstAvailableChoice(commitCandidates, takenIds, "빌드 고정"),
+        takeFirstAvailableChoice(pivotCandidates, takenIds, "전환"),
+      ].filter(Boolean);
+      choices.push(...primaryChoices);
+      const extraPrimaryPool = [...commitCandidates, ...pivotCandidates];
+      for (const choice of extraPrimaryPool) {
+        if (choices.length >= 3) {
+          break;
+        }
+        if (!choice || takenIds.has(choice.id)) {
+          continue;
+        }
+        takenIds.add(choice.id);
+        choices.push(markForgeLane(choice, choice.type === "core" ? "전환" : "빌드 고정"));
+      }
+      if (
+        Number.isFinite(scrapBank) &&
+        choices.length > 0 &&
+        choices.every((choice) => choice.cost > scrapBank)
+      ) {
+        choices[choices.length - 1] = markForgeLane({
+          type: "fallback",
+          id: "fallback:emergency_vent",
+          tag: "무료",
+          title: "Emergency Vent",
+          description: "패키지 첫 슬롯이 모두 너무 비싸 무료 안정화 1장을 끼워 넣는다.",
+          slotText: "패키지 보정",
+          cost: 0,
+        }, "생존/경제");
+      }
+      return shuffle(choices.slice(0, 3), random);
+    }
+
+    if (shouldForceForgePackage(options) && (options.packageStep || 1) === 2) {
+      const choices = [];
+      const takenIds = new Set();
+      const secondaryChoices = [
+        takeFirstAvailableChoice(subsystemCandidates, takenIds, "보조 시스템"),
+        takeFirstAvailableChoice(sustainCandidates, takenIds, "생존/경제"),
+      ].filter(Boolean);
+      choices.push(...secondaryChoices);
+      const extraSecondaryPool = [...subsystemCandidates, ...sustainCandidates];
+      for (const choice of extraSecondaryPool) {
+        if (choices.length >= 3) {
+          break;
+        }
+        if (!choice || takenIds.has(choice.id)) {
+          continue;
+        }
+        takenIds.add(choice.id);
+        choices.push(markForgeLane(choice, choice.type === "system" ? "보조 시스템" : "생존/경제"));
+      }
+      if (
+        Number.isFinite(scrapBank) &&
+        choices.length > 0 &&
+        choices.every((choice) => choice.cost > scrapBank)
+      ) {
+        choices[choices.length - 1] = markForgeLane({
+          type: "fallback",
+          id: "fallback:emergency_vent",
+          tag: "무료",
+          title: "Emergency Vent",
+          description: "패키지 마감 슬롯이 모두 너무 비싸 무료 안정화로 마감한다.",
+          slotText: "패키지 보정",
+          cost: 0,
+        }, "생존/경제");
+      }
+      return shuffle(choices.slice(0, 3), random);
+    }
+
     const takenIds = new Set();
     const laneChoices = [
       takeFirstAvailableChoice(commitCandidates, takenIds, "빌드 고정"),
@@ -2667,7 +2805,7 @@
   }
 
   function shouldOpenForgePackage(run, choice) {
-    if (!run || !choice || choice.type !== "system" || run.pendingFinalForge) {
+    if (!run || !choice || run.pendingFinalForge) {
       return false;
     }
     const nextWave = Number.isFinite(run.waveIndex) ? run.waveIndex + 2 : 0;
@@ -2675,15 +2813,30 @@
   }
 
   function buildForgeFollowupChoices(build, rng, scrapBank, options = null, previousChoice = null) {
-    const choices = buildForgeChoices(build, rng, scrapBank, options).filter((choice) => {
-      if (!choice || choice.type === "system") {
-        return false;
-      }
-      if (previousChoice && choice.id === previousChoice.id) {
-        return false;
-      }
-      return true;
-    });
+    const random = typeof rng === "function" ? rng : Math.random;
+    const packageFollowup = shouldForceForgePackage(options);
+    const choices = packageFollowup
+      ? buildForgeChoices(build, random, scrapBank, { ...options, packageStep: 2 }).filter((choice) => {
+          if (
+            !choice ||
+            (choice.laneLabel !== "보조 시스템" && choice.laneLabel !== "생존/경제")
+          ) {
+            return false;
+          }
+          if (previousChoice && choice.id === previousChoice.id) {
+            return false;
+          }
+          return true;
+        })
+      : buildForgeChoices(build, random, scrapBank, options).filter((choice) => {
+          if (!choice || choice.type === "system") {
+            return false;
+          }
+          if (previousChoice && choice.id === previousChoice.id) {
+            return false;
+          }
+          return true;
+        });
     if (choices.length > 0) {
       return choices;
     }
@@ -3506,15 +3659,16 @@
 
   function enterForge() {
     const isFinalForge = state.waveIndex >= MAX_WAVES - 1;
+    const startsPackage = !isFinalForge && state.waveIndex + 2 >= FORGE_PACKAGE_START_WAVE;
     state.phase = "forge";
     state.pendingFinalForge = isFinalForge;
     state.forgeStep = 1;
-    state.forgeMaxSteps = 1;
+    state.forgeMaxSteps = startsPackage ? 2 : 1;
     state.forgeChoices = buildForgeChoices(
       state.build,
       Math.random,
       state.resources.scrap,
-      { finalForge: isFinalForge, nextWave: state.waveIndex + 2 }
+      { finalForge: isFinalForge, nextWave: state.waveIndex + 2, packageStep: 1 }
     );
     state.hazards = [];
     state.enemies = [];
@@ -3800,7 +3954,7 @@
         choice
       );
       pushCombatFeed(
-        `${choice.tag} · ${choice.title} 적용. 패키지 슬롯이 열려 추가 선택 1회를 더 고른다.`,
+        `${choice.tag} · ${choice.title} 적용. 패키지 마감 슬롯에서 보조 시스템 또는 안정화 카드를 1장 더 고른다.`,
         "FORGE"
       );
       refreshDerivedStats(false);
@@ -5285,9 +5439,9 @@
       : "촉매 조건 미도달";
     const packageSummary =
       state.forgeMaxSteps > 1
-        ? `패키지 ${state.forgeStep}/${state.forgeMaxSteps} · 보조 시스템 뒤 추가 선택 1회`
+        ? `패키지 ${state.forgeStep}/${state.forgeMaxSteps} · 1슬롯 화력/전환, 2슬롯 시스템/안정화`
         : state.waveIndex + 2 >= FORGE_PACKAGE_START_WAVE && !state.pendingFinalForge
-          ? "Wave 3+ 포지는 보조 시스템 선택 시 추가 패키지 슬롯 1회"
+          ? "Wave 3+ 포지는 두 슬롯으로 진행된다: 먼저 화력/전환, 다음 시스템/안정화"
           : "단일 포지 선택";
     elements.forgeSubtitle.textContent = state.pendingFinalForge
       ? catalystReady

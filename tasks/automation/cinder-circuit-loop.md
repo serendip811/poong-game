@@ -14,6 +14,17 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-21 11:30 KST
+  Findings:
+  - `WAVE_CONFIG` is still only a 5-wave lane with one arena, one hazard family, and mostly density/rate escalation, so the game still lacks the phase contrast, pacing resets, and encounter vocabulary needed for a run structure that could honestly scale toward `20-30` waves.
+  - The new forge package is not a real between-wave build layer yet because `handleForgeSelection()` only opens the second pick after choosing a `system`; the player is still usually making one narrow purchase, not assembling a loadout package with weapon, defense, and utility tension every stop.
+  - `SUPPORT_SYSTEM_DEFS` remains just two families with a hard stop at `Mk.II`, which means the "second axis" still burns out almost immediately instead of feeding anticipation through orbitals, shields, interceptors, missiles, or other visible long-run upgrades.
+  - `computeWeaponStats()` still concentrates growth in throughput math with a few pattern perks, so weapons do not mutate often enough in silhouette or battlefield role; repeated runs still promise build fantasy more than they deliver it.
+  - The `960x540` arena against Wave 4-5 caps, shrike share, and twin-surge pressure still makes late combat read as compression management, not expressive routing. The player survives by constant traffic correction more than by making strong movement decisions.
+  Top Priority: Redesign each mid-run forge into a true two-slot loadout assembly from Wave 3 onward, with one weapon/pivot decision plus one separate subsystem/defense/utility decision that stays relevant across a much longer progression curve.
+  Why Now: Until every forge meaningfully grows a build package, extending the run will mostly stretch repetition and congestion.
+  Do Not Repeat: Do not count "conditional extra pick" or another `Mk.II` as solved depth.
+
 - 2026-03-21 19:05 KST
   Findings:
   - `buildForgeChoices()` shows more lanes now, but the run still only lets the player buy one isolated card per intermission; across a 5-wave structure that is not enough build throughput to create the compounding hunger, pivots, and payoff cadence a replayable action roguelite needs.
@@ -236,6 +247,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-21 20:05 KST
+  Changed: reworked the Wave 3+ forge cadence in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) into a guaranteed two-slot package instead of the old "extra pick only after choosing a system" flow. Mid-run forges now open with a first slot made of `빌드 고정` / `전환` offense decisions, then always rebuild into a second slot of `보조 시스템` / `생존/경제` cards after that first pick lands. In the same pass, both support families now extend to `Mk.III`, so the secondary lane can keep escalating through later stops instead of hard-ending at `Mk.II`. Updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to cover the new Wave 3 primary/follow-up split and the new tier-3 support progression.
+  Why: the newest critique’s top priority was to make Wave 3+ forges assemble a real package with one weapon/pivot commitment plus one separate subsystem/defense/utility decision, while also keeping subsystem tracks relevant longer. I took the highest-value bounded interpretation as "enforce the two slots structurally and extend existing support lines one more visible tier" because it directly improves build assembly without sprawling into a full 20-wave content expansion in one pass.
+  Follow-up risk: the second slot now has proper package identity, but only two support families still feed it. If later critique still finds subsystem planning too solved, the next pass should add a third family or lane-specific utility modules so repeated Wave 4-5 packages do not converge on the same few endings.
 
 - 2026-03-21 19:20 KST
   Changed: updated the Wave 3+ forge flow in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so taking a `보조 시스템` card no longer ends the stop immediately. Mid-run subsystem picks now open one follow-up package slot in the same forge, rebuilding the card row into non-system `빌드 고정` / `전환` / `생존/경제` options so the intermission can resolve as "install or upgrade a subsystem, then pair it with one more combat or sustain choice" instead of spending the whole visit on a single helper card. The forge subtitle now calls out that package rule while active, and [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts that Wave 3 opens the package flow, earlier waves do not, and the follow-up pool excludes a second subsystem pick.

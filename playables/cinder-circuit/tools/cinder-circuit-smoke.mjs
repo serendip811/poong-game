@@ -130,8 +130,11 @@ midrunChaseBuild.pendingCores = [];
 midrunChaseBuild.attunedCopies = 1;
 const genericForgeChoices = game.buildForgeChoices(midrunChaseBuild, () => 0, 180);
 assert.ok(!genericForgeChoices.some((choice) => choice.laneLabel === "빌드 고정" && choice.recipeLabel === "Kiln Bloom"));
-const midrunForgeChoices = game.buildForgeChoices(midrunChaseBuild, () => 0, 180, { nextWave: 2 });
-const midrunForgeFinisherChoice = midrunForgeChoices.find(
+const waveTwoForgeChoices = game.buildForgeChoices(midrunChaseBuild, () => 0, 180, { nextWave: 2 });
+assert.equal(waveTwoForgeChoices.length, 3);
+assert.ok(!waveTwoForgeChoices.some((choice) => choice.type === "system"));
+const waveThreeForgeChoices = game.buildForgeChoices(midrunChaseBuild, () => 0, 180, { nextWave: 3 });
+const midrunForgeFinisherChoice = waveThreeForgeChoices.find(
   (choice) => choice.laneLabel === "빌드 고정" && choice.recipeLabel === "Kiln Bloom"
 );
 assert.ok(midrunForgeFinisherChoice);
@@ -139,48 +142,23 @@ assert.equal(midrunForgeFinisherChoice.type, "core");
 assert.equal(midrunForgeFinisherChoice.coreId, "scatter");
 assert.equal(midrunForgeFinisherChoice.benchCopies, 0);
 assert.equal(midrunForgeFinisherChoice.tag, "FINISHER");
-assert.equal(midrunForgeChoices.length, 4);
-assert.equal(
-  JSON.stringify(midrunForgeChoices.filter((choice) => choice.laneLabel === "보조 시스템").map((choice) => choice.systemId).sort()),
-  JSON.stringify(["aegis_halo", "ember_ring"])
-);
+assert.equal(waveThreeForgeChoices.length, 3);
+assert.ok(waveThreeForgeChoices.every((choice) => choice.laneLabel !== "보조 시스템"));
+assert.ok(waveThreeForgeChoices.every((choice) => choice.laneLabel !== "생존/경제"));
 
-const installSystemChoice = midrunForgeChoices.find(
-  (choice) => choice.laneLabel === "보조 시스템" && choice.type === "system" && choice.systemId === "ember_ring"
-);
-assert.ok(installSystemChoice);
-assert.equal(installSystemChoice.systemTier, 1);
 const systemRun = {
   build: midrunChaseBuild,
   player: null,
   resources: { scrap: 999 },
   stats: {},
 };
-game.applyForgeChoice(systemRun, installSystemChoice);
-assert.equal(midrunChaseBuild.supportSystemId, "ember_ring");
-assert.equal(midrunChaseBuild.supportSystemTier, 1);
-assert.equal(game.computeSupportSystemStats(midrunChaseBuild).orbitCount, 1);
-assert.equal(game.computeSupportSystemStats(midrunChaseBuild).shotCooldown, 0);
-
-const upgradedSystemChoices = game.buildForgeChoices(midrunChaseBuild, () => 0, 180, { nextWave: 4 });
-const upgradeSystemChoice = upgradedSystemChoices.find(
-  (choice) => choice.laneLabel === "보조 시스템" && choice.type === "system"
-);
-assert.ok(upgradeSystemChoice);
-assert.ok(upgradedSystemChoices.some((choice) => choice.laneLabel === "생존/경제"));
-assert.equal(upgradeSystemChoice.systemTier, 2);
-game.applyForgeChoice(systemRun, upgradeSystemChoice);
-assert.equal(midrunChaseBuild.supportSystemTier, 2);
-assert.equal(game.computeSupportSystemStats(midrunChaseBuild).orbitCount, 2);
-assert.ok(game.computeSupportSystemStats(midrunChaseBuild).shotCooldown > 0);
-
 const packageBuild = game.createInitialBuild("relay_oath");
 packageBuild.pendingCores = [];
-const waveThreeForgeChoices = game.buildForgeChoices(packageBuild, () => 0, 180, { nextWave: 3 });
-const packageSystemChoice = waveThreeForgeChoices.find(
-  (choice) => choice.laneLabel === "보조 시스템" && choice.type === "system"
+const packageWaveThreeChoices = game.buildForgeChoices(packageBuild, () => 0, 180, { nextWave: 3 });
+const packagePrimaryChoice = packageWaveThreeChoices.find(
+  (choice) => choice.laneLabel === "빌드 고정" || choice.laneLabel === "전환"
 );
-assert.ok(packageSystemChoice);
+assert.ok(packagePrimaryChoice);
 assert.equal(
   game.shouldOpenForgePackage(
     {
@@ -188,24 +166,42 @@ assert.equal(
       pendingFinalForge: false,
       waveIndex: 1,
     },
-    packageSystemChoice
+    packagePrimaryChoice
   ),
   true
 );
 game.applyForgeChoice(
   { build: packageBuild, player: null, resources: { scrap: 999 }, stats: {} },
-  packageSystemChoice
+  packagePrimaryChoice
 );
 const packageFollowupChoices = game.buildForgeFollowupChoices(
   packageBuild,
   () => 0,
-  180 - packageSystemChoice.cost,
+  180 - packagePrimaryChoice.cost,
   { nextWave: 3, finalForge: false },
-  packageSystemChoice
+  packagePrimaryChoice
 );
 assert.ok(packageFollowupChoices.length >= 1);
-assert.ok(packageFollowupChoices.every((choice) => choice.type !== "system"));
-assert.ok(packageFollowupChoices.some((choice) => choice.laneLabel === "빌드 고정" || choice.laneLabel === "전환" || choice.laneLabel === "생존/경제"));
+assert.ok(
+  packageFollowupChoices.every(
+    (choice) => choice.laneLabel === "보조 시스템" || choice.laneLabel === "생존/경제"
+  )
+);
+assert.equal(
+  JSON.stringify(packageFollowupChoices.filter((choice) => choice.laneLabel === "보조 시스템").map((choice) => choice.systemId).sort()),
+  JSON.stringify(["aegis_halo", "ember_ring"])
+);
+const emberInstallChoice = packageFollowupChoices.find(
+  (choice) => choice.laneLabel === "보조 시스템" && choice.systemId === "ember_ring"
+);
+assert.ok(emberInstallChoice);
+game.applyForgeChoice(
+  { build: packageBuild, player: null, resources: { scrap: 999 }, stats: {} },
+  emberInstallChoice
+);
+const emberTierOne = game.computeSupportSystemStats(packageBuild);
+assert.equal(emberTierOne.orbitCount, 1);
+assert.equal(emberTierOne.shotCooldown, 0);
 assert.equal(
   game.shouldOpenForgePackage(
     {
@@ -213,14 +209,20 @@ assert.equal(
       pendingFinalForge: false,
       waveIndex: 0,
     },
-    packageSystemChoice
+    packagePrimaryChoice
   ),
   false
 );
 
 const aegisBuild = game.createInitialBuild("relay_oath");
 aegisBuild.pendingCores = [];
-const aegisInstallChoices = game.buildForgeChoices(aegisBuild, () => 0.99, 180, { nextWave: 2 });
+const aegisInstallChoices = game.buildForgeFollowupChoices(
+  aegisBuild,
+  () => 0.99,
+  180,
+  { nextWave: 3, finalForge: false },
+  packagePrimaryChoice
+);
 assert.equal(
   JSON.stringify(aegisInstallChoices.filter((choice) => choice.laneLabel === "보조 시스템").map((choice) => choice.systemId).sort()),
   JSON.stringify(["aegis_halo", "ember_ring"])
@@ -241,7 +243,13 @@ assert.equal(aegisTierOne.shotCooldown, 0);
 assert.ok(aegisTierOne.interceptRange > 0);
 assert.equal(aegisTierOne.interceptPulseDamage, 0);
 
-const aegisUpgradeChoices = game.buildForgeChoices(aegisBuild, () => 0, 180, { nextWave: 4 });
+const aegisUpgradeChoices = game.buildForgeFollowupChoices(
+  aegisBuild,
+  () => 0,
+  180,
+  { nextWave: 4, finalForge: false },
+  packagePrimaryChoice
+);
 const aegisUpgradeChoice = aegisUpgradeChoices.find(
   (choice) => choice.laneLabel === "보조 시스템" && choice.type === "system"
 );
@@ -256,6 +264,19 @@ const aegisTierTwo = game.computeSupportSystemStats(aegisBuild);
 assert.equal(aegisTierTwo.orbitCount, 2);
 assert.ok(aegisTierTwo.interceptRange > aegisTierOne.interceptRange);
 assert.ok(aegisTierTwo.interceptPulseDamage > 0);
+const aegisTierThreeChoice = game
+  .buildForgeFollowupChoices(aegisBuild, () => 0, 180, { nextWave: 5, finalForge: false }, packagePrimaryChoice)
+  .find((choice) => choice.laneLabel === "보조 시스템" && choice.type === "system");
+assert.ok(aegisTierThreeChoice);
+assert.equal(aegisTierThreeChoice.systemTier, 3);
+game.applyForgeChoice(
+  { build: aegisBuild, player: null, resources: { scrap: 999 }, stats: {} },
+  aegisTierThreeChoice
+);
+const aegisTierThree = game.computeSupportSystemStats(aegisBuild);
+assert.equal(aegisTierThree.orbitCount, 3);
+assert.ok(aegisTierThree.interceptRange > aegisTierTwo.interceptRange);
+assert.ok(aegisTierThree.interceptPulseRadius > aegisTierTwo.interceptPulseRadius);
 
 const emberBuild = game.createInitialBuild("relay_oath");
 emberBuild.coreId = "ember";

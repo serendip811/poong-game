@@ -9080,3 +9080,363 @@ Call out when the game needs bigger structural ambition, not just cleanup.
 Do not commit, do not push, and do not edit any file except `tasks/automation/cinder-circuit-loop.md`.
 
 mcp startup: no servers
+codex
+Reviewing the current `Cinder Circuit` loop and adjacent game docs first, then I’ll write a concise critique entry into the automation loop file without touching gameplay code.
+exec
+/bin/zsh -lc "sed -n '1,220p' tasks/automation/cinder-circuit-loop.md" in /Users/seren/workspace/poong-gameexec
+/bin/zsh -lc 'rg --files playables/cinder-circuit docs/games tasks/automation | sort' in /Users/seren/workspace/poong-game succeeded in 1ms:
+# Cinder Circuit Automation Loop
+
+This file is shared by two recurring Codex CLI jobs.
+
+- `critique`: reviews the current state of `playables/cinder-circuit/` and writes sharp feedback.
+- `improve`: reads the latest critique, implements one bounded improvement, and records what changed.
+
+## Rules
+
+- Keep entries newest-first inside each section.
+- Be concrete. Prefer specific files, mechanics, and next actions.
+- `critique` should not edit gameplay files.
+- `improve` should only act on the latest actionable critique unless blocked.
+
+## Latest Critique
+
+- 2026-03-21 17:52 KST
+  Findings:
+  - The run is still structurally a short 5-wave sprint in `WAVE_CONFIG`, with one arena, one hazard family, and four enemy types, so it does not yet prove the stamina, phase contrast, or encounter vocabulary needed for the stronger `20-30` wave future this game should be aiming toward.
+  - The new support-system lane is not enough yet: `SUPPORT_SYSTEM_DEFS` only contains `Ember Ring`, `createSupportSystemChoice()` always points back to that one line, and `shouldOfferSupportSystem()` tucks it into a late sustain slot, so it reads more like a helpful sidecar than a run-defining progression axis.
+ succeeded in 47ms:
+docs/games/cinder-circuit-design.md
+docs/games/cinder-circuit-source-analysis.md
+docs/games/cinder-circuit-source-application.md
+docs/games/deadstock-depot-canvas-port.md
+docs/games/deadstock-depot-content-expansion.md
+docs/games/deadstock-depot-design.md
+docs/games/deadstock-depot-source-analysis.md
+docs/games/hexfall-march-design.md
+docs/games/hexfall-march-source-analysis.md
+playables/cinder-circuit/game.js
+playables/cinder-circuit/index.html
+playables/cinder-circuit/styles.css
+playables/cinder-circuit/tools/cinder-circuit-endstate-audit.mjs
+playables/cinder-circuit/tools/cinder-circuit-smoke.mjs
+tasks/automation/cinder-circuit-critique-prompt.md
+tasks/automation/cinder-circuit-improve-prompt.md
+tasks/automation/cinder-circuit-loop.md
+tasks/automation/logs/critique-last.txt
+tasks/automation/logs/critique.log
+tasks/automation/logs/improve-last.txt
+codex
+I have the existing critique history. Next I’m checking the current implementation details that matter for replayability pressure, forge depth, and long-run ceiling so the new entry reflects what actually changed.
+exec
+/bin/zsh -lc 'rg -n "WAVE_CONFIG|SUPPORT_SYSTEM_DEFS|buildForgeChoices|computeWeaponStats|FINAL_CASHOUT_DURATION|createSupportSystemChoice|shouldOfferSupportSystem|createSupportSystemUpgradeChoice|Aegis Halo|Ember Ring|960|540|canvas|width|height" playables/cinder-circuit/game.js' in /Users/seren/workspace/poong-gameexec
+/bin/zsh -lc "sed -n '1,240p' docs/games/cinder-circuit-design.md" in /Users/seren/workspace/poong-game succeeded in 0ms:
+# Cinder Circuit Design
+
+## Overview
+
+- Working title: `Cinder Circuit`
+- Genre: 탑다운 아레나 슈터 + 웨이브 로그라이트
+- Platform: Desktop-first Canvas browser game
+- Session length: 7분 내외
+- Core promise: 불타는 회로 아레나를 돌며 괴물 떼와 폭주 지형을 함께 버티고, 웨이브 사이 포지에서 스크랩을 태워 무기 코어와 보강을 선택해 빌드를 터뜨린다.
+
+## Pillars
+
+- 읽히는 회피: 플레이어는 항상 무엇을 피해야 하고 어디로 빠져야 하는지 즉시 알아야 한다.
+- 드랍의 가치: 웨이브 중 얻은 코어가 다음 포지 선택을 바꾸며, 빌드 방향을 흔들어야 한다.
+- 짧은 러닝: 시작부터 결과까지 한 번에 완주 가능한 길이로 압축한다.
+
+## Core Fantasy
+
+플레이어는 무너진 제련 회로를 달리는 헌터다. 적을 파쇄해 잔열 코어를 줍고, 웨이브 사이 멈춰 선 포지에서 무기 회로를 갈아 끼우며 더 위험하지만 더 강한 화력을 만든다.
+
+ succeeded in 28ms:
+3:  const ARENA_WIDTH = 960;
+4:  const ARENA_HEIGHT = 540;
+7:  const WAVE_CONFIG = [
+139:  const MAX_WAVES = WAVE_CONFIG.length;
+141:  const FINAL_CASHOUT_DURATION = 12;
+401:  const SUPPORT_SYSTEM_DEFS = {
+412:          label: "Ember Ring",
+413:          title: "Ember Ring",
+433:          statusNote: "Ember Ring이 플레이어 주위를 돌며 근접 적을 긁어 안전 반경을 만든다.",
+437:          label: "Ember Ring Mk.II",
+438:          title: "Ember Ring Mk.II",
+441:            "Ember Ring을 2기 편대로 증설한다. 위성이 더 넓게 회전하며 주기적으로 근처 적에게 자동 점화 볼트를 발사한다.",
+452:          shotSpeed: 540,
+458:          statusNote: "Ember Ring Mk.II가 두 갈래 궤도로 전열을 긁고 자동 점화 볼트까지 보탠다.",
+472:          label: "Aegis Halo",
+473:          title: "Aegis Halo",
+493:          statusNote: "Aegis Halo가 들어오는 탄환을 먼저 지워 사격 압박을 끊는다.",
+497:          label: "Aegis Halo Mk.II",
+498:          title: "Aegis Halo Mk.II",
+501:            "Aegis Halo를 2기 편대로 증설한다. 요격 범위가 넓어지고 탄환을 끊을 때마다 짧은 방호 충격파로 근접 적까지 밀어낸다.",
+exec
+/bin/zsh -lc "sed -n '1,240p' docs/games/cinder-circuit-source-application.md" in /Users/seren/workspace/poong-game succeeded in 0ms:
+# Cinder Circuit Source Application
+
+## Purpose
+
+- Document how the currently available `Grind Survivors` source material should inform `Cinder Circuit`.
+- Convert the source docs into concrete design and balance rules for future implementation passes.
+- Keep the browser game distinct from the source instead of trying to clone the source systems one-to-one.
+
+## Source Set
+
+- Analysis date: `2026-03-20`
+- Source note:
+  - `grindsurvivors.wiki` appears to be a community wiki, not an official developer manual.
+  - It is still useful because the pages are internally consistent and line up with the official Steam/Xbox descriptions already checked.
+  - Treat the wiki as `high-signal design reference`, not as canon.
+- Pages reviewed:
+  - `https://grindsurvivors.wiki/beginners-guide/`
+  - `https://grindsurvivors.wiki/weapons/`
+  - `https://grindsurvivors.wiki/characters/`
+  - `https://grindsurvivors.wiki/forge/`
+codex
+The docs still frame this as a short-run MVP, but the review standard you asked for is higher than that. I’m checking whether the current code has actually broken out of that prototype ceiling or just added another lane inside the same short structure.
+exec
+/bin/zsh -lc "sed -n '1,180p' playables/cinder-circuit/game.js" in /Users/seren/workspace/poong-game succeeded in 0ms:
+(function () {
+  const GAME_TITLE = "Cinder Circuit";
+  const ARENA_WIDTH = 960;
+  const ARENA_HEIGHT = 540;
+  const PLAYER_RADIUS = 12;
+
+  const WAVE_CONFIG = [
+    {
+      id: "ignition",
+      label: "Wave 1 · Ignition",
+      duration: 56,
+      spawnBudget: 48,
+      activeCap: 18,
+      baseSpawnInterval: 0.92,
+      spawnIntervalMin: 0.28,
+      spawnAcceleration: 0.42,
+      eliteEvery: 12,
+      mix: {
+        scuttler: 0.7,
+        brute: 0.22,
+exec
+/bin/zsh -lc "sed -n '1580,1775p' playables/cinder-circuit/game.js" in /Users/seren/workspace/poong-game succeeded in 0ms:
+    }
+    return "Standard";
+  }
+
+  function getSupportSystemDef(build) {
+    if (!build || !build.supportSystemId) {
+      return null;
+    }
+    return SUPPORT_SYSTEM_DEFS[build.supportSystemId] || null;
+  }
+
+  function computeSupportSystemStats(build) {
+    const system = getSupportSystemDef(build);
+    if (!system) {
+      return null;
+    }
+    const tier = clamp(build.supportSystemTier || 0, 0, 2);
+    const tierDef = system.tiers[tier];
+    if (!tierDef) {
+      return null;
+exec
+/bin/zsh -lc "sed -n '2517,2715p' playables/cinder-circuit/game.js" in /Users/seren/workspace/poong-game succeeded in 0ms:
+  function buildForgeChoices(build, rng, scrapBank, options = null) {
+    if (options && options.finalForge) {
+      const finalChoices = buildFinalForgeChoices(build);
+      if (finalChoices) {
+        return finalChoices;
+      }
+    }
+    const random = typeof rng === "function" ? rng : Math.random;
+    const pending = getPendingCoreIds(build);
+    const choiceCatalog = new Set();
+    const commitCandidates = [];
+    const pivotCandidates = [];
+    const sustainCandidates = [];
+    const currentAffixIds = sanitizeAffixIds(build.affixes, getAffixCapacity(build));
+    const catalystReforgeChoice = createCatalystReforgeChoice(build);
+    const recycleChoice = createRecycleChoice(build);
+    const reforgeChoice = catalystReforgeChoice || createReforgeChoice(build, random);
+    const affixReforgeChoice = createAffixReforgeChoice(build, random);
+    const finisherChoice = createRecipeFinisherChoice(build);
+    const supportSystemChoice = shouldOfferSupportSystem(build, options)
+exec
+/bin/zsh -lc "sed -n '1924,2088p' playables/cinder-circuit/game.js" in /Users/seren/workspace/poong-game succeeded in 0ms:
+  function computeWeaponStats(build) {
+    const core = CORE_DEFS[build.coreId] || CORE_DEFS.ember;
+    const baseDamage = 24 + build.damageBonus;
+    const baseCooldown = clamp(0.28 - build.cooldownBonus, 0.12, 0.4);
+    const attunedCopies =
+      build.attunedCoreId === core.id ? Math.max(1, build.attunedCopies || 1) : 1;
+    const benchCopies = getBenchCount(build, core.id);
+    const benchSyncLevel = clamp(attunedCopies - 1, 0, 3);
+    const apexActive = benchSyncLevel >= 3;
+    const syncedBaseCooldown = clamp(
+      baseCooldown - benchSyncLevel * 0.012 - (apexActive ? 0.01 : 0),
+      0.12,
+      0.4
+    );
+    const syncedHeatFactor = clamp(
+      1 - benchSyncLevel * 0.06 - (apexActive ? 0.04 : 0),
+      0.72,
+      1
+    );
+    const stats = {
+codex
+I’ve got the key issue: the game now has two support families, but they’re still delivered as a late, mostly random sustain-side card inside the same 5-wave box. I’m adding a critique entry that pushes on agency, run length ceiling, combat space, and visible build payoff rather than treating the new halo as sufficient depth.
+file update
+M /Users/seren/workspace/poong-game/tasks/automation/cinder-circuit-loop.md
+@@ -16,2 +16,13 @@
+ 
++- 2026-03-21 18:22 KST
++  Findings:
++  - The run is still fundamentally a single 5-wave act in `WAVE_CONFIG`, so even with better forge readability it does not yet demonstrate the pacing contrast, recovery beats, or escalation architecture needed for a repeatable action roguelite that could plausibly stretch toward `20-30` waves.
++  - Adding `Aegis Halo` fixes the "only one support family" problem, but `createSupportSystemChoice()` still serves just one random system card and `shouldOfferSupportSystem()` only starts that lane at Wave 3+, so secondary progression remains a late side dish instead of a deliberate build plan players can chase.
++  - `buildForgeChoices()` still shelves support systems inside the sustain slot, which makes orbitals/shields compete with emergency stability rather than stand as a real power lane; the forge still does not create enough hunger around "commit weapon, commit subsystem, or pivot into a new package."
++  - The combat floor is still cramped by the `960x540` arena against Wave 4-5 density and Twin/Meltdown surges, so late pressure reads as traffic compression more than expressive movement, loot routing, or target-priority mastery.
++  - `computeWeaponStats()` and the current support tiers add useful throughput, but most level-ups still cash out as stat efficiency or modest helper upgrades; there are not enough visible breakpoints where a build suddenly gains a new firing pattern, extra orbitals, missile behavior, barrier rule, or other run-defining silhouette shift.
++  Top Priority: Rework the forge into a true multi-axis choice from mid-run onward by offering explicit subsystem decisions alongside weapon commitment, with at least two competing support/module cards at once and visible tier breakpoints that meaningfully change battlefield behavior.
++  Why Now: Until the player can intentionally assemble a package instead of taking a late random helper, longer runs will only expose how thin the build anticipation still is.
++  Do Not Repeat: Do not mark "second build axis solved" while subsystem selection is still late, singular, and mostly random.
++
+ - 2026-03-21 17:52 KST
+apply_patch(auto_approved=true) exited 0 in 200ms:
+Success. Updated the following files:
+M /Users/seren/workspace/poong-game/tasks/automation/cinder-circuit-loop.md
+file update:
+diff --git a/tasks/automation/cinder-circuit-loop.md b/tasks/automation/cinder-circuit-loop.md
+index ccf1ce4907951aad9fd10b452c87e83f1a141559..d00b23ea03f1bbce728997406f660e96c9cb7aa2
+--- a/tasks/automation/cinder-circuit-loop.md
++++ b/tasks/automation/cinder-circuit-loop.md
+@@ -14,6 +14,17 @@
+ 
+ ## Latest Critique
+ 
++- 2026-03-21 18:22 KST
++  Findings:
++  - The run is still fundamentally a single 5-wave act in `WAVE_CONFIG`, so even with better forge readability it does not yet demonstrate the pacing contrast, recovery beats, or escalation architecture needed for a repeatable action roguelite that could plausibly stretch toward `20-30` waves.
++  - Adding `Aegis Halo` fixes the "only one support family" problem, but `createSupportSystemChoice()` still serves just one random system card and `shouldOfferSupportSystem()` only starts that lane at Wave 3+, so secondary progression remains a late side dish instead of a deliberate build plan players can chase.
++  - `buildForgeChoices()` still shelves support systems inside the sustain slot, which makes orbitals/shields compete with emergency stability rather than stand as a real power lane; the forge still does not create enough hunger around "commit weapon, commit subsystem, or pivot into a new package."
++  - The combat floor is still cramped by the `960x540` arena against Wave 4-5 density and Twin/Meltdown surges, so late pressure reads as traffic compression more than expressive movement, loot routing, or target-priority mastery.
++  - `computeWeaponStats()` and the current support tiers add useful throughput, but most level-ups still cash out as stat efficiency or modest helper upgrades; there are not enough visible breakpoints where a build suddenly gains a new firing pattern, extra orbitals, missile behavior, barrier rule, or other run-defining silhouette shift.
++  Top Priority: Rework the forge into a true multi-axis choice from mid-run onward by offering explicit subsystem decisions alongside weapon commitment, with at least two competing support/module cards at once and visible tier breakpoints that meaningfully change battlefield behavior.
++  Why Now: Until the player can intentionally assemble a package instead of taking a late random helper, longer runs will only expose how thin the build anticipation still is.
++  Do Not Repeat: Do not mark "second build axis solved" while subsystem selection is still late, singular, and mostly random.
++
+ - 2026-03-21 17:52 KST
+   Findings:
+   - The run is still structurally a short 5-wave sprint in `WAVE_CONFIG`, with one arena, one hazard family, and four enemy types, so it does not yet prove the stamina, phase contrast, or encounter vocabulary needed for the stronger `20-30` wave future this game should be aiming toward.
+
+file update:
+diff --git a/tasks/automation/cinder-circuit-loop.md b/tasks/automation/cinder-circuit-loop.md
+index ccf1ce4907951aad9fd10b452c87e83f1a141559..d00b23ea03f1bbce728997406f660e96c9cb7aa2
+--- a/tasks/automation/cinder-circuit-loop.md
++++ b/tasks/automation/cinder-circuit-loop.md
+@@ -14,6 +14,17 @@
+ 
+ ## Latest Critique
+ 
++- 2026-03-21 18:22 KST
++  Findings:
++  - The run is still fundamentally a single 5-wave act in `WAVE_CONFIG`, so even with better forge readability it does not yet demonstrate the pacing contrast, recovery beats, or escalation architecture needed for a repeatable action roguelite that could plausibly stretch toward `20-30` waves.
++  - Adding `Aegis Halo` fixes the "only one support family" problem, but `createSupportSystemChoice()` still serves just one random system card and `shouldOfferSupportSystem()` only starts that lane at Wave 3+, so secondary progression remains a late side dish instead of a deliberate build plan players can chase.
++  - `buildForgeChoices()` still shelves support systems inside the sustain slot, which makes orbitals/shields compete with emergency stability rather than stand as a real power lane; the forge still does not create enough hunger around "commit weapon, commit subsystem, or pivot into a new package."
++  - The combat floor is still cramped by the `960x540` arena against Wave 4-5 density and Twin/Meltdown surges, so late pressure reads as traffic compression more than expressive movement, loot routing, or target-priority mastery.
++  - `computeWeaponStats()` and the current support tiers add useful throughput, but most level-ups still cash out as stat efficiency or modest helper upgrades; there are not enough visible breakpoints where a build suddenly gains a new firing pattern, extra orbitals, missile behavior, barrier rule, or other run-defining silhouette shift.
++  Top Priority: Rework the forge into a true multi-axis choice from mid-run onward by offering explicit subsystem decisions alongside weapon commitment, with at least two competing support/module cards at once and visible tier breakpoints that meaningfully change battlefield behavior.
++  Why Now: Until the player can intentionally assemble a package instead of taking a late random helper, longer runs will only expose how thin the build anticipation still is.
++  Do Not Repeat: Do not mark "second build axis solved" while subsystem selection is still late, singular, and mostly random.
++
+ - 2026-03-21 17:52 KST
+   Findings:
+   - The run is still structurally a short 5-wave sprint in `WAVE_CONFIG`, with one arena, one hazard family, and four enemy types, so it does not yet prove the stamina, phase contrast, or encounter vocabulary needed for the stronger `20-30` wave future this game should be aiming toward.
+
+codex
+The critique entry is in place. I’m doing a quick diff check to confirm only the loop file changed and that the new note is prepended in the right section.
+exec
+/bin/zsh -lc 'git diff -- tasks/automation/cinder-circuit-loop.md' in /Users/seren/workspace/poong-gameexec
+/bin/zsh -lc 'git diff --stat' in /Users/seren/workspace/poong-game succeeded in 71ms:
+diff --git a/tasks/automation/cinder-circuit-loop.md b/tasks/automation/cinder-circuit-loop.md
+index ccf1ce4..d00b23e 100644
+--- a/tasks/automation/cinder-circuit-loop.md
++++ b/tasks/automation/cinder-circuit-loop.md
+@@ -14,6 +14,17 @@ This file is shared by two recurring Codex CLI jobs.
+ 
+ ## Latest Critique
+ 
++- 2026-03-21 18:22 KST
++  Findings:
++  - The run is still fundamentally a single 5-wave act in `WAVE_CONFIG`, so even with better forge readability it does not yet demonstrate the pacing contrast, recovery beats, or escalation architecture needed for a repeatable action roguelite that could plausibly stretch toward `20-30` waves.
++  - Adding `Aegis Halo` fixes the "only one support family" problem, but `createSupportSystemChoice()` still serves just one random system card and `shouldOfferSupportSystem()` only starts that lane at Wave 3+, so secondary progression remains a late side dish instead of a deliberate build plan players can chase.
++  - `buildForgeChoices()` still shelves support systems inside the sustain slot, which makes orbitals/shields compete with emergency stability rather than stand as a real power lane; the forge still does not create enough hunger around "commit weapon, commit subsystem, or pivot into a new package."
++  - The combat floor is still cramped by the `960x540` arena against Wave 4-5 density and Twin/Meltdown surges, so late pressure reads as traffic compression more than expressive movement, loot routing, or target-priority mastery.
++  - `computeWeaponStats()` and the current support tiers add useful throughput, but most level-ups still cash out as stat efficiency or modest helper upgrades; there are not enough visible breakpoints where a build suddenly gains a new firing pattern, extra orbitals, missile behavior, barrier rule, or other run-defining silhouette shift.
++  Top Priority: Rework the forge into a true multi-axis choice from mid-run onward by offering explicit subsystem decisions alongside weapon commitment, with at least two competing support/module cards at once and visible tier breakpoints that meaningfully change battlefield behavior.
++  Why Now: Until the player can intentionally assemble a package instead of taking a late random helper, longer runs will only expose how thin the build anticipation still is.
++  Do Not Repeat: Do not mark "second build axis solved" while subsystem selection is still late, singular, and mostly random.
++
+ - 2026-03-21 17:52 KST
+ succeeded in 74ms:
+ tasks/automation/cinder-circuit-loop.md |  11 ++
+ tasks/automation/logs/critique.log      | 298 ++++++++++++++++++++++++++++++++
+ 2 files changed, 309 insertions(+)
+file update:
+diff --git a/tasks/automation/cinder-circuit-loop.md b/tasks/automation/cinder-circuit-loop.md
+index ccf1ce4907951aad9fd10b452c87e83f1a141559..d00b23ea03f1bbce728997406f660e96c9cb7aa2
+--- a/tasks/automation/cinder-circuit-loop.md
++++ b/tasks/automation/cinder-circuit-loop.md
+@@ -14,6 +14,17 @@
+ 
+ ## Latest Critique
+ 
++- 2026-03-21 18:22 KST
++  Findings:
++  - The run is still fundamentally a single 5-wave act in `WAVE_CONFIG`, so even with better forge readability it does not yet demonstrate the pacing contrast, recovery beats, or escalation architecture needed for a repeatable action roguelite that could plausibly stretch toward `20-30` waves.
++  - Adding `Aegis Halo` fixes the "only one support family" problem, but `createSupportSystemChoice()` still serves just one random system card and `shouldOfferSupportSystem()` only starts that lane at Wave 3+, so secondary progression remains a late side dish instead of a deliberate build plan players can chase.
++  - `buildForgeChoices()` still shelves support systems inside the sustain slot, which makes orbitals/shields compete with emergency stability rather than stand as a real power lane; the forge still does not create enough hunger around "commit weapon, commit subsystem, or pivot into a new package."
++  - The combat floor is still cramped by the `960x540` arena against Wave 4-5 density and Twin/Meltdown surges, so late pressure reads as traffic compression more than expressive movement, loot routing, or target-priority mastery.
++  - `computeWeaponStats()` and the current support tiers add useful throughput, but most level-ups still cash out as stat efficiency or modest helper upgrades; there are not enough visible breakpoints where a build suddenly gains a new firing pattern, extra orbitals, missile behavior, barrier rule, or other run-defining silhouette shift.
++  Top Priority: Rework the forge into a true multi-axis choice from mid-run onward by offering explicit subsystem decisions alongside weapon commitment, with at least two competing support/module cards at once and visible tier breakpoints that meaningfully change battlefield behavior.
++  Why Now: Until the player can intentionally assemble a package instead of taking a late random helper, longer runs will only expose how thin the build anticipation still is.
++  Do Not Repeat: Do not mark "second build axis solved" while subsystem selection is still late, singular, and mostly random.
++
+ - 2026-03-21 17:52 KST
+   Findings:
+   - The run is still structurally a short 5-wave sprint in `WAVE_CONFIG`, with one arena, one hazard family, and four enemy types, so it does not yet prove the stamina, phase contrast, or encounter vocabulary needed for the stronger `20-30` wave future this game should be aiming toward.
+
+codex
+Updated `tasks/automation/cinder-circuit-loop.md` with a new critique focused on the core ceiling problem: support systems still arrive too late and too randomly inside the same cramped 5-wave structure, so the game still lacks intentional multi-axis build hunger and enough combat space for a release-feeling loop.
+
+Added critique: make forge choices truly multi-axis from mid-run, with explicit subsystem competition, visible tier breakpoints, and stronger long-run escalation ambition.
+file update:
+diff --git a/tasks/automation/cinder-circuit-loop.md b/tasks/automation/cinder-circuit-loop.md
+index ccf1ce4907951aad9fd10b452c87e83f1a141559..d00b23ea03f1bbce728997406f660e96c9cb7aa2
+--- a/tasks/automation/cinder-circuit-loop.md
++++ b/tasks/automation/cinder-circuit-loop.md
+@@ -14,6 +14,17 @@
+ 
+ ## Latest Critique
+ 
++- 2026-03-21 18:22 KST
++  Findings:
++  - The run is still fundamentally a single 5-wave act in `WAVE_CONFIG`, so even with better forge readability it does not yet demonstrate the pacing contrast, recovery beats, or escalation architecture needed for a repeatable action roguelite that could plausibly stretch toward `20-30` waves.
++  - Adding `Aegis Halo` fixes the "only one support family" problem, but `createSupportSystemChoice()` still serves just one random system card and `shouldOfferSupportSystem()` only starts that lane at Wave 3+, so secondary progression remains a late side dish instead of a deliberate build plan players can chase.
++  - `buildForgeChoices()` still shelves support systems inside the sustain slot, which makes orbitals/shields compete with emergency stability rather than stand as a real power lane; the forge still does not create enough hunger around "commit weapon, commit subsystem, or pivot into a new package."
++  - The combat floor is still cramped by the `960x540` arena against Wave 4-5 density and Twin/Meltdown surges, so late pressure reads as traffic compression more than expressive movement, loot routing, or target-priority mastery.
++  - `computeWeaponStats()` and the current support tiers add useful throughput, but most level-ups still cash out as stat efficiency or modest helper upgrades; there are not enough visible breakpoints where a build suddenly gains a new firing pattern, extra orbitals, missile behavior, barrier rule, or other run-defining silhouette shift.
++  Top Priority: Rework the forge into a true multi-axis choice from mid-run onward by offering explicit subsystem decisions alongside weapon commitment, with at least two competing support/module cards at once and visible tier breakpoints that meaningfully change battlefield behavior.
++  Why Now: Until the player can intentionally assemble a package instead of taking a late random helper, longer runs will only expose how thin the build anticipation still is.
++  Do Not Repeat: Do not mark "second build axis solved" while subsystem selection is still late, singular, and mostly random.
++
+ - 2026-03-21 17:52 KST
+   Findings:
+   - The run is still structurally a short 5-wave sprint in `WAVE_CONFIG`, with one arena, one hazard family, and four enemy types, so it does not yet prove the stamina, phase contrast, or encounter vocabulary needed for the stronger `20-30` wave future this game should be aiming toward.
+
+tokens used
+36,083
+Updated `tasks/automation/cinder-circuit-loop.md` with a new critique focused on the core ceiling problem: support systems still arrive too late and too randomly inside the same cramped 5-wave structure, so the game still lacks intentional multi-axis build hunger and enough combat space for a release-feeling loop.
+
+Added critique: make forge choices truly multi-axis from mid-run, with explicit subsystem competition, visible tier breakpoints, and stronger long-run escalation ambition.
+[2026-03-21 10:31:01] critique done
