@@ -1724,7 +1724,8 @@
       preferredModIds: ["drive_sync", "arc_array", "step_servos"],
       preferredAffixIds: ["arc_link", "overclock"],
       reservedLane: "공세 모듈",
-      reserveText: "남은 support bay는 공세 모듈 전용으로 잠기며 방호/거점 시스템 신규 장착이 끊긴다.",
+      reserveText:
+        "초반 두 support bay는 공세 모듈 쪽으로 강하게 기울고, Late Break Armory에서 열린 마지막 bay 1칸만 방호/거점 시스템까지 우회 장착할 수 있다.",
       favoredCoreId: "ricochet",
       lateCapstoneId: "relay_storm_lattice",
       apply(build) {
@@ -1747,7 +1748,8 @@
       preferredModIds: ["armor_mesh", "magnet_rig", "reactor_cap"],
       preferredAffixIds: ["salvage_link", "thermal_weave"],
       reservedLane: "보조 시스템",
-      reserveText: "남은 support bay는 포탑/방호 전용으로 잠기며 공세 모듈 신규 장착이 끊긴다.",
+      reserveText:
+        "초반 두 support bay는 포탑/방호 쪽으로 강하게 기울고, Late Break Armory에서 열린 마지막 bay 1칸만 공세 모듈까지 우회 장착할 수 있다.",
       favoredCoreId: "scatter",
       lateCapstoneId: "bulwark_foundry",
       apply(build) {
@@ -1770,7 +1772,8 @@
       preferredModIds: ["rail_sleeve", "arc_array", "heat_sink"],
       preferredAffixIds: ["phase_rounds", "arc_link"],
       reservedLane: "공세 모듈",
-      reserveText: "남은 support bay는 포격 모듈 전용으로 잠기며 방호/거점 시스템 신규 장착이 끊긴다.",
+      reserveText:
+        "초반 두 support bay는 포격 모듈 쪽으로 강하게 기울고, Late Break Armory에서 열린 마지막 bay 1칸만 방호/거점 시스템까지 우회 장착할 수 있다.",
       favoredCoreId: "lance",
       lateCapstoneId: "sky_lance_grid",
       apply(build) {
@@ -3993,12 +3996,50 @@
       : null;
   }
 
+  function getDoctrinePreferredSystemIds(doctrine) {
+    if (!doctrine) {
+      return [];
+    }
+    return Array.from(
+      new Set(
+        [doctrine.starterSystemId, ...(Array.isArray(doctrine.preferredSystemIds) ? doctrine.preferredSystemIds : [])]
+          .filter(Boolean)
+      )
+    );
+  }
+
+  function getDoctrineWildcardSystemAllowance(build) {
+    if (!build || !build.bastionDoctrineId) {
+      return 0;
+    }
+    return Math.max(0, getSupportBayCapacity(build) - MAX_SUPPORT_BAYS);
+  }
+
+  function countDoctrineWildcardSystems(build, doctrine = null) {
+    if (!build) {
+      return 0;
+    }
+    const activeDoctrine = doctrine || getBastionDoctrineDef(build);
+    if (!activeDoctrine) {
+      return 0;
+    }
+    const preferredSystemIds = new Set(getDoctrinePreferredSystemIds(activeDoctrine));
+    return getInstalledSupportSystems(build).reduce(
+      (count, entry) => count + (preferredSystemIds.has(entry.id) ? 0 : 1),
+      0
+    );
+  }
+
   function doctrineAllowsSystemInstall(build, systemId) {
     const doctrine = build && build.bastionDoctrineId ? getBastionDoctrineDef(build) : null;
-    if (!doctrine || !Array.isArray(doctrine.preferredSystemIds) || doctrine.preferredSystemIds.length === 0) {
+    const preferredSystemIds = getDoctrinePreferredSystemIds(doctrine);
+    if (!doctrine || preferredSystemIds.length === 0) {
       return true;
     }
-    return doctrine.preferredSystemIds.includes(systemId);
+    if (preferredSystemIds.includes(systemId)) {
+      return true;
+    }
+    return countDoctrineWildcardSystems(build, doctrine) < getDoctrineWildcardSystemAllowance(build);
   }
 
   function doctrineAllowsModChoice(build, modId) {
@@ -5460,7 +5501,7 @@
       tag: "DOCTRINE",
       title: doctrine.label,
       description:
-        `${doctrine.description} 즉시 ${spikeChoice.title}을(를) 할인 장착하고, ${doctrine.reserveText} 이후 포지 후보도 ${doctrine.short} 방향으로만 열린다.${lateCapstone ? ` Wave 4-6에는 ${lateCapstone.title} Frame 추격 카드가 먼저 열리고, Wave 9 Late Break Armory에서는 ${lateCapstone.title} 교리 완성 카드가 열린다.` : ""}`,
+        `${doctrine.description} 즉시 ${spikeChoice.title}을(를) 할인 장착하고, ${doctrine.reserveText} 이후 포지 후보도 ${doctrine.short} 방향을 먼저 민다.${lateCapstone ? ` Wave 4-6에는 ${lateCapstone.title} Frame 추격 카드가 먼저 열리고, Wave 9 Late Break Armory에서는 ${lateCapstone.title} 교리 완성 카드가 열린다.` : ""}`,
       slotText: `교리 채택 · ${spikeChoice.title} · ${doctrine.short} · ${doctrine.reservedLane}`,
       cost: spikeChoice.cost,
       laneLabel: "교리 채택",
@@ -5514,7 +5555,7 @@
       tag: "ARCH",
       title: doctrine.label,
       description:
-        `${doctrine.description} 즉시 주무장을 ${weaponChoice.title} 형태로 재배선하고 ${starterTier.title}을(를) 무료 설치해 ${doctrine.branchFamilyLabel} 계통을 바로 켠다. ${doctrine.reserveText} 이후 포지 후보도 ${doctrine.short} 쪽으로만 기울인다.${lateCapstone ? ` Wave 4-6에는 ${lateCapstone.title} Frame 추격 카드가 먼저 열리고, Late Break Armory에서는 ${lateCapstone.title} 완성 카드까지 열린다.` : ""}`,
+        `${doctrine.description} 즉시 주무장을 ${weaponChoice.title} 형태로 재배선하고 ${starterTier.title}을(를) 무료 설치해 ${doctrine.branchFamilyLabel} 계통을 바로 켠다. ${doctrine.reserveText} 이후 포지 후보도 ${doctrine.short} 쪽을 먼저 민다.${lateCapstone ? ` Wave 4-6에는 ${lateCapstone.title} Frame 추격 카드가 먼저 열리고, Late Break Armory에서는 ${lateCapstone.title} 완성 카드까지 열린다.` : ""}`,
       slotText: `아키텍처 잠금 · ${weaponChoice.title} + ${starterTier.title} · ${doctrine.short}`,
       cost: 0,
       laneLabel: "아키텍처",
@@ -6945,7 +6986,9 @@
     if (!isFinalForge && isLateBreakArmory(forgeOptions) && unlockLateSupportBay(state.build)) {
       state.build.upgrades.push("Aux Bay Uplink");
       pushCombatFeed(
-        "Wave 8 돌파. Late Break Armory가 열리며 세 번째 support bay가 해금된다.",
+        state.build.bastionDoctrineId
+          ? "Wave 8 돌파. Late Break Armory가 열리며 세 번째 support bay와 교리 우회 베이 1칸이 함께 해금된다."
+          : "Wave 8 돌파. Late Break Armory가 열리며 세 번째 support bay가 해금된다.",
         "ARMORY"
       );
     }
@@ -6966,7 +7009,7 @@
       isFinalForge
         ? "최종 웨이브 정리 완료. 마지막 포지에서 최종 각인과 화력 배치를 마감한다."
         : isLateBreakArmory(forgeOptions)
-          ? "Wave 8 돌파. Late Break Armory에서 6장 중 대형 카드 두 장을 골라 세 번째 베이까지 포함한 4웨이브짜리 Act 3 화력 틀을 잠근다."
+          ? "Wave 8 돌파. Late Break Armory에서 6장 중 대형 카드 두 장을 골라 세 번째 베이와 교리 wildcard까지 포함한 4웨이브짜리 Act 3 화력 틀을 뒤튼다."
         : draftType === "armory"
           ? "Wave 4 돌파. Act Break Armory에서 6장 중 대형 카드 두 장을 골라 4웨이브짜리 Act 2 빌드 정체성을 일찍 고정한다."
           : "웨이브 종료. 포지 카드로 다음 화력 축을 고른다.",
@@ -7251,16 +7294,16 @@
       pushCombatFeed(
         state.forgeDraftType === "architecture_draft"
           ? choice.action === "architecture_doctrine"
-            ? `${choice.doctrineLabel} 적용. ${choice.doctrineChoice ? choice.doctrineChoice.title : "starter subsystem"}를 즉시 설치하고 이후 포지를 해당 아키텍처 계통으로 잠근 채 다음 웨이브를 연다.`
-            : `${grantLabel} 적용. 아키텍처를 잠근 채 다음 웨이브를 연다.`
+            ? `${choice.doctrineLabel} 적용. ${choice.doctrineChoice ? choice.doctrineChoice.title : "starter subsystem"}를 즉시 설치하고 이후 포지를 해당 아키텍처 쪽으로 기울인 채 다음 웨이브를 연다.`
+            : `${grantLabel} 적용. 아키텍처 방향을 기울인 채 다음 웨이브를 연다.`
         : state.forgeDraftType === "bastion_draft"
           ? choice.type === "fallback"
             ? `${grantLabel} 적용. Bastion Draft를 안정화로 넘기고 다음 웨이브를 바로 연다.`
             : choice.action === "bastion_pact"
               ? `${grantLabel} 적용. 최대 체력을 깎아 고철을 쥐고 다음 웨이브를 연다.`
               : choice.action === "bastion_doctrine"
-                ? `${choice.doctrineLabel} 적용. 즉시 ${choice.doctrineChoice ? choice.doctrineChoice.title : "spike"}를 잠그고 이후 포지를 해당 교리 쪽으로 기울인 채 다음 웨이브를 연다.`
-              : `${grantLabel} 적용. 고철 ${choice.cost}을 태워 ${choice.title}을 일찍 잠그고 다음 웨이브를 강행한다.`
+                ? `${choice.doctrineLabel} 적용. 즉시 ${choice.doctrineChoice ? choice.doctrineChoice.title : "spike"}를 확보하고 이후 포지를 해당 교리 쪽으로 기울인 채 다음 웨이브를 연다.`
+              : `${grantLabel} 적용. 고철 ${choice.cost}을 태워 ${choice.title}을 일찍 확보하고 다음 웨이브를 강행한다.`
           : state.forgeDraftType === "catalyst_draft"
             ? choice.type === "fallback"
               ? `${grantLabel} 적용. 촉매는 쥔 채로 상태만 정리하고 다음 웨이브를 연다.`
@@ -9654,12 +9697,12 @@
         : state.forgeDraftType === "bastion_draft"
         ? state.build.bastionDoctrineId
           ? "Bastion Draft · 기존 교리 위에 추가 spike 또는 고통 계약을 더 얹어 Act 2 greed를 강제한다"
-          : "Bastion Draft · 시그니처 교리 1장, 고통 계약 1장, 무료 안정화 1장 중 1픽으로 Act 2 posture와 future bay를 잠근다"
+          : "Bastion Draft · 시그니처 교리 1장, 고통 계약 1장, 무료 안정화 1장 중 1픽으로 Act 2 posture를 기울이고 late wildcard bay를 예고한다"
         : state.forgeDraftType === "catalyst_draft"
         ? "Catalyst Crucible · 회수한 촉매를 지금 태워 Act 3 본편을 괴물 화력이나 운영형 안정화로 먼저 고정한다"
         : state.forgeDraftType === "armory"
         ? isLateBreakArmory(forgeOptions)
-          ? `${armoryLabel} ${state.forgeStep}/${state.forgeMaxSteps} · 6장 중 2픽, 세 번째 베이와 교리 완성 카드까지 열려 최종 전장 posture를 잠근다`
+          ? `${armoryLabel} ${state.forgeStep}/${state.forgeMaxSteps} · 6장 중 2픽, 세 번째 베이와 교리 wildcard·완성 카드까지 열려 최종 전장 posture를 뒤튼다`
           : `${armoryLabel} ${state.forgeStep}/${state.forgeMaxSteps} · 6장 중 2픽, 대형 화력이 과투입되어 안전한 lane 보장이 없다`
         : state.forgeMaxSteps > 1
         ? `패키지 ${state.forgeStep}/${state.forgeMaxSteps} · 1슬롯 화력/전환, 2슬롯 시스템/안정화`
@@ -9671,18 +9714,18 @@
         ? `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 세 장은 완성, 촉매 연소, 안정화로 고정되며 각 카드가 바로 이어질 12초 cash-out 시험을 미리 보여준다.`
         : `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 촉매가 없어도 비상 점화와 안정화 fail-soft 카드가 열리며, 각 카드가 다른 12초 cash-out 시험으로 바로 이어진다.`
       : state.forgeDraftType === "architecture_draft"
-        ? `Wave 3 진입 직전 Architecture Draft다. 세 장기 교리 중 하나를 골라 주무장을 즉시 해당 교리 형태로 재배선하고 starter subsystem을 무료 설치하며, 남은 support bay와 이후 포지 후보를 그 계통으로 잠근다. 지금부터 이번 런이 어떤 최종 병기로 자랄지 바로 드러난다.`
+        ? `Wave 3 진입 직전 Architecture Draft다. 세 장기 교리 중 하나를 골라 주무장을 즉시 해당 교리 형태로 재배선하고 starter subsystem을 무료 설치하며, 초반 두 support bay와 이후 포지 후보를 그 계통 쪽으로 강하게 기울인다. Late Break Armory가 열리면 마지막 bay 1칸만 우회 조합용으로 풀린다. 지금부터 이번 런이 어떤 최종 병기로 자랄지 바로 드러난다.`
       : state.forgeDraftType === "field_grant"
         ? `고철 ${Math.round(state.resources.scrap)} 보유. Field Cache다. 할인된 즉시 장착 2장과 무료 Emergency Vent 중 하나를 고른다. 지금 스파이크를 사서 당길지, 고철을 쥐고 다음 큰 포지까지 버틸지 직접 판단해야 한다.`
         : state.forgeDraftType === "bastion_draft"
         ? state.build.bastionDoctrineId
           ? `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 이미 채택한 교리 위에 추가 spike 1장과 Siege Salvage Pact, 무료 안정화가 다시 뜬다. 지금 더 깊게 묶일지, 체력을 태워 greed를 당길지 결정한다.`
-          : `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 한 장은 시그니처 전용 교리라 즉시 spike를 잠그면서 남은 support bay와 이후 포지 후보까지 한 계통으로 고정하고, 한 장은 최대 체력을 깎고 고철을 당겨오는 Siege Salvage Pact, 마지막 한 장은 무료 안정화다. Act 2 posture를 잠글지, 더 아프게 탐욕할지 직접 정한다.`
+          : `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 한 장은 시그니처 전용 교리라 즉시 spike를 확보하면서 초반 support bay와 이후 포지 후보를 한 계통 쪽으로 강하게 기울이고, Late Break Armory에서는 마지막 bay 1칸만 우회 조합용으로 풀어 준다. 한 장은 최대 체력을 깎고 고철을 당겨오는 Siege Salvage Pact, 마지막 한 장은 무료 안정화다. Act 2 posture를 잠글지, 더 아프게 탐욕할지 직접 정한다.`
         : state.forgeDraftType === "catalyst_draft"
         ? `고철 ${Math.round(state.resources.scrap)} 보유. Catalyst Crucible이다. 이제 막 회수한 촉매를 무료로 점화하거나 안정화해 남은 Act 3 웨이브를 완성형 회로로 직접 소모한다. 최종 포지까지 묵혀 두는 대신 지금부터 괴물 형태를 실제 전장에 투입한다.`
         : state.forgeDraftType === "armory"
         ? isLateBreakArmory(forgeOptions)
-          ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 8을 넘기며 ${armoryLabel}가 열린다. 세 번째 support bay가 해금됐고, 교리를 택한 런이라면 doctrine apex 카드도 함께 열려 이번 포지 2픽이 최종 전장 posture 자체를 바꾼다.`
+          ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 8을 넘기며 ${armoryLabel}가 열린다. 세 번째 support bay가 해금됐고, 교리를 택한 런이라면 마지막 bay 1칸이 우회 조합용 wildcard로 풀리며 doctrine apex 카드도 함께 열려 이번 포지 2픽이 최종 전장 posture 자체를 바꾼다.`
           : `고철 ${Math.round(state.resources.scrap)} 보유. Wave 4를 넘기면 일반 패키지 대신 ${armoryLabel}가 열린다. 이번 포지는 6장 중 2장을 고르며, 주무장 진화와 공세 카드가 여러 장 겹쳐 떠 4웨이브짜리 Act 2 운영을 일찍 잠근다.`
       : `고철 ${Math.round(state.resources.scrap)} 보유. 장착은 무기 등급을 올리거나 바꾸고, 각인은 속성을 붙이며, 재구성/분해는 보관 코어를 정리한다. ${packageSummary}.`;
     elements.forgeContext.innerHTML = `

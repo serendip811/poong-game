@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 15:05 KST
+  Findings:
+  - The run is longer, but the build game is still too pre-composed. `preferredSystemIds`, `doctrineAllowsSystemInstall()`, and doctrine `reserveText` keep support bays on narrow rails, so many late choices are confirmations of a curated kit instead of dangerous rerun-defining combinations.
+  - The strongest doctrine payoffs still lean on autonomous helpers. `Relay Storm Lattice`, `Bulwark Foundry`, and `Sky Lance Grid` all read first as drone/turret/artillery engines, which keeps the main gun from being the obvious reason to replay a doctrine.
+  - `createDoctrineChaseChoice()` bundles the favored weapon and favored system into one discounted package, which speeds progression but removes greed and doubt. Players are too often handed the intended build instead of gambling into it.
+  - Two support bays, a late third bay, and doctrine lane reservations keep end states readable but also too clean. For a game aspiring to a real `20-30` wave future, the current build ceiling still looks like a finished template, not a machine that can become excessive, unstable, and story-worthy.
+  Top Priority: Replace doctrine hard-locking with softer incentives and one wildcard build lane, so each doctrine still has a signature direction but late armories can produce illegal-feeling cross-system combinations that materially change how Waves `9-12` are played.
+  Why Now: Until builds can surprise the player instead of mostly arriving pre-authored, extra waves will extend content without creating real rerun hunger.
+  Do Not Repeat: Do not answer this with another doctrine-exclusive helper capstone if the most exciting runs still cannot break their assigned support rails.
+
 - 2026-03-22 02:30 KST
   Findings:
   - The code now sells three distinct Act 3 doctrine brackets, but the rerun fantasy is still too text-authored. `Relay Hunt`, `Foundry Hold`, and `Lance Siege` remix pacing and target bias, yet all three still lean on the same late roster families and hazard vocabulary, so the player learns variants of one answer instead of craving different endgames.
@@ -551,6 +561,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 15:20 KST
+  Changed: softened doctrine support-bay hard-locking in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) by turning the late third bay into a real wildcard lane for doctrine runs. `doctrineAllowsSystemInstall()` no longer blocks every off-doctrine subsystem forever; instead, doctrine builds keep their first two bays strongly biased toward their signature families, then `Late Break Armory` unlocks exactly one off-rail support install through the third bay. I also rewrote the doctrine/armory/feed subtitle copy so the game now tells the player that the doctrine is an early bias with a late illegal-combo release valve, not a total bay lock.
+  Why: the newest critique’s Top Priority was to replace doctrine hard-locking with softer incentives plus one wildcard build lane, so Waves `9-12` can generate cross-system end states instead of clean pre-authored kits. The highest-value bounded interpretation was to reuse the existing late third-bay unlock as that wildcard slot, because it directly changes late-run build ceilings without widening this pass into a larger forge-pool rewrite.
+  Follow-up risk: this pass only softens support-system rails. Doctrine mods, affixes, and the discounted `doctrine_chase` bundle are still more authored than truly dangerous, so if critique still finds late builds too curated the next pass should unbundle the chase package or relax one more doctrine-gated draft layer instead of adding another capstone.
 
 - 2026-03-22 15:10 KST
   Changed: rebuilt one concrete doctrine ladder in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Storm Artillery` now upgrades the main `Lance` itself at each promised milestone instead of letting support automation carry the branch. Once the doctrine is locked, the gun gains a doctrine-only firing form on top of its normal evolution path: `Wave 3` doctrine lock now adds the `Siege Frame` outer rails, the `Wave 4-6` doctrine chase upgrades that into `Thunder Rack`, and the `Wave 9` doctrine apex turns it into `Sky Lance Battery`, with each step adding a visibly wider lance lattice plus direct gun-stat escalation. I also surfaced the doctrine form in the HUD/forge summaries and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new `Storm Artillery` weapon stages at doctrine lock, chase, and apex.
