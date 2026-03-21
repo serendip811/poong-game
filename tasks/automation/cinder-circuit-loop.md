@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-21 23:05 KST
+  Findings:
+  - The run now reaches Wave 8 with a larger Act 2 arena and bastion hazards, but the enemy game is still fundamentally `scuttler + brute + shrike + elite` all the way through. Territory cores are a better hazard, not a new combat faction, so the back half still risks reading as the same soup under wider spacing.
+  - Build breadth improved, yet the payoff ladder is still too short for real rerun hunger: `MAX_WEAPON_EVOLUTION_TIER` remains `2`, the new offensive modules do not unlock until Wave 6, and the late run therefore spends too few forge beats in a true "my build is coming online" state.
+  - The `1280x720` room gives breathing room, but the current pressure shape still leans heavily on shrike-heavy pursuit plus anchor cleanup. Players get more room to kite, not enough reasons to claim, abandon, or retake specific parts of the arena for different build types.
+  - The design doc still frames the game as a `5웨이브` short run even though the implementation has already stretched past that. That mismatch is dangerous because it encourages additive prototype thinking instead of an authored two-act or three-bracket progression model with expected power tiers.
+  Top Priority: Pull a real Act 2 power spike forward by unlocking a Wave 4 forge bracket that offers the first offensive utility modules and a third weapon evolution tier, so players enter the back half chasing a visible end-state instead of merely extending Wave 5 logic.
+  Why Now: The run is finally long enough that its missing long-range payoff structure is more damaging than any local tuning flaw.
+  Do Not Repeat: Do not answer this with only Wave 9-10, more bastions, or more shrike pressure if the player still has too little late-build runway to anticipate.
+
 - 2026-03-21 14:00 KST
   Findings:
   - Waves 6-8 and the `1280x720` second-act arena are a real structural step, but Act 2 still fights with the same four-enemy roster and the same surge-family logic. Right now the longer run mostly feels like a stretched Wave 5 exam, not a new combat phase players would hunger to reach again.
@@ -298,6 +308,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-21 23:25 KST
+  Changed: pulled the Act 2 power spike forward in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) by moving the `Seeker Array` and `Volt Drones` offensive-module unlocks from Wave 6 to the Wave 4 forge bracket, and by extending every core in `WEAPON_EVOLUTION_DEFS` to a third evolution tier with visibly larger projectile patterns. `Ember` now reaches `Solar Crown`, `Scatter` reaches `Ashen Typhoon`, `Lance` reaches `Aurora Lattice`, and `Ricochet` reaches `Mirror Cathedral`, so the mid-run forge can expose a clearer "I want to see the last form" chase before the back half starts. The same pass updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the Wave 4 module unlock timing and tier-3 evolution progression.
+  Why: the newest critique’s Top Priority was to create a Wave 4 forge bracket that brings offensive utility modules online earlier and restores a third weapon evolution tier, because the run had become long enough for the missing late-build runway to matter more than local tuning. I took the highest-value bounded interpretation as "pull the existing utility lane forward and add a new visible apex tier to all four cores" because it increases Act 2 anticipation and build identity without widening this pass into new enemies, new waves, or a larger forge rewrite.
+  Follow-up risk: the build ceiling is now visibly higher, but players can still miss some apex forms if scrap income or forge frequency does not support reaching tier 3 consistently enough. If the next critique still sees the back half as too maintenance-heavy, it should look at how often Wave 4-6 forges can realistically finance both an offensive module lane and the new apex weapon chase.
 
 - 2026-03-21 23:05 KST
   Changed: turned the Wave 6-8 act hazards in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) into persistent destructible `territory` bastions instead of more short-lived surge circles. `Afterglow`, `Breakline`, and `Crownfire` now spawn large claimed zones with visible central cores, periodic bastion shots, and local enemy rally pressure; shooting the core collapses the zone early, which adds a route-breaking target-priority problem to Act 2 rather than only asking for wider kiting. The same pass updated the hazard HUD copy to explain that active cores can be destroyed, and [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts that Wave 6+ hazards use the new territory profile.

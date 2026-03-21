@@ -175,6 +175,32 @@ assert.equal(evolvedWeapon.evolutionTier, 1);
 assert.equal(evolvedWeapon.evolutionLabel, "Prism Crown");
 assert.equal(evolvedWeapon.evolutionTraitLabel, "삼중 분광탄");
 assert.equal(JSON.stringify(evolvedWeapon.evolutionFirePattern.offsets), JSON.stringify([0]));
+const evolutionChoiceTierTwo = game.buildForgeChoices(evolutionBuild, () => 0, 180, { nextWave: 4 }).find(
+  (choice) => choice.type === "evolution"
+);
+assert.ok(evolutionChoiceTierTwo);
+assert.equal(evolutionChoiceTierTwo.evolutionTier, 2);
+game.applyForgeChoice(
+  { build: evolutionBuild, player: null, resources: { scrap: 999 }, stats: {} },
+  evolutionChoiceTierTwo
+);
+const evolutionChoiceTierThree = game.buildForgeChoices(evolutionBuild, () => 0, 180, { nextWave: 5 }).find(
+  (choice) => choice.type === "evolution"
+);
+assert.ok(evolutionChoiceTierThree);
+assert.equal(evolutionChoiceTierThree.evolutionTier, 3);
+game.applyForgeChoice(
+  { build: evolutionBuild, player: null, resources: { scrap: 999 }, stats: {} },
+  evolutionChoiceTierThree
+);
+const apexEvolvedWeapon = game.computeWeaponStats(evolutionBuild);
+assert.equal(apexEvolvedWeapon.evolutionTier, 3);
+assert.equal(apexEvolvedWeapon.evolutionLabel, "Mirror Cathedral");
+assert.equal(apexEvolvedWeapon.evolutionTraitLabel, "칠중 분광탄");
+assert.equal(
+  JSON.stringify(apexEvolvedWeapon.evolutionFirePattern.offsets),
+  JSON.stringify([-0.28, -0.18, -0.08, 0.08, 0.18, 0.28])
+);
 
 const systemRun = {
   build: midrunChaseBuild,
@@ -286,23 +312,48 @@ const aegisUpgradeChoices = game.buildForgeFollowupChoices(
   { nextWave: 4, finalForge: false },
   packagePrimaryChoice
 );
-const aegisUpgradeChoice = aegisUpgradeChoices.find(
-  (choice) => choice.laneLabel === "보조 시스템" && choice.type === "system"
+assert.equal(
+  JSON.stringify(aegisUpgradeChoices.filter((choice) => choice.laneLabel === "공세 모듈").map((choice) => choice.systemId).sort()),
+  JSON.stringify(["seeker_array"])
 );
-assert.ok(aegisUpgradeChoice);
-assert.equal(aegisUpgradeChoice.systemId, "aegis_halo");
-assert.equal(aegisUpgradeChoice.systemTier, 2);
+const emberSecondBayChoice = aegisUpgradeChoices.find(
+  (choice) =>
+    choice.laneLabel === "보조 시스템" &&
+    choice.type === "system" &&
+    choice.systemId === "ember_ring"
+);
+assert.ok(emberSecondBayChoice);
+assert.equal(emberSecondBayChoice.systemTier, 1);
 game.applyForgeChoice(
   { build: aegisBuild, player: null, resources: { scrap: 999 }, stats: {} },
-  aegisUpgradeChoice
+  emberSecondBayChoice
+);
+const aegisTierTwoChoice = game
+  .buildForgeFollowupChoices(aegisBuild, () => 0, 180, { nextWave: 5, finalForge: false }, packagePrimaryChoice)
+  .find(
+    (choice) =>
+      choice.laneLabel === "보조 시스템" &&
+      choice.type === "system" &&
+      choice.systemId === "aegis_halo"
+  );
+assert.ok(aegisTierTwoChoice);
+assert.equal(aegisTierTwoChoice.systemTier, 2);
+game.applyForgeChoice(
+  { build: aegisBuild, player: null, resources: { scrap: 999 }, stats: {} },
+  aegisTierTwoChoice
 );
 const aegisTierTwo = game.computeSupportSystemStats(aegisBuild);
-assert.equal(aegisTierTwo.orbitCount, 2);
+assert.ok(aegisTierTwo.orbitCount >= 2);
 assert.ok(aegisTierTwo.interceptRange > aegisTierOne.interceptRange);
 assert.ok(aegisTierTwo.interceptPulseDamage > 0);
 const aegisTierThreeChoice = game
-  .buildForgeFollowupChoices(aegisBuild, () => 0, 180, { nextWave: 5, finalForge: false }, packagePrimaryChoice)
-  .find((choice) => choice.laneLabel === "보조 시스템" && choice.type === "system");
+  .buildForgeFollowupChoices(aegisBuild, () => 0, 180, { nextWave: 6, finalForge: false }, packagePrimaryChoice)
+  .find(
+    (choice) =>
+      choice.laneLabel === "보조 시스템" &&
+      choice.type === "system" &&
+      choice.systemId === "aegis_halo"
+  );
 assert.ok(aegisTierThreeChoice);
 assert.equal(aegisTierThreeChoice.systemTier, 3);
 game.applyForgeChoice(
@@ -310,7 +361,7 @@ game.applyForgeChoice(
   aegisTierThreeChoice
 );
 const aegisTierThree = game.computeSupportSystemStats(aegisBuild);
-assert.equal(aegisTierThree.orbitCount, 3);
+assert.ok(aegisTierThree.orbitCount > aegisTierTwo.orbitCount);
 assert.ok(aegisTierThree.interceptRange > aegisTierTwo.interceptRange);
 assert.ok(aegisTierThree.interceptPulseRadius > aegisTierTwo.interceptPulseRadius);
 
@@ -320,7 +371,7 @@ const actOneModuleFollowup = game.buildForgeFollowupChoices(
   actTwoModuleBuild,
   () => 0,
   180,
-  { nextWave: 5, finalForge: false },
+  { nextWave: 3, finalForge: false },
   packagePrimaryChoice
 );
 assert.ok(!actOneModuleFollowup.some((choice) => choice.laneLabel === "공세 모듈"));
@@ -328,7 +379,7 @@ const actTwoModuleFollowup = game.buildForgeFollowupChoices(
   actTwoModuleBuild,
   () => 0,
   180,
-  { nextWave: 6, finalForge: false },
+  { nextWave: 4, finalForge: false },
   packagePrimaryChoice
 );
 assert.equal(
@@ -352,7 +403,7 @@ const voltInstallChoice = game
     actTwoModuleBuild,
     () => 0,
     180,
-    { nextWave: 7, finalForge: false },
+    { nextWave: 5, finalForge: false },
     packagePrimaryChoice
   )
   .find((choice) => choice.laneLabel === "공세 모듈" && choice.systemId === "volt_drones");

@@ -702,7 +702,7 @@
     },
     seeker_array: {
       id: "seeker_array",
-      forgeWaveMin: 6,
+      forgeWaveMin: 4,
       forgeLane: "공세 모듈",
       tag: "ORDNANCE",
       color: "#ff9b54",
@@ -716,7 +716,7 @@
           title: "Seeker Array",
           cost: 46,
           description:
-            "후반부부터 해금되는 추적 미사일 랙 1기를 설치한다. 멀리 벌어진 적에게 자동 사격을 꽂아 넓은 작업장에서 화력 회수를 돕는다.",
+            "Wave 4 forge bracket부터 해금되는 추적 미사일 랙 1기를 설치한다. 멀리 벌어진 적에게 자동 사격을 꽂아 넓은 작업장에서 화력 회수를 돕는다.",
           slotText: "공세 모듈 설치 · 추적 미사일 랙",
           orbitCount: 1,
           orbitRadius: 76,
@@ -789,7 +789,7 @@
     },
     volt_drones: {
       id: "volt_drones",
-      forgeWaveMin: 6,
+      forgeWaveMin: 4,
       forgeLane: "공세 모듈",
       tag: "DRONE",
       color: "#7fffd4",
@@ -1022,7 +1022,7 @@
 
   const DEFAULT_SIGNATURE_ID = "relay_oath";
   const FORGE_PACKAGE_START_WAVE = 3;
-  const MAX_WEAPON_EVOLUTION_TIER = 2;
+  const MAX_WEAPON_EVOLUTION_TIER = 3;
   const WEAPON_EVOLUTION_DEFS = {
     ember: {
       tiers: {
@@ -1072,6 +1072,30 @@
             bounceBonus: 0,
             chainBonus: 0,
             color: "#fff1a8",
+          },
+        },
+        3: {
+          tier: 3,
+          title: "Solar Crown",
+          label: "Solar Crown",
+          tag: "EVOLVE",
+          cost: 80,
+          description:
+            "Sunspoke Manifold를 왕관형 점화망으로 완성한다. 중앙 조준만 유지해도 일곱 갈래 화선이 전방과 대각 재진입선을 함께 잠가 후반 진입 각을 통째로 태운다.",
+          slotText: "주무장 진화 · 칠열 왕관 점화",
+          previewText: "왕관 보조 총열 6기",
+          traitLabel: "칠열 왕관 점화",
+          statusNote: "Solar Crown이 일곱 갈래 왕관 화선으로 전방과 대각 진입선을 한 번에 잠근다.",
+          firePattern: {
+            offsets: [-0.32, -0.2, -0.1, 0.1, 0.2, 0.32],
+            damageMultiplier: 0.54,
+            speedMultiplier: 1.08,
+            radius: 4.5,
+            life: 1.16,
+            pierceBonus: 0,
+            bounceBonus: 0,
+            chainBonus: 0,
+            color: "#fff6c9",
           },
         },
       },
@@ -1126,6 +1150,30 @@
             color: "#ffd7a3",
           },
         },
+        3: {
+          tier: 3,
+          title: "Ashen Typhoon",
+          label: "Ashen Typhoon",
+          tag: "EVOLVE",
+          cost: 78,
+          description:
+            "Kiln Storm을 다시 벌려 여섯 갈래 외곽 절개선으로 완성한다. 근접 산탄의 폭딜은 유지하면서 화면 가장자리까지 쓸어 후반 포위망을 통째로 찢는다.",
+          slotText: "주무장 진화 · 외곽 파편 6발",
+          previewText: "초확장 파편탄",
+          traitLabel: "외곽 파편 x6",
+          statusNote: "Ashen Typhoon이 여섯 갈래 외곽 파편탄으로 근접 바깥 포위망까지 함께 찢어낸다.",
+          firePattern: {
+            offsets: [-0.52, -0.34, -0.16, 0.16, 0.34, 0.52],
+            damageMultiplier: 0.44,
+            speedMultiplier: 1.24,
+            radius: 3.7,
+            life: 1.3,
+            pierceBonus: 0,
+            bounceBonus: 0,
+            chainBonus: 0,
+            color: "#ffe6bd",
+          },
+        },
       },
     },
     lance: {
@@ -1178,6 +1226,30 @@
             color: "#d8fbff",
           },
         },
+        3: {
+          tier: 3,
+          title: "Aurora Lattice",
+          label: "Aurora Lattice",
+          tag: "EVOLVE",
+          cost: 82,
+          description:
+            "Trident Rail을 격자형 돌파선으로 확장한다. 일곱 줄 레일이 얇은 장벽처럼 깔려 엘리트 전열과 측면 추격선을 동시에 꿰뚫는 후반 진입 차단기로 완성된다.",
+          slotText: "주무장 진화 · 칠연 격자 레일",
+          previewText: "격자 보조 레일",
+          traitLabel: "칠연 격자 레일",
+          statusNote: "Aurora Lattice가 일곱 줄 레일 장벽으로 전열과 측면 추격선을 함께 꿰뚫는다.",
+          firePattern: {
+            offsets: [-0.24, -0.14, -0.06, 0.06, 0.14, 0.24],
+            damageMultiplier: 0.58,
+            speedMultiplier: 1.14,
+            radius: 5.1,
+            life: 1.18,
+            pierceBonus: 2,
+            bounceBonus: 0,
+            chainBonus: 0,
+            color: "#eefeff",
+          },
+        },
       },
     },
     ricochet: {
@@ -1228,6 +1300,30 @@
             bounceBonus: 1,
             chainBonus: 0,
             color: "#f7e6ff",
+          },
+        },
+        3: {
+          tier: 3,
+          title: "Mirror Cathedral",
+          label: "Mirror Cathedral",
+          tag: "EVOLVE",
+          cost: 79,
+          description:
+            "Glass Choir를 일곱 갈래 거울 합창으로 완성한다. 벽을 스치는 순간 더 많은 입사각이 퍼져 후반 외곽 재진입과 중앙 반사 청소가 동시에 열린다.",
+          slotText: "주무장 진화 · 칠중 분광탄",
+          previewText: "분광탄 5발 추가",
+          traitLabel: "칠중 분광탄",
+          statusNote: "Mirror Cathedral이 일곱 갈래 분광탄으로 벽 반사 각을 화면 폭만큼 넓힌다.",
+          firePattern: {
+            offsets: [-0.28, -0.18, -0.08, 0.08, 0.18, 0.28],
+            damageMultiplier: 0.6,
+            speedMultiplier: 1.04,
+            radius: 4.1,
+            life: 1.22,
+            pierceBonus: 0,
+            bounceBonus: 1,
+            chainBonus: 0,
+            color: "#fcf2ff",
           },
         },
       },
