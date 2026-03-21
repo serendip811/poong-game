@@ -1321,6 +1321,63 @@
     },
   };
 
+  const BASTION_DOCTRINE_DEFS = {
+    relay_oath: {
+      id: "mirror_hunt",
+      signatureId: "relay_oath",
+      label: "Mirror Hunt Doctrine",
+      tag: "HUNT",
+      short: "추적 미사일 · 드라이브 압박",
+      description:
+        "반사 코어를 추적 압박 회로에 묶는다. Act 2부터 외곽 정리와 드라이브 순환을 함께 밀어붙이는 사냥형 운영을 강제한다.",
+      perkText: "Drive +12% · Move +14 · 이후 포지가 추적/연쇄 라인을 먼저 민다.",
+      preferredSystemIds: ["seeker_array", "volt_drones"],
+      preferredModIds: ["drive_sync", "arc_array", "step_servos"],
+      preferredAffixIds: ["arc_link", "overclock"],
+      favoredCoreId: "ricochet",
+      apply(build) {
+        build.driveGainBonus += 0.12;
+        build.moveSpeedBonus += 14;
+      },
+    },
+    scrap_pact: {
+      id: "kiln_bastion",
+      signatureId: "scrap_pact",
+      label: "Kiln Bastion Doctrine",
+      tag: "FORT",
+      short: "전방 포탑 · 회수 요새",
+      description:
+        "수거 회로를 전방 거점 운영으로 굳힌다. 포탑과 방호 차체를 더 자주 밀어 올려, Act 2 전장을 회수 가능한 요새로 바꾸게 만든다.",
+      perkText: "Max HP +14 · Hazard Mitigation +8% · 이후 포지가 포탑/방호 라인을 먼저 민다.",
+      preferredSystemIds: ["kiln_sentry", "aegis_halo"],
+      preferredModIds: ["armor_mesh", "magnet_rig", "reactor_cap"],
+      preferredAffixIds: ["salvage_link", "thermal_weave"],
+      favoredCoreId: "scatter",
+      apply(build) {
+        build.maxHpBonus += 14;
+        build.hazardMitigation += 0.08;
+      },
+    },
+    rail_zeal: {
+      id: "storm_artillery",
+      signatureId: "rail_zeal",
+      label: "Storm Artillery Doctrine",
+      tag: "SIEGE",
+      short: "돌파 포격 · 냉각 압박",
+      description:
+        "관통 냉각 회로를 장거리 포격 교리로 고정한다. 관통/연쇄 보강과 자율 포격을 더 자주 밀어 올려 긴 사선을 끝까지 유지하게 만든다.",
+      perkText: "Damage +4 · Cool +6 · 이후 포지가 관통/포격 라인을 먼저 민다.",
+      preferredSystemIds: ["volt_drones", "seeker_array"],
+      preferredModIds: ["rail_sleeve", "arc_array", "heat_sink"],
+      preferredAffixIds: ["phase_rounds", "arc_link"],
+      favoredCoreId: "lance",
+      apply(build) {
+        build.damageBonus += 4;
+        build.coolRateBonus += 6;
+      },
+    },
+  };
+
   const DEFAULT_SIGNATURE_ID = "relay_oath";
   const FORGE_PACKAGE_START_WAVE = 3;
   const ACT_BREAK_ARMORY_WAVE = 5;
@@ -2360,6 +2417,7 @@
     catalystCapstoneId: null,
     cashoutSupportId: null,
     cashoutFailSoftId: null,
+    bastionDoctrineId: null,
     supportBayCap: 2,
     supportSystemId: null,
     supportSystemTier: 0,
@@ -3194,6 +3252,7 @@
         catalystCapstoneId: BASE_BUILD.catalystCapstoneId,
         cashoutSupportId: BASE_BUILD.cashoutSupportId,
         cashoutFailSoftId: BASE_BUILD.cashoutFailSoftId,
+        bastionDoctrineId: BASE_BUILD.bastionDoctrineId,
         supportBayCap: BASE_BUILD.supportBayCap,
         supportSystemId: BASE_BUILD.supportSystemId,
         supportSystemTier: BASE_BUILD.supportSystemTier,
@@ -3251,6 +3310,17 @@
 
   function getSignatureDef(signatureId) {
     return SIGNATURE_DEFS[signatureId] || SIGNATURE_DEFS[DEFAULT_SIGNATURE_ID];
+  }
+
+  function getBastionDoctrineDef(buildOrSignatureId) {
+    if (!buildOrSignatureId) {
+      return null;
+    }
+    const signatureId =
+      typeof buildOrSignatureId === "string"
+        ? buildOrSignatureId
+        : buildOrSignatureId.signatureId || null;
+    return signatureId ? BASTION_DOCTRINE_DEFS[signatureId] || null : null;
   }
 
   function computePlayerStats(build) {
@@ -4048,6 +4118,7 @@
     const supportSystemChoices = shouldOfferSupportSystem(build, options)
       ? createSupportSystemChoices(build, random, options)
       : [];
+    const doctrine = build && build.bastionDoctrineId ? getBastionDoctrineDef(build) : null;
     const guaranteedMidrunChase = shouldGuaranteeMidrunChase(options)
       ? createGuaranteedChaseChoice(build)
       : null;
@@ -4118,6 +4189,12 @@
         .filter((choice) => choice && canApplyAffixChoice(build, choice.affixId, choice.replaceTarget)),
       random
     ).forEach((choice) => pushChoiceIfOpen(sustainCandidates, choice, choiceCatalog));
+
+    sortChoicesForDoctrine(evolutionCandidates, doctrine);
+    sortChoicesForDoctrine(commitCandidates, doctrine);
+    sortChoicesForDoctrine(offensiveModuleCandidates, doctrine);
+    sortChoicesForDoctrine(subsystemCandidates, doctrine);
+    sortChoicesForDoctrine(sustainCandidates, doctrine);
 
     if (sustainCandidates.length === 0) {
       sustainCandidates.push({
@@ -4434,6 +4511,68 @@
     };
   }
 
+  function getDoctrinePreferenceScore(choice, doctrine) {
+    if (!choice || !doctrine) {
+      return 0;
+    }
+    if (choice.type === "system") {
+      const index = doctrine.preferredSystemIds.indexOf(choice.systemId);
+      return index >= 0 ? 320 - index * 24 + (choice.systemTier || 1) * 6 : 0;
+    }
+    if (choice.type === "mod") {
+      const index = doctrine.preferredModIds.indexOf(choice.modId);
+      return index >= 0 ? 220 - index * 16 : 0;
+    }
+    if (choice.type === "affix") {
+      const index = doctrine.preferredAffixIds.indexOf(choice.affixId);
+      return index >= 0 ? 190 - index * 14 : 0;
+    }
+    if (choice.type === "evolution" && choice.coreId === doctrine.favoredCoreId) {
+      return 170 + (choice.evolutionTier || 1) * 10;
+    }
+    return 0;
+  }
+
+  function sortChoicesForDoctrine(candidates, doctrine) {
+    if (!Array.isArray(candidates) || candidates.length <= 1 || !doctrine) {
+      return candidates;
+    }
+    candidates.sort((left, right) => {
+      const scoreDelta =
+        getDoctrinePreferenceScore(right, doctrine) - getDoctrinePreferenceScore(left, doctrine);
+      if (scoreDelta !== 0) {
+        return scoreDelta;
+      }
+      return (right.cost || 0) - (left.cost || 0);
+    });
+    return candidates;
+  }
+
+  function createBastionDoctrineChoice(build, rng, nextWave) {
+    const doctrine = getBastionDoctrineDef(build);
+    const spikeChoice = createBastionDraftSpikeChoice(build, rng, nextWave);
+    if (!doctrine || !spikeChoice) {
+      return spikeChoice;
+    }
+    return {
+      type: "utility",
+      action: "bastion_doctrine",
+      id: `utility:bastion_doctrine:${doctrine.id}`,
+      verb: "채택",
+      tag: "DOCTRINE",
+      title: doctrine.label,
+      description:
+        `${doctrine.description} 즉시 ${spikeChoice.title}을(를) 할인 장착하고, 이후 포지 후보가 ${doctrine.short} 방향으로 기울어진다.`,
+      slotText: `교리 채택 · ${spikeChoice.title} · ${doctrine.short}`,
+      cost: spikeChoice.cost,
+      laneLabel: "교리 채택",
+      forgeLaneLabel: "교리 채택",
+      doctrineId: doctrine.id,
+      doctrineLabel: doctrine.label,
+      doctrineChoice: spikeChoice,
+    };
+  }
+
   function createBastionDraftPactChoice() {
     return {
       type: "utility",
@@ -4456,7 +4595,9 @@
   }
 
   function buildBastionDraftChoices(build, rng, nextWave) {
-    const spikeChoice = createBastionDraftSpikeChoice(build, rng, nextWave);
+    const spikeChoice = build && build.bastionDoctrineId
+      ? createBastionDraftSpikeChoice(build, rng, nextWave)
+      : createBastionDoctrineChoice(build, rng, nextWave);
     const choices = [];
     if (spikeChoice) {
       choices.push(spikeChoice);
@@ -4556,6 +4697,16 @@
     updateHUD();
   }
 
+  function getBastionDraftIntroText(build) {
+    if (!build || !build.bastionDoctrineId) {
+      const doctrine = getBastionDoctrineDef(build);
+      return doctrine
+        ? `${doctrine.label} 교리 1장, 고통 계약 1장, 무료 안정화 1장 중 하나로 Act 2 운영을 직접 비튼다.`
+        : "할인 spike 1장, 고통 계약 1장, 무료 안정화 1장 중 하나로 Act 2 운영을 직접 비튼다.";
+    }
+    return "이미 채택한 교리 위에 추가 spike 1장, 고통 계약 1장, 무료 안정화 1장 중 하나로 Act 2 greed를 더 밀어붙인다.";
+  }
+
   function enterBastionDraft() {
     const nextWave = state.waveIndex + 2;
     state.phase = "forge";
@@ -4565,7 +4716,7 @@
     state.forgeDraftType = "bastion_draft";
     state.forgeChoices = buildBastionDraftChoices(state.build, Math.random, nextWave);
     pushCombatFeed(
-      "Bastion Draft 개시. 할인 spike 1장, 고통 계약 1장, 무료 안정화 1장 중 하나로 Act 2 운영을 직접 비튼다.",
+      `Bastion Draft 개시. ${getBastionDraftIntroText(state.build)}`,
       "DRAFT"
     );
     setBanner("Bastion Draft", 0.95);
@@ -4859,6 +5010,19 @@
       return choice;
     }
 
+    if (choice.type === "utility" && choice.action === "bastion_doctrine") {
+      const doctrine = getBastionDoctrineDef(run.build);
+      if (doctrine && run.build.bastionDoctrineId !== doctrine.id) {
+        run.build.bastionDoctrineId = doctrine.id;
+        doctrine.apply(run.build, run);
+        run.build.upgrades.push(`교리 채택: ${doctrine.label}`);
+      }
+      if (choice.doctrineChoice) {
+        applyForgeChoice(run, choice.doctrineChoice);
+      }
+      return choice;
+    }
+
     if (choice.type === "fallback" && run.player) {
       run.player.hp = Math.min(run.player.maxHp, run.player.hp + 16);
       run.player.heat = Math.max(0, run.player.heat - 60);
@@ -4920,6 +5084,7 @@
     buildForgeChoices,
     buildForgeFollowupChoices,
     buildFieldGrantChoices,
+    buildBastionDraftChoices,
     applyForgeChoice,
     shouldUseFieldGrant,
     getCatalystCapstone,
@@ -5942,6 +6107,8 @@
             ? `${grantLabel} 적용. Bastion Draft를 안정화로 넘기고 다음 웨이브를 바로 연다.`
             : choice.action === "bastion_pact"
               ? `${grantLabel} 적용. 최대 체력을 깎아 고철을 쥐고 다음 웨이브를 연다.`
+              : choice.action === "bastion_doctrine"
+                ? `${choice.doctrineLabel} 적용. 즉시 ${choice.doctrineChoice ? choice.doctrineChoice.title : "spike"}를 잠그고 이후 포지를 해당 교리 쪽으로 기울인 채 다음 웨이브를 연다.`
               : `${grantLabel} 적용. 고철 ${choice.cost}을 태워 ${choice.title}을 일찍 잠그고 다음 웨이브를 강행한다.`
           : choice.type === "fallback"
             ? `${grantLabel} 현장 보급 적용. 고철은 아낀 채 ${choice.title}로 상태만 정리하고 다음 웨이브를 즉시 연다.`
@@ -8036,7 +8203,9 @@
       state.forgeDraftType === "field_grant"
         ? "Field Cache · 할인 장착 2장과 무료 회수 1장 중 1픽, 지금 고철을 태울지 아낄지 고른다"
         : state.forgeDraftType === "bastion_draft"
-        ? "Bastion Draft · 할인 spike 1장, 고통 계약 1장, 무료 안정화 1장 중 1픽으로 Act 2 greed를 강제한다"
+        ? state.build.bastionDoctrineId
+          ? "Bastion Draft · 기존 교리 위에 추가 spike 또는 고통 계약을 더 얹어 Act 2 greed를 강제한다"
+          : "Bastion Draft · 시그니처 교리 1장, 고통 계약 1장, 무료 안정화 1장 중 1픽으로 Act 2 posture를 잠근다"
         : state.forgeDraftType === "armory"
         ? isLateBreakArmory(forgeOptions)
           ? `${armoryLabel} ${state.forgeStep}/${state.forgeMaxSteps} · 6장 중 2픽, 세 번째 베이까지 열린 상태에서 마지막 과투입을 강제한다`
@@ -8053,7 +8222,9 @@
       : state.forgeDraftType === "field_grant"
         ? `고철 ${Math.round(state.resources.scrap)} 보유. Field Cache다. 할인된 즉시 장착 2장과 무료 Emergency Vent 중 하나를 고른다. 지금 스파이크를 사서 당길지, 고철을 쥐고 다음 큰 포지까지 버틸지 직접 판단해야 한다.`
         : state.forgeDraftType === "bastion_draft"
-        ? `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 한 장은 평소보다 이른 spike, 한 장은 최대 체력을 깎고 고철을 당겨오는 Siege Salvage Pact, 마지막 한 장은 무료 안정화다. Act 2를 더 강하게 잠글지, 더 아프게 탐욕할지 직접 정한다.`
+        ? state.build.bastionDoctrineId
+          ? `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 이미 채택한 교리 위에 추가 spike 1장과 Siege Salvage Pact, 무료 안정화가 다시 뜬다. 지금 더 깊게 묶일지, 체력을 태워 greed를 당길지 결정한다.`
+          : `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 한 장은 시그니처 전용 교리라 즉시 spike를 잠그면서 이후 포지 후보까지 비틀고, 한 장은 최대 체력을 깎고 고철을 당겨오는 Siege Salvage Pact, 마지막 한 장은 무료 안정화다. Act 2 posture를 잠글지, 더 아프게 탐욕할지 직접 정한다.`
         : state.forgeDraftType === "armory"
         ? isLateBreakArmory(forgeOptions)
           ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 8을 넘기며 ${armoryLabel}가 열린다. 세 번째 support bay가 해금됐고, 이번 포지는 6장 중 2장을 골라 4웨이브짜리 최종 전투 구간 전체를 버틸 과한 조합을 잠근다.`

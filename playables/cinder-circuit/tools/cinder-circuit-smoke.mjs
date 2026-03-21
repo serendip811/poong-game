@@ -197,6 +197,34 @@ assert.equal(game.shouldUseFieldGrant({ nextWave: 3, finalForge: false }), true)
 assert.equal(game.shouldUseFieldGrant({ nextWave: 5, finalForge: false }), false);
 assert.equal(game.shouldUseFieldGrant({ nextWave: 9, finalForge: false }), false);
 assert.equal(game.shouldUseFieldGrant({ nextWave: 12, finalForge: true }), false);
+const bastionDoctrineBuild = game.createInitialBuild("relay_oath");
+bastionDoctrineBuild.pendingCores = [];
+const bastionDraftChoices = game.buildBastionDraftChoices(bastionDoctrineBuild, () => 0, 6);
+assert.equal(bastionDraftChoices.length, 3);
+const bastionDoctrineChoice = bastionDraftChoices.find(
+  (choice) => choice.action === "bastion_doctrine"
+);
+assert.ok(bastionDoctrineChoice);
+assert.equal(bastionDoctrineChoice.title, "Mirror Hunt Doctrine");
+assert.equal(bastionDoctrineChoice.doctrineChoice.title, "Prism Crown");
+game.applyForgeChoice(
+  { build: bastionDoctrineBuild, player: null, resources: { scrap: 999 }, stats: {} },
+  bastionDoctrineChoice
+);
+assert.equal(bastionDoctrineBuild.bastionDoctrineId, "mirror_hunt");
+assert.ok(bastionDoctrineBuild.upgrades.includes("교리 채택: Mirror Hunt Doctrine"));
+assert.equal(game.computeWeaponStats(bastionDoctrineBuild).evolutionLabel, "Prism Crown");
+const doctrinePrimaryChoices = game.buildForgeChoices(
+  bastionDoctrineBuild,
+  () => 0.99,
+  180,
+  { nextWave: 7, finalForge: false }
+);
+const doctrineCommitChoice = doctrinePrimaryChoices.find(
+  (choice) => choice.laneLabel === "빌드 고정"
+);
+assert.ok(doctrineCommitChoice);
+assert.equal(doctrineCommitChoice.modId, "drive_sync");
 const fieldGrantBuild = game.createInitialBuild("relay_oath");
 fieldGrantBuild.pendingCores = [];
 const fieldGrantChoices = game.buildFieldGrantChoices(fieldGrantBuild, () => 0, 4);

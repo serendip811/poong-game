@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-21 22:00 KST
+  Findings:
+  - The run is longer now, but repeated-play identity still comes online too late. `SIGNATURE_DEFS` mostly front-loads a starter core and a small stat nudge, so Wave 1-2 still reads more like warmup survival than the opening commitment of a run the player is eager to author.
+  - The first real build posture changes are still backloaded into Wave 3+ package forges and Wave 4+ offensive modules. That is too slow for a game already stretching to 12 waves, and it will be much worse if this grows toward 20-30.
+  - Act 2 and Act 3 add space and new threats, but the macro ask still keeps collapsing into variants of the same lane-reopen exam against bastions, mortar fire, and warden lines. More content is present than real strategic identity.
+  - The forge structure is richer, yet nearly every between-wave stop is still a card shop. There is still no early irreversible doctrine pick that changes future offer pools, module appetite, and battlefield posture for the rest of the run.
+  Top Priority: Add an early Act 1 doctrine draft tied to the chosen signature that permanently pushes the run into a distinct combat posture and future forge pool, such as fortress control, roaming artillery, or hunter pursuit.
+  Why Now: A longer run cannot rely on late payoff if the first third still feels interchangeable.
+  Do Not Repeat: Do not solve this with another discounted forge variant or another evolution tier that leaves the early run generic.
+
 - 2026-03-21 11:45 KST
   Findings:
   - The run has more upgrade vocabulary now, but too much of the actual build chase still collapses into the same small recipe language. `AFFIX_DEFS` only gives six affixes, and every finisher recipe in `FINISHER_RECIPE_DEFS` pulls from that same tiny pool, so repeated runs risk feeling like different wrappers on the same shopping list instead of distinct obsessions.
@@ -449,6 +459,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-21 KST
+  Changed: upgraded Act 2's existing `Bastion Draft` in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from a generic discounted spike into a signature-tied doctrine pick. The first Wave `6/8` draft for each run now offers a doctrine card keyed off the chosen signature (`Mirror Hunt Doctrine`, `Kiln Bastion Doctrine`, or `Storm Artillery Doctrine`) that immediately grants a discounted spike and permanently biases later forge offers toward that run's intended posture; I also stored the doctrine on the build, threaded the new bias into forge candidate ordering, refreshed the Bastion Draft UI/feed copy so the event reads as an authored commitment beat, and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to cover doctrine adoption plus the follow-on forge bias.
+  Why: the critique list was out of order, so I treated `2026-03-22 02:28 KST` as the newest actionable item by timestamp and took its Top Priority as the main target. This was the highest-value bounded interpretation because it turns the mid-run draft from safe smoothing into a lasting build commitment that starts shaping future offers instead of only handing out one temporary spike.
+  Follow-up risk: the current forge bias is implemented as deterministic candidate ordering, not a deeper pool rewrite, so late-run doctrine identity will still be softer than a full authored branch ecosystem. If later critiques still find Act 2 too convergent, the next pass should add doctrine-exclusive cards or sacrifices rather than only increasing the sort weight on existing offers.
 
 - 2026-03-21 12:05 KST
   Changed: reworked the `scatter` weapon evolution ladder in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from wider outer pellet lines into a forward `slag_seed` branch: `Cinder Mines`, `Kiln Minefield`, and `Caldera Verge` now launch delayed explosive seeds that leave short-lived burn zones. I also added the runtime support those shots needed so they detonate, apply burst damage, create lingering area-denial pools, tick damage against enemies and territory cores, and render clearly in combat, and updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new scatter evolution behavior.
