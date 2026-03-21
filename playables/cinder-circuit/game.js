@@ -881,6 +881,126 @@
         },
       },
     },
+    kiln_sentry: {
+      id: "kiln_sentry",
+      forgeWaveMin: 2,
+      forgeLane: "보조 시스템",
+      tag: "SENTRY",
+      color: "#ffb86b",
+      orbitColor: "rgba(255, 184, 107, 0.14)",
+      strokeColor: "rgba(255, 235, 209, 0.74)",
+      renderShape: "turret",
+      tiers: {
+        1: {
+          tier: 1,
+          label: "Kiln Sentry",
+          title: "Kiln Sentry",
+          cost: 32,
+          description:
+            "플레이어 전방에 고정 포탑 1기를 자동 전개한다. 포탑이 그 자리를 점유하며 좁은 진입로를 대신 지켜 첫 포지 직후에도 싸울 지점을 만든다.",
+          slotText: "보조 시스템 설치 · 전방 포탑 1기",
+          orbitCount: 0,
+          orbitRadius: 0,
+          orbitSpeed: 0,
+          satelliteRadius: 0,
+          touchDamage: 0,
+          touchCooldown: 0,
+          shotCooldown: 0,
+          shotRange: 0,
+          shotDamage: 0,
+          shotSpeed: 0,
+          interceptRange: 0,
+          interceptCooldown: 0,
+          interceptPulseDamage: 0,
+          interceptPulseRadius: 0,
+          deployCount: 1,
+          deployCooldown: 0.55,
+          deployDistance: 126,
+          deployDuration: 10.5,
+          deployRadius: 13,
+          deployShotCooldown: 0.84,
+          deployShotRange: 246,
+          deployShotDamage: 15,
+          deployShotSpeed: 470,
+          deployBurstCount: 1,
+          deployBurstSpread: 0,
+          previewText: "전방 고정 포탑",
+          statusNote: "Kiln Sentry가 전방 거점을 먼저 세워 추격선 대신 한쪽 공간을 붙잡아 준다.",
+        },
+        2: {
+          tier: 2,
+          label: "Kiln Sentry Mk.II",
+          title: "Kiln Sentry Mk.II",
+          cost: 48,
+          description:
+            "Kiln Sentry를 2기 전개로 증설한다. 포탑 유지시간이 늘고 교차 사격을 열어, 플레이어가 포탑 사이를 오가며 밀린 전열을 다시 찢을 수 있다.",
+          slotText: "보조 시스템 증설 · 포탑 2기 + 교차 사격",
+          orbitCount: 0,
+          orbitRadius: 0,
+          orbitSpeed: 0,
+          satelliteRadius: 0,
+          touchDamage: 0,
+          touchCooldown: 0,
+          shotCooldown: 0,
+          shotRange: 0,
+          shotDamage: 0,
+          shotSpeed: 0,
+          interceptRange: 0,
+          interceptCooldown: 0,
+          interceptPulseDamage: 0,
+          interceptPulseRadius: 0,
+          deployCount: 2,
+          deployCooldown: 0.42,
+          deployDistance: 138,
+          deployDuration: 12.4,
+          deployRadius: 13.8,
+          deployShotCooldown: 0.64,
+          deployShotRange: 278,
+          deployShotDamage: 17,
+          deployShotSpeed: 510,
+          deployBurstCount: 2,
+          deployBurstSpread: 0.16,
+          previewText: "포탑 2기 교차 사격",
+          statusNote: "Kiln Sentry Mk.II가 두 개의 고정 거점을 남겨 교차 사격으로 전장을 두 갈래로 지킨다.",
+        },
+        3: {
+          tier: 3,
+          label: "Kiln Sentry Mk.III",
+          title: "Kiln Sentry Mk.III",
+          cost: 64,
+          description:
+            "Kiln Sentry를 3기 릴레이 망으로 확장한다. 포탑이 더 빨리 세워지고 삼중 탄막을 깔아 플레이어가 포탑 전선을 따라 전장을 밀어붙일 수 있다.",
+          slotText: "보조 시스템 증설 · 포탑 3기 + 릴레이 탄막",
+          orbitCount: 0,
+          orbitRadius: 0,
+          orbitSpeed: 0,
+          satelliteRadius: 0,
+          touchDamage: 0,
+          touchCooldown: 0,
+          shotCooldown: 0,
+          shotRange: 0,
+          shotDamage: 0,
+          shotSpeed: 0,
+          interceptRange: 0,
+          interceptCooldown: 0,
+          interceptPulseDamage: 0,
+          interceptPulseRadius: 0,
+          deployCount: 3,
+          deployCooldown: 0.34,
+          deployDistance: 148,
+          deployDuration: 14.6,
+          deployRadius: 14.5,
+          deployShotCooldown: 0.48,
+          deployShotRange: 308,
+          deployShotDamage: 19,
+          deployShotSpeed: 560,
+          deployBurstCount: 3,
+          deployBurstSpread: 0.2,
+          previewText: "포탑 3기 릴레이",
+          statusNote: "Kiln Sentry Mk.III가 전방에 3기 릴레이 포탑을 세워 플레이어 이동선 자체를 전선으로 바꾼다.",
+        },
+      },
+    },
     seeker_array: {
       id: "seeker_array",
       forgeWaveMin: 4,
@@ -2553,6 +2673,28 @@
     if (systems.length === 0) {
       return null;
     }
+    const deployableSystems = systems
+      .filter((system) => system.deployCount > 0)
+      .map((system) => ({
+        systemId: system.id,
+        systemIndex: system.systemIndex,
+        label: system.label,
+        title: system.title,
+        color: system.color,
+        strokeColor: system.strokeColor,
+        renderShape: system.renderShape,
+        deployCount: system.deployCount,
+        deployCooldown: system.deployCooldown,
+        deployDistance: system.deployDistance,
+        deployDuration: system.deployDuration,
+        deployRadius: system.deployRadius,
+        deployShotCooldown: system.deployShotCooldown,
+        deployShotRange: system.deployShotRange,
+        deployShotDamage: system.deployShotDamage,
+        deployShotSpeed: system.deployShotSpeed,
+        deployBurstCount: system.deployBurstCount,
+        deployBurstSpread: system.deployBurstSpread,
+      }));
     const satellites = [];
     systems.forEach((system, systemIndex) => {
       for (let index = 0; index < system.orbitCount; index += 1) {
@@ -2581,22 +2723,35 @@
       }
     });
     const primarySystem = systems[0];
+    const satelliteCount = satellites.length;
+    const deployCount = deployableSystems.reduce(
+      (sum, system) => sum + Math.max(0, system.deployCount || 0),
+      0
+    );
     return {
       id: primarySystem.id,
       label: systems.map((system) => system.label).join(" + "),
       tier: Math.max(...systems.map((system) => system.tier)),
-      orbitCount: satellites.length,
-      orbitRadius: round(
-        satellites.reduce((sum, satellite) => sum + satellite.orbitRadius, 0) / satellites.length,
-        1
-      ),
-      orbitSpeed: round(
-        satellites.reduce((sum, satellite) => sum + satellite.orbitSpeed, 0) / satellites.length,
-        2
-      ),
-      satelliteRadius: Math.max(...satellites.map((satellite) => satellite.satelliteRadius)),
+      orbitCount: satelliteCount,
+      orbitRadius:
+        satelliteCount > 0
+          ? round(
+              satellites.reduce((sum, satellite) => sum + satellite.orbitRadius, 0) / satelliteCount,
+              1
+            )
+          : 0,
+      orbitSpeed:
+        satelliteCount > 0
+          ? round(
+              satellites.reduce((sum, satellite) => sum + satellite.orbitSpeed, 0) / satelliteCount,
+              2
+            )
+          : 0,
+      satelliteRadius:
+        satelliteCount > 0 ? Math.max(...satellites.map((satellite) => satellite.satelliteRadius)) : 0,
       touchDamage: satellites.reduce((sum, satellite) => sum + satellite.touchDamage, 0),
-      touchCooldown: Math.min(...satellites.map((satellite) => satellite.touchCooldown)),
+      touchCooldown:
+        satelliteCount > 0 ? Math.min(...satellites.map((satellite) => satellite.touchCooldown)) : 0,
       shotCooldown: systems.some((system) => system.shotCooldown > 0)
         ? Math.min(...systems.filter((system) => system.shotCooldown > 0).map((system) => system.shotCooldown))
         : 0,
@@ -2613,9 +2768,11 @@
       orbitColor: primarySystem.orbitColor,
       strokeColor: primarySystem.strokeColor,
       renderShape: primarySystem.renderShape,
+      deployCount,
       statusNote: systems.map((system) => system.statusNote).join(" "),
       systems,
       satellites,
+      deployableSystems,
     };
   }
 
@@ -2700,7 +2857,10 @@
       return false;
     }
     const nextWave = options && Number.isFinite(options.nextWave) ? options.nextWave : 0;
-    if (nextWave < FORGE_PACKAGE_START_WAVE) {
+    const unlockedSupportExists = Object.keys(SUPPORT_SYSTEM_DEFS).some((systemId) =>
+      isSupportSystemUnlocked(systemId, nextWave)
+    );
+    if (!unlockedSupportExists) {
       return false;
     }
     const installedSystems = getInstalledSupportSystems(build);
@@ -4025,6 +4185,17 @@
       return shuffle(choices.slice(0, 3), random);
     }
 
+    const nextWave = options && Number.isFinite(options.nextWave) ? options.nextWave : 0;
+    if (nextWave < FORGE_PACKAGE_START_WAVE && subsystemCandidates.length > 0) {
+      const takenIds = new Set();
+      return [
+        takeFirstAvailableChoice(evolutionCandidates, takenIds, "주무장 진화"),
+        takeFirstAvailableChoice(commitCandidates, takenIds, "빌드 고정"),
+        takeFirstAvailableChoice(pivotCandidates, takenIds, "전환"),
+        takeFirstAvailableChoice(subsystemCandidates, takenIds, "보조 시스템"),
+      ].filter(Boolean);
+    }
+
     const takenIds = new Set();
     const laneChoices = [
       takeFirstAvailableChoice(evolutionCandidates, takenIds, "주무장 진화"),
@@ -4774,18 +4945,26 @@
     if (!systemStats) {
       return "보조 시스템 없음";
     }
+    const describeSystemCount = (system) =>
+      system.deployCount > 0 ? `포탑 ${system.deployCount}기` : `위성 ${system.orbitCount}기`;
     if (Array.isArray(systemStats.systems) && systemStats.systems.length > 1) {
       const familySummary = systemStats.systems
-        .map((system) => `${system.label} ${system.orbitCount}기`)
+        .map((system) => `${system.label} ${describeSystemCount(system)}`)
         .join(" + ");
       const traits = [
         systemStats.systems.some((system) => system.shotCooldown > 0) ? "자동 볼트" : null,
         systemStats.systems.some((system) => system.interceptRange > 0) ? "탄환 요격" : null,
         systemStats.systems.some((system) => system.interceptPulseDamage > 0) ? "방호 파동" : null,
+        systemStats.systems.some((system) => system.deployCount > 0) ? "전방 거점" : null,
       ]
         .filter(Boolean)
         .join(" + ");
       return traits ? `${familySummary} · ${traits}` : familySummary;
+    }
+    if (systemStats.deployCount > 0) {
+      return systemStats.tier >= 2
+        ? `${systemStats.label} · 포탑 ${systemStats.deployCount}기 · 전방 거점`
+        : `${systemStats.label} · 포탑 ${systemStats.deployCount}기`;
     }
     if (systemStats.interceptRange > 0) {
       return systemStats.interceptPulseDamage > 0
@@ -4862,7 +5041,9 @@
         shotCooldowns: [],
         touchCooldowns: [],
         interceptCooldowns: [],
+        deployCooldowns: [],
       },
+      supportDeployables: [],
     };
   }
 
@@ -5047,6 +5228,7 @@
         shotCooldowns: [],
         touchCooldowns: [],
         interceptCooldowns: [],
+        deployCooldowns: [],
       };
     }
     const orbitCount = state.supportSystem && state.supportSystem.satellites
@@ -5073,6 +5255,24 @@
       }
       return current > 0 ? current : system.shotCooldown * 0.55;
     });
+    state.supportSystemRuntime.deployCooldowns = Array.from({ length: shotSystemCount }, (_, index) => {
+      const current = Math.max(0, state.supportSystemRuntime.deployCooldowns[index] || 0);
+      const system = state.supportSystem && state.supportSystem.systems
+        ? state.supportSystem.systems[index]
+        : null;
+      if (!system || system.deployCount <= 0) {
+        return 0;
+      }
+      return current;
+    });
+    const validSystemIds = new Set(
+      state.supportSystem && Array.isArray(state.supportSystem.deployableSystems)
+        ? state.supportSystem.deployableSystems.map((system) => system.systemId)
+        : []
+    );
+    state.supportDeployables = Array.isArray(state.supportDeployables)
+      ? state.supportDeployables.filter((deployable) => validSystemIds.has(deployable.systemId))
+      : [];
   }
 
   function getSupportSystemSatellites() {
@@ -5232,6 +5432,7 @@
     state.drops = [];
     state.hazards = [];
     state.particles = [];
+    state.supportDeployables = [];
     syncArenaCanvas();
     state.player.x = arena.width / 2;
     state.player.y = arena.height / 2;
@@ -5277,6 +5478,7 @@
     state.hazards = [];
     state.enemies = [];
     state.projectiles = [];
+    state.supportDeployables = [];
     state.player.heat = Math.max(0, state.player.heat - 20);
     state.player.overheated = false;
     pushCombatFeed(
@@ -6166,6 +6368,137 @@
     };
   }
 
+  function createSupportSystemProjectileAtAngle(origin, angle, systemStats, overrides = {}) {
+    return {
+      owner: "player",
+      x: origin.x,
+      y: origin.y,
+      vx: Math.cos(angle) * systemStats.shotSpeed,
+      vy: Math.sin(angle) * systemStats.shotSpeed,
+      radius: 3.8,
+      damage: systemStats.shotDamage,
+      life: 0.82,
+      pierce: 0,
+      bounce: 0,
+      chain: 0,
+      chainRange: 0,
+      color: systemStats.color,
+      capstoneOnHit: null,
+      capstoneOnBounce: null,
+      ...overrides,
+    };
+  }
+
+  function findNearestEnemy(origin, maxRange) {
+    let target = null;
+    let bestDistance = maxRange;
+    for (const enemy of state.enemies) {
+      if (enemy.defeated || enemy.hp <= 0) {
+        continue;
+      }
+      const distance = Math.hypot(enemy.x - origin.x, enemy.y - origin.y);
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        target = enemy;
+      }
+    }
+    return target;
+  }
+
+  function createSupportDeployable(system) {
+    const aimTarget = findNearestEnemy(state.player, 420);
+    const baseAngle = aimTarget
+      ? Math.atan2(aimTarget.y - state.player.y, aimTarget.x - state.player.x)
+      : state.player.facing || 0;
+    const deployedForSystem = (state.supportDeployables || []).filter(
+      (deployable) => deployable.systemId === system.systemId
+    );
+    const slotIndex = deployedForSystem.length;
+    const side = slotIndex % 2 === 0 ? 1 : -1;
+    const spreadIndex = Math.floor(slotIndex / 2) + (slotIndex > 0 ? 1 : 0);
+    const angleOffset = slotIndex === 0 ? 0 : side * spreadIndex * 0.5;
+    const deployAngle = baseAngle + angleOffset;
+    const arena = getCurrentArenaSize();
+    const radius = system.deployRadius || 12;
+    const x = clamp(
+      state.player.x + Math.cos(deployAngle) * system.deployDistance,
+      radius + 12,
+      arena.width - radius - 12
+    );
+    const y = clamp(
+      state.player.y + Math.sin(deployAngle) * system.deployDistance,
+      radius + 12,
+      arena.height - radius - 12
+    );
+    return {
+      systemId: system.systemId,
+      systemIndex: system.systemIndex,
+      x,
+      y,
+      radius,
+      life: system.deployDuration,
+      maxLife: system.deployDuration,
+      shotCooldown: 0.12,
+      shotInterval: system.deployShotCooldown,
+      shotRange: system.deployShotRange,
+      shotDamage: system.deployShotDamage,
+      shotSpeed: system.deployShotSpeed,
+      burstCount: system.deployBurstCount,
+      burstSpread: system.deployBurstSpread,
+      color: system.color,
+      strokeColor: system.strokeColor,
+      renderShape: system.renderShape,
+    };
+  }
+
+  function updateSupportDeployables(dt) {
+    if (!Array.isArray(state.supportDeployables) || state.supportDeployables.length === 0) {
+      state.supportDeployables = [];
+      return;
+    }
+    const nextDeployables = [];
+    for (const deployable of state.supportDeployables) {
+      const nextDeployable = {
+        ...deployable,
+        life: deployable.life - dt,
+        shotCooldown: Math.max(0, deployable.shotCooldown - dt),
+      };
+      if (nextDeployable.life <= 0) {
+        state.particles.push(createParticle(deployable.x, deployable.y, deployable.color, 0.75));
+        continue;
+      }
+      if (nextDeployable.shotCooldown <= 0) {
+        const target = findNearestEnemy(nextDeployable, nextDeployable.shotRange);
+        if (target) {
+          const baseAngle = Math.atan2(target.y - nextDeployable.y, target.x - nextDeployable.x);
+          const half = (nextDeployable.burstCount - 1) / 2;
+          for (let index = 0; index < nextDeployable.burstCount; index += 1) {
+            const angleOffset = (index - half) * nextDeployable.burstSpread;
+            state.projectiles.push(
+              createSupportSystemProjectileAtAngle(
+                nextDeployable,
+                baseAngle + angleOffset,
+                {
+                  color: nextDeployable.color,
+                  shotDamage: nextDeployable.shotDamage,
+                  shotSpeed: nextDeployable.shotSpeed,
+                },
+                {
+                  radius: 4.1,
+                  life: 0.92,
+                }
+              )
+            );
+          }
+          nextDeployable.shotCooldown = nextDeployable.shotInterval;
+          state.particles.push(createParticle(nextDeployable.x, nextDeployable.y, "#ffe7c4", 0.6));
+        }
+      }
+      nextDeployables.push(nextDeployable);
+    }
+    state.supportDeployables = nextDeployables;
+  }
+
   function emitStormRailBursts(projectile, sourceEnemy) {
     const onHit = projectile && projectile.capstoneOnHit;
     if (!onHit || onHit.kind !== "storm_branch" || onHit.remainingBursts <= 0) {
@@ -6248,6 +6581,31 @@
     state.supportSystemRuntime.shotCooldowns = state.supportSystemRuntime.shotCooldowns.map((cooldown) =>
       Math.max(0, cooldown - dt)
     );
+    state.supportSystemRuntime.deployCooldowns = state.supportSystemRuntime.deployCooldowns.map((cooldown) =>
+      Math.max(0, cooldown - dt)
+    );
+    updateSupportDeployables(dt);
+    (state.supportSystem.deployableSystems || []).forEach((system) => {
+      const activeCount = state.supportDeployables.filter(
+        (deployable) => deployable.systemId === system.systemId
+      ).length;
+      if (
+        activeCount >= system.deployCount ||
+        state.supportSystemRuntime.deployCooldowns[system.systemIndex] > 0
+      ) {
+        return;
+      }
+      state.supportDeployables.push(createSupportDeployable(system));
+      state.supportSystemRuntime.deployCooldowns[system.systemIndex] = system.deployCooldown;
+      state.particles.push(
+        createParticle(
+          state.supportDeployables[state.supportDeployables.length - 1].x,
+          state.supportDeployables[state.supportDeployables.length - 1].y,
+          system.color,
+          0.85
+        )
+      );
+    });
     const satellites = getSupportSystemSatellites();
 
     satellites.forEach((satellite, index) => {
@@ -7593,11 +7951,40 @@
 
     if (state.player && state.supportSystem) {
       for (const system of state.supportSystem.systems || []) {
+        if (system.orbitRadius <= 0) {
+          continue;
+        }
         context.strokeStyle = system.orbitColor;
         context.lineWidth = 1.5;
         context.beginPath();
         context.arc(state.player.x, state.player.y, system.orbitRadius, 0, Math.PI * 2);
         context.stroke();
+      }
+      for (const deployable of state.supportDeployables || []) {
+        const lifeRatio =
+          deployable.maxLife > 0 ? clamp(deployable.life / deployable.maxLife, 0, 1) : 1;
+        context.save();
+        context.globalAlpha = lifeRatio < 0.24 ? 0.5 + Math.abs(Math.sin(performance.now() * 0.02)) * 0.4 : 1;
+        context.strokeStyle = `${deployable.strokeColor}`;
+        context.lineWidth = 1.4;
+        context.beginPath();
+        context.arc(deployable.x, deployable.y, deployable.shotRange * 0.32, 0, Math.PI * 2);
+        context.stroke();
+        context.translate(deployable.x, deployable.y);
+        context.fillStyle = deployable.color;
+        context.strokeStyle = deployable.strokeColor;
+        context.beginPath();
+        context.rect(-deployable.radius, -deployable.radius * 0.7, deployable.radius * 2, deployable.radius * 1.4);
+        context.fill();
+        context.stroke();
+        context.beginPath();
+        context.moveTo(0, -deployable.radius - 4);
+        context.lineTo(deployable.radius * 0.8, -deployable.radius * 0.18);
+        context.lineTo(-deployable.radius * 0.8, -deployable.radius * 0.18);
+        context.closePath();
+        context.fill();
+        context.stroke();
+        context.restore();
       }
       for (const satellite of getSupportSystemSatellites()) {
         context.fillStyle = satellite.color;

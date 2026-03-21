@@ -72,7 +72,7 @@ assert.equal(game.createFinalCashoutWave().arena.width, 1440);
 assert.equal(game.DEFAULT_SIGNATURE_ID, "relay_oath");
 assert.equal(
   JSON.stringify(Object.keys(game.SUPPORT_SYSTEM_DEFS).sort()),
-  JSON.stringify(["aegis_halo", "ember_ring", "seeker_array", "volt_drones"])
+  JSON.stringify(["aegis_halo", "ember_ring", "kiln_sentry", "seeker_array", "volt_drones"])
 );
 
 const signatureBuild = game.createInitialBuild("scrap_pact");
@@ -173,8 +173,8 @@ midrunChaseBuild.attunedCopies = 1;
 const genericForgeChoices = game.buildForgeChoices(midrunChaseBuild, () => 0, 180);
 assert.ok(!genericForgeChoices.some((choice) => choice.laneLabel === "빌드 고정" && choice.recipeLabel === "Kiln Bloom"));
 const waveTwoForgeChoices = game.buildForgeChoices(midrunChaseBuild, () => 0, 180, { nextWave: 2 });
-assert.equal(waveTwoForgeChoices.length, 4);
-assert.ok(!waveTwoForgeChoices.some((choice) => choice.type === "system"));
+assert.equal(waveTwoForgeChoices.length, 3);
+assert.ok(waveTwoForgeChoices.some((choice) => choice.type === "system" && choice.systemId === "kiln_sentry"));
 const waveThreeForgeChoices = game.buildForgeChoices(midrunChaseBuild, () => 0, 180, { nextWave: 3 });
 const waveThreeEvolutionChoice = waveThreeForgeChoices.find(
   (choice) => choice.laneLabel === "주무장 진화" && choice.type === "evolution"
@@ -301,21 +301,27 @@ assert.ok(
       choice.laneLabel === "생존/경제"
   )
 );
-assert.equal(
-  JSON.stringify(packageFollowupChoices.filter((choice) => choice.laneLabel === "보조 시스템").map((choice) => choice.systemId).sort()),
-  JSON.stringify(["aegis_halo", "ember_ring"])
+const packageFollowupSystems = packageFollowupChoices
+  .filter((choice) => choice.laneLabel === "보조 시스템")
+  .map((choice) => choice.systemId)
+  .sort();
+assert.ok(packageFollowupSystems.length >= 2);
+assert.ok(packageFollowupSystems.includes("kiln_sentry"));
+assert.ok(packageFollowupSystems.includes("aegis_halo") || packageFollowupSystems.includes("ember_ring"));
+const firstOrbitalInstallChoice = packageFollowupChoices.find(
+  (choice) =>
+    choice.laneLabel === "보조 시스템" &&
+    choice.type === "system" &&
+    choice.systemId !== "kiln_sentry"
 );
-const emberInstallChoice = packageFollowupChoices.find(
-  (choice) => choice.laneLabel === "보조 시스템" && choice.systemId === "ember_ring"
-);
-assert.ok(emberInstallChoice);
+assert.ok(firstOrbitalInstallChoice);
 game.applyForgeChoice(
   { build: packageBuild, player: null, resources: { scrap: 999 }, stats: {} },
-  emberInstallChoice
+  firstOrbitalInstallChoice
 );
-const emberTierOne = game.computeSupportSystemStats(packageBuild);
-assert.equal(emberTierOne.orbitCount, 1);
-assert.equal(emberTierOne.shotCooldown, 0);
+const firstOrbitalTierOne = game.computeSupportSystemStats(packageBuild);
+assert.equal(firstOrbitalTierOne.orbitCount, 1);
+assert.equal(firstOrbitalTierOne.deployCount, 0);
 assert.equal(
   game.shouldOpenForgePackage(
     {
@@ -337,10 +343,47 @@ const aegisInstallChoices = game.buildForgeFollowupChoices(
   { nextWave: 3, finalForge: false },
   packagePrimaryChoice
 );
-assert.equal(
-  JSON.stringify(aegisInstallChoices.filter((choice) => choice.laneLabel === "보조 시스템").map((choice) => choice.systemId).sort()),
-  JSON.stringify(["aegis_halo", "ember_ring"])
+const aegisInstallSystemIds = aegisInstallChoices
+  .filter((choice) => choice.laneLabel === "보조 시스템")
+  .map((choice) => choice.systemId)
+  .sort();
+assert.ok(aegisInstallSystemIds.length >= 2);
+assert.ok(aegisInstallSystemIds.includes("aegis_halo"));
+const sentryBuild = game.createInitialBuild("relay_oath");
+sentryBuild.pendingCores = [];
+const sentryInstallChoice = game.buildForgeChoices(
+  sentryBuild,
+  () => 0,
+  180,
+  { nextWave: 2, finalForge: false }
+).find((choice) => choice.type === "system" && choice.systemId === "kiln_sentry");
+assert.ok(sentryInstallChoice);
+assert.equal(sentryInstallChoice.laneLabel, "보조 시스템");
+game.applyForgeChoice(
+  { build: sentryBuild, player: null, resources: { scrap: 999 }, stats: {} },
+  sentryInstallChoice
 );
+const sentryTierOne = game.computeSupportSystemStats(sentryBuild);
+assert.equal(sentryTierOne.orbitCount, 0);
+assert.equal(sentryTierOne.deployCount, 1);
+assert.equal(sentryTierOne.renderShape, "turret");
+game.applyForgeChoice(
+  { build: sentryBuild, player: null, resources: { scrap: 999 }, stats: {} },
+  { type: "system", systemId: "aegis_halo", systemTier: 1 }
+);
+const sentryTierTwoChoice = game
+  .buildForgeFollowupChoices(sentryBuild, () => 0, 180, { nextWave: 4, finalForge: false }, packagePrimaryChoice)
+  .find((choice) => choice.type === "system" && choice.systemId === "kiln_sentry");
+assert.ok(sentryTierTwoChoice);
+assert.equal(sentryTierTwoChoice.systemTier, 2);
+game.applyForgeChoice(
+  { build: sentryBuild, player: null, resources: { scrap: 999 }, stats: {} },
+  sentryTierTwoChoice
+);
+const sentryTierTwo = game.computeSupportSystemStats(sentryBuild);
+assert.equal(sentryTierTwo.deployCount, 2);
+assert.ok(sentryTierTwo.systems[0].deployShotRange > sentryTierOne.systems[0].deployShotRange);
+assert.ok(sentryTierTwo.systems[0].deployBurstCount > sentryTierOne.systems[0].deployBurstCount);
 const aegisInstallChoice = aegisInstallChoices.find(
   (choice) => choice.laneLabel === "보조 시스템" && choice.type === "system" && choice.systemId === "aegis_halo"
 );
@@ -368,17 +411,17 @@ assert.equal(
   JSON.stringify(aegisUpgradeChoices.filter((choice) => choice.laneLabel === "공세 모듈").map((choice) => choice.systemId).sort()),
   JSON.stringify(["seeker_array"])
 );
-const emberSecondBayChoice = aegisUpgradeChoices.find(
+const secondSupportBayChoice = aegisUpgradeChoices.find(
   (choice) =>
     choice.laneLabel === "보조 시스템" &&
     choice.type === "system" &&
-    choice.systemId === "ember_ring"
+    choice.systemId !== "aegis_halo"
 );
-assert.ok(emberSecondBayChoice);
-assert.equal(emberSecondBayChoice.systemTier, 1);
+assert.ok(secondSupportBayChoice);
+assert.equal(secondSupportBayChoice.systemTier, 1);
 game.applyForgeChoice(
   { build: aegisBuild, player: null, resources: { scrap: 999 }, stats: {} },
-  emberSecondBayChoice
+  secondSupportBayChoice
 );
 const aegisTierTwoChoice = game
   .buildForgeFollowupChoices(aegisBuild, () => 0, 180, { nextWave: 6, finalForge: false }, packagePrimaryChoice)

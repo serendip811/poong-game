@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 02:05 KST
+  Findings:
+  - The upgrade catalog looks broader, but the major support lines (`Ember Ring`, `Aegis Halo`, `Seeker Array`, `Volt Drones`) are still all orbiting helpers anchored to the player. They vary in payload more than in posture, so many "different" builds still occupy space the same way.
+  - Because those systems mostly unlock at `Wave 3-4` and `Field Cache` keeps feeding discounted growth after that, the first third of the run still lacks a hard identity spike. Replays spend too long waiting for the build to become a machine worth chasing.
+  - The larger late arena gives breathing room, but the current module set mostly reinforces a moving safety donut while the player solves the same lane-reopening cleanup exam. That is readable, not rerun-hungry.
+  - A future `20-30` wave version needs secondary systems that claim space in fundamentally different ways: forward barriers, planted turrets, mines, beam relays, callable strikes, or detached hunters. Right now the support layer is richer, but still too same-shaped to generate real build anticipation.
+  Top Priority: Add one early-access non-orbital subsystem family that changes battlefield posture instead of orbit count, and make it a normal build chase before mid-run.
+  Why Now: Until support choices change where and how the player fights, added modules will keep reading as variants of the same answer.
+  Do Not Repeat: Do not add another satellite/ring/drone that still just circles the player with a different damage flavor.
+
 - 2026-03-21 23:58 KST
   Findings:
   - The build surface is finally widening through evolutions, capstones, orbitals, shields, missiles, and drones, but the combat problems are still mostly the same four enemy bodies plus hazard remixes. The player is gaining more answers than the game has distinct questions.
@@ -419,6 +429,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 02:43 KST
+  Changed: added an early non-orbital `Kiln Sentry` subsystem family in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). `Kiln Sentry` unlocks on the Wave 2 forge, occupies the `보조 시스템` lane before the normal package cadence starts, and upgrades through three tiers of planted forward turrets that persist on the field and fire from fixed positions instead of orbiting the player. I extended support-system stat aggregation, runtime state, and arena rendering so detached sentries spawn, hold space, shoot, and display correctly alongside the existing orbit-based systems, and updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new support family, Wave 2 access, and its visible tier scaling.
+  Why: the latest critique's Top Priority was still open because all support families were still variations of player-anchored orbitals. I took the highest-value bounded interpretation as "ship one Wave 2-3 planted-turret line and make the first forge surface it directly" so runs can form an early posture identity around holding ground and fighting around emplacements instead of waiting until mid-run for another safety ring.
+  Follow-up risk: `Kiln Sentry` now changes where the player wants to stand, but enemy AI still treats the player as the only real positional threat, so later waves are not yet trying to flank or punish sentry nests specifically. If the next critique still wants more posture contrast, the next pass should add enemies or hazards that force players to relocate, defend, or re-seed those emplacements under pressure rather than only scaling sentry numbers.
 
 - 2026-03-22 02:24 KST
   Changed: added a new `mortar` enemy role to [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and threaded it through late Act 2 and all of Act 3 so the run now asks a different combat question than `warden` lane-breaking alone. `Mortar` units hold long range and launch slow, wide ember-shell volleys that linger in the arena long enough for `Aegis Halo`-style interception and route management to matter; I also rebalanced Waves `7-12` to carve some weight out of repeated `warden` share, rewrote their combat notes/directives around the new target-priority rule, and updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new roster slot plus its late-wave presence.
