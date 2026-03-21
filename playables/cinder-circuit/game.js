@@ -2499,6 +2499,7 @@
     cashoutFailSoftId: null,
     bastionDoctrineId: null,
     doctrineCapstoneId: null,
+    doctrineChaseClaimed: false,
     supportBayCap: 2,
     supportSystemId: null,
     supportSystemTier: 0,
@@ -3249,6 +3250,23 @@
         ...finaleRows,
       ];
     }
+    if (choice.type === "utility" && choice.action === "doctrine_chase") {
+      return [
+        {
+          label: "무기",
+          value: choice.weaponChoice ? choice.weaponChoice.title : "주무장 추격",
+        },
+        {
+          label: "지원",
+          value: choice.systemChoice ? choice.systemChoice.title : "지원 추격",
+        },
+        {
+          label: "종점",
+          value: choice.capstoneLabel || choice.doctrineLabel || "Doctrine Apex",
+        },
+        ...finaleRows,
+      ];
+    }
     if (choice.type === "system") {
       const systemDef = SUPPORT_SYSTEM_DEFS[choice.systemId];
       const tierDef = systemDef && systemDef.tiers[choice.systemTier];
@@ -3366,6 +3384,7 @@
         cashoutSupportId: BASE_BUILD.cashoutSupportId,
         cashoutFailSoftId: BASE_BUILD.cashoutFailSoftId,
         bastionDoctrineId: BASE_BUILD.bastionDoctrineId,
+        doctrineChaseClaimed: BASE_BUILD.doctrineChaseClaimed,
         supportBayCap: BASE_BUILD.supportBayCap,
         supportSystemId: BASE_BUILD.supportSystemId,
         supportSystemTier: BASE_BUILD.supportSystemTier,
@@ -3847,6 +3866,133 @@
     return createCoreChoice(build.coreId, build);
   }
 
+  function createSupportSystemTierChoice(systemId, targetTier) {
+    const system = SUPPORT_SYSTEM_DEFS[systemId];
+    const tierDef = system && system.tiers[targetTier];
+    if (!system || !tierDef) {
+      return null;
+    }
+    return {
+      type: "system",
+      id: `system:${system.id}:t${targetTier}`,
+      verb: targetTier > 1 ? "증설" : "설치",
+      tag: system.tag || "SYSTEM",
+      title: tierDef.title,
+      description: tierDef.description,
+      slotText:
+        targetTier > 1 ? `기존 베이 증설 · ${tierDef.slotText}` : tierDef.slotText,
+      systemId: system.id,
+      systemTier: targetTier,
+      bayAction: targetTier > 1 ? "upgrade" : "install",
+      forgeLaneLabel: getSupportSystemForgeLane(system.id),
+      cost: tierDef.cost,
+    };
+  }
+
+  function createDoctrineChaseSystemChoice(build, doctrine, options = null) {
+    if (!build || !doctrine) {
+      return null;
+    }
+    const nextWave = options && Number.isFinite(options.nextWave) ? options.nextWave : 0;
+    const installedSystems = getInstalledSupportSystems(build);
+    const supportBayCap = getSupportBayCapacity(build);
+    const installedMap = new Map(installedSystems.map((entry) => [entry.id, entry]));
+    const preferredSystemIds = [
+      doctrine.starterSystemId,
+      ...(Array.isArray(doctrine.preferredSystemIds) ? doctrine.preferredSystemIds : []),
+    ].filter(Boolean);
+    for (const systemId of preferredSystemIds) {
+      const installed = installedMap.get(systemId);
+      if (installed && installed.tier < 2) {
+        return createSupportSystemTierChoice(systemId, installed.tier + 1);
+      }
+      if (
+        !installed &&
+        installedSystems.length < supportBayCap &&
+        isSupportSystemUnlocked(systemId, nextWave)
+      ) {
+        return createSupportSystemTierChoice(systemId, 1);
+      }
+    }
+    return null;
+  }
+
+  function createDoctrineChaseWeaponChoice(build, doctrine, options = null) {
+    if (!build || !doctrine || !doctrine.favoredCoreId || !CORE_DEFS[doctrine.favoredCoreId]) {
+      return null;
+    }
+    if (build.coreId === doctrine.favoredCoreId) {
+      const evolutionChoice = createWeaponEvolutionChoice(build, options);
+      if (evolutionChoice && evolutionChoice.coreId === doctrine.favoredCoreId) {
+        return evolutionChoice;
+      }
+      const reinforcementChoice = createCoreChoice(doctrine.favoredCoreId, build);
+      if (
+        reinforcementChoice &&
+        reinforcementChoice.resultingCopies > Math.max(1, build.attunedCopies || 1)
+      ) {
+        return reinforcementChoice;
+      }
+    }
+    return (
+      createCoreChoice(doctrine.favoredCoreId, build, { directOffer: true }) ||
+      createCoreChoice(doctrine.favoredCoreId, build)
+    );
+  }
+
+  function shouldOfferDoctrineChase(build, options = null) {
+    if (
+      !build ||
+      !build.bastionDoctrineId ||
+      build.doctrineCapstoneId ||
+      build.doctrineChaseClaimed ||
+      !options ||
+      options.finalForge
+    ) {
+      return false;
+    }
+    const nextWave = Number.isFinite(options.nextWave) ? options.nextWave : 0;
+    return nextWave >= 4 && nextWave <= 6;
+  }
+
+  function createDoctrineChaseChoice(build, options = null) {
+    if (!shouldOfferDoctrineChase(build, options)) {
+      return null;
+    }
+    const doctrine = getBastionDoctrineDef(build);
+    const capstone =
+      doctrine && doctrine.lateCapstoneId ? getDoctrineCapstoneDef(doctrine.lateCapstoneId) : null;
+    const weaponChoice = createDoctrineChaseWeaponChoice(build, doctrine, options);
+    const systemChoice = createDoctrineChaseSystemChoice(build, doctrine, options);
+    if (!doctrine || !weaponChoice || !systemChoice) {
+      return null;
+    }
+    const bundleCost = Math.max(
+      36,
+      Math.round(((weaponChoice.cost || 0) + (systemChoice.cost || 0)) * 0.76)
+    );
+    return {
+      type: "utility",
+      action: "doctrine_chase",
+      id: `utility:doctrine_chase:${doctrine.id}`,
+      verb: "추격",
+      tag: "CHASE",
+      title: capstone ? `${capstone.title} Frame` : `${doctrine.label} Frame`,
+      description:
+        `${doctrine.label}의 조기 완성 패키지. ${weaponChoice.title}과 ${systemChoice.title}을(를) 한 번에 밀어 올려 지금부터 주무장과 지원층이 같은 종점을 향해 자라게 만든다.${capstone ? ` 최종적으로는 ${capstone.title} 완성 카드까지 이어진다.` : ""}`,
+      slotText: `교리 추격 · ${weaponChoice.title} + ${systemChoice.title}`,
+      cost: bundleCost,
+      laneLabel: "교리 추격",
+      forgeLaneLabel: "교리 추격",
+      doctrineId: doctrine.id,
+      doctrineLabel: doctrine.label,
+      doctrineCapstoneId: capstone ? capstone.id : null,
+      capstoneLabel: capstone ? capstone.label : null,
+      weaponChoice,
+      systemChoice,
+    };
+  }
+
   function createAffixReforgeChoice(build, rng) {
     const currentAffixes = sanitizeAffixIds(build.affixes, getAffixCapacity(build));
     if (currentAffixes.length === 0) {
@@ -4290,6 +4436,7 @@
     const affixReforgeChoice = createAffixReforgeChoice(build, random);
     const finisherChoice = createRecipeFinisherChoice(build);
     const weaponEvolutionChoice = createWeaponEvolutionChoice(build, options);
+    const doctrineChaseChoice = createDoctrineChaseChoice(build, options);
     const supportSystemChoices = shouldOfferSupportSystem(build, options)
       ? createSupportSystemChoices(build, random, options)
       : [];
@@ -4299,6 +4446,7 @@
       : null;
     const packagePrimary = shouldForceForgePackage(options) && (options.packageStep || 1) === 1;
     pushChoiceIfOpen(evolutionCandidates, weaponEvolutionChoice, choiceCatalog);
+    pushChoiceIfOpen(commitCandidates, doctrineChaseChoice, choiceCatalog);
     pushChoiceIfOpen(commitCandidates, guaranteedMidrunChase || finisherChoice, choiceCatalog);
 
     const sameCoreChoice = createCoreChoice(build.coreId, build);
@@ -4727,6 +4875,9 @@
     if (!choice || !doctrine) {
       return 0;
     }
+    if (choice.type === "utility" && choice.action === "doctrine_chase") {
+      return 520;
+    }
     if (choice.type === "system") {
       const index = doctrine.preferredSystemIds.indexOf(choice.systemId);
       return index >= 0 ? 320 - index * 24 + (choice.systemTier || 1) * 6 : 0;
@@ -4777,7 +4928,7 @@
       tag: "DOCTRINE",
       title: doctrine.label,
       description:
-        `${doctrine.description} 즉시 ${spikeChoice.title}을(를) 할인 장착하고, ${doctrine.reserveText} 이후 포지 후보도 ${doctrine.short} 방향으로만 열린다.${lateCapstone ? ` Wave 9 Late Break Armory에서는 ${lateCapstone.title} 교리 완성 카드가 열린다.` : ""}`,
+        `${doctrine.description} 즉시 ${spikeChoice.title}을(를) 할인 장착하고, ${doctrine.reserveText} 이후 포지 후보도 ${doctrine.short} 방향으로만 열린다.${lateCapstone ? ` Wave 4-6에는 ${lateCapstone.title} Frame 추격 카드가 먼저 열리고, Wave 9 Late Break Armory에서는 ${lateCapstone.title} 교리 완성 카드가 열린다.` : ""}`,
       slotText: `교리 채택 · ${spikeChoice.title} · ${doctrine.short} · ${doctrine.reservedLane}`,
       cost: spikeChoice.cost,
       laneLabel: "교리 채택",
@@ -4808,7 +4959,7 @@
       tag: "ARCH",
       title: doctrine.label,
       description:
-        `${doctrine.description} 즉시 ${starterTier.title}을(를) 무료 설치해 ${doctrine.branchFamilyLabel} 계통을 바로 켜고, ${doctrine.reserveText} 이후 포지 후보도 ${doctrine.short} 쪽으로만 기울인다.${lateCapstone ? ` Late Break Armory에서는 ${lateCapstone.title} 완성 카드까지 열린다.` : ""}`,
+        `${doctrine.description} 즉시 ${starterTier.title}을(를) 무료 설치해 ${doctrine.branchFamilyLabel} 계통을 바로 켜고, ${doctrine.reserveText} 이후 포지 후보도 ${doctrine.short} 쪽으로만 기울인다.${lateCapstone ? ` Wave 4-6에는 ${lateCapstone.title} Frame 추격 카드가 먼저 열리고, Late Break Armory에서는 ${lateCapstone.title} 완성 카드까지 열린다.` : ""}`,
       slotText: `아키텍처 잠금 · ${starterTier.title} 설치 · ${doctrine.short}`,
       cost: 0,
       laneLabel: "아키텍처",
@@ -5296,6 +5447,7 @@
       if (doctrine && run.build.bastionDoctrineId !== doctrine.id) {
         run.build.bastionDoctrineId = doctrine.id;
         run.build.doctrineCapstoneId = null;
+        run.build.doctrineChaseClaimed = false;
         doctrine.apply(run.build, run);
         run.build.upgrades.push(`교리 채택: ${doctrine.label}`);
       }
@@ -5312,11 +5464,26 @@
       }
       run.build.bastionDoctrineId = doctrine.id;
       run.build.doctrineCapstoneId = null;
+      run.build.doctrineChaseClaimed = false;
       doctrine.apply(run.build, run);
       run.build.upgrades.push(`아키텍처 잠금: ${doctrine.label}`);
       if (choice.doctrineChoice) {
         applyForgeChoice(run, choice.doctrineChoice);
       }
+      return choice;
+    }
+
+    if (choice.type === "utility" && choice.action === "doctrine_chase") {
+      if (choice.weaponChoice) {
+        applyForgeChoice(run, choice.weaponChoice);
+      }
+      if (choice.systemChoice) {
+        applyForgeChoice(run, choice.systemChoice);
+      }
+      run.build.doctrineChaseClaimed = true;
+      run.build.upgrades.push(
+        `교리 추격: ${choice.capstoneLabel || choice.doctrineLabel || "Doctrine"} Frame`
+      );
       return choice;
     }
 

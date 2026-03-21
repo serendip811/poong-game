@@ -206,11 +206,42 @@ const architectureRun = {
 };
 game.applyForgeChoice(architectureRun, architectureDraftChoices[0]);
 assert.ok(architectureRun.build.bastionDoctrineId);
+assert.equal(architectureRun.build.doctrineChaseClaimed, false);
 assert.ok(
   architectureRun.build.upgrades.some((upgrade) => upgrade.startsWith("아키텍처 잠금: "))
 );
 assert.equal(architectureRun.build.supportSystems.length, 1);
 assert.equal(architectureRun.build.supportSystems[0].tier, 1);
+const doctrineChaseChoices = game.buildForgeChoices(
+  architectureRun.build,
+  () => 0,
+  180,
+  { nextWave: 4, finalForge: false }
+);
+const doctrineChaseChoice = doctrineChaseChoices.find(
+  (choice) => choice.type === "utility" && choice.action === "doctrine_chase"
+);
+assert.ok(doctrineChaseChoice);
+assert.equal(doctrineChaseChoice.title, "Relay Storm Lattice Frame");
+assert.equal(doctrineChaseChoice.weaponChoice.type, "evolution");
+assert.equal(doctrineChaseChoice.weaponChoice.coreId, "ricochet");
+assert.equal(doctrineChaseChoice.systemChoice.type, "system");
+assert.equal(doctrineChaseChoice.systemChoice.systemId, "volt_drones");
+assert.equal(doctrineChaseChoice.systemChoice.systemTier, 2);
+game.applyForgeChoice(architectureRun, doctrineChaseChoice);
+assert.equal(architectureRun.build.doctrineChaseClaimed, true);
+assert.equal(game.computeWeaponStats(architectureRun.build).evolutionTier, 1);
+assert.equal(
+  architectureRun.build.supportSystems.find((entry) => entry.id === "volt_drones").tier,
+  2
+);
+const postChaseChoices = game.buildForgeChoices(
+  architectureRun.build,
+  () => 0,
+  180,
+  { nextWave: 5, finalForge: false }
+);
+assert.ok(!postChaseChoices.some((choice) => choice.type === "utility" && choice.action === "doctrine_chase"));
 assert.equal(game.shouldUseFieldGrant({ nextWave: 5, finalForge: false }), false);
 assert.equal(game.shouldUseFieldGrant({ nextWave: 9, finalForge: false }), false);
 assert.equal(game.shouldUseFieldGrant({ nextWave: 12, finalForge: true }), false);

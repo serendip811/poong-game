@@ -14,6 +14,17 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 12:05 KST
+  Findings:
+  - The run is now long enough to prove its core sameness: across `Wave 5-12`, the player still mostly solves "reopen space, kill the core, cut the backline, resume kiting" under different labels. That is encounter extension, not replayable combat destiny.
+  - Arena growth to `1280x720` and `1440x820` gives the fight room, but the pressure model still leans too hard on bastion lockouts plus mortar/warden overlap. The result is often longer transit and cleaner edge rotation, not richer territorial decisions that make different builds want different parts of the map.
+  - The forge has more events now, but too much of the run-shaping power is still support-system routing. `Architecture Draft`, `Bastion Draft`, and the late doctrine apex mostly decide which helpers get installed and which lane gets locked, instead of feeding a terrifying end-state players start craving several waves in advance.
+  - Weapon growth is still not carrying enough of the excitement. Tier-3 evolutions exist, but most visible escalation is coming from drones, missiles, shields, and sentries around the gun rather than the gun itself becoming a battlefield-defining monster with unmistakable new firing rules.
+  - The design docs are still anchored to a `5웨이브` short-run MVP while the implementation already behaves like an aspiring long-run roguelite. That ambition mismatch keeps showing up as "more structure, same appetite ceiling."
+  Top Priority: Rebuild the run around one earlier, explicit end-state chase per doctrine that starts by Wave 3-4 and transforms the main weapon plus support layer together, so Act 2 and Act 3 are spent completing a known monster rather than accumulating generally useful helpers.
+  Why Now: More waves will only make the sameness more visible until the player has a build fantasy worth anticipating for ten minutes or more.
+  Do Not Repeat: Do not answer this with another draft wrapper, another helper module, or another wave bracket if the player still spends most runs solving the same lane-reset loop with different escorts.
+
 - 2026-03-22 11:32 KST
   Findings:
   - The game now has enough doctrine, armory, and support-bay scaffolding to look deep on paper, but repeated runs still resolve into the same real job: reopen lanes, trim anchors, and survive crossfire while orbiting the arena edge. That is not enough movement variety for a rerun-driven action roguelite.
@@ -500,6 +511,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 12:20 KST
+  Changed: added an early doctrine-chase bundle to [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so doctrine runs start assembling a known monster by `Wave 4-6` instead of waiting for `Wave 9` to reveal their real end-state. Once `Architecture Draft` or `Bastion Draft` locks a doctrine, normal forge generation now offers one `... Frame` chase card that upgrades the doctrine’s favored weapon path and its support layer together in a single pick, with preview rows and doctrine copy updated to explicitly point from the early frame into the later apex. I also extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new Wave `4` chase offer, its bundled weapon/support payload, and that it only appears once.
+  Why: the latest critique’s Top Priority was to rebuild the run around an earlier, explicit end-state chase per doctrine that begins by `Wave 3-4` and transforms the main weapon plus support layer together. The highest-value bounded interpretation was to add one authored doctrine bundle inside the existing forge cadence, because that creates visible monster-assembly momentum without widening this pass into a new doctrine tree or another menu wrapper.
+  Follow-up risk: the chase bundle now makes the doctrine destination explicit much earlier, but it is still a single authored acceleration beat rather than a full multi-step doctrine recipe ladder. If critique still wants stronger long-run appetite after this, the next pass should add a second doctrine-specific mid/late chase beat or doctrine-exclusive drawback packages so the run keeps asking for deeper commitments after the first frame lands.
 
 - 2026-03-22 11:55 KST
   Changed: rebuilt the live `Kiln Bastion` payoff in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) around a real revisitable safe zone instead of extra sentry damage. `Kiln Sentry` deployables now project a doctrine-only reclaim field that slows and burns enemies, chips `territory` hazard cores, and rewards the player for stepping back into the manufactured foothold with damage mitigation, faster cooling, passive repair, and drive gain; `Bulwark Foundry` now widens and intensifies that field so the late doctrine capstone reads as "hold and retake this ground" rather than "turrets pulse harder." I also updated doctrine/capstone copy, HUD support summaries, and sentry rendering so the reclaim zone is visible in combat.
