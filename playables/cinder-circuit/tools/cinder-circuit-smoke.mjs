@@ -373,14 +373,19 @@ const actBreakArmoryChoices = game.buildForgeChoices(
   180,
   { nextWave: 6, finalForge: false }
 );
-assert.equal(actBreakArmoryChoices.length, 5);
+assert.equal(actBreakArmoryChoices.length, 6);
 assert.ok(actBreakArmoryChoices.some((choice) => choice.laneLabel === "주무장 진화"));
 assert.ok(actBreakArmoryChoices.some((choice) => choice.laneLabel === "공세 모듈"));
-assert.ok(actBreakArmoryChoices.some((choice) => choice.laneLabel === "보조 시스템"));
 assert.ok(actBreakArmoryChoices.some((choice) => choice.laneLabel === "방호/유틸 차체"));
+assert.ok(actBreakArmoryChoices.some((choice) => choice.laneLabel === "대형 화력"));
+assert.ok(
+  actBreakArmoryChoices.filter((choice) =>
+    ["주무장 진화", "공세 모듈", "대형 화력"].includes(choice.laneLabel)
+  ).length >= 4
+);
 assert.ok(
   actBreakArmoryChoices.every((choice) =>
-    ["주무장 진화", "공세 모듈", "보조 시스템", "방호/유틸 차체"].includes(choice.laneLabel)
+    ["주무장 진화", "공세 모듈", "대형 화력", "보조 시스템", "방호/유틸 차체"].includes(choice.laneLabel)
   )
 );
 const armoryFirstPick = actBreakArmoryChoices.find((choice) => choice.laneLabel === "공세 모듈");
@@ -399,7 +404,11 @@ const actBreakFollowupChoices = game.buildForgeFollowupChoices(
 assert.ok(actBreakFollowupChoices.length >= 4);
 assert.ok(!actBreakFollowupChoices.some((choice) => choice.id === armoryFirstPick.id));
 assert.ok(actBreakFollowupChoices.some((choice) => choice.laneLabel === "방호/유틸 차체"));
-assert.ok(actBreakFollowupChoices.some((choice) => choice.laneLabel === "보조 시스템"));
+assert.ok(
+  actBreakFollowupChoices.some((choice) =>
+    ["주무장 진화", "공세 모듈", "대형 화력"].includes(choice.laneLabel)
+  )
+);
 const actModuleFollowupBuild = game.createInitialBuild("relay_oath");
 actModuleFollowupBuild.pendingCores = [];
 const actOneModuleFollowup = game.buildForgeFollowupChoices(

@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-21 23:40 KST
+  Findings:
+  - `buildActBreakArmoryChoices()` is a step up, but it still curates the draft too safely: one evolution, one offensive module, one support system, one chassis lane. A supposed Act 2 identity lock should create greed and fear, not a neat sampler plate.
+  - The larger `1280x720` arena finally gives space, yet Waves 6-8 only raise `activeCap` from `34` to `39` while reusing the same `scuttler/brute/shrike` roster. The room breathes, but too often by creating empty laps rather than sharper territory decisions or more expressive pressure.
+  - Bastion hazards improve target priority, but the late game still resolves into "break the core, then resume kiting the same pack." That is better encounter texture, not the kind of second-act combat rewrite that makes players desperate to reach the back half again.
+  - `MAX_SUPPORT_BAYS = 2` and the current four system families already show visible payoff, but the build ceiling still caps out early. The run now gestures toward a long-form roguelite while its authorship still tops out around "finish the kit," not "become something outrageous."
+  Top Priority: Rework the Act Break Armory into a greedier six-card double-pick draft that can roll multiple offensive spikes against each other instead of lane-guaranteeing one safe answer per category.
+  Why Now: Wave 5 to Wave 6 is the point where rerun hunger should spike, and the current draft still smooths that moment out instead of detonating it.
+  Do Not Repeat: Do not answer this with only more module families or Wave 9+ if the mid-run armory still protects the player from making a dangerous build-defining commitment.
+
 - 2026-03-21 15:00 KST
   Findings:
   - The run now has an actual Wave 8 back half, Wave 4 offensive modules, and tier-3 weapon evolutions, but the forge cadence still feels too controlled and maintenance-heavy for a rerun-hungry action roguelite. Too many stops still resolve as "take the obvious spike, then patch."
@@ -318,6 +328,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-21 23:55 KST
+  Changed: reworked the Wave 5 `Act Break Armory` draft in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from a safe five-card lane sampler into a six-card, two-pick collision draft. The armory now intentionally overfeeds high-commitment offense by surfacing `주무장 진화`, `공세 모듈`, and a new `대형 화력` bucket in the same roll, including recipe-finisher/current-core chase cards and big offensive mod spikes beside the existing system offers, while still leaving a smaller `방호/유틸 차체` hedge lane in the pool. The forge feed/subtitle copy was updated to explain the new 6-card greed profile, and [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts the six-card armory size plus the requirement that multiple offensive spikes collide in the Wave 6 draft.
+  Why: the latest critique’s Top Priority explicitly called for a greedier six-card double-pick armory that can roll multiple offensive spikes against each other instead of guaranteeing one safe answer per category. I took the highest-value bounded interpretation as "change the armory generator itself so it overproduces offensive commitment cards inside the existing progression systems" because that directly sharpens the Wave 5 to Wave 6 identity lock without widening scope into new module families or later-wave content first.
+  Follow-up risk: the draft now creates stronger greed/fear at the act break, but the live combat after the draft still leans on the same Act 2 roster and pressure shape. If the next critique still finds the back half too flat, the next pass should spend this riskier armory on a more distinct Act 2 encounter rewrite rather than adding even more menu breadth.
 
 - 2026-03-21 15:40 KST
   Changed: added a dedicated post-Wave-5 `Act Break Armory` draft in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). The Wave 5 forge no longer uses the normal "primary card, then systems/maintenance closer" package cadence; instead it now opens a two-pick milestone draft that surfaces five major cards drawn from rival `주무장 진화`, `공세 모듈`, `보조 시스템`, and `방호/유틸 차체` lanes. The second pick is re-drafted after the first selection so players can stack identities like evolution + missiles, drones + shielding, or orbitals + economy/mobility chassis before Waves 6-8 start. The same pass updated the forge subtitle/feed text to explain that this is a larger act-break draft, and [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts the Wave 6 armory pool and its second-pick follow-up behavior.

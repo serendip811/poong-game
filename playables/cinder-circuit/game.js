@@ -1023,7 +1023,7 @@
   const DEFAULT_SIGNATURE_ID = "relay_oath";
   const FORGE_PACKAGE_START_WAVE = 3;
   const ACT_BREAK_ARMORY_WAVE = 6;
-  const ACT_BREAK_ARMORY_MAX_CHOICES = 5;
+  const ACT_BREAK_ARMORY_MAX_CHOICES = 6;
   const ACT_BREAK_CHASSIS_MOD_IDS = [
     "drive_sync",
     "armor_mesh",
@@ -3444,6 +3444,7 @@
     );
     const choiceCatalog = new Set(excludedIds);
     const evolutionCandidates = [];
+    const offensiveSpikeCandidates = [];
     const offensiveModuleCandidates = [];
     const subsystemCandidates = [];
     const chassisCandidates = [];
@@ -3451,6 +3452,14 @@
       ? createSupportSystemChoices(build, random, options)
       : [];
     const currentAffixIds = sanitizeAffixIds(build.affixes, getAffixCapacity(build));
+    const offensiveModChoices = shuffle(
+      ["shock_lens", "pulse_gate", "arc_array", "rail_sleeve"]
+        .filter((modId) => MOD_DEFS[modId])
+        .map((modId) => createModChoice(modId)),
+      random
+    );
+    const currentCoreChoice = createCoreChoice(build.coreId, build);
+    const finisherChoice = createRecipeFinisherChoice(build);
     const chassisAffixChoices = [
       "thermal_weave",
       "salvage_link",
@@ -3460,6 +3469,13 @@
       .filter((choice) => choice && canApplyAffixChoice(build, choice.affixId, choice.replaceTarget));
 
     pushChoiceIfOpen(evolutionCandidates, createWeaponEvolutionChoice(build, options), choiceCatalog);
+    pushChoiceIfOpen(offensiveSpikeCandidates, finisherChoice, choiceCatalog);
+    if (currentCoreChoice && currentCoreChoice.benchCopies > 0) {
+      pushChoiceIfOpen(offensiveSpikeCandidates, currentCoreChoice, choiceCatalog);
+    }
+    offensiveModChoices.forEach((choice) => {
+      pushChoiceIfOpen(offensiveSpikeCandidates, choice, choiceCatalog);
+    });
     supportSystemChoices.forEach((choice) => {
       if (choice.forgeLaneLabel === "공세 모듈") {
         pushChoiceIfOpen(offensiveModuleCandidates, choice, choiceCatalog);
@@ -3477,23 +3493,32 @@
       pushChoiceIfOpen(chassisCandidates, choice, choiceCatalog);
     });
 
+    const takeArmoryChoice = (candidates, takenIds, laneLabel) => {
+      for (const choice of candidates) {
+        if (!choice || takenIds.has(choice.id)) {
+          continue;
+        }
+        takenIds.add(choice.id);
+        return markForgeLane(choice, laneLabel);
+      }
+      return null;
+    };
     const choices = [];
     const takenIds = new Set(excludedIds);
+    const primarySpikePool = [...evolutionCandidates, ...offensiveModuleCandidates, ...offensiveSpikeCandidates];
+    const hedgePool = [...subsystemCandidates, ...chassisCandidates];
+    const flexPool = [...primarySpikePool, ...hedgePool];
     [
-      takeFirstAvailableChoice(evolutionCandidates, takenIds, "주무장 진화"),
-      takeFirstAvailableChoice(offensiveModuleCandidates, takenIds, "공세 모듈"),
-      takeFirstAvailableChoice(subsystemCandidates, takenIds, "보조 시스템"),
-      takeFirstAvailableChoice(chassisCandidates, takenIds, "방호/유틸 차체"),
+      takeArmoryChoice(evolutionCandidates, takenIds, "주무장 진화"),
+      takeArmoryChoice(offensiveModuleCandidates, takenIds, "공세 모듈"),
+      takeArmoryChoice(primarySpikePool, takenIds, "대형 화력"),
+      takeArmoryChoice(primarySpikePool, takenIds, "대형 화력"),
+      takeArmoryChoice(hedgePool, takenIds, "방호/유틸 차체"),
     ]
       .filter(Boolean)
       .forEach((choice) => choices.push(choice));
 
-    const extraChoicePool = [
-      ...evolutionCandidates,
-      ...offensiveModuleCandidates,
-      ...subsystemCandidates,
-      ...chassisCandidates,
-    ];
+    const extraChoicePool = flexPool;
     for (const choice of extraChoicePool) {
       if (choices.length >= ACT_BREAK_ARMORY_MAX_CHOICES) {
         break;
@@ -3505,11 +3530,15 @@
       choices.push(
         markForgeLane(
           choice,
-          choice.type === "system"
-            ? choice.forgeLaneLabel || "보조 시스템"
-            : choice.type === "evolution"
+          choice.type === "evolution"
               ? "주무장 진화"
-              : "방호/유틸 차체"
+              : choice.type === "system"
+                ? choice.forgeLaneLabel || "보조 시스템"
+                : choice.type === "core" || choice.type === "affix"
+                  ? "대형 화력"
+                  : hedgePool.includes(choice)
+                    ? "방호/유틸 차체"
+                    : "대형 화력"
         )
       );
     }
@@ -4819,7 +4848,7 @@
       isFinalForge
         ? "최종 웨이브 정리 완료. 마지막 포지에서 최종 각인과 화력 배치를 마감한다."
         : draftType === "armory"
-          ? "Wave 5 돌파. Act Break Armory에서 대형 화력/차체 카드 두 장을 골라 Act 2 빌드 정체성을 고정한다."
+          ? "Wave 5 돌파. Act Break Armory에서 6장 중 대형 카드 두 장을 골라 Act 2 빌드 정체성을 위험하게 고정한다."
           : "웨이브 종료. 포지 카드로 다음 화력 축을 고른다.",
       "FORGE"
     );
@@ -6721,7 +6750,7 @@
       : "촉매 조건 미도달";
     const packageSummary =
       state.forgeDraftType === "armory"
-        ? `Act Break Armory ${state.forgeStep}/${state.forgeMaxSteps} · 주무장 진화, 공세 모듈, 방호/유틸 차체가 한 번에 충돌한다`
+        ? `Act Break Armory ${state.forgeStep}/${state.forgeMaxSteps} · 6장 중 2픽, 대형 화력이 과투입되어 안전한 lane 보장이 없다`
         : state.forgeMaxSteps > 1
         ? `패키지 ${state.forgeStep}/${state.forgeMaxSteps} · 1슬롯 화력/전환, 2슬롯 시스템/안정화`
         : state.waveIndex + 2 >= FORGE_PACKAGE_START_WAVE && !state.pendingFinalForge
@@ -6732,7 +6761,7 @@
         ? `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 세 장은 완성, 촉매 연소, 안정화로 고정되며 각 카드가 바로 이어질 12초 cash-out 시험을 미리 보여준다.`
         : `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 촉매가 없어도 비상 점화와 안정화 fail-soft 카드가 열리며, 각 카드가 다른 12초 cash-out 시험으로 바로 이어진다.`
       : state.forgeDraftType === "armory"
-        ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 5를 넘기면 일반 패키지 대신 Act Break Armory가 열린다. 이번 포지는 두 장 모두 대형 선택이며, 주무장 진화·공세 모듈·방호/유틸 차체가 같은 풀에서 경쟁한다.`
+        ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 5를 넘기면 일반 패키지 대신 Act Break Armory가 열린다. 이번 포지는 6장 중 2장을 고르며, 주무장 진화와 공세 카드가 여러 장 겹쳐 떠 안전한 lane별 정답을 보장하지 않는다.`
       : `고철 ${Math.round(state.resources.scrap)} 보유. 장착은 무기 등급을 올리거나 바꾸고, 각인은 속성을 붙이며, 재구성/분해는 보관 코어를 정리한다. ${packageSummary}.`;
     elements.forgeContext.innerHTML = `
       <article class="forge-context__card">
