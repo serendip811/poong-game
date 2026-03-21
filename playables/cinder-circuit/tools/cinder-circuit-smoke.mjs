@@ -139,13 +139,16 @@ assert.equal(midrunForgeFinisherChoice.type, "core");
 assert.equal(midrunForgeFinisherChoice.coreId, "scatter");
 assert.equal(midrunForgeFinisherChoice.benchCopies, 0);
 assert.equal(midrunForgeFinisherChoice.tag, "FINISHER");
+assert.equal(midrunForgeChoices.length, 4);
+assert.equal(
+  JSON.stringify(midrunForgeChoices.filter((choice) => choice.laneLabel === "보조 시스템").map((choice) => choice.systemId).sort()),
+  JSON.stringify(["aegis_halo", "ember_ring"])
+);
 
-const midrunSystemChoices = game.buildForgeChoices(midrunChaseBuild, () => 0, 180, { nextWave: 3 });
-const installSystemChoice = midrunSystemChoices.find(
-  (choice) => choice.laneLabel === "보조 시스템" && choice.type === "system"
+const installSystemChoice = midrunForgeChoices.find(
+  (choice) => choice.laneLabel === "보조 시스템" && choice.type === "system" && choice.systemId === "ember_ring"
 );
 assert.ok(installSystemChoice);
-assert.equal(installSystemChoice.systemId, "ember_ring");
 assert.equal(installSystemChoice.systemTier, 1);
 const systemRun = {
   build: midrunChaseBuild,
@@ -164,6 +167,7 @@ const upgradeSystemChoice = upgradedSystemChoices.find(
   (choice) => choice.laneLabel === "보조 시스템" && choice.type === "system"
 );
 assert.ok(upgradeSystemChoice);
+assert.ok(upgradedSystemChoices.some((choice) => choice.laneLabel === "생존/경제"));
 assert.equal(upgradeSystemChoice.systemTier, 2);
 game.applyForgeChoice(systemRun, upgradeSystemChoice);
 assert.equal(midrunChaseBuild.supportSystemTier, 2);
@@ -172,9 +176,13 @@ assert.ok(game.computeSupportSystemStats(midrunChaseBuild).shotCooldown > 0);
 
 const aegisBuild = game.createInitialBuild("relay_oath");
 aegisBuild.pendingCores = [];
-const aegisInstallChoices = game.buildForgeChoices(aegisBuild, () => 0.99, 180, { nextWave: 3 });
+const aegisInstallChoices = game.buildForgeChoices(aegisBuild, () => 0.99, 180, { nextWave: 2 });
+assert.equal(
+  JSON.stringify(aegisInstallChoices.filter((choice) => choice.laneLabel === "보조 시스템").map((choice) => choice.systemId).sort()),
+  JSON.stringify(["aegis_halo", "ember_ring"])
+);
 const aegisInstallChoice = aegisInstallChoices.find(
-  (choice) => choice.laneLabel === "보조 시스템" && choice.type === "system"
+  (choice) => choice.laneLabel === "보조 시스템" && choice.type === "system" && choice.systemId === "aegis_halo"
 );
 assert.ok(aegisInstallChoice);
 assert.equal(aegisInstallChoice.systemId, "aegis_halo");

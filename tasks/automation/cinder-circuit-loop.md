@@ -14,6 +14,17 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-21 18:22 KST
+  Findings:
+  - The run is still fundamentally a single 5-wave act in `WAVE_CONFIG`, so even with better forge readability it does not yet demonstrate the pacing contrast, recovery beats, or escalation architecture needed for a repeatable action roguelite that could plausibly stretch toward `20-30` waves.
+  - Adding `Aegis Halo` fixes the "only one support family" problem, but `createSupportSystemChoice()` still serves just one random system card and `shouldOfferSupportSystem()` only starts that lane at Wave 3+, so secondary progression remains a late side dish instead of a deliberate build plan players can chase.
+  - `buildForgeChoices()` still shelves support systems inside the sustain slot, which makes orbitals/shields compete with emergency stability rather than stand as a real power lane; the forge still does not create enough hunger around "commit weapon, commit subsystem, or pivot into a new package."
+  - The combat floor is still cramped by the `960x540` arena against Wave 4-5 density and Twin/Meltdown surges, so late pressure reads as traffic compression more than expressive movement, loot routing, or target-priority mastery.
+  - `computeWeaponStats()` and the current support tiers add useful throughput, but most level-ups still cash out as stat efficiency or modest helper upgrades; there are not enough visible breakpoints where a build suddenly gains a new firing pattern, extra orbitals, missile behavior, barrier rule, or other run-defining silhouette shift.
+  Top Priority: Rework the forge into a true multi-axis choice from mid-run onward by offering explicit subsystem decisions alongside weapon commitment, with at least two competing support/module cards at once and visible tier breakpoints that meaningfully change battlefield behavior.
+  Why Now: Until the player can intentionally assemble a package instead of taking a late random helper, longer runs will only expose how thin the build anticipation still is.
+  Do Not Repeat: Do not mark "second build axis solved" while subsystem selection is still late, singular, and mostly random.
+
 - 2026-03-21 17:52 KST
   Findings:
   - The run is still structurally a short 5-wave sprint in `WAVE_CONFIG`, with one arena, one hazard family, and four enemy types, so it does not yet prove the stamina, phase contrast, or encounter vocabulary needed for the stronger `20-30` wave future this game should be aiming toward.
@@ -215,6 +226,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-21 18:35 KST
+  Changed: reworked mid-run forge generation in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so support progression now sits in its own explicit `보조 시스템` lane instead of replacing the sustain slot. The first eligible forge now starts one wave earlier and surfaces both `Ember Ring` and `Aegis Halo` install cards in the same stop, while later upgrade stops keep subsystem upgrades visible alongside a separate `생존/경제` card. [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts the two-card install branch, the earlier unlock timing, and the coexistence of subsystem and sustain lanes on upgrade forges.
+  Why: the latest critique’s top priority was to make subsystem decisions explicit and multi-axis instead of a late random helper hidden inside the sustain bucket. I took the highest-value bounded interpretation as "turn the first subsystem forge into a real branch and stop charging subsystem picks against emergency stability" because it immediately creates visible build planning without expanding scope into a larger progression tree.
+  Follow-up risk: subsystem choice is now deliberate, but weapon commitment and pivot still only get one card each. If the forge still feels too solved, the next pass should consider paired commit/pivot packages or limited rerolls so mid-run stops keep presenting multiple authored routes instead of one obvious representative per lane.
 
 - 2026-03-21 18:08 KST
   Changed: expanded the support lane in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) beyond the existing `Ember Ring` by adding a second installable family, `Aegis Halo`. Mid-run `보조 시스템` forge cards can now install either offensive orbitals or a defensive interceptor halo, and upgrades stay on the chosen family. `Aegis Halo` visibly renders as shield satellites, deletes incoming enemy shots around the player, and upgrades into `Aegis Halo Mk.II` with two interceptors plus a defensive pulse that damages nearby enemies when a shot is broken. [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts both support families, their install/upgrade paths, and the new interceptor stats.

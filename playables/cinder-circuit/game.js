@@ -1624,33 +1624,39 @@
     };
   }
 
-  function createSupportSystemChoice(build, rng) {
+  function createSupportSystemChoices(build, rng) {
     if (!build) {
-      return null;
+      return [];
     }
     const random = typeof rng === "function" ? rng : Math.random;
-    const systemIds = Object.keys(SUPPORT_SYSTEM_DEFS);
-    const system = getSupportSystemDef(build)
-      || SUPPORT_SYSTEM_DEFS[systemIds[Math.floor(random() * systemIds.length)] || systemIds[0]];
-    const nextTier = getSupportSystemDef(build)
-      ? clamp((build.supportSystemTier || 0) + 1, 0, 2)
-      : 1;
-    const tierDef = system.tiers[nextTier];
-    if (!tierDef || (build.supportSystemId === system.id && (build.supportSystemTier || 0) >= nextTier)) {
-      return null;
-    }
-    return {
-      type: "system",
-      id: `system:${system.id}:t${tierDef.tier}`,
-      verb: build.supportSystemId === system.id ? "증설" : "설치",
-      tag: "SYSTEM",
-      title: tierDef.title,
-      description: tierDef.description,
-      slotText: tierDef.slotText,
-      systemId: system.id,
-      systemTier: tierDef.tier,
-      cost: tierDef.cost,
-    };
+    const currentSystem = getSupportSystemDef(build);
+    const candidateIds = currentSystem ? [currentSystem.id] : shuffle(Object.keys(SUPPORT_SYSTEM_DEFS), random);
+    return candidateIds
+      .map((systemId) => {
+        const system = SUPPORT_SYSTEM_DEFS[systemId];
+        const nextTier = currentSystem ? clamp((build.supportSystemTier || 0) + 1, 0, 2) : 1;
+        const tierDef = system && system.tiers[nextTier];
+        if (
+          !system ||
+          !tierDef ||
+          (build.supportSystemId === system.id && (build.supportSystemTier || 0) >= nextTier)
+        ) {
+          return null;
+        }
+        return {
+          type: "system",
+          id: `system:${system.id}:t${tierDef.tier}`,
+          verb: build.supportSystemId === system.id ? "증설" : "설치",
+          tag: "SYSTEM",
+          title: tierDef.title,
+          description: tierDef.description,
+          slotText: tierDef.slotText,
+          systemId: system.id,
+          systemTier: tierDef.tier,
+          cost: tierDef.cost,
+        };
+      })
+      .filter(Boolean);
   }
 
   function shouldOfferSupportSystem(build, options) {
@@ -1659,7 +1665,7 @@
     }
     const nextWave = options && Number.isFinite(options.nextWave) ? options.nextWave : 0;
     if (!build.supportSystemId) {
-      return nextWave >= 3;
+      return nextWave >= 2;
     }
     return (build.supportSystemTier || 0) < 2 && nextWave >= 4;
   }
@@ -2526,6 +2532,7 @@
     const choiceCatalog = new Set();
     const commitCandidates = [];
     const pivotCandidates = [];
+    const subsystemCandidates = [];
     const sustainCandidates = [];
     const currentAffixIds = sanitizeAffixIds(build.affixes, getAffixCapacity(build));
     const catalystReforgeChoice = createCatalystReforgeChoice(build);
@@ -2533,14 +2540,12 @@
     const reforgeChoice = catalystReforgeChoice || createReforgeChoice(build, random);
     const affixReforgeChoice = createAffixReforgeChoice(build, random);
     const finisherChoice = createRecipeFinisherChoice(build);
-    const supportSystemChoice = shouldOfferSupportSystem(build, options)
-      ? createSupportSystemChoice(build, random)
-      : null;
+    const supportSystemChoices = shouldOfferSupportSystem(build, options)
+      ? createSupportSystemChoices(build, random)
+      : [];
     const guaranteedMidrunChase = shouldGuaranteeMidrunChase(options)
       ? createGuaranteedChaseChoice(build)
       : null;
-    const supportLaneLabel = supportSystemChoice ? "보조 시스템" : "생존/경제";
-
     pushChoiceIfOpen(commitCandidates, guaranteedMidrunChase || finisherChoice, choiceCatalog);
 
     const sameCoreChoice = createCoreChoice(build.coreId, build);
@@ -2583,7 +2588,9 @@
       pushChoiceIfOpen(pivotCandidates, choice, choiceCatalog);
     });
 
-    pushChoiceIfOpen(sustainCandidates, supportSystemChoice, choiceCatalog);
+    supportSystemChoices.forEach((choice) => {
+      pushChoiceIfOpen(subsystemCandidates, choice, choiceCatalog);
+    });
 
     if (Number.isFinite(scrapBank) && scrapBank < 32 && recycleChoice) {
       pushChoiceIfOpen(sustainCandidates, recycleChoice, choiceCatalog);
@@ -2614,21 +2621,29 @@
     }
 
     const takenIds = new Set();
-    const choices = [
+    const laneChoices = [
       takeFirstAvailableChoice(commitCandidates, takenIds, "빌드 고정"),
       takeFirstAvailableChoice(pivotCandidates, takenIds, "전환"),
-      takeFirstAvailableChoice(sustainCandidates, takenIds, supportLaneLabel),
+      takeFirstAvailableChoice(subsystemCandidates, takenIds, "보조 시스템"),
+      takeFirstAvailableChoice(sustainCandidates, takenIds, "생존/경제"),
     ].filter(Boolean);
+    const choices = !build.supportSystemId && subsystemCandidates.length > 1
+      ? laneChoices.filter((choice) => choice.laneLabel !== "생존/경제")
+      : laneChoices;
+    const maxChoices = subsystemCandidates.length > 0 ? 4 : 3;
+    const extraChoicePool = !build.supportSystemId && subsystemCandidates.length > 1
+      ? [...subsystemCandidates, ...commitCandidates, ...pivotCandidates, ...sustainCandidates]
+      : [...commitCandidates, ...pivotCandidates, ...subsystemCandidates, ...sustainCandidates];
 
-    for (const choice of [...commitCandidates, ...pivotCandidates, ...sustainCandidates]) {
-      if (choices.length >= 3) {
+    for (const choice of extraChoicePool) {
+      if (choices.length >= maxChoices) {
         break;
       }
       if (takenIds.has(choice.id)) {
         continue;
       }
       takenIds.add(choice.id);
-      choices.push(markForgeLane(choice, "예비"));
+      choices.push(markForgeLane(choice, choice.type === "system" ? "보조 시스템" : "예비"));
     }
 
     if (
@@ -2647,7 +2662,7 @@
       }, "생존/경제");
     }
 
-    return shuffle(choices.slice(0, 3), random);
+    return shuffle(choices.slice(0, maxChoices), random);
   }
 
   function applyForgeChoice(run, choice) {
