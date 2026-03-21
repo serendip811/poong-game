@@ -54,10 +54,42 @@ PY
   fi
 }
 
+extract_commit_message() {
+  if [ -f "$LAST_FILE" ]; then
+    /usr/bin/python3 - <<'PY' "$LAST_FILE"
+from pathlib import Path
+import sys
+for line in Path(sys.argv[1]).read_text().splitlines():
+    stripped = line.strip()
+    if stripped.lower().startswith("commit message:"):
+        print(stripped.split(":", 1)[1].strip())
+        break
+PY
+  fi
+}
+
+auto_commit_push() {
+  local status_output commit_message
+  status_output=$(/usr/bin/git -C "$ROOT" status --short)
+  if [ -z "$status_output" ]; then
+    return 0
+  fi
+
+  commit_message=$(extract_commit_message)
+  if [ -z "$commit_message" ]; then
+    commit_message="auto improve cinder circuit"
+  fi
+
+  /usr/bin/git -C "$ROOT" add -A
+  /usr/bin/git -C "$ROOT" commit -m "$commit_message"
+  /usr/bin/git -C "$ROOT" push origin main
+}
+
 {
   printf '\n[%s] improve start\n' "$(date '+%Y-%m-%d %H:%M:%S')"
   notify "start" "loop started"
   cat "$PROMPT_FILE" | "$CODEX_BIN" exec --dangerously-bypass-approvals-and-sandbox -C "$ROOT" -o "$LAST_FILE" -
+  auto_commit_push
   printf '[%s] improve done\n' "$(date '+%Y-%m-%d %H:%M:%S')"
   notify "done" "$(summary_text)"
 } >> "$LOG_FILE" 2>&1

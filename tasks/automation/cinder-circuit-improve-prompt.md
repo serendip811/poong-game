@@ -18,6 +18,7 @@ Working rules:
 - After changing code, update `tasks/automation/cinder-circuit-loop.md` by prepending a new entry under `## Latest Improvement`.
 - Include what changed, why, and any new follow-up risk in that entry.
 - Run the existing smoke test if your change touches gameplay or UI logic.
+- Do not run `git add`, `git commit`, or `git push` yourself; the wrapper script handles git after you finish.
 
 Constraints:
 - Keep the improvement bounded. One coherent change per run.
@@ -28,11 +29,9 @@ Constraints:
 
 After code and loop-file changes are done:
 - Run the existing smoke test if needed.
-- Stage the relevant files.
-- Create a git commit with a concise message.
-- Push to `origin/main`.
+- End with a single-line `Commit message:` field containing a concise commit message the wrapper can reuse.
 
 Final response rule:
-- End with a very short 1-2 line plain-text summary of what was improved, what files changed, and whether validation passed so the automation webhook can relay it.
+- End with a very short 1-2 line plain-text summary of what was improved, what files changed, whether validation passed, and include the `Commit message:` line so the automation wrapper can relay and reuse it.
 
 If the critique is too vague, choose the highest-value concrete interpretation and note it in the loop file.
