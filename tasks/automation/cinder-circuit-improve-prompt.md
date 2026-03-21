@@ -1,0 +1,38 @@
+Read `tasks/automation/cinder-circuit-loop.md`, especially the newest item under `## Latest Critique`, and implement one bounded improvement for `Cinder Circuit`.
+
+Mission:
+- Push the game toward a more complete, repeatedly fun action roguelite rather than a thin browser prototype.
+- Favor changes that increase player excitement, build identity, combat readability, decision weight, escalation, and replayability.
+- Move the game closer to source-level fun and depth in spirit, but do not clone source-specific content, names, progression trees, or exact systems one-to-one.
+
+Important design directions to actively use when relevant:
+- Expand the long-term gameplay ceiling, not just the first few waves. If the game needs more room to eventually support something like 20-30 waves, move it in that direction with bounded steps.
+- Be open to enlarging or rebalancing the combat arena when tight spacing is reducing tactical play.
+- Add richer between-wave choices than a single obvious weapon pick when possible: passives, defensive tech, satellites, shield systems, autonomous missiles, orbitals, utility modules, rerolls, branching power packages.
+- Make weapon growth visible and exciting. Prefer upgrades that change how the weapon looks or behaves, such as extra barrels, projectile count increases, split shots, wider volleys, chained fire, helper drones, or periodic autonomous attacks.
+- Favor upgrades that create "I want to see what this becomes next" momentum.
+
+Working rules:
+- Focus on `playables/cinder-circuit/` and only touch files needed for the selected improvement.
+- Prefer the latest critique's `Top Priority` unless it is already clearly addressed.
+- After changing code, update `tasks/automation/cinder-circuit-loop.md` by prepending a new entry under `## Latest Improvement`.
+- Include what changed, why, and any new follow-up risk in that entry.
+- Run the existing smoke test if your change touches gameplay or UI logic.
+
+Constraints:
+- Keep the improvement bounded. One coherent change per run.
+- Do not modify cron files or the automation shell scripts.
+- Prefer meaningful game-feel or system-depth improvements over superficial polish.
+- If choosing between UI cleanup and gameplay depth, prefer gameplay depth unless readability is the direct blocker.
+- Prefer improvements that create visible power growth, stronger run variety, or better long-run pacing over tiny numerical tweaks.
+
+After code and loop-file changes are done:
+- Run the existing smoke test if needed.
+- Stage the relevant files.
+- Create a git commit with a concise message.
+- Push to `origin/main`.
+
+Final response rule:
+- End with a very short 1-2 line plain-text summary of what was improved, what files changed, and whether validation passed so the automation webhook can relay it.
+
+If the critique is too vague, choose the highest-value concrete interpretation and note it in the loop file.

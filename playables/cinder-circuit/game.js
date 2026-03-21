@@ -138,6 +138,8 @@
 
   const MAX_WAVES = WAVE_CONFIG.length;
   const POST_WAVE_LOOT_GRACE = 2.4;
+  const FINAL_CASHOUT_DURATION = 12;
+  const FINAL_CASHOUT_SPAWN_BUDGET = 26;
 
   const ENEMY_DEFS = {
     scuttler: {
@@ -254,7 +256,9 @@
   };
 
   const DROPPABLE_CORE_IDS = ["scatter", "lance", "ricochet"];
-  const MAX_BENCH_COPIES_PER_CORE = 3;
+  const MAX_BENCH_COPIES_PER_CORE = 4;
+  const BASE_AFFIX_CAP = 2;
+  const LEGENDARY_AFFIX_CAP = 3;
   const CORE_OVERFLOW_SCRAP = 6;
 
   const MOD_DEFS = {
@@ -390,6 +394,129 @@
       apply(build) {
         build.dashMaxBonus += 1;
         build.coolRateBonus += 6;
+      },
+    },
+  };
+
+  const SUPPORT_SYSTEM_DEFS = {
+    ember_ring: {
+      id: "ember_ring",
+      tag: "SYSTEM",
+      color: "#ffd166",
+      orbitColor: "rgba(255, 209, 102, 0.18)",
+      strokeColor: "rgba(255, 241, 168, 0.6)",
+      renderShape: "orb",
+      tiers: {
+        1: {
+          tier: 1,
+          label: "Ember Ring",
+          title: "Ember Ring",
+          cost: 36,
+          description:
+            "플레이어 주위를 도는 화염 위성 1기를 설치한다. 근접 요격으로 전열을 비집고 지나갈 공간을 만든다.",
+          slotText: "보조 시스템 설치 · 위성 1기",
+          orbitCount: 1,
+          orbitRadius: 52,
+          orbitSpeed: 1.9,
+          satelliteRadius: 8,
+          touchDamage: 16,
+          touchCooldown: 0.28,
+          shotCooldown: 0,
+          shotRange: 0,
+          shotDamage: 0,
+          shotSpeed: 0,
+          interceptRange: 0,
+          interceptCooldown: 0,
+          interceptPulseDamage: 0,
+          interceptPulseRadius: 0,
+          previewText: "근접 요격 위성",
+          statusNote: "Ember Ring이 플레이어 주위를 돌며 근접 적을 긁어 안전 반경을 만든다.",
+        },
+        2: {
+          tier: 2,
+          label: "Ember Ring Mk.II",
+          title: "Ember Ring Mk.II",
+          cost: 52,
+          description:
+            "Ember Ring을 2기 편대로 증설한다. 위성이 더 넓게 회전하며 주기적으로 근처 적에게 자동 점화 볼트를 발사한다.",
+          slotText: "보조 시스템 증설 · 위성 2기 + 자동 볼트",
+          orbitCount: 2,
+          orbitRadius: 64,
+          orbitSpeed: 2.25,
+          satelliteRadius: 8.5,
+          touchDamage: 20,
+          touchCooldown: 0.22,
+          shotCooldown: 1.15,
+          shotRange: 248,
+          shotDamage: 12,
+          shotSpeed: 540,
+          interceptRange: 0,
+          interceptCooldown: 0,
+          interceptPulseDamage: 0,
+          interceptPulseRadius: 0,
+          previewText: "위성 2기 + 자동 볼트",
+          statusNote: "Ember Ring Mk.II가 두 갈래 궤도로 전열을 긁고 자동 점화 볼트까지 보탠다.",
+        },
+      },
+    },
+    aegis_halo: {
+      id: "aegis_halo",
+      tag: "SYSTEM",
+      color: "#8ae7ff",
+      orbitColor: "rgba(138, 231, 255, 0.2)",
+      strokeColor: "rgba(226, 251, 255, 0.72)",
+      renderShape: "shield",
+      tiers: {
+        1: {
+          tier: 1,
+          label: "Aegis Halo",
+          title: "Aegis Halo",
+          cost: 34,
+          description:
+            "요격 위성 1기를 설치한다. 위성이 플레이어 주변을 돌며 날아오는 적 탄환을 먼저 지워 위험한 사격 각을 끊는다.",
+          slotText: "보조 시스템 설치 · 요격 위성 1기",
+          orbitCount: 1,
+          orbitRadius: 44,
+          orbitSpeed: 1.7,
+          satelliteRadius: 9,
+          touchDamage: 8,
+          touchCooldown: 0.34,
+          shotCooldown: 0,
+          shotRange: 0,
+          shotDamage: 0,
+          shotSpeed: 0,
+          interceptRange: 26,
+          interceptCooldown: 0.16,
+          interceptPulseDamage: 0,
+          interceptPulseRadius: 0,
+          previewText: "요격 위성",
+          statusNote: "Aegis Halo가 들어오는 탄환을 먼저 지워 사격 압박을 끊는다.",
+        },
+        2: {
+          tier: 2,
+          label: "Aegis Halo Mk.II",
+          title: "Aegis Halo Mk.II",
+          cost: 50,
+          description:
+            "Aegis Halo를 2기 편대로 증설한다. 요격 범위가 넓어지고 탄환을 끊을 때마다 짧은 방호 충격파로 근접 적까지 밀어낸다.",
+          slotText: "보조 시스템 증설 · 요격 위성 2기 + 방호 파동",
+          orbitCount: 2,
+          orbitRadius: 52,
+          orbitSpeed: 1.95,
+          satelliteRadius: 9.5,
+          touchDamage: 10,
+          touchCooldown: 0.28,
+          shotCooldown: 0,
+          shotRange: 0,
+          shotDamage: 0,
+          shotSpeed: 0,
+          interceptRange: 34,
+          interceptCooldown: 0.12,
+          interceptPulseDamage: 14,
+          interceptPulseRadius: 48,
+          previewText: "요격 2기 + 방호 파동",
+          statusNote: "Aegis Halo Mk.II가 탄환을 끊을 때마다 방호 파동을 터뜨려 근접 압박까지 밀어낸다.",
+        },
       },
     },
   };
@@ -539,6 +666,688 @@
   };
 
   const DEFAULT_SIGNATURE_ID = "relay_oath";
+  const FINISHER_RECIPE_DEFS = {
+    ember: {
+      label: "Crown Pyre",
+      summary: "기본 회로를 고속 관통 화선으로 압축하는 정밀 starter-core 피니셔.",
+      steps: [
+        {
+          type: "affix",
+          affixId: "overclock",
+          title: "Relay Spool",
+          slotText: "연사 예열",
+        },
+        {
+          type: "affix",
+          affixId: "phase_rounds",
+          title: "Needle Core",
+          slotText: "직선 관통",
+        },
+        {
+          type: "affix",
+          affixId: "hotshot",
+          title: "Crown Pyre",
+          slotText: "종결 화선",
+        },
+      ],
+    },
+    scatter: {
+      label: "Kiln Bloom",
+      summary: "근거리 과열 산탄을 끝까지 밀어 붙이는 전설 산탄 레시피.",
+      steps: [
+        {
+          type: "core",
+          minCopies: 4,
+          title: "Legendary Sync",
+          slotText: "전설 동기화",
+        },
+        {
+          type: "affix",
+          affixId: "overclock",
+          title: "Bloom Chamber",
+          slotText: "탄막 증폭",
+        },
+        {
+          type: "affix",
+          affixId: "thermal_weave",
+          title: "Coolant Lattice",
+          slotText: "발열 제어",
+        },
+        {
+          type: "affix",
+          affixId: "hotshot",
+          title: "Cinder Bloom",
+          slotText: "마무리 화력",
+        },
+      ],
+    },
+    lance: {
+      label: "Sky Pierce",
+      summary: "관통선과 연쇄를 한 줄로 묶어 엘리트 전열을 찢는 레일 레시피.",
+      steps: [
+        {
+          type: "core",
+          minCopies: 4,
+          title: "Legendary Rail",
+          slotText: "전설 레일 동조",
+        },
+        {
+          type: "affix",
+          affixId: "phase_rounds",
+          title: "Needle Stack",
+          slotText: "심화 관통",
+        },
+        {
+          type: "affix",
+          affixId: "arc_link",
+          title: "Breaker Arc",
+          slotText: "연쇄 돌파",
+        },
+        {
+          type: "affix",
+          affixId: "thermal_weave",
+          title: "Cold Spur",
+          slotText: "지속 발사 안정화",
+        },
+      ],
+    },
+    ricochet: {
+      label: "Prism Cascade",
+      summary: "반사, 연쇄, 속사를 엮어 웨이브 정리를 가속하는 분광 레시피.",
+      steps: [
+        {
+          type: "core",
+          minCopies: 4,
+          title: "Legendary Prism",
+          slotText: "전설 반사 동조",
+        },
+        {
+          type: "affix",
+          affixId: "arc_link",
+          title: "Cascade Link",
+          slotText: "연쇄 반사 결합",
+        },
+        {
+          type: "affix",
+          affixId: "overclock",
+          title: "Split Accelerator",
+          slotText: "반사 회전 가속",
+        },
+        {
+          type: "affix",
+          affixId: "phase_rounds",
+          title: "Glass Spear",
+          slotText: "재진입 관통",
+        },
+      ],
+    },
+  };
+
+  const CATALYST_REFORGE_DEFS = {
+    ember: {
+      id: "sear_halo",
+      coreId: "ember",
+      label: "Sear Halo",
+      title: "Sear Halo",
+      slotText: "촉매 재구성 · 에코 화선",
+      description:
+        "Crown Pyre 촉매를 태워 주탄 양옆에 에코 볼트를 덧댄다. 단일 종결 화력 대신 얇은 다중 라인을 길게 유지하는 쪽을 택한다.",
+      apply(build) {
+        build.cooldownBonus += 0.018;
+        build.driveGainBonus += 0.2;
+        build.moveSpeedBonus += 10;
+        build.catalystCapstoneId = "sear_halo";
+      },
+      applyWeapon(stats) {
+        stats.capstoneTraitLabel = "쌍선 에코 볼트";
+        stats.capstoneStatusNote = "주탄 양옆으로 에코 볼트가 벌어져 측면 진입선을 함께 훑는다.";
+        stats.capstoneFire = {
+          kind: "ember_echo",
+          projectileCount: 2,
+          spread: 0.11,
+          damageMultiplier: 0.62,
+          speedMultiplier: 1.06,
+          radius: 4.6,
+          color: "#ffe08a",
+        };
+      },
+    },
+    scatter: {
+      id: "flash_temper",
+      coreId: "scatter",
+      label: "Flash Temper",
+      title: "Flash Temper",
+      slotText: "촉매 재구성 · 관통 산탄",
+      description:
+        "Kiln Bloom 촉매를 태워 매 발마다 중심 관통 슬러그를 함께 박아 넣는다. 완성형 화력 대신 전열 절개와 드라이브 순환을 택한다.",
+      apply(build) {
+        build.damageBonus += 6;
+        build.pierceBonus += 1;
+        build.driveGainBonus += 0.22;
+        build.catalystCapstoneId = "flash_temper";
+      },
+      applyWeapon(stats) {
+        stats.capstoneTraitLabel = "중앙 관통 슬러그";
+        stats.capstoneStatusNote = "주탄막 사이로 고속 슬러그가 함께 나가 전열을 곧게 찢는다.";
+        stats.capstoneFire = {
+          kind: "temper_slug",
+          damageMultiplier: 1.55,
+          pierceBonus: 2,
+          speedMultiplier: 1.2,
+          radius: 5.6,
+          color: "#ffd166",
+        };
+      },
+    },
+    lance: {
+      id: "storm_rail",
+      coreId: "lance",
+      label: "Storm Rail",
+      title: "Storm Rail",
+      slotText: "촉매 재구성 · 연쇄 레일",
+      description:
+        "Sky Pierce 촉매를 태워 명중점에서 연쇄 분기 레일을 터뜨린다. 엘리트 관통선 대신 광역 전도 압박을 고른다.",
+      apply(build) {
+        build.chainBonus += 1;
+        build.cooldownBonus += 0.024;
+        build.coolRateBonus += 6;
+        build.catalystCapstoneId = "storm_rail";
+      },
+      applyWeapon(stats) {
+        stats.capstoneTraitLabel = "충격 분기 레일";
+        stats.capstoneStatusNote = "레일이 적중한 자리에서 주변 적 둘까지 전도 분기가 추가로 뻗는다.";
+        stats.capstoneOnHit = {
+          kind: "storm_branch",
+          burstCount: 2,
+          range: 188,
+          damageMultiplier: 0.58,
+          speedMultiplier: 1.08,
+          color: "#8ae7ff",
+        };
+      },
+    },
+    ricochet: {
+      id: "mirror_spiral",
+      coreId: "ricochet",
+      label: "Mirror Spiral",
+      title: "Mirror Spiral",
+      slotText: "촉매 재구성 · 속사 분광",
+      description:
+        "Prism Cascade 촉매를 태워 첫 반사 시 거울 파편 둘로 갈라진다. 완성 레시피 대신 더 빠른 회전과 연쇄로 밀어 붙인다.",
+      apply(build) {
+        build.damageBonus += 5;
+        build.cooldownBonus += 0.028;
+        build.chainBonus += 1;
+        build.catalystCapstoneId = "mirror_spiral";
+      },
+      applyWeapon(stats) {
+        stats.capstoneTraitLabel = "반사 분열 파편";
+        stats.capstoneStatusNote = "첫 벽 반사 때 탄이 둘로 갈라져 측면까지 훑는다.";
+        stats.capstoneOnBounce = {
+          kind: "mirror_split",
+          splitCount: 2,
+          spread: 0.24,
+          damageMultiplier: 0.62,
+          speedMultiplier: 0.96,
+          color: "#b6f4ff",
+        };
+      },
+    },
+  };
+  const CATALYST_REFORGE_BY_ID = Object.values(CATALYST_REFORGE_DEFS).reduce(
+    (map, def) => {
+      map[def.id] = def;
+      return map;
+    },
+    {}
+  );
+  const FINAL_CASHOUT_CAPSTONE_VARIANTS = {
+    sear_halo: {
+      cashoutLabel: "Halo Trial",
+      bannerLabel: "Sear Halo Trial",
+      note: "Sear Halo cash-out은 중앙 주탄과 좌우 에코 볼트로 다중 진입선을 동시에 지우는지 시험한다.",
+      directive: "얇은 세 줄 압박과 빠른 측면 재진입. 정면 고정 사격보다 라인 스위프 유지가 중요하다.",
+      spawnBudget: FINAL_CASHOUT_SPAWN_BUDGET + 3,
+      activeCap: 23,
+      baseSpawnInterval: 0.23,
+      spawnIntervalMin: 0.1,
+      eliteEvery: 4,
+      driveGainFactor: 1.25,
+      mix: {
+        scuttler: 0.4,
+        brute: 0.14,
+        shrike: 0.46,
+      },
+      hazard: {
+        label: "Halo Lanes",
+        interval: 6.1,
+        count: 3,
+        radius: 56,
+        telegraph: 0.76,
+        duration: 3.4,
+        damage: 12,
+        timerFactor: 0.47,
+      },
+    },
+    flash_temper: {
+      cashoutLabel: "Temper Trial",
+      bannerLabel: "Flash Temper Trial",
+      note: "Flash Temper cash-out은 브루트 전열을 찢고 중심 슬러그 각을 유지해야 안정적으로 정리된다.",
+      directive: "단일 대구경 surge와 무거운 전열. 정면 절개와 드라이브 회전을 강하게 요구한다.",
+      spawnBudget: FINAL_CASHOUT_SPAWN_BUDGET + 2,
+      activeCap: 21,
+      baseSpawnInterval: 0.3,
+      spawnIntervalMin: 0.11,
+      eliteEvery: 4,
+      driveGainFactor: 1.28,
+      mix: {
+        scuttler: 0.22,
+        brute: 0.48,
+        shrike: 0.3,
+      },
+      hazard: {
+        label: "Temper Breaker",
+        interval: 7.1,
+        count: 1,
+        radius: 82,
+        telegraph: 0.78,
+        duration: 4.5,
+        damage: 14,
+        timerFactor: 0.5,
+      },
+    },
+    storm_rail: {
+      cashoutLabel: "Rail Trial",
+      bannerLabel: "Storm Rail Trial",
+      note: "Storm Rail cash-out은 얇은 전열보다 분기 레일 각을 열 수 있는 다중 타겟 정리에 무게를 둔다.",
+      directive: "세 갈래 surge와 잦은 엘리트 침투. 연쇄 적중을 굴려 화면 전반을 비워야 한다.",
+      spawnBudget: FINAL_CASHOUT_SPAWN_BUDGET + 4,
+      activeCap: 24,
+      baseSpawnInterval: 0.24,
+      spawnIntervalMin: 0.1,
+      eliteEvery: 4,
+      driveGainFactor: 1.26,
+      mix: {
+        scuttler: 0.46,
+        brute: 0.16,
+        shrike: 0.38,
+      },
+      hazard: {
+        label: "Storm Lattice",
+        interval: 6.4,
+        count: 3,
+        radius: 58,
+        telegraph: 0.74,
+        duration: 3.4,
+        damage: 12,
+        timerFactor: 0.48,
+      },
+    },
+    mirror_spiral: {
+      cashoutLabel: "Mirror Trial",
+      bannerLabel: "Mirror Spiral Trial",
+      note: "Mirror Spiral cash-out은 반사 분열이 측면 압박을 지우는지 시험하도록 빠른 측면 교차 화력을 깐다.",
+      directive: "짧은 간격의 crossfire surge와 가벼운 추적 무리. 벽 반사 각과 측면 정리가 핵심이다.",
+      spawnBudget: FINAL_CASHOUT_SPAWN_BUDGET + 5,
+      activeCap: 25,
+      baseSpawnInterval: 0.22,
+      spawnIntervalMin: 0.1,
+      eliteEvery: 5,
+      driveGainFactor: 1.24,
+      mix: {
+        scuttler: 0.34,
+        brute: 0.12,
+        shrike: 0.54,
+      },
+      hazard: {
+        label: "Mirror Crossfire",
+        interval: 5.9,
+        count: 2,
+        radius: 64,
+        telegraph: 0.7,
+        duration: 3.5,
+        damage: 12,
+        timerFactor: 0.44,
+      },
+    },
+  };
+  const FINAL_CASHOUT_SUPPORT_DEFS = {
+    ember: {
+      id: "pilot_light",
+      coreId: "ember",
+      label: "Pilot Light",
+      title: "Pilot Light",
+      slotText: "촉매 안정화 · 드라이브 여유",
+      description:
+        "Crown Pyre 촉매를 파일럿 라이트로 태워 drive 회전과 냉각 복구를 안정화한다. 종결 화선 대신 오버드라이브 창을 더 자주 여는 운영을 고른다.",
+      apply(build, run) {
+        build.driveGainBonus += 0.26;
+        build.overdriveDurationBonus += 1.1;
+        build.coolRateBonus += 8;
+        build.cashoutSupportId = "pilot_light";
+        if (run && run.player) {
+          run.player.drive = Math.min(100, run.player.drive + 22);
+        }
+      },
+      cashoutLabel: "Pilot Trial",
+      bannerLabel: "Pilot Light Trial",
+      note: "Pilot Light cash-out은 오버드라이브 창을 더 자주 열 수 있는 대신, 그 창마다 엘리트와 측면 압박을 빨리 비워야 한다.",
+      directive: "짧은 교전 파형과 잦은 엘리트 침투. drive 타이밍과 냉각 복구를 굴려 전장을 비워야 한다.",
+      spawnBudget: FINAL_CASHOUT_SPAWN_BUDGET + 1,
+      activeCap: 20,
+      baseSpawnInterval: 0.27,
+      spawnIntervalMin: 0.11,
+      eliteEvery: 4,
+      driveGainFactor: 1.3,
+      mix: {
+        scuttler: 0.28,
+        brute: 0.24,
+        shrike: 0.48,
+      },
+      hazard: {
+        label: "Pilot Rings",
+        interval: 6.9,
+        count: 2,
+        radius: 62,
+        telegraph: 0.9,
+        duration: 3,
+        damage: 11,
+        timerFactor: 0.58,
+      },
+    },
+    scatter: {
+      id: "quench_loop",
+      coreId: "scatter",
+      label: "Quench Loop",
+      title: "Quench Loop",
+      slotText: "촉매 안정화 · 열 배기",
+      description:
+        "Kiln Bloom 촉매를 냉각 루프로 태워 heat 관리와 지속 사격을 안정화한다. 완성형 폭딜 대신 더 긴 발화 각과 넓은 telegraph를 고른다.",
+      apply(build, run) {
+        build.heatFactor *= 0.76;
+        build.coolRateBonus += 14;
+        build.cashoutSupportId = "quench_loop";
+        if (run && run.player) {
+          run.player.heat = Math.max(0, run.player.heat - 28);
+          run.player.overheated = false;
+        }
+      },
+      cashoutLabel: "Quench Trial",
+      bannerLabel: "Quench Loop Trial",
+      note: "Quench Loop cash-out은 더 긴 냉각 여유로 정면 교전을 유지하는 대신, 적 밀도를 조금 더 오래 끌고 가며 절개 각을 만든다.",
+      directive: "넓어진 surge telegraph와 느린 압박. 발열 관리로 중앙 사선을 오래 유지하는지가 핵심이다.",
+      spawnBudget: FINAL_CASHOUT_SPAWN_BUDGET - 1,
+      activeCap: 18,
+      baseSpawnInterval: 0.32,
+      spawnIntervalMin: 0.12,
+      eliteEvery: 5,
+      driveGainFactor: 1.18,
+      mix: {
+        scuttler: 0.26,
+        brute: 0.42,
+        shrike: 0.32,
+      },
+      hazard: {
+        label: "Quench Lanes",
+        interval: 7.6,
+        count: 1,
+        radius: 76,
+        telegraph: 0.94,
+        duration: 3.2,
+        damage: 10,
+        timerFactor: 0.62,
+      },
+    },
+    lance: {
+      id: "vector_relay",
+      coreId: "lance",
+      label: "Vector Relay",
+      title: "Vector Relay",
+      slotText: "촉매 안정화 · 대시 경제",
+      description:
+        "Sky Pierce 촉매를 벡터 릴레이로 태워 dash stock과 복구를 끌어올린다. 완성형 관통 대신 위험한 레인 사이를 더 자주 넘는 운영을 고른다.",
+      apply(build) {
+        build.moveSpeedBonus += 16;
+        build.dashCooldownBonus += 0.42;
+        build.dashMaxBonus += 1;
+        build.cashoutSupportId = "vector_relay";
+      },
+      cashoutLabel: "Relay Trial",
+      bannerLabel: "Vector Relay Trial",
+      note: "Vector Relay cash-out은 다중 레인을 dash로 넘기며 각을 다시 잡는지 시험한다.",
+      directive: "교차 surge 레인이 자주 열리지만 복구 간격이 길다. dash stock과 위치 교정 판단이 중요하다.",
+      spawnBudget: FINAL_CASHOUT_SPAWN_BUDGET + 1,
+      activeCap: 20,
+      baseSpawnInterval: 0.28,
+      spawnIntervalMin: 0.11,
+      eliteEvery: 5,
+      driveGainFactor: 1.2,
+      mix: {
+        scuttler: 0.4,
+        brute: 0.18,
+        shrike: 0.42,
+      },
+      hazard: {
+        label: "Relay Lattice",
+        interval: 6.8,
+        count: 2,
+        radius: 60,
+        telegraph: 0.88,
+        duration: 3.1,
+        damage: 11,
+        timerFactor: 0.58,
+      },
+    },
+    ricochet: {
+      id: "phase_anchor",
+      coreId: "ricochet",
+      label: "Phase Anchor",
+      title: "Phase Anchor",
+      slotText: "촉매 안정화 · 회전 제어",
+      description:
+        "Prism Cascade 촉매를 위상 앵커로 태워 냉각과 회전 복구를 끌어올린다. 완성형 탄막 대신 측면 정리 각을 더 자주 다시 여는 운영을 택한다.",
+      apply(build) {
+        build.coolRateBonus += 10;
+        build.cooldownBonus += 0.014;
+        build.moveSpeedBonus += 14;
+        build.cashoutSupportId = "phase_anchor";
+      },
+      cashoutLabel: "Anchor Trial",
+      bannerLabel: "Phase Anchor Trial",
+      note: "Phase Anchor cash-out은 측면 압박을 천천히 풀어 주는 대신 더 오래 회전 각을 유지해야 한다.",
+      directive: "넓은 측면 진입과 느린 crossfire. 냉각을 굴리며 벽 반사 각을 반복해서 다시 세워야 한다.",
+      spawnBudget: FINAL_CASHOUT_SPAWN_BUDGET,
+      activeCap: 19,
+      baseSpawnInterval: 0.27,
+      spawnIntervalMin: 0.11,
+      eliteEvery: 5,
+      driveGainFactor: 1.19,
+      mix: {
+        scuttler: 0.3,
+        brute: 0.14,
+        shrike: 0.56,
+      },
+      hazard: {
+        label: "Anchor Crossfire",
+        interval: 6.6,
+        count: 2,
+        radius: 60,
+        telegraph: 0.9,
+        duration: 3,
+        damage: 10,
+        timerFactor: 0.6,
+      },
+    },
+  };
+  const FINAL_CASHOUT_FAILSOFT_DEFS = {
+    ember: {
+      id: "ember_wake",
+      coreId: "ember",
+      label: "Ember Wake",
+      title: "Ember Wake",
+      slotText: "fail-soft 점화 · 과열 경주",
+      description:
+        "촉매 대신 고철과 잔열을 태워 Ember Wake를 억지 점화한다. 화력과 drive를 당겨 받는 대신 더 날카로운 압박을 견뎌야 한다.",
+      cost: 18,
+      apply(build, run) {
+        build.damageBonus += 0.2;
+        build.driveGainBonus += 0.14;
+        build.cashoutFailSoftId = "ember_wake";
+        if (run && run.player) {
+          run.player.drive = Math.min(100, run.player.drive + 16);
+          run.player.heat = Math.min(100, run.player.heat + 12);
+        }
+      },
+      cashoutLabel: "Wake Trial",
+      bannerLabel: "Ember Wake Trial",
+      note: "Ember Wake cash-out은 억지로 끌어올린 화력을 유지하는 대신, 더 빠른 측면 압박과 잦은 브루트 진입을 버티는지 시험한다.",
+      directive: "짧은 템포의 압박과 뜨거운 재진입. 당겨 받은 drive를 바로 써서 화면을 비워야 한다.",
+      spawnBudget: FINAL_CASHOUT_SPAWN_BUDGET + 3,
+      activeCap: 22,
+      baseSpawnInterval: 0.24,
+      spawnIntervalMin: 0.1,
+      eliteEvery: 4,
+      driveGainFactor: 1.24,
+      mix: {
+        scuttler: 0.32,
+        brute: 0.28,
+        shrike: 0.4,
+      },
+      hazard: {
+        label: "Wake Flares",
+        interval: 6.1,
+        count: 2,
+        radius: 60,
+        telegraph: 0.76,
+        duration: 3.1,
+        damage: 12,
+        timerFactor: 0.49,
+      },
+    },
+    scatter: {
+      id: "slag_burst",
+      coreId: "scatter",
+      label: "Slag Burst",
+      title: "Slag Burst",
+      slotText: "fail-soft 분사 · 근접 절개",
+      description:
+        "촉매 대신 예비 노즐을 찢어 Slag Burst를 강행한다. 산탄 화력과 관통을 밀어 올리지만 압박도 더 가까워진다.",
+      cost: 18,
+      apply(build, run) {
+        build.damageBonus += 0.18;
+        build.pierceBonus += 1;
+        build.cashoutFailSoftId = "slag_burst";
+        if (run && run.player) {
+          run.player.heat = Math.min(100, run.player.heat + 10);
+        }
+      },
+      cashoutLabel: "Slag Trial",
+      bannerLabel: "Slag Burst Trial",
+      note: "Slag Burst cash-out은 두꺼운 전열을 더 가까이 받아내며 근접 절개 각을 만들어 내는지 시험한다.",
+      directive: "좁은 간격의 전열과 무거운 브루트 파형. 짧은 사거리 압박을 뚫어야 한다.",
+      spawnBudget: FINAL_CASHOUT_SPAWN_BUDGET + 2,
+      activeCap: 21,
+      baseSpawnInterval: 0.27,
+      spawnIntervalMin: 0.11,
+      eliteEvery: 4,
+      driveGainFactor: 1.2,
+      mix: {
+        scuttler: 0.2,
+        brute: 0.5,
+        shrike: 0.3,
+      },
+      hazard: {
+        label: "Slag Wells",
+        interval: 6.8,
+        count: 2,
+        radius: 68,
+        telegraph: 0.82,
+        duration: 3.4,
+        damage: 12,
+        timerFactor: 0.53,
+      },
+    },
+    lance: {
+      id: "rail_sprint",
+      coreId: "lance",
+      label: "Rail Sprint",
+      title: "Rail Sprint",
+      slotText: "fail-soft 돌파 · 관통 질주",
+      description:
+        "촉매 대신 예비 축전기를 태워 Rail Sprint를 건다. 이동과 관통을 끌어올리지만 교차 레인이 더 촘촘해진다.",
+      cost: 18,
+      apply(build) {
+        build.moveSpeedBonus += 18;
+        build.pierceBonus += 1;
+        build.cashoutFailSoftId = "rail_sprint";
+      },
+      cashoutLabel: "Sprint Trial",
+      bannerLabel: "Rail Sprint Trial",
+      note: "Rail Sprint cash-out은 빠른 위치 교정으로 얇은 레인을 연속 돌파하는지 시험한다.",
+      directive: "촘촘한 교차 레인과 잦은 측면 찌르기. 이동 판단과 관통 각이 중요하다.",
+      spawnBudget: FINAL_CASHOUT_SPAWN_BUDGET + 3,
+      activeCap: 22,
+      baseSpawnInterval: 0.23,
+      spawnIntervalMin: 0.1,
+      eliteEvery: 4,
+      driveGainFactor: 1.22,
+      mix: {
+        scuttler: 0.42,
+        brute: 0.16,
+        shrike: 0.42,
+      },
+      hazard: {
+        label: "Sprint Lanes",
+        interval: 6.2,
+        count: 3,
+        radius: 56,
+        telegraph: 0.78,
+        duration: 3,
+        damage: 12,
+        timerFactor: 0.47,
+      },
+    },
+    ricochet: {
+      id: "glass_arc",
+      coreId: "ricochet",
+      label: "Glass Arc",
+      title: "Glass Arc",
+      slotText: "fail-soft 반사 · 측면 붕괴",
+      description:
+        "촉매 대신 반사 코일을 과부하시켜 Glass Arc를 연다. 연쇄와 기동을 밀어 올리지만 측면 교차 화력이 더 빨라진다.",
+      cost: 18,
+      apply(build) {
+        build.chainBonus += 1;
+        build.moveSpeedBonus += 12;
+        build.cashoutFailSoftId = "glass_arc";
+      },
+      cashoutLabel: "Glass Trial",
+      bannerLabel: "Glass Arc Trial",
+      note: "Glass Arc cash-out은 빠른 측면 교차 화력 속에서도 반사 연쇄를 끊기지 않게 유지하는지 시험한다.",
+      directive: "빠른 crossfire와 가벼운 측면 파형. 반사 각을 즉시 다시 세워야 한다.",
+      spawnBudget: FINAL_CASHOUT_SPAWN_BUDGET + 3,
+      activeCap: 23,
+      baseSpawnInterval: 0.22,
+      spawnIntervalMin: 0.1,
+      eliteEvery: 5,
+      driveGainFactor: 1.21,
+      mix: {
+        scuttler: 0.34,
+        brute: 0.12,
+        shrike: 0.54,
+      },
+      hazard: {
+        label: "Glass Crossfire",
+        interval: 5.8,
+        count: 2,
+        radius: 60,
+        telegraph: 0.72,
+        duration: 3.1,
+        damage: 12,
+        timerFactor: 0.45,
+      },
+    },
+  };
 
   const BASE_BUILD = {
     signatureId: DEFAULT_SIGNATURE_ID,
@@ -546,6 +1355,12 @@
     attunedCoreId: "ember",
     attunedCopies: 1,
     affixes: [],
+    finisherCatalysts: [],
+    catalystCapstoneId: null,
+    cashoutSupportId: null,
+    cashoutFailSoftId: null,
+    supportSystemId: null,
+    supportSystemTier: 0,
     pendingCores: [],
     upgrades: [],
     damageBonus: 0,
@@ -626,7 +1441,34 @@
     return next;
   }
 
-  function sanitizeAffixIds(affixIds) {
+  function sanitizeCatalystCoreIds(coreIds) {
+    const seen = new Set();
+    const next = [];
+    for (const coreId of coreIds || []) {
+      if (!FINISHER_RECIPE_DEFS[coreId] || seen.has(coreId)) {
+        continue;
+      }
+      seen.add(coreId);
+      next.push(coreId);
+    }
+    return next;
+  }
+
+  function getAffixCapacity(build) {
+    if (build && build.coreId === "ember") {
+      return LEGENDARY_AFFIX_CAP;
+    }
+    const attunedCopies =
+      build &&
+      build.attunedCoreId === build.coreId
+        ? Math.max(1, build.attunedCopies || 1)
+        : 1;
+    return attunedCopies >= MAX_BENCH_COPIES_PER_CORE
+      ? LEGENDARY_AFFIX_CAP
+      : BASE_AFFIX_CAP;
+  }
+
+  function sanitizeAffixIds(affixIds, maxCount = BASE_AFFIX_CAP) {
     const next = [];
     const seen = new Set();
     for (const affixId of affixIds || []) {
@@ -635,7 +1477,7 @@
       }
       seen.add(affixId);
       next.push(affixId);
-      if (next.length >= 2) {
+      if (next.length >= maxCount) {
         break;
       }
     }
@@ -643,10 +1485,93 @@
   }
 
   function getAffixDefs(build) {
-    return sanitizeAffixIds(build && build.affixes).map((affixId) => AFFIX_DEFS[affixId]);
+    return sanitizeAffixIds(
+      build && build.affixes,
+      getAffixCapacity(build)
+    ).map((affixId) => AFFIX_DEFS[affixId]);
+  }
+
+  function hasFinisherCatalyst(build, coreId) {
+    return sanitizeCatalystCoreIds(build && build.finisherCatalysts).includes(coreId);
+  }
+
+  function getCatalystCapstone(build, coreId = build && build.coreId) {
+    if (!build || !build.catalystCapstoneId) {
+      return null;
+    }
+    const capstone = CATALYST_REFORGE_BY_ID[build.catalystCapstoneId];
+    if (!capstone || (coreId && capstone.coreId !== coreId)) {
+      return null;
+    }
+    return capstone;
+  }
+
+  function getRecipeAffixIds(recipe) {
+    return (recipe && recipe.steps ? recipe.steps : [])
+      .filter((step) => step.type === "affix")
+      .map((step) => step.affixId);
+  }
+
+  function getRemainingRecipeAffixIds(build, recipe, affixIds) {
+    const currentAffixIds = sanitizeAffixIds(
+      affixIds || (build && build.affixes),
+      getAffixCapacity(build)
+    );
+    return getRecipeAffixIds(recipe).filter((affixId) => !currentAffixIds.includes(affixId));
+  }
+
+  function isRecipeCoreReady(build, recipe) {
+    if (!build || !recipe) {
+      return false;
+    }
+    const coreStep = recipe.steps.find((step) => step.type === "core");
+    return !coreStep || (build.attunedCopies || 1) >= coreStep.minCopies;
+  }
+
+  function buildCanEarnFinisherCatalyst(build) {
+    if (!build) {
+      return false;
+    }
+    const recipe = FINISHER_RECIPE_DEFS[build.coreId];
+    if (!recipe || !isRecipeCoreReady(build, recipe) || hasFinisherCatalyst(build, build.coreId)) {
+      return false;
+    }
+    return getRemainingRecipeAffixIds(build, recipe).length === 1;
+  }
+
+  function canApplyAffixChoice(build, affixId, replaceTarget) {
+    if (!build || !AFFIX_DEFS[affixId]) {
+      return false;
+    }
+    const recipe = FINISHER_RECIPE_DEFS[build.coreId];
+    if (!recipe || !isRecipeCoreReady(build, recipe)) {
+      return true;
+    }
+    const currentAffixIds = sanitizeAffixIds(build.affixes, getAffixCapacity(build));
+    const nextAffixIds = replaceTarget
+      ? sanitizeAffixIds(
+          currentAffixIds.map((currentAffixId) =>
+            currentAffixId === replaceTarget ? affixId : currentAffixId
+          ),
+          getAffixCapacity(build)
+        )
+      : sanitizeAffixIds(currentAffixIds.concat(affixId), getAffixCapacity(build));
+    const remainingBefore = getRemainingRecipeAffixIds(build, recipe, currentAffixIds);
+    if (
+      remainingBefore.length === 1 &&
+      remainingBefore[0] === affixId &&
+      getRemainingRecipeAffixIds(build, recipe, nextAffixIds).length === 0 &&
+      !hasFinisherCatalyst(build, build.coreId)
+    ) {
+      return false;
+    }
+    return true;
   }
 
   function getWeaponTierLabel(attunedCopies) {
+    if (attunedCopies >= 4) {
+      return "Legendary";
+    }
     if (attunedCopies >= 3) {
       return "Epic";
     }
@@ -656,47 +1581,164 @@
     return "Standard";
   }
 
+  function getSupportSystemDef(build) {
+    if (!build || !build.supportSystemId) {
+      return null;
+    }
+    return SUPPORT_SYSTEM_DEFS[build.supportSystemId] || null;
+  }
+
+  function computeSupportSystemStats(build) {
+    const system = getSupportSystemDef(build);
+    if (!system) {
+      return null;
+    }
+    const tier = clamp(build.supportSystemTier || 0, 0, 2);
+    const tierDef = system.tiers[tier];
+    if (!tierDef) {
+      return null;
+    }
+    return {
+      id: system.id,
+      label: tierDef.label,
+      tier,
+      orbitCount: tierDef.orbitCount,
+      orbitRadius: tierDef.orbitRadius,
+      orbitSpeed: tierDef.orbitSpeed,
+      satelliteRadius: tierDef.satelliteRadius,
+      touchDamage: tierDef.touchDamage,
+      touchCooldown: tierDef.touchCooldown,
+      shotCooldown: tierDef.shotCooldown,
+      shotRange: tierDef.shotRange,
+      shotDamage: tierDef.shotDamage,
+      shotSpeed: tierDef.shotSpeed,
+      interceptRange: tierDef.interceptRange,
+      interceptCooldown: tierDef.interceptCooldown,
+      interceptPulseDamage: tierDef.interceptPulseDamage,
+      interceptPulseRadius: tierDef.interceptPulseRadius,
+      color: system.color,
+      orbitColor: system.orbitColor,
+      strokeColor: system.strokeColor,
+      renderShape: system.renderShape,
+      statusNote: tierDef.statusNote,
+    };
+  }
+
+  function createSupportSystemChoice(build, rng) {
+    if (!build) {
+      return null;
+    }
+    const random = typeof rng === "function" ? rng : Math.random;
+    const systemIds = Object.keys(SUPPORT_SYSTEM_DEFS);
+    const system = getSupportSystemDef(build)
+      || SUPPORT_SYSTEM_DEFS[systemIds[Math.floor(random() * systemIds.length)] || systemIds[0]];
+    const nextTier = getSupportSystemDef(build)
+      ? clamp((build.supportSystemTier || 0) + 1, 0, 2)
+      : 1;
+    const tierDef = system.tiers[nextTier];
+    if (!tierDef || (build.supportSystemId === system.id && (build.supportSystemTier || 0) >= nextTier)) {
+      return null;
+    }
+    return {
+      type: "system",
+      id: `system:${system.id}:t${tierDef.tier}`,
+      verb: build.supportSystemId === system.id ? "증설" : "설치",
+      tag: "SYSTEM",
+      title: tierDef.title,
+      description: tierDef.description,
+      slotText: tierDef.slotText,
+      systemId: system.id,
+      systemTier: tierDef.tier,
+      cost: tierDef.cost,
+    };
+  }
+
+  function shouldOfferSupportSystem(build, options) {
+    if (!build || (options && options.finalForge)) {
+      return false;
+    }
+    const nextWave = options && Number.isFinite(options.nextWave) ? options.nextWave : 0;
+    if (!build.supportSystemId) {
+      return nextWave >= 3;
+    }
+    return (build.supportSystemTier || 0) < 2 && nextWave >= 4;
+  }
+
   function createForgePreviewRows(choice) {
     if (!choice) {
       return [];
     }
+    const finaleRows = choice.finalePreview
+      ? [
+          { label: "시험", value: choice.finalePreview.label },
+          { label: "압박", value: choice.finalePreview.hazard },
+        ]
+      : [];
     if (choice.type === "core") {
       return [
         { label: "결과", value: `${CORE_DEFS[choice.coreId].short} / ${getWeaponTierLabel(choice.resultingCopies)} / ${formatSyncLabel(choice.syncLevel)}` },
-        { label: "소모", value: `보관 ${choice.benchCopies}개` },
+        {
+          label: choice.benchCopies > 0 ? "소모" : "전환",
+          value: choice.benchCopies > 0 ? `보관 ${choice.benchCopies}개` : "포지 직행 장착",
+        },
+        ...finaleRows,
       ];
     }
     if (choice.type === "affix") {
       return [
         { label: "속성", value: AFFIX_DEFS[choice.affixId].label },
         { label: "방식", value: choice.replaceTarget ? `교체 ${AFFIX_DEFS[choice.replaceTarget].label}` : "새 속성 추가" },
+        ...finaleRows,
       ];
     }
     if (choice.type === "mod") {
       return [
         { label: "분류", value: MOD_DEFS[choice.modId].tag },
         { label: "효과", value: "현재 무기 직접 강화" },
+        ...finaleRows,
       ];
     }
     if (choice.type === "utility" && choice.action === "reforge") {
       return [
         { label: "보관", value: "코어 구성 재조합" },
         { label: "무기", value: "현재 무기 유지" },
+        ...finaleRows,
+      ];
+    }
+    if (choice.type === "utility" && choice.action === "catalyst_reforge") {
+      return [
+        { label: "촉매", value: `${choice.recipeLabel} 포기` },
+        { label: "결과", value: choice.capstoneLabel },
+        ...finaleRows,
       ];
     }
     if (choice.type === "utility" && choice.action === "affix_reforge") {
       return [
         { label: "교체", value: AFFIX_DEFS[choice.targetAffixId].label },
         { label: "신규", value: AFFIX_DEFS[choice.nextAffixId].label },
+        ...finaleRows,
       ];
     }
     if (choice.type === "utility" && choice.action === "recycle") {
       return [
         { label: "획득", value: `고철 ${choice.scrapValue}` },
         { label: "대상", value: "보관 코어 전체" },
+        ...finaleRows,
       ];
     }
-    return [{ label: "효과", value: choice.slotText || choice.description || "선택" }];
+    if (choice.type === "system") {
+      const systemDef = SUPPORT_SYSTEM_DEFS[choice.systemId];
+      const tierDef = systemDef && systemDef.tiers[choice.systemTier];
+      return [
+        { label: "계층", value: choice.systemTier === 1 ? "설치" : `Mk.${choice.systemTier}` },
+        {
+          label: "효과",
+          value: tierDef ? tierDef.previewText : "보조 시스템 증설",
+        },
+        ...finaleRows,
+      ];
+    }
+    return [{ label: "효과", value: choice.slotText || choice.description || "선택" }, ...finaleRows];
   }
 
   function getBenchCount(build, coreId) {
@@ -710,10 +1752,13 @@
   }
 
   function getBenchSyncLevel(build, coreId) {
-    return clamp(getBenchCount(build, coreId) - 1, 0, 2);
+    return clamp(getBenchCount(build, coreId) - 1, 0, 3);
   }
 
   function formatSyncLabel(level) {
+    if (level >= 3) {
+      return "3강";
+    }
     if (level >= 2) {
       return "2강";
     }
@@ -793,6 +1838,12 @@
         attunedCoreId: BASE_BUILD.attunedCoreId,
         attunedCopies: BASE_BUILD.attunedCopies,
         affixes: BASE_BUILD.affixes.slice(),
+        finisherCatalysts: BASE_BUILD.finisherCatalysts.slice(),
+        catalystCapstoneId: BASE_BUILD.catalystCapstoneId,
+        cashoutSupportId: BASE_BUILD.cashoutSupportId,
+        cashoutFailSoftId: BASE_BUILD.cashoutFailSoftId,
+        supportSystemId: BASE_BUILD.supportSystemId,
+        supportSystemTier: BASE_BUILD.supportSystemTier,
         pendingCores: [],
         upgrades: [],
         damageBonus: BASE_BUILD.damageBonus,
@@ -826,7 +1877,8 @@
     nextBuild.affixes = sanitizeAffixIds(
       (Array.isArray(nextBuild.affixes) ? nextBuild.affixes : []).concat(
         signature.startAffixes || []
-      )
+      ),
+      getAffixCapacity(nextBuild)
     );
     nextBuild.pendingCores = sanitizeBenchCoreIds(
       (Array.isArray(nextBuild.pendingCores) ? nextBuild.pendingCores : []).concat(
@@ -876,9 +1928,18 @@
     const attunedCopies =
       build.attunedCoreId === core.id ? Math.max(1, build.attunedCopies || 1) : 1;
     const benchCopies = getBenchCount(build, core.id);
-    const benchSyncLevel = clamp(attunedCopies - 1, 0, 2);
-    const syncedBaseCooldown = clamp(baseCooldown - benchSyncLevel * 0.012, 0.12, 0.4);
-    const syncedHeatFactor = 1 - benchSyncLevel * 0.06;
+    const benchSyncLevel = clamp(attunedCopies - 1, 0, 3);
+    const apexActive = benchSyncLevel >= 3;
+    const syncedBaseCooldown = clamp(
+      baseCooldown - benchSyncLevel * 0.012 - (apexActive ? 0.01 : 0),
+      0.12,
+      0.4
+    );
+    const syncedHeatFactor = clamp(
+      1 - benchSyncLevel * 0.06 - (apexActive ? 0.04 : 0),
+      0.72,
+      1
+    );
     const stats = {
       core,
       benchCopies,
@@ -886,24 +1947,53 @@
       benchSyncLevel,
       benchSyncLabel: formatSyncLabel(benchSyncLevel),
       tierLabel: getWeaponTierLabel(attunedCopies),
-      affixIds: sanitizeAffixIds(build.affixes),
-      damage: round((baseDamage + benchSyncLevel * 3) * core.damageFactor, 1),
+      affixIds: sanitizeAffixIds(build.affixes, getAffixCapacity(build)),
+      damage: round((baseDamage + benchSyncLevel * 3 + (apexActive ? 6 : 0)) * core.damageFactor, 1),
       cooldown: round(syncedBaseCooldown * core.cooldownFactor, 3),
       heatPerShot: round(14 * build.heatFactor * core.heatFactor * syncedHeatFactor, 1),
       projectileSpeed: round(460 * core.speedFactor, 1),
-      pellets: core.pellets + (core.id === "scatter" && benchSyncLevel >= 2 ? 1 : 0),
-      spread: core.spread,
-      pierce: core.pierce + build.pierceBonus + (core.id === "lance" && benchSyncLevel >= 1 ? 1 : 0),
-      bounce: core.bounce + (core.id === "ricochet" && benchSyncLevel >= 1 ? 1 : 0),
-      chain: build.chainBonus,
-      chainRange: build.chainBonus > 0 ? (core.id === "lance" ? 188 : 164) : 0,
+      pellets:
+        core.pellets +
+        (core.id === "scatter" && benchSyncLevel >= 2 ? 1 : 0) +
+        (core.id === "scatter" && apexActive ? 1 : 0),
+      spread:
+        core.id === "scatter" && apexActive ? round(core.spread * 0.82, 3) : core.spread,
+      pierce:
+        core.pierce +
+        build.pierceBonus +
+        (core.id === "lance" && benchSyncLevel >= 1 ? 1 : 0) +
+        (core.id === "lance" && apexActive ? 1 : 0),
+      bounce:
+        core.bounce +
+        (core.id === "ricochet" && benchSyncLevel >= 1 ? 1 : 0) +
+        (core.id === "ricochet" && apexActive ? 1 : 0),
+      chain: build.chainBonus + (core.id === "ricochet" && apexActive ? 1 : 0),
+      chainRange:
+        build.chainBonus > 0 || (core.id === "ricochet" && apexActive)
+          ? (core.id === "lance" ? 188 + (apexActive ? 28 : 0) : 164)
+          : 0,
       color: core.color,
+      capstoneId: null,
+      capstoneLabel: null,
+      capstoneTraitLabel: null,
+      capstoneStatusNote: null,
+      capstoneFire: null,
+      capstoneOnHit: null,
+      capstoneOnBounce: null,
     };
     getAffixDefs(build).forEach((affix) => {
       if (typeof affix.applyWeapon === "function") {
         affix.applyWeapon(stats, build);
       }
     });
+    const catalystCapstone = getCatalystCapstone(build, core.id);
+    if (catalystCapstone) {
+      stats.capstoneId = catalystCapstone.id;
+      stats.capstoneLabel = catalystCapstone.label;
+      if (typeof catalystCapstone.applyWeapon === "function") {
+        catalystCapstone.applyWeapon(stats, build);
+      }
+    }
     stats.damage = round(stats.damage, 1);
     stats.cooldown = round(stats.cooldown, 3);
     stats.heatPerShot = round(stats.heatPerShot, 1);
@@ -912,32 +2002,93 @@
     return stats;
   }
 
-  function createCoreChoice(coreId, build) {
+  function pickPivotFuelEntry(build, targetCoreId) {
+    const benchEntries = getBenchEntries(build);
+    if (benchEntries.length === 0) {
+      return null;
+    }
+    return (
+      benchEntries.find((entry) => entry.coreId !== targetCoreId) ||
+      benchEntries[0]
+    );
+  }
+
+  function createCoreChoice(coreId, build, options = {}) {
     const core = CORE_DEFS[coreId];
+    const directOffer = options.directOffer === true;
+    const pivotFuelEntry = directOffer ? pickPivotFuelEntry(build, coreId) : null;
+    if (directOffer && !pivotFuelEntry) {
+      return null;
+    }
     const benchCopies = getBenchCount(build, coreId);
     const baseAttunedCopies =
       build.coreId === coreId ? Math.max(1, build.attunedCopies || 1) : 0;
-    const resultingCopies = clamp(baseAttunedCopies + benchCopies, 1, 3);
-    const syncLevel = clamp(resultingCopies - 1, 0, 2);
+    const resultingCopies = clamp(baseAttunedCopies + benchCopies, 1, MAX_BENCH_COPIES_PER_CORE);
+    const syncLevel = clamp(resultingCopies - 1, 0, 3);
     const syncLabel = formatSyncLabel(syncLevel);
     const discountedCost = Math.max(18, core.cost - syncLevel * 8);
+    const directOfferText =
+      !directOffer || build.coreId === coreId
+        ? `즉시 재장착 · 최종 ${syncLabel}`
+        : `보관 ${CORE_DEFS[pivotFuelEntry.coreId].short} 1개 연소 · 최종 ${syncLabel}`;
     return {
       type: "core",
       id: `core:${coreId}`,
       verb: "장착",
       tag: "장착",
       title: core.label,
-      description: `${core.description} 보관 코어 x${benchCopies}. 장착 시 보관분을 소모해 최종 ${syncLabel} 무기로 맞춘다.`,
+      description:
+        benchCopies > 0
+          ? `${core.description} 보관 코어 x${benchCopies}. 장착 시 보관분을 소모해 최종 ${syncLabel} 무기로 맞춘다.`
+          : directOffer && pivotFuelEntry
+            ? `${core.description} 보관 ${CORE_DEFS[pivotFuelEntry.coreId].short} 1개를 태워 이번 포지에서 바로 갈아탈 수 있다. 최종 ${syncLabel} 무기로 재배선한다.`
+            : `${core.description} 아직 보관 코어가 없어도 기본 등급으로 다시 맞춰 쓸 수 있다.`,
       slotText:
-        build.coreId === coreId
-          ? `현재 무기 강화 · x${benchCopies} 소모 · 최종 ${syncLabel}`
-          : `보관분 소모 장착 · x${benchCopies} · 최종 ${syncLabel}`,
+        benchCopies > 0
+          ? build.coreId === coreId
+            ? `현재 무기 강화 · x${benchCopies} 소모 · 최종 ${syncLabel}`
+            : `보관분 소모 장착 · x${benchCopies} · 최종 ${syncLabel}`
+          : directOffer
+            ? directOfferText
+            : `기본 장착 · 최종 ${syncLabel}`,
       coreId,
       benchCopies,
       resultingCopies,
       syncLevel,
-      cost: discountedCost,
+      directOffer,
+      pivotFuelCoreId: pivotFuelEntry ? pivotFuelEntry.coreId : null,
+      pivotFuelCopies: pivotFuelEntry ? 1 : 0,
+      cost: benchCopies > 0 && !directOffer ? discountedCost : Math.max(22, core.cost - 4),
     };
+  }
+
+  function markForgeLane(choice, laneLabel) {
+    if (!choice) {
+      return null;
+    }
+    return {
+      ...choice,
+      laneLabel,
+    };
+  }
+
+  function pushChoiceIfOpen(list, choice, seenIds) {
+    if (!choice || seenIds.has(choice.id)) {
+      return;
+    }
+    seenIds.add(choice.id);
+    list.push(choice);
+  }
+
+  function takeFirstAvailableChoice(candidates, takenIds, laneLabel) {
+    for (const choice of candidates) {
+      if (!choice || takenIds.has(choice.id)) {
+        continue;
+      }
+      takenIds.add(choice.id);
+      return markForgeLane(choice, laneLabel);
+    }
+    return null;
   }
 
   function createModChoice(modId) {
@@ -957,9 +2108,14 @@
 
   function createAffixChoice(affixId, build) {
     const affix = AFFIX_DEFS[affixId];
-    const currentAffixes = sanitizeAffixIds(build.affixes);
-    const willReplace = currentAffixes.length >= 2;
+    const affixCapacity = getAffixCapacity(build);
+    const currentAffixes = sanitizeAffixIds(build.affixes, affixCapacity);
+    const willReplace = currentAffixes.length >= affixCapacity;
     const replaceTarget = willReplace ? currentAffixes[0] : null;
+    const addingSlotText =
+      affixCapacity >= 3 && currentAffixes.length === 2
+        ? `세 번째 속성 추가 · ${affix.tag}`
+        : `속성 추가 · ${affix.tag}`;
     return {
       type: "affix",
       id: `affix:${affixId}`,
@@ -968,16 +2124,120 @@
       title: affix.label,
       description: willReplace
         ? `${affix.description} 현재 첫 속성 ${AFFIX_DEFS[replaceTarget].label} 대신 새 각인을 새긴다.`
-        : `${affix.description} 현재 무기에 새 속성을 추가한다.`,
-      slotText: willReplace ? `속성 교체 · ${AFFIX_DEFS[replaceTarget].label} -> ${affix.label}` : `속성 추가 · ${affix.tag}`,
+        : affixCapacity >= 3 && currentAffixes.length === 2
+          ? `${affix.description} 전설 등급 무기에 세 번째 속성을 추가한다.`
+          : `${affix.description} 현재 무기에 새 속성을 추가한다.`,
+      slotText: willReplace ? `속성 교체 · ${AFFIX_DEFS[replaceTarget].label} -> ${affix.label}` : addingSlotText,
       affixId,
       replaceTarget,
       cost: affix.cost,
     };
   }
 
+  function markRecipeChoice(choice, build, recipe, step) {
+    if (!choice || !recipe || !step) {
+      return choice;
+    }
+    const baseDescription = choice.description || "";
+    const detail =
+      step.type === "core"
+        ? `${recipe.label} 레시피의 첫 단계. ${recipe.summary}`
+        : `${recipe.label} 레시피의 다음 조각. ${AFFIX_DEFS[step.affixId].label} 각인을 채워 완성형으로 수렴한다.`;
+    return {
+      ...choice,
+      verb: "완성",
+      tag: "FINISHER",
+      title: step.title || choice.title,
+      description: `${detail} ${baseDescription}`.trim(),
+      slotText: `${recipe.label} · ${step.slotText || choice.slotText}`,
+      recipeLabel: recipe.label,
+      recipeStepType: step.type,
+      recipeTargetId: step.type === "affix" ? step.affixId : build.coreId,
+      consumesCatalyst: Boolean(step.requiresCatalyst),
+    };
+  }
+
+  function createRecipeFinisherChoice(build, options = null) {
+    if (!build || !FINISHER_RECIPE_DEFS[build.coreId]) {
+      return null;
+    }
+    const recipe = FINISHER_RECIPE_DEFS[build.coreId];
+    const currentAffixIds = sanitizeAffixIds(build.affixes, getAffixCapacity(build));
+    const remainingAffixIds = getRemainingRecipeAffixIds(build, recipe, currentAffixIds);
+    for (const step of recipe.steps) {
+      if (step.type === "core") {
+        if ((build.attunedCopies || 1) >= step.minCopies) {
+          continue;
+        }
+        const coreChoice = createCoreChoice(build.coreId, build);
+        const allowDirectCoreOffer = Boolean(options && options.allowDirectCoreOffer);
+        if (coreChoice && (coreChoice.benchCopies > 0 || allowDirectCoreOffer)) {
+          return markRecipeChoice(coreChoice, build, recipe, step);
+        }
+        return null;
+      }
+      if (step.type === "affix") {
+        if (currentAffixIds.includes(step.affixId)) {
+          continue;
+        }
+        if (
+          remainingAffixIds.length === 1 &&
+          remainingAffixIds[0] === step.affixId &&
+          !hasFinisherCatalyst(build, build.coreId)
+        ) {
+          return null;
+        }
+        return markRecipeChoice(
+          createAffixChoice(step.affixId, build),
+          build,
+          recipe,
+          remainingAffixIds.length === 1 && remainingAffixIds[0] === step.affixId
+            ? { ...step, requiresCatalyst: true }
+            : step
+        );
+      }
+    }
+    return null;
+  }
+
+  function shouldGuaranteeMidrunChase(options) {
+    if (!options || options.finalForge) {
+      return false;
+    }
+    const nextWave = Number.isFinite(options.nextWave) ? options.nextWave : null;
+    return nextWave >= 2 && nextWave <= 4;
+  }
+
+  function createGuaranteedChaseChoice(build) {
+    if (!build) {
+      return null;
+    }
+    const finisherChoice = createRecipeFinisherChoice(build, { allowDirectCoreOffer: true });
+    if (finisherChoice) {
+      return finisherChoice;
+    }
+    const recipe = FINISHER_RECIPE_DEFS[build.coreId];
+    if (!recipe) {
+      return createCoreChoice(build.coreId, build);
+    }
+    const currentAffixIds = sanitizeAffixIds(build.affixes, getAffixCapacity(build));
+    const missingAffixIds = getRemainingRecipeAffixIds(build, recipe, currentAffixIds);
+    for (const affixId of missingAffixIds) {
+      const affixChoice = createAffixChoice(affixId, build);
+      if (affixChoice && canApplyAffixChoice(build, affixId, affixChoice.replaceTarget)) {
+        return markRecipeChoice(
+          affixChoice,
+          build,
+          recipe,
+          recipe.steps.find((step) => step.type === "affix" && step.affixId === affixId)
+        );
+      }
+    }
+    return createCoreChoice(build.coreId, build);
+  }
+
   function createAffixReforgeChoice(build, rng) {
-    const currentAffixes = sanitizeAffixIds(build.affixes);
+    const currentAffixes = sanitizeAffixIds(build.affixes, getAffixCapacity(build));
     if (currentAffixes.length === 0) {
       return null;
     }
@@ -1064,6 +2324,169 @@
     };
   }
 
+  function createCatalystReforgeChoice(build) {
+    if (!build || !hasFinisherCatalyst(build, build.coreId)) {
+      return null;
+    }
+    const capstone = CATALYST_REFORGE_DEFS[build.coreId];
+    const recipe = FINISHER_RECIPE_DEFS[build.coreId];
+    if (!capstone || !recipe) {
+      return null;
+    }
+    return {
+      type: "utility",
+      action: "catalyst_reforge",
+      id: `utility:catalyst_reforge:${build.coreId}`,
+      verb: "재구성",
+      tag: "CAPSTONE",
+      title: capstone.title,
+      description: `${capstone.description} 현재 속성과 코어는 유지되지만 촉매는 소모된다.`,
+      slotText: capstone.slotText,
+      cost: 30,
+      capstoneLabel: capstone.label,
+      recipeLabel: recipe.label,
+      catalystCoreId: build.coreId,
+    };
+  }
+
+  function createCashoutSupportChoice(build, options = null) {
+    if (!build) {
+      return null;
+    }
+    const support = FINAL_CASHOUT_SUPPORT_DEFS[build.coreId];
+    const recipe = FINISHER_RECIPE_DEFS[build.coreId];
+    if (!support || !recipe) {
+      return null;
+    }
+    const hasCatalyst = hasFinisherCatalyst(build, build.coreId);
+    const allowWithoutCatalyst = Boolean(options && options.allowWithoutCatalyst);
+    if (!hasCatalyst && !allowWithoutCatalyst) {
+      return null;
+    }
+    const failSoft = !hasCatalyst;
+    const costOverride = options && Number.isFinite(options.costOverride) ? options.costOverride : null;
+    return {
+      type: "utility",
+      action: "cashout_support",
+      id: `utility:cashout_support:${build.coreId}`,
+      verb: "안정화",
+      tag: "TRIAL",
+      title: support.title,
+      description: failSoft
+        ? `${support.description} 촉매가 없어도 예비 회로를 열어 fail-soft cash-out으로 진입한다.`
+        : `${support.description} 현재 코어는 유지되지만 촉매는 소모된다.`,
+      slotText: failSoft ? `fail-soft 진입 · ${support.slotText}` : support.slotText,
+      cost: costOverride ?? 28,
+      supportLabel: support.label,
+      recipeLabel: recipe.label,
+      supportCoreId: build.coreId,
+      failSoft,
+    };
+  }
+
+  function createFailSoftOverrideChoice(build) {
+    if (!build || hasFinisherCatalyst(build, build.coreId)) {
+      return null;
+    }
+    const failSoft = FINAL_CASHOUT_FAILSOFT_DEFS[build.coreId];
+    if (!failSoft) {
+      return null;
+    }
+    return {
+      type: "utility",
+      action: "cashout_failsoft",
+      id: `utility:cashout_failsoft:${build.coreId}`,
+      verb: "점화",
+      tag: "FAIL-SOFT",
+      title: failSoft.title,
+      description: `${failSoft.description} 촉매 없이도 다른 cash-out 시험으로 판돈을 건다.`,
+      slotText: failSoft.slotText,
+      cost: failSoft.cost,
+      failSoftLabel: failSoft.label,
+      supportCoreId: build.coreId,
+      failSoft: true,
+    };
+  }
+
+  function getFinalCashoutPreview(overrides = null) {
+    const wave = createFinalCashoutWave(
+      MAX_WAVES - 1,
+      overrides
+        ? {
+            catalystCapstoneId: overrides.catalystCapstoneId || null,
+            cashoutSupportId: overrides.cashoutSupportId || null,
+            cashoutFailSoftId: overrides.cashoutFailSoftId || null,
+          }
+        : null
+    );
+    return {
+      label: wave.bannerLabel || wave.label,
+      directive: wave.directive,
+      hazard: wave.hazard ? `${wave.hazard.label} x${wave.hazard.count}` : "Hazard 없음",
+      tempo: `${wave.timeLeft}초 · 적 상한 ${wave.activeCap}`,
+    };
+  }
+
+  function annotateFinaleChoice(choice, preview, overrides = {}) {
+    if (!choice) {
+      return null;
+    }
+    return {
+      ...choice,
+      ...overrides,
+      finalePreview: preview,
+    };
+  }
+
+  function buildFinalForgeChoices(build) {
+    const capstone = CATALYST_REFORGE_DEFS[build.coreId];
+    const support = FINAL_CASHOUT_SUPPORT_DEFS[build.coreId];
+    const failSoftOverride = FINAL_CASHOUT_FAILSOFT_DEFS[build.coreId];
+    if (!capstone || !support) {
+      return null;
+    }
+    const stabilizeChoice = annotateFinaleChoice(
+      createCashoutSupportChoice(build, { allowWithoutCatalyst: true, costOverride: 0 }),
+      getFinalCashoutPreview({ cashoutSupportId: support.id })
+    );
+    if (!stabilizeChoice) {
+      return null;
+    }
+    const choices = [];
+    const finisherChoice = createRecipeFinisherChoice(build);
+    if (finisherChoice) {
+      choices.push(
+        markForgeLane(annotateFinaleChoice(finisherChoice, getFinalCashoutPreview()), "완성")
+      );
+    }
+    const catalystChoice = createCatalystReforgeChoice(build);
+    if (catalystChoice) {
+      choices.push(
+        markForgeLane(
+          annotateFinaleChoice(
+            catalystChoice,
+            getFinalCashoutPreview({ catalystCapstoneId: capstone.id })
+          ),
+          "촉매 연소"
+        )
+      );
+    }
+    const failSoftChoice = createFailSoftOverrideChoice(build);
+    if (failSoftChoice && failSoftOverride) {
+      choices.push(
+        markForgeLane(
+          annotateFinaleChoice(
+            failSoftChoice,
+            getFinalCashoutPreview({ cashoutFailSoftId: failSoftOverride.id })
+          ),
+          "비상 점화"
+        )
+      );
+    }
+    choices.push(markForgeLane(stabilizeChoice, "안정화"));
+    return choices;
+  }
+
   function getRecycleValue(build) {
     return sanitizeBenchCoreIds(build.pendingCores).reduce(
       (total, coreId) => total + Math.max(10, Math.round(CORE_DEFS[coreId].cost * 0.35)),
@@ -1091,58 +2514,95 @@
     };
   }
 
-  function buildForgeChoices(build, rng, scrapBank) {
+  function buildForgeChoices(build, rng, scrapBank, options = null) {
+    if (options && options.finalForge) {
+      const finalChoices = buildFinalForgeChoices(build);
+      if (finalChoices) {
+        return finalChoices;
+      }
+    }
     const random = typeof rng === "function" ? rng : Math.random;
     const pending = getPendingCoreIds(build);
-    const choices = [];
+    const choiceCatalog = new Set();
+    const commitCandidates = [];
+    const pivotCandidates = [];
+    const sustainCandidates = [];
+    const currentAffixIds = sanitizeAffixIds(build.affixes, getAffixCapacity(build));
+    const catalystReforgeChoice = createCatalystReforgeChoice(build);
+    const recycleChoice = createRecycleChoice(build);
+    const reforgeChoice = catalystReforgeChoice || createReforgeChoice(build, random);
+    const affixReforgeChoice = createAffixReforgeChoice(build, random);
+    const finisherChoice = createRecipeFinisherChoice(build);
+    const supportSystemChoice = shouldOfferSupportSystem(build, options)
+      ? createSupportSystemChoice(build, random)
+      : null;
+    const guaranteedMidrunChase = shouldGuaranteeMidrunChase(options)
+      ? createGuaranteedChaseChoice(build)
+      : null;
+    const supportLaneLabel = supportSystemChoice ? "보조 시스템" : "생존/경제";
 
-    shuffle(pending, random)
-      .slice(0, 2)
-      .forEach((coreId) => {
-        choices.push(createCoreChoice(coreId, build));
+    pushChoiceIfOpen(commitCandidates, guaranteedMidrunChase || finisherChoice, choiceCatalog);
+
+    const sameCoreChoice = createCoreChoice(build.coreId, build);
+    if (sameCoreChoice.benchCopies > 0) {
+      pushChoiceIfOpen(commitCandidates, sameCoreChoice, choiceCatalog);
+    }
+
+    shuffle(
+      Object.keys(AFFIX_DEFS)
+        .filter((affixId) => !currentAffixIds.includes(affixId))
+        .map((affixId) => createAffixChoice(affixId, build))
+        .filter((choice) => choice && canApplyAffixChoice(build, choice.affixId, choice.replaceTarget)),
+      random
+    ).forEach((choice) => {
+      pushChoiceIfOpen(commitCandidates, choice, choiceCatalog);
+    });
+
+    shuffle(
+      ["shock_lens", "pulse_gate", "arc_array", "rail_sleeve", "drive_sync", "heat_sink", "reactor_cap"]
+        .filter((modId) => MOD_DEFS[modId])
+        .map((modId) => createModChoice(modId)),
+      random
+    ).forEach((choice) => {
+      pushChoiceIfOpen(commitCandidates, choice, choiceCatalog);
+    });
+
+    shuffle(uniqueCoreQueue(pending.filter((coreId) => coreId !== build.coreId)), random)
+      .map((coreId) => createCoreChoice(coreId, build))
+      .forEach((choice) => {
+        pushChoiceIfOpen(pivotCandidates, choice, choiceCatalog);
       });
 
-    const supportChoices = [];
-    const recycleChoice = createRecycleChoice(build);
-    const reforgeChoice = createReforgeChoice(build, random);
-    const affixReforgeChoice = createAffixReforgeChoice(build, random);
-    if (recycleChoice || reforgeChoice || affixReforgeChoice) {
-      const utilityChoices = [recycleChoice, reforgeChoice, affixReforgeChoice].filter(Boolean);
-      if (Number.isFinite(scrapBank) && scrapBank < 32 && recycleChoice) {
-        supportChoices.push(recycleChoice);
-        utilityChoices
-          .filter((choice) => choice.id !== recycleChoice.id)
-          .forEach((choice) => supportChoices.push(choice));
-      } else {
-        shuffle(utilityChoices, random).forEach((choice) => supportChoices.push(choice));
-      }
+    shuffle(DROPPABLE_CORE_IDS.filter((coreId) => coreId !== build.coreId), random)
+      .map((coreId) => createCoreChoice(coreId, build, { directOffer: true }))
+      .forEach((choice) => {
+        pushChoiceIfOpen(pivotCandidates, choice, choiceCatalog);
+      });
+
+    [reforgeChoice, affixReforgeChoice].forEach((choice) => {
+      pushChoiceIfOpen(pivotCandidates, choice, choiceCatalog);
+    });
+
+    pushChoiceIfOpen(sustainCandidates, supportSystemChoice, choiceCatalog);
+
+    if (Number.isFinite(scrapBank) && scrapBank < 32 && recycleChoice) {
+      pushChoiceIfOpen(sustainCandidates, recycleChoice, choiceCatalog);
     }
 
-    const affixChoices = shuffle(
-      Object.keys(AFFIX_DEFS)
-        .filter((affixId) => !sanitizeAffixIds(build.affixes).includes(affixId))
-        .map((affixId) => createAffixChoice(affixId, build)),
+    [recycleChoice, createModChoice("coolant_purge"), createModChoice("magnet_rig"), createModChoice("armor_mesh"), createModChoice("step_servos")]
+      .filter(Boolean)
+      .forEach((choice) => pushChoiceIfOpen(sustainCandidates, choice, choiceCatalog));
+
+    shuffle(
+      ["thermal_weave", "salvage_link"]
+        .filter((affixId) => !currentAffixIds.includes(affixId))
+        .map((affixId) => createAffixChoice(affixId, build))
+        .filter((choice) => choice && canApplyAffixChoice(build, choice.affixId, choice.replaceTarget)),
       random
-    );
-    affixChoices.slice(0, 2).forEach((choice) => supportChoices.push(choice));
+    ).forEach((choice) => pushChoiceIfOpen(sustainCandidates, choice, choiceCatalog));
 
-    shuffle(Object.keys(MOD_DEFS), random)
-      .map((modId) => createModChoice(modId))
-      .forEach((choice) => supportChoices.push(choice));
-
-    for (const choice of supportChoices) {
-      if (choices.length >= 3) {
-        break;
-      }
-      choices.push(choice);
-    }
-
-    if (
-      Number.isFinite(scrapBank) &&
-      choices.length > 0 &&
-      choices.every((choice) => choice.cost > scrapBank)
-    ) {
-      choices[choices.length - 1] = {
+    if (sustainCandidates.length === 0) {
+      sustainCandidates.push({
         type: "fallback",
         id: "fallback:emergency_vent",
         tag: "무료",
@@ -1150,7 +2610,41 @@
         description: "무료 안정화. 열을 크게 빼고 체력을 조금 회복한다.",
         slotText: "무료 정비",
         cost: 0,
-      };
+      });
+    }
+
+    const takenIds = new Set();
+    const choices = [
+      takeFirstAvailableChoice(commitCandidates, takenIds, "빌드 고정"),
+      takeFirstAvailableChoice(pivotCandidates, takenIds, "전환"),
+      takeFirstAvailableChoice(sustainCandidates, takenIds, supportLaneLabel),
+    ].filter(Boolean);
+
+    for (const choice of [...commitCandidates, ...pivotCandidates, ...sustainCandidates]) {
+      if (choices.length >= 3) {
+        break;
+      }
+      if (takenIds.has(choice.id)) {
+        continue;
+      }
+      takenIds.add(choice.id);
+      choices.push(markForgeLane(choice, "예비"));
+    }
+
+    if (
+      Number.isFinite(scrapBank) &&
+      choices.length > 0 &&
+      choices.every((choice) => choice.cost > scrapBank)
+    ) {
+      choices[choices.length - 1] = markForgeLane({
+        type: "fallback",
+        id: "fallback:emergency_vent",
+        tag: "무료",
+        title: "Emergency Vent",
+        description: "무료 안정화. 열을 크게 빼고 체력을 조금 회복한다.",
+        slotText: "무료 정비",
+        cost: 0,
+      }, "생존/경제");
     }
 
     return shuffle(choices.slice(0, 3), random);
@@ -1162,15 +2656,30 @@
     }
 
     if (choice.type === "core") {
-      const consumedCopies = Math.max(1, removeBenchCopies(run.build, choice.coreId, choice.benchCopies));
+      const pivotFuelSpent =
+        choice.directOffer && choice.pivotFuelCoreId
+          ? removeBenchCopies(run.build, choice.pivotFuelCoreId, choice.pivotFuelCopies || 1)
+          : 0;
+      const consumedCopies = Math.max(
+        1,
+        removeBenchCopies(run.build, choice.coreId, choice.benchCopies)
+      );
       const existingCopies =
         run.build.coreId === choice.coreId ? Math.max(1, run.build.attunedCopies || 1) : 0;
-      const totalCopies = clamp(existingCopies + consumedCopies, 1, 3);
+      const totalCopies = clamp(existingCopies + consumedCopies, 1, MAX_BENCH_COPIES_PER_CORE);
+      const previousCoreId = run.build.coreId;
       run.build.coreId = choice.coreId;
       run.build.attunedCoreId = choice.coreId;
       run.build.attunedCopies = totalCopies;
+      if (previousCoreId !== choice.coreId) {
+        run.build.catalystCapstoneId = null;
+        run.build.cashoutSupportId = null;
+        run.build.cashoutFailSoftId = null;
+      }
       run.build.upgrades.push(
-        `무기 장착: ${CORE_DEFS[choice.coreId].label} · ${formatSyncLabel(clamp(totalCopies - 1, 0, 2))}`
+        choice.directOffer && choice.pivotFuelCoreId && pivotFuelSpent > 0
+          ? `무기 전환: ${CORE_DEFS[choice.coreId].label} · ${CORE_DEFS[choice.pivotFuelCoreId].short} 연소 · ${formatSyncLabel(clamp(totalCopies - 1, 0, 3))}`
+          : `무기 장착: ${CORE_DEFS[choice.coreId].label} · ${formatSyncLabel(clamp(totalCopies - 1, 0, 3))}`
       );
       if (run.player) {
         run.player.heat = Math.max(0, run.player.heat - 18);
@@ -1186,15 +2695,40 @@
       return choice;
     }
 
+    if (choice.type === "system") {
+      const system = SUPPORT_SYSTEM_DEFS[choice.systemId];
+      const tierDef = system && system.tiers[choice.systemTier];
+      if (!system || !tierDef) {
+        return null;
+      }
+      run.build.supportSystemId = choice.systemId;
+      run.build.supportSystemTier = Math.max(run.build.supportSystemTier || 0, choice.systemTier || 1);
+      run.build.upgrades.push(
+        `${choice.systemTier > 1 ? "시스템 증설" : "시스템 설치"}: ${tierDef.label}`
+      );
+      return choice;
+    }
+
     if (choice.type === "affix") {
-      const currentAffixes = sanitizeAffixIds(run.build.affixes);
+      if (!canApplyAffixChoice(run.build, choice.affixId, choice.replaceTarget)) {
+        return null;
+      }
+      const currentAffixes = sanitizeAffixIds(run.build.affixes, getAffixCapacity(run.build));
       run.build.affixes = choice.replaceTarget
         ? sanitizeAffixIds(
             currentAffixes.map((affixId) =>
               affixId === choice.replaceTarget ? choice.affixId : affixId
-            )
+            ),
+            getAffixCapacity(run.build)
           )
-        : sanitizeAffixIds(currentAffixes.concat(choice.affixId));
+        : sanitizeAffixIds(currentAffixes.concat(choice.affixId), getAffixCapacity(run.build));
+      if (choice.consumesCatalyst) {
+        run.build.finisherCatalysts = sanitizeCatalystCoreIds(
+          (run.build.finisherCatalysts || []).filter((coreId) => coreId !== run.build.coreId)
+        );
+      }
+      run.build.cashoutSupportId = null;
+      run.build.cashoutFailSoftId = null;
       run.build.upgrades.push(`속성 각인: ${AFFIX_DEFS[choice.affixId].label}`);
       return choice;
     }
@@ -1211,11 +2745,58 @@
       return choice;
     }
 
+    if (choice.type === "utility" && choice.action === "catalyst_reforge") {
+      const capstone = CATALYST_REFORGE_DEFS[choice.catalystCoreId || run.build.coreId];
+      if (!capstone) {
+        return null;
+      }
+      capstone.apply(run.build, run);
+      run.build.cashoutSupportId = null;
+      run.build.cashoutFailSoftId = null;
+      run.build.finisherCatalysts = sanitizeCatalystCoreIds(
+        (run.build.finisherCatalysts || []).filter(
+          (coreId) => coreId !== (choice.catalystCoreId || run.build.coreId)
+        )
+      );
+      run.build.upgrades.push(`재구성: ${capstone.label}`);
+      return choice;
+    }
+
+    if (choice.type === "utility" && choice.action === "cashout_support") {
+      const support = FINAL_CASHOUT_SUPPORT_DEFS[choice.supportCoreId || run.build.coreId];
+      if (!support) {
+        return null;
+      }
+      run.build.catalystCapstoneId = null;
+      run.build.cashoutFailSoftId = null;
+      support.apply(run.build, run);
+      run.build.finisherCatalysts = sanitizeCatalystCoreIds(
+        (run.build.finisherCatalysts || []).filter(
+          (coreId) => coreId !== (choice.supportCoreId || run.build.coreId)
+        )
+      );
+      run.build.upgrades.push(`안정화: ${support.label}`);
+      return choice;
+    }
+
+    if (choice.type === "utility" && choice.action === "cashout_failsoft") {
+      const failSoft = FINAL_CASHOUT_FAILSOFT_DEFS[choice.supportCoreId || run.build.coreId];
+      if (!failSoft) {
+        return null;
+      }
+      run.build.catalystCapstoneId = null;
+      run.build.cashoutSupportId = null;
+      failSoft.apply(run.build, run);
+      run.build.upgrades.push(`비상 점화: ${failSoft.label}`);
+      return choice;
+    }
+
     if (choice.type === "utility" && choice.action === "affix_reforge") {
       run.build.affixes = sanitizeAffixIds(
         (run.build.affixes || []).map((affixId) =>
           affixId === choice.targetAffixId ? choice.nextAffixId : affixId
-        )
+        ),
+        getAffixCapacity(run.build)
       );
       run.build.upgrades.push(
         `재각인: ${AFFIX_DEFS[choice.targetAffixId].label} -> ${AFFIX_DEFS[choice.nextAffixId].label}`
@@ -1271,22 +2852,34 @@
     GAME_TITLE,
     MAX_WAVES,
     WAVE_CONFIG,
+    FINAL_CASHOUT_DURATION,
     ENEMY_DEFS,
     CORE_DEFS,
     AFFIX_DEFS,
     MOD_DEFS,
+    SUPPORT_SYSTEM_DEFS,
     SIGNATURE_DEFS,
     DEFAULT_SIGNATURE_ID,
     createInitialBuild,
     getSignatureDef,
     computePlayerStats,
     computeWeaponStats,
+    computeSupportSystemStats,
     getBenchEntries,
     getBenchCount,
     getBenchSyncLevel,
     sanitizeBenchCoreIds,
+    hasFinisherCatalyst,
+    buildCanEarnFinisherCatalyst,
+    shouldFinishAfterForge,
+    createFinalCashoutWave,
+    getFinalCashoutTransitionProfile,
+    applyFinalCashoutTransition,
+    chooseHazardSpawn,
+    buildHazardCandidates,
     buildForgeChoices,
     applyForgeChoice,
+    getCatalystCapstone,
   };
 
   if (typeof module !== "undefined" && module.exports) {
@@ -1392,12 +2985,59 @@
     return `<span class="mini-pill${className}"><span>${label}</span><strong>${value}</strong></span>`;
   }
 
+  function describeHazardState(currentState = state) {
+    const wave = currentState && currentState.wave;
+    if (!wave || !wave.hazard || currentState.phase !== "wave") {
+      return {
+        chipLabel: "Hazard Idle",
+        detailLabel: "폭주",
+        detailValue: "없음",
+        note: "현재 웨이브에는 잔불 폭주가 없다.",
+        tone: "",
+      };
+    }
+
+    if (currentState.hazards.length > 0) {
+      return {
+        chipLabel: `${wave.hazard.label} LIVE`,
+        detailLabel: "폭주",
+        detailValue: "활성",
+        note: `${currentState.hazards.length}개 구역이 활성화됐다. 붉은 원에서 즉시 이탈해야 한다.`,
+        tone: "summary-chip--hot",
+      };
+    }
+
+    const nextWindow = Math.max(0, wave.hazardTimer || 0);
+    return {
+      chipLabel: wave.hazard.label,
+      detailLabel: "다음 폭주",
+      detailValue: `${nextWindow.toFixed(1)}s`,
+      note: `${wave.hazard.count}개 구역이 ${wave.hazard.telegraph.toFixed(1)}초 예고 후 폭주한다.`,
+      tone: nextWindow <= 2.5 ? "summary-chip--hot" : "",
+    };
+  }
+
   function getWeaponTraitLabels(weapon) {
     return [
       weapon.pierce > 0 ? `관통 ${weapon.pierce}` : null,
       weapon.bounce > 0 ? `반사 ${weapon.bounce}` : null,
       weapon.chain > 0 ? `연쇄 ${weapon.chain}` : null,
+      weapon.capstoneTraitLabel ? weapon.capstoneTraitLabel : null,
     ].filter(Boolean);
+  }
+
+  function getSupportSystemSummary(systemStats) {
+    if (!systemStats) {
+      return "보조 시스템 없음";
+    }
+    if (systemStats.interceptRange > 0) {
+      return systemStats.interceptPulseDamage > 0
+        ? `${systemStats.label} · 위성 ${systemStats.orbitCount}기 · 탄환 요격 + 방호 파동`
+        : `${systemStats.label} · 위성 ${systemStats.orbitCount}기 · 탄환 요격`;
+    }
+    return systemStats.tier >= 2
+      ? `${systemStats.label} · 위성 ${systemStats.orbitCount}기 · 자동 볼트`
+      : `${systemStats.label} · 위성 ${systemStats.orbitCount}기`;
   }
 
   function getRunGrade(result) {
@@ -1426,6 +3066,7 @@
       waveIndex: 0,
       wave: null,
       waveClearTimer: 0,
+      pendingFinalForge: false,
       enemies: [],
       projectiles: [],
       drops: [],
@@ -1454,6 +3095,12 @@
       feed: [],
       weapon: computeWeaponStats(build),
       playerStats: computePlayerStats(build),
+      supportSystem: computeSupportSystemStats(build),
+      supportSystemRuntime: {
+        angle: 0,
+        shotCooldown: 0,
+        touchCooldowns: [],
+      },
     };
   }
 
@@ -1579,6 +3226,8 @@
   function refreshDerivedStats(preserveRatio) {
     state.weapon = computeWeaponStats(state.build);
     state.playerStats = computePlayerStats(state.build);
+    state.supportSystem = computeSupportSystemStats(state.build);
+    syncSupportSystemRuntime();
     if (!state.player) {
       return;
     }
@@ -1604,6 +3253,50 @@
       0,
       state.player.dashMax
     );
+  }
+
+  function syncSupportSystemRuntime() {
+    if (!state) {
+      return;
+    }
+    if (!state.supportSystemRuntime) {
+      state.supportSystemRuntime = {
+        angle: 0,
+        shotCooldown: 0,
+        touchCooldowns: [],
+        interceptCooldowns: [],
+      };
+    }
+    const orbitCount = state.supportSystem ? state.supportSystem.orbitCount : 0;
+    state.supportSystemRuntime.touchCooldowns = Array.from(
+      { length: orbitCount },
+      (_, index) => Math.max(0, state.supportSystemRuntime.touchCooldowns[index] || 0)
+    );
+    state.supportSystemRuntime.interceptCooldowns = Array.from(
+      { length: orbitCount },
+      (_, index) => Math.max(0, state.supportSystemRuntime.interceptCooldowns[index] || 0)
+    );
+    if (!state.supportSystem || state.supportSystem.shotCooldown <= 0) {
+      state.supportSystemRuntime.shotCooldown = 0;
+    } else if (state.supportSystemRuntime.shotCooldown <= 0) {
+      state.supportSystemRuntime.shotCooldown = state.supportSystem.shotCooldown * 0.55;
+    }
+  }
+
+  function getSupportSystemSatellites() {
+    if (!state || !state.player || !state.supportSystem) {
+      return [];
+    }
+    const runtime = state.supportSystemRuntime || { angle: 0 };
+    return Array.from({ length: state.supportSystem.orbitCount }, (_, index) => {
+      const angle = runtime.angle + (index / state.supportSystem.orbitCount) * Math.PI * 2;
+      return {
+        x: state.player.x + Math.cos(angle) * state.supportSystem.orbitRadius,
+        y: state.player.y + Math.sin(angle) * state.supportSystem.orbitRadius,
+        radius: state.supportSystem.satelliteRadius,
+        angle,
+      };
+    });
   }
 
   function showScreen(name) {
@@ -1714,6 +3407,7 @@
     const config = WAVE_CONFIG[index];
     state.waveIndex = index;
     state.phase = "wave";
+    state.pendingFinalForge = false;
     state.wave = {
       index,
       timeLeft: config.duration,
@@ -1754,19 +3448,186 @@
   }
 
   function enterForge() {
+    const isFinalForge = state.waveIndex >= MAX_WAVES - 1;
     state.phase = "forge";
+    state.pendingFinalForge = isFinalForge;
     state.forgeChoices = buildForgeChoices(
       state.build,
       Math.random,
-      state.resources.scrap
+      state.resources.scrap,
+      { finalForge: isFinalForge, nextWave: state.waveIndex + 2 }
     );
     state.hazards = [];
     state.enemies = [];
     state.projectiles = [];
     state.player.heat = Math.max(0, state.player.heat - 20);
     state.player.overheated = false;
-    pushCombatFeed("웨이브 종료. 포지 카드로 다음 화력 축을 고른다.", "FORGE");
-    setBanner("포지 정지", 1.2);
+    pushCombatFeed(
+      isFinalForge
+        ? "Meltdown 정리 완료. 마지막 포지에서 최종 각인과 화력 배치를 마감한다."
+        : "웨이브 종료. 포지 카드로 다음 화력 축을 고른다.",
+      "FORGE"
+    );
+    setBanner(isFinalForge ? "최종 포지" : "포지 정지", 1.2);
+    renderForgeOverlay();
+    updateHUD();
+  }
+
+  function shouldFinishAfterForge(run) {
+    return Boolean(run && run.pendingFinalForge && run.waveIndex >= MAX_WAVES - 1);
+  }
+
+  function getFinalCashoutCapstoneVariant(build) {
+    if (!build || !build.catalystCapstoneId) {
+      return null;
+    }
+    return FINAL_CASHOUT_CAPSTONE_VARIANTS[build.catalystCapstoneId] || null;
+  }
+
+  function getFinalCashoutSupportVariant(build) {
+    if (!build || !build.cashoutSupportId) {
+      return null;
+    }
+    return (
+      Object.values(FINAL_CASHOUT_SUPPORT_DEFS).find(
+        (support) => support.id === build.cashoutSupportId
+      ) || null
+    );
+  }
+
+  function getFinalCashoutFailSoftVariant(build) {
+    if (!build || !build.cashoutFailSoftId) {
+      return null;
+    }
+    return (
+      Object.values(FINAL_CASHOUT_FAILSOFT_DEFS).find(
+        (failSoft) => failSoft.id === build.cashoutFailSoftId
+      ) || null
+    );
+  }
+
+  function createFinalCashoutWave(index = MAX_WAVES - 1, build = null) {
+    const baseConfig = WAVE_CONFIG[clamp(index, 0, MAX_WAVES - 1)];
+    const variant =
+      getFinalCashoutFailSoftVariant(build) ||
+      getFinalCashoutSupportVariant(build) ||
+      getFinalCashoutCapstoneVariant(build);
+    const defaultHazard = baseConfig.hazard
+      ? {
+          ...baseConfig.hazard,
+          interval: Math.max(6.2, baseConfig.hazard.interval * 0.82),
+          telegraph: Math.max(0.72, baseConfig.hazard.telegraph * 0.92),
+        }
+      : null;
+    const hazard = variant && defaultHazard
+      ? {
+          ...defaultHazard,
+          ...variant.hazard,
+        }
+      : defaultHazard;
+    return {
+      index,
+      timeLeft: FINAL_CASHOUT_DURATION,
+      spawnBudget: variant ? variant.spawnBudget : FINAL_CASHOUT_SPAWN_BUDGET,
+      spawned: 0,
+      spawnTimer: 0.2,
+      label: `${baseConfig.label} · ${variant ? variant.cashoutLabel : "Cash-Out"}`,
+      bannerLabel: variant ? variant.bannerLabel : "Meltdown Cash-Out",
+      note: variant
+        ? variant.note
+        : "완성된 무기로 마지막 폭주 압박을 직접 정리하는 구간.",
+      directive: variant ? variant.directive : baseConfig.directive,
+      activeCap: variant
+        ? variant.activeCap
+        : Math.max(18, Math.round(baseConfig.activeCap * 0.7)),
+      baseSpawnInterval: variant
+        ? variant.baseSpawnInterval
+        : Math.max(0.22, baseConfig.baseSpawnInterval * 0.74),
+      spawnIntervalMin: variant
+        ? variant.spawnIntervalMin
+        : Math.max(0.1, baseConfig.spawnIntervalMin * 0.9),
+      spawnAcceleration: baseConfig.spawnAcceleration,
+      eliteEvery: variant ? variant.eliteEvery : Math.max(5, baseConfig.eliteEvery - 1),
+      mix: variant ? { ...variant.mix } : { ...baseConfig.mix },
+      cleanupPhase: false,
+      awaitingForge: false,
+      completesRun: true,
+      driveGainFactor: variant
+        ? variant.driveGainFactor
+        : Math.max(baseConfig.driveGainFactor || 1, 1.22),
+      hazard,
+      hazardTimer: hazard
+        ? hazard.interval * (variant && variant.hazard ? variant.hazard.timerFactor : 0.55)
+        : Number.POSITIVE_INFINITY,
+    };
+  }
+
+  function getFinalCashoutTransitionProfile(build = null) {
+    if (build && build.cashoutSupportId) {
+      return {
+        preserveArenaState: true,
+        clearProjectiles: true,
+        clearParticles: true,
+        recenterPlayer: false,
+        heatTrim: 8,
+        refillDash: false,
+      };
+    }
+    return {
+      preserveArenaState: false,
+      clearProjectiles: true,
+      clearParticles: true,
+      recenterPlayer: true,
+      heatTrim: 16,
+      refillDash: true,
+    };
+  }
+
+  function applyFinalCashoutTransition(run) {
+    if (!run) {
+      return null;
+    }
+    const profile = getFinalCashoutTransitionProfile(run.build);
+    run.phase = "wave";
+    run.pendingFinalForge = false;
+    run.wave = createFinalCashoutWave(run.waveIndex, run.build);
+    run.waveClearTimer = 0;
+    if (!profile.preserveArenaState) {
+      run.enemies = [];
+      run.drops = [];
+      run.hazards = [];
+    }
+    if (profile.clearProjectiles) {
+      run.projectiles = [];
+    }
+    if (profile.clearParticles) {
+      run.particles = [];
+    }
+    if (run.player) {
+      if (profile.recenterPlayer) {
+        run.player.x = ARENA_WIDTH / 2;
+        run.player.y = ARENA_HEIGHT / 2;
+      }
+      run.player.heat = Math.max(0, run.player.heat - profile.heatTrim);
+      run.player.overheated = false;
+      run.player.fireCooldown = 0;
+      if (profile.refillDash) {
+        run.player.dashCharges = run.player.dashMax;
+        run.player.dashCooldownTimer = 0;
+      }
+    }
+    return profile;
+  }
+
+  function beginFinalCashout() {
+    const transition = applyFinalCashoutTransition(state);
+    pushCombatFeed(`최종 포지 완료. ${state.wave.note}`, "LAST");
+    setBanner(
+      transition && transition.preserveArenaState
+        ? `${state.wave.bannerLabel || "Meltdown Cash-Out"} · 압박 유지`
+        : state.wave.bannerLabel || "Meltdown Cash-Out",
+      1.2
+    );
     renderForgeOverlay();
     updateHUD();
   }
@@ -1776,6 +3637,7 @@
     const benchEntries = getBenchEntries(state.build);
     state.screen = "result";
     state.phase = "result";
+    state.pendingFinalForge = false;
     state.result = {
       victory,
       wavesCleared: state.stats.wavesCleared,
@@ -1869,6 +3731,10 @@
     applyForgeChoice(state, choice);
     pushCombatFeed(`${choice.tag} · ${choice.title} 적용.`, "FORGE");
     refreshDerivedStats(false);
+    if (shouldFinishAfterForge(state)) {
+      beginFinalCashout();
+      return;
+    }
     beginWave(state.waveIndex + 1);
   }
 
@@ -1909,7 +3775,6 @@
       return;
     }
     const wave = state.wave;
-    const config = WAVE_CONFIG[state.waveIndex];
     wave.timeLeft = Math.max(0, wave.timeLeft - dt);
     wave.cleanupPhase = wave.timeLeft <= 0;
     wave.spawnTimer -= dt;
@@ -1922,7 +3787,7 @@
           wave.spawnIntervalMin,
           wave.baseSpawnInterval
         );
-    const activeCap = wave.cleanupPhase ? config.activeCap + 10 : config.activeCap;
+    const activeCap = wave.cleanupPhase ? wave.activeCap + 10 : wave.activeCap;
 
     while (
       wave.spawnTimer <= 0 &&
@@ -1933,7 +3798,7 @@
         wave.spawned > 0 && wave.spawned % wave.eliteEvery === 0;
       const typeId = shouldSpawnElite
         ? "elite"
-        : pickWeighted(config.mix, Math.random);
+        : pickWeighted(wave.mix, Math.random);
       spawnEnemy(typeId);
       wave.spawned += 1;
       wave.spawnTimer += interval;
@@ -1959,27 +3824,242 @@
     }
   }
 
-  function spawnHazard(config) {
-    const margin = config.radius + 40;
-    let x = ARENA_WIDTH / 2;
-    let y = ARENA_HEIGHT / 2;
+  function normalizeVector(x, y, fallbackX = 1, fallbackY = 0) {
+    const magnitude = Math.hypot(x, y);
+    if (magnitude <= 0.001) {
+      return { x: fallbackX, y: fallbackY };
+    }
+    return {
+      x: x / magnitude,
+      y: y / magnitude,
+    };
+  }
 
-    for (let attempt = 0; attempt < 12; attempt += 1) {
-      const candidateX = margin + Math.random() * (ARENA_WIDTH - margin * 2);
-      const candidateY = margin + Math.random() * (ARENA_HEIGHT - margin * 2);
-      const distance = Math.hypot(candidateX - state.player.x, candidateY - state.player.y);
-      if (distance > config.radius + 70) {
-        x = candidateX;
-        y = candidateY;
-        break;
+  function clampHazardAnchor(x, y, radius, arenaWidth = ARENA_WIDTH, arenaHeight = ARENA_HEIGHT) {
+    const margin = radius + 24;
+    return {
+      x: clamp(x, margin, arenaWidth - margin),
+      y: clamp(y, margin, arenaHeight - margin),
+    };
+  }
+
+  function getHazardHeading(context) {
+    const player = context.player || { x: ARENA_WIDTH / 2, y: ARENA_HEIGHT / 2 };
+    if (context.moveVector) {
+      return normalizeVector(context.moveVector.x, context.moveVector.y, 1, 0);
+    }
+    if (context.aimVector) {
+      return normalizeVector(context.aimVector.x, context.aimVector.y, 1, 0);
+    }
+    const threats = (context.enemies || []).filter((enemy) => !enemy.defeated);
+    if (threats.length > 0) {
+      const nearest = threats.reduce((closest, enemy) => {
+        if (!closest) {
+          return enemy;
+        }
+        const closestDistance = Math.hypot(closest.x - player.x, closest.y - player.y);
+        const nextDistance = Math.hypot(enemy.x - player.x, enemy.y - player.y);
+        return nextDistance < closestDistance ? enemy : closest;
+      }, null);
+      if (nearest) {
+        return normalizeVector(nearest.x - player.x, nearest.y - player.y, 1, 0);
       }
-      x = candidateX;
-      y = candidateY;
+    }
+    return { x: 1, y: 0 };
+  }
+
+  function buildHazardCandidates(config, context) {
+    const player = context.player || { x: ARENA_WIDTH / 2, y: ARENA_HEIGHT / 2 };
+    const heading = getHazardHeading(context);
+    const perpendicular = { x: -heading.y, y: heading.x };
+    const routeDistance = clamp(config.radius * 0.9 + 42, 82, 148);
+    const laneOffset = clamp(config.radius * 0.55, 24, 44);
+    const projectedRoute = {
+      x: player.x + heading.x * routeDistance,
+      y: player.y + heading.y * routeDistance,
+    };
+    const candidates = [
+      {
+        x: projectedRoute.x,
+        y: projectedRoute.y,
+        weight: 5.8,
+        tag: "route",
+      },
+      {
+        x: projectedRoute.x + perpendicular.x * laneOffset,
+        y: projectedRoute.y + perpendicular.y * laneOffset,
+        weight: 4.9,
+        tag: "route-left",
+      },
+      {
+        x: projectedRoute.x - perpendicular.x * laneOffset,
+        y: projectedRoute.y - perpendicular.y * laneOffset,
+        weight: 4.9,
+        tag: "route-right",
+      },
+    ];
+
+    for (const enemy of context.enemies || []) {
+      if (enemy.defeated || enemy.type !== "elite") {
+        continue;
+      }
+      const distance = Math.hypot(enemy.x - player.x, enemy.y - player.y);
+      if (distance > 320) {
+        continue;
+      }
+      candidates.push({
+        x: enemy.x,
+        y: enemy.y,
+        weight: 7.1 - distance / 160,
+        tag: "elite",
+      });
+      candidates.push({
+        x: (enemy.x + projectedRoute.x) / 2,
+        y: (enemy.y + projectedRoute.y) / 2,
+        weight: 5.7 - distance / 220,
+        tag: "elite-route",
+      });
     }
 
+    for (const drop of context.drops || []) {
+      if (
+        drop.life <= 0 ||
+        (drop.kind !== "scrap" && drop.kind !== "core" && drop.kind !== "catalyst")
+      ) {
+        continue;
+      }
+      const distance = Math.hypot(drop.x - player.x, drop.y - player.y);
+      if (distance > 260) {
+        continue;
+      }
+      const isCore = drop.kind === "core";
+      const isCatalyst = drop.kind === "catalyst";
+      candidates.push({
+        x: drop.x,
+        y: drop.y,
+        weight: (isCatalyst ? 7.1 : isCore ? 6.4 : 5.6) - distance / 180,
+        tag: isCatalyst ? "catalyst-drop" : isCore ? "core-drop" : "scrap-drop",
+      });
+    }
+
+    return candidates.map((candidate) => ({
+      ...candidate,
+      ...clampHazardAnchor(candidate.x, candidate.y, config.radius, context.arenaWidth, context.arenaHeight),
+    }));
+  }
+
+  function scoreHazardCandidate(candidate, config, context) {
+    const player = context.player || { x: ARENA_WIDTH / 2, y: ARENA_HEIGHT / 2 };
+    const routeFocus = context.routeFocus || candidate;
+    const distanceToPlayer = Math.hypot(candidate.x - player.x, candidate.y - player.y);
+    const distanceToRoute = Math.hypot(candidate.x - routeFocus.x, candidate.y - routeFocus.y);
+    let score = candidate.weight;
+
+    score += clamp(1.4 - distanceToRoute / 180, -1.8, 1.4);
+    score += clamp(1.1 - Math.abs(distanceToPlayer - config.radius * 1.1) / 140, -1.4, 1.1);
+    if (candidate.tag === "elite") {
+      score += 1.1;
+    } else if (candidate.tag === "elite-route") {
+      score += 0.55;
+    } else if (candidate.tag === "core-drop") {
+      score += 0.95;
+    } else if (candidate.tag === "scrap-drop") {
+      score += 0.5;
+    }
+
+    for (const hazard of context.hazards || []) {
+      const distance = Math.hypot(candidate.x - hazard.x, candidate.y - hazard.y);
+      const minDistance = config.radius + hazard.radius + 18;
+      if (distance < minDistance) {
+        score -= (minDistance - distance) / 18;
+      }
+    }
+
+    return score;
+  }
+
+  function chooseHazardSpawn(config, context, rng = Math.random) {
+    const player = context.player || { x: ARENA_WIDTH / 2, y: ARENA_HEIGHT / 2 };
+    const heading = getHazardHeading(context);
+    const routeFocus = {
+      x: player.x + heading.x * clamp(config.radius * 0.9 + 42, 82, 148),
+      y: player.y + heading.y * clamp(config.radius * 0.9 + 42, 82, 148),
+    };
+    const baseCandidates = buildHazardCandidates(config, {
+      ...context,
+      routeFocus,
+    });
+    const jitterRadius = Math.max(18, config.radius * 0.32);
+    let bestCandidate = null;
+    let bestScore = Number.NEGATIVE_INFINITY;
+
+    for (const candidate of baseCandidates) {
+      for (let sample = 0; sample < 3; sample += 1) {
+        const offsetAngle = rng() * Math.PI * 2;
+        const offsetDistance = sample === 0 ? 0 : rng() * jitterRadius;
+        const positioned = clampHazardAnchor(
+          candidate.x + Math.cos(offsetAngle) * offsetDistance,
+          candidate.y + Math.sin(offsetAngle) * offsetDistance,
+          config.radius,
+          context.arenaWidth,
+          context.arenaHeight
+        );
+        const score =
+          scoreHazardCandidate(
+            {
+              ...candidate,
+              ...positioned,
+            },
+            config,
+            {
+              ...context,
+              routeFocus,
+            }
+          ) + rng() * 0.22;
+        if (score > bestScore) {
+          bestScore = score;
+          bestCandidate = positioned;
+        }
+      }
+    }
+
+    if (bestCandidate) {
+      return bestCandidate;
+    }
+
+    return clampHazardAnchor(
+      player.x + heading.x * config.radius,
+      player.y + heading.y * config.radius,
+      config.radius,
+      context.arenaWidth,
+      context.arenaHeight
+    );
+  }
+
+  function spawnHazard(config) {
+    const moveVector = {
+      x: (input.keys.has("KeyD") ? 1 : 0) - (input.keys.has("KeyA") ? 1 : 0),
+      y: (input.keys.has("KeyS") ? 1 : 0) - (input.keys.has("KeyW") ? 1 : 0),
+    };
+    const aimVector = getAimVector();
+    const position = chooseHazardSpawn(
+      config,
+      {
+        arenaWidth: ARENA_WIDTH,
+        arenaHeight: ARENA_HEIGHT,
+        player: state.player,
+        moveVector,
+        aimVector,
+        enemies: state.enemies,
+        drops: state.drops,
+        hazards: state.hazards,
+      },
+      Math.random
+    );
+
     state.hazards.push({
-      x,
-      y,
+      x: position.x,
+      y: position.y,
       radius: config.radius,
       telegraphTime: config.telegraph,
       activeTime: config.duration,
@@ -2074,6 +4154,248 @@
     setBanner("벤트", 0.55);
   }
 
+  function createPlayerProjectile(angle, weapon, driveActive, overrides = {}) {
+    return {
+      x: state.player.x + Math.cos(angle) * 16,
+      y: state.player.y + Math.sin(angle) * 16,
+      vx: Math.cos(angle) * weapon.projectileSpeed * (driveActive ? 1.12 : 1),
+      vy: Math.sin(angle) * weapon.projectileSpeed * (driveActive ? 1.12 : 1),
+      radius: weapon.core.id === "lance" ? 5.8 : driveActive ? 4.8 : 4.2,
+      damage: weapon.damage + (driveActive ? 8 : 0),
+      life: weapon.core.id === "lance" ? 1.1 : 1.4,
+      pierce: weapon.pierce,
+      bounce: weapon.bounce,
+      chain: weapon.chain,
+      chainRange: weapon.chainRange,
+      color: weapon.color,
+      capstoneOnHit: weapon.capstoneOnHit
+        ? {
+            ...weapon.capstoneOnHit,
+            remainingBursts: weapon.capstoneOnHit.burstCount,
+          }
+        : null,
+      capstoneOnBounce: weapon.capstoneOnBounce
+        ? {
+            ...weapon.capstoneOnBounce,
+          }
+        : null,
+      ...overrides,
+    };
+  }
+
+  function createDerivedProjectile(projectile, angle, overrides = {}) {
+    const speed = overrides.speed || Math.hypot(projectile.vx, projectile.vy) || 1;
+    return {
+      ...projectile,
+      x: overrides.x ?? projectile.x,
+      y: overrides.y ?? projectile.y,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      ...overrides,
+    };
+  }
+
+  function createSupportSystemProjectile(origin, target, systemStats) {
+    const dx = target.x - origin.x;
+    const dy = target.y - origin.y;
+    const magnitude = Math.hypot(dx, dy) || 1;
+    return {
+      owner: "player",
+      x: origin.x,
+      y: origin.y,
+      vx: (dx / magnitude) * systemStats.shotSpeed,
+      vy: (dy / magnitude) * systemStats.shotSpeed,
+      radius: 3.8,
+      damage: systemStats.shotDamage,
+      life: 0.8,
+      pierce: 0,
+      bounce: 0,
+      chain: 0,
+      chainRange: 0,
+      color: systemStats.color,
+      capstoneOnHit: null,
+      capstoneOnBounce: null,
+    };
+  }
+
+  function emitStormRailBursts(projectile, sourceEnemy) {
+    const onHit = projectile && projectile.capstoneOnHit;
+    if (!onHit || onHit.kind !== "storm_branch" || onHit.remainingBursts <= 0) {
+      return;
+    }
+    let emitted = 0;
+    for (const enemy of state.enemies) {
+      if (
+        enemy === sourceEnemy ||
+        enemy.defeated ||
+        enemy.hp <= 0 ||
+        emitted >= onHit.remainingBursts
+      ) {
+        continue;
+      }
+      const distance = Math.hypot(enemy.x - sourceEnemy.x, enemy.y - sourceEnemy.y);
+      if (distance > onHit.range) {
+        continue;
+      }
+      const angle = Math.atan2(enemy.y - sourceEnemy.y, enemy.x - sourceEnemy.x);
+      state.projectiles.push(
+        createDerivedProjectile(projectile, angle, {
+          x: sourceEnemy.x,
+          y: sourceEnemy.y,
+          speed: (Math.hypot(projectile.vx, projectile.vy) || 1) * onHit.speedMultiplier,
+          radius: Math.max(projectile.radius - 0.2, 4.8),
+          damage: round(projectile.damage * onHit.damageMultiplier, 1),
+          life: 0.32,
+          pierce: 0,
+          bounce: 0,
+          chain: 0,
+          chainRange: 0,
+          color: onHit.color,
+          capstoneOnHit: null,
+          capstoneOnBounce: null,
+        })
+      );
+      emitted += 1;
+    }
+    onHit.remainingBursts = 0;
+  }
+
+  function emitMirrorSplit(projectile) {
+    const onBounce = projectile && projectile.capstoneOnBounce;
+    if (!onBounce || onBounce.kind !== "mirror_split" || onBounce.splitCount <= 0) {
+      return;
+    }
+    const baseAngle = Math.atan2(projectile.vy, projectile.vx);
+    const speed = (Math.hypot(projectile.vx, projectile.vy) || 1) * onBounce.speedMultiplier;
+    const half = (onBounce.splitCount - 1) / 2;
+    for (let index = 0; index < onBounce.splitCount; index += 1) {
+      const offset = (index - half) * onBounce.spread;
+      state.projectiles.push(
+        createDerivedProjectile(projectile, baseAngle + offset, {
+          speed,
+          radius: Math.max(projectile.radius - 0.4, 3.8),
+          damage: round(projectile.damage * onBounce.damageMultiplier, 1),
+          life: Math.max(projectile.life, 0.38),
+          color: onBounce.color,
+          capstoneOnBounce: null,
+          capstoneOnHit: null,
+        })
+      );
+    }
+    projectile.capstoneOnBounce = null;
+  }
+
+  function updateSupportSystem(dt) {
+    if (state.phase !== "wave" || !state.player || !state.supportSystem) {
+      return;
+    }
+    syncSupportSystemRuntime();
+    state.supportSystemRuntime.angle += dt * state.supportSystem.orbitSpeed;
+    state.supportSystemRuntime.touchCooldowns = state.supportSystemRuntime.touchCooldowns.map((cooldown) =>
+      Math.max(0, cooldown - dt)
+    );
+    state.supportSystemRuntime.interceptCooldowns = state.supportSystemRuntime.interceptCooldowns.map(
+      (cooldown) => Math.max(0, cooldown - dt)
+    );
+    const satellites = getSupportSystemSatellites();
+
+    if (state.supportSystem.interceptRange > 0) {
+      satellites.forEach((satellite, index) => {
+        if (state.supportSystemRuntime.interceptCooldowns[index] > 0) {
+          return;
+        }
+        const hostileProjectile = state.projectiles.find((projectile) => {
+          if (projectile.owner !== "enemy" || projectile.life <= 0) {
+            return false;
+          }
+          const distance = Math.hypot(projectile.x - satellite.x, projectile.y - satellite.y);
+          return distance <= state.supportSystem.interceptRange + projectile.radius + satellite.radius;
+        });
+        if (!hostileProjectile) {
+          return;
+        }
+        hostileProjectile.life = 0;
+        state.supportSystemRuntime.interceptCooldowns[index] = state.supportSystem.interceptCooldown;
+        state.particles.push(createParticle(hostileProjectile.x, hostileProjectile.y, state.supportSystem.color, 1));
+        state.particles.push(createParticle(satellite.x, satellite.y, "#f3feff", 0.8));
+        if (state.supportSystem.interceptPulseDamage > 0 && state.supportSystem.interceptPulseRadius > 0) {
+          for (const enemy of state.enemies) {
+            if (enemy.defeated || enemy.hp <= 0) {
+              continue;
+            }
+            const distance = Math.hypot(enemy.x - hostileProjectile.x, enemy.y - hostileProjectile.y);
+            if (distance > state.supportSystem.interceptPulseRadius + enemy.radius) {
+              continue;
+            }
+            enemy.hp -= state.supportSystem.interceptPulseDamage;
+            state.particles.push(createParticle(enemy.x, enemy.y, "#c7fbff", 0.6));
+            if (enemy.hp <= 0) {
+              destroyEnemy(enemy);
+            }
+          }
+        }
+      });
+    }
+
+    satellites.forEach((satellite, index) => {
+      for (const enemy of state.enemies) {
+        if (enemy.defeated || enemy.hp <= 0) {
+          continue;
+        }
+        const distance = Math.hypot(enemy.x - satellite.x, enemy.y - satellite.y);
+        if (
+          distance < enemy.radius + satellite.radius &&
+          state.supportSystemRuntime.touchCooldowns[index] <= 0
+        ) {
+          enemy.hp -= state.supportSystem.touchDamage;
+          state.supportSystemRuntime.touchCooldowns[index] = state.supportSystem.touchCooldown;
+          state.particles.push(createParticle(satellite.x, satellite.y, state.supportSystem.color, 0.8));
+          if (enemy.hp <= 0) {
+            destroyEnemy(enemy);
+          }
+          break;
+        }
+      }
+    });
+
+    if (state.supportSystem.shotCooldown <= 0) {
+      return;
+    }
+
+    state.supportSystemRuntime.shotCooldown = Math.max(
+      0,
+      state.supportSystemRuntime.shotCooldown - dt
+    );
+    if (state.supportSystemRuntime.shotCooldown > 0) {
+      return;
+    }
+
+    let fired = false;
+    satellites.forEach((satellite) => {
+      let target = null;
+      let bestDistance = state.supportSystem.shotRange;
+      for (const enemy of state.enemies) {
+        if (enemy.defeated || enemy.hp <= 0) {
+          continue;
+        }
+        const distance = Math.hypot(enemy.x - satellite.x, enemy.y - satellite.y);
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          target = enemy;
+        }
+      }
+      if (target) {
+        state.projectiles.push(createSupportSystemProjectile(satellite, target, state.supportSystem));
+        state.particles.push(createParticle(satellite.x, satellite.y, "#fff0c9", 0.55));
+        fired = true;
+      }
+    });
+
+    if (fired) {
+      state.supportSystemRuntime.shotCooldown = state.supportSystem.shotCooldown;
+    }
+  }
+
   function fireWeapon() {
     if (state.phase !== "wave") {
       return;
@@ -2097,20 +4419,73 @@
           ? 0
           : ((pellet / (weapon.pellets - 1)) * 2 - 1) * weapon.spread;
       const angle = baseAngle + pelletOffset;
-      state.projectiles.push({
-        x: state.player.x + Math.cos(angle) * 16,
-        y: state.player.y + Math.sin(angle) * 16,
-        vx: Math.cos(angle) * weapon.projectileSpeed * (driveActive ? 1.12 : 1),
-        vy: Math.sin(angle) * weapon.projectileSpeed * (driveActive ? 1.12 : 1),
-        radius: weapon.core.id === "lance" ? 5.8 : driveActive ? 4.8 : 4.2,
-        damage: weapon.damage + (driveActive ? 8 : 0),
-        life: weapon.core.id === "lance" ? 1.1 : 1.4,
-        pierce: weapon.pierce,
-        bounce: weapon.bounce,
-        chain: weapon.chain,
-        chainRange: weapon.chainRange,
-        color: weapon.color,
-      });
+      state.projectiles.push(createPlayerProjectile(angle, weapon, driveActive));
+    }
+
+    if (weapon.capstoneFire) {
+      if (weapon.capstoneFire.kind === "temper_slug") {
+        state.projectiles.push(
+          createPlayerProjectile(baseAngle, weapon, driveActive, {
+            vx:
+              Math.cos(baseAngle) *
+              weapon.projectileSpeed *
+              weapon.capstoneFire.speedMultiplier *
+              (driveActive ? 1.12 : 1),
+            vy:
+              Math.sin(baseAngle) *
+              weapon.projectileSpeed *
+              weapon.capstoneFire.speedMultiplier *
+              (driveActive ? 1.12 : 1),
+            radius: weapon.capstoneFire.radius,
+            damage: round(
+              (weapon.damage + (driveActive ? 8 : 0)) * weapon.capstoneFire.damageMultiplier,
+              1
+            ),
+            life: 1.18,
+            pierce: weapon.pierce + weapon.capstoneFire.pierceBonus,
+            bounce: 0,
+            chain: 0,
+            chainRange: 0,
+            color: weapon.capstoneFire.color,
+          })
+        );
+      } else if (weapon.capstoneFire.kind === "ember_echo") {
+        const half = (weapon.capstoneFire.projectileCount - 1) / 2;
+        for (
+          let projectileIndex = 0;
+          projectileIndex < weapon.capstoneFire.projectileCount;
+          projectileIndex += 1
+        ) {
+          const echoOffset =
+            (projectileIndex - half) * weapon.capstoneFire.spread;
+          const echoAngle = baseAngle + echoOffset;
+          state.projectiles.push(
+            createPlayerProjectile(echoAngle, weapon, driveActive, {
+              vx:
+                Math.cos(echoAngle) *
+                weapon.projectileSpeed *
+                weapon.capstoneFire.speedMultiplier *
+                (driveActive ? 1.12 : 1),
+              vy:
+                Math.sin(echoAngle) *
+                weapon.projectileSpeed *
+                weapon.capstoneFire.speedMultiplier *
+                (driveActive ? 1.12 : 1),
+              radius: weapon.capstoneFire.radius,
+              damage: round(
+                (weapon.damage + (driveActive ? 8 : 0)) * weapon.capstoneFire.damageMultiplier,
+                1
+              ),
+              life: 1.08,
+              pierce: weapon.pierce,
+              bounce: 0,
+              chain: 0,
+              chainRange: 0,
+              color: weapon.capstoneFire.color,
+            })
+          );
+        }
+      }
     }
 
     state.player.heat = clamp(
@@ -2360,6 +4735,7 @@
       if (bounced) {
         projectile.x = clamp(projectile.x, 4, ARENA_WIDTH - 4);
         projectile.y = clamp(projectile.y, 4, ARENA_HEIGHT - 4);
+        emitMirrorSplit(projectile);
       }
 
       let consumed = false;
@@ -2383,6 +4759,7 @@
             if (enemy.hp <= 0) {
               destroyEnemy(enemy);
             }
+            emitStormRailBursts(projectile, enemy);
             const chained = tryChainProjectile(projectile, enemy);
             if (chained) {
               if (projectile.pierce > 0) {
@@ -2479,6 +4856,22 @@
         coreId: nextCore,
         life: 12,
       });
+      if (
+        state.waveIndex === MAX_WAVES - 1 &&
+        buildCanEarnFinisherCatalyst(state.build) &&
+        !state.drops.some(
+          (drop) => drop.kind === "catalyst" && drop.coreId === state.build.coreId && drop.life > 0
+        )
+      ) {
+        state.drops.push({
+          kind: "catalyst",
+          x: enemy.x - 12,
+          y: enemy.y + 12,
+          coreId: state.build.coreId,
+          life: 12,
+        });
+        pushCombatFeed(`${FINISHER_RECIPE_DEFS[state.build.coreId].label} 촉매 노출. 회수해야 최종 각인이 열린다.`, "CAT");
+      }
     }
 
     state.shake = Math.max(state.shake, enemy.type === "elite" ? 10 : 4);
@@ -2535,6 +4928,21 @@
         gainDrive(CORE_OVERFLOW_SCRAP * 0.24);
         setBanner(`${CORE_DEFS[drop.coreId].short} 초과분 분해 +${CORE_OVERFLOW_SCRAP}`, 0.8);
       }
+      return;
+    }
+
+    if (drop.kind === "catalyst") {
+      if (!hasFinisherCatalyst(state.build, drop.coreId)) {
+        state.build.finisherCatalysts = sanitizeCatalystCoreIds(
+          (state.build.finisherCatalysts || []).concat(drop.coreId)
+        );
+        pushCombatFeed(
+          `${FINISHER_RECIPE_DEFS[drop.coreId].label} 촉매 확보. 마지막 완성 단계가 해금되었다.`,
+          "CAT"
+        );
+        setBanner(`${CORE_DEFS[drop.coreId].short} 촉매 확보`, 0.9);
+      }
+      return;
     }
   }
 
@@ -2568,7 +4976,7 @@
 
       state.waveClearTimer = Math.max(0, state.waveClearTimer - dt);
       if (state.waveClearTimer <= 0) {
-        if (state.waveIndex >= MAX_WAVES - 1) {
+        if (state.wave.completesRun) {
           finishRun(true);
         } else {
           enterForge();
@@ -2591,6 +4999,8 @@
         ? state.player.overdriveActiveTime / Math.max(0.1, state.player.overdriveDuration)
         : state.player.drive / 100;
     const traitLabels = getWeaponTraitLabels(state.weapon);
+    const hazardStatus = describeHazardState(state);
+    const supportSystemSummary = getSupportSystemSummary(state.supportSystem);
 
     elements.waveLabel.textContent = waveLabel;
     elements.hpStat.textContent = `${Math.ceil(state.player.hp)} / ${state.player.maxHp}`;
@@ -2644,6 +5054,9 @@
     const weapon = state.weapon;
     const traitSummary = traitLabels.join(" · ");
     const affixSummary = weapon.affixLabels.length ? weapon.affixLabels.join(" · ") : "속성 없음";
+    const capstoneSummary = weapon.capstoneLabel
+      ? `${weapon.capstoneLabel} · ${weapon.capstoneTraitLabel}`
+      : null;
     if (elements.activeCore) {
       elements.activeCore.innerHTML = `
         <div class="summary-head">
@@ -2667,9 +5080,11 @@
               ? traitLabels.map((label) => createMiniPill("TRAIT", label, "accent")).join("")
               : createMiniPill("TRAIT", "직선 탄도")
           }
+          ${capstoneSummary ? createMiniPill("CAP", weapon.capstoneLabel, "hot") : ""}
+          ${state.supportSystem ? createMiniPill("SYS", state.supportSystem.label, "accent") : ""}
           ${weapon.affixLabels.map((label) => createMiniPill("속성", label, "cool")).join("")}
         </div>
-        <p class="summary-note">${affixSummary} · 보관 ${weapon.benchCopies}개 대기</p>
+        <p class="summary-note">${[affixSummary, capstoneSummary, supportSystemSummary, `보관 ${weapon.benchCopies}개 대기`].filter(Boolean).join(" · ")}</p>
       `;
     }
 
@@ -2704,15 +5119,17 @@
       elements.waveObjective.innerHTML = `
         <div class="summary-head">
           <strong>${waveConfig.label}</strong>
-          <span class="summary-chip ${state.hazards.length > 0 ? "summary-chip--hot" : ""}">
-            Hazard ${state.hazards.length}
+          <span class="summary-chip ${hazardStatus.tone}">
+            ${hazardStatus.chipLabel}
           </span>
         </div>
         <div class="status-list">
           ${createStatusRow("남은 스폰", String(enemiesLeft))}
           ${createStatusRow("현재 적", String(state.enemies.length))}
           ${createStatusRow("드랍", String(state.drops.length))}
+          ${createStatusRow(hazardStatus.detailLabel, hazardStatus.detailValue)}
         </div>
+        <p class="summary-note">${hazardStatus.note}</p>
       `;
     }
 
@@ -2736,11 +5153,16 @@
           ${createStatusRow("처치", String(state.stats.kills))}
           ${createStatusRow("코어 수집", String(state.stats.coresCollected))}
           ${createStatusRow("쓴 고철", String(Math.round(state.stats.scrapSpent)))}
+          ${createStatusRow(hazardStatus.detailLabel, hazardStatus.detailValue)}
           ${createStatusRow("벤트", "Q / 24 Drive")}
         </div>
         <p class="summary-note ${
           state.player.overheated ? "summary-note--danger" : ""
-        }">${state.player.overheated ? "사격 정지: 열을 비워야 한다." : "과열 전까지 자동 사격 유지."}</p>
+        }">${
+          state.player.overheated
+            ? "사격 정지: 열을 비워야 한다."
+            : `${weapon.capstoneStatusNote ? `${weapon.capstoneStatusNote} ` : ""}${state.supportSystem ? `${state.supportSystem.statusNote} ` : ""}${hazardStatus.note} 자동 사격은 과열 전까지 유지된다.`
+        }</p>
       `;
     }
 
@@ -2762,6 +5184,10 @@
     const affixSummary = state.weapon.affixLabels.length
       ? state.weapon.affixLabels.join(" · ")
       : "속성 없음";
+    const capstoneSummary = state.weapon.capstoneLabel
+      ? `${state.weapon.capstoneLabel} · ${state.weapon.capstoneTraitLabel}`
+      : "활성 촉매 재구성 없음";
+    const forgeSystemSummary = getSupportSystemSummary(state.supportSystem);
     const benchEntries = getBenchEntries(state.build);
     const benchSummary = benchEntries.length
       ? benchEntries
@@ -2771,8 +5197,18 @@
           )
           .join(" · ")
       : "보관 코어 없음";
-    elements.forgeSubtitle.textContent =
-      `고철 ${Math.round(state.resources.scrap)} 보유. 장착은 무기 등급을 올리거나 바꾸고, 각인은 속성을 붙이며, 재구성/분해는 보관 코어를 정리한다.`;
+    const catalystReady = hasFinisherCatalyst(state.build, state.build.coreId);
+    const catalystEligible = buildCanEarnFinisherCatalyst(state.build) || catalystReady;
+    const catalystSummary = catalystEligible
+      ? catalystReady
+        ? `${FINISHER_RECIPE_DEFS[state.build.coreId].label} 촉매 확보`
+        : `${FINISHER_RECIPE_DEFS[state.build.coreId].label} 촉매 필요`
+      : "촉매 조건 미도달";
+    elements.forgeSubtitle.textContent = state.pendingFinalForge
+      ? catalystReady
+        ? `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 세 장은 완성, 촉매 연소, 안정화로 고정되며 각 카드가 바로 이어질 12초 cash-out 시험을 미리 보여준다.`
+        : `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 촉매가 없어도 비상 점화와 안정화 fail-soft 카드가 열리며, 각 카드가 다른 12초 cash-out 시험으로 바로 이어진다.`
+      : `고철 ${Math.round(state.resources.scrap)} 보유. 장착은 무기 등급을 올리거나 바꾸고, 각인은 속성을 붙이며, 재구성/분해는 보관 코어를 정리한다.`;
     elements.forgeContext.innerHTML = `
       <article class="forge-context__card">
         <p class="panel__eyebrow">현재 무기</p>
@@ -2780,9 +5216,9 @@
         <p>${state.weapon.tierLabel} · ${state.weapon.benchSyncLabel} · ${traitSummary}</p>
       </article>
       <article class="forge-context__card">
-        <p class="panel__eyebrow">속성 패키지</p>
+        <p class="panel__eyebrow">속성 / 시스템</p>
         <strong>${affixSummary}</strong>
-        <p>보관 ${benchEntries.length}종 · 분해 예상 고철 ${getRecycleValue(state.build)}</p>
+        <p>${capstoneSummary} · ${forgeSystemSummary} · 보관 ${benchEntries.length}종 · ${catalystSummary} · 분해 예상 고철 ${getRecycleValue(state.build)}</p>
       </article>
     `;
     elements.forgeCards.innerHTML = state.forgeChoices
@@ -2809,7 +5245,7 @@
             data-verb="${choice.verb}"
             ${state.resources.scrap < choice.cost ? "disabled" : ""}
           >
-            <span class="forge-card__tag">${choice.tag}</span>
+            <span class="forge-card__tag">${choice.laneLabel ? `${choice.laneLabel} · ${choice.tag}` : choice.tag}</span>
             <h3>${choice.title}</h3>
             <p>${choice.description}</p>
             <div class="forge-card__preview">${previewRows}</div>
@@ -2912,13 +5348,23 @@
     }
 
     for (const drop of state.drops) {
-      const maxLife = drop.kind === "core" ? 12 : 10;
+      const maxLife = drop.kind === "core" || drop.kind === "catalyst" ? 12 : 10;
       const fadeRatio = clamp(drop.life / maxLife, 0, 1);
       const blink = drop.life < 2.2 ? 0.45 + Math.abs(Math.sin(performance.now() * 0.02)) * 0.55 : 1;
       context.globalAlpha = clamp(fadeRatio * blink, 0.18, 1);
       if (drop.kind === "scrap") {
         context.fillStyle = "rgba(255, 209, 102, 0.9)";
         context.fillRect(drop.x - 4, drop.y - 4, 8, 8);
+      } else if (drop.kind === "catalyst") {
+        context.strokeStyle = "#fff1a8";
+        context.lineWidth = 2;
+        context.beginPath();
+        context.arc(drop.x, drop.y, 10, 0, Math.PI * 2);
+        context.stroke();
+        context.fillStyle = CORE_DEFS[drop.coreId].color;
+        context.beginPath();
+        context.arc(drop.x, drop.y, 5.5, 0, Math.PI * 2);
+        context.fill();
       } else {
         context.fillStyle = CORE_DEFS[drop.coreId].color;
         context.save();
@@ -2928,6 +5374,45 @@
         context.restore();
       }
       context.globalAlpha = 1;
+    }
+
+    if (state.player && state.supportSystem) {
+      context.strokeStyle = state.supportSystem.orbitColor;
+      context.lineWidth = 1.5;
+      context.beginPath();
+      context.arc(state.player.x, state.player.y, state.supportSystem.orbitRadius, 0, Math.PI * 2);
+      context.stroke();
+      for (const satellite of getSupportSystemSatellites()) {
+        context.fillStyle = state.supportSystem.color;
+        context.strokeStyle = state.supportSystem.strokeColor;
+        context.lineWidth = 1.4;
+        if (state.supportSystem.renderShape === "shield") {
+          context.save();
+          context.translate(satellite.x, satellite.y);
+          context.rotate(satellite.angle + Math.PI / 4);
+          context.beginPath();
+          context.rect(-satellite.radius, -satellite.radius, satellite.radius * 2, satellite.radius * 2);
+          context.fill();
+          context.stroke();
+          context.restore();
+          context.beginPath();
+          context.arc(
+            satellite.x,
+            satellite.y,
+            satellite.radius + state.supportSystem.interceptRange * 0.45,
+            0,
+            Math.PI * 2
+          );
+          context.stroke();
+        } else {
+          context.beginPath();
+          context.arc(satellite.x, satellite.y, satellite.radius, 0, Math.PI * 2);
+          context.fill();
+          context.beginPath();
+          context.arc(satellite.x, satellite.y, satellite.radius + 3, 0, Math.PI * 2);
+          context.stroke();
+        }
+      }
     }
 
     for (const projectile of state.projectiles) {
@@ -3067,6 +5552,7 @@
 
     if (state.phase === "wave") {
       updatePlayer(dt);
+      updateSupportSystem(dt);
       maybeSpawnEnemies(dt);
       maybeSpawnHazards(dt);
       updateEnemies(dt);
