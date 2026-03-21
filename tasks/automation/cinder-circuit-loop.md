@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-21 23:58 KST
+  Findings:
+  - `WAVE_CONFIG` now reaches Wave 8, but the escalation model is still basically prototype-length: one first-act climb, one act-break draft, then three more waves of the same roster plus bastions. That is not yet the kind of bracketed progression that could scale into a 20-30 wave rerun machine.
+  - Act 2 still leans on `scuttler/brute/shrike` with modest `activeCap` growth (`34 -> 39`) and a shared bastion hazard family. The arena breathes more, but the player is still mostly solving familiar pursuit pressure rather than entering a new combat language with distinct target priority and route ownership.
+  - Build visuals are finally more legible through satellites, drones, missiles, and tier-3 weapon evolutions, yet the ceiling still arrives too soon: two support bays and a short back half mean many runs are already "assembled" before they become outrageous.
+  - The docs still describe a `5웨이브` MVP and `7분 내외` target while the implementation has moved past that. That mismatch is now a design liability because it keeps pulling the game back toward short-run prototype thinking instead of authored long-run escalation with expected power brackets.
+  Top Priority: Author and implement a true third combat bracket after Wave 8 planning, centered on a new late-game enemy pressure family rather than more bastion variants or small spawn-number increases.
+  Why Now: Until the game has a credible late-run escalation model, every other payoff upgrade still lands inside a ceiling that feels too short to chase repeatedly.
+  Do Not Repeat: Do not spend another pass on safer forge variety or local tuning if the combat roadmap still tops out at "same enemies, wider room, more bastions."
+
 - 2026-03-21 23:40 KST
   Findings:
   - `buildActBreakArmoryChoices()` is a step up, but it still curates the draft too safely: one evolution, one offensive module, one support system, one chassis lane. A supposed Act 2 identity lock should create greed and fear, not a neat sampler plate.
@@ -328,6 +338,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-21 23:59 KST
+  Changed: extended [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) with a bounded third combat bracket after `Crownfire` by adding Waves 9-10, a larger `1440x820` late-run arena, and a new `warden` enemy family built around long-range standoff volleys instead of more bastion ownership. `Warden` units now hold medium range, strafe around the player, and fire visible fan spreads, while `Lockgrid` and `Starforge` shift the late mix heavily toward that family so the player has to break crossfire lanes and reopen routes rather than only kite the same pursuit pack. The same pass updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to cover the new wave count, third-act arena sizing, warden-heavy mixes, and the new final cash-out center.
+  Why: the latest critique’s Top Priority was to author a true third combat bracket after Wave 8 around a new late-game enemy pressure family instead of more bastion variants or minor spawn-number inflation. I took the highest-value bounded interpretation as "add exactly one new enemy language plus two authored late waves that let it dominate the route problem" because that raises the long-run ceiling immediately without reopening forge systems or trying to solve the whole 20-30 wave roadmap in one pass.
+  Follow-up risk: `warden` crossfire now gives the back half a distinct lane-control ask, but it is still only one new late-run family. If the next critique still wants more factional contrast, the next pass should deepen Wave 9+ encounter authorship with a second complementary late-game role or a wave-specific hazard that explicitly combos with wardens instead of returning to bastion count tuning.
 
 - 2026-03-21 23:55 KST
   Changed: reworked the Wave 5 `Act Break Armory` draft in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from a safe five-card lane sampler into a six-card, two-pick collision draft. The armory now intentionally overfeeds high-commitment offense by surfacing `주무장 진화`, `공세 모듈`, and a new `대형 화력` bucket in the same roll, including recipe-finisher/current-core chase cards and big offensive mod spikes beside the existing system offers, while still leaving a smaller `방호/유틸 차체` hedge lane in the pool. The forge feed/subtitle copy was updated to explain the new 6-card greed profile, and [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts the six-card armory size plus the requirement that multiple offensive spikes collide in the Wave 6 draft.

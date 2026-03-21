@@ -22,8 +22,8 @@ vm.runInNewContext(source, sandbox, { filename: gamePath });
 const game = sandbox.module.exports;
 
 assert.equal(game.GAME_TITLE, "Cinder Circuit");
-assert.equal(game.MAX_WAVES, 8);
-assert.equal(game.WAVE_CONFIG.length, 8);
+assert.equal(game.MAX_WAVES, 10);
+assert.equal(game.WAVE_CONFIG.length, 10);
 assert.ok(game.WAVE_CONFIG[0].spawnBudget < game.WAVE_CONFIG[2].spawnBudget);
 assert.ok(game.WAVE_CONFIG[4].hazard);
 assert.ok(game.WAVE_CONFIG[3].hazard.interval > game.WAVE_CONFIG[4].hazard.interval);
@@ -36,7 +36,14 @@ assert.ok(game.WAVE_CONFIG[7].spawnBudget > game.WAVE_CONFIG[4].spawnBudget);
 assert.ok(game.WAVE_CONFIG[7].hazard.count > game.WAVE_CONFIG[4].hazard.count);
 assert.equal(game.WAVE_CONFIG[7].hazard.type, "territory");
 assert.ok(game.WAVE_CONFIG[7].hazard.turretInterval < game.WAVE_CONFIG[5].hazard.turretInterval);
-assert.equal(game.createFinalCashoutWave().arena.width, 1280);
+assert.equal(game.WAVE_CONFIG[8].arena.width, 1440);
+assert.equal(game.WAVE_CONFIG[8].hazard.type || "pulse", "pulse");
+assert.ok(game.WAVE_CONFIG[8].mix.warden > game.WAVE_CONFIG[8].mix.shrike);
+assert.equal(game.WAVE_CONFIG[9].arena.height, 820);
+assert.ok(game.WAVE_CONFIG[9].spawnBudget > game.WAVE_CONFIG[7].spawnBudget);
+assert.ok(game.WAVE_CONFIG[9].mix.warden >= 0.5);
+assert.ok(game.ENEMY_DEFS.warden.hp > game.ENEMY_DEFS.shrike.hp);
+assert.equal(game.createFinalCashoutWave().arena.width, 1440);
 assert.equal(game.DEFAULT_SIGNATURE_ID, "relay_oath");
 assert.equal(
   JSON.stringify(Object.keys(game.SUPPORT_SYSTEM_DEFS).sort()),
@@ -908,8 +915,8 @@ assert.equal(capstoneTransitionRun.drops.length, 0);
 assert.equal(capstoneTransitionRun.hazards.length, 0);
 assert.equal(capstoneTransitionRun.projectiles.length, 0);
 assert.equal(capstoneTransitionRun.particles.length, 0);
-assert.equal(capstoneTransitionRun.player.x, 640);
-assert.equal(capstoneTransitionRun.player.y, 360);
+assert.equal(capstoneTransitionRun.player.x, 720);
+assert.equal(capstoneTransitionRun.player.y, 410);
 assert.equal(capstoneTransitionRun.player.heat, 17);
 assert.equal(capstoneTransitionRun.player.dashCharges, 3);
 assert.equal(capstoneTransitionRun.player.dashCooldownTimer, 0);

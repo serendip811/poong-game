@@ -7,6 +7,10 @@
     width: 1280,
     height: 720,
   };
+  const THIRD_ACT_ARENA = {
+    width: 1440,
+    height: 820,
+  };
 
   const WAVE_CONFIG = [
     {
@@ -246,6 +250,66 @@
         enemyPullRadius: 164,
       },
     },
+    {
+      id: "lockgrid",
+      label: "Wave 9 · Lockgrid",
+      duration: 90,
+      spawnBudget: 186,
+      activeCap: 40,
+      baseSpawnInterval: 0.37,
+      spawnIntervalMin: 0.11,
+      spawnAcceleration: 0.34,
+      eliteEvery: 5,
+      mix: {
+        scuttler: 0.14,
+        brute: 0.18,
+        shrike: 0.24,
+        warden: 0.44,
+      },
+      note: "세 번째 전투 구간. 추격 대신 장거리 봉쇄를 끊으며 다시 길을 열어야 한다.",
+      directive: "warden crossfire. 바깥 사선을 정리하지 않으면 안전 루트와 고철 회수선이 계속 잠긴다.",
+      driveGainFactor: 1.38,
+      arena: THIRD_ACT_ARENA,
+      hazard: {
+        label: "Lockgrid Surge",
+        interval: 9.1,
+        count: 3,
+        radius: 74,
+        telegraph: 0.82,
+        duration: 4.3,
+        damage: 14,
+      },
+    },
+    {
+      id: "starforge",
+      label: "Wave 10 · Starforge",
+      duration: 96,
+      spawnBudget: 204,
+      activeCap: 42,
+      baseSpawnInterval: 0.34,
+      spawnIntervalMin: 0.1,
+      spawnAcceleration: 0.35,
+      eliteEvery: 5,
+      mix: {
+        scuttler: 0.12,
+        brute: 0.18,
+        shrike: 0.2,
+        warden: 0.5,
+      },
+      note: "최종 전장은 warden 라인을 찢어야만 화력 창이 생긴다. 끝까지 경로 소유권을 두고 싸우는 구간.",
+      directive: "triple surge + warden ring. 중앙 돌진보다 외곽 포대를 정리하며 화력 창을 만든다.",
+      driveGainFactor: 1.44,
+      arena: THIRD_ACT_ARENA,
+      hazard: {
+        label: "Starforge Surge",
+        interval: 8.3,
+        count: 3,
+        radius: 82,
+        telegraph: 0.76,
+        duration: 4.7,
+        damage: 15,
+      },
+    },
   ];
 
   const MAX_WAVES = WAVE_CONFIG.length;
@@ -296,6 +360,16 @@
       damage: 12,
       scrap: 2,
       particleColor: "#a7fff4",
+    },
+    warden: {
+      label: "Warden",
+      color: "#ff6b9a",
+      radius: 16,
+      hp: 64,
+      speed: 68,
+      damage: 14,
+      scrap: 3,
+      particleColor: "#ff9aba",
     },
     elite: {
       label: "Elite Husk",
@@ -5179,6 +5253,7 @@
       contactCooldown: 0,
       attackCooldown: Math.random() * 0.8,
       wobble: Math.random() * Math.PI * 2,
+      orbitDirection: Math.random() > 0.5 ? 1 : -1,
       defeated: false,
     });
   }
@@ -6124,22 +6199,42 @@
     }
   }
 
-  function spawnEnemyShot(enemy, heavy) {
-    const dx = state.player.x - enemy.x;
-    const dy = state.player.y - enemy.y;
+  function spawnEnemyShot(enemy, heavyOrConfig) {
+    const config =
+      heavyOrConfig && typeof heavyOrConfig === "object"
+        ? heavyOrConfig
+        : {
+            speed: heavyOrConfig ? 218 : 192,
+            radius: heavyOrConfig ? 7 : 5,
+            damage: heavyOrConfig ? 12 : 8,
+            life: heavyOrConfig ? 2.6 : 2.2,
+            color: heavyOrConfig ? "#ffd166" : "#8ae7ff",
+            count: 1,
+            spread: 0,
+          };
+    const targetX = Number.isFinite(config.targetX) ? config.targetX : state.player.x;
+    const targetY = Number.isFinite(config.targetY) ? config.targetY : state.player.y;
+    const dx = targetX - enemy.x;
+    const dy = targetY - enemy.y;
     const distance = Math.hypot(dx, dy) || 1;
-    const speed = heavy ? 218 : 192;
-    state.projectiles.push({
-      owner: "enemy",
-      x: enemy.x,
-      y: enemy.y,
-      vx: (dx / distance) * speed,
-      vy: (dy / distance) * speed,
-      radius: heavy ? 7 : 5,
-      damage: heavy ? 12 : 8,
-      life: heavy ? 2.6 : 2.2,
-      color: heavy ? "#ffd166" : "#8ae7ff",
-    });
+    const baseAngle = Math.atan2(dy, dx);
+    const count = Math.max(1, Math.round(config.count || 1));
+    const spread = count > 1 ? config.spread || 0 : 0;
+    for (let index = 0; index < count; index += 1) {
+      const offset = (index - (count - 1) / 2) * spread;
+      const angle = baseAngle + offset;
+      state.projectiles.push({
+        owner: "enemy",
+        x: enemy.x,
+        y: enemy.y,
+        vx: Math.cos(angle) * config.speed,
+        vy: Math.sin(angle) * config.speed,
+        radius: config.radius,
+        damage: config.damage,
+        life: config.life,
+        color: config.color,
+      });
+    }
   }
 
   function updateEnemies(dt) {
@@ -6175,6 +6270,18 @@
       if (enemy.type === "shrike") {
         enemy.wobble += dt * 5;
         angle += Math.sin(enemy.wobble) * 0.6;
+      } else if (enemy.type === "warden") {
+        enemy.wobble += dt * 2.6;
+        const distanceToPlayer = Math.hypot(state.player.x - enemy.x, state.player.y - enemy.y);
+        const preferredRange = 230;
+        if (distanceToPlayer < preferredRange * 0.82) {
+          angle += Math.PI;
+        } else if (distanceToPlayer <= preferredRange * 1.18) {
+          angle += enemy.orbitDirection * 1.08 + Math.sin(enemy.wobble) * 0.22;
+          speedMultiplier *= 0.9;
+        } else {
+          speedMultiplier *= 1.05;
+        }
       }
 
       const speed = def.speed * (1 + state.waveIndex * 0.06) * speedMultiplier;
@@ -6189,6 +6296,19 @@
         if (distance < projectileRange) {
           spawnEnemyShot(enemy, enemy.type === "elite");
           enemy.attackCooldown = enemy.type === "elite" ? 1.6 : 2.1;
+        }
+      } else if (enemy.type === "warden" && enemy.attackCooldown <= 0) {
+        if (distance < 360) {
+          spawnEnemyShot(enemy, {
+            speed: 228,
+            radius: 5,
+            damage: 9,
+            life: 3.1,
+            color: "#ff9aba",
+            count: state.waveIndex >= 9 ? 5 : 3,
+            spread: state.waveIndex >= 9 ? 0.16 : 0.28,
+          });
+          enemy.attackCooldown = state.waveIndex >= 9 ? 2.35 : 2.75;
         }
       }
       if (
@@ -6368,7 +6488,15 @@
 
     enemy.defeated = true;
     state.stats.kills += 1;
-    gainDrive(enemy.type === "elite" ? 24 : enemy.type === "brute" ? 10 : 7);
+    gainDrive(
+      enemy.type === "elite"
+        ? 24
+        : enemy.type === "brute"
+          ? 10
+          : enemy.type === "warden"
+            ? 12
+            : 7
+    );
     const def = ENEMY_DEFS[enemy.type];
     for (let index = 0; index < 8; index += 1) {
       state.particles.push(createParticle(enemy.x, enemy.y, def.particleColor, 1.1));
@@ -7060,6 +7188,14 @@
       } else if (enemy.type === "elite") {
         drawPolygon(context, enemy.x, enemy.y, enemy.radius, 6, Math.PI / 6);
         context.fill();
+      } else if (enemy.type === "warden") {
+        drawPolygon(context, enemy.x, enemy.y, enemy.radius, 4, Math.PI / 4 + enemy.wobble * 0.12);
+        context.fill();
+        context.strokeStyle = "rgba(255, 212, 227, 0.85)";
+        context.lineWidth = 2;
+        context.beginPath();
+        context.arc(enemy.x, enemy.y, enemy.radius + 4, 0, Math.PI * 2);
+        context.stroke();
       } else {
         context.beginPath();
         context.arc(enemy.x, enemy.y, enemy.radius, 0, Math.PI * 2);
