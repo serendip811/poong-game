@@ -265,6 +265,36 @@ assert.ok(
       choice.laneLabel === "공세 모듈"
   )
 );
+const doctrineCapstoneBuild = game.createInitialBuild("relay_oath");
+doctrineCapstoneBuild.pendingCores = [];
+const mirrorArchitectureChoice = game
+  .buildArchitectureDraftChoices()
+  .find((choice) => choice.title === "Mirror Hunt Doctrine");
+assert.ok(mirrorArchitectureChoice);
+game.applyForgeChoice(
+  { build: doctrineCapstoneBuild, player: null, resources: { scrap: 999 }, stats: {} },
+  mirrorArchitectureChoice
+);
+const doctrineLateArmoryChoices = game.buildForgeChoices(
+  doctrineCapstoneBuild,
+  () => 0,
+  180,
+  { nextWave: 9, finalForge: false }
+);
+const doctrineCapstoneChoice = doctrineLateArmoryChoices.find(
+  (choice) => choice.action === "doctrine_capstone"
+);
+assert.ok(doctrineCapstoneChoice);
+assert.equal(doctrineCapstoneChoice.title, "Relay Storm Lattice");
+assert.equal(doctrineCapstoneChoice.laneLabel, "Doctrine Apex");
+game.applyForgeChoice(
+  { build: doctrineCapstoneBuild, player: null, resources: { scrap: 999 }, stats: {} },
+  doctrineCapstoneChoice
+);
+assert.equal(doctrineCapstoneBuild.doctrineCapstoneId, "relay_storm_lattice");
+const doctrineCapstoneSystemStats = game.computeSupportSystemStats(doctrineCapstoneBuild);
+assert.equal(doctrineCapstoneSystemStats.doctrineCapstoneLabel, "Relay Storm Lattice");
+assert.ok(doctrineCapstoneSystemStats.statusNote.includes("Relay Storm Lattice"));
 const fortressDoctrineBuild = game.createInitialBuild("scrap_pact");
 fortressDoctrineBuild.pendingCores = [];
 const fortressDoctrineChoice = game

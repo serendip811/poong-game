@@ -1339,6 +1339,7 @@
       reservedLane: "공세 모듈",
       reserveText: "남은 support bay는 공세 모듈 전용으로 잠기며 방호/거점 시스템 신규 장착이 끊긴다.",
       favoredCoreId: "ricochet",
+      lateCapstoneId: "relay_storm_lattice",
       apply(build) {
         build.driveGainBonus += 0.12;
         build.moveSpeedBonus += 14;
@@ -1361,6 +1362,7 @@
       reservedLane: "보조 시스템",
       reserveText: "남은 support bay는 포탑/방호 전용으로 잠기며 공세 모듈 신규 장착이 끊긴다.",
       favoredCoreId: "scatter",
+      lateCapstoneId: "bulwark_foundry",
       apply(build) {
         build.maxHpBonus += 14;
         build.hazardMitigation += 0.08;
@@ -1383,10 +1385,53 @@
       reservedLane: "공세 모듈",
       reserveText: "남은 support bay는 포격 모듈 전용으로 잠기며 방호/거점 시스템 신규 장착이 끊긴다.",
       favoredCoreId: "lance",
+      lateCapstoneId: "sky_lance_grid",
       apply(build) {
         build.damageBonus += 4;
         build.coolRateBonus += 6;
       },
+    },
+  };
+
+  const DOCTRINE_CAPSTONE_DEFS = {
+    mirror_hunt: {
+      id: "relay_storm_lattice",
+      doctrineId: "mirror_hunt",
+      label: "Relay Storm Lattice",
+      title: "Relay Storm Lattice",
+      slotText: "교리 완성 · 추적 릴레이 폭풍",
+      cost: 78,
+      laneLabel: "Doctrine Apex",
+      summary: "드론과 미사일이 멀어진 적을 번개 릴레이로 엮어 외곽 전체를 자동 사냥한다.",
+      statusNote: "Relay Storm Lattice가 외곽 적을 번개 릴레이로 엮어 추적선이 따로 사냥을 계속한다.",
+      description:
+        "Mirror Hunt 전용 최종 교리 카드. Volt Drones와 Seeker Array가 멀어진 적 셋까지 자동 릴레이 폭풍으로 엮어 외곽 추적선을 플레이어와 분리된 사냥 기계로 바꾼다.",
+    },
+    kiln_bastion: {
+      id: "bulwark_foundry",
+      doctrineId: "kiln_bastion",
+      label: "Bulwark Foundry",
+      title: "Bulwark Foundry",
+      slotText: "교리 완성 · 회수 요새 주조",
+      cost: 80,
+      laneLabel: "Doctrine Apex",
+      summary: "전방 포탑이 주기적으로 용광 방벽을 뿜어내며 점령 구역 자체가 적을 태우는 요새가 된다.",
+      statusNote: "Bulwark Foundry가 전방 포대마다 용광 방벽을 뿜어내 이동선이 그대로 살상 구역이 된다.",
+      description:
+        "Kiln Bastion 전용 최종 교리 카드. Kiln Sentry 거점이 주기적으로 용광 방벽을 뿜어내 포대 둘레를 고정 살상 구역으로 바꾸고, Act 3 라인을 되찾는 속도를 크게 끌어올린다.",
+    },
+    storm_artillery: {
+      id: "sky_lance_grid",
+      doctrineId: "storm_artillery",
+      label: "Sky Lance Grid",
+      title: "Sky Lance Grid",
+      slotText: "교리 완성 · 유도 천공 포격",
+      cost: 82,
+      laneLabel: "Doctrine Apex",
+      summary: "포격 모듈이 먼 적 무리를 자동 표적화해 천공 낙뢰를 꽂으며 후열 전체를 갈라놓는다.",
+      statusNote: "Sky Lance Grid가 먼 적 무리에 자동 천공 낙뢰를 꽂아 후열 전체를 강제로 흔든다.",
+      description:
+        "Storm Artillery 전용 최종 교리 카드. Seeker Array와 ember 계열 포격이 먼 적 무리에 자동 천공 낙뢰를 호출해, 후열 압박과 라인 절개를 플레이어 조준과 분리된 포병 엔진으로 만든다.",
     },
   };
 
@@ -2431,6 +2476,7 @@
     cashoutSupportId: null,
     cashoutFailSoftId: null,
     bastionDoctrineId: null,
+    doctrineCapstoneId: null,
     supportBayCap: 2,
     supportSystemId: null,
     supportSystemTier: 0,
@@ -2735,6 +2781,7 @@
 
   function computeSupportSystemStats(build) {
     const installedSystems = getInstalledSupportSystems(build);
+    const doctrineCapstone = getDoctrineCapstoneDef(build);
     if (installedSystems.length === 0) {
       return null;
     }
@@ -2858,7 +2905,12 @@
       strokeColor: primarySystem.strokeColor,
       renderShape: primarySystem.renderShape,
       deployCount,
-      statusNote: systems.map((system) => system.statusNote).join(" "),
+      doctrineCapstoneId: doctrineCapstone ? doctrineCapstone.id : null,
+      doctrineCapstoneLabel: doctrineCapstone ? doctrineCapstone.label : null,
+      doctrineCapstoneStatusNote: doctrineCapstone ? doctrineCapstone.statusNote : null,
+      statusNote: [systems.map((system) => system.statusNote).join(" "), doctrineCapstone ? doctrineCapstone.statusNote : null]
+        .filter(Boolean)
+        .join(" "),
       systems,
       satellites,
       deployableSystems,
@@ -3375,6 +3427,24 @@
         ? buildOrSignatureId
         : buildOrSignatureId.signatureId || null;
     return signatureId ? BASTION_DOCTRINE_DEFS[signatureId] || null : null;
+  }
+
+  function getDoctrineCapstoneDef(buildOrCapstoneId) {
+    if (!buildOrCapstoneId) {
+      return null;
+    }
+    if (typeof buildOrCapstoneId === "object") {
+      return buildOrCapstoneId.doctrineCapstoneId
+        ? Object.values(DOCTRINE_CAPSTONE_DEFS).find(
+            (capstone) => capstone.id === buildOrCapstoneId.doctrineCapstoneId
+          ) || null
+        : null;
+    }
+    return (
+      Object.values(DOCTRINE_CAPSTONE_DEFS).find((capstone) => capstone.id === buildOrCapstoneId) ||
+      DOCTRINE_CAPSTONE_DEFS[buildOrCapstoneId] ||
+      null
+    );
   }
 
   function doctrineAllowsSystemInstall(build, systemId) {
@@ -4023,6 +4093,7 @@
     const offensiveModuleCandidates = [];
     const subsystemCandidates = [];
     const chassisCandidates = [];
+    const doctrineCapstoneChoice = createDoctrineCapstoneChoice(build, options);
     const supportSystemChoices = shouldOfferSupportSystem(build, options)
       ? createSupportSystemChoices(build, random, options)
       : [];
@@ -4044,6 +4115,7 @@
       .filter((choice) => choice && canApplyAffixChoice(build, choice.affixId, choice.replaceTarget));
 
     pushChoiceIfOpen(evolutionCandidates, createWeaponEvolutionChoice(build, options), choiceCatalog);
+    pushChoiceIfOpen(offensiveSpikeCandidates, doctrineCapstoneChoice, choiceCatalog);
     pushChoiceIfOpen(offensiveSpikeCandidates, finisherChoice, choiceCatalog);
     if (currentCoreChoice && currentCoreChoice.benchCopies > 0) {
       pushChoiceIfOpen(offensiveSpikeCandidates, currentCoreChoice, choiceCatalog);
@@ -4074,7 +4146,7 @@
           continue;
         }
         takenIds.add(choice.id);
-        return markForgeLane(choice, laneLabel);
+        return markForgeLane(choice, choice.laneLabel === "Doctrine Apex" ? choice.laneLabel : laneLabel);
       }
       return null;
     };
@@ -4109,6 +4181,8 @@
               ? "주무장 진화"
               : choice.type === "system"
                 ? choice.forgeLaneLabel || "보조 시스템"
+                : choice.action === "doctrine_capstone"
+                  ? "Doctrine Apex"
                 : choice.type === "core" || choice.type === "affix"
                   ? "대형 화력"
                   : hedgePool.includes(choice)
@@ -4595,6 +4669,37 @@
     };
   }
 
+  function createDoctrineCapstoneChoice(build, options = null) {
+    if (!build || !isLateBreakArmory(options) || build.doctrineCapstoneId) {
+      return null;
+    }
+    const doctrine = getBastionDoctrineDef(build);
+    if (!doctrine || !doctrine.lateCapstoneId) {
+      return null;
+    }
+    const capstone = getDoctrineCapstoneDef(doctrine.lateCapstoneId);
+    if (!capstone) {
+      return null;
+    }
+    return {
+      type: "utility",
+      action: "doctrine_capstone",
+      id: `utility:doctrine_capstone:${capstone.id}`,
+      verb: "완성",
+      tag: "APEX",
+      title: capstone.title,
+      description: `${capstone.description} ${capstone.summary}`,
+      slotText: capstone.slotText,
+      cost: capstone.cost,
+      laneLabel: capstone.laneLabel,
+      forgeLaneLabel: capstone.laneLabel,
+      doctrineId: doctrine.id,
+      doctrineLabel: doctrine.label,
+      doctrineCapstoneId: capstone.id,
+      capstoneLabel: capstone.label,
+    };
+  }
+
   function getDoctrinePreferenceScore(choice, doctrine) {
     if (!choice || !doctrine) {
       return 0;
@@ -4635,6 +4740,9 @@
   function createBastionDoctrineChoice(build, rng, nextWave) {
     const doctrine = getBastionDoctrineDef(build);
     const spikeChoice = createBastionDraftSpikeChoice(build, rng, nextWave);
+    const lateCapstone = doctrine && doctrine.lateCapstoneId
+      ? getDoctrineCapstoneDef(doctrine.lateCapstoneId)
+      : null;
     if (!doctrine || !spikeChoice) {
       return spikeChoice;
     }
@@ -4646,7 +4754,7 @@
       tag: "DOCTRINE",
       title: doctrine.label,
       description:
-        `${doctrine.description} 즉시 ${spikeChoice.title}을(를) 할인 장착하고, ${doctrine.reserveText} 이후 포지 후보도 ${doctrine.short} 방향으로만 열린다.`,
+        `${doctrine.description} 즉시 ${spikeChoice.title}을(를) 할인 장착하고, ${doctrine.reserveText} 이후 포지 후보도 ${doctrine.short} 방향으로만 열린다.${lateCapstone ? ` Wave 9 Late Break Armory에서는 ${lateCapstone.title} 교리 완성 카드가 열린다.` : ""}`,
       slotText: `교리 채택 · ${spikeChoice.title} · ${doctrine.short} · ${doctrine.reservedLane}`,
       cost: spikeChoice.cost,
       laneLabel: "교리 채택",
@@ -4663,6 +4771,9 @@
     }
     const starterSystem = SUPPORT_SYSTEM_DEFS[doctrine.starterSystemId];
     const starterTier = starterSystem.tiers[1];
+    const lateCapstone = doctrine && doctrine.lateCapstoneId
+      ? getDoctrineCapstoneDef(doctrine.lateCapstoneId)
+      : null;
     if (!starterTier) {
       return null;
     }
@@ -4674,7 +4785,7 @@
       tag: "ARCH",
       title: doctrine.label,
       description:
-        `${doctrine.description} 즉시 ${starterTier.title}을(를) 무료 설치해 ${doctrine.branchFamilyLabel} 계통을 바로 켜고, ${doctrine.reserveText} 이후 포지 후보도 ${doctrine.short} 쪽으로만 기울인다.`,
+        `${doctrine.description} 즉시 ${starterTier.title}을(를) 무료 설치해 ${doctrine.branchFamilyLabel} 계통을 바로 켜고, ${doctrine.reserveText} 이후 포지 후보도 ${doctrine.short} 쪽으로만 기울인다.${lateCapstone ? ` Late Break Armory에서는 ${lateCapstone.title} 완성 카드까지 열린다.` : ""}`,
       slotText: `아키텍처 잠금 · ${starterTier.title} 설치 · ${doctrine.short}`,
       cost: 0,
       laneLabel: "아키텍처",
@@ -5161,6 +5272,7 @@
       const doctrine = getBastionDoctrineDef(choice.doctrineId || run.build);
       if (doctrine && run.build.bastionDoctrineId !== doctrine.id) {
         run.build.bastionDoctrineId = doctrine.id;
+        run.build.doctrineCapstoneId = null;
         doctrine.apply(run.build, run);
         run.build.upgrades.push(`교리 채택: ${doctrine.label}`);
       }
@@ -5176,11 +5288,22 @@
         return choice;
       }
       run.build.bastionDoctrineId = doctrine.id;
+      run.build.doctrineCapstoneId = null;
       doctrine.apply(run.build, run);
       run.build.upgrades.push(`아키텍처 잠금: ${doctrine.label}`);
       if (choice.doctrineChoice) {
         applyForgeChoice(run, choice.doctrineChoice);
       }
+      return choice;
+    }
+
+    if (choice.type === "utility" && choice.action === "doctrine_capstone") {
+      const capstone = getDoctrineCapstoneDef(choice.doctrineCapstoneId || run.build);
+      if (!capstone) {
+        return null;
+      }
+      run.build.doctrineCapstoneId = capstone.id;
+      run.build.upgrades.push(`교리 완성: ${capstone.label}`);
       return choice;
     }
 
@@ -5220,6 +5343,7 @@
     AFFIX_DEFS,
     MOD_DEFS,
     SUPPORT_SYSTEM_DEFS,
+    DOCTRINE_CAPSTONE_DEFS,
     SIGNATURE_DEFS,
     DEFAULT_SIGNATURE_ID,
     ACT_BREAK_ARMORY_WAVE,
@@ -5249,6 +5373,7 @@
     buildBastionDraftChoices,
     applyForgeChoice,
     shouldUseFieldGrant,
+    getDoctrineCapstoneDef,
     getCatalystCapstone,
     shouldOpenForgePackage,
   };
@@ -5441,6 +5566,9 @@
     if (!systemStats) {
       return "보조 시스템 없음";
     }
+    const capstoneSuffix = systemStats.doctrineCapstoneLabel
+      ? ` · ${systemStats.doctrineCapstoneLabel}`
+      : "";
     const describeSystemCount = (system) =>
       system.deployCount > 0 ? `포탑 ${system.deployCount}기` : `위성 ${system.orbitCount}기`;
     if (Array.isArray(systemStats.systems) && systemStats.systems.length > 1) {
@@ -5455,21 +5583,21 @@
       ]
         .filter(Boolean)
         .join(" + ");
-      return traits ? `${familySummary} · ${traits}` : familySummary;
+      return traits ? `${familySummary} · ${traits}${capstoneSuffix}` : `${familySummary}${capstoneSuffix}`;
     }
     if (systemStats.deployCount > 0) {
       return systemStats.tier >= 2
-        ? `${systemStats.label} · 포탑 ${systemStats.deployCount}기 · 전방 거점`
-        : `${systemStats.label} · 포탑 ${systemStats.deployCount}기`;
+        ? `${systemStats.label} · 포탑 ${systemStats.deployCount}기 · 전방 거점${capstoneSuffix}`
+        : `${systemStats.label} · 포탑 ${systemStats.deployCount}기${capstoneSuffix}`;
     }
     if (systemStats.interceptRange > 0) {
       return systemStats.interceptPulseDamage > 0
-        ? `${systemStats.label} · 위성 ${systemStats.orbitCount}기 · 탄환 요격 + 방호 파동`
-        : `${systemStats.label} · 위성 ${systemStats.orbitCount}기 · 탄환 요격`;
+        ? `${systemStats.label} · 위성 ${systemStats.orbitCount}기 · 탄환 요격 + 방호 파동${capstoneSuffix}`
+        : `${systemStats.label} · 위성 ${systemStats.orbitCount}기 · 탄환 요격${capstoneSuffix}`;
     }
     return systemStats.tier >= 2
-      ? `${systemStats.label} · 위성 ${systemStats.orbitCount}기 · 자동 볼트`
-      : `${systemStats.label} · 위성 ${systemStats.orbitCount}기`;
+      ? `${systemStats.label} · 위성 ${systemStats.orbitCount}기 · 자동 볼트${capstoneSuffix}`
+      : `${systemStats.label} · 위성 ${systemStats.orbitCount}기${capstoneSuffix}`;
   }
 
   function getRunGrade(result) {
@@ -5539,6 +5667,7 @@
         touchCooldowns: [],
         interceptCooldowns: [],
         deployCooldowns: [],
+        doctrineCapstoneCooldown: 0,
       },
       supportDeployables: [],
     };
@@ -5726,6 +5855,7 @@
         touchCooldowns: [],
         interceptCooldowns: [],
         deployCooldowns: [],
+        doctrineCapstoneCooldown: 0,
       };
     }
     const orbitCount = state.supportSystem && state.supportSystem.satellites
@@ -5762,6 +5892,10 @@
       }
       return current;
     });
+    state.supportSystemRuntime.doctrineCapstoneCooldown = Math.max(
+      0,
+      state.supportSystemRuntime.doctrineCapstoneCooldown || 0
+    );
     const validSystemIds = new Set(
       state.supportSystem && Array.isArray(state.supportSystem.deployableSystems)
         ? state.supportSystem.deployableSystems.map((system) => system.systemId)
@@ -6986,6 +7120,144 @@
     return target;
   }
 
+  function emitCapstoneLinkParticles(from, to, color, steps = 5) {
+    if (!from || !to) {
+      return;
+    }
+    for (let index = 0; index <= steps; index += 1) {
+      const ratio = steps === 0 ? 1 : index / steps;
+      state.particles.push(
+        createParticle(
+          from.x + (to.x - from.x) * ratio,
+          from.y + (to.y - from.y) * ratio,
+          color,
+          0.55
+        )
+      );
+    }
+  }
+
+  function triggerMirrorHuntCapstone() {
+    const livingEnemies = state.enemies.filter((enemy) => !enemy.defeated && enemy.hp > 0);
+    if (livingEnemies.length === 0) {
+      return false;
+    }
+    const orderedTargets = livingEnemies
+      .slice()
+      .sort(
+        (left, right) =>
+          Math.hypot(right.x - state.player.x, right.y - state.player.y) -
+          Math.hypot(left.x - state.player.x, left.y - state.player.y)
+      )
+      .slice(0, 3);
+    const damage = 24 + Math.max(0, state.supportSystem.systems.length - 1) * 8;
+    let previousPoint = { x: state.player.x, y: state.player.y };
+    orderedTargets.forEach((enemy) => {
+      emitCapstoneLinkParticles(previousPoint, enemy, "#7fffd4", 6);
+      enemy.hp -= damage;
+      previousPoint = enemy;
+      if (enemy.hp <= 0) {
+        destroyEnemy(enemy);
+      }
+    });
+    pushCombatFeed("Relay Storm Lattice가 외곽 적을 자동 추적해 릴레이 폭풍을 엮었다.");
+    return orderedTargets.length > 0;
+  }
+
+  function triggerStormArtilleryCapstone() {
+    const livingEnemies = state.enemies.filter((enemy) => !enemy.defeated && enemy.hp > 0);
+    if (livingEnemies.length === 0) {
+      return false;
+    }
+    const primaryTarget = livingEnemies
+      .slice()
+      .sort(
+        (left, right) =>
+          Math.hypot(right.x - state.player.x, right.y - state.player.y) -
+          Math.hypot(left.x - state.player.x, left.y - state.player.y)
+      )[0];
+    if (!primaryTarget) {
+      return false;
+    }
+    const blastRadius = 132;
+    const damage = 38 + Math.max(0, state.supportSystem.systems.length - 1) * 10;
+    state.particles.push(createParticle(primaryTarget.x, primaryTarget.y, "#ffd7a8", 1.2));
+    state.particles.push(createParticle(primaryTarget.x, primaryTarget.y, "#fff4d7", 0.95));
+    emitCapstoneLinkParticles(
+      { x: primaryTarget.x, y: 0 },
+      primaryTarget,
+      "#ffbf72",
+      7
+    );
+    for (const enemy of livingEnemies) {
+      const distance = Math.hypot(enemy.x - primaryTarget.x, enemy.y - primaryTarget.y);
+      if (distance > blastRadius + enemy.radius) {
+        continue;
+      }
+      enemy.hp -= distance < 22 ? damage * 1.2 : damage;
+      if (enemy.hp <= 0) {
+        destroyEnemy(enemy);
+      }
+    }
+    pushCombatFeed("Sky Lance Grid가 후열 무리에 자동 천공 포격을 호출했다.");
+    return true;
+  }
+
+  function updateBulwarkFoundryDeployables(nextDeployable, dt) {
+    const capstone = getDoctrineCapstoneDef(state.build);
+    if (!capstone || capstone.id !== "bulwark_foundry") {
+      return nextDeployable;
+    }
+    const pulseRadius = nextDeployable.shotRange * 0.28;
+    nextDeployable.doctrinePulseCooldown = Math.max(0, nextDeployable.doctrinePulseCooldown - dt);
+    if (nextDeployable.doctrinePulseCooldown > 0) {
+      return nextDeployable;
+    }
+    nextDeployable.doctrinePulseCooldown = 1.65;
+    const damage = 20 + Math.max(0, state.supportSystem.deployCount - 1) * 4;
+    for (const enemy of state.enemies) {
+      if (enemy.defeated || enemy.hp <= 0) {
+        continue;
+      }
+      const distance = Math.hypot(enemy.x - nextDeployable.x, enemy.y - nextDeployable.y);
+      if (distance > pulseRadius + enemy.radius) {
+        continue;
+      }
+      enemy.hp -= damage;
+      state.particles.push(createParticle(enemy.x, enemy.y, "#ffb261", 0.65));
+      if (enemy.hp <= 0) {
+        destroyEnemy(enemy);
+      }
+    }
+    state.particles.push(createParticle(nextDeployable.x, nextDeployable.y, "#ffe0b0", 1));
+    return nextDeployable;
+  }
+
+  function updateDoctrineCapstone(dt) {
+    const capstone = getDoctrineCapstoneDef(state.build);
+    if (!capstone || !state.supportSystem) {
+      return;
+    }
+    state.supportSystemRuntime.doctrineCapstoneCooldown = Math.max(
+      0,
+      state.supportSystemRuntime.doctrineCapstoneCooldown - dt
+    );
+    if (state.supportSystemRuntime.doctrineCapstoneCooldown > 0) {
+      return;
+    }
+    let activated = false;
+    if (capstone.id === "relay_storm_lattice") {
+      activated = triggerMirrorHuntCapstone();
+      state.supportSystemRuntime.doctrineCapstoneCooldown = 4.2;
+    } else if (capstone.id === "sky_lance_grid") {
+      activated = triggerStormArtilleryCapstone();
+      state.supportSystemRuntime.doctrineCapstoneCooldown = 4.6;
+    }
+    if (!activated) {
+      state.supportSystemRuntime.doctrineCapstoneCooldown = 1.2;
+    }
+  }
+
   function createSupportDeployable(system) {
     const aimTarget = findNearestEnemy(state.player, 420);
     const baseAngle = aimTarget
@@ -7020,6 +7292,7 @@
       life: system.deployDuration,
       maxLife: system.deployDuration,
       shotCooldown: 0.12,
+      doctrinePulseCooldown: 0.9,
       shotInterval: system.deployShotCooldown,
       shotRange: system.deployShotRange,
       shotDamage: system.deployShotDamage,
@@ -7075,6 +7348,7 @@
           state.particles.push(createParticle(nextDeployable.x, nextDeployable.y, "#ffe7c4", 0.6));
         }
       }
+      updateBulwarkFoundryDeployables(nextDeployable, dt);
       nextDeployables.push(nextDeployable);
     }
     state.supportDeployables = nextDeployables;
@@ -7194,6 +7468,7 @@
       Math.max(0, cooldown - dt)
     );
     updateSupportDeployables(dt);
+    updateDoctrineCapstone(dt);
     (state.supportSystem.deployableSystems || []).forEach((system) => {
       const activeCount = state.supportDeployables.filter(
         (deployable) => deployable.systemId === system.systemId
@@ -8388,7 +8663,7 @@
           : "Bastion Draft · 시그니처 교리 1장, 고통 계약 1장, 무료 안정화 1장 중 1픽으로 Act 2 posture와 future bay를 잠근다"
         : state.forgeDraftType === "armory"
         ? isLateBreakArmory(forgeOptions)
-          ? `${armoryLabel} ${state.forgeStep}/${state.forgeMaxSteps} · 6장 중 2픽, 세 번째 베이까지 열린 상태에서 마지막 과투입을 강제한다`
+          ? `${armoryLabel} ${state.forgeStep}/${state.forgeMaxSteps} · 6장 중 2픽, 세 번째 베이와 교리 완성 카드까지 열려 최종 전장 posture를 잠근다`
           : `${armoryLabel} ${state.forgeStep}/${state.forgeMaxSteps} · 6장 중 2픽, 대형 화력이 과투입되어 안전한 lane 보장이 없다`
         : state.forgeMaxSteps > 1
         ? `패키지 ${state.forgeStep}/${state.forgeMaxSteps} · 1슬롯 화력/전환, 2슬롯 시스템/안정화`
@@ -8409,7 +8684,7 @@
           : `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 한 장은 시그니처 전용 교리라 즉시 spike를 잠그면서 남은 support bay와 이후 포지 후보까지 한 계통으로 고정하고, 한 장은 최대 체력을 깎고 고철을 당겨오는 Siege Salvage Pact, 마지막 한 장은 무료 안정화다. Act 2 posture를 잠글지, 더 아프게 탐욕할지 직접 정한다.`
         : state.forgeDraftType === "armory"
         ? isLateBreakArmory(forgeOptions)
-          ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 8을 넘기며 ${armoryLabel}가 열린다. 세 번째 support bay가 해금됐고, 이번 포지는 6장 중 2장을 골라 4웨이브짜리 최종 전투 구간 전체를 버틸 과한 조합을 잠근다.`
+          ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 8을 넘기며 ${armoryLabel}가 열린다. 세 번째 support bay가 해금됐고, 교리를 택한 런이라면 doctrine apex 카드도 함께 열려 이번 포지 2픽이 최종 전장 posture 자체를 바꾼다.`
           : `고철 ${Math.round(state.resources.scrap)} 보유. Wave 4를 넘기면 일반 패키지 대신 ${armoryLabel}가 열린다. 이번 포지는 6장 중 2장을 고르며, 주무장 진화와 공세 카드가 여러 장 겹쳐 떠 4웨이브짜리 Act 2 운영을 일찍 잠근다.`
       : `고철 ${Math.round(state.resources.scrap)} 보유. 장착은 무기 등급을 올리거나 바꾸고, 각인은 속성을 붙이며, 재구성/분해는 보관 코어를 정리한다. ${packageSummary}.`;
     elements.forgeContext.innerHTML = `
@@ -8664,6 +8939,7 @@
       for (const deployable of state.supportDeployables || []) {
         const lifeRatio =
           deployable.maxLife > 0 ? clamp(deployable.life / deployable.maxLife, 0, 1) : 1;
+        const doctrineCapstone = getDoctrineCapstoneDef(state.build);
         context.save();
         context.globalAlpha = lifeRatio < 0.24 ? 0.5 + Math.abs(Math.sin(performance.now() * 0.02)) * 0.4 : 1;
         context.strokeStyle = `${deployable.strokeColor}`;
@@ -8671,6 +8947,14 @@
         context.beginPath();
         context.arc(deployable.x, deployable.y, deployable.shotRange * 0.32, 0, Math.PI * 2);
         context.stroke();
+        if (doctrineCapstone && doctrineCapstone.id === "bulwark_foundry") {
+          context.globalAlpha = 0.35 + (1 - Math.min(1, deployable.doctrinePulseCooldown || 0)) * 0.2;
+          context.strokeStyle = "rgba(255, 190, 120, 0.85)";
+          context.lineWidth = 2.2;
+          context.beginPath();
+          context.arc(deployable.x, deployable.y, deployable.shotRange * 0.28, 0, Math.PI * 2);
+          context.stroke();
+        }
         context.translate(deployable.x, deployable.y);
         context.fillStyle = deployable.color;
         context.strokeStyle = deployable.strokeColor;

@@ -14,6 +14,17 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 03:05 KST
+  Findings:
+  - The run is finally long enough to expose its real weakness: Acts 2-3 are broader, but too many successful builds still solve the same job of reopening lanes under bastion, mortar, and warden pressure. Longer structure is present; distinct combat destinies are not.
+  - `Architecture Draft`, `Act Break Armory`, and `Late Break Armory` are good scaffolding, but they still mostly route the player into support-bay flavor rather than a must-have end-state recipe. A repeated-run roguelite needs players to think "this is the run where I finish the fortress/drone/artillery monster," not just "this is the run where I got the right lane tools."
+  - The support roster is more visible now, yet most payoffs are still orbitals, escorts, or forward turrets around the same movement loop. There are not enough battlefield-converting capstones like beam lattices, chained relay storms, shield walls, or autonomous zone-control engines that make Wave 10+ feel like a different genre of power.
+  - The weapon evolution set is uneven in how much it actually changes play. `scatter` starts to create territory, but several other cores still cash out as denser firing geometry instead of a new rule set the rest of the build wants to serve.
+  - The design docs still talk like a short-run prototype while the implementation is already pretending to be a longer-form rerun game. That ambition gap will keep producing "more waves, same answers" unless the build ceiling gets much more outrageous.
+  Top Priority: Add one doctrine-specific capstone recipe per branch that only comes online in Wave 8-9 and visibly transforms the run into a new battlefield posture, with future offers clearly feeding that capstone from the moment the doctrine is chosen.
+  Why Now: The game already has enough length that missing end-state hunger is more damaging than any local tuning issue.
+  Do Not Repeat: Do not answer this with another early draft, another discount wrapper, or more waves if the late-run still lacks a truly outrageous form to chase.
+
 - 2026-03-21 23:10 KST
   Findings:
   - The implementation now stretches to `12` waves and `3` acts, but the design target in `docs/games/cinder-circuit-design.md` still frames the game as a `5웨이브` short run. That mismatch shows up in the loop itself: the structure has grown longer, while the build ambition is still calibrated like a prototype that expects to end just after the first real power spike.
@@ -479,6 +490,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-21 KST
+  Changed: added doctrine-only `Late Break Armory` apex cards in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so a committed `Mirror Hunt`, `Kiln Bastion`, or `Storm Artillery` run can cash out into a visibly different Wave `9+` battlefield posture instead of just denser generic firepower. `Relay Storm Lattice` now fires autonomous relay-lightning hunts across distant enemies, `Bulwark Foundry` turns `Kiln Sentry` placements into repeating fortress kill-zones, and `Sky Lance Grid` calls automatic backline lance strikes; I also threaded doctrine-capstone state into support summaries/HUD copy, advertised the apex payoff from the doctrine draft text, exported the capstone defs/helper, and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new late-armory offer and build state.
+  Why: the newest critique’s Top Priority was to add Wave `8-9` doctrine-specific capstones that transform the run into a new battlefield posture. The highest-value bounded interpretation was "add one late doctrine apex card per branch using the existing support-system loop" because it creates a real end-state to chase without widening this pass into whole new progression trees or extra waves.
+  Follow-up risk: the new apex cards now give each doctrine a clearer late-run destiny, but only `Bulwark Foundry` renders a persistent zone shape directly in the arena; `Relay Storm Lattice` and `Sky Lance Grid` are visible through repeated autonomous strikes but still rely on particles rather than dedicated telegraph assets. If later critique still wants even stronger silhouette separation, the next pass should give hunt/artillery bespoke strike telegraphs or branch-specific projectile art rather than only raising their damage cadence.
 
 - 2026-03-21 KST
   Changed: added a new early `Architecture Draft` to [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) that fires before `Wave 3` instead of letting that stop default to `Field Cache`. The draft now offers three exclusive long-run doctrine branches (`Mirror Hunt`, `Kiln Bastion`, `Storm Artillery`) regardless of signature, each at `0` cost, and each branch immediately installs a visible tier-1 subsystem family (`Volt Drones`, `Kiln Sentry`, or `Seeker Array`) while locking later support/mod/affix offers to that doctrine’s authored pool. I also updated forge/feed overlay copy so the branch lock reads as an irreversible architecture commitment instead of another discount event, exported the new draft builder, and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new early draft and starter-system install.
