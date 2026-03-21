@@ -756,6 +756,7 @@
 
   const MAX_WAVES = WAVE_CONFIG.length;
   const POST_WAVE_LOOT_GRACE = 2.4;
+  const COMBAT_CACHE_DROP_LIFE = 14;
   const FINAL_CASHOUT_DURATION = 12;
   const FINAL_CASHOUT_SPAWN_BUDGET = 26;
   const KILN_BASTION_FIELD_BASE = {
@@ -5818,6 +5819,45 @@
     updateHUD();
   }
 
+  function getCombatCacheChoicesForWave(build, nextWave) {
+    return buildFieldGrantChoices(build, Math.random, nextWave).slice(0, 3);
+  }
+
+  function deployCombatCache(enemy) {
+    const combatCache = state.wave && state.wave.combatCache;
+    if (!combatCache || combatCache.deployed || combatCache.claimed) {
+      return;
+    }
+    const choices = Array.isArray(combatCache.choices) ? combatCache.choices.filter(Boolean) : [];
+    if (choices.length === 0) {
+      combatCache.deployed = true;
+      combatCache.claimed = true;
+      return;
+    }
+    combatCache.deployed = true;
+    combatCache.groupId = `combat-cache-${state.waveIndex + 1}-${state.stats.kills}`;
+    const spreadRadius = choices.length === 1 ? 0 : 34;
+    choices.forEach((choice, index) => {
+      const angle = (index / choices.length) * Math.PI * 2 - Math.PI / 2;
+      state.drops.push({
+        kind: "combat_cache",
+        x: enemy.x + Math.cos(angle) * spreadRadius,
+        y: enemy.y + Math.sin(angle) * spreadRadius,
+        life: COMBAT_CACHE_DROP_LIFE,
+        choice,
+        groupId: combatCache.groupId,
+      });
+    });
+    const cacheSummary = choices
+      .map((choice) => `${choice.tag} ${choice.title}${choice.cost > 0 ? `(${choice.cost})` : ""}`)
+      .join(" / ");
+    pushCombatFeed(
+      `Combat Cache 노출. ${cacheSummary} 중 하나를 전장에서 직접 회수하면 다음 웨이브로 즉시 연결된다.`,
+      "CACHE"
+    );
+    setBanner("Combat Cache", 0.9);
+  }
+
   function getBastionDraftIntroText(build) {
     if (!build || !build.bastionDoctrineId) {
       const doctrine = getBastionDoctrineDef(build);
@@ -7047,6 +7087,15 @@
       driveGainFactor: config.driveGainFactor || 1,
       hazard: config.hazard,
       hazardTimer: config.hazard ? config.hazard.interval * 0.8 : Number.POSITIVE_INFINITY,
+      combatCache: shouldUseFieldGrant({ nextWave: waveNumber + 1, finalForge: false })
+        ? {
+            armed: true,
+            deployed: false,
+            claimed: false,
+            groupId: null,
+            choices: getCombatCacheChoicesForWave(state.build, waveNumber + 1),
+          }
+        : null,
     };
     state.waveClearTimer = 0;
     state.enemies = [];
@@ -7079,6 +7128,12 @@
     state.player.dashCharges = state.player.dashMax;
     state.player.dashCooldownTimer = 0;
     pushCombatFeed(`${config.label} 진입. ${config.note}`, `W${index + 1}`);
+    if (state.wave.combatCache) {
+      pushCombatFeed(
+        "첫 elite가 Combat Cache를 떨어뜨린다. 현장에서 하나를 회수하면 Field Cache 정지 없이 바로 다음 웨이브로 이어진다.",
+        "CACHE"
+      );
+    }
     setBanner(config.label, 1.4);
     renderForgeOverlay();
     updateHUD();
@@ -9466,6 +9521,7 @@
           "CAT"
         );
       }
+      deployCombatCache(enemy);
       if (enemy.overcommitTarget && state.overcommit.active) {
         state.overcommit.targetDefeated = true;
         state.overcommit.status = "salvage";
@@ -9506,7 +9562,9 @@
       }
 
       if (distance < state.player.radius + 10) {
-        collectDrop(drop);
+        if (!collectDrop(drop) && drop.life > 0) {
+          nextDrops.push(drop);
+        }
       } else if (drop.life <= 0 && drop.kind === "overcommit_salvage") {
         failOvercommitTrial(
           "Contraband salvage가 식어 버렸다. 이번 런의 조기 Frame 추격 창구가 닫혔다."
@@ -9525,7 +9583,7 @@
       state.stats.scrapCollected += value;
       gainDrive(value * 0.24);
       setBanner(`고철 +${value}`, 0.45);
-      return;
+      return true;
     }
 
     if (drop.kind === "core") {
@@ -9547,7 +9605,7 @@
         gainDrive(CORE_OVERFLOW_SCRAP * 0.24);
         setBanner(`${CORE_DEFS[drop.coreId].short} 초과분 분해 +${CORE_OVERFLOW_SCRAP}`, 0.8);
       }
-      return;
+      return true;
     }
 
     if (drop.kind === "catalyst") {
@@ -9561,7 +9619,7 @@
         );
         setBanner(`${CORE_DEFS[drop.coreId].short} 촉매 확보`, 0.9);
       }
-      return;
+      return true;
     }
 
     if (drop.kind === "overcommit_salvage") {
@@ -9577,7 +9635,43 @@
       if (state.overcommit.salvageCollected >= state.overcommit.salvageRequired) {
         unlockOvercommitTrial();
       }
+      return true;
     }
+
+    if (drop.kind === "combat_cache") {
+      const combatCache = state.wave && state.wave.combatCache;
+      const choice = drop.choice;
+      if (!combatCache || combatCache.claimed || !choice) {
+        return true;
+      }
+      if (state.resources.scrap < choice.cost) {
+        setBanner(`고철 ${choice.cost} 필요`, 0.45);
+        return false;
+      }
+      if (choice.cost > 0) {
+        state.resources.scrap -= choice.cost;
+        state.stats.scrapSpent += choice.cost;
+      }
+      applyForgeChoice(state, choice);
+      refreshDerivedStats(false);
+      combatCache.claimed = true;
+      state.drops.forEach((entry) => {
+        if (entry.kind === "combat_cache" && entry.groupId === drop.groupId) {
+          entry.life = 0;
+        }
+      });
+      const grantLabel = choice.forgeLaneLabel || choice.laneLabel || choice.tag || "CACHE";
+      pushCombatFeed(
+        choice.type === "fallback"
+          ? `${grantLabel} 현장 회수. 상태만 정리하고 Field Cache 정지 없이 다음 웨이브로 밀어붙인다.`
+          : `${grantLabel} 현장 회수. ${choice.title}${choice.cost > 0 ? `(${choice.cost})` : ""}을(를) 전장 한복판에서 잠그고 다음 웨이브까지 압박을 이어 간다.`,
+        "CACHE"
+      );
+      setBanner(`${choice.tag} 확보`, 0.8);
+      return true;
+    }
+
+    return false;
   }
 
   function updateParticles(dt) {
@@ -9626,7 +9720,7 @@
             : shouldRunCatalystDraft({ nextWave, finalForge: false }, state.build)
               ? "Catalyst Crucible"
             : shouldUseFieldGrant({ nextWave, finalForge: false })
-              ? "Field Cache"
+              ? "다음 웨이브"
               : "포지";
         setBanner("전장 정리", 0.9);
         pushCombatFeed(
@@ -9649,7 +9743,7 @@
         ) {
           enterCatalystDraft();
         } else if (shouldUseFieldGrant({ nextWave: state.waveIndex + 2, finalForge: false })) {
-          enterFieldGrant();
+          beginWave(state.waveIndex + 1);
         } else {
           enterForge();
         }
@@ -9803,7 +9897,9 @@
     const enemiesLeft = Math.max(0, state.wave ? state.wave.spawnBudget - state.wave.spawned : 0);
     if (elements.waveObjective) {
       const overcommitRows = [];
+      const combatCacheRows = [];
       let overcommitNote = "";
+      let combatCacheNote = "";
       if (state.overcommit.active) {
         overcommitRows.push(
           createStatusRow(
@@ -9829,6 +9925,26 @@
         overcommitRows.push(createStatusRow("Contraband", "봉인"));
         overcommitNote = "이번 런에서는 조기 Frame 추격을 더는 열 수 없다.";
       }
+      if (state.phase === "wave" && state.wave && state.wave.combatCache) {
+        const combatCache = state.wave.combatCache;
+        combatCacheRows.push(
+          createStatusRow(
+            "Combat Cache",
+            combatCache.claimed ? "회수 완료" : combatCache.deployed ? "전장 노출" : "첫 elite 대기"
+          )
+        );
+        combatCacheRows.push(
+          createStatusRow(
+            "Forge Skip",
+            combatCache.claimed ? "다음 웨이브 직결" : "회수 시 직결"
+          )
+        );
+        combatCacheNote = combatCache.claimed
+          ? "이번 웨이브의 live cache를 이미 잠갔다. 정리 후 Field Cache 정지 없이 다음 웨이브로 즉시 이어진다."
+          : combatCache.deployed
+            ? "드롭된 Combat Cache 중 하나만 회수할 수 있다. 놓치면 이번 웨이브의 현장 spike는 사라진다."
+            : "이번 웨이브 첫 elite가 Combat Cache를 떨어뜨린다. 회수에 성공하면 Field Cache 정지 없이 다음 웨이브로 직결된다.";
+      }
       elements.waveObjective.innerHTML = `
         <div class="summary-head">
           <strong>${waveConfig.label}</strong>
@@ -9841,9 +9957,10 @@
           ${createStatusRow("현재 적", String(state.enemies.length))}
           ${createStatusRow("드랍", String(state.drops.length))}
           ${createStatusRow(hazardStatus.detailLabel, hazardStatus.detailValue)}
+          ${combatCacheRows.join("")}
           ${overcommitRows.join("")}
         </div>
-        <p class="summary-note">${overcommitNote || hazardStatus.note}</p>
+        <p class="summary-note">${combatCacheNote || overcommitNote || hazardStatus.note}</p>
       `;
     }
 
@@ -10207,6 +10324,8 @@
           ? 12
           : drop.kind === "overcommit_salvage"
             ? OVERCOMMIT_SALVAGE_LIFE
+            : drop.kind === "combat_cache"
+              ? COMBAT_CACHE_DROP_LIFE
             : 10;
       const fadeRatio = clamp(drop.life / maxLife, 0, 1);
       const blink = drop.life < 2.2 ? 0.45 + Math.abs(Math.sin(performance.now() * 0.02)) * 0.55 : 1;
@@ -10214,6 +10333,25 @@
       if (drop.kind === "scrap") {
         context.fillStyle = "rgba(255, 209, 102, 0.9)";
         context.fillRect(drop.x - 4, drop.y - 4, 8, 8);
+      } else if (drop.kind === "combat_cache") {
+        const choice = drop.choice || {};
+        context.strokeStyle = choice.type === "fallback" ? "rgba(136, 229, 198, 0.95)" : "rgba(255, 212, 122, 0.95)";
+        context.lineWidth = 2.5;
+        context.beginPath();
+        context.arc(drop.x, drop.y, 13, 0, Math.PI * 2);
+        context.stroke();
+        context.fillStyle = choice.type === "fallback" ? "rgba(60, 176, 145, 0.88)" : "rgba(255, 161, 72, 0.92)";
+        context.beginPath();
+        context.moveTo(drop.x, drop.y - 8);
+        context.lineTo(drop.x + 8, drop.y);
+        context.lineTo(drop.x, drop.y + 8);
+        context.lineTo(drop.x - 8, drop.y);
+        context.closePath();
+        context.fill();
+        context.fillStyle = "rgba(22, 10, 4, 0.92)";
+        context.font = "bold 10px monospace";
+        context.textAlign = "center";
+        context.fillText(choice.tag || "CACHE", drop.x, drop.y + 26);
       } else if (drop.kind === "overcommit_salvage") {
         context.strokeStyle = "rgba(255, 231, 130, 0.95)";
         context.lineWidth = 2;

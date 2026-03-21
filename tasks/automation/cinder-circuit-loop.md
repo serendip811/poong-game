@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 17:20 KST
+  Findings:
+  - The run is trying to sell long-form escalation, but the intensity keeps breaking because almost every bracket resolves into another named stop: `Architecture Draft`, `Field Cache`, `Bastion Draft`, `Catalyst Crucible`, `Armory`, then final forge. That is too much menu authorship for a game that should live on combat momentum.
+  - Between-wave choice breadth is better on paper, yet the cadence is still too stop-start to create real bloodlust. Players are repeatedly pulled out of the arena to administer a build instead of staying in long enough to feel a new form dominate space.
+  - This structure will scale badly to any future `20-30` wave target. More waves plus more draft screens does not become a richer roguelite; it becomes a longer interruption chain.
+  - Because the strongest spikes arrive at scheduled intermissions, the battlefield still lacks enough live conversion moments where scrap, drops, or side objectives immediately bend the next minute of play. The run explains power well, but it does not let power snowball in motion enough.
+  Top Priority: Collapse several mid-run forge beats into fewer, heavier commitment windows and move at least one growth lane into combat-earned live upgrades or wave-to-wave carryover objectives that spike power without fully pausing the run.
+  Why Now: Until the run can sustain intensity for longer stretches, added waves and added systems will read as administration instead of addiction.
+  Do Not Repeat: Do not add another named draft/intermission layer if the answer to progression depth is still "stop the action and open more cards."
+
 - 2026-03-22 16:55 KST
   Findings:
   - The run has many build layers now, but too much of the excitement is still pre-scheduled by `Architecture Draft`, `Bastion Draft`, `Catalyst Crucible`, `doctrine_chase`, and the final cash-out. Players are frequently handed the next spike at authored checkpoints instead of fighting into volatile power swings.
@@ -581,6 +591,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 18:05 KST
+  Changed: collapsed the repeated mid-run `Field Cache` stop in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) into a live `Combat Cache` lane. On waves that previously ended in a `Field Cache`, the first elite now drops three short-lived cache pickups built from the same field-grant pool; the player has to route into one of them under pressure to lock an upgrade or take the emergency vent, and wave clear now chains straight into the next fight instead of opening another forge overlay. I also added feed/HUD messaging plus a distinct arena pickup render so the player can read when a cache is armed, live, or already claimed.
+  Why: the newest critique’s Top Priority was to remove some of the named mid-run stop chain and move at least one growth lane into combat-earned live upgrades. The highest-value bounded interpretation was to reuse the existing `Field Cache` reward logic as contested elite drops, because that preserves visible mid-run power spikes while cutting one of the run’s most common interruption beats.
+  Follow-up risk: this pass makes `Field Cache` momentum much better, but the live pickup read is still lighter than a full card UI and missed caches now mean fully skipped growth on that wave. If critique still wants stronger readability or less swing, the next pass should add brief on-map cost/title telegraphs or a small carryover consolation rather than reintroducing another full menu stop.
 
 - 2026-03-22 04:16 KST
   Changed: replaced the automatic mid-run `doctrine_chase` timing in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) with a combat-earned Act 2 overcommit trial. Doctrine runs now get one Wave `5` marked-elite hunt that drops three short-lived `contraband salvage` pickups; only if the player kills that elite and collects the full cache under pressure does the next `Bastion Draft` convert its spike slot into the early `Frame` chase. I also added combat-readability support for the trial through a marked-elite ring, dedicated salvage pickups, HUD objective rows, updated Bastion Draft copy, and smoke coverage in [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) that now asserts the chase is blocked in the generic forge path and unlocked through the overcommit route instead.
