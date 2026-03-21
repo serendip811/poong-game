@@ -512,17 +512,17 @@
     kiln_bastion: {
       8: {
         label: "Wave 9 · Foundry Hold",
-        note: "Kiln Bastion의 Act 3는 움직임보다 점유 유지가 먼저다. 무거운 전열과 포격이 되찾은 구역을 다시 빼앗으러 오므로, 거점장을 중심으로 같은 지대를 반복 reclaim해야 한다.",
+        note: "Kiln Bastion의 Act 3는 움직임보다 점유 유지가 먼저다. 무거운 전열과 포격이 되찾은 구역을 다시 빼앗으러 오므로, 거점장을 중심으로 같은 지대를 반복 reclaim하고 붕괴한 코어에서 터지는 salvage를 회수해야 한다.",
         directive:
-          "foundry hold. 강화 bastion 코어와 브루트 전열이 함께 밀고 들어온다. 열린 lane을 따라 도주하는 대신, 되찾은 pocket 안에서 거점장을 굴리며 회수선과 수리선을 함께 지켜야 한다.",
+          "foundry hold. 강화 bastion 코어와 브루트 전열이 함께 밀고 들어온다. 열린 lane을 따라 도주하는 대신, 위험한 flank bastion을 먼저 깨 salvage pocket를 만들고 그 안에서 회수선과 수리선을 함께 지켜야 한다.",
         driveGainFactor: 1.4,
-        activeCap: 42,
-        spawnBudget: 192,
+        activeCap: 40,
+        spawnBudget: 188,
         mix: {
           scuttler: 0.08,
-          brute: 0.28,
-          shrike: 0.12,
-          mortar: 0.2,
+          brute: 0.3,
+          shrike: 0.08,
+          mortar: 0.22,
           warden: 0.32,
         },
         hazard: {
@@ -540,22 +540,26 @@
           turretDamage: 11,
           turretSpeed: 238,
           enemyPullRadius: 188,
+          salvageScrap: 10,
+          salvageBurstCount: 4,
+          salvageBurstRadius: 44,
+          salvageDropLife: 11,
         },
       },
       9: {
         label: "Wave 10 · Reclaim Kiln",
-        note: "포격을 맞으며 점거 코어를 깨야 하는 대신, 한 번 되찾은 구역 안에서는 버티는 가치가 더 크다. Kiln Sentry와 방호 계통이 살아 있을수록 후반 재진입 루트가 뚜렷해진다.",
+        note: "포격을 맞으며 점거 pocket를 열고, 다음 pocket가 닫히기 전에 rotate할지 결정해야 한다. Kiln Sentry와 방호 계통이 살아 있을수록 어느 salvage 지대를 포기하고 어느 쪽을 지킬지 더 선명해진다.",
         directive:
-          "reclaim kiln. 이동 화구가 느리게 거점 바깥을 훑고, 브루트와 mortar가 복귀선을 끊으러 온다. 빈 외곽을 도는 것보다 다시 밟을 용광 pocket를 남기는 운영이 중요하다.",
+          "reclaim kiln. 이동 화구가 느리게 거점 바깥을 훑고, 브루트와 mortar가 복귀선을 끊으러 온다. 빈 외곽을 도는 것보다 방금 확보한 pocket를 짧게 지킨 뒤 다음 salvage flank로 일찍 rotate하는 운영이 중요하다.",
         driveGainFactor: 1.44,
-        activeCap: 44,
-        spawnBudget: 204,
+        activeCap: 42,
+        spawnBudget: 200,
         mix: {
           scuttler: 0.08,
-          brute: 0.3,
+          brute: 0.32,
           shrike: 0.1,
           mortar: 0.24,
-          warden: 0.28,
+          warden: 0.26,
         },
         hazard: {
           label: "Kiln Drift",
@@ -572,18 +576,18 @@
       },
       10: {
         label: "Wave 11 · Bastion Furnace",
-        note: "Kiln Bastion 후반은 단순 warden 절단이 아니라 전열과 점거지를 함께 태우는 시험이다. 느린 추격과 두꺼운 브루트가 반복 재진입해, 같은 구역을 다시 붙잡는 힘이 강할수록 전장이 쉬워진다.",
+        note: "Kiln Bastion 후반은 단순 warden 절단이 아니라 전열과 점거지를 함께 태우는 시험이다. 느린 추격과 두꺼운 브루트가 반복 재진입해, 같은 구역을 다시 붙잡고 salvage를 먹으면서 버티는 힘이 강할수록 전장이 쉬워진다.",
         directive:
-          "bastion furnace. 넓은 bastion 권역과 포격 겹침. 되찾은 중심축을 버리면 전열이 다시 두꺼워지고, 버티면 포탑과 지뢰 지대가 전장을 대신 씹어 먹는다.",
+          "bastion furnace. 넓은 bastion 권역과 포격 겹침. 되찾은 중심축을 버리면 전열이 다시 두꺼워지고, 버티며 salvage pocket를 먹으면 포탑과 지뢰 지대가 전장을 대신 씹어 먹는다.",
         driveGainFactor: 1.48,
-        activeCap: 47,
-        spawnBudget: 220,
+        activeCap: 44,
+        spawnBudget: 214,
         mix: {
           scuttler: 0.06,
-          brute: 0.32,
+          brute: 0.34,
           shrike: 0.08,
-          mortar: 0.24,
-          warden: 0.3,
+          mortar: 0.26,
+          warden: 0.26,
         },
         hazard: {
           label: "Furnace Bastion",
@@ -600,22 +604,26 @@
           turretDamage: 12,
           turretSpeed: 244,
           enemyPullRadius: 194,
+          salvageScrap: 12,
+          salvageBurstCount: 4,
+          salvageBurstRadius: 48,
+          salvageDropLife: 11,
         },
       },
       11: {
         label: "Wave 12 · Bulwark Crown",
-        note: "Kiln Bastion 결산은 되찾은 공간을 끝까지 요새로 바꾸는 시험이다. 무거운 전열, 포격, 봉쇄선이 함께 들어오지만 거점을 굳히면 마지막 전장을 역으로 잠글 수 있다.",
+        note: "Kiln Bastion 결산은 되찾은 공간을 끝까지 요새로 바꾸는 시험이다. 무거운 전열, 포격, 봉쇄선이 함께 들어오지만 거점을 굳히고 마지막 salvage crown을 회수하면 전장을 역으로 잠글 수 있다.",
         directive:
-          "bulwark crown. 사중 용광 폭주와 bastion 중첩. 무작정 회피하면 계속 밀리고, 거점장 안에서 전열을 녹이며 다음 pocket를 이어 붙이면 후반이 열린다.",
+          "bulwark crown. 사중 용광 폭주와 bastion 중첩. 무작정 회피하면 계속 밀리고, 마지막 flank 코어를 깨 crown salvage를 먹은 뒤 거점장 안에서 다음 pocket를 이어 붙여야 후반이 열린다.",
         driveGainFactor: 1.54,
-        activeCap: 50,
-        spawnBudget: 238,
+        activeCap: 46,
+        spawnBudget: 228,
         mix: {
           scuttler: 0.04,
-          brute: 0.34,
+          brute: 0.36,
           shrike: 0.08,
-          mortar: 0.22,
-          warden: 0.32,
+          mortar: 0.24,
+          warden: 0.28,
         },
         hazard: {
           label: "Bulwark Crown",
@@ -632,6 +640,10 @@
           turretDamage: 12,
           turretSpeed: 248,
           enemyPullRadius: 200,
+          salvageScrap: 14,
+          salvageBurstCount: 5,
+          salvageBurstRadius: 54,
+          salvageDropLife: 12,
         },
       },
     },
@@ -7696,6 +7708,11 @@
       turretDamage: Number.isFinite(config.turretDamage) ? config.turretDamage : 0,
       turretSpeed: Number.isFinite(config.turretSpeed) ? config.turretSpeed : 0,
       enemyPullRadius: Number.isFinite(config.enemyPullRadius) ? config.enemyPullRadius : config.radius + 42,
+      salvageScrap: Number.isFinite(config.salvageScrap) ? config.salvageScrap : 0,
+      salvageBurstCount: Number.isFinite(config.salvageBurstCount) ? config.salvageBurstCount : 0,
+      salvageBurstRadius: Number.isFinite(config.salvageBurstRadius) ? config.salvageBurstRadius : 0,
+      salvageDropLife: Number.isFinite(config.salvageDropLife) ? config.salvageDropLife : 10,
+      salvageReleased: false,
       driftSpeed: Number.isFinite(config.driftSpeed) ? config.driftSpeed : 0,
       driftOrbit: Number.isFinite(config.driftOrbit) ? config.driftOrbit : 0.34,
       orbitDirection: Math.random() < 0.5 ? -1 : 1,
@@ -7720,10 +7737,43 @@
     });
   }
 
+  function spawnScrapBurst(x, y, totalValue, count = 3, radius = 36, life = 10) {
+    const dropCount = Math.max(1, Math.round(count || 1));
+    const burstRadius = Math.max(0, radius || 0);
+    const total = Math.max(0, Math.round(totalValue || 0));
+    const baseValue = Math.floor(total / dropCount);
+    let remainder = Math.max(0, total - baseValue * dropCount);
+    for (let index = 0; index < dropCount; index += 1) {
+      const angle = (index / dropCount) * Math.PI * 2 + Math.random() * 0.35;
+      const distance = dropCount === 1 ? 0 : burstRadius * (0.35 + Math.random() * 0.65);
+      const value = Math.max(1, baseValue + (remainder > 0 ? 1 : 0));
+      remainder = Math.max(0, remainder - 1);
+      state.drops.push({
+        kind: "scrap",
+        x: x + Math.cos(angle) * distance,
+        y: y + Math.sin(angle) * distance,
+        value,
+        life,
+      });
+    }
+  }
+
   function destroyHazard(hazard, reason = "expired") {
     hazard.telegraphTime = 0;
     hazard.activeTime = 0;
     if (reason === "destroyed") {
+      if (!hazard.salvageReleased && hazard.salvageScrap > 0) {
+        spawnScrapBurst(
+          hazard.x,
+          hazard.y,
+          hazard.salvageScrap,
+          hazard.salvageBurstCount,
+          hazard.salvageBurstRadius,
+          hazard.salvageDropLife
+        );
+        hazard.salvageReleased = true;
+        pushCombatFeed(`${hazard.label} 붕괴. salvage pocket이 열렸다.`, "SALV");
+      }
       state.shake = Math.max(state.shake, 5);
       for (let index = 0; index < 10; index += 1) {
         state.particles.push(createParticle(hazard.x, hazard.y, "#ffd7a6", 1));

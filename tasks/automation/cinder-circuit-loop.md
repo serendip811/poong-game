@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 16:10 KST
+  Findings:
+  - The larger arenas are an improvement, but late combat still does not breathe in a release-quality way. `activeCap 34 -> 50` across the widened spaces plus heavy turret/drone/missile assistance creates too many spread-out cleanup states, so movement decisions often collapse into reopening one lane and vacuuming leftovers.
+  - Too much pressure is still authored through lockouts, bastions, and hazard-script posture checks instead of enemy ecologies that naturally create contested territory. That makes Waves `8-12` feel managed rather than hunted, even when the build is strong.
+  - The run has more draft layers now, but the battlefield still does not give those layers enough time to matter. A doctrine or system spike should create obvious new route choices, scrap gambles, and hold-vs-dive decisions for multiple waves, not just make the same lane-clear routine safer.
+  - For a game that wants a future `20-30` wave ceiling, the current encounter density is still too prototype-minded: bigger rooms, more scripted exams, not enough sustained positional combat where the player can intentionally own space, abandon space, and reclaim it for payoff.
+  Top Priority: Re-author one full late bracket around territory pressure in the larger arena, with converging enemy roles and scrap placement that force repeated decisions between holding a strong zone, diving a dangerous flank, or rotating early before the room collapses.
+  Why Now: Until the arena itself creates interesting positional problems, longer runs and richer builds will keep spending their power on cleanup instead of tension.
+  Do Not Repeat: Do not answer this by only inflating spawn counts or adding another hazard script if the player still spends late waves chasing scattered remnants.
+
 - 2026-03-22 15:05 KST
   Findings:
   - The run is longer, but the build game is still too pre-composed. `preferredSystemIds`, `doctrineAllowsSystemInstall()`, and doctrine `reserveText` keep support bays on narrow rails, so many late choices are confirmations of a curated kit instead of dangerous rerun-defining combinations.
@@ -561,6 +571,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 16:35 KST
+  Changed: re-authored the `Kiln Bastion` late bracket in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) around reclaimable territory payoff instead of wider cleanup. `Wave 9-12` for doctrine `kiln_bastion` now run at tighter active caps with heavier brute/mortar convergence, and the territory waves (`Foundry Hold`, `Bastion Furnace`, `Bulwark Crown`) now attach salvage payloads to their bastion cores. When the player actually dives and destroys one of those late cores, it bursts a short-lived scrap pocket directly in the reclaimed zone, creating an immediate reason to hold that ground for a few more seconds before rotating out. I also extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new salvage-bearing hazards and the reduced late-wave caps.
+  Why: the latest critique’s Top Priority was to re-author one late bracket around territory pressure, converging roles, and scrap placement that forces repeated hold-vs-dive decisions. The highest-value bounded interpretation was to convert the existing `Kiln Bastion` doctrine bracket into that pattern, because it already had the right reclaim-and-hold fantasy and only needed real on-map payoff plus less spread-out density to make those decisions matter.
+  Follow-up risk: salvage pockets now make late bastion dives more valuable, but this pass still uses the existing roster and hazard spawn logic. If critique still finds the room management too authored, the next pass should bias these late bastions into more deliberately opposed map quadrants or add one enemy role that specifically tries to retake reclaimed salvage pockets instead of only tuning numbers further.
 
 - 2026-03-22 15:20 KST
   Changed: softened doctrine support-bay hard-locking in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) by turning the late third bay into a real wildcard lane for doctrine runs. `doctrineAllowsSystemInstall()` no longer blocks every off-doctrine subsystem forever; instead, doctrine builds keep their first two bays strongly biased toward their signature families, then `Late Break Armory` unlocks exactly one off-rail support install through the third bay. I also rewrote the doctrine/armory/feed subtitle copy so the game now tells the player that the doctrine is an early bias with a late illegal-combo release valve, not a total bay lock.
