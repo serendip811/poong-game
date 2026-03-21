@@ -407,6 +407,28 @@
   const POST_WAVE_LOOT_GRACE = 2.4;
   const FINAL_CASHOUT_DURATION = 12;
   const FINAL_CASHOUT_SPAWN_BUDGET = 26;
+  const KILN_BASTION_FIELD_BASE = {
+    radiusFactor: 0.24,
+    enemyDamage: 7,
+    coreDamage: 8,
+    enemySlow: 0.82,
+    repairInterval: 1.15,
+    repairAmount: 2.5,
+    drivePerSecond: 1.4,
+    heatFactor: 1.45,
+    damageMitigation: 0.18,
+  };
+  const KILN_BASTION_FIELD_CAPSTONE = {
+    radiusFactor: 0.32,
+    enemyDamage: 12,
+    coreDamage: 13,
+    enemySlow: 0.7,
+    repairInterval: 0.72,
+    repairAmount: 4.5,
+    drivePerSecond: 2.4,
+    heatFactor: 1.9,
+    damageMitigation: 0.32,
+  };
 
   function getArenaSize(config = null) {
     const arena =
@@ -1350,12 +1372,12 @@
       signatureId: "scrap_pact",
       label: "Kiln Bastion Doctrine",
       tag: "FORT",
-      short: "전방 포탑 · 회수 요새",
+      short: "전방 포탑 · 회수 거점",
       branchFamilyLabel: "전방 포탑",
       starterSystemId: "kiln_sentry",
       description:
-        "수거 회로를 전방 거점 운영으로 굳힌다. 포탑과 방호 차체를 더 자주 밀어 올려, Act 2 전장을 회수 가능한 요새로 바꾸게 만든다.",
-      perkText: "Max HP +14 · Hazard Mitigation +8% · Kiln Sentry 즉시 설치 · 이후 포지가 포탑/방호 라인을 먼저 민다.",
+        "수거 회로를 전방 거점 운영으로 굳힌다. Kiln Sentry가 머무를 이유가 있는 회수 거점을 펼쳐, 같은 구역을 다시 밟으며 밀린 전열을 되찾는 운영을 요구한다.",
+      perkText: "Max HP +14 · Hazard Mitigation +8% · Kiln Sentry 거점장 즉시 설치 · 이후 포지가 포탑/방호 라인을 먼저 민다.",
       preferredSystemIds: ["kiln_sentry", "aegis_halo"],
       preferredModIds: ["armor_mesh", "magnet_rig", "reactor_cap"],
       preferredAffixIds: ["salvage_link", "thermal_weave"],
@@ -1415,10 +1437,10 @@
       slotText: "교리 완성 · 회수 요새 주조",
       cost: 80,
       laneLabel: "Doctrine Apex",
-      summary: "전방 포탑이 주기적으로 용광 방벽을 뿜어내며 점령 구역 자체가 적을 태우는 요새가 된다.",
-      statusNote: "Bulwark Foundry가 전방 포대마다 용광 방벽을 뿜어내 이동선이 그대로 살상 구역이 된다.",
+      summary: "전방 포탑 거점장이 용광 방벽과 수리장을 함께 펼쳐, 되찾은 구역이 곧 전열 복구선이 된다.",
+      statusNote: "Bulwark Foundry가 전방 포대마다 용광 거점장을 펼쳐 되찾은 구역이 그대로 수리·살상 구역이 된다.",
       description:
-        "Kiln Bastion 전용 최종 교리 카드. Kiln Sentry 거점이 주기적으로 용광 방벽을 뿜어내 포대 둘레를 고정 살상 구역으로 바꾸고, Act 3 라인을 되찾는 속도를 크게 끌어올린다.",
+        "Kiln Bastion 전용 최종 교리 카드. Kiln Sentry 거점이 용광 거점장을 크게 넓혀 적과 점거 코어를 태우고, 그 안으로 복귀한 플레이어는 더 빠르게 냉각·수리되어 같은 구역을 반복 점거하는 운영이 완성된다.",
     },
     storm_artillery: {
       id: "sky_lance_grid",
@@ -2905,6 +2927,7 @@
       strokeColor: primarySystem.strokeColor,
       renderShape: primarySystem.renderShape,
       deployCount,
+      doctrineId: build && build.bastionDoctrineId ? build.bastionDoctrineId : null,
       doctrineCapstoneId: doctrineCapstone ? doctrineCapstone.id : null,
       doctrineCapstoneLabel: doctrineCapstone ? doctrineCapstone.label : null,
       doctrineCapstoneStatusNote: doctrineCapstone ? doctrineCapstone.statusNote : null,
@@ -5580,6 +5603,7 @@
         systemStats.systems.some((system) => system.interceptRange > 0) ? "탄환 요격" : null,
         systemStats.systems.some((system) => system.interceptPulseDamage > 0) ? "방호 파동" : null,
         systemStats.systems.some((system) => system.deployCount > 0) ? "전방 거점" : null,
+        systemStats.doctrineId === "kiln_bastion" ? "회수 거점장" : null,
       ]
         .filter(Boolean)
         .join(" + ");
@@ -5587,8 +5611,8 @@
     }
     if (systemStats.deployCount > 0) {
       return systemStats.tier >= 2
-        ? `${systemStats.label} · 포탑 ${systemStats.deployCount}기 · 전방 거점${capstoneSuffix}`
-        : `${systemStats.label} · 포탑 ${systemStats.deployCount}기${capstoneSuffix}`;
+        ? `${systemStats.label} · 포탑 ${systemStats.deployCount}기 · ${systemStats.doctrineId === "kiln_bastion" ? "회수 거점장" : "전방 거점"}${capstoneSuffix}`
+        : `${systemStats.label} · 포탑 ${systemStats.deployCount}기${systemStats.doctrineId === "kiln_bastion" ? " · 회수 거점장" : ""}${capstoneSuffix}`;
     }
     if (systemStats.interceptRange > 0) {
       return systemStats.interceptPulseDamage > 0
@@ -5792,6 +5816,10 @@
       drive: 0,
       overdriveActiveTime: 0,
       invulnerableTime: 0,
+      bastionFieldTime: 0,
+      bastionRepairCooldown: 0,
+      bastionDamageMitigation: 0,
+      bastionHeatFactor: 1,
       dashTrail: 0,
       facing: 0,
     };
@@ -5832,6 +5860,8 @@
     state.player.overdriveDuration = state.playerStats.overdriveDuration;
     state.player.hazardMitigation = state.playerStats.hazardMitigation;
     state.player.dashCooldown = state.playerStats.dashCooldown;
+    state.player.bastionDamageMitigation = Math.max(0, state.player.bastionDamageMitigation || 0);
+    state.player.bastionHeatFactor = Math.max(1, state.player.bastionHeatFactor || 1);
     if (preserveRatio) {
       state.player.hp = Math.max(1, Math.round(state.player.maxHp * hpRatio));
     } else {
@@ -7233,6 +7263,92 @@
     return nextDeployable;
   }
 
+  function getKilnBastionFieldConfig() {
+    const doctrine = getBastionDoctrineDef(state.build);
+    if (!doctrine || doctrine.id !== "kiln_bastion") {
+      return null;
+    }
+    const capstone = getDoctrineCapstoneDef(state.build);
+    return capstone && capstone.id === "bulwark_foundry"
+      ? KILN_BASTION_FIELD_CAPSTONE
+      : KILN_BASTION_FIELD_BASE;
+  }
+
+  function updateKilnBastionDeployableField(nextDeployable, dt) {
+    const fieldConfig = getKilnBastionFieldConfig();
+    if (!fieldConfig) {
+      nextDeployable.kilnFieldRadius = 0;
+      nextDeployable.kilnFieldTickCooldown = 0;
+      return nextDeployable;
+    }
+    const fieldRadius = nextDeployable.shotRange * fieldConfig.radiusFactor;
+    nextDeployable.kilnFieldRadius = fieldRadius;
+    nextDeployable.kilnFieldTickCooldown = Math.max(
+      0,
+      (nextDeployable.kilnFieldTickCooldown || 0) - dt
+    );
+
+    const playerDistance = Math.hypot(
+      state.player.x - nextDeployable.x,
+      state.player.y - nextDeployable.y
+    );
+    if (playerDistance <= fieldRadius + state.player.radius) {
+      state.player.bastionFieldTime = Math.max(state.player.bastionFieldTime || 0, 0.18);
+      state.player.bastionDamageMitigation = Math.max(
+        state.player.bastionDamageMitigation || 0,
+        fieldConfig.damageMitigation
+      );
+      state.player.bastionHeatFactor = Math.max(
+        state.player.bastionHeatFactor || 1,
+        fieldConfig.heatFactor
+      );
+      gainDrive(fieldConfig.drivePerSecond * dt);
+    }
+
+    if (nextDeployable.kilnFieldTickCooldown > 0) {
+      return nextDeployable;
+    }
+    nextDeployable.kilnFieldTickCooldown = 0.34;
+
+    for (const enemy of state.enemies) {
+      if (enemy.defeated || enemy.hp <= 0) {
+        continue;
+      }
+      const distance = Math.hypot(enemy.x - nextDeployable.x, enemy.y - nextDeployable.y);
+      if (distance > fieldRadius + enemy.radius) {
+        continue;
+      }
+      enemy.hp -= fieldConfig.enemyDamage;
+      enemy.kilnFieldSlowMultiplier = Math.min(
+        enemy.kilnFieldSlowMultiplier || 1,
+        fieldConfig.enemySlow
+      );
+      enemy.kilnFieldSlowTime = Math.max(enemy.kilnFieldSlowTime || 0, 0.42);
+      state.particles.push(createParticle(enemy.x, enemy.y, "#ffb261", 0.5));
+      if (enemy.hp <= 0) {
+        destroyEnemy(enemy);
+      }
+    }
+
+    for (const hazard of state.hazards) {
+      if (
+        hazard.type !== "territory" ||
+        hazard.telegraphTime > 0 ||
+        hazard.activeTime <= 0 ||
+        hazard.coreHp <= 0
+      ) {
+        continue;
+      }
+      const distance = Math.hypot(hazard.x - nextDeployable.x, hazard.y - nextDeployable.y);
+      if (distance > fieldRadius + hazard.coreRadius) {
+        continue;
+      }
+      hazard.coreHp = Math.max(0, hazard.coreHp - fieldConfig.coreDamage);
+      state.particles.push(createParticle(hazard.x, hazard.y, "#ffd7a6", 0.65));
+    }
+    return nextDeployable;
+  }
+
   function updateDoctrineCapstone(dt) {
     const capstone = getDoctrineCapstoneDef(state.build);
     if (!capstone || !state.supportSystem) {
@@ -7348,6 +7464,7 @@
           state.particles.push(createParticle(nextDeployable.x, nextDeployable.y, "#ffe7c4", 0.6));
         }
       }
+      updateKilnBastionDeployableField(nextDeployable, dt);
       updateBulwarkFoundryDeployables(nextDeployable, dt);
       nextDeployables.push(nextDeployable);
     }
@@ -7808,6 +7925,13 @@
 
   function updatePlayer(dt) {
     const arena = getCurrentArenaSize();
+    const fieldConfig = getKilnBastionFieldConfig();
+    state.player.bastionFieldTime = Math.max(0, (state.player.bastionFieldTime || 0) - dt);
+    state.player.bastionRepairCooldown = Math.max(0, (state.player.bastionRepairCooldown || 0) - dt);
+    state.player.bastionDamageMitigation =
+      state.player.bastionFieldTime > 0 ? state.player.bastionDamageMitigation || 0 : 0;
+    state.player.bastionHeatFactor =
+      state.player.bastionFieldTime > 0 ? Math.max(1, state.player.bastionHeatFactor || 1) : 1;
     const move = { x: 0, y: 0 };
     if (input.keys.has("KeyW")) {
       move.y -= 1;
@@ -7836,10 +7960,24 @@
     state.player.heat = Math.max(
       0,
       state.player.heat -
-        state.player.coolRate * dt * (state.player.overdriveActiveTime > 0 ? 1.5 : 1)
+        state.player.coolRate *
+          dt *
+          (state.player.overdriveActiveTime > 0 ? 1.5 : 1) *
+          state.player.bastionHeatFactor
     );
     if (state.player.overheated && state.player.heat < 45) {
       state.player.overheated = false;
+    }
+
+    if (
+      fieldConfig &&
+      state.player.bastionFieldTime > 0 &&
+      state.player.bastionRepairCooldown <= 0 &&
+      state.player.hp < state.player.maxHp
+    ) {
+      state.player.hp = Math.min(state.player.maxHp, state.player.hp + fieldConfig.repairAmount);
+      state.player.bastionRepairCooldown = fieldConfig.repairInterval;
+      state.particles.push(createParticle(state.player.x, state.player.y, "#ffd7a6", 0.85));
     }
 
     state.player.overdriveActiveTime = Math.max(
@@ -7951,6 +8089,12 @@
       let dy = state.player.y - enemy.y;
       let angle = Math.atan2(dy, dx);
       let speedMultiplier = 1;
+      enemy.kilnFieldSlowTime = Math.max(0, (enemy.kilnFieldSlowTime || 0) - dt);
+      if (enemy.kilnFieldSlowTime > 0) {
+        speedMultiplier *= enemy.kilnFieldSlowMultiplier || 0.82;
+      } else {
+        enemy.kilnFieldSlowMultiplier = 1;
+      }
 
       const territoryHazard = state.hazards.find((hazard) => {
         if (hazard.type !== "territory" || hazard.telegraphTime > 0 || hazard.activeTime <= 0) {
@@ -8053,10 +8197,11 @@
   }
 
   function takePlayerDamage(amount, source) {
-    const mitigated =
+    const hazardMitigated =
       source === "hazard"
         ? amount * (1 - state.player.hazardMitigation)
         : amount;
+    const mitigated = hazardMitigated * (1 - (state.player.bastionDamageMitigation || 0));
     state.player.hp = Math.max(0, state.player.hp - mitigated);
     state.player.invulnerableTime = 0.36;
     state.shake = Math.max(state.shake, 8);
@@ -8426,6 +8571,10 @@
     const traitLabels = getWeaponTraitLabels(state.weapon);
     const hazardStatus = describeHazardState(state);
     const supportSystemSummary = getSupportSystemSummary(state.supportSystem);
+    const kilnFieldSummary =
+      state.player.bastionFieldTime > 0
+        ? `거점장 복귀 · 피해 -${Math.round((state.player.bastionDamageMitigation || 0) * 100)}% · 냉각 가속`
+        : null;
 
     elements.waveLabel.textContent = waveLabel;
     elements.hpStat.textContent = `${Math.ceil(state.player.hp)} / ${state.player.maxHp}`;
@@ -8513,7 +8662,7 @@
           ${state.supportSystem ? createMiniPill("SYS", state.supportSystem.label, "accent") : ""}
           ${weapon.affixLabels.map((label) => createMiniPill("속성", label, "cool")).join("")}
         </div>
-        <p class="summary-note">${[affixSummary, evolutionSummary, capstoneSummary, supportSystemSummary, `보관 ${weapon.benchCopies}개 대기`].filter(Boolean).join(" · ")}</p>
+        <p class="summary-note">${[affixSummary, evolutionSummary, capstoneSummary, supportSystemSummary, kilnFieldSummary, `보관 ${weapon.benchCopies}개 대기`].filter(Boolean).join(" · ")}</p>
       `;
     }
 
@@ -8953,6 +9102,25 @@
           context.lineWidth = 2.2;
           context.beginPath();
           context.arc(deployable.x, deployable.y, deployable.shotRange * 0.28, 0, Math.PI * 2);
+          context.stroke();
+        }
+        if (deployable.kilnFieldRadius > 0) {
+          const pulseAlpha =
+            doctrineCapstone && doctrineCapstone.id === "bulwark_foundry" ? 0.18 : 0.11;
+          context.globalAlpha = pulseAlpha;
+          context.fillStyle = doctrineCapstone && doctrineCapstone.id === "bulwark_foundry"
+            ? "rgba(255, 170, 92, 0.65)"
+            : "rgba(255, 196, 128, 0.5)";
+          context.beginPath();
+          context.arc(deployable.x, deployable.y, deployable.kilnFieldRadius, 0, Math.PI * 2);
+          context.fill();
+          context.globalAlpha = 0.55;
+          context.strokeStyle = doctrineCapstone && doctrineCapstone.id === "bulwark_foundry"
+            ? "rgba(255, 213, 166, 0.92)"
+            : "rgba(255, 222, 184, 0.72)";
+          context.lineWidth = doctrineCapstone && doctrineCapstone.id === "bulwark_foundry" ? 2.4 : 1.6;
+          context.beginPath();
+          context.arc(deployable.x, deployable.y, deployable.kilnFieldRadius, 0, Math.PI * 2);
           context.stroke();
         }
         context.translate(deployable.x, deployable.y);

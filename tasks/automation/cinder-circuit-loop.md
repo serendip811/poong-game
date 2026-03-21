@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 11:32 KST
+  Findings:
+  - The game now has enough doctrine, armory, and support-bay scaffolding to look deep on paper, but repeated runs still resolve into the same real job: reopen lanes, trim anchors, and survive crossfire while orbiting the arena edge. That is not enough movement variety for a rerun-driven action roguelite.
+  - The doctrine branches are still too similar in player behavior. `Mirror Hunt`, `Kiln Bastion`, and `Storm Artillery` change which helpers fire for you, but they do not yet force clearly different movement contracts like committed chase, deliberate hold-ground, or long-sightline siege.
+  - Forge pacing is becoming too scripted. `Architecture Draft -> Act Break Armory -> Bastion Draft -> Late Break Armory` gives the run more labels, but too many choices are still branch-approved maintenance instead of painful greed-vs-survival decisions that make players improvise and overcommit.
+  - Weapon evolution remains the weakest payoff layer in three of four cores. `scatter` actually redraws the battlefield; `ember`, `lance`, and `ricochet` mostly widen existing fire geometry, so the most visible source of power still lacks the kind of transformational spike players replay for.
+  Top Priority: Rebuild one doctrine, preferably `Kiln Bastion`, into a true territory-control route whose forge offers, capstone, and encounter asks all reward claiming and revisiting a manufactured safe zone instead of just doing the usual kite-and-reopen loop with extra turrets.
+  Why Now: Until one branch creates a genuinely different way to move and fight, extra waves and extra upgrade layers will keep exposing sameness faster than they create build hunger.
+  Do Not Repeat: Do not answer this with another labeled draft, another orbital helper, or more branch filtering if the player still solves every run with the same edge-circling lane reset.
+
 - 2026-03-22 03:05 KST
   Findings:
   - The run is finally long enough to expose its real weakness: Acts 2-3 are broader, but too many successful builds still solve the same job of reopening lanes under bastion, mortar, and warden pressure. Longer structure is present; distinct combat destinies are not.
@@ -490,6 +500,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 11:55 KST
+  Changed: rebuilt the live `Kiln Bastion` payoff in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) around a real revisitable safe zone instead of extra sentry damage. `Kiln Sentry` deployables now project a doctrine-only reclaim field that slows and burns enemies, chips `territory` hazard cores, and rewards the player for stepping back into the manufactured foothold with damage mitigation, faster cooling, passive repair, and drive gain; `Bulwark Foundry` now widens and intensifies that field so the late doctrine capstone reads as "hold and retake this ground" rather than "turrets pulse harder." I also updated doctrine/capstone copy, HUD support summaries, and sentry rendering so the reclaim zone is visible in combat.
+  Why: the latest critique’s Top Priority was to turn `Kiln Bastion` into a true territory-control route that rewards claiming and revisiting a manufactured safe zone. The highest-value bounded interpretation was to make the existing sentry route generate a player-serving reclaim field, because that directly changes movement and target priority inside live combat without widening scope into a full new enemy or forge system.
+  Follow-up risk: the doctrine now creates a distinct hold-ground loop, but the forge layer still points at that identity mostly through existing sentry/defense weighting rather than dedicated "zone package" cards. If critique still wants stronger branch appetite, the next pass should add one or two `Kiln Bastion`-specific forge offers that explicitly trade mobility or greed for stronger field anchoring instead of only relying on the doctrine runtime effect.
 
 - 2026-03-21 KST
   Changed: added doctrine-only `Late Break Armory` apex cards in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so a committed `Mirror Hunt`, `Kiln Bastion`, or `Storm Artillery` run can cash out into a visibly different Wave `9+` battlefield posture instead of just denser generic firepower. `Relay Storm Lattice` now fires autonomous relay-lightning hunts across distant enemies, `Bulwark Foundry` turns `Kiln Sentry` placements into repeating fortress kill-zones, and `Sky Lance Grid` calls automatic backline lance strikes; I also threaded doctrine-capstone state into support summaries/HUD copy, advertised the apex payoff from the doctrine draft text, exported the capstone defs/helper, and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new late-armory offer and build state.
