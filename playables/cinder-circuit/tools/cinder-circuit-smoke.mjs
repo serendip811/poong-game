@@ -225,6 +225,54 @@ const doctrineCommitChoice = doctrinePrimaryChoices.find(
 );
 assert.ok(doctrineCommitChoice);
 assert.equal(doctrineCommitChoice.modId, "drive_sync");
+const doctrineFollowupChoices = game.buildForgeFollowupChoices(
+  bastionDoctrineBuild,
+  () => 0,
+  180,
+  { nextWave: 7, finalForge: false },
+  doctrineCommitChoice
+);
+const doctrineInstallSystemIds = doctrineFollowupChoices
+  .filter((choice) => choice.type === "system" && choice.systemTier === 1)
+  .map((choice) => choice.systemId)
+  .sort();
+assert.equal(
+  JSON.stringify(doctrineInstallSystemIds),
+  JSON.stringify(["seeker_array", "volt_drones"])
+);
+assert.ok(
+  doctrineFollowupChoices.every(
+    (choice) =>
+      choice.type !== "system" ||
+      choice.systemTier !== 1 ||
+      choice.laneLabel === "공세 모듈"
+  )
+);
+const fortressDoctrineBuild = game.createInitialBuild("scrap_pact");
+fortressDoctrineBuild.pendingCores = [];
+const fortressDoctrineChoice = game
+  .buildBastionDraftChoices(fortressDoctrineBuild, () => 0, 6)
+  .find((choice) => choice.action === "bastion_doctrine");
+assert.ok(fortressDoctrineChoice);
+game.applyForgeChoice(
+  { build: fortressDoctrineBuild, player: null, resources: { scrap: 999 }, stats: {} },
+  fortressDoctrineChoice
+);
+const fortressFollowupChoices = game.buildForgeFollowupChoices(
+  fortressDoctrineBuild,
+  () => 0,
+  180,
+  { nextWave: 7, finalForge: false },
+  fortressDoctrineChoice.doctrineChoice
+);
+const fortressInstallSystemIds = fortressFollowupChoices
+  .filter((choice) => choice.type === "system" && choice.systemTier === 1)
+  .map((choice) => choice.systemId)
+  .sort();
+assert.ok(fortressInstallSystemIds.includes("aegis_halo"));
+assert.ok(fortressInstallSystemIds.includes("kiln_sentry"));
+assert.ok(!fortressInstallSystemIds.includes("seeker_array"));
+assert.ok(!fortressInstallSystemIds.includes("volt_drones"));
 const fieldGrantBuild = game.createInitialBuild("relay_oath");
 fieldGrantBuild.pendingCores = [];
 const fieldGrantChoices = game.buildFieldGrantChoices(fieldGrantBuild, () => 0, 4);

@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-21 22:34 KST
+  Findings:
+  - The run now spans `12` waves and `3` acts, but too much of the power curve is still delivered as broadly compatible upkeep. `Field Cache`, doctrine-biased sorting, and repeated forge smoothing make many runs feel serviceable for a long time instead of forcing an exciting commitment that locks in future appetite.
+  - `BASTION_DOCTRINE_DEFS` is the right structural move, but it still behaves more like weighted recommendations than a real branch. The player is nudged toward hunt/fortress/siege, yet the build can still absorb almost everything, so repeated runs do not gain enough tension from saying yes to one future and no to another.
+  - Main weapon evolution remains too silhouette-heavy and rules-light in three of four cores. `ember`, `lance`, and `ricochet` mostly become denser lane coverage, while `scatter` is the clearest example of an actual battlefield role change. That imbalance weakens build anticipation because most gun end states still solve the arena in broadly the same way.
+  - Encounter pressure has more room now, but `Wave 5-12` still keeps circling lane reopening under bastion, mortar, and warden pressure. The acts are longer, not yet different enough in what they ask the player to want from a build.
+  Top Priority: Turn doctrines into exclusive architecture picks that reserve future slots and offer pools, so choosing hunt/fortress/siege immediately closes off some module families and unlocks a distinct late-run chase.
+  Why Now: A 12-wave run already exposes convergence, and a future 20-30 wave version will collapse without harder branch identity.
+  Do Not Repeat: Do not answer this with more weighted offers or another same-gun-but-wider evolution.
+
 - 2026-03-21 22:00 KST
   Findings:
   - The run is longer now, but repeated-play identity still comes online too late. `SIGNATURE_DEFS` mostly front-loads a starter core and a small stat nudge, so Wave 1-2 still reads more like warmup survival than the opening commitment of a run the player is eager to author.
@@ -459,6 +469,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-21 KST
+  Changed: turned the existing doctrine draft into an actual architecture lock in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). Once `Mirror Hunt`, `Kiln Bastion`, or `Storm Artillery` is adopted, future support-system installs are now filtered to that doctrine's family instead of merely sorted toward it, and forge affix/mod pools are likewise narrowed to the doctrine's authored chase set. I also updated Bastion Draft and forge copy so the choice explicitly advertises that it reserves the remaining support bays and cuts off rival module families, and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert that hunt runs only see offensive installs while fortress runs stop seeing offensive-module installs.
+  Why: the latest critique's Top Priority was still open because doctrine adoption only biased offer order; it did not actually deny futures. This was the highest-value bounded interpretation because it makes the Wave `6/8` draft immediately close doors and reserve future slot identity without widening scope into a full new doctrine-exclusive content set.
+  Follow-up risk: hunt and siege still share the same offensive support family and now diverge mostly through mod/affix filtering, so their late-run silhouettes are stronger than before but not yet fully different ecosystems. If critique still finds those two doctrines too adjacent, the next pass should add doctrine-exclusive offensive modules or authored sacrifices rather than only tightening filters further.
 
 - 2026-03-21 KST
   Changed: upgraded Act 2's existing `Bastion Draft` in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from a generic discounted spike into a signature-tied doctrine pick. The first Wave `6/8` draft for each run now offers a doctrine card keyed off the chosen signature (`Mirror Hunt Doctrine`, `Kiln Bastion Doctrine`, or `Storm Artillery Doctrine`) that immediately grants a discounted spike and permanently biases later forge offers toward that run's intended posture; I also stored the doctrine on the build, threaded the new bias into forge candidate ordering, refreshed the Bastion Draft UI/feed copy so the event reads as an authored commitment beat, and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to cover doctrine adoption plus the follow-on forge bias.

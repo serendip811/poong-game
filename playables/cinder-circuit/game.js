@@ -1334,6 +1334,8 @@
       preferredSystemIds: ["seeker_array", "volt_drones"],
       preferredModIds: ["drive_sync", "arc_array", "step_servos"],
       preferredAffixIds: ["arc_link", "overclock"],
+      reservedLane: "공세 모듈",
+      reserveText: "남은 support bay는 공세 모듈 전용으로 잠기며 방호/거점 시스템 신규 장착이 끊긴다.",
       favoredCoreId: "ricochet",
       apply(build) {
         build.driveGainBonus += 0.12;
@@ -1352,6 +1354,8 @@
       preferredSystemIds: ["kiln_sentry", "aegis_halo"],
       preferredModIds: ["armor_mesh", "magnet_rig", "reactor_cap"],
       preferredAffixIds: ["salvage_link", "thermal_weave"],
+      reservedLane: "보조 시스템",
+      reserveText: "남은 support bay는 포탑/방호 전용으로 잠기며 공세 모듈 신규 장착이 끊긴다.",
       favoredCoreId: "scatter",
       apply(build) {
         build.maxHpBonus += 14;
@@ -1370,6 +1374,8 @@
       preferredSystemIds: ["volt_drones", "seeker_array"],
       preferredModIds: ["rail_sleeve", "arc_array", "heat_sink"],
       preferredAffixIds: ["phase_rounds", "arc_link"],
+      reservedLane: "공세 모듈",
+      reserveText: "남은 support bay는 포격 모듈 전용으로 잠기며 방호/거점 시스템 신규 장착이 끊긴다.",
       favoredCoreId: "lance",
       apply(build) {
         build.damageBonus += 4;
@@ -2861,9 +2867,13 @@
     const installedSystems = getInstalledSupportSystems(build);
     const supportBayCap = getSupportBayCapacity(build);
     const installedMap = new Map(installedSystems.map((entry) => [entry.id, entry]));
+    const doctrine = build && build.bastionDoctrineId ? getBastionDoctrineDef(build) : null;
     const installChoices = shuffle(
       Object.keys(SUPPORT_SYSTEM_DEFS).filter(
-        (systemId) => !installedMap.has(systemId) && isSupportSystemUnlocked(systemId, nextWave)
+        (systemId) =>
+          !installedMap.has(systemId) &&
+          isSupportSystemUnlocked(systemId, nextWave) &&
+          doctrineAllowsSystemInstall(build, systemId)
       ),
       random
     )
@@ -2884,7 +2894,7 @@
           title: tierDef.title,
           description:
             installedSystems.length > 0
-              ? `${tierDef.description} 기존 ${installedSystems.map((entry) => SUPPORT_SYSTEM_DEFS[entry.id].tiers[entry.tier].label).join(" + ")}와 병렬 베이에 탑재된다.`
+              ? `${tierDef.description} 기존 ${installedSystems.map((entry) => SUPPORT_SYSTEM_DEFS[entry.id].tiers[entry.tier].label).join(" + ")}와 병렬 베이에 탑재된다.${doctrine ? ` ${doctrine.reserveText}` : ""}`
               : tierDef.description,
           slotText:
             installedSystems.length > 0
@@ -3316,11 +3326,43 @@
     if (!buildOrSignatureId) {
       return null;
     }
+    if (typeof buildOrSignatureId === "object" && buildOrSignatureId.bastionDoctrineId) {
+      const adoptedDoctrine = Object.values(BASTION_DOCTRINE_DEFS).find(
+        (doctrine) => doctrine.id === buildOrSignatureId.bastionDoctrineId
+      );
+      if (adoptedDoctrine) {
+        return adoptedDoctrine;
+      }
+    }
     const signatureId =
       typeof buildOrSignatureId === "string"
         ? buildOrSignatureId
         : buildOrSignatureId.signatureId || null;
     return signatureId ? BASTION_DOCTRINE_DEFS[signatureId] || null : null;
+  }
+
+  function doctrineAllowsSystemInstall(build, systemId) {
+    const doctrine = build && build.bastionDoctrineId ? getBastionDoctrineDef(build) : null;
+    if (!doctrine || !Array.isArray(doctrine.preferredSystemIds) || doctrine.preferredSystemIds.length === 0) {
+      return true;
+    }
+    return doctrine.preferredSystemIds.includes(systemId);
+  }
+
+  function doctrineAllowsModChoice(build, modId) {
+    const doctrine = build && build.bastionDoctrineId ? getBastionDoctrineDef(build) : null;
+    if (!doctrine || !Array.isArray(doctrine.preferredModIds) || doctrine.preferredModIds.length === 0) {
+      return true;
+    }
+    return doctrine.preferredModIds.includes(modId);
+  }
+
+  function doctrineAllowsAffixChoice(build, affixId) {
+    const doctrine = build && build.bastionDoctrineId ? getBastionDoctrineDef(build) : null;
+    if (!doctrine || !Array.isArray(doctrine.preferredAffixIds) || doctrine.preferredAffixIds.length === 0) {
+      return true;
+    }
+    return doctrine.preferredAffixIds.includes(affixId);
   }
 
   function computePlayerStats(build) {
@@ -4133,7 +4175,10 @@
 
     shuffle(
       Object.keys(AFFIX_DEFS)
-        .filter((affixId) => !currentAffixIds.includes(affixId))
+        .filter(
+          (affixId) =>
+            !currentAffixIds.includes(affixId) && doctrineAllowsAffixChoice(build, affixId)
+        )
         .map((affixId) => createAffixChoice(affixId, build))
         .filter((choice) => choice && canApplyAffixChoice(build, choice.affixId, choice.replaceTarget)),
       random
@@ -4143,7 +4188,7 @@
 
     shuffle(
       ["shock_lens", "pulse_gate", "arc_array", "rail_sleeve", "drive_sync", "heat_sink", "reactor_cap"]
-        .filter((modId) => MOD_DEFS[modId])
+        .filter((modId) => MOD_DEFS[modId] && doctrineAllowsModChoice(build, modId))
         .map((modId) => createModChoice(modId)),
       random
     ).forEach((choice) => {
@@ -4184,7 +4229,10 @@
 
     shuffle(
       ["thermal_weave", "salvage_link"]
-        .filter((affixId) => !currentAffixIds.includes(affixId))
+        .filter(
+          (affixId) =>
+            !currentAffixIds.includes(affixId) && doctrineAllowsAffixChoice(build, affixId)
+        )
         .map((affixId) => createAffixChoice(affixId, build))
         .filter((choice) => choice && canApplyAffixChoice(build, choice.affixId, choice.replaceTarget)),
       random
@@ -4562,8 +4610,8 @@
       tag: "DOCTRINE",
       title: doctrine.label,
       description:
-        `${doctrine.description} 즉시 ${spikeChoice.title}을(를) 할인 장착하고, 이후 포지 후보가 ${doctrine.short} 방향으로 기울어진다.`,
-      slotText: `교리 채택 · ${spikeChoice.title} · ${doctrine.short}`,
+        `${doctrine.description} 즉시 ${spikeChoice.title}을(를) 할인 장착하고, ${doctrine.reserveText} 이후 포지 후보도 ${doctrine.short} 방향으로만 열린다.`,
+      slotText: `교리 채택 · ${spikeChoice.title} · ${doctrine.short} · ${doctrine.reservedLane}`,
       cost: spikeChoice.cost,
       laneLabel: "교리 채택",
       forgeLaneLabel: "교리 채택",
@@ -4701,7 +4749,7 @@
     if (!build || !build.bastionDoctrineId) {
       const doctrine = getBastionDoctrineDef(build);
       return doctrine
-        ? `${doctrine.label} 교리 1장, 고통 계약 1장, 무료 안정화 1장 중 하나로 Act 2 운영을 직접 비튼다.`
+        ? `${doctrine.label} 교리 1장, 고통 계약 1장, 무료 안정화 1장 중 하나로 Act 2 운영을 직접 비튼다. 교리를 고르면 ${doctrine.reserveText}`
         : "할인 spike 1장, 고통 계약 1장, 무료 안정화 1장 중 하나로 Act 2 운영을 직접 비튼다.";
     }
     return "이미 채택한 교리 위에 추가 spike 1장, 고통 계약 1장, 무료 안정화 1장 중 하나로 Act 2 greed를 더 밀어붙인다.";
@@ -8205,7 +8253,7 @@
         : state.forgeDraftType === "bastion_draft"
         ? state.build.bastionDoctrineId
           ? "Bastion Draft · 기존 교리 위에 추가 spike 또는 고통 계약을 더 얹어 Act 2 greed를 강제한다"
-          : "Bastion Draft · 시그니처 교리 1장, 고통 계약 1장, 무료 안정화 1장 중 1픽으로 Act 2 posture를 잠근다"
+          : "Bastion Draft · 시그니처 교리 1장, 고통 계약 1장, 무료 안정화 1장 중 1픽으로 Act 2 posture와 future bay를 잠근다"
         : state.forgeDraftType === "armory"
         ? isLateBreakArmory(forgeOptions)
           ? `${armoryLabel} ${state.forgeStep}/${state.forgeMaxSteps} · 6장 중 2픽, 세 번째 베이까지 열린 상태에서 마지막 과투입을 강제한다`
@@ -8224,7 +8272,7 @@
         : state.forgeDraftType === "bastion_draft"
         ? state.build.bastionDoctrineId
           ? `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 이미 채택한 교리 위에 추가 spike 1장과 Siege Salvage Pact, 무료 안정화가 다시 뜬다. 지금 더 깊게 묶일지, 체력을 태워 greed를 당길지 결정한다.`
-          : `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 한 장은 시그니처 전용 교리라 즉시 spike를 잠그면서 이후 포지 후보까지 비틀고, 한 장은 최대 체력을 깎고 고철을 당겨오는 Siege Salvage Pact, 마지막 한 장은 무료 안정화다. Act 2 posture를 잠글지, 더 아프게 탐욕할지 직접 정한다.`
+          : `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 한 장은 시그니처 전용 교리라 즉시 spike를 잠그면서 남은 support bay와 이후 포지 후보까지 한 계통으로 고정하고, 한 장은 최대 체력을 깎고 고철을 당겨오는 Siege Salvage Pact, 마지막 한 장은 무료 안정화다. Act 2 posture를 잠글지, 더 아프게 탐욕할지 직접 정한다.`
         : state.forgeDraftType === "armory"
         ? isLateBreakArmory(forgeOptions)
           ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 8을 넘기며 ${armoryLabel}가 열린다. 세 번째 support bay가 해금됐고, 이번 포지는 6장 중 2장을 골라 4웨이브짜리 최종 전투 구간 전체를 버틸 과한 조합을 잠근다.`
