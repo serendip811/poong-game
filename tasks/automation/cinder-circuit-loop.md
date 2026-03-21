@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 06:30 KST
+  Findings:
+  - `Cinder Circuit` now has enough waves, doctrine language, and support bays to look ambitious, but the actual repeat-run question is still too often "which flavor of bastion-crossfire cleanup am I solving?" `Wave 5-12` keeps rotating bastion cores, `mortar`, and `warden` pressure instead of introducing new combat rules that make different builds want different space.
+  - Arena growth to `1280x720` and `1440x820` is the right instinct, but rising `activeCap` and persistent territory pressure keep converting that space into wider janitorial laps. The player still spends too much time restoring one usable route and harvesting scraps instead of making bold route commitments across multiple simultaneously dangerous zones.
+  - The forge structure is now overselling authored ambition. `Architecture Draft`, `Bastion Draft`, `Catalyst Crucible`, and repeated armory framing explain the run well, but they also make power feel scheduled. A release-feeling roguelite needs more of the hunger to come from combat-earned pursuit and less from another named selection screen telling the player what their monster form is.
+  - Visible escalation still leans too hard on support clutter over main-weapon supremacy. Satellites, shields, sentries, drones, and doctrine helpers make the screen busier, but they dilute the fantasy that the player themselves has forged an absurd endgame gun with a silhouette and firing rule worth rerunning for.
+  Top Priority: Add one non-bastion late-act encounter family with a distinct spatial rule, then rework one doctrine path so its main weapon visibly mutates to exploit that rule while support systems stay secondary.
+  Why Now: Longer runs and more forge layers will only magnify repetition until combat asks and weapon payoffs branch harder than the current authored scaffolding.
+  Do Not Repeat: Do not answer this with another draft screen, another helper bay, or another late-wave bastion remix.
+
 - 2026-03-22 19:05 KST
   Findings:
   - The run is now long enough to expose its real ceiling: `Wave 5-12` adds space and more forge layers, but the combat question keeps collapsing into the same bastion-core, mortar, and warden lane-reopen exam. That is not enough encounter variety to carry repeat runs, let alone a future `20-30` wave game.
@@ -621,6 +631,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 20:05 KST
+  Changed: promoted `relay pylon` hazards from a doctrine-only late bracket into the shared Act 3 line in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), so the default `Wave 10` and `Wave 12` battlefield rule is now "sever the flame corridors" instead of another bastion-ownership exam. In the same pass I reworked the `Storm Artillery` weapon ladder so completed lance forms gain `relay_sever` follow-through on pylon hits: `Thunder Rack` now throws extra cutting rails through linked pylons, and both apex endings strengthen that direct gun payoff rather than adding more support clutter. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to cover the new shared relay waves plus the doctrine’s relay-breaking weapon state.
+  Why: the latest critique’s Top Priority was to add one non-bastion late-act encounter family and make one doctrine’s main weapon visibly mutate to exploit it. The highest-value bounded interpretation was to spread the existing relay hazard tech into the generic late bracket, then let `Storm Artillery` become the obvious pylon-breaker through player-fired lance behavior instead of another authored support subsystem.
+  Follow-up risk: this creates a real shared late-act rule change, but `Mirror Hunt` and `Kiln Bastion` still do not have equally explicit "good into relay / bad into relay" weapon answers, so branch contrast may still flatten after the novelty of the new family lands. A next pass should tune at least one rival doctrine to struggle against relay crowns or gain a different non-bastion specialty rather than only adding more relay numbers.
 
 - 2026-03-22 19:35 KST
   Changed: added a new late-act `relay` encounter family in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and used it to rebuild the `Storm Artillery` Act 3 bracket around link-breaking instead of more bastion ownership exams. `Wave 10-12` for that doctrine now spawn relay pylons that draw damaging flame corridors across the arena until their cores are destroyed, with new HUD/readout text, render treatment, and hazard-core handling so the player can read the lattice and snipe it apart. I also tuned relay-core damage so `Storm Artillery` gets a concrete doctrine/apex bonus against those pylons while `Kiln Bastion` underperforms there, then updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new relay-wave variants.

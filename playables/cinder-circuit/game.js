@@ -297,7 +297,7 @@
     },
     {
       id: "emberward",
-      label: "Wave 10 · Ember Ward",
+      label: "Wave 10 · Ember Lattice",
       duration: 94,
       spawnBudget: 198,
       activeCap: 43,
@@ -312,26 +312,25 @@
         mortar: 0.18,
         warden: 0.34,
       },
-      note: "warden이 점거 코어를 지키는 동안 mortar 포격이 돌입 루트를 덮는다. 외곽 사선만 끊는 것으로는 부족하고, 포격 압박 속에서 봉쇄 구역 자체를 부숴야 다시 회전이 열린다.",
+      note: "Act 3 중반은 bastion 소유권이 아니라 relay lattice 절개다. wardens가 입구를 세우고 mortar가 후열을 덮는 동안, 멀리 깔린 pylon을 먼저 끊어 회랑 자체를 찢어야 다시 회전이 열린다.",
       directive:
-        "warden bastions. 점거 코어를 부수지 않으면 외곽 회수선과 탈출 각이 동시에 잠기고, 뒤쪽 mortar 포격이 돌입각을 천천히 지워버린다. 사선 정리와 코어 돌입 순서를 함께 판단해야 한다.",
+        "ember lattice. relay pylon이 화염 회랑을 길게 엮고 warden 사선이 입구를 잠근다. 가까운 전열과 오래 싸우기보다 먼 pylon부터 절개해 회랑 밀도를 먼저 무너뜨려야 한다.",
       driveGainFactor: 1.42,
       arena: THIRD_ACT_ARENA,
       hazard: {
-        label: "Ember Ward Bastion",
-        type: "territory",
+        label: "Ember Lattice Relay",
+        type: "relay",
         interval: 8.6,
-        count: 2,
-        radius: 112,
+        count: 3,
+        radius: 86,
         telegraph: 0.84,
         duration: 9.4,
         damage: 13,
         coreHp: 66,
         coreRadius: 18,
-        turretInterval: 0.88,
-        turretDamage: 11,
-        turretSpeed: 236,
-        enemyPullRadius: 176,
+        relayRange: 432,
+        relayWidth: 34,
+        relayDamage: 13,
       },
     },
     {
@@ -386,19 +385,25 @@
         mortar: 0.18,
         warden: 0.42,
       },
-      note: "최종 전장은 라인 소유권과 탄막 관리 둘 다 끝까지 유지해야 버틴다. 세 번째 support bay까지 열린 빌드가 없으면 외곽과 중앙, 그리고 누적 포격 궤도까지 동시에 감당하기 어렵다.",
+      note: "최종 전장은 relay crown을 먼저 찢지 못하면 화면 전체가 불길 회랑으로 갈라진다. support clutter보다 직접 후열을 끊는 주무장 형태가 얼마나 빨리 회랑을 무너뜨리는지가 더 크게 드러난다.",
       directive:
-        "forge lattice. 사중 폭주가 퇴로를 끊는 동안 warden 사선과 mortar 포격이 겹쳐 들어온다. 외곽 정리와 즉시 돌파를 반복하며 마지막 전장을 억지로 열어야 한다.",
+        "cinder crown relay. 사중 relay crown과 warden 차폐선, mortar 포격이 함께 전장을 얇게 찢는다. 중앙 난전을 오래 붙들기보다 먼 pylon과 포격원을 먼저 지워 회랑 자체를 무너뜨려야 한다.",
       driveGainFactor: 1.52,
       arena: THIRD_ACT_ARENA,
       hazard: {
-        label: "Cinder Crown Surge",
+        label: "Cinder Crown Relay",
+        type: "relay",
         interval: 7.6,
         count: 4,
         radius: 88,
         telegraph: 0.72,
         duration: 4.9,
         damage: 16,
+        coreHp: 74,
+        coreRadius: 19,
+        relayRange: 508,
+        relayWidth: 38,
+        relayDamage: 15,
       },
     },
   ];
@@ -1998,12 +2003,20 @@
           label: "Thunder Rack",
           traitLabel: "오연 공성선",
           statusNote:
-            "Thunder Rack이 넓은 다중 공성선을 펼쳐 긴 사선을 오래 유지하고 후열까지 연쇄 절개한다.",
+            "Thunder Rack이 넓은 다중 공성선을 펼치고 relay pylon 적중 시 과전도 절개를 뿌려 회랑을 연쇄 절단한다.",
           damageBonus: 6,
           cooldownMultiplier: 0.92,
           pierceBonus: 1,
           chainBonus: 1,
           chainRangeBonus: 22,
+          onHazardHit: {
+            kind: "relay_sever",
+            burstCount: 1,
+            range: 236,
+            damageMultiplier: 0.8,
+            speedMultiplier: 1.14,
+            color: "#dffcff",
+          },
           firePattern: {
             offsets: [-0.3, -0.12, 0.12, 0.3],
             damageMultiplier: 0.54,
@@ -2022,12 +2035,20 @@
               label: "Sky Lance Battery",
               traitLabel: "칠연 천공망",
               statusNote:
-                "Sky Lance Battery가 화면 폭의 천공망을 깔아 후열 포대와 차폐선을 동시에 찢는다.",
+                "Sky Lance Battery가 화면 폭의 천공망을 깔고 relay pylon마다 추가 천공 절개를 뿌려 후열과 회랑을 동시에 찢는다.",
               damageBonus: 10,
               cooldownMultiplier: 0.88,
               pierceBonus: 2,
               chainBonus: 1,
               chainRangeBonus: 38,
+              onHazardHit: {
+                kind: "relay_sever",
+                burstCount: 2,
+                range: 284,
+                damageMultiplier: 0.88,
+                speedMultiplier: 1.18,
+                color: "#ffffff",
+              },
               firePattern: {
                 offsets: [-0.36, -0.22, -0.08, 0.08, 0.22, 0.36],
                 damageMultiplier: 0.56,
@@ -2044,12 +2065,20 @@
               label: "Stormspire Needle",
               traitLabel: "삼중 첨탑 관통",
               statusNote:
-                "Stormspire Needle이 좁은 삼중 첨탑 레일로 코어와 엘리트를 꿰고, 중심 적중점에서 전도 파편이 옆 열을 갈라낸다.",
+                "Stormspire Needle이 좁은 삼중 첨탑 레일로 코어와 엘리트를 꿰고, relay pylon 적중 시 절개 파편이 linked pylon까지 꿰뚫는다.",
               damageBonus: 16,
               cooldownMultiplier: 0.94,
               pierceBonus: 4,
               chainBonus: 1,
               chainRangeBonus: 18,
+              onHazardHit: {
+                kind: "relay_sever",
+                burstCount: 2,
+                range: 264,
+                damageMultiplier: 1.05,
+                speedMultiplier: 1.22,
+                color: "#fff5dd",
+              },
               firePattern: {
                 offsets: [-0.08, 0.08],
                 damageMultiplier: 0.78,
@@ -4384,6 +4413,7 @@
       doctrineStatusNote: null,
       doctrineFirePattern: null,
       doctrineOnHit: null,
+      doctrineOnHazardHit: null,
       capstoneFire: null,
       capstoneOnHit: null,
       capstoneOnBounce: null,
@@ -4419,6 +4449,7 @@
       stats.doctrineStatusNote = doctrineWeaponForm.statusNote;
       stats.doctrineFirePattern = doctrineWeaponForm.firePattern;
       stats.doctrineOnHit = doctrineWeaponForm.onHit || null;
+      stats.doctrineOnHazardHit = doctrineWeaponForm.onHazardHit || null;
       stats.damage += doctrineWeaponForm.damageBonus || 0;
       stats.cooldown = clamp(
         stats.cooldown * (doctrineWeaponForm.cooldownMultiplier || 1),
@@ -6537,6 +6568,7 @@
     applyForgeChoice,
     shouldUseFieldGrant,
     shouldRunCatalystDraft,
+    getDoctrineWeaponForm,
     getDoctrineCapstoneDef,
     getCatalystCapstone,
     shouldOpenForgePackage,
@@ -8285,7 +8317,12 @@
       for (let index = 0; index < 10; index += 1) {
         state.particles.push(createParticle(hazard.x, hazard.y, "#ffd7a6", 1));
       }
-      pushCombatFeed(`${hazard.label} 코어 파괴. 점거 구역이 붕괴했다.`, "CORE");
+      pushCombatFeed(
+        hazard.type === "relay"
+          ? `${hazard.label} 절단. 화염 회랑이 붕괴했다.`
+          : `${hazard.label} 코어 파괴. 점거 구역이 붕괴했다.`,
+        "CORE"
+      );
     }
   }
 
@@ -8449,6 +8486,12 @@
         ? {
             ...weapon.doctrineOnHit,
             remainingBursts: weapon.doctrineOnHit.burstCount,
+          }
+        : null,
+      doctrineOnHazardHit: weapon.doctrineOnHazardHit
+        ? {
+            ...weapon.doctrineOnHazardHit,
+            remainingBursts: weapon.doctrineOnHazardHit.burstCount,
           }
         : null,
       capstoneOnHit: weapon.capstoneOnHit
@@ -9106,6 +9149,65 @@
       emitted += 1;
     }
     onHit.remainingBursts = 0;
+  }
+
+  function emitRelaySeverBursts(projectile, sourceHazard) {
+    const onHazardHit = projectile && projectile.doctrineOnHazardHit;
+    if (
+      !sourceHazard ||
+      !onHazardHit ||
+      onHazardHit.kind !== "relay_sever" ||
+      onHazardHit.remainingBursts <= 0 ||
+      sourceHazard.type !== "relay"
+    ) {
+      return;
+    }
+    const relayTargets = getRelayLinksForHazard(sourceHazard)
+      .filter((hazard) => isHazardCoreTarget(hazard) && hazard.coreHp > 0)
+      .slice(0, onHazardHit.remainingBursts);
+    if (relayTargets.length < onHazardHit.remainingBursts) {
+      const fallbackTargets = state.hazards
+        .filter(
+          (hazard) =>
+            hazard !== sourceHazard &&
+            !relayTargets.includes(hazard) &&
+            isHazardCoreTarget(hazard) &&
+            hazard.type === "relay" &&
+            hazard.coreHp > 0 &&
+            Math.hypot(hazard.x - sourceHazard.x, hazard.y - sourceHazard.y) <= onHazardHit.range
+        )
+        .sort(
+          (left, right) =>
+            Math.hypot(left.x - sourceHazard.x, left.y - sourceHazard.y) -
+            Math.hypot(right.x - sourceHazard.x, right.y - sourceHazard.y)
+        )
+        .slice(0, onHazardHit.remainingBursts - relayTargets.length);
+      relayTargets.push(...fallbackTargets);
+    }
+    for (const hazard of relayTargets) {
+      const angle = Math.atan2(hazard.y - sourceHazard.y, hazard.x - sourceHazard.x);
+      const launchOffset = sourceHazard.coreRadius + projectile.radius + 4;
+      state.projectiles.push(
+        createDerivedProjectile(projectile, angle, {
+          x: sourceHazard.x + Math.cos(angle) * launchOffset,
+          y: sourceHazard.y + Math.sin(angle) * launchOffset,
+          speed: (Math.hypot(projectile.vx, projectile.vy) || 1) * onHazardHit.speedMultiplier,
+          radius: Math.max(projectile.radius - 0.1, 5),
+          damage: round(projectile.damage * onHazardHit.damageMultiplier, 1),
+          life: 0.34,
+          pierce: 1,
+          bounce: 0,
+          chain: 0,
+          chainRange: 0,
+          color: onHazardHit.color,
+          doctrineOnHit: null,
+          doctrineOnHazardHit: null,
+          capstoneOnHit: null,
+          capstoneOnBounce: null,
+        })
+      );
+    }
+    onHazardHit.remainingBursts = 0;
   }
 
   function emitMirrorSplit(projectile) {
@@ -9777,6 +9879,7 @@
             const distance = Math.hypot(projectile.x - hazard.x, projectile.y - hazard.y);
             if (distance < projectile.radius + hazard.coreRadius) {
               hazard.coreHp -= projectile.damage * getHazardCoreDamageMultiplier(hazard);
+              emitRelaySeverBursts(projectile, hazard);
               state.particles.push(createParticle(projectile.x, projectile.y, "#ffd7a6", 0.7));
               if (projectile.pierce > 0) {
                 projectile.pierce -= 1;
