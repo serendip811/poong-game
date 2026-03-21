@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 01:20 KST
+  Findings:
+  - The run is longer and richer now, but `shouldUseFieldGrant()` still turns most non-armory clears from `Wave 3+` into a free `Field Cache`, so a large share of progression is effectively guaranteed instead of fought over. That is generous pacing, not rerun-hungry economy.
+  - Because `Field Cache` pulls from evolutions, systems, affixes, and mods at `0` cost, scrap tension fades too often between the two big armories. The player gets stronger reliably, but rarely feels the greed of "bank now, risk now, or miss the spike I actually want."
+  - This smooths over build drama. Visible upgrades exist, yet too many runs will broaden through safe cheap gains rather than hard commitments, painful skips, or meaningful underpowered stretches that make the next payoff exciting.
+  - The docs still describe a `5-wave / 7-minute` prototype while the code now authors a `12-wave` three-act run. That mismatch shows up in reward cadence: the game is still protecting the player with constant free growth instead of trusting a longer-form roguelite curve with sharper scarcity and bigger commitment windows.
+  Top Priority: Rework `Field Cache` into a contested reward layer instead of an automatic free upgrade after most waves, so between-wave growth asks for a real sacrifice or timing decision rather than handing out reliable forward progress.
+  Why Now: Until growth has cost, scarcity, or risk, the run will feel like guided completion instead of a build chase worth replaying.
+  Do Not Repeat: Do not solve this by adding more cache card variety while the core reward cadence still guarantees free progress.
+
 - 2026-03-22 01:05 KST
   Findings:
   - The game now has `Wave 1-12`, but the run still feels authored like a `5-wave / 7-minute` MVP with extra waves bolted on. A player can feel that mismatch: the structure does not yet create the long, rising hunger a rerun-heavy action roguelite needs.
@@ -399,6 +409,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 02:05 KST
+  Changed: reworked `Field Cache` in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from a free mid-run upgrade handout into a paid-or-pass pressure valve. Cache drafts now surface two discounted instant-install cards plus a zero-cost `Emergency Vent` recovery option, field-cache picks now actually spend scrap and can be unaffordable, and the forge/feed copy now frames the stop as a greed decision about buying tempo now versus banking for the next armory. [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts that non-fallback cache cards are discounted but paid, and that the free bailout still exists.
+  Why: the latest critique's Top Priority was still open because `Field Cache` was granting too much reliable zero-cost progression between armories. I took the highest-value bounded interpretation as "keep the fast cache cadence, but make every cache ask for an explicit scrap sacrifice or a visible pass" so the run regains scarcity and timing tension without falling back to full forge spam.
+  Follow-up risk: caches now create real economy pressure, but they still appear after most non-armory waves. If the cadence still feels too generous once costs land, the next pass should gate cache appearance by wave bracket or combat performance instead of returning to free growth.
 
 - 2026-03-22 01:42 KST
   Changed: re-authored the run spine in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) into a clearer `4-4-4` structure by moving the first `Act Break Armory` up to after Wave 4, turning `Wave 4` into an actual `Meltdown` finale, and promoting `Wave 5` into the larger-arena `Afterglow` opener for Act 2. I also rewrote `Wave 8` into `Forgecross`, a second-act capstone that mixes early `warden` pressure into bastion territory before the late armory, and updated the wave-track HUD plus forge copy so the run now visibly reads as `Act 1 / Act 2 / Act 3` instead of one long prototype lane. [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts the earlier armory breakpoint, act labels, and the new Wave 5/Wave 8 role changes.

@@ -191,13 +191,18 @@ assert.equal(game.shouldUseFieldGrant({ nextWave: 12, finalForge: true }), false
 const fieldGrantBuild = game.createInitialBuild("relay_oath");
 fieldGrantBuild.pendingCores = [];
 const fieldGrantChoices = game.buildFieldGrantChoices(fieldGrantBuild, () => 0, 4);
-assert.ok(fieldGrantChoices.length >= 1);
-assert.ok(fieldGrantChoices.length <= 2);
+assert.ok(fieldGrantChoices.length >= 2);
+assert.ok(fieldGrantChoices.length <= 3);
 assert.ok(fieldGrantChoices.every((choice) => ["evolution", "system", "affix", "mod", "fallback"].includes(choice.type)));
-assert.ok(fieldGrantChoices.every((choice) => (choice.cost || 0) === 0));
 assert.ok(fieldGrantChoices.every((choice) => choice.fieldGrant === true));
 assert.ok(fieldGrantChoices.every((choice) => choice.type !== "core"));
 assert.ok(fieldGrantChoices.every((choice) => choice.type !== "utility"));
+assert.ok(fieldGrantChoices.some((choice) => choice.type === "fallback" && choice.cost === 0));
+assert.ok(
+  fieldGrantChoices
+    .filter((choice) => choice.type !== "fallback")
+    .every((choice) => choice.cost >= 10 && choice.originalCost > choice.cost)
+);
 
 const evolutionBuild = game.createInitialBuild("relay_oath");
 const evolutionChoice = game.buildForgeChoices(evolutionBuild, () => 0, 180, { nextWave: 3 }).find(

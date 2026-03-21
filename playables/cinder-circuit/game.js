@@ -1193,6 +1193,8 @@
     { start: 9, end: 12, label: "Act 3 · Crown Siege", shortLabel: "Act 3" },
   ];
   const FIELD_GRANT_MAX_COST = 48;
+  const FIELD_GRANT_DISCOUNT_MULTIPLIER = 0.65;
+  const FIELD_GRANT_MIN_COST = 10;
   const ACT_BREAK_ARMORY_MAX_CHOICES = 6;
   const ACT_BREAK_CHASSIS_MOD_IDS = [
     "drive_sync",
@@ -4142,10 +4144,22 @@
     if (!choice) {
       return null;
     }
+    const originalCost = Math.max(0, choice.cost || 0);
+    const fieldGrantCost =
+      choice.type === "fallback"
+        ? 0
+        : Math.max(
+            FIELD_GRANT_MIN_COST,
+            Math.round(originalCost * FIELD_GRANT_DISCOUNT_MULTIPLIER)
+          );
     return {
       ...choice,
-      cost: 0,
-      slotText: "현장 장착",
+      cost: fieldGrantCost,
+      originalCost,
+      slotText:
+        choice.type === "fallback"
+          ? "현장 안정화"
+          : `현장 장착 · 할인 ${Math.max(0, originalCost - fieldGrantCost)}`,
       fieldGrant: true,
     };
   }
@@ -4170,9 +4184,10 @@
         id: "fieldgrant:emergency_vent",
         tag: "CACHE",
         title: "Emergency Vent",
-        description: "전장 보급품이 냉각제와 간이 수복만 남겼다.",
+        description: "전장 보급품이 냉각제와 간이 수복만 남겼다. 고철은 아끼고 다음 웨이브로 바로 간다.",
         slotText: "현장 보급",
         cost: 0,
+        laneLabel: "회수",
       })];
     }
     const choices = [];
@@ -4200,17 +4215,16 @@
       choices.push(createFieldGrantCard(choice));
       takenIds.add(choice.id);
     }
-    if (choices.length === 1) {
-      choices.push(createFieldGrantCard({
-        type: "fallback",
-        id: "fieldgrant:emergency_vent",
-        tag: "CACHE",
-        title: "Emergency Vent",
-        description: "남은 보급품이 냉각제와 간이 수복만 남아 즉시 안정화한다.",
-        slotText: "현장 보급",
-        cost: 0,
-      }));
-    }
+    choices.push(createFieldGrantCard({
+      type: "fallback",
+      id: "fieldgrant:emergency_vent",
+      tag: "CACHE",
+      title: "Emergency Vent",
+      description: "고철을 쓰지 않고 열과 체력만 정리한 채 다음 웨이브로 바로 넘긴다.",
+      slotText: "현장 보급",
+      cost: 0,
+      laneLabel: "회수",
+    }));
     return choices;
   }
 
@@ -4223,7 +4237,7 @@
     state.forgeDraftType = "field_grant";
     state.forgeChoices = buildFieldGrantChoices(state.build, Math.random, nextWave);
     pushCombatFeed(
-      "Field Cache 확보. 두 가지 즉시 장착안 중 하나를 고르면 전장을 다시 가동한다.",
+      "Field Cache 확보. 할인 장착으로 지금 고철을 태우거나, Emergency Vent로 자원을 아낀 채 전장을 다시 가동한다.",
       "CACHE"
     );
     setBanner("Field Cache", 0.95);
@@ -5518,11 +5532,11 @@
       return;
     }
     const fieldGrantDraft = state.forgeDraftType === "field_grant";
-    if (!fieldGrantDraft && state.resources.scrap < choice.cost) {
+    if (state.resources.scrap < choice.cost) {
       setBanner("고철 부족", 0.8);
       return;
     }
-    if (!fieldGrantDraft) {
+    if (choice.cost > 0) {
       state.resources.scrap -= choice.cost;
       state.stats.scrapSpent += choice.cost;
     }
@@ -5530,7 +5544,9 @@
     if (fieldGrantDraft) {
       const grantLabel = choice.forgeLaneLabel || choice.laneLabel || choice.tag || "CACHE";
       pushCombatFeed(
-        `${grantLabel} 현장 보급 적용. ${choice.title}을 잠그고 다음 웨이브로 즉시 밀어붙인다.`,
+        choice.type === "fallback"
+          ? `${grantLabel} 현장 보급 적용. 고철은 아낀 채 ${choice.title}로 상태만 정리하고 다음 웨이브를 즉시 연다.`
+          : `${grantLabel} 현장 보급 적용. 고철 ${choice.cost}을 태워 ${choice.title}을 잠그고 다음 웨이브를 즉시 밀어붙인다.`,
         "CACHE"
       );
       refreshDerivedStats(false);
@@ -7280,7 +7296,7 @@
     const armoryLabel = getArmoryLabel(forgeOptions);
     const packageSummary =
       state.forgeDraftType === "field_grant"
-        ? "Field Cache · 2장 중 1픽, 고철 소모 없이 즉시 장착하고 곧바로 다음 웨이브로 이어진다"
+        ? "Field Cache · 할인 장착 2장과 무료 회수 1장 중 1픽, 지금 고철을 태울지 아낄지 고른다"
         : state.forgeDraftType === "armory"
         ? isLateBreakArmory(forgeOptions)
           ? `${armoryLabel} ${state.forgeStep}/${state.forgeMaxSteps} · 6장 중 2픽, 세 번째 베이까지 열린 상태에서 마지막 과투입을 강제한다`
@@ -7295,8 +7311,8 @@
         ? `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 세 장은 완성, 촉매 연소, 안정화로 고정되며 각 카드가 바로 이어질 12초 cash-out 시험을 미리 보여준다.`
         : `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 촉매가 없어도 비상 점화와 안정화 fail-soft 카드가 열리며, 각 카드가 다른 12초 cash-out 시험으로 바로 이어진다.`
       : state.forgeDraftType === "field_grant"
-        ? `고철 ${Math.round(state.resources.scrap)} 보유. Field Cache다. 두 장 중 하나만 즉시 장착하며, 선택이 끝나는 즉시 다음 웨이브가 시작된다. 저렴한 자동 추천 대신 지금 필요한 화력 또는 안정화를 직접 잠근다.`
-      : state.forgeDraftType === "armory"
+        ? `고철 ${Math.round(state.resources.scrap)} 보유. Field Cache다. 할인된 즉시 장착 2장과 무료 Emergency Vent 중 하나를 고른다. 지금 스파이크를 사서 당길지, 고철을 쥐고 다음 큰 포지까지 버틸지 직접 판단해야 한다.`
+        : state.forgeDraftType === "armory"
         ? isLateBreakArmory(forgeOptions)
           ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 8을 넘기며 ${armoryLabel}가 열린다. 세 번째 support bay가 해금됐고, 이번 포지는 6장 중 2장을 골라 4웨이브짜리 최종 전투 구간 전체를 버틸 과한 조합을 잠근다.`
           : `고철 ${Math.round(state.resources.scrap)} 보유. Wave 4를 넘기면 일반 패키지 대신 ${armoryLabel}가 열린다. 이번 포지는 6장 중 2장을 고르며, 주무장 진화와 공세 카드가 여러 장 겹쳐 떠 4웨이브짜리 Act 2 운영을 일찍 잠근다.`
@@ -7335,7 +7351,7 @@
             data-kind="${kind}"
             data-index="${index}"
             data-verb="${choice.verb}"
-            ${state.forgeDraftType !== "field_grant" && state.resources.scrap < choice.cost ? "disabled" : ""}
+            ${state.resources.scrap < choice.cost ? "disabled" : ""}
           >
             <span class="forge-card__tag">${choice.laneLabel ? `${choice.laneLabel} · ${choice.tag}` : choice.tag}</span>
             <h3>${choice.title}</h3>
@@ -7344,7 +7360,11 @@
             <span class="forge-card__meta">${choice.slotText}</span>
             <span class="forge-card__slot">${
               state.forgeDraftType === "field_grant"
-                ? `${index + 1}번 선택 · 즉시 장착`
+                ? state.resources.scrap < choice.cost
+                  ? `${index + 1}번 선택 · 고철 부족`
+                  : choice.cost > 0
+                    ? `${index + 1}번 선택 · 현장 고철 ${choice.cost}`
+                    : `${index + 1}번 선택 · 무료 회수`
                 : state.resources.scrap < choice.cost
                 ? `${index + 1}번 선택 · 고철 부족`
                 : `${index + 1}번 선택 · 고철 ${choice.cost}`
