@@ -403,6 +403,345 @@
     },
   ];
 
+  const DOCTRINE_LATE_WAVE_VARIANTS = {
+    mirror_hunt: {
+      8: {
+        label: "Wave 9 · Relay Hunt",
+        note: "Mirror Hunt의 Act 3 시작점. warden 봉쇄선보다 빠른 측면 추적과 외곽 청소가 먼저 시험된다. 사냥 교리를 탄 런은 전장을 크게 돌며 흩어진 위협을 먼저 걷어낼수록 강해진다.",
+        directive:
+          "relay hunt. 가벼운 추적 무리가 외곽 회수선에 먼저 몰리고, 짧은 폭주가 회전 루트를 계속 갈아엎는다. 한 lane을 억지로 열기보다 넓은 외곽 스윕으로 backline을 먼저 잘라야 한다.",
+        driveGainFactor: 1.42,
+        activeCap: 43,
+        spawnBudget: 190,
+        mix: {
+          scuttler: 0.22,
+          brute: 0.12,
+          shrike: 0.36,
+          mortar: 0.12,
+          warden: 0.18,
+        },
+        hazard: {
+          label: "Relay Lances",
+          interval: 7.8,
+          count: 4,
+          radius: 66,
+          telegraph: 0.76,
+          duration: 3.8,
+          damage: 13,
+        },
+      },
+      9: {
+        label: "Wave 10 · Split Pursuit",
+        note: "Mirror Hunt 중반부는 이동하는 화구와 경량 추격선으로 사냥 회전을 시험한다. 길을 여는 순간 더 깊게 들어가 다음 측면을 바로 뜯어낼 수 있어야 한다.",
+        directive:
+          "split pursuit. 빠른 shrike 편대와 얇은 warden 사선이 동시에 물러나며 다시 물어뜯는다. 드리프트 화구를 이용해 군집을 쪼개고, 벽 반사나 자율 추격으로 외곽 정리를 이어가야 한다.",
+        driveGainFactor: 1.46,
+        activeCap: 45,
+        spawnBudget: 202,
+        mix: {
+          scuttler: 0.18,
+          brute: 0.12,
+          shrike: 0.42,
+          mortar: 0.1,
+          warden: 0.18,
+        },
+        hazard: {
+          label: "Relay Pursuit",
+          type: "drift",
+          interval: 8.1,
+          count: 3,
+          radius: 72,
+          telegraph: 0.7,
+          duration: 5.5,
+          damage: 14,
+          driftSpeed: 132,
+          driftOrbit: 0.5,
+        },
+      },
+      10: {
+        label: "Wave 11 · Glass Run",
+        note: "사냥 교리의 후반 시험은 정면 성벽보다 옆구리 연쇄 정리다. 가벼운 적이 계속 벌어져 들어오므로 플레이어 화력과 자율 화력이 서로 다른 외곽을 동시에 치워야 한다.",
+        directive:
+          "glass run. 짧은 교차 폭주와 추격조 확산. 중앙 정리보다 외곽 둘레를 빠르게 비워 다음 진입 각을 선점하는지가 핵심이다.",
+        driveGainFactor: 1.5,
+        activeCap: 47,
+        spawnBudget: 218,
+        mix: {
+          scuttler: 0.2,
+          brute: 0.1,
+          shrike: 0.4,
+          mortar: 0.14,
+          warden: 0.16,
+        },
+        hazard: {
+          label: "Glass Crossfire",
+          interval: 7.1,
+          count: 3,
+          radius: 76,
+          telegraph: 0.68,
+          duration: 4.2,
+          damage: 14,
+        },
+      },
+      11: {
+        label: "Wave 12 · Mirror Crown",
+        note: "Mirror Hunt 결산은 무거운 성벽보다 계속 갈라지는 측면 압박을 정리하는 마지막 사냥 시험이다. 추적 장치가 살아 있다면 플레이어는 빈 쪽을 과감히 넘나들며 다음 교차선을 먼저 끊을 수 있다.",
+        directive:
+          "mirror crown. 사중 교차 폭주와 빠른 측면 재진입. 벽 반사, 추적 드론, drive 돌입을 이어 붙여 화면 가장자리부터 역순으로 청소해야 한다.",
+        driveGainFactor: 1.56,
+        activeCap: 49,
+        spawnBudget: 236,
+        mix: {
+          scuttler: 0.16,
+          brute: 0.1,
+          shrike: 0.42,
+          mortar: 0.12,
+          warden: 0.2,
+        },
+        hazard: {
+          label: "Mirror Crown Crossfire",
+          interval: 6.8,
+          count: 4,
+          radius: 82,
+          telegraph: 0.66,
+          duration: 4.4,
+          damage: 15,
+        },
+      },
+    },
+    kiln_bastion: {
+      8: {
+        label: "Wave 9 · Foundry Hold",
+        note: "Kiln Bastion의 Act 3는 움직임보다 점유 유지가 먼저다. 무거운 전열과 포격이 되찾은 구역을 다시 빼앗으러 오므로, 거점장을 중심으로 같은 지대를 반복 reclaim해야 한다.",
+        directive:
+          "foundry hold. 강화 bastion 코어와 브루트 전열이 함께 밀고 들어온다. 열린 lane을 따라 도주하는 대신, 되찾은 pocket 안에서 거점장을 굴리며 회수선과 수리선을 함께 지켜야 한다.",
+        driveGainFactor: 1.4,
+        activeCap: 42,
+        spawnBudget: 192,
+        mix: {
+          scuttler: 0.08,
+          brute: 0.28,
+          shrike: 0.12,
+          mortar: 0.2,
+          warden: 0.32,
+        },
+        hazard: {
+          label: "Foundry Bastion",
+          type: "territory",
+          interval: 8.8,
+          count: 2,
+          radius: 120,
+          telegraph: 0.8,
+          duration: 10.2,
+          damage: 13,
+          coreHp: 74,
+          coreRadius: 19,
+          turretInterval: 0.84,
+          turretDamage: 11,
+          turretSpeed: 238,
+          enemyPullRadius: 188,
+        },
+      },
+      9: {
+        label: "Wave 10 · Reclaim Kiln",
+        note: "포격을 맞으며 점거 코어를 깨야 하는 대신, 한 번 되찾은 구역 안에서는 버티는 가치가 더 크다. Kiln Sentry와 방호 계통이 살아 있을수록 후반 재진입 루트가 뚜렷해진다.",
+        directive:
+          "reclaim kiln. 이동 화구가 느리게 거점 바깥을 훑고, 브루트와 mortar가 복귀선을 끊으러 온다. 빈 외곽을 도는 것보다 다시 밟을 용광 pocket를 남기는 운영이 중요하다.",
+        driveGainFactor: 1.44,
+        activeCap: 44,
+        spawnBudget: 204,
+        mix: {
+          scuttler: 0.08,
+          brute: 0.3,
+          shrike: 0.1,
+          mortar: 0.24,
+          warden: 0.28,
+        },
+        hazard: {
+          label: "Kiln Drift",
+          type: "drift",
+          interval: 8.4,
+          count: 2,
+          radius: 90,
+          telegraph: 0.76,
+          duration: 6.1,
+          damage: 15,
+          driftSpeed: 98,
+          driftOrbit: 0.3,
+        },
+      },
+      10: {
+        label: "Wave 11 · Bastion Furnace",
+        note: "Kiln Bastion 후반은 단순 warden 절단이 아니라 전열과 점거지를 함께 태우는 시험이다. 느린 추격과 두꺼운 브루트가 반복 재진입해, 같은 구역을 다시 붙잡는 힘이 강할수록 전장이 쉬워진다.",
+        directive:
+          "bastion furnace. 넓은 bastion 권역과 포격 겹침. 되찾은 중심축을 버리면 전열이 다시 두꺼워지고, 버티면 포탑과 지뢰 지대가 전장을 대신 씹어 먹는다.",
+        driveGainFactor: 1.48,
+        activeCap: 47,
+        spawnBudget: 220,
+        mix: {
+          scuttler: 0.06,
+          brute: 0.32,
+          shrike: 0.08,
+          mortar: 0.24,
+          warden: 0.3,
+        },
+        hazard: {
+          label: "Furnace Bastion",
+          type: "territory",
+          interval: 7.9,
+          count: 3,
+          radius: 118,
+          telegraph: 0.76,
+          duration: 10.4,
+          damage: 14,
+          coreHp: 82,
+          coreRadius: 19,
+          turretInterval: 0.8,
+          turretDamage: 12,
+          turretSpeed: 244,
+          enemyPullRadius: 194,
+        },
+      },
+      11: {
+        label: "Wave 12 · Bulwark Crown",
+        note: "Kiln Bastion 결산은 되찾은 공간을 끝까지 요새로 바꾸는 시험이다. 무거운 전열, 포격, 봉쇄선이 함께 들어오지만 거점을 굳히면 마지막 전장을 역으로 잠글 수 있다.",
+        directive:
+          "bulwark crown. 사중 용광 폭주와 bastion 중첩. 무작정 회피하면 계속 밀리고, 거점장 안에서 전열을 녹이며 다음 pocket를 이어 붙이면 후반이 열린다.",
+        driveGainFactor: 1.54,
+        activeCap: 50,
+        spawnBudget: 238,
+        mix: {
+          scuttler: 0.04,
+          brute: 0.34,
+          shrike: 0.08,
+          mortar: 0.22,
+          warden: 0.32,
+        },
+        hazard: {
+          label: "Bulwark Crown",
+          type: "territory",
+          interval: 7.2,
+          count: 3,
+          radius: 124,
+          telegraph: 0.7,
+          duration: 10.8,
+          damage: 15,
+          coreHp: 88,
+          coreRadius: 20,
+          turretInterval: 0.76,
+          turretDamage: 12,
+          turretSpeed: 248,
+          enemyPullRadius: 200,
+        },
+      },
+    },
+    storm_artillery: {
+      8: {
+        label: "Wave 9 · Lance Siege",
+        note: "Storm Artillery의 Act 3는 전방 난전보다 후열 포대 해체가 먼저다. warden과 mortar가 긴 사선을 겹치며 버티기 때문에, 멀리 찌르는 화력일수록 먼저 유리해진다.",
+        directive:
+          "lance siege. 후열 포격조와 얇은 warden 성벽이 길게 겹친다. 한가운데를 도는 것보다 긴 천공선으로 backline을 찢고, 남은 전열을 나중에 정리하는 편이 훨씬 안전하다.",
+        driveGainFactor: 1.42,
+        activeCap: 42,
+        spawnBudget: 192,
+        mix: {
+          scuttler: 0.08,
+          brute: 0.16,
+          shrike: 0.14,
+          mortar: 0.28,
+          warden: 0.34,
+        },
+        hazard: {
+          label: "Lance Grid",
+          interval: 8.4,
+          count: 3,
+          radius: 70,
+          telegraph: 0.78,
+          duration: 4.1,
+          damage: 14,
+        },
+      },
+      9: {
+        label: "Wave 10 · Thunder Corridor",
+        note: "Storm Artillery 중반은 이동 화구 사이로 긴 관통선을 오래 유지하는 시험이다. 뒤쪽 포격이 살아 있는 동안 좁은 사선이라도 계속 열어 두는 빌드가 크게 보상받는다.",
+        directive:
+          "thunder corridor. 추적 화구가 천천히 corridor를 접고, mortar가 탈출 루트 밖에서 사격을 이어간다. 긴 라인을 유지하며 후열을 먼저 꿰뚫는 인내가 필요하다.",
+        driveGainFactor: 1.46,
+        activeCap: 44,
+        spawnBudget: 204,
+        mix: {
+          scuttler: 0.08,
+          brute: 0.18,
+          shrike: 0.12,
+          mortar: 0.3,
+          warden: 0.32,
+        },
+        hazard: {
+          label: "Thunder Corridor",
+          type: "drift",
+          interval: 8.3,
+          count: 2,
+          radius: 96,
+          telegraph: 0.76,
+          duration: 6,
+          damage: 15,
+          driftSpeed: 106,
+          driftOrbit: 0.36,
+        },
+      },
+      10: {
+        label: "Wave 11 · Sky Battery",
+        note: "후반 artillery 시험은 backline 포대 과밀이다. 먼 적 무리를 동시에 꿰뚫거나 유도 낙뢰로 끊지 못하면 전장이 포격 궤도로 서서히 닫힌다.",
+        directive:
+          "sky battery. 포격조 밀도 상승과 재배치된 warden 차폐선. 짧은 근접 교전보다 긴 절개와 자동 포격 연동이 훨씬 큰 값을 낸다.",
+        driveGainFactor: 1.5,
+        activeCap: 47,
+        spawnBudget: 220,
+        mix: {
+          scuttler: 0.08,
+          brute: 0.16,
+          shrike: 0.1,
+          mortar: 0.34,
+          warden: 0.32,
+        },
+        hazard: {
+          label: "Sky Battery Surge",
+          interval: 7.4,
+          count: 3,
+          radius: 84,
+          telegraph: 0.7,
+          duration: 4.5,
+          damage: 15,
+        },
+      },
+      11: {
+        label: "Wave 12 · Lance Crown",
+        note: "Storm Artillery 결산은 포대 군락을 끝까지 꿰뚫는 마지막 siege 시험이다. 후열을 지우는 시간이 짧을수록 중앙은 자연히 열린다.",
+        directive:
+          "lance crown. 사중 천공 폭주와 두꺼운 후열 포격. 정면 난전을 오래 붙들기보다 먼 포대부터 지워 전장의 사격 밀도를 무너뜨려야 한다.",
+        driveGainFactor: 1.56,
+        activeCap: 49,
+        spawnBudget: 238,
+        mix: {
+          scuttler: 0.06,
+          brute: 0.16,
+          shrike: 0.1,
+          mortar: 0.36,
+          warden: 0.32,
+        },
+        hazard: {
+          label: "Lance Crown Barrage",
+          interval: 6.9,
+          count: 4,
+          radius: 86,
+          telegraph: 0.66,
+          duration: 4.7,
+          damage: 16,
+        },
+      },
+    },
+  };
+
   const MAX_WAVES = WAVE_CONFIG.length;
   const POST_WAVE_LOOT_GRACE = 2.4;
   const FINAL_CASHOUT_DURATION = 12;
@@ -440,6 +779,32 @@
     return {
       width: arena && Number.isFinite(arena.width) ? arena.width : ARENA_WIDTH,
       height: arena && Number.isFinite(arena.height) ? arena.height : ARENA_HEIGHT,
+    };
+  }
+
+  function resolveWaveConfig(index, build = null) {
+    const baseConfig = WAVE_CONFIG[clamp(index, 0, MAX_WAVES - 1)];
+    if (!baseConfig || index < LATE_BREAK_ARMORY_WAVE - 1 || !build || !build.bastionDoctrineId) {
+      return baseConfig;
+    }
+    const doctrine = getBastionDoctrineDef(build);
+    const variantSet = doctrine ? DOCTRINE_LATE_WAVE_VARIANTS[doctrine.id] : null;
+    const override = variantSet ? variantSet[index] : null;
+    if (!override) {
+      return baseConfig;
+    }
+    return {
+      ...baseConfig,
+      ...override,
+      mix: override.mix ? { ...override.mix } : { ...baseConfig.mix },
+      hazard: override.hazard
+        ? {
+            ...(baseConfig.hazard || {}),
+            ...override.hazard,
+          }
+        : baseConfig.hazard
+          ? { ...baseConfig.hazard }
+          : null,
     };
   }
 
@@ -5670,6 +6035,7 @@
     GAME_TITLE,
     MAX_WAVES,
     WAVE_CONFIG,
+    resolveWaveConfig,
     FINAL_CASHOUT_DURATION,
     ENEMY_DEFS,
     CORE_DEFS,
@@ -6374,7 +6740,7 @@
   }
 
   function beginWave(index) {
-    const config = WAVE_CONFIG[index];
+    const config = resolveWaveConfig(index, state.build);
     const arena = getArenaSize(config);
     state.waveIndex = index;
     state.phase = "wave";

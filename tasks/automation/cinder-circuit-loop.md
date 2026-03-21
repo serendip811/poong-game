@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 14:20 KST
+  Findings:
+  - The run is now long enough to expose a harsher truth: too much build identity is still menu-authored instead of combat-authored. `Architecture Draft`, repeated `Bastion Draft` beats, two Armories, `Catalyst Crucible`, and the final forge do a lot of declaring, but Waves `9-12` still do not make the player feel radically different for choosing one doctrine over another.
+  - Act 3 pressure remains too universal. `lockgrid`, `emberward`, `starforge`, and `cindercrown` mostly ask every build to solve the same stack of problems: reopen space, cut the backline, survive hazard overlap, keep rotating. That supports competence, not rerun hunger.
+  - The most legible power spikes still live in satellites, drones, sentries, and doctrine text. Those helpers are useful, but a release-feeling action roguelite needs the main gun itself to become the thing players are desperate to see again, with branch-specific visual and functional absurdity during live combat.
+  - The bigger arenas help, but the game still spends too much of its new runtime on administered decision beats and not enough on uninterrupted combat stretches where a locked build gets to dominate a distinct late-run problem for multiple waves.
+  Top Priority: Replace the generic Act 3 back half with doctrine-specific late-run encounter brackets after `Wave 8`, so each build path gets its own combat asks and payoff window instead of sharing one hazard-stack gauntlet with different helper loadouts.
+  Why Now: Extra waves only earn their keep when different builds want to replay them for different reasons.
+  Do Not Repeat: Do not answer this with more forge cards or another capstone if Waves `9-12` still test every run the same way.
+
 - 2026-03-22 13:25 KST
   Findings:
   - The run now has enough bracket length to expose a bigger structural miss: the most outrageous weapon payoff is still deferred to the final forge and a `12` second cash-out. If the true monster form only exists in the epilogue, the run never actually lets the player live inside its best fantasy.
@@ -531,6 +541,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 14:46 KST
+  Changed: replaced the generic shared Act 3 bracket in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) with doctrine-resolved late-wave variants for `Wave 9-12`. After `Wave 8`, `Mirror Hunt`, `Kiln Bastion`, and `Storm Artillery` now each rewrite the late bracket’s labels, encounter notes, directives, enemy mixes, and hazard tuning so the run asks different questions: hunt builds get faster perimeter-chase exams, bastion builds get heavier reclaim-and-hold territory fights, and artillery builds get backline siege brackets with denser mortar pressure. I also extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert that these doctrine-specific Act 3 variants actually resolve and stay distinct from the static base table.
+  Why: the newest critique’s Top Priority was to stop making every post-`Wave 8` run solve the same hazard-stack gauntlet. The highest-value bounded interpretation was to author doctrine-specific encounter overlays on the existing late-wave structure, because that changes what late builds are asked to prove in combat without widening this pass into another progression menu or a new enemy family.
+  Follow-up risk: the late bracket now branches by doctrine, but it still reuses the existing enemy roster and hazard families under different compositions. If the next critique still wants stronger rerun hunger, the next pass should add one doctrine-exclusive late hazard behavior or enemy modifier so the branch identity is not only authored through mix and pressure tuning.
 
 - 2026-03-22 14:05 KST
   Changed: moved the catalyst payoff into live Act 3 in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) instead of leaving it as a last-second final-forge reveal. Finisher catalysts can now start dropping from Act 3 elites as soon as the recipe is ready, and the first eligible post-wave stop in Act 3 now becomes a one-time `Catalyst Crucible` draft that offers a free `catalyst_reforge` ignition, a free stabilized support-route ignition, or a hold-the-catalyst vent. That draft has its own banner/feed/HUD copy so the player is explicitly told they are cashing the monster form into the remaining bracket, and [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts the new Act 3 catalyst draft gate and card payload.
