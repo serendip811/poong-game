@@ -399,6 +399,7 @@
   };
 
   const MAX_SUPPORT_SYSTEM_TIER = 3;
+  const MAX_SUPPORT_BAYS = 2;
   const SUPPORT_SYSTEM_DEFS = {
     ember_ring: {
       id: "ember_ring",
@@ -1413,6 +1414,7 @@
     cashoutFailSoftId: null,
     supportSystemId: null,
     supportSystemTier: 0,
+    supportSystems: [],
     pendingCores: [],
     upgrades: [],
     damageBonus: 0,
@@ -1634,45 +1636,146 @@
   }
 
   function getSupportSystemDef(build) {
-    if (!build || !build.supportSystemId) {
+    const installedSystems = getInstalledSupportSystems(build);
+    if (installedSystems.length === 0) {
       return null;
     }
-    return SUPPORT_SYSTEM_DEFS[build.supportSystemId] || null;
+    return SUPPORT_SYSTEM_DEFS[installedSystems[0].id] || null;
+  }
+
+  function sanitizeSupportSystems(systems) {
+    if (!Array.isArray(systems)) {
+      return [];
+    }
+    const next = [];
+    const seen = new Set();
+    for (const entry of systems) {
+      if (!entry || !SUPPORT_SYSTEM_DEFS[entry.id] || seen.has(entry.id)) {
+        continue;
+      }
+      seen.add(entry.id);
+      next.push({
+        id: entry.id,
+        tier: clamp(Math.round(entry.tier || 1), 1, MAX_SUPPORT_SYSTEM_TIER),
+      });
+      if (next.length >= MAX_SUPPORT_BAYS) {
+        break;
+      }
+    }
+    return next;
+  }
+
+  function getInstalledSupportSystems(build) {
+    if (!build) {
+      return [];
+    }
+    const normalized = sanitizeSupportSystems(build.supportSystems);
+    if (normalized.length > 0) {
+      return normalized;
+    }
+    if (build.supportSystemId && SUPPORT_SYSTEM_DEFS[build.supportSystemId]) {
+      return [
+        {
+          id: build.supportSystemId,
+          tier: clamp(build.supportSystemTier || 1, 1, MAX_SUPPORT_SYSTEM_TIER),
+        },
+      ];
+    }
+    return [];
   }
 
   function computeSupportSystemStats(build) {
-    const system = getSupportSystemDef(build);
-    if (!system) {
+    const installedSystems = getInstalledSupportSystems(build);
+    if (installedSystems.length === 0) {
       return null;
     }
-    const tier = clamp(build.supportSystemTier || 0, 0, MAX_SUPPORT_SYSTEM_TIER);
-    const tierDef = system.tiers[tier];
-    if (!tierDef) {
+    const systems = installedSystems
+      .map((entry, systemIndex) => {
+        const system = SUPPORT_SYSTEM_DEFS[entry.id];
+        const tierDef = system && system.tiers[entry.tier];
+        if (!system || !tierDef) {
+          return null;
+        }
+        return {
+          id: system.id,
+          tier: entry.tier,
+          label: tierDef.label,
+          title: tierDef.title,
+          color: system.color,
+          orbitColor: system.orbitColor,
+          strokeColor: system.strokeColor,
+          renderShape: system.renderShape,
+          systemIndex,
+          ...tierDef,
+        };
+      })
+      .filter(Boolean);
+    if (systems.length === 0) {
       return null;
     }
+    const satellites = [];
+    systems.forEach((system, systemIndex) => {
+      for (let index = 0; index < system.orbitCount; index += 1) {
+        satellites.push({
+          systemId: system.id,
+          systemIndex,
+          color: system.color,
+          strokeColor: system.strokeColor,
+          renderShape: system.renderShape,
+          orbitRadius: system.orbitRadius,
+          orbitSpeed: system.orbitSpeed,
+          satelliteRadius: system.satelliteRadius,
+          touchDamage: system.touchDamage,
+          touchCooldown: system.touchCooldown,
+          shotCooldown: system.shotCooldown,
+          shotRange: system.shotRange,
+          shotDamage: system.shotDamage,
+          shotSpeed: system.shotSpeed,
+          interceptRange: system.interceptRange,
+          interceptCooldown: system.interceptCooldown,
+          interceptPulseDamage: system.interceptPulseDamage,
+          interceptPulseRadius: system.interceptPulseRadius,
+          localIndex: index,
+          localCount: system.orbitCount,
+        });
+      }
+    });
+    const primarySystem = systems[0];
     return {
-      id: system.id,
-      label: tierDef.label,
-      tier,
-      orbitCount: tierDef.orbitCount,
-      orbitRadius: tierDef.orbitRadius,
-      orbitSpeed: tierDef.orbitSpeed,
-      satelliteRadius: tierDef.satelliteRadius,
-      touchDamage: tierDef.touchDamage,
-      touchCooldown: tierDef.touchCooldown,
-      shotCooldown: tierDef.shotCooldown,
-      shotRange: tierDef.shotRange,
-      shotDamage: tierDef.shotDamage,
-      shotSpeed: tierDef.shotSpeed,
-      interceptRange: tierDef.interceptRange,
-      interceptCooldown: tierDef.interceptCooldown,
-      interceptPulseDamage: tierDef.interceptPulseDamage,
-      interceptPulseRadius: tierDef.interceptPulseRadius,
-      color: system.color,
-      orbitColor: system.orbitColor,
-      strokeColor: system.strokeColor,
-      renderShape: system.renderShape,
-      statusNote: tierDef.statusNote,
+      id: primarySystem.id,
+      label: systems.map((system) => system.label).join(" + "),
+      tier: Math.max(...systems.map((system) => system.tier)),
+      orbitCount: satellites.length,
+      orbitRadius: round(
+        satellites.reduce((sum, satellite) => sum + satellite.orbitRadius, 0) / satellites.length,
+        1
+      ),
+      orbitSpeed: round(
+        satellites.reduce((sum, satellite) => sum + satellite.orbitSpeed, 0) / satellites.length,
+        2
+      ),
+      satelliteRadius: Math.max(...satellites.map((satellite) => satellite.satelliteRadius)),
+      touchDamage: satellites.reduce((sum, satellite) => sum + satellite.touchDamage, 0),
+      touchCooldown: Math.min(...satellites.map((satellite) => satellite.touchCooldown)),
+      shotCooldown: systems.some((system) => system.shotCooldown > 0)
+        ? Math.min(...systems.filter((system) => system.shotCooldown > 0).map((system) => system.shotCooldown))
+        : 0,
+      shotRange: Math.max(0, ...systems.map((system) => system.shotRange)),
+      shotDamage: systems.reduce((sum, system) => sum + system.shotDamage, 0),
+      shotSpeed: Math.max(0, ...systems.map((system) => system.shotSpeed)),
+      interceptRange: Math.max(0, ...systems.map((system) => system.interceptRange)),
+      interceptCooldown: systems.some((system) => system.interceptCooldown > 0)
+        ? Math.min(...systems.filter((system) => system.interceptCooldown > 0).map((system) => system.interceptCooldown))
+        : 0,
+      interceptPulseDamage: systems.reduce((sum, system) => sum + system.interceptPulseDamage, 0),
+      interceptPulseRadius: Math.max(0, ...systems.map((system) => system.interceptPulseRadius)),
+      color: primarySystem.color,
+      orbitColor: primarySystem.orbitColor,
+      strokeColor: primarySystem.strokeColor,
+      renderShape: primarySystem.renderShape,
+      statusNote: systems.map((system) => system.statusNote).join(" "),
+      systems,
+      satellites,
     };
   }
 
@@ -1681,36 +1784,69 @@
       return [];
     }
     const random = typeof rng === "function" ? rng : Math.random;
-    const currentSystem = getSupportSystemDef(build);
-    const candidateIds = currentSystem ? [currentSystem.id] : shuffle(Object.keys(SUPPORT_SYSTEM_DEFS), random);
-    return candidateIds
+    const installedSystems = getInstalledSupportSystems(build);
+    const installedMap = new Map(installedSystems.map((entry) => [entry.id, entry]));
+    const installChoices = shuffle(
+      Object.keys(SUPPORT_SYSTEM_DEFS).filter((systemId) => !installedMap.has(systemId)),
+      random
+    )
       .map((systemId) => {
+        if (installedSystems.length >= MAX_SUPPORT_BAYS) {
+          return null;
+        }
         const system = SUPPORT_SYSTEM_DEFS[systemId];
-        const nextTier = currentSystem
-          ? clamp((build.supportSystemTier || 0) + 1, 0, MAX_SUPPORT_SYSTEM_TIER)
-          : 1;
+        const tierDef = system && system.tiers[1];
+        if (!system || !tierDef) {
+          return null;
+        }
+        return {
+          type: "system",
+          id: `system:${system.id}:install`,
+          verb: "설치",
+          tag: "SYSTEM",
+          title: tierDef.title,
+          description:
+            installedSystems.length > 0
+              ? `${tierDef.description} 기존 ${installedSystems.map((entry) => SUPPORT_SYSTEM_DEFS[entry.id].tiers[entry.tier].label).join(" + ")}와 병렬 베이에 탑재된다.`
+              : tierDef.description,
+          slotText:
+            installedSystems.length > 0
+              ? `빈 베이 설치 · ${tierDef.slotText}`
+              : tierDef.slotText,
+          systemId: system.id,
+          systemTier: 1,
+          bayAction: "install",
+          cost: tierDef.cost,
+        };
+      })
+      .filter(Boolean);
+    const upgradeChoices = shuffle(installedSystems, random)
+      .map((entry) => {
+        if (entry.tier >= MAX_SUPPORT_SYSTEM_TIER) {
+          return null;
+        }
+        const nextTier = entry.tier + 1;
+        const system = SUPPORT_SYSTEM_DEFS[entry.id];
         const tierDef = system && system.tiers[nextTier];
-        if (
-          !system ||
-          !tierDef ||
-          (build.supportSystemId === system.id && (build.supportSystemTier || 0) >= nextTier)
-        ) {
+        if (!system || !tierDef) {
           return null;
         }
         return {
           type: "system",
           id: `system:${system.id}:t${tierDef.tier}`,
-          verb: build.supportSystemId === system.id ? "증설" : "설치",
+          verb: "증설",
           tag: "SYSTEM",
           title: tierDef.title,
           description: tierDef.description,
-          slotText: tierDef.slotText,
+          slotText: `기존 베이 증설 · ${tierDef.slotText}`,
           systemId: system.id,
           systemTier: tierDef.tier,
+          bayAction: "upgrade",
           cost: tierDef.cost,
         };
       })
       .filter(Boolean);
+    return [...installChoices, ...upgradeChoices];
   }
 
   function shouldOfferSupportSystem(build, options) {
@@ -1721,10 +1857,11 @@
     if (nextWave < FORGE_PACKAGE_START_WAVE) {
       return false;
     }
-    if (!build.supportSystemId) {
-      return true;
-    }
-    return (build.supportSystemTier || 0) < MAX_SUPPORT_SYSTEM_TIER && nextWave >= 4;
+    const installedSystems = getInstalledSupportSystems(build);
+    return (
+      installedSystems.length < MAX_SUPPORT_BAYS ||
+      installedSystems.some((entry) => entry.tier < MAX_SUPPORT_SYSTEM_TIER)
+    );
   }
 
   function shouldForceForgePackage(options) {
@@ -1914,6 +2051,7 @@
         cashoutFailSoftId: BASE_BUILD.cashoutFailSoftId,
         supportSystemId: BASE_BUILD.supportSystemId,
         supportSystemTier: BASE_BUILD.supportSystemTier,
+        supportSystems: BASE_BUILD.supportSystems.slice(),
         pendingCores: [],
         upgrades: [],
         damageBonus: BASE_BUILD.damageBonus,
@@ -2766,11 +2904,11 @@
       takeFirstAvailableChoice(subsystemCandidates, takenIds, "보조 시스템"),
       takeFirstAvailableChoice(sustainCandidates, takenIds, "생존/경제"),
     ].filter(Boolean);
-    const choices = !build.supportSystemId && subsystemCandidates.length > 1
+    const choices = getInstalledSupportSystems(build).length === 0 && subsystemCandidates.length > 1
       ? laneChoices.filter((choice) => choice.laneLabel !== "생존/경제")
       : laneChoices;
     const maxChoices = subsystemCandidates.length > 0 ? 4 : 3;
-    const extraChoicePool = !build.supportSystemId && subsystemCandidates.length > 1
+    const extraChoicePool = getInstalledSupportSystems(build).length === 0 && subsystemCandidates.length > 1
       ? [...subsystemCandidates, ...commitCandidates, ...pivotCandidates, ...sustainCandidates]
       : [...commitCandidates, ...pivotCandidates, ...subsystemCandidates, ...sustainCandidates];
 
@@ -2907,10 +3045,26 @@
       if (!system || !tierDef) {
         return null;
       }
+      const installedSystems = getInstalledSupportSystems(run.build);
+      const existingIndex = installedSystems.findIndex((entry) => entry.id === choice.systemId);
+      let nextSystems;
+      if (existingIndex >= 0) {
+        nextSystems = installedSystems.slice();
+        nextSystems[existingIndex] = {
+          ...nextSystems[existingIndex],
+          tier: Math.max(nextSystems[existingIndex].tier || 1, choice.systemTier || 1),
+        };
+      } else {
+        nextSystems = installedSystems.concat({
+          id: choice.systemId,
+          tier: choice.systemTier || 1,
+        });
+      }
+      run.build.supportSystems = sanitizeSupportSystems(nextSystems);
       run.build.supportSystemId = choice.systemId;
-      run.build.supportSystemTier = Math.max(run.build.supportSystemTier || 0, choice.systemTier || 1);
+      run.build.supportSystemTier = choice.systemTier || 1;
       run.build.upgrades.push(
-        `${choice.systemTier > 1 ? "시스템 증설" : "시스템 설치"}: ${tierDef.label}`
+        `${existingIndex >= 0 ? "시스템 증설" : "시스템 설치"}: ${tierDef.label}`
       );
       return choice;
     }
@@ -3238,6 +3392,19 @@
     if (!systemStats) {
       return "보조 시스템 없음";
     }
+    if (Array.isArray(systemStats.systems) && systemStats.systems.length > 1) {
+      const familySummary = systemStats.systems
+        .map((system) => `${system.label} ${system.orbitCount}기`)
+        .join(" + ");
+      const traits = [
+        systemStats.systems.some((system) => system.shotCooldown > 0) ? "자동 볼트" : null,
+        systemStats.systems.some((system) => system.interceptRange > 0) ? "탄환 요격" : null,
+        systemStats.systems.some((system) => system.interceptPulseDamage > 0) ? "방호 파동" : null,
+      ]
+        .filter(Boolean)
+        .join(" + ");
+      return traits ? `${familySummary} · ${traits}` : familySummary;
+    }
     if (systemStats.interceptRange > 0) {
       return systemStats.interceptPulseDamage > 0
         ? `${systemStats.label} · 위성 ${systemStats.orbitCount}기 · 탄환 요격 + 방호 파동`
@@ -3308,8 +3475,9 @@
       supportSystem: computeSupportSystemStats(build),
       supportSystemRuntime: {
         angle: 0,
-        shotCooldown: 0,
+        shotCooldowns: [],
         touchCooldowns: [],
+        interceptCooldowns: [],
       },
     };
   }
@@ -3472,12 +3640,17 @@
     if (!state.supportSystemRuntime) {
       state.supportSystemRuntime = {
         angle: 0,
-        shotCooldown: 0,
+        shotCooldowns: [],
         touchCooldowns: [],
         interceptCooldowns: [],
       };
     }
-    const orbitCount = state.supportSystem ? state.supportSystem.orbitCount : 0;
+    const orbitCount = state.supportSystem && state.supportSystem.satellites
+      ? state.supportSystem.satellites.length
+      : 0;
+    const shotSystemCount = state.supportSystem && state.supportSystem.systems
+      ? state.supportSystem.systems.length
+      : 0;
     state.supportSystemRuntime.touchCooldowns = Array.from(
       { length: orbitCount },
       (_, index) => Math.max(0, state.supportSystemRuntime.touchCooldowns[index] || 0)
@@ -3486,24 +3659,33 @@
       { length: orbitCount },
       (_, index) => Math.max(0, state.supportSystemRuntime.interceptCooldowns[index] || 0)
     );
-    if (!state.supportSystem || state.supportSystem.shotCooldown <= 0) {
-      state.supportSystemRuntime.shotCooldown = 0;
-    } else if (state.supportSystemRuntime.shotCooldown <= 0) {
-      state.supportSystemRuntime.shotCooldown = state.supportSystem.shotCooldown * 0.55;
-    }
+    state.supportSystemRuntime.shotCooldowns = Array.from({ length: shotSystemCount }, (_, index) => {
+      const current = Math.max(0, state.supportSystemRuntime.shotCooldowns[index] || 0);
+      const system = state.supportSystem && state.supportSystem.systems
+        ? state.supportSystem.systems[index]
+        : null;
+      if (!system || system.shotCooldown <= 0) {
+        return 0;
+      }
+      return current > 0 ? current : system.shotCooldown * 0.55;
+    });
   }
 
   function getSupportSystemSatellites() {
-    if (!state || !state.player || !state.supportSystem) {
+    if (!state || !state.player || !state.supportSystem || !Array.isArray(state.supportSystem.satellites)) {
       return [];
     }
     const runtime = state.supportSystemRuntime || { angle: 0 };
-    return Array.from({ length: state.supportSystem.orbitCount }, (_, index) => {
-      const angle = runtime.angle + (index / state.supportSystem.orbitCount) * Math.PI * 2;
+    return state.supportSystem.satellites.map((satellite) => {
+      const angle =
+        runtime.angle * satellite.orbitSpeed +
+        (satellite.localIndex / satellite.localCount) * Math.PI * 2 +
+        satellite.systemIndex * 0.48;
       return {
-        x: state.player.x + Math.cos(angle) * state.supportSystem.orbitRadius,
-        y: state.player.y + Math.sin(angle) * state.supportSystem.orbitRadius,
-        radius: state.supportSystem.satelliteRadius,
+        ...satellite,
+        x: state.player.x + Math.cos(angle) * satellite.orbitRadius,
+        y: state.player.y + Math.sin(angle) * satellite.orbitRadius,
+        radius: satellite.satelliteRadius,
         angle,
       };
     });
@@ -4530,45 +4712,46 @@
     state.supportSystemRuntime.interceptCooldowns = state.supportSystemRuntime.interceptCooldowns.map(
       (cooldown) => Math.max(0, cooldown - dt)
     );
+    state.supportSystemRuntime.shotCooldowns = state.supportSystemRuntime.shotCooldowns.map((cooldown) =>
+      Math.max(0, cooldown - dt)
+    );
     const satellites = getSupportSystemSatellites();
 
-    if (state.supportSystem.interceptRange > 0) {
-      satellites.forEach((satellite, index) => {
-        if (state.supportSystemRuntime.interceptCooldowns[index] > 0) {
-          return;
+    satellites.forEach((satellite, index) => {
+      if (satellite.interceptRange <= 0 || state.supportSystemRuntime.interceptCooldowns[index] > 0) {
+        return;
+      }
+      const hostileProjectile = state.projectiles.find((projectile) => {
+        if (projectile.owner !== "enemy" || projectile.life <= 0) {
+          return false;
         }
-        const hostileProjectile = state.projectiles.find((projectile) => {
-          if (projectile.owner !== "enemy" || projectile.life <= 0) {
-            return false;
-          }
-          const distance = Math.hypot(projectile.x - satellite.x, projectile.y - satellite.y);
-          return distance <= state.supportSystem.interceptRange + projectile.radius + satellite.radius;
-        });
-        if (!hostileProjectile) {
-          return;
-        }
-        hostileProjectile.life = 0;
-        state.supportSystemRuntime.interceptCooldowns[index] = state.supportSystem.interceptCooldown;
-        state.particles.push(createParticle(hostileProjectile.x, hostileProjectile.y, state.supportSystem.color, 1));
-        state.particles.push(createParticle(satellite.x, satellite.y, "#f3feff", 0.8));
-        if (state.supportSystem.interceptPulseDamage > 0 && state.supportSystem.interceptPulseRadius > 0) {
-          for (const enemy of state.enemies) {
-            if (enemy.defeated || enemy.hp <= 0) {
-              continue;
-            }
-            const distance = Math.hypot(enemy.x - hostileProjectile.x, enemy.y - hostileProjectile.y);
-            if (distance > state.supportSystem.interceptPulseRadius + enemy.radius) {
-              continue;
-            }
-            enemy.hp -= state.supportSystem.interceptPulseDamage;
-            state.particles.push(createParticle(enemy.x, enemy.y, "#c7fbff", 0.6));
-            if (enemy.hp <= 0) {
-              destroyEnemy(enemy);
-            }
-          }
-        }
+        const distance = Math.hypot(projectile.x - satellite.x, projectile.y - satellite.y);
+        return distance <= satellite.interceptRange + projectile.radius + satellite.radius;
       });
-    }
+      if (!hostileProjectile) {
+        return;
+      }
+      hostileProjectile.life = 0;
+      state.supportSystemRuntime.interceptCooldowns[index] = satellite.interceptCooldown;
+      state.particles.push(createParticle(hostileProjectile.x, hostileProjectile.y, satellite.color, 1));
+      state.particles.push(createParticle(satellite.x, satellite.y, "#f3feff", 0.8));
+      if (satellite.interceptPulseDamage > 0 && satellite.interceptPulseRadius > 0) {
+        for (const enemy of state.enemies) {
+          if (enemy.defeated || enemy.hp <= 0) {
+            continue;
+          }
+          const distance = Math.hypot(enemy.x - hostileProjectile.x, enemy.y - hostileProjectile.y);
+          if (distance > satellite.interceptPulseRadius + enemy.radius) {
+            continue;
+          }
+          enemy.hp -= satellite.interceptPulseDamage;
+          state.particles.push(createParticle(enemy.x, enemy.y, "#c7fbff", 0.6));
+          if (enemy.hp <= 0) {
+            destroyEnemy(enemy);
+          }
+        }
+      }
+    });
 
     satellites.forEach((satellite, index) => {
       for (const enemy of state.enemies) {
@@ -4580,9 +4763,9 @@
           distance < enemy.radius + satellite.radius &&
           state.supportSystemRuntime.touchCooldowns[index] <= 0
         ) {
-          enemy.hp -= state.supportSystem.touchDamage;
-          state.supportSystemRuntime.touchCooldowns[index] = state.supportSystem.touchCooldown;
-          state.particles.push(createParticle(satellite.x, satellite.y, state.supportSystem.color, 0.8));
+          enemy.hp -= satellite.touchDamage;
+          state.supportSystemRuntime.touchCooldowns[index] = satellite.touchCooldown;
+          state.particles.push(createParticle(satellite.x, satellite.y, satellite.color, 0.8));
           if (enemy.hp <= 0) {
             destroyEnemy(enemy);
           }
@@ -4591,42 +4774,36 @@
       }
     });
 
-    if (state.supportSystem.shotCooldown <= 0) {
-      return;
-    }
-
-    state.supportSystemRuntime.shotCooldown = Math.max(
-      0,
-      state.supportSystemRuntime.shotCooldown - dt
-    );
-    if (state.supportSystemRuntime.shotCooldown > 0) {
-      return;
-    }
-
-    let fired = false;
-    satellites.forEach((satellite) => {
-      let target = null;
-      let bestDistance = state.supportSystem.shotRange;
-      for (const enemy of state.enemies) {
-        if (enemy.defeated || enemy.hp <= 0) {
-          continue;
-        }
-        const distance = Math.hypot(enemy.x - satellite.x, enemy.y - satellite.y);
-        if (distance < bestDistance) {
-          bestDistance = distance;
-          target = enemy;
-        }
+    state.supportSystem.systems.forEach((system, systemIndex) => {
+      if (system.shotCooldown <= 0 || state.supportSystemRuntime.shotCooldowns[systemIndex] > 0) {
+        return;
       }
-      if (target) {
-        state.projectiles.push(createSupportSystemProjectile(satellite, target, state.supportSystem));
-        state.particles.push(createParticle(satellite.x, satellite.y, "#fff0c9", 0.55));
-        fired = true;
+      let fired = false;
+      satellites
+        .filter((satellite) => satellite.systemIndex === systemIndex && satellite.shotCooldown > 0)
+        .forEach((satellite) => {
+          let target = null;
+          let bestDistance = satellite.shotRange;
+          for (const enemy of state.enemies) {
+            if (enemy.defeated || enemy.hp <= 0) {
+              continue;
+            }
+            const distance = Math.hypot(enemy.x - satellite.x, enemy.y - satellite.y);
+            if (distance < bestDistance) {
+              bestDistance = distance;
+              target = enemy;
+            }
+          }
+          if (target) {
+            state.projectiles.push(createSupportSystemProjectile(satellite, target, satellite));
+            state.particles.push(createParticle(satellite.x, satellite.y, "#fff0c9", 0.55));
+            fired = true;
+          }
+        });
+      if (fired) {
+        state.supportSystemRuntime.shotCooldowns[systemIndex] = system.shotCooldown;
       }
     });
-
-    if (fired) {
-      state.supportSystemRuntime.shotCooldown = state.supportSystem.shotCooldown;
-    }
   }
 
   function fireWeapon() {
@@ -5616,16 +5793,18 @@
     }
 
     if (state.player && state.supportSystem) {
-      context.strokeStyle = state.supportSystem.orbitColor;
-      context.lineWidth = 1.5;
-      context.beginPath();
-      context.arc(state.player.x, state.player.y, state.supportSystem.orbitRadius, 0, Math.PI * 2);
-      context.stroke();
+      for (const system of state.supportSystem.systems || []) {
+        context.strokeStyle = system.orbitColor;
+        context.lineWidth = 1.5;
+        context.beginPath();
+        context.arc(state.player.x, state.player.y, system.orbitRadius, 0, Math.PI * 2);
+        context.stroke();
+      }
       for (const satellite of getSupportSystemSatellites()) {
-        context.fillStyle = state.supportSystem.color;
-        context.strokeStyle = state.supportSystem.strokeColor;
+        context.fillStyle = satellite.color;
+        context.strokeStyle = satellite.strokeColor;
         context.lineWidth = 1.4;
-        if (state.supportSystem.renderShape === "shield") {
+        if (satellite.renderShape === "shield") {
           context.save();
           context.translate(satellite.x, satellite.y);
           context.rotate(satellite.angle + Math.PI / 4);
@@ -5638,7 +5817,7 @@
           context.arc(
             satellite.x,
             satellite.y,
-            satellite.radius + state.supportSystem.interceptRange * 0.45,
+            satellite.radius + satellite.interceptRange * 0.45,
             0,
             Math.PI * 2
           );

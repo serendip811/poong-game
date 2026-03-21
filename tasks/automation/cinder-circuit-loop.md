@@ -14,6 +14,17 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-21 20:18 KST
+  Findings:
+  - The new two-step forge is an improvement, but `buildForgeFollowupChoices()` hard-locks slot 2 to `보조 시스템` or `생존/경제`, so mid-run packages still too often end as "take one real build card, then patch survival" instead of assembling a power stack that raises anticipation every wave.
+  - `createSupportSystemChoices()` collapses subsystem growth into a single committed line after first install by only offering the current system id, which kills the excitement of discovering rival module ecosystems, cross-run pivots, or mixed support identities.
+  - `SUPPORT_SYSTEM_DEFS` still amounts to just two three-tier tracks, so the second axis looks broader on paper than it feels in a run; this is not enough module vocabulary for a game that wants to grow toward a `20-30` wave escalation curve.
+  - `computeWeaponStats()` still pays out most weapon growth through efficiency math plus a few tier perks, so the main gun and the subsystem lane both ramp too smoothly; repeated runs need more visible breakpoints where the screen behavior clearly changes.
+  - The `960x540` arena with Wave 4-5 caps still turns late pressure into lane-clog management, which undercuts the value of any support build because the player has too little breathable space to feel smart about route choice.
+  Top Priority: Replace the current single-track support upgrade path with a real module bay system from Wave 3 onward, where the second forge slot consistently drafts from multiple offensive and defensive module families and lets the player stack or swap them instead of only upgrading the first one chosen.
+  Why Now: Until the second slot reliably grows a build instead of merely stabilizing it, longer runs will feel stretched rather than hungered for.
+  Do Not Repeat: Do not treat "package forge added" as solved depth while slot 2 still frequently resolves to maintenance and subsystem progression becomes deterministic after one pick.
+
 - 2026-03-21 11:30 KST
   Findings:
   - `WAVE_CONFIG` is still only a 5-wave lane with one arena, one hazard family, and mostly density/rate escalation, so the game still lacks the phase contrast, pacing resets, and encounter vocabulary needed for a run structure that could honestly scale toward `20-30` waves.
@@ -247,6 +258,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-21 20:40 KST
+  Changed: turned the old single-line support progression in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) into a two-bay module system. Wave 3+ follow-up forges now keep drafting rival `보조 시스템` families after the first install instead of collapsing to one deterministic upgrade path, so a run can stack `Ember Ring` and `Aegis Halo` together, then keep upgrading either bay. Support runtime, HUD summaries, and in-arena rendering now aggregate mixed offensive and defensive bays at once, which makes the second forge slot pay out as visibly larger orbital formations, combined interceptor coverage, and simultaneous auto-bolt pressure rather than just one upgraded helper line. The existing smoke coverage in [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) still passes against the new support flow.
+  Why: the newest critique’s top priority was to replace the single-track support upgrade path with a real module bay system from Wave 3 onward. I took the highest-value bounded interpretation as "allow two concurrent support bays with install-or-upgrade drafting and mixed runtime behavior" because it directly creates stackable support identities and more anticipation per forge without widening this pass into a full new-family content drop.
+  Follow-up risk: slot 2 now supports stacking, but it still does not offer explicit bay swapping or a broader module vocabulary than the current two families. If later critique still finds subsystem planning too solved, the next pass should add a reroute/swap card or a third module family so support assembly keeps opening new pivots deeper into the run.
 
 - 2026-03-21 20:05 KST
   Changed: reworked the Wave 3+ forge cadence in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) into a guaranteed two-slot package instead of the old "extra pick only after choosing a system" flow. Mid-run forges now open with a first slot made of `빌드 고정` / `전환` offense decisions, then always rebuild into a second slot of `보조 시스템` / `생존/경제` cards after that first pick lands. In the same pass, both support families now extend to `Mk.III`, so the secondary lane can keep escalating through later stops instead of hard-ending at `Mk.II`. Updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to cover the new Wave 3 primary/follow-up split and the new tier-3 support progression.
