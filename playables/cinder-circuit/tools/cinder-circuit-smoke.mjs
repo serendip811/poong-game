@@ -257,7 +257,18 @@ const doctrineChaseChoices = game.buildForgeChoices(
   180,
   { nextWave: 4, finalForge: false }
 );
-const doctrineChaseChoice = doctrineChaseChoices.find(
+const blockedDoctrineChaseChoice = doctrineChaseChoices.find(
+  (choice) => choice.type === "utility" && choice.action === "doctrine_chase"
+);
+assert.equal(blockedDoctrineChaseChoice, undefined);
+architectureRun.build.overcommitUnlocked = true;
+architectureRun.build.overcommitResolved = true;
+const bastionOvercommitChoices = game.buildBastionDraftChoices(
+  architectureRun.build,
+  () => 0,
+  6
+);
+const doctrineChaseChoice = bastionOvercommitChoices.find(
   (choice) => choice.type === "utility" && choice.action === "doctrine_chase"
 );
 assert.ok(doctrineChaseChoice);
@@ -411,7 +422,11 @@ assert.equal(
   JSON.stringify([-0.22, 0.22])
 );
 const artilleryChaseChoice = game
-  .buildForgeChoices(artilleryDoctrineBuild, () => 0, 180, { nextWave: 4, finalForge: false })
+  .buildBastionDraftChoices(
+    Object.assign(artilleryDoctrineBuild, { overcommitUnlocked: true, overcommitResolved: true }),
+    () => 0,
+    6
+  )
   .find((choice) => choice.action === "doctrine_chase");
 assert.ok(artilleryChaseChoice);
 game.applyForgeChoice(

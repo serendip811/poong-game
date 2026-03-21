@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 16:55 KST
+  Findings:
+  - The run has many build layers now, but too much of the excitement is still pre-scheduled by `Architecture Draft`, `Bastion Draft`, `Catalyst Crucible`, `doctrine_chase`, and the final cash-out. Players are frequently handed the next spike at authored checkpoints instead of fighting into volatile power swings.
+  - Weapon evolutions are better than before, yet the strongest anticipation still often reads as "wait for the next named package" rather than "survive long enough to complete a terrifying gun." That is good prototype scaffolding, not release-grade rerun hunger.
+  - The support-bay railings and discounted bundle logic keep builds legible, but they also make many runs feel too responsibly assembled. A strong action roguelite needs some runs to become lopsided, greedy, and slightly reckless well before the end.
+  - Because so much build identity is delivered in menus, combat waves still spend too little time letting a newly-earned form dominate the field and force fresh decisions. The player gets confirmation beats, not enough live ownership beats.
+  Top Priority: Replace one mid-run scripted forge bundle with a combat-earned overcommit system, where a dangerous elite/salvage objective can unlock an early weapon-form spike or illegal support pairing several waves ahead of schedule.
+  Why Now: Until power spikes are earned through combat risk instead of mostly scheduled menus, repeated runs will feel authored rather than addictive.
+  Do Not Repeat: Do not add another named draft, capstone, or discount bundle if the next big payoff still arrives because the timeline said so.
+
 - 2026-03-22 16:10 KST
   Findings:
   - The larger arenas are an improvement, but late combat still does not breathe in a release-quality way. `activeCap 34 -> 50` across the widened spaces plus heavy turret/drone/missile assistance creates too many spread-out cleanup states, so movement decisions often collapse into reopening one lane and vacuuming leftovers.
@@ -571,6 +581,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 04:16 KST
+  Changed: replaced the automatic mid-run `doctrine_chase` timing in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) with a combat-earned Act 2 overcommit trial. Doctrine runs now get one Wave `5` marked-elite hunt that drops three short-lived `contraband salvage` pickups; only if the player kills that elite and collects the full cache under pressure does the next `Bastion Draft` convert its spike slot into the early `Frame` chase. I also added combat-readability support for the trial through a marked-elite ring, dedicated salvage pickups, HUD objective rows, updated Bastion Draft copy, and smoke coverage in [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) that now asserts the chase is blocked in the generic forge path and unlocked through the overcommit route instead.
+  Why: the latest critique’s Top Priority was to stop handing out one of the run’s main mid-run spikes because the schedule said so. The highest-value bounded interpretation was to reuse the existing `doctrine_chase` reward but make Wave `5` combat earn it, because that shifts one authored menu payoff into a live risk/reward moment without widening this pass into a new progression tree or a broader support-rail rewrite.
+  Follow-up risk: this pass only adds the weapon-first half of the requested overcommit fantasy. Successful trials currently unlock the early `Frame` chase, not an illegal off-doctrine support pairing, so if critique still wants greedier build breakage the next pass should let one branch cash the same salvage into an early wildcard subsystem install instead of adding another scheduled draft.
 
 - 2026-03-22 16:35 KST
   Changed: re-authored the `Kiln Bastion` late bracket in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) around reclaimable territory payoff instead of wider cleanup. `Wave 9-12` for doctrine `kiln_bastion` now run at tighter active caps with heavier brute/mortar convergence, and the territory waves (`Foundry Hold`, `Bastion Furnace`, `Bulwark Crown`) now attach salvage payloads to their bastion cores. When the player actually dives and destroys one of those late cores, it bursts a short-lived scrap pocket directly in the reclaimed zone, creating an immediate reason to hold that ground for a few more seconds before rotating out. I also extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new salvage-bearing hazards and the reduced late-wave caps.

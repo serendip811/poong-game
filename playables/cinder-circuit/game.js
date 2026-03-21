@@ -1913,6 +1913,9 @@
   const ACT_BREAK_ARMORY_WAVE = 5;
   const LATE_BREAK_ARMORY_WAVE = 9;
   const ACT3_CATALYST_DRAFT_WAVE = 10;
+  const OVERCOMMIT_TRIAL_WAVE = 5;
+  const OVERCOMMIT_SALVAGE_REQUIRED = 3;
+  const OVERCOMMIT_SALVAGE_LIFE = 7.5;
   const ACT_LABELS = [
     { start: 1, end: 4, label: "Act 1 · Ignition", shortLabel: "Act 1" },
     { start: 5, end: 8, label: "Act 2 · Bastion Run", shortLabel: "Act 2" },
@@ -2952,6 +2955,8 @@
     bastionDoctrineId: null,
     doctrineCapstoneId: null,
     doctrineChaseClaimed: false,
+    overcommitUnlocked: false,
+    overcommitResolved: false,
     supportBayCap: 2,
     supportSystemId: null,
     supportSystemTier: 0,
@@ -3864,6 +3869,8 @@
         act3CatalystDraftSeen: BASE_BUILD.act3CatalystDraftSeen,
         bastionDoctrineId: BASE_BUILD.bastionDoctrineId,
         doctrineChaseClaimed: BASE_BUILD.doctrineChaseClaimed,
+        overcommitUnlocked: BASE_BUILD.overcommitUnlocked,
+        overcommitResolved: BASE_BUILD.overcommitResolved,
         supportBayCap: BASE_BUILD.supportBayCap,
         supportSystemId: BASE_BUILD.supportSystemId,
         supportSystemTier: BASE_BUILD.supportSystemTier,
@@ -4531,6 +4538,7 @@
       !build.bastionDoctrineId ||
       build.doctrineCapstoneId ||
       build.doctrineChaseClaimed ||
+      !build.overcommitUnlocked ||
       !options ||
       options.finalForge
     ) {
@@ -4538,6 +4546,13 @@
     }
     const nextWave = Number.isFinite(options.nextWave) ? options.nextWave : 0;
     return nextWave >= 4 && nextWave <= 6;
+  }
+
+  function shouldRunOvercommitTrial(build, waveNumber) {
+    if (!build || !build.bastionDoctrineId || build.doctrineChaseClaimed || build.overcommitResolved) {
+      return false;
+    }
+    return waveNumber === OVERCOMMIT_TRIAL_WAVE;
   }
 
   function createDoctrineChaseChoice(build, options = null) {
@@ -5619,7 +5634,8 @@
 
   function buildBastionDraftChoices(build, rng, nextWave) {
     const spikeChoice = build && build.bastionDoctrineId
-      ? createBastionDraftSpikeChoice(build, rng, nextWave)
+      ? createDoctrineChaseChoice(build, { nextWave, finalForge: false }) ||
+        createBastionDraftSpikeChoice(build, rng, nextWave)
       : createBastionDoctrineChoice(build, rng, nextWave);
     const choices = [];
     if (spikeChoice) {
@@ -5808,6 +5824,12 @@
       return doctrine
         ? `${doctrine.label} 교리 1장, 고통 계약 1장, 무료 안정화 1장 중 하나로 Act 2 운영을 직접 비튼다. 교리를 고르면 ${doctrine.reserveText}`
         : "할인 spike 1장, 고통 계약 1장, 무료 안정화 1장 중 하나로 Act 2 운영을 직접 비튼다.";
+    }
+    if (build.overcommitUnlocked && !build.doctrineChaseClaimed) {
+      return "방금 회수한 contraband salvage가 열려 있다. 이번 Bastion Draft에서는 조기 Frame 추격 카드, 고통 계약, 무료 안정화 중 하나로 Act 2 greed를 직접 결정한다.";
+    }
+    if (!build.overcommitResolved) {
+      return "아직 overcommit salvage를 못 챙겼다. 이번 초반 교전에서 marked elite를 부숴 contraband salvage를 전부 회수해야만 조기 Frame 추격 카드가 열린다.";
     }
     return "이미 채택한 교리 위에 추가 spike 1장, 고통 계약 1장, 무료 안정화 1장 중 하나로 Act 2 greed를 더 밀어붙인다.";
   }
@@ -6552,6 +6574,15 @@
       paused: false,
       hudInspect: false,
       feed: [],
+      overcommit: {
+        active: false,
+        status: "idle",
+        targetSpawned: false,
+        targetDefeated: false,
+        salvageCollected: 0,
+        salvageRequired: OVERCOMMIT_SALVAGE_REQUIRED,
+        expired: false,
+      },
       weapon: computeWeaponStats(build),
       playerStats: computePlayerStats(build),
       supportSystem: computeSupportSystemStats(build),
@@ -6565,6 +6596,65 @@
       },
       supportDeployables: [],
     };
+  }
+
+  function resetOvercommitState(run) {
+    if (!run) {
+      return;
+    }
+    run.overcommit = {
+      active: false,
+      status: "idle",
+      targetSpawned: false,
+      targetDefeated: false,
+      salvageCollected: 0,
+      salvageRequired: OVERCOMMIT_SALVAGE_REQUIRED,
+      expired: false,
+    };
+  }
+
+  function armOvercommitTrial(run) {
+    if (!run) {
+      return;
+    }
+    run.overcommit = {
+      active: true,
+      status: "hunt",
+      targetSpawned: false,
+      targetDefeated: false,
+      salvageCollected: 0,
+      salvageRequired: OVERCOMMIT_SALVAGE_REQUIRED,
+      expired: false,
+    };
+  }
+
+  function failOvercommitTrial(reasonText = "") {
+    if (!state.build || state.build.overcommitResolved || state.build.overcommitUnlocked) {
+      return;
+    }
+    state.build.overcommitResolved = true;
+    state.overcommit.active = false;
+    state.overcommit.status = "failed";
+    state.overcommit.expired = true;
+    if (reasonText) {
+      pushCombatFeed(reasonText, "RISK");
+    }
+  }
+
+  function unlockOvercommitTrial() {
+    if (!state.build || state.build.overcommitUnlocked) {
+      return;
+    }
+    state.build.overcommitUnlocked = true;
+    state.build.overcommitResolved = true;
+    state.overcommit.active = false;
+    state.overcommit.status = "ready";
+    state.build.upgrades.push("Contraband Overcommit");
+    pushCombatFeed(
+      "Contraband salvage 확보. 다음 Bastion Draft에서 조기 Frame 추격 카드가 열린다.",
+      "RISK"
+    );
+    setBanner("Overcommit 준비", 0.9);
   }
 
   function renderHudPanels() {
@@ -6933,6 +7023,7 @@
   function beginWave(index) {
     const config = resolveWaveConfig(index, state.build);
     const arena = getArenaSize(config);
+    const waveNumber = index + 1;
     state.waveIndex = index;
     state.phase = "wave";
     state.pendingFinalForge = false;
@@ -6965,6 +7056,20 @@
     state.slagPools = [];
     state.particles = [];
     state.supportDeployables = [];
+    if (shouldRunOvercommitTrial(state.build, waveNumber)) {
+      armOvercommitTrial(state);
+      pushCombatFeed(
+        "Overcommit trial 시작. marked elite를 파괴하고 흩어진 contraband salvage 3개를 전부 회수하면 Wave 6 Bastion Draft에서 조기 Frame이 열린다.",
+        "RISK"
+      );
+    } else {
+      resetOvercommitState(state);
+      if (state.build.overcommitUnlocked) {
+        state.overcommit.status = "ready";
+      } else if (state.build.overcommitResolved) {
+        state.overcommit.status = "failed";
+      }
+    }
     syncArenaCanvas();
     state.player.x = arena.width / 2;
     state.player.y = arena.height / 2;
@@ -7388,7 +7493,7 @@
       x = Math.random() * arena.width;
       y = arena.height + padding;
     }
-    state.enemies.push({
+    const enemy = {
       type: typeId,
       x,
       y,
@@ -7399,7 +7504,27 @@
       wobble: Math.random() * Math.PI * 2,
       orbitDirection: Math.random() > 0.5 ? 1 : -1,
       defeated: false,
-    });
+      overcommitTarget: false,
+    };
+    if (
+      typeId === "elite" &&
+      state.overcommit.active &&
+      !state.overcommit.targetSpawned &&
+      !state.build.overcommitResolved &&
+      !state.build.overcommitUnlocked
+    ) {
+      enemy.overcommitTarget = true;
+      enemy.hp *= 1.35;
+      enemy.attackCooldown = 0.18;
+      state.overcommit.targetSpawned = true;
+      state.overcommit.status = "hunt";
+      pushCombatFeed(
+        "Marked elite 감지. 처치 후 흩어지는 contraband salvage를 전부 회수해야 한다.",
+        "RISK"
+      );
+      setBanner("Marked Elite", 0.8);
+    }
+    state.enemies.push(enemy);
   }
 
   function maybeSpawnEnemies(dt) {
@@ -9341,6 +9466,27 @@
           "CAT"
         );
       }
+      if (enemy.overcommitTarget && state.overcommit.active) {
+        state.overcommit.targetDefeated = true;
+        state.overcommit.status = "salvage";
+        for (let index = 0; index < state.overcommit.salvageRequired; index += 1) {
+          const angle =
+            (index / state.overcommit.salvageRequired) * Math.PI * 2 + Math.random() * 0.25;
+          const distance = 28 + Math.random() * 34;
+          state.drops.push({
+            kind: "overcommit_salvage",
+            x: enemy.x + Math.cos(angle) * distance,
+            y: enemy.y + Math.sin(angle) * distance,
+            value: 8,
+            life: OVERCOMMIT_SALVAGE_LIFE,
+          });
+        }
+        pushCombatFeed(
+          "Contraband salvage 방출. 전부 회수하면 다음 Bastion Draft가 조기 Frame 추격으로 변한다.",
+          "SALV"
+        );
+        setBanner("Salvage 회수", 0.8);
+      }
     }
 
     state.shake = Math.max(state.shake, enemy.type === "elite" ? 10 : 4);
@@ -9361,6 +9507,10 @@
 
       if (distance < state.player.radius + 10) {
         collectDrop(drop);
+      } else if (drop.life <= 0 && drop.kind === "overcommit_salvage") {
+        failOvercommitTrial(
+          "Contraband salvage가 식어 버렸다. 이번 런의 조기 Frame 추격 창구가 닫혔다."
+        );
       } else if (drop.life > 0) {
         nextDrops.push(drop);
       }
@@ -9413,6 +9563,21 @@
       }
       return;
     }
+
+    if (drop.kind === "overcommit_salvage") {
+      const value = round(drop.value * state.player.scrapMultiplier, 0);
+      state.resources.scrap += value;
+      state.stats.scrapCollected += value;
+      state.overcommit.salvageCollected += 1;
+      gainDrive(value * 0.3);
+      setBanner(
+        `Contraband ${state.overcommit.salvageCollected}/${state.overcommit.salvageRequired}`,
+        0.55
+      );
+      if (state.overcommit.salvageCollected >= state.overcommit.salvageRequired) {
+        unlockOvercommitTrial();
+      }
+    }
   }
 
   function updateParticles(dt) {
@@ -9433,6 +9598,17 @@
     }
     if (state.wave.spawned >= state.wave.spawnBudget && state.enemies.length === 0) {
       if (!state.wave.awaitingForge) {
+        if (
+          state.overcommit.active &&
+          !state.build.overcommitUnlocked &&
+          !state.build.overcommitResolved
+        ) {
+          failOvercommitTrial(
+            state.overcommit.targetDefeated
+              ? "남은 salvage를 다 못 주웠다. 조기 Frame 추격은 이번 런에서 봉인된다."
+              : "Marked elite를 놓쳤다. 조기 Frame 추격은 이번 런에서 봉인된다."
+          );
+        }
         state.wave.awaitingForge = true;
         state.wave.cleanupPhase = true;
         state.waveClearTimer = POST_WAVE_LOOT_GRACE;
@@ -9626,6 +9802,33 @@
 
     const enemiesLeft = Math.max(0, state.wave ? state.wave.spawnBudget - state.wave.spawned : 0);
     if (elements.waveObjective) {
+      const overcommitRows = [];
+      let overcommitNote = "";
+      if (state.overcommit.active) {
+        overcommitRows.push(
+          createStatusRow(
+            "Overcommit",
+            state.overcommit.targetDefeated ? "salvage 회수" : "marked elite 추적"
+          )
+        );
+        overcommitRows.push(
+          createStatusRow(
+            "Contraband",
+            `${state.overcommit.salvageCollected}/${state.overcommit.salvageRequired}`
+          )
+        );
+        overcommitNote = state.overcommit.targetDefeated
+          ? "흩어진 salvage를 전부 주워야 Wave 6 Bastion Draft가 조기 Frame 추격으로 변한다."
+          : "Wave 5 marked elite를 먼저 부수고 contraband salvage를 전부 회수해야 한다.";
+      } else if (state.build.overcommitUnlocked) {
+        overcommitRows.push(createStatusRow("Overcommit", "해금"));
+        overcommitRows.push(createStatusRow("Contraband", "Frame ready"));
+        overcommitNote = "다음 Bastion Draft에서 조기 Frame 추격 카드가 열린다.";
+      } else if (state.build.overcommitResolved) {
+        overcommitRows.push(createStatusRow("Overcommit", "실패"));
+        overcommitRows.push(createStatusRow("Contraband", "봉인"));
+        overcommitNote = "이번 런에서는 조기 Frame 추격을 더는 열 수 없다.";
+      }
       elements.waveObjective.innerHTML = `
         <div class="summary-head">
           <strong>${waveConfig.label}</strong>
@@ -9638,8 +9841,9 @@
           ${createStatusRow("현재 적", String(state.enemies.length))}
           ${createStatusRow("드랍", String(state.drops.length))}
           ${createStatusRow(hazardStatus.detailLabel, hazardStatus.detailValue)}
+          ${overcommitRows.join("")}
         </div>
-        <p class="summary-note">${hazardStatus.note}</p>
+        <p class="summary-note">${overcommitNote || hazardStatus.note}</p>
       `;
     }
 
@@ -9746,7 +9950,9 @@
         ? "Field Cache · 할인 장착 2장과 무료 회수 1장 중 1픽, 지금 고철을 태울지 아낄지 고른다"
         : state.forgeDraftType === "bastion_draft"
         ? state.build.bastionDoctrineId
-          ? "Bastion Draft · 기존 교리 위에 추가 spike 또는 고통 계약을 더 얹어 Act 2 greed를 강제한다"
+          ? state.build.overcommitUnlocked && !state.build.doctrineChaseClaimed
+            ? "Bastion Draft · 회수한 contraband salvage를 조기 Frame 추격으로 바꾸거나, 계약/안정화로 greed를 접는다"
+            : "Bastion Draft · 기존 교리 위에 추가 spike 또는 고통 계약을 더 얹어 Act 2 greed를 강제한다"
           : "Bastion Draft · 시그니처 교리 1장, 고통 계약 1장, 무료 안정화 1장 중 1픽으로 Act 2 posture를 기울이고 late wildcard bay를 예고한다"
         : state.forgeDraftType === "catalyst_draft"
         ? "Catalyst Crucible · 회수한 촉매를 지금 태워 Act 3 본편을 괴물 화력이나 운영형 안정화로 먼저 고정한다"
@@ -9769,7 +9975,9 @@
         ? `고철 ${Math.round(state.resources.scrap)} 보유. Field Cache다. 할인된 즉시 장착 2장과 무료 Emergency Vent 중 하나를 고른다. 지금 스파이크를 사서 당길지, 고철을 쥐고 다음 큰 포지까지 버틸지 직접 판단해야 한다.`
         : state.forgeDraftType === "bastion_draft"
         ? state.build.bastionDoctrineId
-          ? `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 이미 채택한 교리 위에 추가 spike 1장과 Siege Salvage Pact, 무료 안정화가 다시 뜬다. 지금 더 깊게 묶일지, 체력을 태워 greed를 당길지 결정한다.`
+          ? state.build.overcommitUnlocked && !state.build.doctrineChaseClaimed
+            ? `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. Wave 5에서 회수한 contraband salvage가 살아 있어 조기 Frame 추격 카드가 열렸다. 지금 주무장과 support 라인을 평소보다 이르게 같은 종점으로 묶을지, Siege Salvage Pact나 무료 안정화로 greed를 접을지 정한다.`
+            : `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 이미 채택한 교리 위에 추가 spike 1장과 Siege Salvage Pact, 무료 안정화가 다시 뜬다. 지금 더 깊게 묶일지, 체력을 태워 greed를 당길지 결정한다.`
           : `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 한 장은 시그니처 전용 교리라 즉시 spike를 확보하면서 초반 support bay와 이후 포지 후보를 한 계통 쪽으로 강하게 기울이고, Late Break Armory에서는 마지막 bay 1칸만 우회 조합용으로 풀어 준다. 한 장은 최대 체력을 깎고 고철을 당겨오는 Siege Salvage Pact, 마지막 한 장은 무료 안정화다. Act 2 posture를 잠글지, 더 아프게 탐욕할지 직접 정한다.`
         : state.forgeDraftType === "catalyst_draft"
         ? `고철 ${Math.round(state.resources.scrap)} 보유. Catalyst Crucible이다. 이제 막 회수한 촉매를 무료로 점화하거나 안정화해 남은 Act 3 웨이브를 완성형 회로로 직접 소모한다. 최종 포지까지 묵혀 두는 대신 지금부터 괴물 형태를 실제 전장에 투입한다.`
@@ -9994,13 +10202,32 @@
     }
 
     for (const drop of state.drops) {
-      const maxLife = drop.kind === "core" || drop.kind === "catalyst" ? 12 : 10;
+      const maxLife =
+        drop.kind === "core" || drop.kind === "catalyst"
+          ? 12
+          : drop.kind === "overcommit_salvage"
+            ? OVERCOMMIT_SALVAGE_LIFE
+            : 10;
       const fadeRatio = clamp(drop.life / maxLife, 0, 1);
       const blink = drop.life < 2.2 ? 0.45 + Math.abs(Math.sin(performance.now() * 0.02)) * 0.55 : 1;
       context.globalAlpha = clamp(fadeRatio * blink, 0.18, 1);
       if (drop.kind === "scrap") {
         context.fillStyle = "rgba(255, 209, 102, 0.9)";
         context.fillRect(drop.x - 4, drop.y - 4, 8, 8);
+      } else if (drop.kind === "overcommit_salvage") {
+        context.strokeStyle = "rgba(255, 231, 130, 0.95)";
+        context.lineWidth = 2;
+        context.beginPath();
+        context.arc(drop.x, drop.y, 9, 0, Math.PI * 2);
+        context.stroke();
+        context.fillStyle = "rgba(255, 170, 72, 0.95)";
+        context.beginPath();
+        context.moveTo(drop.x, drop.y - 6);
+        context.lineTo(drop.x + 5, drop.y);
+        context.lineTo(drop.x, drop.y + 6);
+        context.lineTo(drop.x - 5, drop.y);
+        context.closePath();
+        context.fill();
       } else if (drop.kind === "catalyst") {
         context.strokeStyle = "#fff1a8";
         context.lineWidth = 2;
@@ -10198,6 +10425,13 @@
       } else if (enemy.type === "elite") {
         drawPolygon(context, enemy.x, enemy.y, enemy.radius, 6, Math.PI / 6);
         context.fill();
+        if (enemy.overcommitTarget) {
+          context.strokeStyle = "rgba(255, 229, 126, 0.95)";
+          context.lineWidth = 3;
+          context.beginPath();
+          context.arc(enemy.x, enemy.y, enemy.radius + 6, 0, Math.PI * 2);
+          context.stroke();
+        }
       } else if (enemy.type === "warden") {
         drawPolygon(context, enemy.x, enemy.y, enemy.radius, 4, Math.PI / 4 + enemy.wobble * 0.12);
         context.fill();
