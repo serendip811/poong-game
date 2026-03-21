@@ -254,6 +254,23 @@ assert.equal(
   JSON.stringify([-0.28, -0.18, -0.08, 0.08, 0.18, 0.28])
 );
 
+const scatterEvolutionBuild = game.createInitialBuild("scrap_pact");
+scatterEvolutionBuild.pendingCores = [];
+const scatterEvolutionChoice = game
+  .buildForgeChoices(scatterEvolutionBuild, () => 0, 180, { nextWave: 3 })
+  .find((choice) => choice.type === "evolution");
+assert.ok(scatterEvolutionChoice);
+game.applyForgeChoice(
+  { build: scatterEvolutionBuild, player: null, resources: { scrap: 999 }, stats: {} },
+  scatterEvolutionChoice
+);
+const scatterEvolvedWeapon = game.computeWeaponStats(scatterEvolutionBuild);
+assert.equal(scatterEvolvedWeapon.evolutionLabel, "Cinder Mines");
+assert.equal(scatterEvolvedWeapon.evolutionTraitLabel, "용광 지뢰 x1");
+assert.equal(scatterEvolvedWeapon.evolutionFirePattern.kind, "slag_seed");
+assert.equal(scatterEvolvedWeapon.evolutionFirePattern.count, 1);
+assert.ok(scatterEvolvedWeapon.evolutionFirePattern.poolRadius > 50);
+
 const systemRun = {
   build: midrunChaseBuild,
   player: null,

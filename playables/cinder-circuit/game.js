@@ -1424,74 +1424,92 @@
       tiers: {
         1: {
           tier: 1,
-          title: "Flak Bloom",
-          label: "Flak Bloom",
+          title: "Cinder Mines",
+          label: "Cinder Mines",
           tag: "EVOLVE",
           cost: 42,
           description:
-            "산탄 외곽에 장거리 파편탄 두 발을 덧댄다. 근접 압박만 강한 무기에서 벗어나 중거리 교전과 측면 정리를 동시에 챙긴다.",
-          slotText: "주무장 진화 · 외곽 파편 2발",
-          previewText: "장거리 파편탄",
-          traitLabel: "외곽 파편 x2",
-          statusNote: "Flak Bloom이 산탄 양끝에 장거리 파편탄을 덧대 중거리 정리선을 늘린다.",
+            "산탄 끝에 느린 용광 씨앗을 덧댄다. 씨앗은 전방에서 폭발해 짧은 화염 지대를 남기므로 근접 폭딜 무기가 전방 점거형 무기로 변한다.",
+          slotText: "주무장 진화 · 용광 지뢰",
+          previewText: "전방 화염 지대",
+          traitLabel: "용광 지뢰 x1",
+          statusNote: "Cinder Mines가 전방에 용광 씨앗을 심어 추격선과 재진입 각을 잠시 봉쇄한다.",
           firePattern: {
-            offsets: [-0.34, 0.34],
-            damageMultiplier: 0.54,
-            speedMultiplier: 1.18,
-            radius: 3.9,
-            life: 1.22,
-            pierceBonus: 0,
-            bounceBonus: 0,
-            chainBonus: 0,
-            color: "#ffc27a",
+            kind: "slag_seed",
+            count: 1,
+            spread: 0,
+            speedMultiplier: 0.54,
+            radius: 6.2,
+            life: 0.6,
+            damageMultiplier: 0.56,
+            blastRadius: 54,
+            blastDamageMultiplier: 0.7,
+            poolRadius: 62,
+            poolDuration: 1.35,
+            poolTickInterval: 0.32,
+            poolDamageMultiplier: 0.16,
+            color: "#ffbd73",
+            poolColor: "rgba(255, 125, 46, 0.3)",
           },
         },
         2: {
           tier: 2,
-          title: "Kiln Storm",
-          label: "Kiln Storm",
+          title: "Kiln Minefield",
+          label: "Kiln Minefield",
           tag: "EVOLVE",
           cost: 60,
           description:
-            "외곽 파편탄을 네 갈래로 넓힌다. 산탄의 근접 폭딜은 유지하면서도 화면 양옆에 추가 절개선을 만들어 혼전 정리가 훨씬 또렷해진다.",
-          slotText: "주무장 진화 · 외곽 파편 4발",
-          previewText: "확장 파편탄",
-          traitLabel: "외곽 파편 x4",
-          statusNote: "Kiln Storm이 외곽 파편탄을 네 갈래로 뿌려 근접 압박 바깥도 함께 훑는다.",
+            "용광 씨앗을 두 발로 늘리고 폭발 반경과 화염 지대 유지 시간을 키운다. 조준선 앞에 이중 지뢰대를 깔아 추격과 측면 스윕을 동시에 예고할 수 있다.",
+          slotText: "주무장 진화 · 이중 용광 지뢰",
+          previewText: "이중 화염 지대",
+          traitLabel: "용광 지뢰 x2",
+          statusNote: "Kiln Minefield가 두 갈래 용광 지뢰대로 전방 회랑을 잠가 적 움직임을 미리 꺾는다.",
           firePattern: {
-            offsets: [-0.42, -0.22, 0.22, 0.42],
-            damageMultiplier: 0.48,
-            speedMultiplier: 1.22,
-            radius: 3.8,
-            life: 1.26,
-            pierceBonus: 0,
-            bounceBonus: 0,
-            chainBonus: 0,
-            color: "#ffd7a3",
+            kind: "slag_seed",
+            count: 2,
+            spread: 0.18,
+            speedMultiplier: 0.56,
+            radius: 6.6,
+            life: 0.68,
+            damageMultiplier: 0.6,
+            blastRadius: 60,
+            blastDamageMultiplier: 0.78,
+            poolRadius: 72,
+            poolDuration: 1.7,
+            poolTickInterval: 0.3,
+            poolDamageMultiplier: 0.18,
+            color: "#ffce8b",
+            poolColor: "rgba(255, 150, 62, 0.32)",
           },
         },
         3: {
           tier: 3,
-          title: "Ashen Typhoon",
-          label: "Ashen Typhoon",
+          title: "Caldera Verge",
+          label: "Caldera Verge",
           tag: "EVOLVE",
           cost: 78,
           description:
-            "Kiln Storm을 다시 벌려 여섯 갈래 외곽 절개선으로 완성한다. 근접 산탄의 폭딜은 유지하면서 화면 가장자리까지 쓸어 후반 포위망을 통째로 찢는다.",
-          slotText: "주무장 진화 · 외곽 파편 6발",
-          previewText: "초확장 파편탄",
-          traitLabel: "외곽 파편 x6",
-          statusNote: "Ashen Typhoon이 여섯 갈래 외곽 파편탄으로 근접 바깥 포위망까지 함께 찢어낸다.",
+            "용광 씨앗을 세 발로 묶어 더 멀리 심고, 폭발 뒤 남는 칼데라 지대를 크게 키운다. 산탄이 근접 청소기에서 전방 진입로를 직접 설계하는 영역 장악 무기로 완성된다.",
+          slotText: "주무장 진화 · 칼데라 지뢰망",
+          previewText: "삼중 칼데라 지대",
+          traitLabel: "칼데라 지뢰 x3",
+          statusNote: "Caldera Verge가 삼중 칼데라 지대로 전방 회랑과 추격선을 함께 태워 이동 경로 자체를 재배치한다.",
           firePattern: {
-            offsets: [-0.52, -0.34, -0.16, 0.16, 0.34, 0.52],
-            damageMultiplier: 0.44,
-            speedMultiplier: 1.24,
-            radius: 3.7,
-            life: 1.3,
-            pierceBonus: 0,
-            bounceBonus: 0,
-            chainBonus: 0,
-            color: "#ffe6bd",
+            kind: "slag_seed",
+            count: 3,
+            spread: 0.22,
+            speedMultiplier: 0.6,
+            radius: 7,
+            life: 0.74,
+            damageMultiplier: 0.64,
+            blastRadius: 66,
+            blastDamageMultiplier: 0.88,
+            poolRadius: 84,
+            poolDuration: 2.05,
+            poolTickInterval: 0.28,
+            poolDamageMultiplier: 0.2,
+            color: "#ffe1b0",
+            poolColor: "rgba(255, 175, 88, 0.34)",
           },
         },
       },
@@ -5159,6 +5177,7 @@
       projectiles: [],
       drops: [],
       hazards: [],
+      slagPools: [],
       particles: [],
       forgeChoices: [],
       forgeStep: 1,
@@ -5582,6 +5601,7 @@
     state.projectiles = [];
     state.drops = [];
     state.hazards = [];
+    state.slagPools = [];
     state.particles = [];
     state.supportDeployables = [];
     syncArenaCanvas();
@@ -5629,6 +5649,7 @@
     state.hazards = [];
     state.enemies = [];
     state.projectiles = [];
+    state.slagPools = [];
     state.supportDeployables = [];
     state.player.heat = Math.max(0, state.player.heat - 20);
     state.player.overheated = false;
@@ -6503,6 +6524,69 @@
     };
   }
 
+  function applyPlayerAreaDamage(x, y, radius, damage, options = {}) {
+    if (!(damage > 0) || !(radius > 0)) {
+      return;
+    }
+    const hazardDamageFactor = Number.isFinite(options.hazardDamageFactor)
+      ? options.hazardDamageFactor
+      : 1;
+    for (const enemy of state.enemies) {
+      if (enemy.defeated || enemy.hp <= 0) {
+        continue;
+      }
+      const distance = Math.hypot(enemy.x - x, enemy.y - y);
+      if (distance > radius + enemy.radius) {
+        continue;
+      }
+      enemy.hp -= damage;
+      if (enemy.hp <= 0) {
+        destroyEnemy(enemy);
+      }
+    }
+    for (const hazard of state.hazards) {
+      if (
+        hazard.type !== "territory" ||
+        hazard.telegraphTime > 0 ||
+        hazard.activeTime <= 0 ||
+        hazard.coreHp <= 0
+      ) {
+        continue;
+      }
+      const distance = Math.hypot(hazard.x - x, hazard.y - y);
+      if (distance > radius + hazard.coreRadius) {
+        continue;
+      }
+      hazard.coreHp -= damage * hazardDamageFactor;
+    }
+  }
+
+  function detonateSlagSeed(projectile) {
+    const slagSeed = projectile && projectile.slagSeed;
+    if (!slagSeed || projectile.slagDetonated) {
+      return;
+    }
+    projectile.slagDetonated = true;
+    applyPlayerAreaDamage(projectile.x, projectile.y, slagSeed.blastRadius, slagSeed.blastDamage, {
+      hazardDamageFactor: 0.8,
+    });
+    state.slagPools.push({
+      x: projectile.x,
+      y: projectile.y,
+      radius: slagSeed.poolRadius,
+      life: slagSeed.poolDuration,
+      maxLife: slagSeed.poolDuration,
+      tickInterval: slagSeed.poolTickInterval,
+      tickCooldown: 0.04,
+      damage: slagSeed.poolDamage,
+      color: slagSeed.poolColor,
+    });
+    state.shake = Math.max(state.shake, 3);
+    for (let index = 0; index < 8; index += 1) {
+      state.particles.push(createParticle(projectile.x, projectile.y, slagSeed.particleColor, 0.95));
+    }
+  }
+
   function createSupportSystemProjectile(origin, target, systemStats) {
     const dx = target.x - origin.x;
     const dy = target.y - origin.y;
@@ -6655,6 +6739,34 @@
       nextDeployables.push(nextDeployable);
     }
     state.supportDeployables = nextDeployables;
+  }
+
+  function updateSlagPools(dt) {
+    if (!Array.isArray(state.slagPools) || state.slagPools.length === 0) {
+      state.slagPools = [];
+      return;
+    }
+    const nextPools = [];
+    for (const pool of state.slagPools) {
+      const nextPool = {
+        ...pool,
+        life: pool.life - dt,
+        tickCooldown: pool.tickCooldown - dt,
+      };
+      if (nextPool.tickCooldown <= 0) {
+        applyPlayerAreaDamage(nextPool.x, nextPool.y, nextPool.radius, nextPool.damage, {
+          hazardDamageFactor: 0.45,
+        });
+        nextPool.tickCooldown += nextPool.tickInterval;
+        if (Math.random() < 0.7) {
+          state.particles.push(createParticle(nextPool.x, nextPool.y, "#ffbf72", 0.55));
+        }
+      }
+      if (nextPool.life > 0) {
+        nextPools.push(nextPool);
+      }
+    }
+    state.slagPools = nextPools;
   }
 
   function emitStormRailBursts(projectile, sourceEnemy) {
@@ -6882,35 +6994,88 @@
     }
 
     if (weapon.evolutionFirePattern) {
-      weapon.evolutionFirePattern.offsets.forEach((offset) => {
-        const angle = baseAngle + offset;
-        state.projectiles.push(
-          createPlayerProjectile(angle, weapon, driveActive, {
-            vx:
-              Math.cos(angle) *
-              weapon.projectileSpeed *
-              weapon.evolutionFirePattern.speedMultiplier *
-              (driveActive ? 1.12 : 1),
-            vy:
-              Math.sin(angle) *
-              weapon.projectileSpeed *
-              weapon.evolutionFirePattern.speedMultiplier *
-              (driveActive ? 1.12 : 1),
-            radius: weapon.evolutionFirePattern.radius,
-            damage: round(
-              (weapon.damage + (driveActive ? 8 : 0)) *
-                weapon.evolutionFirePattern.damageMultiplier,
-              1
-            ),
-            life: weapon.evolutionFirePattern.life,
-            pierce: weapon.pierce + weapon.evolutionFirePattern.pierceBonus,
-            bounce: weapon.bounce + weapon.evolutionFirePattern.bounceBonus,
-            chain: weapon.chain + weapon.evolutionFirePattern.chainBonus,
-            chainRange: weapon.chainRange,
-            color: weapon.evolutionFirePattern.color,
-          })
-        );
-      });
+      if (weapon.evolutionFirePattern.kind === "slag_seed") {
+        const count = Math.max(1, weapon.evolutionFirePattern.count || 1);
+        const half = (count - 1) / 2;
+        for (let seedIndex = 0; seedIndex < count; seedIndex += 1) {
+          const offset = (seedIndex - half) * (weapon.evolutionFirePattern.spread || 0);
+          const angle = baseAngle + offset;
+          state.projectiles.push(
+            createPlayerProjectile(angle, weapon, driveActive, {
+              vx:
+                Math.cos(angle) *
+                weapon.projectileSpeed *
+                weapon.evolutionFirePattern.speedMultiplier *
+                (driveActive ? 1.12 : 1),
+              vy:
+                Math.sin(angle) *
+                weapon.projectileSpeed *
+                weapon.evolutionFirePattern.speedMultiplier *
+                (driveActive ? 1.12 : 1),
+              radius: weapon.evolutionFirePattern.radius,
+              damage: round(
+                (weapon.damage + (driveActive ? 8 : 0)) *
+                  weapon.evolutionFirePattern.damageMultiplier,
+                1
+              ),
+              life: weapon.evolutionFirePattern.life,
+              pierce: 0,
+              bounce: 0,
+              chain: 0,
+              chainRange: 0,
+              color: weapon.evolutionFirePattern.color,
+              slagSeed: {
+                blastRadius: weapon.evolutionFirePattern.blastRadius,
+                blastDamage: round(
+                  (weapon.damage + (driveActive ? 8 : 0)) *
+                    weapon.evolutionFirePattern.blastDamageMultiplier,
+                  1
+                ),
+                poolRadius: weapon.evolutionFirePattern.poolRadius,
+                poolDuration: weapon.evolutionFirePattern.poolDuration,
+                poolTickInterval: weapon.evolutionFirePattern.poolTickInterval,
+                poolDamage: round(
+                  (weapon.damage + (driveActive ? 8 : 0)) *
+                    weapon.evolutionFirePattern.poolDamageMultiplier,
+                  1
+                ),
+                poolColor: weapon.evolutionFirePattern.poolColor,
+                particleColor: weapon.evolutionFirePattern.color,
+              },
+            })
+          );
+        }
+      } else {
+        weapon.evolutionFirePattern.offsets.forEach((offset) => {
+          const angle = baseAngle + offset;
+          state.projectiles.push(
+            createPlayerProjectile(angle, weapon, driveActive, {
+              vx:
+                Math.cos(angle) *
+                weapon.projectileSpeed *
+                weapon.evolutionFirePattern.speedMultiplier *
+                (driveActive ? 1.12 : 1),
+              vy:
+                Math.sin(angle) *
+                weapon.projectileSpeed *
+                weapon.evolutionFirePattern.speedMultiplier *
+                (driveActive ? 1.12 : 1),
+              radius: weapon.evolutionFirePattern.radius,
+              damage: round(
+                (weapon.damage + (driveActive ? 8 : 0)) *
+                  weapon.evolutionFirePattern.damageMultiplier,
+                1
+              ),
+              life: weapon.evolutionFirePattern.life,
+              pierce: weapon.pierce + weapon.evolutionFirePattern.pierceBonus,
+              bounce: weapon.bounce + weapon.evolutionFirePattern.bounceBonus,
+              chain: weapon.chain + weapon.evolutionFirePattern.chainBonus,
+              chainRange: weapon.chainRange,
+              color: weapon.evolutionFirePattern.color,
+            })
+          );
+        });
+      }
     }
 
     if (weapon.capstoneFire) {
@@ -7382,6 +7547,11 @@
             }
           }
         }
+      }
+
+      if (projectile.owner === "player" && projectile.slagSeed && (consumed || projectile.life <= 0)) {
+        detonateSlagSeed(projectile);
+        consumed = true;
       }
 
       if (!consumed && projectile.life > 0) {
@@ -8233,6 +8403,22 @@
       }
     }
 
+    for (const pool of state.slagPools || []) {
+      const alpha = clamp(pool.life / pool.maxLife, 0, 1);
+      context.globalAlpha = alpha * 0.85;
+      context.fillStyle = pool.color;
+      context.beginPath();
+      context.arc(pool.x, pool.y, pool.radius, 0, Math.PI * 2);
+      context.fill();
+      context.globalAlpha = alpha;
+      context.strokeStyle = "rgba(255, 214, 146, 0.55)";
+      context.lineWidth = 2;
+      context.beginPath();
+      context.arc(pool.x, pool.y, pool.radius * 0.72, 0, Math.PI * 2);
+      context.stroke();
+      context.globalAlpha = 1;
+    }
+
     for (const enemy of state.enemies) {
       const def = ENEMY_DEFS[enemy.type];
       context.fillStyle = def.color;
@@ -8379,6 +8565,7 @@
       maybeSpawnHazards(dt);
       updateEnemies(dt);
       updateProjectiles(dt);
+      updateSlagPools(dt);
       updateDrops(dt);
       updateHazards(dt);
       updateParticles(dt);

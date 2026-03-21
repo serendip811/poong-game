@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-21 11:45 KST
+  Findings:
+  - The run has more upgrade vocabulary now, but too much of the actual build chase still collapses into the same small recipe language. `AFFIX_DEFS` only gives six affixes, and every finisher recipe in `FINISHER_RECIPE_DEFS` pulls from that same tiny pool, so repeated runs risk feeling like different wrappers on the same shopping list instead of distinct obsessions.
+  - Main-weapon evolutions look better, but `WEAPON_EVOLUTION_DEFS` still mostly escalates by adding more parallel lanes. The player sees "more barrels, more lines, more spread" far more often than a true doctrine shift like beams, delayed bursts, area denial, chaining landmarks, or autonomous side behavior that changes how they pilot the arena.
+  - The support layer is broader, yet most of it still reinforces player-centered orbit or escort logic. Even `Seeker Array` and `Volt Drones` remain moving halos around the player, while only `Kiln Sentry` really starts to claim independent territory. That is more content, not enough posture diversity for a rerun-heavy roguelite.
+  - This matters more because the combat asks in Act 2-3 are already long enough to expose convergence. A 12-wave run can survive with adjacent build identities; a future 20-30 wave version cannot.
+  Top Priority: Create one genuinely divergent branch per core that demands different affix/module partners and produces a new battlefield posture, not just a denser version of the current firing lane.
+  Why Now: Until builds diverge in rule set instead of only in projectile count, extending the run will mostly magnify repetition.
+  Do Not Repeat: Do not answer this with another upgrade that is just "same weapon, but more lines."
+
 - 2026-03-22 02:28 KST
   Findings:
   - The game now has enough upgrade nouns to look like a roguelite, but the actual run still spends too long in "competent maintenance" instead of rising obsession. `Wave 3-8` adds systems, evolutions, and discounted `Field Cache` growth, yet many runs still feel broadly online rather than sharply committed to a build fantasy the player is impatient to complete.
@@ -439,6 +449,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-21 12:05 KST
+  Changed: reworked the `scatter` weapon evolution ladder in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from wider outer pellet lines into a forward `slag_seed` branch: `Cinder Mines`, `Kiln Minefield`, and `Caldera Verge` now launch delayed explosive seeds that leave short-lived burn zones. I also added the runtime support those shots needed so they detonate, apply burst damage, create lingering area-denial pools, tick damage against enemies and territory cores, and render clearly in combat, and updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new scatter evolution behavior.
+  Why: the newest critique's Top Priority asked for a genuinely divergent core branch rather than another "same weapon, more lines" escalation. This was the highest-value bounded interpretation because it gives one core a different battlefield posture immediately: scatter now wants to seed approach lanes and hold space, not only stand closer and widen its cone.
+  Follow-up risk: the new burn pools can also chip territory cores, so stacked scatter damage builds may soften Act 2-3 hazard pacing more than intended. If playtests show too much passive objective melting, the next pass should trim pool duration or lower hazard damage scaling without reverting the new posture.
 
 - 2026-03-21 KST
   Changed: replaced part of Act 2's automatic `Field Cache` cadence with a new `Bastion Draft` in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). After Waves `5` and `7`, the run now opens a three-card one-pick draft instead of another safe cache: one discounted `Bastion Spike` pulled from the heavier Act Break offensive pool, one `Siege Salvage Pact` that grants a large scrap injection in exchange for permanent max-HP loss, and one free `Emergency Vent`. I also updated the forge transition/UI copy so the event reads as a distinct Act 2 greed/commitment beat rather than another generic cache.
