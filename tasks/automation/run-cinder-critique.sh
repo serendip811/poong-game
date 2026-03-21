@@ -1,6 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
+export HOME="/Users/seren"
 export PATH="/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
 
 ROOT="/Users/seren/workspace/poong-game"

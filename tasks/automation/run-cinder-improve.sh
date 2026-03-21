@@ -1,6 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
+export HOME="/Users/seren"
 export PATH="/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
 
 ROOT="/Users/seren/workspace/poong-game"
@@ -69,7 +70,7 @@ PY
 }
 
 auto_commit_push() {
-  local status_output commit_message
+  local status_output commit_message token auth_header
   status_output=$(/usr/bin/git -C "$ROOT" status --short)
   if [ -z "$status_output" ]; then
     return 0
@@ -82,7 +83,11 @@ auto_commit_push() {
 
   /usr/bin/git -C "$ROOT" add -A
   /usr/bin/git -C "$ROOT" commit -m "$commit_message"
-  /usr/bin/git -C "$ROOT" push origin main
+  if ! /usr/bin/git -C "$ROOT" push origin main; then
+    token=$("/usr/local/bin/gh" auth token)
+    auth_header=$(printf 'x-access-token:%s' "$token" | /usr/bin/base64)
+    /usr/bin/git -C "$ROOT" -c credential.helper= -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $auth_header" push origin main
+  fi
 }
 
 {

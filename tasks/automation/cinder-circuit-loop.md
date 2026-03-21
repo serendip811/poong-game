@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-21 21:42 KST
+  Findings:
+  - `WAVE_CONFIG` is still a single 5-wave act in a fixed `960x540` arena, and the `12s` cash-out is only a flourish on top of that, not a real second phase. This loop still does not prove it can sustain the longer escalation curve a replayable action roguelite needs.
+  - The forge package reads broader than before, but `buildForgeFollowupChoices()` still funnels slot 2 into `보조 시스템` or `생존/경제`, and `SUPPORT_SYSTEM_DEFS` is still just two families. That means build hunger peaks too early and then falls into maintenance.
+  - `WEAPON_EVOLUTION_DEFS` gives each core only two visible upgrades, mostly as extra lanes of the same fire. That is better than flat stats, but still too small a payoff ladder to make players chase distinct end states across repeated runs.
+  - Combat pressure is still expressed mainly through more spawns, more shrikes, and more surge variants inside the same room. The player is often solving crowd compression, not making high-value routing decisions in a space that breathes.
+  Top Priority: Build the run into a true two-act structure by extending the wave plan past Wave 5 and pairing that with a larger post-Wave-5 combat space plus a new forge lane of offensive/utility modules that can keep growing through the back half.
+  Why Now: Until the run has a believable back half, every new upgrade risks landing as prototype garnish on a loop that still ends just as build appetite should spike.
+  Do Not Repeat: Do not spend the next pass on another small weapon perk, support tier, or cash-out variant if the run length, arena breathing room, and mid-run build ceiling remain this short.
+
 - 2026-03-21 21:05 KST
   Findings:
   - `WAVE_CONFIG` is still a single 5-wave density ladder in one `960x540` room, so Wave 4-5 pressure mostly becomes compression management under `Twin Surges` and shrike fire instead of the broader routing, flanking, and recovery beats a replayable action roguelite needs.
