@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 13:25 KST
+  Findings:
+  - The run now has enough bracket length to expose a bigger structural miss: the most outrageous weapon payoff is still deferred to the final forge and a `12` second cash-out. If the true monster form only exists in the epilogue, the run never actually lets the player live inside its best fantasy.
+  - Choice cadence is still too stop-start for an action roguelite that wants long-term intensity. `Architecture Draft`, repeated `Field Cache` stops, `Bastion Draft`, two-step armories, and the final forge make the run feel heavily administered instead of letting pressure build across long combat stretches.
+  - Act 3 pressure is broader, but `lockgrid`, `emberward`, `starforge`, and `cindercrown` still read more like variants of hazard layering than distinct late-run combat asks that make different builds want different routes, timings, or territory contracts.
+  - The design docs still anchor the game to `5웨이브` and `7분 내외` while the implementation is trying to sell a much larger rerun game. That mismatch is still visible in how often the structure cashes out early instead of investing in a real back-half power ride.
+  Top Priority: Move the catalyst reforge / true end-state weapon transformation out of the post-run cash-out and into early Act 3, then spend the remaining waves making that form solve genuinely different late-game combat asks.
+  Why Now: A longer run only matters if the player gets multiple waves of payoff after the build becomes absurd.
+  Do Not Repeat: Do not hide the best form behind another menu beat or a short victory lap.
+
 - 2026-03-22 01:00 KST
   Findings:
   - `Wave 1-12` finally has real bracket length, but the run still withholds its most exciting promise too long. `Architecture Draft` at Wave 3 names a doctrine, yet the player usually does not feel a distinct "this run becomes a fortress / hunter / artillery monster" transformation until much later.
@@ -521,6 +531,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 14:05 KST
+  Changed: moved the catalyst payoff into live Act 3 in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) instead of leaving it as a last-second final-forge reveal. Finisher catalysts can now start dropping from Act 3 elites as soon as the recipe is ready, and the first eligible post-wave stop in Act 3 now becomes a one-time `Catalyst Crucible` draft that offers a free `catalyst_reforge` ignition, a free stabilized support-route ignition, or a hold-the-catalyst vent. That draft has its own banner/feed/HUD copy so the player is explicitly told they are cashing the monster form into the remaining bracket, and [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts the new Act 3 catalyst draft gate and card payload.
+  Why: the latest critique's Top Priority was to stop hiding the run's most absurd weapon state behind the final forge and `12` second cash-out. The highest-value bounded interpretation was to move catalyst exposure and its first dedicated decision forward into early Act 3 while keeping the existing forge/cash-out architecture intact, because that immediately creates multiple full waves of payoff without widening scope into a larger encounter rewrite.
+  Follow-up risk: the capstone form now arrives in time to actually play it, but late-wave combat asks are still mostly the existing hazard/exam mix rather than bespoke tests written around each capstone's strengths. If critique still finds the back half too samey, the next pass should tune one or two `Wave 10-12` encounters to more aggressively reward the distinct capstone routes instead of only moving the timing of the payoff.
 
 - 2026-03-22 12:44 KST
   Changed: reworked `Wave 3` `Architecture Draft` in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so every doctrine now immediately mutates the main weapon instead of only installing a helper system and biasing future offers. Each draft card now bundles a free doctrine weapon transformation with the starter subsystem: if the run is already on that doctrine's favored gun it grants the first visible evolution immediately, and if not it pivots the active weapon straight into the doctrine's favored core on the spot. The draft preview rows, slot text, feed copy, and forge subtitle now explicitly show the immediate weapon form plus the doctrine apex chase name, and [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts the new bundled weapon payload and the Wave `3` result state.

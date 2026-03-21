@@ -1462,6 +1462,7 @@
   const FORGE_PACKAGE_START_WAVE = 3;
   const ACT_BREAK_ARMORY_WAVE = 5;
   const LATE_BREAK_ARMORY_WAVE = 9;
+  const ACT3_CATALYST_DRAFT_WAVE = 10;
   const ACT_LABELS = [
     { start: 1, end: 4, label: "Act 1 · Ignition", shortLabel: "Act 1" },
     { start: 5, end: 8, label: "Act 2 · Bastion Run", shortLabel: "Act 2" },
@@ -2497,6 +2498,7 @@
     catalystCapstoneId: null,
     cashoutSupportId: null,
     cashoutFailSoftId: null,
+    act3CatalystDraftSeen: false,
     bastionDoctrineId: null,
     doctrineCapstoneId: null,
     doctrineChaseClaimed: false,
@@ -3081,6 +3083,21 @@
     return nextWave === 6 || nextWave === 8;
   }
 
+  function shouldRunCatalystDraft(options, build) {
+    if (!options || options.finalForge || !build) {
+      return false;
+    }
+    const nextWave = options.nextWave || 0;
+    return (
+      nextWave >= ACT3_CATALYST_DRAFT_WAVE &&
+      nextWave <= MAX_WAVES &&
+      hasFinisherCatalyst(build, build.coreId) &&
+      !build.catalystCapstoneId &&
+      !build.cashoutSupportId &&
+      !build.act3CatalystDraftSeen
+    );
+  }
+
   function shouldUseFieldGrant(options) {
     if (!options || options.finalForge) {
       return false;
@@ -3114,6 +3131,9 @@
     }
     if (shouldRunBastionDraft(options)) {
       return "bastion_draft";
+    }
+    if (shouldRunCatalystDraft(options, options.build)) {
+      return "catalyst_draft";
     }
     if (shouldForceForgePackage(options)) {
       return "package";
@@ -3391,6 +3411,7 @@
         catalystCapstoneId: BASE_BUILD.catalystCapstoneId,
         cashoutSupportId: BASE_BUILD.cashoutSupportId,
         cashoutFailSoftId: BASE_BUILD.cashoutFailSoftId,
+        act3CatalystDraftSeen: BASE_BUILD.act3CatalystDraftSeen,
         bastionDoctrineId: BASE_BUILD.bastionDoctrineId,
         doctrineChaseClaimed: BASE_BUILD.doctrineChaseClaimed,
         supportBayCap: BASE_BUILD.supportBayCap,
@@ -5126,6 +5147,72 @@
     return choices;
   }
 
+  function buildCatalystDraftChoices(build) {
+    if (!build) {
+      return [];
+    }
+    const capstone = CATALYST_REFORGE_DEFS[build.coreId];
+    const support = FINAL_CASHOUT_SUPPORT_DEFS[build.coreId];
+    const choices = [];
+    if (capstone) {
+      const capstoneChoice = createCatalystReforgeChoice(build);
+      if (capstoneChoice) {
+        choices.push(
+          markForgeLane(
+            annotateFinaleChoice(
+              {
+                ...capstoneChoice,
+                cost: 0,
+                tag: "IGNITE",
+                slotText: `Act 3 점화 · ${capstoneChoice.slotText}`,
+                description: `${capstoneChoice.description} 지금 점화하면 남은 Act 3 웨이브 전체를 ${capstone.label} 형태로 싸운다.`,
+              },
+              getFinalCashoutPreview({ catalystCapstoneId: capstone.id })
+            ),
+            "촉매 점화"
+          )
+        );
+      }
+    }
+    if (support) {
+      const supportChoice = createCashoutSupportChoice(build, {
+        allowWithoutCatalyst: false,
+        costOverride: 0,
+      });
+      if (supportChoice) {
+        choices.push(
+          markForgeLane(
+            annotateFinaleChoice(
+              {
+                ...supportChoice,
+                tag: "STABILIZE",
+                slotText: `Act 3 안정화 · ${supportChoice.slotText}`,
+                description: `${supportChoice.description} 지금 안정화하면 남은 Act 3 웨이브를 이 운영형 회로로 미리 시험한다.`,
+              },
+              getFinalCashoutPreview({ cashoutSupportId: support.id })
+            ),
+            "촉매 안정화"
+          )
+        );
+      }
+    }
+    choices.push(
+      markForgeLane(
+        {
+          type: "fallback",
+          id: "catalyst:emergency_vent",
+          tag: "VENT",
+          title: "Emergency Vent",
+          description: "촉매는 보관한 채 열과 체력만 정리하고 다음 웨이브로 넘긴다. 이후 일반 포지에서도 촉매 카드는 다시 뜰 수 있다.",
+          slotText: "촉매 보류",
+          cost: 0,
+        },
+        "보류"
+      )
+    );
+    return choices;
+  }
+
   function enterArchitectureDraft() {
     state.phase = "forge";
     state.pendingFinalForge = false;
@@ -5186,6 +5273,23 @@
     updateHUD();
   }
 
+  function enterCatalystDraft() {
+    state.phase = "forge";
+    state.pendingFinalForge = false;
+    state.forgeStep = 1;
+    state.forgeMaxSteps = 1;
+    state.forgeDraftType = "catalyst_draft";
+    state.build.act3CatalystDraftSeen = true;
+    state.forgeChoices = buildCatalystDraftChoices(state.build);
+    pushCombatFeed(
+      "Catalyst Crucible 개시. 회수한 촉매를 지금 점화해 Act 3 본편을 괴물 형태로 싸울지, 안정화 회로로 남은 bracket을 운영형으로 비틀지 정한다.",
+      "CAT"
+    );
+    setBanner("Catalyst Crucible", 0.95);
+    renderForgeOverlay();
+    updateHUD();
+  }
+
   function getForgeDraftDisplayName(draftType) {
     if (draftType === "architecture_draft") {
       return "Architecture Draft";
@@ -5195,6 +5299,9 @@
     }
     if (draftType === "bastion_draft") {
       return "Bastion Draft";
+    }
+    if (draftType === "catalyst_draft") {
+      return "Catalyst Crucible";
     }
     return "Forge";
   }
@@ -5574,6 +5681,7 @@
     DEFAULT_SIGNATURE_ID,
     ACT_BREAK_ARMORY_WAVE,
     LATE_BREAK_ARMORY_WAVE,
+    ACT3_CATALYST_DRAFT_WAVE,
     createInitialBuild,
     getSignatureDef,
     getActLabelForWave,
@@ -5597,8 +5705,10 @@
     buildArchitectureDraftChoices,
     buildFieldGrantChoices,
     buildBastionDraftChoices,
+    buildCatalystDraftChoices,
     applyForgeChoice,
     shouldUseFieldGrant,
+    shouldRunCatalystDraft,
     getDoctrineCapstoneDef,
     getCatalystCapstone,
     shouldOpenForgePackage,
@@ -6317,6 +6427,7 @@
     const forgeOptions = {
       finalForge: isFinalForge,
       nextWave: state.waveIndex + 2,
+      build: state.build,
       packageStep: 1,
     };
     const draftType = getForgeDraftType(forgeOptions);
@@ -6620,7 +6731,8 @@
     const instantDraft =
       state.forgeDraftType === "architecture_draft" ||
       state.forgeDraftType === "field_grant" ||
-      state.forgeDraftType === "bastion_draft";
+      state.forgeDraftType === "bastion_draft" ||
+      state.forgeDraftType === "catalyst_draft";
     if (state.resources.scrap < choice.cost) {
       setBanner("고철 부족", 0.8);
       return;
@@ -6645,6 +6757,12 @@
               : choice.action === "bastion_doctrine"
                 ? `${choice.doctrineLabel} 적용. 즉시 ${choice.doctrineChoice ? choice.doctrineChoice.title : "spike"}를 잠그고 이후 포지를 해당 교리 쪽으로 기울인 채 다음 웨이브를 연다.`
               : `${grantLabel} 적용. 고철 ${choice.cost}을 태워 ${choice.title}을 일찍 잠그고 다음 웨이브를 강행한다.`
+          : state.forgeDraftType === "catalyst_draft"
+            ? choice.type === "fallback"
+              ? `${grantLabel} 적용. 촉매는 쥔 채로 상태만 정리하고 다음 웨이브를 연다.`
+              : choice.action === "catalyst_reforge"
+                ? `${choice.capstoneLabel} 점화. 남은 Act 3 웨이브를 촉매 괴물 형태로 바로 연다.`
+                : `${choice.supportLabel || choice.title} 안정화. 남은 Act 3 웨이브를 이 회로 운영으로 먼저 시험한다.`
           : choice.type === "fallback"
             ? `${grantLabel} 현장 보급 적용. 고철은 아낀 채 ${choice.title}로 상태만 정리하고 다음 웨이브를 즉시 연다.`
             : `${grantLabel} 현장 보급 적용. 고철 ${choice.cost}을 태워 ${choice.title}을 잠그고 다음 웨이브를 즉시 밀어붙인다.`,
@@ -6652,6 +6770,8 @@
           ? "ARCH"
           : state.forgeDraftType === "bastion_draft"
             ? "DRAFT"
+            : state.forgeDraftType === "catalyst_draft"
+              ? "CAT"
             : "CACHE"
       );
       refreshDerivedStats(false);
@@ -8607,7 +8727,7 @@
         life: 12,
       });
       if (
-        state.waveIndex === MAX_WAVES - 1 &&
+        state.waveIndex >= LATE_BREAK_ARMORY_WAVE - 1 &&
         buildCanEarnFinisherCatalyst(state.build) &&
         !state.drops.some(
           (drop) => drop.kind === "catalyst" && drop.coreId === state.build.coreId && drop.life > 0
@@ -8620,7 +8740,10 @@
           coreId: state.build.coreId,
           life: 12,
         });
-        pushCombatFeed(`${FINISHER_RECIPE_DEFS[state.build.coreId].label} 촉매 노출. 회수해야 최종 각인이 열린다.`, "CAT");
+        pushCombatFeed(
+          `${FINISHER_RECIPE_DEFS[state.build.coreId].label} 촉매 노출. 회수하면 다음 포지에서 Act 3 변환 각인이 열린다.`,
+          "CAT"
+        );
       }
     }
 
@@ -8728,6 +8851,8 @@
               ? "Bastion Draft"
             : shouldRunArchitectureDraft({ nextWave, finalForge: false })
               ? "Architecture Draft"
+            : shouldRunCatalystDraft({ nextWave, finalForge: false }, state.build)
+              ? "Catalyst Crucible"
             : shouldUseFieldGrant({ nextWave, finalForge: false })
               ? "Field Cache"
               : "포지";
@@ -8747,6 +8872,10 @@
           enterArchitectureDraft();
         } else if (shouldRunBastionDraft({ nextWave: state.waveIndex + 2, finalForge: false })) {
           enterBastionDraft();
+        } else if (
+          shouldRunCatalystDraft({ nextWave: state.waveIndex + 2, finalForge: false }, state.build)
+        ) {
+          enterCatalystDraft();
         } else if (shouldUseFieldGrant({ nextWave: state.waveIndex + 2, finalForge: false })) {
           enterFieldGrant();
         } else {
@@ -8925,6 +9054,8 @@
                   ? "Field Cache 선택 중"
                   : state.forgeDraftType === "bastion_draft"
                     ? "Bastion Draft 선택 중"
+                    : state.forgeDraftType === "catalyst_draft"
+                      ? "Catalyst Crucible 선택 중"
                     : "포지 선택 중"
               : "전투 진행 중"
           }</strong>
@@ -9002,6 +9133,7 @@
     const forgeOptions = {
       finalForge: state.pendingFinalForge,
       nextWave: state.waveIndex + 2,
+      build: state.build,
     };
     const armoryLabel = getArmoryLabel(forgeOptions);
     const packageSummary =
@@ -9013,6 +9145,8 @@
         ? state.build.bastionDoctrineId
           ? "Bastion Draft · 기존 교리 위에 추가 spike 또는 고통 계약을 더 얹어 Act 2 greed를 강제한다"
           : "Bastion Draft · 시그니처 교리 1장, 고통 계약 1장, 무료 안정화 1장 중 1픽으로 Act 2 posture와 future bay를 잠근다"
+        : state.forgeDraftType === "catalyst_draft"
+        ? "Catalyst Crucible · 회수한 촉매를 지금 태워 Act 3 본편을 괴물 화력이나 운영형 안정화로 먼저 고정한다"
         : state.forgeDraftType === "armory"
         ? isLateBreakArmory(forgeOptions)
           ? `${armoryLabel} ${state.forgeStep}/${state.forgeMaxSteps} · 6장 중 2픽, 세 번째 베이와 교리 완성 카드까지 열려 최종 전장 posture를 잠근다`
@@ -9034,6 +9168,8 @@
         ? state.build.bastionDoctrineId
           ? `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 이미 채택한 교리 위에 추가 spike 1장과 Siege Salvage Pact, 무료 안정화가 다시 뜬다. 지금 더 깊게 묶일지, 체력을 태워 greed를 당길지 결정한다.`
           : `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 한 장은 시그니처 전용 교리라 즉시 spike를 잠그면서 남은 support bay와 이후 포지 후보까지 한 계통으로 고정하고, 한 장은 최대 체력을 깎고 고철을 당겨오는 Siege Salvage Pact, 마지막 한 장은 무료 안정화다. Act 2 posture를 잠글지, 더 아프게 탐욕할지 직접 정한다.`
+        : state.forgeDraftType === "catalyst_draft"
+        ? `고철 ${Math.round(state.resources.scrap)} 보유. Catalyst Crucible이다. 이제 막 회수한 촉매를 무료로 점화하거나 안정화해 남은 Act 3 웨이브를 완성형 회로로 직접 소모한다. 최종 포지까지 묵혀 두는 대신 지금부터 괴물 형태를 실제 전장에 투입한다.`
         : state.forgeDraftType === "armory"
         ? isLateBreakArmory(forgeOptions)
           ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 8을 넘기며 ${armoryLabel}가 열린다. 세 번째 support bay가 해금됐고, 교리를 택한 런이라면 doctrine apex 카드도 함께 열려 이번 포지 2픽이 최종 전장 posture 자체를 바꾼다.`
@@ -9097,6 +9233,12 @@
                       : choice.cost > 0
                         ? `${index + 1}번 선택 · spike 고철 ${choice.cost}`
                         : `${index + 1}번 선택 · 무료 안정화`
+                : state.forgeDraftType === "catalyst_draft"
+                  ? choice.type === "fallback"
+                    ? `${index + 1}번 선택 · 촉매 보류`
+                    : choice.action === "catalyst_reforge"
+                      ? `${index + 1}번 선택 · 무료 점화`
+                      : `${index + 1}번 선택 · 무료 안정화`
                 : state.resources.scrap < choice.cost
                   ? `${index + 1}번 선택 · 고철 부족`
                   : `${index + 1}번 선택 · 고철 ${choice.cost}`

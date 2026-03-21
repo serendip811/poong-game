@@ -26,6 +26,7 @@ assert.equal(game.MAX_WAVES, 12);
 assert.equal(game.WAVE_CONFIG.length, 12);
 assert.equal(game.ACT_BREAK_ARMORY_WAVE, 5);
 assert.equal(game.LATE_BREAK_ARMORY_WAVE, 9);
+assert.equal(game.ACT3_CATALYST_DRAFT_WAVE, 10);
 assert.equal(game.getActLabelForWave(4).shortLabel, "Act 1");
 assert.equal(game.getActLabelForWave(5).shortLabel, "Act 2");
 assert.equal(game.getActLabelForWave(9).shortLabel, "Act 3");
@@ -258,6 +259,33 @@ const bastionDoctrineChoice = bastionDraftChoices.find(
 );
 assert.ok(bastionDoctrineChoice);
 assert.equal(bastionDoctrineChoice.title, "Mirror Hunt Doctrine");
+
+const catalystBuild = game.createInitialBuild("scrap_pact");
+catalystBuild.finisherCatalysts = ["scatter"];
+assert.equal(
+  game.shouldRunCatalystDraft(
+    { nextWave: game.ACT3_CATALYST_DRAFT_WAVE, finalForge: false },
+    catalystBuild
+  ),
+  true
+);
+const catalystDraftChoices = game.buildCatalystDraftChoices(catalystBuild);
+assert.equal(catalystDraftChoices.length, 3);
+assert.equal(catalystDraftChoices[0].action, "catalyst_reforge");
+assert.equal(catalystDraftChoices[0].cost, 0);
+assert.equal(catalystDraftChoices[0].laneLabel, "촉매 점화");
+assert.equal(catalystDraftChoices[1].action, "cashout_support");
+assert.equal(catalystDraftChoices[1].cost, 0);
+assert.equal(catalystDraftChoices[1].laneLabel, "촉매 안정화");
+assert.equal(catalystDraftChoices[2].type, "fallback");
+catalystBuild.act3CatalystDraftSeen = true;
+assert.equal(
+  game.shouldRunCatalystDraft(
+    { nextWave: game.ACT3_CATALYST_DRAFT_WAVE, finalForge: false },
+    catalystBuild
+  ),
+  false
+);
 assert.equal(bastionDoctrineChoice.doctrineChoice.title, "Prism Crown");
 game.applyForgeChoice(
   { build: bastionDoctrineBuild, player: null, resources: { scrap: 999 }, stats: {} },
