@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 02:28 KST
+  Findings:
+  - The game now has enough upgrade nouns to look like a roguelite, but the actual run still spends too long in "competent maintenance" instead of rising obsession. `Wave 3-8` adds systems, evolutions, and discounted `Field Cache` growth, yet many runs still feel broadly online rather than sharply committed to a build fantasy the player is impatient to complete.
+  - The main weapon evolution ladder is visually better, but it still mostly scales the current firing lane wider. Extra barrels, wider rails, and more projectiles read well, yet they do not create enough role divergence between runs compared with the support layer. Repeated runs still risk becoming "pick your spread shape, then solve the same space-control exam."
+  - Combat pressure is more breathable than the old single-room prototype, but late-wave asks are still too unified around reopening lanes under `warden` + `mortar` + hazard pressure. The arena is larger, not more strategically varied. A future `20-30` wave game needs acts that force different appetites, not just harder ownership fights over movement space.
+  - `Field Cache` remains too generous as the default non-armory cadence after `Wave 3`. Cheap evolutions/systems keep smoothing over weak stretches, which lowers the emotional charge of armories and undercuts the greed of saving for a real spike.
+  Top Priority: Replace part of the mid-run `Field Cache` cadence with a more committal act-specific draft that offers one high-payoff build branch and one painful sacrifice, so Act 2 starts creating hunger instead of just reliable smoothing.
+  Why Now: Until the mid-run economy can deny, tempt, and polarize builds, more weapons and more waves will keep landing as content volume instead of replayable obsession.
+  Do Not Repeat: Do not answer this with another safe discount layer or another evolution that only adds more barrels to the same firing job.
+
 - 2026-03-22 02:05 KST
   Findings:
   - The upgrade catalog looks broader, but the major support lines (`Ember Ring`, `Aegis Halo`, `Seeker Array`, `Volt Drones`) are still all orbiting helpers anchored to the player. They vary in payload more than in posture, so many "different" builds still occupy space the same way.
@@ -429,6 +439,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-21 KST
+  Changed: replaced part of Act 2's automatic `Field Cache` cadence with a new `Bastion Draft` in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). After Waves `5` and `7`, the run now opens a three-card one-pick draft instead of another safe cache: one discounted `Bastion Spike` pulled from the heavier Act Break offensive pool, one `Siege Salvage Pact` that grants a large scrap injection in exchange for permanent max-HP loss, and one free `Emergency Vent`. I also updated the forge transition/UI copy so the event reads as a distinct Act 2 greed/commitment beat rather than another generic cache.
+  Why: the latest critique's Top Priority was to replace part of the mid-run `Field Cache` smoothing with an act-specific draft that creates hunger and denial. This was the highest-value bounded interpretation because it adds one visible spike branch and one painful sacrifice without broadening scope into a full economy rewrite.
+  Follow-up risk: `Siege Salvage Pact` may overfeed strong players who can absorb the HP penalty, and `Bastion Spike` still reuses the Armory offensive pool instead of yet authoring multiple bespoke Act 2 branch identities. If Act 2 remains too convergent, the next pass should tune pact numbers and split the spike slot into more than one authored branch family.
 
 - 2026-03-22 02:43 KST
   Changed: added an early non-orbital `Kiln Sentry` subsystem family in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). `Kiln Sentry` unlocks on the Wave 2 forge, occupies the `보조 시스템` lane before the normal package cadence starts, and upgrades through three tiers of planted forward turrets that persist on the field and fire from fixed positions instead of orbiting the player. I extended support-system stat aggregation, runtime state, and arena rendering so detached sentries spawn, hold space, shoot, and display correctly alongside the existing orbit-based systems, and updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new support family, Wave 2 access, and its visible tier scaling.

@@ -2897,12 +2897,24 @@
     return isLateBreakArmory(options) ? "Late Break Armory" : "Act Break Armory";
   }
 
+  function shouldRunBastionDraft(options) {
+    if (!options || options.finalForge) {
+      return false;
+    }
+    const nextWave = options.nextWave || 0;
+    return nextWave === 6 || nextWave === 8;
+  }
+
   function shouldUseFieldGrant(options) {
     if (!options || options.finalForge) {
       return false;
     }
     const nextWave = options.nextWave || 0;
-    return nextWave >= FORGE_PACKAGE_START_WAVE && !shouldRunActBreakArmory(options);
+    return (
+      nextWave >= FORGE_PACKAGE_START_WAVE &&
+      !shouldRunActBreakArmory(options) &&
+      !shouldRunBastionDraft(options)
+    );
   }
 
   function unlockLateSupportBay(build) {
@@ -2919,6 +2931,9 @@
     }
     if (shouldRunActBreakArmory(options)) {
       return "armory";
+    }
+    if (shouldRunBastionDraft(options)) {
+      return "bastion_draft";
     }
     if (shouldForceForgePackage(options)) {
       return "package";
@@ -4353,6 +4368,95 @@
     };
   }
 
+  function createBastionDraftSpikeChoice(build, rng, nextWave) {
+    const random = typeof rng === "function" ? rng : Math.random;
+    const spikePool = buildActBreakArmoryChoices(build, random, Number.POSITIVE_INFINITY, {
+      nextWave,
+      finalForge: false,
+    }).filter(
+      (choice) =>
+        choice &&
+        (choice.laneLabel === "주무장 진화" ||
+          choice.laneLabel === "공세 모듈" ||
+          choice.laneLabel === "대형 화력")
+    );
+    if (spikePool.length === 0) {
+      return null;
+    }
+    const rankedPool = spikePool.sort((left, right) => {
+      const typeScore = (choice) => {
+        if (choice.type === "evolution") {
+          return 4;
+        }
+        if (choice.type === "system" && choice.forgeLaneLabel === "공세 모듈") {
+          return 3;
+        }
+        if (choice.type === "core" || choice.type === "affix") {
+          return 2;
+        }
+        return 1;
+      };
+      const scoreDelta = typeScore(right) - typeScore(left);
+      if (scoreDelta !== 0) {
+        return scoreDelta;
+      }
+      return (right.cost || 0) - (left.cost || 0);
+    });
+    const choice = rankedPool[0];
+    return {
+      ...choice,
+      id: `bastion:${choice.id}`,
+      tag: "SPIKE",
+      laneLabel: "Bastion Spike",
+      forgeLaneLabel: choice.forgeLaneLabel || choice.laneLabel || "대형 화력",
+      cost: Math.max(18, Math.round((choice.cost || 0) * 0.72)),
+      originalCost: choice.cost || 0,
+      slotText: `Act 2 spike · ${choice.slotText || choice.description}`,
+      description: `Act 2용 과투입 카드. ${choice.description} 지금 평소보다 일찍 잠그는 대신, 다음 큰 포지 전까지 이 라인에 더 깊게 묶인다.`,
+    };
+  }
+
+  function createBastionDraftPactChoice() {
+    return {
+      type: "utility",
+      action: "bastion_pact",
+      id: "utility:bastion_pact",
+      verb: "계약",
+      tag: "PACT",
+      title: "Siege Salvage Pact",
+      description:
+        "즉시 고철 +56과 회수 효율 +12%를 얻지만, 최대 체력 -22와 현재 체력 18 피해를 영구적으로 감수한다. 다음 Armory까지 greed를 강제하는 Act 2 계약.",
+      slotText: "고철 +56 · 회수 +12% · 최대 체력 -22",
+      cost: 0,
+      scrapGain: 56,
+      scrapMultiplierGain: 0.12,
+      maxHpPenalty: 22,
+      hpLoss: 18,
+      laneLabel: "Siege Pact",
+      forgeLaneLabel: "고통 계약",
+    };
+  }
+
+  function buildBastionDraftChoices(build, rng, nextWave) {
+    const spikeChoice = createBastionDraftSpikeChoice(build, rng, nextWave);
+    const choices = [];
+    if (spikeChoice) {
+      choices.push(spikeChoice);
+    }
+    choices.push(createBastionDraftPactChoice());
+    choices.push({
+      type: "fallback",
+      id: "bastion:emergency_vent",
+      tag: "VENT",
+      title: "Emergency Vent",
+      description: "Act 2 draft를 거절하고 열과 체력만 정리한 채 다음 웨이브로 바로 넘긴다.",
+      slotText: "무료 안정화",
+      cost: 0,
+      laneLabel: "안정화",
+    });
+    return choices;
+  }
+
   function buildFieldGrantChoices(build, rng, nextWave) {
     const pool = buildForgeChoices(build, rng, FIELD_GRANT_MAX_COST, {
       nextWave,
@@ -4432,6 +4536,33 @@
     setBanner("Field Cache", 0.95);
     renderForgeOverlay();
     updateHUD();
+  }
+
+  function enterBastionDraft() {
+    const nextWave = state.waveIndex + 2;
+    state.phase = "forge";
+    state.pendingFinalForge = false;
+    state.forgeStep = 1;
+    state.forgeMaxSteps = 1;
+    state.forgeDraftType = "bastion_draft";
+    state.forgeChoices = buildBastionDraftChoices(state.build, Math.random, nextWave);
+    pushCombatFeed(
+      "Bastion Draft 개시. 할인 spike 1장, 고통 계약 1장, 무료 안정화 1장 중 하나로 Act 2 운영을 직접 비튼다.",
+      "DRAFT"
+    );
+    setBanner("Bastion Draft", 0.95);
+    renderForgeOverlay();
+    updateHUD();
+  }
+
+  function getForgeDraftDisplayName(draftType) {
+    if (draftType === "field_grant") {
+      return "Field Cache";
+    }
+    if (draftType === "bastion_draft") {
+      return "Bastion Draft";
+    }
+    return "Forge";
   }
 
   function buildForgeFollowupChoices(build, rng, scrapBank, options = null, previousChoice = null) {
@@ -4685,6 +4816,26 @@
       if (run.player) {
         run.player.hp = Math.min(run.player.maxHp, run.player.hp + 10);
         run.player.heat = Math.max(0, run.player.heat - 35);
+        run.player.overheated = false;
+      }
+      return choice;
+    }
+
+    if (choice.type === "utility" && choice.action === "bastion_pact") {
+      if (run.resources) {
+        run.resources.scrap += Math.max(0, choice.scrapGain || 0);
+      }
+      if (run.stats) {
+        run.stats.scrapCollected += Math.max(0, choice.scrapGain || 0);
+      }
+      run.build.scrapMultiplier += choice.scrapMultiplierGain || 0;
+      run.build.maxHpBonus -= Math.max(0, choice.maxHpPenalty || 0);
+      run.build.upgrades.push(
+        `Bastion Pact: 고철 +${Math.max(0, choice.scrapGain || 0)} / 최대 체력 -${Math.max(0, choice.maxHpPenalty || 0)}`
+      );
+      if (run.player) {
+        run.player.hp = Math.max(1, run.player.hp - Math.max(0, choice.hpLoss || 0));
+        run.player.heat = Math.max(0, run.player.heat - 24);
         run.player.overheated = false;
       }
       return choice;
@@ -5751,7 +5902,8 @@
     if (!choice) {
       return;
     }
-    const fieldGrantDraft = state.forgeDraftType === "field_grant";
+    const instantDraft =
+      state.forgeDraftType === "field_grant" || state.forgeDraftType === "bastion_draft";
     if (state.resources.scrap < choice.cost) {
       setBanner("고철 부족", 0.8);
       return;
@@ -5761,13 +5913,19 @@
       state.stats.scrapSpent += choice.cost;
     }
     applyForgeChoice(state, choice);
-    if (fieldGrantDraft) {
+    if (instantDraft) {
       const grantLabel = choice.forgeLaneLabel || choice.laneLabel || choice.tag || "CACHE";
       pushCombatFeed(
-        choice.type === "fallback"
-          ? `${grantLabel} 현장 보급 적용. 고철은 아낀 채 ${choice.title}로 상태만 정리하고 다음 웨이브를 즉시 연다.`
-          : `${grantLabel} 현장 보급 적용. 고철 ${choice.cost}을 태워 ${choice.title}을 잠그고 다음 웨이브를 즉시 밀어붙인다.`,
-        "CACHE"
+        state.forgeDraftType === "bastion_draft"
+          ? choice.type === "fallback"
+            ? `${grantLabel} 적용. Bastion Draft를 안정화로 넘기고 다음 웨이브를 바로 연다.`
+            : choice.action === "bastion_pact"
+              ? `${grantLabel} 적용. 최대 체력을 깎아 고철을 쥐고 다음 웨이브를 연다.`
+              : `${grantLabel} 적용. 고철 ${choice.cost}을 태워 ${choice.title}을 일찍 잠그고 다음 웨이브를 강행한다.`
+          : choice.type === "fallback"
+            ? `${grantLabel} 현장 보급 적용. 고철은 아낀 채 ${choice.title}로 상태만 정리하고 다음 웨이브를 즉시 연다.`
+            : `${grantLabel} 현장 보급 적용. 고철 ${choice.cost}을 태워 ${choice.title}을 잠그고 다음 웨이브를 즉시 밀어붙인다.`,
+        state.forgeDraftType === "bastion_draft" ? "DRAFT" : "CACHE"
       );
       refreshDerivedStats(false);
       beginWave(state.waveIndex + 1);
@@ -7434,6 +7592,8 @@
           ? "최종 포지"
           : shouldRunActBreakArmory({ nextWave, finalForge: false })
             ? getArmoryLabel({ nextWave })
+            : shouldRunBastionDraft({ nextWave, finalForge: false })
+              ? "Bastion Draft"
             : shouldUseFieldGrant({ nextWave, finalForge: false })
               ? "Field Cache"
               : "포지";
@@ -7449,6 +7609,8 @@
       if (state.waveClearTimer <= 0) {
         if (state.wave.completesRun) {
           finishRun(true);
+        } else if (shouldRunBastionDraft({ nextWave: state.waveIndex + 2, finalForge: false })) {
+          enterBastionDraft();
         } else if (shouldUseFieldGrant({ nextWave: state.waveIndex + 2, finalForge: false })) {
           enterFieldGrant();
         } else {
@@ -7465,7 +7627,7 @@
     const waveConfig = state.wave || WAVE_CONFIG[state.waveIndex];
     const waveLabel =
       state.phase === "forge"
-        ? `${waveConfig.label} · ${state.forgeDraftType === "field_grant" ? "Field Cache" : "Forge"}`
+        ? `${waveConfig.label} · ${getForgeDraftDisplayName(state.forgeDraftType)}`
         : waveConfig.label;
     const hpRatio = state.player.maxHp > 0 ? state.player.hp / state.player.maxHp : 0;
     const heatRatio = state.player.heat / 100;
@@ -7619,7 +7781,9 @@
             state.phase === "forge"
               ? state.forgeDraftType === "field_grant"
                 ? "Field Cache 선택 중"
-                : "포지 선택 중"
+                : state.forgeDraftType === "bastion_draft"
+                  ? "Bastion Draft 선택 중"
+                  : "포지 선택 중"
               : "전투 진행 중"
           }</strong>
           <span class="summary-chip ${
@@ -7701,6 +7865,8 @@
     const packageSummary =
       state.forgeDraftType === "field_grant"
         ? "Field Cache · 할인 장착 2장과 무료 회수 1장 중 1픽, 지금 고철을 태울지 아낄지 고른다"
+        : state.forgeDraftType === "bastion_draft"
+        ? "Bastion Draft · 할인 spike 1장, 고통 계약 1장, 무료 안정화 1장 중 1픽으로 Act 2 greed를 강제한다"
         : state.forgeDraftType === "armory"
         ? isLateBreakArmory(forgeOptions)
           ? `${armoryLabel} ${state.forgeStep}/${state.forgeMaxSteps} · 6장 중 2픽, 세 번째 베이까지 열린 상태에서 마지막 과투입을 강제한다`
@@ -7716,6 +7882,8 @@
         : `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 촉매가 없어도 비상 점화와 안정화 fail-soft 카드가 열리며, 각 카드가 다른 12초 cash-out 시험으로 바로 이어진다.`
       : state.forgeDraftType === "field_grant"
         ? `고철 ${Math.round(state.resources.scrap)} 보유. Field Cache다. 할인된 즉시 장착 2장과 무료 Emergency Vent 중 하나를 고른다. 지금 스파이크를 사서 당길지, 고철을 쥐고 다음 큰 포지까지 버틸지 직접 판단해야 한다.`
+        : state.forgeDraftType === "bastion_draft"
+        ? `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 한 장은 평소보다 이른 spike, 한 장은 최대 체력을 깎고 고철을 당겨오는 Siege Salvage Pact, 마지막 한 장은 무료 안정화다. Act 2를 더 강하게 잠글지, 더 아프게 탐욕할지 직접 정한다.`
         : state.forgeDraftType === "armory"
         ? isLateBreakArmory(forgeOptions)
           ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 8을 넘기며 ${armoryLabel}가 열린다. 세 번째 support bay가 해금됐고, 이번 포지는 6장 중 2장을 골라 4웨이브짜리 최종 전투 구간 전체를 버틸 과한 조합을 잠근다.`
@@ -7769,9 +7937,17 @@
                   : choice.cost > 0
                     ? `${index + 1}번 선택 · 현장 고철 ${choice.cost}`
                     : `${index + 1}번 선택 · 무료 회수`
+                : state.forgeDraftType === "bastion_draft"
+                  ? state.resources.scrap < choice.cost
+                    ? `${index + 1}번 선택 · 고철 부족`
+                    : choice.action === "bastion_pact"
+                      ? `${index + 1}번 선택 · 체력 대가 계약`
+                      : choice.cost > 0
+                        ? `${index + 1}번 선택 · spike 고철 ${choice.cost}`
+                        : `${index + 1}번 선택 · 무료 안정화`
                 : state.resources.scrap < choice.cost
-                ? `${index + 1}번 선택 · 고철 부족`
-                : `${index + 1}번 선택 · 고철 ${choice.cost}`
+                  ? `${index + 1}번 선택 · 고철 부족`
+                  : `${index + 1}번 선택 · 고철 ${choice.cost}`
             }</span>
           </button>
         `;
