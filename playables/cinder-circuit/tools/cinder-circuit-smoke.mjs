@@ -347,7 +347,7 @@ assert.ok(aegisTierTwo.orbitCount >= 2);
 assert.ok(aegisTierTwo.interceptRange > aegisTierOne.interceptRange);
 assert.ok(aegisTierTwo.interceptPulseDamage > 0);
 const aegisTierThreeChoice = game
-  .buildForgeFollowupChoices(aegisBuild, () => 0, 180, { nextWave: 6, finalForge: false }, packagePrimaryChoice)
+  .buildForgeFollowupChoices(aegisBuild, () => 0, 180, { nextWave: 7, finalForge: false }, packagePrimaryChoice)
   .find(
     (choice) =>
       choice.laneLabel === "보조 시스템" &&
@@ -367,8 +367,43 @@ assert.ok(aegisTierThree.interceptPulseRadius > aegisTierTwo.interceptPulseRadiu
 
 const actTwoModuleBuild = game.createInitialBuild("relay_oath");
 actTwoModuleBuild.pendingCores = [];
-const actOneModuleFollowup = game.buildForgeFollowupChoices(
+const actBreakArmoryChoices = game.buildForgeChoices(
   actTwoModuleBuild,
+  () => 0,
+  180,
+  { nextWave: 6, finalForge: false }
+);
+assert.equal(actBreakArmoryChoices.length, 5);
+assert.ok(actBreakArmoryChoices.some((choice) => choice.laneLabel === "주무장 진화"));
+assert.ok(actBreakArmoryChoices.some((choice) => choice.laneLabel === "공세 모듈"));
+assert.ok(actBreakArmoryChoices.some((choice) => choice.laneLabel === "보조 시스템"));
+assert.ok(actBreakArmoryChoices.some((choice) => choice.laneLabel === "방호/유틸 차체"));
+assert.ok(
+  actBreakArmoryChoices.every((choice) =>
+    ["주무장 진화", "공세 모듈", "보조 시스템", "방호/유틸 차체"].includes(choice.laneLabel)
+  )
+);
+const armoryFirstPick = actBreakArmoryChoices.find((choice) => choice.laneLabel === "공세 모듈");
+assert.ok(armoryFirstPick);
+game.applyForgeChoice(
+  { build: actTwoModuleBuild, player: null, resources: { scrap: 999 }, stats: {} },
+  armoryFirstPick
+);
+const actBreakFollowupChoices = game.buildForgeFollowupChoices(
+  actTwoModuleBuild,
+  () => 0,
+  180 - armoryFirstPick.cost,
+  { nextWave: 6, finalForge: false },
+  armoryFirstPick
+);
+assert.ok(actBreakFollowupChoices.length >= 4);
+assert.ok(!actBreakFollowupChoices.some((choice) => choice.id === armoryFirstPick.id));
+assert.ok(actBreakFollowupChoices.some((choice) => choice.laneLabel === "방호/유틸 차체"));
+assert.ok(actBreakFollowupChoices.some((choice) => choice.laneLabel === "보조 시스템"));
+const actModuleFollowupBuild = game.createInitialBuild("relay_oath");
+actModuleFollowupBuild.pendingCores = [];
+const actOneModuleFollowup = game.buildForgeFollowupChoices(
+  actModuleFollowupBuild,
   () => 0,
   180,
   { nextWave: 3, finalForge: false },
@@ -376,7 +411,7 @@ const actOneModuleFollowup = game.buildForgeFollowupChoices(
 );
 assert.ok(!actOneModuleFollowup.some((choice) => choice.laneLabel === "공세 모듈"));
 const actTwoModuleFollowup = game.buildForgeFollowupChoices(
-  actTwoModuleBuild,
+  actModuleFollowupBuild,
   () => 0,
   180,
   { nextWave: 4, finalForge: false },
@@ -391,16 +426,16 @@ const seekerInstallChoice = actTwoModuleFollowup.find(
 );
 assert.ok(seekerInstallChoice);
 game.applyForgeChoice(
-  { build: actTwoModuleBuild, player: null, resources: { scrap: 999 }, stats: {} },
+  { build: actModuleFollowupBuild, player: null, resources: { scrap: 999 }, stats: {} },
   seekerInstallChoice
 );
-const seekerTierOne = game.computeSupportSystemStats(actTwoModuleBuild);
+const seekerTierOne = game.computeSupportSystemStats(actModuleFollowupBuild);
 assert.equal(seekerTierOne.orbitCount, 1);
 assert.ok(seekerTierOne.shotCooldown > 0);
 assert.equal(seekerTierOne.renderShape, "missile");
 const voltInstallChoice = game
   .buildForgeFollowupChoices(
-    actTwoModuleBuild,
+    actModuleFollowupBuild,
     () => 0,
     180,
     { nextWave: 5, finalForge: false },
@@ -409,13 +444,13 @@ const voltInstallChoice = game
   .find((choice) => choice.laneLabel === "공세 모듈" && choice.systemId === "volt_drones");
 assert.ok(voltInstallChoice);
 game.applyForgeChoice(
-  { build: actTwoModuleBuild, player: null, resources: { scrap: 999 }, stats: {} },
+  { build: actModuleFollowupBuild, player: null, resources: { scrap: 999 }, stats: {} },
   voltInstallChoice
 );
-const dualOffenseStats = game.computeSupportSystemStats(actTwoModuleBuild);
+const dualOffenseStats = game.computeSupportSystemStats(actModuleFollowupBuild);
 assert.equal(dualOffenseStats.orbitCount, 3);
 const actTwoUpgradeChoices = game.buildForgeFollowupChoices(
-  actTwoModuleBuild,
+  actModuleFollowupBuild,
   () => 0,
   180,
   { nextWave: 8, finalForge: false },

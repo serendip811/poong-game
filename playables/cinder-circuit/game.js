@@ -1022,6 +1022,16 @@
 
   const DEFAULT_SIGNATURE_ID = "relay_oath";
   const FORGE_PACKAGE_START_WAVE = 3;
+  const ACT_BREAK_ARMORY_WAVE = 6;
+  const ACT_BREAK_ARMORY_MAX_CHOICES = 5;
+  const ACT_BREAK_CHASSIS_MOD_IDS = [
+    "drive_sync",
+    "armor_mesh",
+    "heat_sink",
+    "reactor_cap",
+    "step_servos",
+    "magnet_rig",
+  ];
   const MAX_WEAPON_EVOLUTION_TIER = 3;
   const WEAPON_EVOLUTION_DEFS = {
     ember: {
@@ -2503,6 +2513,26 @@
     return (options.nextWave || 0) >= FORGE_PACKAGE_START_WAVE;
   }
 
+  function shouldRunActBreakArmory(options) {
+    if (!options || options.finalForge) {
+      return false;
+    }
+    return (options.nextWave || 0) === ACT_BREAK_ARMORY_WAVE;
+  }
+
+  function getForgeDraftType(options) {
+    if (options && options.finalForge) {
+      return "final";
+    }
+    if (shouldRunActBreakArmory(options)) {
+      return "armory";
+    }
+    if (shouldForceForgePackage(options)) {
+      return "package";
+    }
+    return "single";
+  }
+
   function sanitizeWeaponEvolutionState(weaponEvolutions) {
     const normalized = {};
     const source =
@@ -3400,6 +3430,112 @@
     return choices;
   }
 
+  function buildActBreakArmoryChoices(build, rng, scrapBank, options = null, excludedChoiceIds = null) {
+    if (!build) {
+      return [];
+    }
+    const random = typeof rng === "function" ? rng : Math.random;
+    const excludedIds = new Set(
+      excludedChoiceIds instanceof Set
+        ? Array.from(excludedChoiceIds)
+        : Array.isArray(excludedChoiceIds)
+          ? excludedChoiceIds
+          : []
+    );
+    const choiceCatalog = new Set(excludedIds);
+    const evolutionCandidates = [];
+    const offensiveModuleCandidates = [];
+    const subsystemCandidates = [];
+    const chassisCandidates = [];
+    const supportSystemChoices = shouldOfferSupportSystem(build, options)
+      ? createSupportSystemChoices(build, random, options)
+      : [];
+    const currentAffixIds = sanitizeAffixIds(build.affixes, getAffixCapacity(build));
+    const chassisAffixChoices = [
+      "thermal_weave",
+      "salvage_link",
+    ]
+      .filter((affixId) => !currentAffixIds.includes(affixId))
+      .map((affixId) => createAffixChoice(affixId, build))
+      .filter((choice) => choice && canApplyAffixChoice(build, choice.affixId, choice.replaceTarget));
+
+    pushChoiceIfOpen(evolutionCandidates, createWeaponEvolutionChoice(build, options), choiceCatalog);
+    supportSystemChoices.forEach((choice) => {
+      if (choice.forgeLaneLabel === "공세 모듈") {
+        pushChoiceIfOpen(offensiveModuleCandidates, choice, choiceCatalog);
+      } else {
+        pushChoiceIfOpen(subsystemCandidates, choice, choiceCatalog);
+      }
+    });
+    shuffle(
+      ACT_BREAK_CHASSIS_MOD_IDS.filter((modId) => MOD_DEFS[modId]).map((modId) => createModChoice(modId)),
+      random
+    ).forEach((choice) => {
+      pushChoiceIfOpen(chassisCandidates, choice, choiceCatalog);
+    });
+    shuffle(chassisAffixChoices, random).forEach((choice) => {
+      pushChoiceIfOpen(chassisCandidates, choice, choiceCatalog);
+    });
+
+    const choices = [];
+    const takenIds = new Set(excludedIds);
+    [
+      takeFirstAvailableChoice(evolutionCandidates, takenIds, "주무장 진화"),
+      takeFirstAvailableChoice(offensiveModuleCandidates, takenIds, "공세 모듈"),
+      takeFirstAvailableChoice(subsystemCandidates, takenIds, "보조 시스템"),
+      takeFirstAvailableChoice(chassisCandidates, takenIds, "방호/유틸 차체"),
+    ]
+      .filter(Boolean)
+      .forEach((choice) => choices.push(choice));
+
+    const extraChoicePool = [
+      ...evolutionCandidates,
+      ...offensiveModuleCandidates,
+      ...subsystemCandidates,
+      ...chassisCandidates,
+    ];
+    for (const choice of extraChoicePool) {
+      if (choices.length >= ACT_BREAK_ARMORY_MAX_CHOICES) {
+        break;
+      }
+      if (!choice || takenIds.has(choice.id)) {
+        continue;
+      }
+      takenIds.add(choice.id);
+      choices.push(
+        markForgeLane(
+          choice,
+          choice.type === "system"
+            ? choice.forgeLaneLabel || "보조 시스템"
+            : choice.type === "evolution"
+              ? "주무장 진화"
+              : "방호/유틸 차체"
+        )
+      );
+    }
+
+    if (
+      Number.isFinite(scrapBank) &&
+      choices.length > 0 &&
+      choices.every((choice) => choice.cost > scrapBank)
+    ) {
+      choices[choices.length - 1] = markForgeLane(
+        {
+          type: "fallback",
+          id: "fallback:emergency_vent",
+          tag: "무료",
+          title: "Emergency Vent",
+          description: "Armory draft가 전부 너무 비싸 무료 안정화 카드 1장을 끼워 넣는다.",
+          slotText: "비상 안정화",
+          cost: 0,
+        },
+        "방호/유틸 차체"
+      );
+    }
+
+    return shuffle(choices.slice(0, ACT_BREAK_ARMORY_MAX_CHOICES), random);
+  }
+
   function getRecycleValue(build) {
     return sanitizeBenchCoreIds(build.pendingCores).reduce(
       (total, coreId) => total + Math.max(10, Math.round(CORE_DEFS[coreId].cost * 0.35)),
@@ -3433,6 +3569,9 @@
       if (finalChoices) {
         return finalChoices;
       }
+    }
+    if (shouldRunActBreakArmory(options)) {
+      return buildActBreakArmoryChoices(build, rng, scrapBank, options);
     }
     const random = typeof rng === "function" ? rng : Math.random;
     const pending = getPendingCoreIds(build);
@@ -3700,6 +3839,15 @@
 
   function buildForgeFollowupChoices(build, rng, scrapBank, options = null, previousChoice = null) {
     const random = typeof rng === "function" ? rng : Math.random;
+    if (shouldRunActBreakArmory(options)) {
+      return buildActBreakArmoryChoices(
+        build,
+        random,
+        scrapBank,
+        options,
+        previousChoice ? new Set([previousChoice.id]) : null
+      );
+    }
     const packageFollowup = shouldForceForgePackage(options);
     const choices = packageFollowup
       ? buildForgeChoices(build, random, scrapBank, { ...options, packageStep: 2 }).filter((choice) => {
@@ -4233,6 +4381,7 @@
       forgeChoices: [],
       forgeStep: 1,
       forgeMaxSteps: 1,
+      forgeDraftType: "single",
       resources: {
         scrap: 0,
       },
@@ -4643,16 +4792,23 @@
 
   function enterForge() {
     const isFinalForge = state.waveIndex >= MAX_WAVES - 1;
-    const startsPackage = !isFinalForge && state.waveIndex + 2 >= FORGE_PACKAGE_START_WAVE;
+    const forgeOptions = {
+      finalForge: isFinalForge,
+      nextWave: state.waveIndex + 2,
+      packageStep: 1,
+    };
+    const draftType = getForgeDraftType(forgeOptions);
+    const startsPackage = draftType === "package" || draftType === "armory";
     state.phase = "forge";
     state.pendingFinalForge = isFinalForge;
     state.forgeStep = 1;
     state.forgeMaxSteps = startsPackage ? 2 : 1;
+    state.forgeDraftType = draftType;
     state.forgeChoices = buildForgeChoices(
       state.build,
       Math.random,
       state.resources.scrap,
-      { finalForge: isFinalForge, nextWave: state.waveIndex + 2, packageStep: 1 }
+      forgeOptions
     );
     state.hazards = [];
     state.enemies = [];
@@ -4662,10 +4818,15 @@
     pushCombatFeed(
       isFinalForge
         ? "최종 웨이브 정리 완료. 마지막 포지에서 최종 각인과 화력 배치를 마감한다."
-        : "웨이브 종료. 포지 카드로 다음 화력 축을 고른다.",
+        : draftType === "armory"
+          ? "Wave 5 돌파. Act Break Armory에서 대형 화력/차체 카드 두 장을 골라 Act 2 빌드 정체성을 고정한다."
+          : "웨이브 종료. 포지 카드로 다음 화력 축을 고른다.",
       "FORGE"
     );
-    setBanner(isFinalForge ? "최종 포지" : "포지 정지", 1.2);
+    setBanner(
+      isFinalForge ? "최종 포지" : draftType === "armory" ? "Act Break Armory" : "포지 정지",
+      1.2
+    );
     renderForgeOverlay();
     updateHUD();
   }
@@ -4941,7 +5102,9 @@
         choice
       );
       pushCombatFeed(
-        `${choice.tag} · ${choice.title} 적용. 패키지 마감 슬롯에서 보조 시스템 또는 안정화 카드를 1장 더 고른다.`,
+        state.forgeDraftType === "armory"
+          ? `${choice.tag} · ${choice.title} 적용. Armory draft 두 번째 장에서 남은 대형 화력/차체 카드 1장을 더 고른다.`
+          : `${choice.tag} · ${choice.title} 적용. 패키지 마감 슬롯에서 보조 시스템 또는 안정화 카드를 1장 더 고른다.`,
         "FORGE"
       );
       refreshDerivedStats(false);
@@ -6557,7 +6720,9 @@
         : `${FINISHER_RECIPE_DEFS[state.build.coreId].label} 촉매 필요`
       : "촉매 조건 미도달";
     const packageSummary =
-      state.forgeMaxSteps > 1
+      state.forgeDraftType === "armory"
+        ? `Act Break Armory ${state.forgeStep}/${state.forgeMaxSteps} · 주무장 진화, 공세 모듈, 방호/유틸 차체가 한 번에 충돌한다`
+        : state.forgeMaxSteps > 1
         ? `패키지 ${state.forgeStep}/${state.forgeMaxSteps} · 1슬롯 화력/전환, 2슬롯 시스템/안정화`
         : state.waveIndex + 2 >= FORGE_PACKAGE_START_WAVE && !state.pendingFinalForge
           ? "Wave 3+ 포지는 두 슬롯으로 진행된다: 먼저 화력/전환, 다음 시스템/안정화"
@@ -6566,6 +6731,8 @@
       ? catalystReady
         ? `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 세 장은 완성, 촉매 연소, 안정화로 고정되며 각 카드가 바로 이어질 12초 cash-out 시험을 미리 보여준다.`
         : `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 촉매가 없어도 비상 점화와 안정화 fail-soft 카드가 열리며, 각 카드가 다른 12초 cash-out 시험으로 바로 이어진다.`
+      : state.forgeDraftType === "armory"
+        ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 5를 넘기면 일반 패키지 대신 Act Break Armory가 열린다. 이번 포지는 두 장 모두 대형 선택이며, 주무장 진화·공세 모듈·방호/유틸 차체가 같은 풀에서 경쟁한다.`
       : `고철 ${Math.round(state.resources.scrap)} 보유. 장착은 무기 등급을 올리거나 바꾸고, 각인은 속성을 붙이며, 재구성/분해는 보관 코어를 정리한다. ${packageSummary}.`;
     elements.forgeContext.innerHTML = `
       <article class="forge-context__card">

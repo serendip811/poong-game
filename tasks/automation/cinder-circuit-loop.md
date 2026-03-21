@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-21 15:00 KST
+  Findings:
+  - The run now has an actual Wave 8 back half, Wave 4 offensive modules, and tier-3 weapon evolutions, but the forge cadence still feels too controlled and maintenance-heavy for a rerun-hungry action roguelite. Too many stops still resolve as "take the obvious spike, then patch."
+  - `buildForgeFollowupChoices()` still keeps the second pick inside a narrow package rhythm, so Act 2 rarely produces the kind of greedy collision where weapon growth, orbitals, missiles, shielding, and economy all compete at once. The systems are broader; the authorship is still too safe.
+  - The current arsenal families are readable, yet most lines remain linear upgrades of the same installed thing. Players can get stronger, but they are not often making exciting commitments like "this run becomes a drone fortress" or "this run cashes out into reckless missile greed."
+  - The docs still frame a short `5웨이브` run and that prototype mindset is still visible in the loop: the game now lasts longer than its decision architecture. An 8-wave run needs at least one milestone draft that feels materially bigger than a normal forge stop.
+  Top Priority: Add a post-Wave-5 act-break armory draft that grants two major picks instead of the normal package flow, with rival options across weapon evolution branches, offensive modules, and defensive/utility chassis so the player locks a real Act 2 build identity before Waves 6-8.
+  Why Now: The combat finally has a back half, and it needs a mid-run commitment spike strong enough to make players want to reach it again.
+  Do Not Repeat: Do not answer this with only more module families or more waves if the Wave 5 to Wave 6 handoff still lacks a major build-defining draft.
+
 - 2026-03-21 23:05 KST
   Findings:
   - The run now reaches Wave 8 with a larger Act 2 arena and bastion hazards, but the enemy game is still fundamentally `scuttler + brute + shrike + elite` all the way through. Territory cores are a better hazard, not a new combat faction, so the back half still risks reading as the same soup under wider spacing.
@@ -308,6 +318,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-21 15:40 KST
+  Changed: added a dedicated post-Wave-5 `Act Break Armory` draft in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). The Wave 5 forge no longer uses the normal "primary card, then systems/maintenance closer" package cadence; instead it now opens a two-pick milestone draft that surfaces five major cards drawn from rival `주무장 진화`, `공세 모듈`, `보조 시스템`, and `방호/유틸 차체` lanes. The second pick is re-drafted after the first selection so players can stack identities like evolution + missiles, drones + shielding, or orbitals + economy/mobility chassis before Waves 6-8 start. The same pass updated the forge subtitle/feed text to explain that this is a larger act-break draft, and [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts the Wave 6 armory pool and its second-pick follow-up behavior.
+  Why: the newest critique’s Top Priority was explicitly to add a post-Wave-5 act-break armory draft with two major picks so the Wave 5 to Wave 6 handoff locks a real Act 2 build identity. I took the highest-value bounded interpretation as "replace that one forge stop with a wider two-pick milestone draft built from existing evolution/module/chassis systems" because it directly attacks the maintenance-heavy cadence without widening scope into new waves, new enemies, or another whole progression family.
+  Follow-up risk: the armory draft now creates a real commitment spike, but its `방호/유틸 차체` lane still relies on strong stat packages rather than wholly new autonomous mechanics. If the next critique still finds Act 2 authorship too safe, the next pass should consider one or two even more identity-heavy chassis cards or armory-only bundle effects instead of returning to ordinary forge cleanup.
 
 - 2026-03-21 23:25 KST
   Changed: pulled the Act 2 power spike forward in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) by moving the `Seeker Array` and `Volt Drones` offensive-module unlocks from Wave 6 to the Wave 4 forge bracket, and by extending every core in `WEAPON_EVOLUTION_DEFS` to a third evolution tier with visibly larger projectile patterns. `Ember` now reaches `Solar Crown`, `Scatter` reaches `Ashen Typhoon`, `Lance` reaches `Aurora Lattice`, and `Ricochet` reaches `Mirror Cathedral`, so the mid-run forge can expose a clearer "I want to see the last form" chase before the back half starts. The same pass updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the Wave 4 module unlock timing and tier-3 evolution progression.
