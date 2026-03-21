@@ -3,6 +3,10 @@
   const ARENA_WIDTH = 960;
   const ARENA_HEIGHT = 540;
   const PLAYER_RADIUS = 12;
+  const SECOND_ACT_ARENA = {
+    width: 1280,
+    height: 720,
+  };
 
   const WAVE_CONFIG = [
     {
@@ -134,12 +138,112 @@
         damage: 13,
       },
     },
+    {
+      id: "afterglow",
+      label: "Wave 6 · Afterglow",
+      duration: 78,
+      spawnBudget: 138,
+      activeCap: 34,
+      baseSpawnInterval: 0.46,
+      spawnIntervalMin: 0.14,
+      spawnAcceleration: 0.3,
+      eliteEvery: 7,
+      mix: {
+        scuttler: 0.26,
+        brute: 0.28,
+        shrike: 0.46,
+      },
+      note: "제련실이 확장되며 측면 회피와 드랍 우회 수집이 다시 살아난다.",
+      directive: "넓은 작업장 + tri-surge. 중앙 집착보다 외곽 회전과 복귀 타이밍이 중요하다.",
+      driveGainFactor: 1.22,
+      arena: SECOND_ACT_ARENA,
+      hazard: {
+        label: "Tri Surge",
+        interval: 8.1,
+        count: 3,
+        radius: 74,
+        telegraph: 0.9,
+        duration: 4.1,
+        damage: 13,
+      },
+    },
+    {
+      id: "breakline",
+      label: "Wave 7 · Breakline",
+      duration: 82,
+      spawnBudget: 154,
+      activeCap: 36,
+      baseSpawnInterval: 0.43,
+      spawnIntervalMin: 0.13,
+      spawnAcceleration: 0.31,
+      eliteEvery: 6,
+      mix: {
+        scuttler: 0.24,
+        brute: 0.3,
+        shrike: 0.46,
+      },
+      note: "넓어진 공간을 오래 점유하는 적이 늘어나 고철 경로를 끊임없이 다시 골라야 한다.",
+      directive: "wide crossfire surge. 엘리트 각과 드랍 루트를 함께 읽어야 한다.",
+      driveGainFactor: 1.26,
+      arena: SECOND_ACT_ARENA,
+      hazard: {
+        label: "Breakline Crossfire",
+        interval: 7.6,
+        count: 3,
+        radius: 82,
+        telegraph: 0.84,
+        duration: 4.2,
+        damage: 14,
+      },
+    },
+    {
+      id: "crownfire",
+      label: "Wave 8 · Crownfire",
+      duration: 86,
+      spawnBudget: 172,
+      activeCap: 39,
+      baseSpawnInterval: 0.39,
+      spawnIntervalMin: 0.12,
+      spawnAcceleration: 0.32,
+      eliteEvery: 6,
+      mix: {
+        scuttler: 0.22,
+        brute: 0.3,
+        shrike: 0.48,
+      },
+      note: "후반부 정점. 넓은 전장에서 위험 구역을 가르며 마무리 빌드를 증명해야 한다.",
+      directive: "quad surge pressure. 안전지대를 미리 예측하고 화력 창을 짧게 눌러야 한다.",
+      driveGainFactor: 1.32,
+      arena: SECOND_ACT_ARENA,
+      hazard: {
+        label: "Crownfire Lattice",
+        interval: 7,
+        count: 4,
+        radius: 84,
+        telegraph: 0.78,
+        duration: 4.4,
+        damage: 15,
+      },
+    },
   ];
 
   const MAX_WAVES = WAVE_CONFIG.length;
   const POST_WAVE_LOOT_GRACE = 2.4;
   const FINAL_CASHOUT_DURATION = 12;
   const FINAL_CASHOUT_SPAWN_BUDGET = 26;
+
+  function getArenaSize(config = null) {
+    const arena =
+      config && config.arena
+        ? config.arena
+        : config && Number.isFinite(config.width) && Number.isFinite(config.height)
+          ? config
+          : null;
+    return {
+      width: arena && Number.isFinite(arena.width) ? arena.width : ARENA_WIDTH,
+      height: arena && Number.isFinite(arena.height) ? arena.height : ARENA_HEIGHT,
+    };
+  }
 
   const ENEMY_DEFS = {
     scuttler: {
@@ -3724,10 +3828,10 @@
     if (result.victory) {
       return { grade: "A", note: "핵심 판단을 유지하며 회로를 닫은 러닝." };
     }
-    if (result.wavesCleared >= 4) {
-      return { grade: "B", note: "최종 압박 직전까지는 빌드 축이 살아 있었다." };
+    if (result.wavesCleared >= 6) {
+      return { grade: "B", note: "확장된 후반부까지 빌드 축을 유지했다." };
     }
-    if (result.wavesCleared >= 2) {
+    if (result.wavesCleared >= 3) {
       return { grade: "C", note: "중반부 전개는 읽혔지만 후반 대응이 부족했다." };
     }
     return { grade: "D", note: "초기 포지 이전 안정화가 우선이다." };
@@ -3740,6 +3844,7 @@
       phase: "title",
       build,
       player: null,
+      arena: getArenaSize(),
       waveIndex: 0,
       wave: null,
       waveClearTimer: 0,
@@ -3875,9 +3980,10 @@
 
   function createPlayer(build) {
     const playerStats = computePlayerStats(build);
+    const arena = getArenaSize();
     return {
-      x: ARENA_WIDTH / 2,
-      y: ARENA_HEIGHT / 2,
+      x: arena.width / 2,
+      y: arena.height / 2,
       radius: PLAYER_RADIUS,
       hp: playerStats.maxHp,
       maxHp: playerStats.maxHp,
@@ -3901,6 +4007,21 @@
       dashTrail: 0,
       facing: 0,
     };
+  }
+
+  function getCurrentArenaSize(currentState = state) {
+    if (currentState && currentState.arena) {
+      return getArenaSize(currentState.arena);
+    }
+    return getArenaSize(currentState && currentState.wave ? currentState.wave : null);
+  }
+
+  function syncArenaCanvas() {
+    const arena = getCurrentArenaSize();
+    elements.canvas.width = arena.width;
+    elements.canvas.height = arena.height;
+    input.pointer.x = clamp(input.pointer.x, 0, arena.width);
+    input.pointer.y = clamp(input.pointer.y, 0, arena.height);
   }
 
   function refreshDerivedStats(preserveRatio) {
@@ -4099,9 +4220,11 @@
 
   function beginWave(index) {
     const config = WAVE_CONFIG[index];
+    const arena = getArenaSize(config);
     state.waveIndex = index;
     state.phase = "wave";
     state.pendingFinalForge = false;
+    state.arena = arena;
     state.wave = {
       index,
       timeLeft: config.duration,
@@ -4128,8 +4251,9 @@
     state.drops = [];
     state.hazards = [];
     state.particles = [];
-    state.player.x = ARENA_WIDTH / 2;
-    state.player.y = ARENA_HEIGHT / 2;
+    syncArenaCanvas();
+    state.player.x = arena.width / 2;
+    state.player.y = arena.height / 2;
     state.player.heat = Math.max(0, state.player.heat - 20);
     state.player.overheated = false;
     state.player.fireCooldown = 0;
@@ -4161,7 +4285,7 @@
     state.player.overheated = false;
     pushCombatFeed(
       isFinalForge
-        ? "Meltdown 정리 완료. 마지막 포지에서 최종 각인과 화력 배치를 마감한다."
+        ? "최종 웨이브 정리 완료. 마지막 포지에서 최종 각인과 화력 배치를 마감한다."
         : "웨이브 종료. 포지 카드로 다음 화력 축을 고른다.",
       "FORGE"
     );
@@ -4252,6 +4376,7 @@
       driveGainFactor: variant
         ? variant.driveGainFactor
         : Math.max(baseConfig.driveGainFactor || 1, 1.22),
+      arena: getArenaSize(baseConfig),
       hazard,
       hazardTimer: hazard
         ? hazard.interval * (variant && variant.hazard ? variant.hazard.timerFactor : 0.55)
@@ -4288,6 +4413,7 @@
     run.phase = "wave";
     run.pendingFinalForge = false;
     run.wave = createFinalCashoutWave(run.waveIndex, run.build);
+    run.arena = getArenaSize(run.wave);
     run.waveClearTimer = 0;
     if (!profile.preserveArenaState) {
       run.enemies = [];
@@ -4302,8 +4428,8 @@
     }
     if (run.player) {
       if (profile.recenterPlayer) {
-        run.player.x = ARENA_WIDTH / 2;
-        run.player.y = ARENA_HEIGHT / 2;
+        run.player.x = run.arena.width / 2;
+        run.player.y = run.arena.height / 2;
       }
       run.player.heat = Math.max(0, run.player.heat - profile.heatTrim);
       run.player.overheated = false;
@@ -4318,6 +4444,7 @@
 
   function beginFinalCashout() {
     const transition = applyFinalCashoutTransition(state);
+    syncArenaCanvas();
     pushCombatFeed(`최종 포지 완료. ${state.wave.note}`, "LAST");
     setBanner(
       transition && transition.preserveArenaState
@@ -4352,7 +4479,7 @@
       ? "회로 봉인 성공"
       : "회로 붕괴";
     elements.resultCopy.textContent = victory
-      ? "다섯 번째 폭주 구간을 넘기고 회로를 닫았다. 최종 코어와 보강 조합은 아래에 기록된다."
+      ? "최종 폭주 구간을 넘기고 회로를 닫았다. 최종 코어와 보강 조합은 아래에 기록된다."
       : "열과 밀도를 버티지 못했다. 이동 경로와 포지 선택을 다시 정리해야 한다.";
     elements.resultStats.innerHTML = [
       createResultStat("Waves", String(state.result.wavesCleared)),
@@ -4457,22 +4584,23 @@
 
   function spawnEnemy(typeId) {
     const def = ENEMY_DEFS[typeId];
+    const arena = getCurrentArenaSize();
     const edge = Math.floor(Math.random() * 4);
     let x = 0;
     let y = 0;
     const padding = 32;
     if (edge === 0) {
       x = -padding;
-      y = Math.random() * ARENA_HEIGHT;
+      y = Math.random() * arena.height;
     } else if (edge === 1) {
-      x = ARENA_WIDTH + padding;
-      y = Math.random() * ARENA_HEIGHT;
+      x = arena.width + padding;
+      y = Math.random() * arena.height;
     } else if (edge === 2) {
-      x = Math.random() * ARENA_WIDTH;
+      x = Math.random() * arena.width;
       y = -padding;
     } else {
-      x = Math.random() * ARENA_WIDTH;
-      y = ARENA_HEIGHT + padding;
+      x = Math.random() * arena.width;
+      y = arena.height + padding;
     }
     state.enemies.push({
       type: typeId,
@@ -4754,6 +4882,7 @@
   }
 
   function spawnHazard(config) {
+    const arena = getCurrentArenaSize();
     const moveVector = {
       x: (input.keys.has("KeyD") ? 1 : 0) - (input.keys.has("KeyA") ? 1 : 0),
       y: (input.keys.has("KeyS") ? 1 : 0) - (input.keys.has("KeyW") ? 1 : 0),
@@ -4762,8 +4891,8 @@
     const position = chooseHazardSpawn(
       config,
       {
-        arenaWidth: ARENA_WIDTH,
-        arenaHeight: ARENA_HEIGHT,
+        arenaWidth: arena.width,
+        arenaHeight: arena.height,
         player: state.player,
         moveVector,
         aimVector,
@@ -5281,6 +5410,7 @@
   }
 
   function updatePlayer(dt) {
+    const arena = getCurrentArenaSize();
     const move = { x: 0, y: 0 };
     if (input.keys.has("KeyW")) {
       move.y -= 1;
@@ -5301,8 +5431,8 @@
     state.player.x += (move.x / magnitude) * speed * dt;
     state.player.y += (move.y / magnitude) * speed * dt;
 
-    state.player.x = clamp(state.player.x, 18, ARENA_WIDTH - 18);
-    state.player.y = clamp(state.player.y, 18, ARENA_HEIGHT - 18);
+    state.player.x = clamp(state.player.x, 18, arena.width - 18);
+    state.player.y = clamp(state.player.y, 18, arena.height - 18);
 
     state.player.fireCooldown = Math.max(0, state.player.fireCooldown - dt);
     state.player.invulnerableTime = Math.max(0, state.player.invulnerableTime - dt);
@@ -5338,6 +5468,7 @@
       return;
     }
 
+    const arena = getCurrentArenaSize();
     const move = { x: 0, y: 0 };
     if (input.keys.has("KeyW")) {
       move.y -= 1;
@@ -5363,8 +5494,8 @@
     const magnitude = Math.hypot(dashX, dashY) || 1;
     state.player.x += (dashX / magnitude) * 120;
     state.player.y += (dashY / magnitude) * 120;
-    state.player.x = clamp(state.player.x, 24, ARENA_WIDTH - 24);
-    state.player.y = clamp(state.player.y, 24, ARENA_HEIGHT - 24);
+    state.player.x = clamp(state.player.x, 24, arena.width - 24);
+    state.player.y = clamp(state.player.y, 24, arena.height - 24);
     state.player.dashCharges -= 1;
     state.player.dashCooldownTimer = 0;
     state.player.invulnerableTime = 0.22;
@@ -5450,6 +5581,7 @@
   }
 
   function updateProjectiles(dt) {
+    const arena = getCurrentArenaSize();
     const nextProjectiles = [];
 
     for (const projectile of state.projectiles) {
@@ -5458,7 +5590,7 @@
       projectile.life -= dt;
 
       let bounced = false;
-      if (projectile.x <= 0 || projectile.x >= ARENA_WIDTH) {
+      if (projectile.x <= 0 || projectile.x >= arena.width) {
         if (projectile.bounce > 0) {
           projectile.vx *= -1;
           projectile.bounce -= 1;
@@ -5467,7 +5599,7 @@
           projectile.life = 0;
         }
       }
-      if (projectile.y <= 0 || projectile.y >= ARENA_HEIGHT) {
+      if (projectile.y <= 0 || projectile.y >= arena.height) {
         if (projectile.bounce > 0) {
           projectile.vy *= -1;
           projectile.bounce -= 1;
@@ -5477,8 +5609,8 @@
         }
       }
       if (bounced) {
-        projectile.x = clamp(projectile.x, 4, ARENA_WIDTH - 4);
-        projectile.y = clamp(projectile.y, 4, ARENA_HEIGHT - 4);
+        projectile.x = clamp(projectile.x, 4, arena.width - 4);
+        projectile.y = clamp(projectile.y, 4, arena.height - 4);
         emitMirrorSplit(projectile);
       }
 
@@ -6035,7 +6167,8 @@
   }
 
   function renderGame() {
-    context.clearRect(0, 0, ARENA_WIDTH, ARENA_HEIGHT);
+    const arena = getCurrentArenaSize();
+    context.clearRect(0, 0, arena.width, arena.height);
     context.save();
     if (state.shake > 0) {
       context.translate(
@@ -6044,35 +6177,35 @@
       );
     }
 
-    const background = context.createLinearGradient(0, 0, 0, ARENA_HEIGHT);
+    const background = context.createLinearGradient(0, 0, 0, arena.height);
     background.addColorStop(0, "#151110");
     background.addColorStop(1, "#090807");
     context.fillStyle = background;
-    context.fillRect(0, 0, ARENA_WIDTH, ARENA_HEIGHT);
+    context.fillRect(0, 0, arena.width, arena.height);
 
     context.strokeStyle = "rgba(255,255,255,0.05)";
     context.lineWidth = 1;
-    for (let x = 24; x < ARENA_WIDTH; x += 48) {
+    for (let x = 24; x < arena.width; x += 48) {
       context.beginPath();
       context.moveTo(x, 0);
-      context.lineTo(x, ARENA_HEIGHT);
+      context.lineTo(x, arena.height);
       context.stroke();
     }
-    for (let y = 24; y < ARENA_HEIGHT; y += 48) {
+    for (let y = 24; y < arena.height; y += 48) {
       context.beginPath();
       context.moveTo(0, y);
-      context.lineTo(ARENA_WIDTH, y);
+      context.lineTo(arena.width, y);
       context.stroke();
     }
 
     context.strokeStyle = "rgba(255, 140, 66, 0.15)";
     context.lineWidth = 2;
-    context.strokeRect(20, 20, ARENA_WIDTH - 40, ARENA_HEIGHT - 40);
+    context.strokeRect(20, 20, arena.width - 40, arena.height - 40);
     context.beginPath();
-    context.arc(ARENA_WIDTH / 2, ARENA_HEIGHT / 2, 110, 0, Math.PI * 2);
+    context.arc(arena.width / 2, arena.height / 2, 110, 0, Math.PI * 2);
     context.stroke();
     context.beginPath();
-    context.arc(ARENA_WIDTH / 2, ARENA_HEIGHT / 2, 190, 0, Math.PI * 2);
+    context.arc(arena.width / 2, arena.height / 2, 190, 0, Math.PI * 2);
     context.stroke();
 
     for (const hazard of state.hazards) {
@@ -6337,9 +6470,10 @@
   }
 
   function canvasPositionFromEvent(event) {
+    const arena = getCurrentArenaSize();
     const rect = elements.canvas.getBoundingClientRect();
-    const scaleX = ARENA_WIDTH / rect.width;
-    const scaleY = ARENA_HEIGHT / rect.height;
+    const scaleX = arena.width / rect.width;
+    const scaleY = arena.height / rect.height;
     return {
       x: (event.clientX - rect.left) * scaleX,
       y: (event.clientY - rect.top) * scaleY,
@@ -6365,6 +6499,7 @@
 
   elements.backToTitle.addEventListener("pointerdown", () => {
     state = createAppState(selectedSignatureId);
+    syncArenaCanvas();
     renderSignaturePicker();
     renderSignatureSpotlight();
     showScreen("title");
@@ -6380,6 +6515,7 @@
 
   elements.pauseTitle.addEventListener("pointerdown", () => {
     state = createAppState(selectedSignatureId);
+    syncArenaCanvas();
     renderSignaturePicker();
     renderSignatureSpotlight();
     showScreen("title");
@@ -6474,6 +6610,7 @@
 
   renderSignaturePicker();
   renderSignatureSpotlight();
+  syncArenaCanvas();
   showScreen("title");
   requestAnimationFrame(frame);
 })();
