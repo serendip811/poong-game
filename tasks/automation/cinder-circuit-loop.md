@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 18:05 KST
+  Findings:
+  - The run has many named build layers now, but too little long-horizon hunger. `Architecture Draft`, `Bastion Draft`, `Catalyst Crucible`, and the armories keep delivering power as scheduled packages instead of making the player spend several waves chasing a specific terrifying form.
+  - The source-level appeal is not just "more upgrade types"; it is convergence toward a recipe. Right now `Cinder Circuit` explains evolutions, doctrines, catalysts, and support bays well, but too often the fantasy is administration of systems rather than obsession with finishing a machine.
+  - This will hurt repeat runs even if content count rises. A 20-30 wave version needs early glimpses of late-game forms that create anticipation, denial, greed, and reroute decisions across many fights, not more mid-run menu events explaining the next layer.
+  - Combat still does not metabolize build ambition cleanly because so much growth arrives in overlays. The player should be thinking "two more waves and I complete the chain beam fortress" or "one risky salvage objective unlocks the illegal missile shield setup," not just waiting for the next authored draft screen.
+  Top Priority: Replace one existing mid-run draft layer with a small set of visible multi-wave forge pursuits, where early choices reveal 2-3 concrete end-state recipes and later combat actions determine whether the player actually completes one.
+  Why Now: Until runs create anticipation for a payoff that must be earned over time, added waves will extend structure without creating obsession.
+  Do Not Repeat: Do not answer this with more card categories or lore-heavy draft labels if the player still is not chasing a specific build completion across multiple waves.
+
 - 2026-03-22 17:20 KST
   Findings:
   - The run is trying to sell long-form escalation, but the intensity keeps breaking because almost every bracket resolves into another named stop: `Architecture Draft`, `Field Cache`, `Bastion Draft`, `Catalyst Crucible`, `Armory`, then final forge. That is too much menu authorship for a game that should live on combat momentum.
@@ -591,6 +601,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 18:22 KST
+  Changed: replaced the old one-shot `doctrine_chase` payoff in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) with a visible multi-wave `Forge Pursuit`. The Wave `3` `Architecture Draft` and Wave `6` `Bastion Draft` copy now explicitly sell each doctrine as a long recipe, but taking the chase card no longer dumps an immediate weapon+system bundle into the build. Instead it commits the run to a doctrine-specific frame pursuit, shows shard progress in the HUD/forge summaries, and spawns marked pursuit elites across Waves `6-8`; collecting two frame shards during live combat auto-applies the doctrine’s staged weapon/support spike, while missing the window leaves the pursuit unfinished. I also added pursuit target/drop rendering and updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the smoke test expects a commitment-based pursuit contract instead of the old instant bundle.
+  Why: the newest critique’s Top Priority was to replace one mid-run draft layer with visible multi-wave forge pursuits, so the highest-value bounded interpretation was to keep the three doctrine picks as the early recipe reveal and convert the old Bastion `Frame` shortcut into something the player has to finish over several waves in combat. That creates real anticipation and denial without widening this pass into a whole new progression screen or another layer of draft cards.
+  Follow-up risk: this pass makes the chase visible and combat-earned, but each doctrine still has only one pursuit recipe and completion is currently driven by repeated marked-elite shard pickups rather than more varied combat asks. If critique still wants stronger rerun obsession, the next pass should branch each doctrine into 2-3 alternate pursuit contracts or mix shard hunts with different objective types instead of reverting to another authored menu bundle.
 
 - 2026-03-22 18:05 KST
   Changed: collapsed the repeated mid-run `Field Cache` stop in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) into a live `Combat Cache` lane. On waves that previously ended in a `Field Cache`, the first elite now drops three short-lived cache pickups built from the same field-grant pool; the player has to route into one of them under pressure to lock an upgrade or take the emergency vent, and wave clear now chains straight into the next fight instead of opening another forge overlay. I also added feed/HUD messaging plus a distinct arena pickup render so the player can read when a cache is armed, live, or already claimed.

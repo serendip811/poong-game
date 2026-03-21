@@ -272,19 +272,13 @@ const doctrineChaseChoice = bastionOvercommitChoices.find(
   (choice) => choice.type === "utility" && choice.action === "doctrine_chase"
 );
 assert.ok(doctrineChaseChoice);
-assert.equal(doctrineChaseChoice.title, "Relay Storm Lattice Frame");
-assert.equal(doctrineChaseChoice.weaponChoice.type, "evolution");
-assert.equal(doctrineChaseChoice.weaponChoice.coreId, "ricochet");
-assert.equal(doctrineChaseChoice.systemChoice.type, "system");
-assert.equal(doctrineChaseChoice.systemChoice.systemId, "volt_drones");
-assert.equal(doctrineChaseChoice.systemChoice.systemTier, 2);
+assert.equal(doctrineChaseChoice.title, "Relay Storm Frame");
+assert.equal(doctrineChaseChoice.pursuitGoal, 2);
+assert.equal(doctrineChaseChoice.cost, 0);
 game.applyForgeChoice(architectureRun, doctrineChaseChoice);
-assert.equal(architectureRun.build.doctrineChaseClaimed, true);
-assert.equal(game.computeWeaponStats(architectureRun.build).evolutionTier, 2);
-assert.equal(
-  architectureRun.build.supportSystems.find((entry) => entry.id === "volt_drones").tier,
-  2
-);
+assert.equal(architectureRun.build.doctrinePursuitCommitted, true);
+assert.equal(architectureRun.build.doctrinePursuitProgress, 0);
+assert.equal(architectureRun.build.doctrineChaseClaimed, false);
 const postChaseChoices = game.buildForgeChoices(
   architectureRun.build,
   () => 0,
@@ -434,12 +428,14 @@ game.applyForgeChoice(
   artilleryChaseChoice
 );
 const artilleryWaveFiveWeapon = game.computeWeaponStats(artilleryDoctrineBuild);
-assert.equal(artilleryWaveFiveWeapon.doctrineFormLabel, "Thunder Rack");
-assert.equal(artilleryWaveFiveWeapon.doctrineStage, 2);
-assert.equal(artilleryWaveFiveWeapon.chain, 2);
+assert.equal(artilleryDoctrineBuild.doctrinePursuitCommitted, true);
+assert.equal(artilleryDoctrineBuild.doctrinePursuitProgress, 0);
+assert.equal(artilleryWaveFiveWeapon.doctrineFormLabel, "Siege Frame");
+assert.equal(artilleryWaveFiveWeapon.doctrineStage, 1);
+assert.equal(artilleryWaveFiveWeapon.chain, 1);
 assert.equal(
   JSON.stringify(artilleryWaveFiveWeapon.doctrineFirePattern.offsets),
-  JSON.stringify([-0.3, -0.12, 0.12, 0.3])
+  JSON.stringify([-0.22, 0.22])
 );
 const artilleryLateArmoryChoices = game.buildForgeChoices(
   artilleryDoctrineBuild,

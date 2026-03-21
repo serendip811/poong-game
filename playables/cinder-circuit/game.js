@@ -1838,6 +1838,42 @@
     },
   };
 
+  const DOCTRINE_FORGE_PURSUIT_DEFS = {
+    mirror_hunt: {
+      id: "mirror_hunt",
+      label: "Relay Storm Frame",
+      shortLabel: "Storm Frame",
+      goal: 2,
+      shardLabel: "relay shard",
+      description:
+        "Wave 6-8 marked elite가 relay shard를 떨어뜨린다. 두 개를 회수하면 Mirror Hunt 장기 추격이 완성되어 주무장과 추적층이 한 번에 폭주한다.",
+      failureText:
+        "Wave 8이 끝날 때까지 relay shard를 다 못 모으면 이번 런의 Relay Storm Frame은 미완성으로 끝난다.",
+    },
+    kiln_bastion: {
+      id: "kiln_bastion",
+      label: "Bulwark Frame",
+      shortLabel: "Bulwark Frame",
+      goal: 2,
+      shardLabel: "bulwark shard",
+      description:
+        "Wave 6-8 marked elite가 bulwark shard를 떨어뜨린다. 두 개를 회수하면 Kiln Bastion 장기 추격이 완성되어 영역 장악 화력과 거점층이 함께 닫힌다.",
+      failureText:
+        "Wave 8이 끝날 때까지 bulwark shard를 다 못 모으면 이번 런의 Bulwark Frame은 미완성으로 끝난다.",
+    },
+    storm_artillery: {
+      id: "storm_artillery",
+      label: "Sky Lance Frame",
+      shortLabel: "Sky Lance Frame",
+      goal: 2,
+      shardLabel: "lance shard",
+      description:
+        "Wave 6-8 marked elite가 lance shard를 떨어뜨린다. 두 개를 회수하면 Storm Artillery 장기 추격이 완성되어 공성 레일과 포격층이 함께 열린다.",
+      failureText:
+        "Wave 8이 끝날 때까지 lance shard를 다 못 모으면 이번 런의 Sky Lance Frame은 미완성으로 끝난다.",
+    },
+  };
+
   const DOCTRINE_WEAPON_LADDER_DEFS = {
     storm_artillery: {
       coreId: "lance",
@@ -2956,6 +2992,9 @@
     bastionDoctrineId: null,
     doctrineCapstoneId: null,
     doctrineChaseClaimed: false,
+    doctrinePursuitCommitted: false,
+    doctrinePursuitProgress: 0,
+    doctrinePursuitExpired: false,
     overcommitUnlocked: false,
     overcommitResolved: false,
     supportBayCap: 2,
@@ -3737,16 +3776,16 @@
     if (choice.type === "utility" && choice.action === "doctrine_chase") {
       return [
         {
-          label: "무기",
-          value: choice.weaponChoice ? choice.weaponChoice.title : "주무장 추격",
+          label: "추격",
+          value: choice.pursuitLabel || "Forge Pursuit",
         },
         {
-          label: "지원",
-          value: choice.systemChoice ? choice.systemChoice.title : "지원 추격",
+          label: "웨이브",
+          value: "Wave 6-8 marked elite",
         },
         {
-          label: "종점",
-          value: choice.capstoneLabel || choice.doctrineLabel || "Doctrine Apex",
+          label: "목표",
+          value: `${choice.pursuitGoal || 2} shards`,
         },
         ...finaleRows,
       ];
@@ -3869,7 +3908,11 @@
         cashoutFailSoftId: BASE_BUILD.cashoutFailSoftId,
         act3CatalystDraftSeen: BASE_BUILD.act3CatalystDraftSeen,
         bastionDoctrineId: BASE_BUILD.bastionDoctrineId,
+        doctrineCapstoneId: BASE_BUILD.doctrineCapstoneId,
         doctrineChaseClaimed: BASE_BUILD.doctrineChaseClaimed,
+        doctrinePursuitCommitted: BASE_BUILD.doctrinePursuitCommitted,
+        doctrinePursuitProgress: BASE_BUILD.doctrinePursuitProgress,
+        doctrinePursuitExpired: BASE_BUILD.doctrinePursuitExpired,
         overcommitUnlocked: BASE_BUILD.overcommitUnlocked,
         overcommitResolved: BASE_BUILD.overcommitResolved,
         supportBayCap: BASE_BUILD.supportBayCap,
@@ -3974,6 +4017,17 @@
       DOCTRINE_CAPSTONE_DEFS[buildOrCapstoneId] ||
       null
     );
+  }
+
+  function getDoctrineForgePursuitDef(buildOrDoctrineId) {
+    if (!buildOrDoctrineId) {
+      return null;
+    }
+    const doctrineId =
+      typeof buildOrDoctrineId === "object"
+        ? buildOrDoctrineId.bastionDoctrineId || buildOrDoctrineId.id
+        : buildOrDoctrineId;
+    return doctrineId ? DOCTRINE_FORGE_PURSUIT_DEFS[doctrineId] || null : null;
   }
 
   function getDoctrineWeaponStage(build, doctrine = null) {
@@ -4539,6 +4593,7 @@
       !build.bastionDoctrineId ||
       build.doctrineCapstoneId ||
       build.doctrineChaseClaimed ||
+      build.doctrinePursuitCommitted ||
       !build.overcommitUnlocked ||
       !options ||
       options.finalForge
@@ -4563,34 +4618,30 @@
     const doctrine = getBastionDoctrineDef(build);
     const capstone =
       doctrine && doctrine.lateCapstoneId ? getDoctrineCapstoneDef(doctrine.lateCapstoneId) : null;
-    const weaponChoice = createDoctrineChaseWeaponChoice(build, doctrine, options);
-    const systemChoice = createDoctrineChaseSystemChoice(build, doctrine, options);
-    if (!doctrine || !weaponChoice || !systemChoice) {
+    const pursuit = getDoctrineForgePursuitDef(doctrine);
+    if (!doctrine || !pursuit) {
       return null;
     }
-    const bundleCost = Math.max(
-      36,
-      Math.round(((weaponChoice.cost || 0) + (systemChoice.cost || 0)) * 0.76)
-    );
     return {
       type: "utility",
       action: "doctrine_chase",
       id: `utility:doctrine_chase:${doctrine.id}`,
-      verb: "추격",
+      verb: "계약",
       tag: "CHASE",
-      title: capstone ? `${capstone.title} Frame` : `${doctrine.label} Frame`,
+      title: pursuit.label,
       description:
-        `${doctrine.label}의 조기 완성 패키지. ${weaponChoice.title}과 ${systemChoice.title}을(를) 한 번에 밀어 올려 지금부터 주무장과 지원층이 같은 종점을 향해 자라게 만든다.${capstone ? ` 최종적으로는 ${capstone.title} 완성 카드까지 이어진다.` : ""}`,
-      slotText: `교리 추격 · ${weaponChoice.title} + ${systemChoice.title}`,
-      cost: bundleCost,
+        `${doctrine.label}의 장기 forge pursuit. ${pursuit.description}${capstone ? ` 완성에 성공하면 ${capstone.title} 교리 완성 카드도 그대로 살아 남는다.` : ""}`,
+      slotText: `Forge Pursuit 개시 · ${pursuit.goal} shards 필요 · Wave 6-8 marked elite`,
+      cost: 0,
       laneLabel: "교리 추격",
       forgeLaneLabel: "교리 추격",
       doctrineId: doctrine.id,
       doctrineLabel: doctrine.label,
       doctrineCapstoneId: capstone ? capstone.id : null,
       capstoneLabel: capstone ? capstone.label : null,
-      weaponChoice,
-      systemChoice,
+      pursuitLabel: pursuit.label,
+      pursuitGoal: pursuit.goal,
+      pursuitShardLabel: pursuit.shardLabel,
     };
   }
 
@@ -5529,7 +5580,7 @@
       tag: "DOCTRINE",
       title: doctrine.label,
       description:
-        `${doctrine.description} 즉시 ${spikeChoice.title}을(를) 할인 장착하고, ${doctrine.reserveText} 이후 포지 후보도 ${doctrine.short} 방향을 먼저 민다.${lateCapstone ? ` Wave 4-6에는 ${lateCapstone.title} Frame 추격 카드가 먼저 열리고, Wave 9 Late Break Armory에서는 ${lateCapstone.title} 교리 완성 카드가 열린다.` : ""}`,
+        `${doctrine.description} 즉시 ${spikeChoice.title}을(를) 할인 장착하고, ${doctrine.reserveText} 이후 포지 후보도 ${doctrine.short} 방향을 먼저 민다.${lateCapstone ? ` Wave 6-8 marked elite shard를 모으는 ${lateCapstone.title} forge pursuit가 열리고, Wave 9 Late Break Armory에서는 ${lateCapstone.title} 교리 완성 카드가 열린다.` : ""}`,
       slotText: `교리 채택 · ${spikeChoice.title} · ${doctrine.short} · ${doctrine.reservedLane}`,
       cost: spikeChoice.cost,
       laneLabel: "교리 채택",
@@ -5583,7 +5634,7 @@
       tag: "ARCH",
       title: doctrine.label,
       description:
-        `${doctrine.description} 즉시 주무장을 ${weaponChoice.title} 형태로 재배선하고 ${starterTier.title}을(를) 무료 설치해 ${doctrine.branchFamilyLabel} 계통을 바로 켠다. ${doctrine.reserveText} 이후 포지 후보도 ${doctrine.short} 쪽을 먼저 민다.${lateCapstone ? ` Wave 4-6에는 ${lateCapstone.title} Frame 추격 카드가 먼저 열리고, Late Break Armory에서는 ${lateCapstone.title} 완성 카드까지 열린다.` : ""}`,
+        `${doctrine.description} 즉시 주무장을 ${weaponChoice.title} 형태로 재배선하고 ${starterTier.title}을(를) 무료 설치해 ${doctrine.branchFamilyLabel} 계통을 바로 켠다. ${doctrine.reserveText} 이후 포지 후보도 ${doctrine.short} 쪽을 먼저 민다.${lateCapstone ? ` Wave 5 overcommit를 통과하면 ${lateCapstone.title} forge pursuit 계약이 열리고, 이후 Wave 6-8 marked elite shard를 모아 조기 완성을 노릴 수 있다. Late Break Armory에서는 ${lateCapstone.title} 완성 카드까지 열린다.` : ""}`,
       slotText: `아키텍처 잠금 · ${weaponChoice.title} + ${starterTier.title} · ${doctrine.short}`,
       cost: 0,
       laneLabel: "아키텍처",
@@ -5866,10 +5917,10 @@
         : "할인 spike 1장, 고통 계약 1장, 무료 안정화 1장 중 하나로 Act 2 운영을 직접 비튼다.";
     }
     if (build.overcommitUnlocked && !build.doctrineChaseClaimed) {
-      return "방금 회수한 contraband salvage가 열려 있다. 이번 Bastion Draft에서는 조기 Frame 추격 카드, 고통 계약, 무료 안정화 중 하나로 Act 2 greed를 직접 결정한다.";
+      return "방금 회수한 contraband salvage가 열려 있다. 이번 Bastion Draft에서는 장기 Forge Pursuit 계약, 고통 계약, 무료 안정화 중 하나로 Act 2 greed를 직접 결정한다.";
     }
     if (!build.overcommitResolved) {
-      return "아직 overcommit salvage를 못 챙겼다. 이번 초반 교전에서 marked elite를 부숴 contraband salvage를 전부 회수해야만 조기 Frame 추격 카드가 열린다.";
+      return "아직 overcommit salvage를 못 챙겼다. 이번 초반 교전에서 marked elite를 부숴 contraband salvage를 전부 회수해야만 장기 Forge Pursuit 계약이 열린다.";
     }
     return "이미 채택한 교리 위에 추가 spike 1장, 고통 계약 1장, 무료 안정화 1장 중 하나로 Act 2 greed를 더 밀어붙인다.";
   }
@@ -6223,6 +6274,9 @@
       run.build.bastionDoctrineId = doctrine.id;
       run.build.doctrineCapstoneId = null;
       run.build.doctrineChaseClaimed = false;
+      run.build.doctrinePursuitCommitted = false;
+      run.build.doctrinePursuitProgress = 0;
+      run.build.doctrinePursuitExpired = false;
       doctrine.apply(run.build, run);
       run.build.upgrades.push(`아키텍처 잠금: ${doctrine.label}`);
       if (choice.weaponChoice) {
@@ -6235,15 +6289,12 @@
     }
 
     if (choice.type === "utility" && choice.action === "doctrine_chase") {
-      if (choice.weaponChoice) {
-        applyForgeChoice(run, choice.weaponChoice);
-      }
-      if (choice.systemChoice) {
-        applyForgeChoice(run, choice.systemChoice);
-      }
-      run.build.doctrineChaseClaimed = true;
+      const pursuit = getDoctrineForgePursuitDef(run.build);
+      run.build.doctrinePursuitCommitted = true;
+      run.build.doctrinePursuitProgress = 0;
+      run.build.doctrinePursuitExpired = false;
       run.build.upgrades.push(
-        `교리 추격: ${choice.capstoneLabel || choice.doctrineLabel || "Doctrine"} Frame`
+        `교리 추격 개시: ${(pursuit && pursuit.label) || choice.pursuitLabel || choice.capstoneLabel || choice.doctrineLabel || "Doctrine Frame"}`
       );
       return choice;
     }
@@ -6623,6 +6674,10 @@
         salvageRequired: OVERCOMMIT_SALVAGE_REQUIRED,
         expired: false,
       },
+      doctrinePursuit: {
+        active: false,
+        targetSpawned: false,
+      },
       weapon: computeWeaponStats(build),
       playerStats: computePlayerStats(build),
       supportSystem: computeSupportSystemStats(build),
@@ -6650,6 +6705,16 @@
       salvageCollected: 0,
       salvageRequired: OVERCOMMIT_SALVAGE_REQUIRED,
       expired: false,
+    };
+  }
+
+  function resetDoctrinePursuitState(run) {
+    if (!run) {
+      return;
+    }
+    run.doctrinePursuit = {
+      active: false,
+      targetSpawned: false,
     };
   }
 
@@ -6691,10 +6756,67 @@
     state.overcommit.status = "ready";
     state.build.upgrades.push("Contraband Overcommit");
     pushCombatFeed(
-      "Contraband salvage 확보. 다음 Bastion Draft에서 조기 Frame 추격 카드가 열린다.",
+      "Contraband salvage 확보. 다음 Bastion Draft에서 장기 Forge Pursuit 계약이 열린다.",
       "RISK"
     );
     setBanner("Overcommit 준비", 0.9);
+  }
+
+  function shouldRunDoctrinePursuitWave(build, waveNumber) {
+    return (
+      !!build &&
+      !!build.bastionDoctrineId &&
+      !!build.doctrinePursuitCommitted &&
+      !build.doctrineChaseClaimed &&
+      !build.doctrinePursuitExpired &&
+      waveNumber >= 6 &&
+      waveNumber <= 8
+    );
+  }
+
+  function failDoctrinePursuit() {
+    const pursuit = getDoctrineForgePursuitDef(state.build);
+    if (!state.build || state.build.doctrineChaseClaimed || state.build.doctrinePursuitExpired) {
+      return;
+    }
+    state.build.doctrinePursuitExpired = true;
+    state.doctrinePursuit.active = false;
+    if (pursuit) {
+      pushCombatFeed(pursuit.failureText, "FRAME");
+    }
+  }
+
+  function completeDoctrinePursuit() {
+    if (!state.build || state.build.doctrineChaseClaimed) {
+      return;
+    }
+    const doctrine = getBastionDoctrineDef(state.build);
+    const pursuit = getDoctrineForgePursuitDef(state.build);
+    const weaponChoice = createDoctrineChaseWeaponChoice(state.build, doctrine, {
+      nextWave: state.waveIndex + 2,
+      finalForge: false,
+    });
+    const systemChoice = createDoctrineChaseSystemChoice(state.build, doctrine, {
+      nextWave: state.waveIndex + 2,
+      finalForge: false,
+    });
+    if (weaponChoice) {
+      applyForgeChoice(state, weaponChoice);
+    }
+    if (systemChoice) {
+      applyForgeChoice(state, systemChoice);
+    }
+    state.build.doctrineChaseClaimed = true;
+    state.doctrinePursuit.active = false;
+    state.build.upgrades.push(
+      `교리 추격 완성: ${(pursuit && pursuit.shortLabel) || (doctrine && doctrine.label) || "Doctrine Frame"}`
+    );
+    pushCombatFeed(
+      `${(pursuit && pursuit.label) || "Forge Pursuit"} 완성. 주무장과 지원층이 같은 종점으로 한 번에 잠겼다.`,
+      "FRAME"
+    );
+    setBanner((pursuit && pursuit.shortLabel) || "Frame 완성", 0.9);
+    refreshDerivedStats(false);
   }
 
   function renderHudPanels() {
@@ -7105,10 +7227,11 @@
     state.slagPools = [];
     state.particles = [];
     state.supportDeployables = [];
+    resetDoctrinePursuitState(state);
     if (shouldRunOvercommitTrial(state.build, waveNumber)) {
       armOvercommitTrial(state);
       pushCombatFeed(
-        "Overcommit trial 시작. marked elite를 파괴하고 흩어진 contraband salvage 3개를 전부 회수하면 Wave 6 Bastion Draft에서 조기 Frame이 열린다.",
+        "Overcommit trial 시작. marked elite를 파괴하고 흩어진 contraband salvage 3개를 전부 회수하면 Wave 6 Bastion Draft에서 Forge Pursuit 계약이 열린다.",
         "RISK"
       );
     } else {
@@ -7118,6 +7241,16 @@
       } else if (state.build.overcommitResolved) {
         state.overcommit.status = "failed";
       }
+    }
+    if (shouldRunDoctrinePursuitWave(state.build, waveNumber)) {
+      state.doctrinePursuit.active = true;
+      const pursuit = getDoctrineForgePursuitDef(state.build);
+      pushCombatFeed(
+        `${(pursuit && pursuit.label) || "Forge Pursuit"} 활성화. 이번 웨이브 marked elite를 추적해 shard를 회수해야 한다.`,
+        "FRAME"
+      );
+    } else if (waveNumber > 8 && state.build.doctrinePursuitCommitted && !state.build.doctrineChaseClaimed) {
+      failDoctrinePursuit();
     }
     syncArenaCanvas();
     state.player.x = arena.width / 2;
@@ -7560,8 +7693,25 @@
       orbitDirection: Math.random() > 0.5 ? 1 : -1,
       defeated: false,
       overcommitTarget: false,
+      doctrinePursuitTarget: false,
     };
     if (
+      typeId === "elite" &&
+      state.doctrinePursuit.active &&
+      !state.doctrinePursuit.targetSpawned &&
+      state.build.doctrinePursuitCommitted &&
+      !state.build.doctrineChaseClaimed
+    ) {
+      enemy.doctrinePursuitTarget = true;
+      enemy.hp *= 1.28;
+      enemy.attackCooldown = 0.15;
+      state.doctrinePursuit.targetSpawned = true;
+      pushCombatFeed(
+        "Forge pursuit marked elite 감지. 처치 후 떨어지는 frame shard를 회수해야 한다.",
+        "FRAME"
+      );
+      setBanner("Frame Target", 0.8);
+    } else if (
       typeId === "elite" &&
       state.overcommit.active &&
       !state.overcommit.targetSpawned &&
@@ -9538,10 +9688,24 @@
           });
         }
         pushCombatFeed(
-          "Contraband salvage 방출. 전부 회수하면 다음 Bastion Draft가 조기 Frame 추격으로 변한다.",
+          "Contraband salvage 방출. 전부 회수하면 다음 Bastion Draft가 Forge Pursuit 계약으로 변한다.",
           "SALV"
         );
         setBanner("Salvage 회수", 0.8);
+      } else if (enemy.doctrinePursuitTarget && state.doctrinePursuit.active) {
+        const pursuit = getDoctrineForgePursuitDef(state.build);
+        state.drops.push({
+          kind: "doctrine_pursuit_shard",
+          x: enemy.x,
+          y: enemy.y,
+          value: 10,
+          life: OVERCOMMIT_SALVAGE_LIFE + 1.5,
+        });
+        pushCombatFeed(
+          `${(pursuit && pursuit.shardLabel) || "frame shard"} 방출. 회수하면 forge pursuit가 전진한다.`,
+          "FRAME"
+        );
+        setBanner((pursuit && pursuit.shortLabel) || "Frame Shard", 0.8);
       }
     }
 
@@ -9567,8 +9731,10 @@
         }
       } else if (drop.life <= 0 && drop.kind === "overcommit_salvage") {
         failOvercommitTrial(
-          "Contraband salvage가 식어 버렸다. 이번 런의 조기 Frame 추격 창구가 닫혔다."
+          "Contraband salvage가 식어 버렸다. 이번 런의 Forge Pursuit 계약 창구가 닫혔다."
         );
+      } else if (drop.life <= 0 && drop.kind === "doctrine_pursuit_shard") {
+        pushCombatFeed("Frame shard가 식었다. 이번 웨이브 pursuit 진전이 사라졌다.", "FRAME");
       } else if (drop.life > 0) {
         nextDrops.push(drop);
       }
@@ -9634,6 +9800,23 @@
       );
       if (state.overcommit.salvageCollected >= state.overcommit.salvageRequired) {
         unlockOvercommitTrial();
+      }
+      return true;
+    }
+
+    if (drop.kind === "doctrine_pursuit_shard") {
+      const value = round(drop.value * state.player.scrapMultiplier, 0);
+      const pursuit = getDoctrineForgePursuitDef(state.build);
+      state.resources.scrap += value;
+      state.stats.scrapCollected += value;
+      state.build.doctrinePursuitProgress += 1;
+      gainDrive(value * 0.34);
+      setBanner(
+        `${(pursuit && pursuit.shortLabel) || "Frame"} ${state.build.doctrinePursuitProgress}/${(pursuit && pursuit.goal) || 2}`,
+        0.65
+      );
+      if (state.build.doctrinePursuitProgress >= ((pursuit && pursuit.goal) || 2)) {
+        completeDoctrinePursuit();
       }
       return true;
     }
@@ -9864,7 +10047,18 @@
           ${state.supportSystem ? createMiniPill("SYS", state.supportSystem.label, "accent") : ""}
           ${weapon.affixLabels.map((label) => createMiniPill("속성", label, "cool")).join("")}
         </div>
-        <p class="summary-note">${[affixSummary, evolutionSummary, doctrineSummary, capstoneSummary, supportSystemSummary, kilnFieldSummary, `보관 ${weapon.benchCopies}개 대기`].filter(Boolean).join(" · ")}</p>
+        <p class="summary-note">${[
+          affixSummary,
+          evolutionSummary,
+          doctrineSummary,
+          capstoneSummary,
+          supportSystemSummary,
+          getDoctrineForgePursuitDef(state.build) && state.build.doctrinePursuitCommitted
+            ? `${getDoctrineForgePursuitDef(state.build).shortLabel} ${state.build.doctrinePursuitProgress}/${getDoctrineForgePursuitDef(state.build).goal}${state.build.doctrineChaseClaimed ? " 완성" : state.build.doctrinePursuitExpired ? " 실패" : ""}`
+            : null,
+          kilnFieldSummary,
+          `보관 ${weapon.benchCopies}개 대기`,
+        ].filter(Boolean).join(" · ")}</p>
       `;
     }
 
@@ -9897,8 +10091,10 @@
     const enemiesLeft = Math.max(0, state.wave ? state.wave.spawnBudget - state.wave.spawned : 0);
     if (elements.waveObjective) {
       const overcommitRows = [];
+      const pursuitRows = [];
       const combatCacheRows = [];
       let overcommitNote = "";
+      let pursuitNote = "";
       let combatCacheNote = "";
       if (state.overcommit.active) {
         overcommitRows.push(
@@ -9914,16 +10110,32 @@
           )
         );
         overcommitNote = state.overcommit.targetDefeated
-          ? "흩어진 salvage를 전부 주워야 Wave 6 Bastion Draft가 조기 Frame 추격으로 변한다."
+          ? "흩어진 salvage를 전부 주워야 Wave 6 Bastion Draft가 Forge Pursuit 계약으로 변한다."
           : "Wave 5 marked elite를 먼저 부수고 contraband salvage를 전부 회수해야 한다.";
       } else if (state.build.overcommitUnlocked) {
         overcommitRows.push(createStatusRow("Overcommit", "해금"));
-        overcommitRows.push(createStatusRow("Contraband", "Frame ready"));
-        overcommitNote = "다음 Bastion Draft에서 조기 Frame 추격 카드가 열린다.";
+        overcommitRows.push(createStatusRow("Contraband", "Pursuit ready"));
+        overcommitNote = "다음 Bastion Draft에서 Forge Pursuit 계약이 열린다.";
       } else if (state.build.overcommitResolved) {
         overcommitRows.push(createStatusRow("Overcommit", "실패"));
         overcommitRows.push(createStatusRow("Contraband", "봉인"));
-        overcommitNote = "이번 런에서는 조기 Frame 추격을 더는 열 수 없다.";
+        overcommitNote = "이번 런에서는 Forge Pursuit 계약을 더는 열 수 없다.";
+      }
+      const pursuit = getDoctrineForgePursuitDef(state.build);
+      if (state.build.doctrinePursuitCommitted && pursuit && !state.build.doctrineChaseClaimed) {
+        pursuitRows.push(createStatusRow("Forge Pursuit", pursuit.shortLabel));
+        pursuitRows.push(
+          createStatusRow("Frame Shards", `${state.build.doctrinePursuitProgress}/${pursuit.goal}`)
+        );
+        pursuitNote = state.doctrinePursuit.active
+          ? `이번 웨이브 marked elite를 잡고 ${pursuit.shardLabel}를 회수해야 ${pursuit.shortLabel}이 전진한다.`
+          : state.build.doctrinePursuitExpired
+            ? `${pursuit.shortLabel} pursuit가 끊겼다. 조기 monster form은 이번 런에서 끝났다.`
+            : `${pursuit.shortLabel} pursuit 진행 중. Wave 6-8 shard ${pursuit.goal}개를 모아야 조기 완성이 열린다.`;
+      } else if (state.build.doctrineChaseClaimed && pursuit) {
+        pursuitRows.push(createStatusRow("Forge Pursuit", `${pursuit.shortLabel} 완성`));
+        pursuitRows.push(createStatusRow("Frame Shards", `${pursuit.goal}/${pursuit.goal}`));
+        pursuitNote = `${pursuit.shortLabel} 완성. 조기 monster form이 이미 전장을 바꾸고 있다.`;
       }
       if (state.phase === "wave" && state.wave && state.wave.combatCache) {
         const combatCache = state.wave.combatCache;
@@ -9959,8 +10171,9 @@
           ${createStatusRow(hazardStatus.detailLabel, hazardStatus.detailValue)}
           ${combatCacheRows.join("")}
           ${overcommitRows.join("")}
+          ${pursuitRows.join("")}
         </div>
-        <p class="summary-note">${combatCacheNote || overcommitNote || hazardStatus.note}</p>
+        <p class="summary-note">${combatCacheNote || pursuitNote || overcommitNote || hazardStatus.note}</p>
       `;
     }
 
@@ -10054,6 +10267,13 @@
         ? `${FINISHER_RECIPE_DEFS[state.build.coreId].label} 촉매 확보`
         : `${FINISHER_RECIPE_DEFS[state.build.coreId].label} 촉매 필요`
       : "촉매 조건 미도달";
+    const doctrinePursuit = getDoctrineForgePursuitDef(state.build);
+    const doctrinePursuitSummary =
+      doctrinePursuit && state.build.doctrinePursuitCommitted
+        ? `${doctrinePursuit.shortLabel} ${state.build.doctrinePursuitProgress}/${doctrinePursuit.goal}${state.build.doctrineChaseClaimed ? " · 완성" : state.build.doctrinePursuitExpired ? " · 실패" : ""}`
+        : doctrinePursuit
+          ? `${doctrinePursuit.shortLabel} 미계약`
+          : "교리 pursuit 없음";
     const forgeOptions = {
       finalForge: state.pendingFinalForge,
       nextWave: state.waveIndex + 2,
@@ -10068,7 +10288,7 @@
         : state.forgeDraftType === "bastion_draft"
         ? state.build.bastionDoctrineId
           ? state.build.overcommitUnlocked && !state.build.doctrineChaseClaimed
-            ? "Bastion Draft · 회수한 contraband salvage를 조기 Frame 추격으로 바꾸거나, 계약/안정화로 greed를 접는다"
+            ? "Bastion Draft · 회수한 contraband salvage를 장기 Forge Pursuit 계약으로 바꾸거나, 계약/안정화로 greed를 접는다"
             : "Bastion Draft · 기존 교리 위에 추가 spike 또는 고통 계약을 더 얹어 Act 2 greed를 강제한다"
           : "Bastion Draft · 시그니처 교리 1장, 고통 계약 1장, 무료 안정화 1장 중 1픽으로 Act 2 posture를 기울이고 late wildcard bay를 예고한다"
         : state.forgeDraftType === "catalyst_draft"
@@ -10093,7 +10313,7 @@
         : state.forgeDraftType === "bastion_draft"
         ? state.build.bastionDoctrineId
           ? state.build.overcommitUnlocked && !state.build.doctrineChaseClaimed
-            ? `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. Wave 5에서 회수한 contraband salvage가 살아 있어 조기 Frame 추격 카드가 열렸다. 지금 주무장과 support 라인을 평소보다 이르게 같은 종점으로 묶을지, Siege Salvage Pact나 무료 안정화로 greed를 접을지 정한다.`
+            ? `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. Wave 5에서 회수한 contraband salvage가 살아 있어 장기 Forge Pursuit 계약이 열렸다. 지금 pursuit를 걸고 Wave 6-8 marked elite에서 shard를 모아 조기 monster form을 완성할지, Siege Salvage Pact나 무료 안정화로 greed를 접을지 정한다.`
             : `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 이미 채택한 교리 위에 추가 spike 1장과 Siege Salvage Pact, 무료 안정화가 다시 뜬다. 지금 더 깊게 묶일지, 체력을 태워 greed를 당길지 결정한다.`
           : `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 한 장은 시그니처 전용 교리라 즉시 spike를 확보하면서 초반 support bay와 이후 포지 후보를 한 계통 쪽으로 강하게 기울이고, Late Break Armory에서는 마지막 bay 1칸만 우회 조합용으로 풀어 준다. 한 장은 최대 체력을 깎고 고철을 당겨오는 Siege Salvage Pact, 마지막 한 장은 무료 안정화다. Act 2 posture를 잠글지, 더 아프게 탐욕할지 직접 정한다.`
         : state.forgeDraftType === "catalyst_draft"
@@ -10112,7 +10332,7 @@
       <article class="forge-context__card">
         <p class="panel__eyebrow">속성 / 진화 / 시스템</p>
         <strong>${affixSummary}</strong>
-        <p>${evolutionSummary} · ${doctrineSummary} · ${capstoneSummary} · ${forgeSystemSummary} · ${supportBaySummary} · 보관 ${benchEntries.length}종 · ${catalystSummary} · 분해 예상 고철 ${getRecycleValue(state.build)}</p>
+        <p>${evolutionSummary} · ${doctrineSummary} · ${capstoneSummary} · ${forgeSystemSummary} · ${doctrinePursuitSummary} · ${supportBaySummary} · 보관 ${benchEntries.length}종 · ${catalystSummary} · 분해 예상 고철 ${getRecycleValue(state.build)}</p>
       </article>
     `;
     elements.forgeCards.innerHTML = state.forgeChoices
@@ -10322,7 +10542,7 @@
       const maxLife =
         drop.kind === "core" || drop.kind === "catalyst"
           ? 12
-          : drop.kind === "overcommit_salvage"
+          : drop.kind === "overcommit_salvage" || drop.kind === "doctrine_pursuit_shard"
             ? OVERCOMMIT_SALVAGE_LIFE
             : drop.kind === "combat_cache"
               ? COMBAT_CACHE_DROP_LIFE
@@ -10364,6 +10584,20 @@
         context.lineTo(drop.x + 5, drop.y);
         context.lineTo(drop.x, drop.y + 6);
         context.lineTo(drop.x - 5, drop.y);
+        context.closePath();
+        context.fill();
+      } else if (drop.kind === "doctrine_pursuit_shard") {
+        context.strokeStyle = "rgba(181, 246, 255, 0.96)";
+        context.lineWidth = 2.2;
+        context.beginPath();
+        context.arc(drop.x, drop.y, 10, 0, Math.PI * 2);
+        context.stroke();
+        context.fillStyle = "rgba(108, 214, 255, 0.94)";
+        context.beginPath();
+        context.moveTo(drop.x, drop.y - 7);
+        context.lineTo(drop.x + 6, drop.y);
+        context.lineTo(drop.x, drop.y + 7);
+        context.lineTo(drop.x - 6, drop.y);
         context.closePath();
         context.fill();
       } else if (drop.kind === "catalyst") {
@@ -10565,6 +10799,12 @@
         context.fill();
         if (enemy.overcommitTarget) {
           context.strokeStyle = "rgba(255, 229, 126, 0.95)";
+          context.lineWidth = 3;
+          context.beginPath();
+          context.arc(enemy.x, enemy.y, enemy.radius + 6, 0, Math.PI * 2);
+          context.stroke();
+        } else if (enemy.doctrinePursuitTarget) {
+          context.strokeStyle = "rgba(152, 241, 255, 0.95)";
           context.lineWidth = 3;
           context.beginPath();
           context.arc(enemy.x, enemy.y, enemy.radius + 6, 0, Math.PI * 2);
