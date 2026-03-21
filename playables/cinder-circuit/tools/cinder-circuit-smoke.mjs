@@ -194,10 +194,12 @@ assert.equal(waveThreeForgeChoices.length, 3);
 assert.ok(waveThreeForgeChoices.every((choice) => choice.laneLabel !== "보조 시스템"));
 assert.ok(waveThreeForgeChoices.every((choice) => choice.laneLabel !== "생존/경제"));
 assert.equal(game.shouldUseFieldGrant({ nextWave: 3, finalForge: false }), false);
-const architectureDraftChoices = game.buildArchitectureDraftChoices();
+const architectureDraftChoices = game.buildArchitectureDraftChoices(game.createInitialBuild("relay_oath"));
 assert.equal(architectureDraftChoices.length, 3);
 assert.ok(architectureDraftChoices.every((choice) => choice.action === "architecture_doctrine"));
 assert.ok(architectureDraftChoices.every((choice) => choice.cost === 0));
+assert.ok(architectureDraftChoices.every((choice) => choice.weaponChoice));
+assert.ok(architectureDraftChoices.every((choice) => choice.doctrineCapstoneLabel));
 const architectureRun = {
   build: game.createInitialBuild("relay_oath"),
   player: null,
@@ -210,6 +212,8 @@ assert.equal(architectureRun.build.doctrineChaseClaimed, false);
 assert.ok(
   architectureRun.build.upgrades.some((upgrade) => upgrade.startsWith("아키텍처 잠금: "))
 );
+assert.equal(architectureRun.build.coreId, "ricochet");
+assert.equal(game.computeWeaponStats(architectureRun.build).evolutionTier, 1);
 assert.equal(architectureRun.build.supportSystems.length, 1);
 assert.equal(architectureRun.build.supportSystems[0].tier, 1);
 const doctrineChaseChoices = game.buildForgeChoices(
@@ -230,7 +234,7 @@ assert.equal(doctrineChaseChoice.systemChoice.systemId, "volt_drones");
 assert.equal(doctrineChaseChoice.systemChoice.systemTier, 2);
 game.applyForgeChoice(architectureRun, doctrineChaseChoice);
 assert.equal(architectureRun.build.doctrineChaseClaimed, true);
-assert.equal(game.computeWeaponStats(architectureRun.build).evolutionTier, 1);
+assert.equal(game.computeWeaponStats(architectureRun.build).evolutionTier, 2);
 assert.equal(
   architectureRun.build.supportSystems.find((entry) => entry.id === "volt_drones").tier,
   2
@@ -299,7 +303,7 @@ assert.ok(
 const doctrineCapstoneBuild = game.createInitialBuild("relay_oath");
 doctrineCapstoneBuild.pendingCores = [];
 const mirrorArchitectureChoice = game
-  .buildArchitectureDraftChoices()
+  .buildArchitectureDraftChoices(doctrineCapstoneBuild)
   .find((choice) => choice.title === "Mirror Hunt Doctrine");
 assert.ok(mirrorArchitectureChoice);
 game.applyForgeChoice(

@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 01:00 KST
+  Findings:
+  - `Wave 1-12` finally has real bracket length, but the run still withholds its most exciting promise too long. `Architecture Draft` at Wave 3 names a doctrine, yet the player usually does not feel a distinct "this run becomes a fortress / hunter / artillery monster" transformation until much later.
+  - Too much of the visible escalation is still support-system authored. `Volt Drones`, `Kiln Sentry`, `Seeker Array`, and doctrine apex cards do more to sell the fantasy than the main gun, which leaves the core firing loop feeling like a chassis carrying helpers instead of the star of the build.
+  - The forge has more structure than the docs, but not enough hunger. Between `Wave 3` doctrine locking, `Wave 5` armory, and `Wave 9` late armory, too many picks are still route confirmation or maintenance rather than painful bets on a specific end-state the player is already craving.
+  - Act 2 and Act 3 pressure is clearer, yet the battlefield still asks for variations of lane reopening under bastion, mortar, and warden pressure more often than it asks the build to exploit a unique strength. Longer runs will need branch-specific combat asks, not just stronger lockouts.
+  Top Priority: Rework the Wave 3 `Architecture Draft` so each doctrine immediately mutates the main weapon into a visible provisional form plus a named apex chase, making the run's desired final monster readable by Wave 3 instead of Wave 9.
+  Why Now: Until the build fantasy is legible early, extra waves mostly extend competence instead of anticipation.
+  Do Not Repeat: Do not solve this with another helper module or late capstone if the gun itself still feels secondary for most of the run.
+
 - 2026-03-22 12:05 KST
   Findings:
   - The run is now long enough to prove its core sameness: across `Wave 5-12`, the player still mostly solves "reopen space, kill the core, cut the backline, resume kiting" under different labels. That is encounter extension, not replayable combat destiny.
@@ -511,6 +521,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 12:44 KST
+  Changed: reworked `Wave 3` `Architecture Draft` in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so every doctrine now immediately mutates the main weapon instead of only installing a helper system and biasing future offers. Each draft card now bundles a free doctrine weapon transformation with the starter subsystem: if the run is already on that doctrine's favored gun it grants the first visible evolution immediately, and if not it pivots the active weapon straight into the doctrine's favored core on the spot. The draft preview rows, slot text, feed copy, and forge subtitle now explicitly show the immediate weapon form plus the doctrine apex chase name, and [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts the new bundled weapon payload and the Wave `3` result state.
+  Why: the latest critique's Top Priority was to make the run's desired final monster legible by `Wave 3` instead of waiting for `Wave 9` support payoffs. The highest-value bounded interpretation was to turn `Architecture Draft` itself into the moment the gun changes shape, because that makes the main weapon the first proof of doctrine identity without widening scope into a larger progression rewrite.
+  Follow-up risk: doctrine identity is now visible much earlier, but the immediate mutation currently resolves into an authored core pivot or `T1` evolution rather than a doctrine-exclusive firing rule layered on top of every gun. If critique still wants stronger branch silhouette, the next pass should add doctrine-specific provisional fire modifiers or visuals so `Mirror Hunt`, `Kiln Bastion`, and `Storm Artillery` read as distinct even before later chase cards land.
 
 - 2026-03-22 12:20 KST
   Changed: added an early doctrine-chase bundle to [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so doctrine runs start assembling a known monster by `Wave 4-6` instead of waiting for `Wave 9` to reveal their real end-state. Once `Architecture Draft` or `Bastion Draft` locks a doctrine, normal forge generation now offers one `... Frame` chase card that upgrades the doctrine’s favored weapon path and its support layer together in a single pick, with preview rows and doctrine copy updated to explicitly point from the early frame into the later apex. I also extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new Wave `4` chase offer, its bundled weapon/support payload, and that it only appears once.

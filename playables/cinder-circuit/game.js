@@ -3244,8 +3244,16 @@
       return [
         { label: "교리", value: choice.doctrineLabel || "아키텍처" },
         {
-          label: "즉시",
+          label: "무기",
+          value: choice.weaponChoice ? choice.weaponChoice.title : "주무장 재배선",
+        },
+        {
+          label: "지원",
           value: choice.doctrineChoice ? choice.doctrineChoice.title : "starter subsystem 설치",
+        },
+        {
+          label: "종점",
+          value: choice.doctrineCapstoneLabel || choice.doctrineLabel || "Doctrine Apex",
         },
         ...finaleRows,
       ];
@@ -4939,16 +4947,39 @@
     };
   }
 
-  function createArchitectureDoctrineChoice(doctrine) {
+  function createArchitectureDoctrineWeaponChoice(build, doctrine) {
+    if (!build || !doctrine || !doctrine.favoredCoreId || !CORE_DEFS[doctrine.favoredCoreId]) {
+      return null;
+    }
+    if (build.coreId === doctrine.favoredCoreId) {
+      const evolutionChoice = createWeaponEvolutionChoice(build, { nextWave: ARCHITECTURE_DRAFT_WAVE });
+      return evolutionChoice && evolutionChoice.coreId === doctrine.favoredCoreId
+        ? {
+            ...evolutionChoice,
+            cost: 0,
+          }
+        : null;
+    }
+    const pivotChoice = createCoreChoice(doctrine.favoredCoreId, build);
+    return pivotChoice
+      ? {
+          ...pivotChoice,
+          cost: 0,
+        }
+      : null;
+  }
+
+  function createArchitectureDoctrineChoice(doctrine, build = null) {
     if (!doctrine || !doctrine.starterSystemId || !SUPPORT_SYSTEM_DEFS[doctrine.starterSystemId]) {
       return null;
     }
     const starterSystem = SUPPORT_SYSTEM_DEFS[doctrine.starterSystemId];
     const starterTier = starterSystem.tiers[1];
+    const weaponChoice = createArchitectureDoctrineWeaponChoice(build, doctrine);
     const lateCapstone = doctrine && doctrine.lateCapstoneId
       ? getDoctrineCapstoneDef(doctrine.lateCapstoneId)
       : null;
-    if (!starterTier) {
+    if (!starterTier || !weaponChoice) {
       return null;
     }
     return {
@@ -4959,13 +4990,15 @@
       tag: "ARCH",
       title: doctrine.label,
       description:
-        `${doctrine.description} 즉시 ${starterTier.title}을(를) 무료 설치해 ${doctrine.branchFamilyLabel} 계통을 바로 켜고, ${doctrine.reserveText} 이후 포지 후보도 ${doctrine.short} 쪽으로만 기울인다.${lateCapstone ? ` Wave 4-6에는 ${lateCapstone.title} Frame 추격 카드가 먼저 열리고, Late Break Armory에서는 ${lateCapstone.title} 완성 카드까지 열린다.` : ""}`,
-      slotText: `아키텍처 잠금 · ${starterTier.title} 설치 · ${doctrine.short}`,
+        `${doctrine.description} 즉시 주무장을 ${weaponChoice.title} 형태로 재배선하고 ${starterTier.title}을(를) 무료 설치해 ${doctrine.branchFamilyLabel} 계통을 바로 켠다. ${doctrine.reserveText} 이후 포지 후보도 ${doctrine.short} 쪽으로만 기울인다.${lateCapstone ? ` Wave 4-6에는 ${lateCapstone.title} Frame 추격 카드가 먼저 열리고, Late Break Armory에서는 ${lateCapstone.title} 완성 카드까지 열린다.` : ""}`,
+      slotText: `아키텍처 잠금 · ${weaponChoice.title} + ${starterTier.title} · ${doctrine.short}`,
       cost: 0,
       laneLabel: "아키텍처",
       forgeLaneLabel: "아키텍처",
       doctrineId: doctrine.id,
       doctrineLabel: doctrine.label,
+      doctrineCapstoneLabel: lateCapstone ? lateCapstone.title : null,
+      weaponChoice,
       doctrineChoice: {
         type: "system",
         systemId: doctrine.starterSystemId,
@@ -4980,9 +5013,9 @@
     };
   }
 
-  function buildArchitectureDraftChoices() {
+  function buildArchitectureDraftChoices(build = null) {
     return Object.values(BASTION_DOCTRINE_DEFS)
-      .map((doctrine) => createArchitectureDoctrineChoice(doctrine))
+      .map((doctrine) => createArchitectureDoctrineChoice(doctrine, build))
       .filter(Boolean);
   }
 
@@ -5099,9 +5132,9 @@
     state.forgeStep = 1;
     state.forgeMaxSteps = 1;
     state.forgeDraftType = "architecture_draft";
-    state.forgeChoices = buildArchitectureDraftChoices();
+    state.forgeChoices = buildArchitectureDraftChoices(state.build);
     pushCombatFeed(
-      "Architecture Draft 개시. 세 개의 장기 교리 중 하나를 즉시 잠가 starter subsystem을 무료 설치하고 이후 포지 계통까지 함께 고정한다.",
+      "Architecture Draft 개시. 세 개의 장기 교리 중 하나를 골라 주무장을 즉시 재배선하고 starter subsystem을 무료 설치한 채, 이후 포지 계통까지 함께 고정한다.",
       "ARCH"
     );
     setBanner("Architecture Draft", 0.95);
@@ -5467,6 +5500,9 @@
       run.build.doctrineChaseClaimed = false;
       doctrine.apply(run.build, run);
       run.build.upgrades.push(`아키텍처 잠금: ${doctrine.label}`);
+      if (choice.weaponChoice) {
+        applyForgeChoice(run, choice.weaponChoice);
+      }
       if (choice.doctrineChoice) {
         applyForgeChoice(run, choice.doctrineChoice);
       }
@@ -8970,7 +9006,7 @@
     const armoryLabel = getArmoryLabel(forgeOptions);
     const packageSummary =
       state.forgeDraftType === "architecture_draft"
-        ? "Architecture Draft · 세 장기 교리 중 1픽, starter subsystem을 무료 설치하고 이후 포지 풀과 남은 베이 방향을 즉시 잠근다"
+        ? "Architecture Draft · 세 장기 교리 중 1픽, 주무장 재배선 + starter subsystem 무료 설치로 Wave 3부터 최종 교리 monster를 먼저 보여준다"
         : state.forgeDraftType === "field_grant"
         ? "Field Cache · 할인 장착 2장과 무료 회수 1장 중 1픽, 지금 고철을 태울지 아낄지 고른다"
         : state.forgeDraftType === "bastion_draft"
@@ -8991,7 +9027,7 @@
         ? `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 세 장은 완성, 촉매 연소, 안정화로 고정되며 각 카드가 바로 이어질 12초 cash-out 시험을 미리 보여준다.`
         : `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 촉매가 없어도 비상 점화와 안정화 fail-soft 카드가 열리며, 각 카드가 다른 12초 cash-out 시험으로 바로 이어진다.`
       : state.forgeDraftType === "architecture_draft"
-        ? `Wave 3 진입 직전 Architecture Draft다. 세 장기 교리 중 하나를 골라 starter subsystem을 무료 설치하고, 남은 support bay와 이후 포지 후보를 그 계통으로 잠근다. 지금부터 이번 런의 전장을 어떤 기계로 바꿀지 결정한다.`
+        ? `Wave 3 진입 직전 Architecture Draft다. 세 장기 교리 중 하나를 골라 주무장을 즉시 해당 교리 형태로 재배선하고 starter subsystem을 무료 설치하며, 남은 support bay와 이후 포지 후보를 그 계통으로 잠근다. 지금부터 이번 런이 어떤 최종 병기로 자랄지 바로 드러난다.`
       : state.forgeDraftType === "field_grant"
         ? `고철 ${Math.round(state.resources.scrap)} 보유. Field Cache다. 할인된 즉시 장착 2장과 무료 Emergency Vent 중 하나를 고른다. 지금 스파이크를 사서 당길지, 고철을 쥐고 다음 큰 포지까지 버틸지 직접 판단해야 한다.`
         : state.forgeDraftType === "bastion_draft"
