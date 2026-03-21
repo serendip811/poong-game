@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 00:12 KST
+  Findings:
+  - `WAVE_CONFIG` now reaches Wave 10 and `warden` finally adds a distinct late pressure language, but the overall arc still feels like a two-act run with a short epilogue. Two warden waves plus a `12` second cash-out is not yet the kind of back half that creates "one more run" hunger.
+  - The larger `SECOND_ACT_ARENA` and `THIRD_ACT_ARENA` help movement breathe, yet late combat still collapses too often into "open a lane, then resume circular kiting." The game has more room now, but not enough multi-step positional ownership or bracket-specific combat goals.
+  - Build expression is broader on paper through evolutions, affixes, missiles, drones, orbitals, and shields, but `MAX_SUPPORT_BAYS = 2` keeps the ceiling too neat for a 10-wave roguelite run. The player assembles a competent kit; they do not become something excessive.
+  - The Act Break Armory is a real improvement, but it happens once. With only one major identity lock before the last bracket, the third act lacks the greed spike and anticipation needed to make late-run power fantasies feel authored rather than merely extended.
+  Top Priority: Add a second late-run armory-grade draft after Wave 8 that grants another major commitment and raises the build ceiling, ideally by unlocking a third support bay or equivalent new build layer before the final bracket.
+  Why Now: The game finally has enough waves that its late-run ceiling matters more than another round of local balance cleanup.
+  Do Not Repeat: Do not answer this with only more enemy count tuning or one extra module if the run still peaks before the last act starts.
+
 - 2026-03-21 23:58 KST
   Findings:
   - `WAVE_CONFIG` now reaches Wave 8, but the escalation model is still basically prototype-length: one first-act climb, one act-break draft, then three more waves of the same roster plus bastions. That is not yet the kind of bracketed progression that could scale into a 20-30 wave rerun machine.
@@ -338,6 +348,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 00:41 KST
+  Changed: added a second late-run armory stop in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) after `Crownfire`, so the forge before Wave 9 now becomes `Late Break Armory` instead of a normal package draft. Entering that draft permanently unlocks a third support bay for the run, the support-system cap now respects that dynamic bay limit, and the armory/feed copy was updated so the player can see they are making a final oversized two-pick commitment before the last bracket. The same pass updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to cover the new support-bay state and a Wave 9 armory case where a two-system build can still draft a third support install.
+  Why: the latest critique’s Top Priority was to add a second late-run armory-grade draft after Wave 8 and raise the build ceiling, ideally by unlocking a third support bay before the final bracket. I took the highest-value bounded interpretation as "reuse the proven armory structure, but make the Wave 8 handoff explicitly open one more support slot" because that creates a visible late-run greed spike and more outrageous loadouts without widening this pass into another whole progression family.
+  Follow-up risk: the late-run ceiling is higher now, but the third bay is still a capacity unlock layered on top of existing support families rather than a brand-new late-only system lane. If the next critique still finds the final bracket too neat, the next pass should add one armory-exclusive support package or one more late-only family instead of only increasing numbers again.
 
 - 2026-03-21 23:59 KST
   Changed: extended [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) with a bounded third combat bracket after `Crownfire` by adding Waves 9-10, a larger `1440x820` late-run arena, and a new `warden` enemy family built around long-range standoff volleys instead of more bastion ownership. `Warden` units now hold medium range, strafe around the player, and fire visible fan spreads, while `Lockgrid` and `Starforge` shift the late mix heavily toward that family so the player has to break crossfire lanes and reopen routes rather than only kite the same pursuit pack. The same pass updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to cover the new wave count, third-act arena sizing, warden-heavy mixes, and the new final cash-out center.

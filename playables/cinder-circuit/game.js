@@ -599,6 +599,7 @@
 
   const MAX_SUPPORT_SYSTEM_TIER = 3;
   const MAX_SUPPORT_BAYS = 2;
+  const MAX_SUPPORT_BAY_LIMIT = 3;
   const SUPPORT_SYSTEM_DEFS = {
     ember_ring: {
       id: "ember_ring",
@@ -1097,6 +1098,7 @@
   const DEFAULT_SIGNATURE_ID = "relay_oath";
   const FORGE_PACKAGE_START_WAVE = 3;
   const ACT_BREAK_ARMORY_WAVE = 6;
+  const LATE_BREAK_ARMORY_WAVE = 9;
   const ACT_BREAK_ARMORY_MAX_CHOICES = 6;
   const ACT_BREAK_CHASSIS_MOD_IDS = [
     "drive_sync",
@@ -2106,6 +2108,7 @@
     catalystCapstoneId: null,
     cashoutSupportId: null,
     cashoutFailSoftId: null,
+    supportBayCap: 2,
     supportSystemId: null,
     supportSystemTier: 0,
     supportSystems: [],
@@ -2338,6 +2341,17 @@
     return SUPPORT_SYSTEM_DEFS[installedSystems[0].id] || null;
   }
 
+  function getSupportBayCapacity(build) {
+    if (!build) {
+      return MAX_SUPPORT_BAYS;
+    }
+    return clamp(
+      Math.round(build.supportBayCap || MAX_SUPPORT_BAYS),
+      MAX_SUPPORT_BAYS,
+      MAX_SUPPORT_BAY_LIMIT
+    );
+  }
+
   function getSupportSystemForgeLane(systemId) {
     const system = SUPPORT_SYSTEM_DEFS[systemId];
     return system && system.forgeLane ? system.forgeLane : "보조 시스템";
@@ -2354,10 +2368,11 @@
     return nextWave >= unlockWave;
   }
 
-  function sanitizeSupportSystems(systems) {
+  function sanitizeSupportSystems(systems, build = null) {
     if (!Array.isArray(systems)) {
       return [];
     }
+    const bayCap = getSupportBayCapacity(build);
     const next = [];
     const seen = new Set();
     for (const entry of systems) {
@@ -2369,7 +2384,7 @@
         id: entry.id,
         tier: clamp(Math.round(entry.tier || 1), 1, MAX_SUPPORT_SYSTEM_TIER),
       });
-      if (next.length >= MAX_SUPPORT_BAYS) {
+      if (next.length >= bayCap) {
         break;
       }
     }
@@ -2380,7 +2395,7 @@
     if (!build) {
       return [];
     }
-    const normalized = sanitizeSupportSystems(build.supportSystems);
+    const normalized = sanitizeSupportSystems(build.supportSystems, build);
     if (normalized.length > 0) {
       return normalized;
     }
@@ -2497,6 +2512,7 @@
     const random = typeof rng === "function" ? rng : Math.random;
     const nextWave = options && Number.isFinite(options.nextWave) ? options.nextWave : 0;
     const installedSystems = getInstalledSupportSystems(build);
+    const supportBayCap = getSupportBayCapacity(build);
     const installedMap = new Map(installedSystems.map((entry) => [entry.id, entry]));
     const installChoices = shuffle(
       Object.keys(SUPPORT_SYSTEM_DEFS).filter(
@@ -2505,7 +2521,7 @@
       random
     )
       .map((systemId) => {
-        if (installedSystems.length >= MAX_SUPPORT_BAYS) {
+        if (installedSystems.length >= supportBayCap) {
           return null;
         }
         const system = SUPPORT_SYSTEM_DEFS[systemId];
@@ -2574,8 +2590,9 @@
       return false;
     }
     const installedSystems = getInstalledSupportSystems(build);
+    const supportBayCap = getSupportBayCapacity(build);
     return (
-      installedSystems.length < MAX_SUPPORT_BAYS ||
+      installedSystems.length < supportBayCap ||
       installedSystems.some((entry) => entry.tier < MAX_SUPPORT_SYSTEM_TIER)
     );
   }
@@ -2591,7 +2608,27 @@
     if (!options || options.finalForge) {
       return false;
     }
-    return (options.nextWave || 0) === ACT_BREAK_ARMORY_WAVE;
+    const nextWave = options.nextWave || 0;
+    return nextWave === ACT_BREAK_ARMORY_WAVE || nextWave === LATE_BREAK_ARMORY_WAVE;
+  }
+
+  function isLateBreakArmory(options) {
+    if (!options) {
+      return false;
+    }
+    return (options.nextWave || 0) === LATE_BREAK_ARMORY_WAVE;
+  }
+
+  function getArmoryLabel(options) {
+    return isLateBreakArmory(options) ? "Late Break Armory" : "Act Break Armory";
+  }
+
+  function unlockLateSupportBay(build) {
+    if (!build || getSupportBayCapacity(build) >= MAX_SUPPORT_BAY_LIMIT) {
+      return false;
+    }
+    build.supportBayCap = MAX_SUPPORT_BAY_LIMIT;
+    return true;
   }
 
   function getForgeDraftType(options) {
@@ -2842,6 +2879,7 @@
         catalystCapstoneId: BASE_BUILD.catalystCapstoneId,
         cashoutSupportId: BASE_BUILD.cashoutSupportId,
         cashoutFailSoftId: BASE_BUILD.cashoutFailSoftId,
+        supportBayCap: BASE_BUILD.supportBayCap,
         supportSystemId: BASE_BUILD.supportSystemId,
         supportSystemTier: BASE_BUILD.supportSystemTier,
         supportSystems: BASE_BUILD.supportSystems.slice(),
@@ -4074,7 +4112,7 @@
           tier: choice.systemTier || 1,
         });
       }
-      run.build.supportSystems = sanitizeSupportSystems(nextSystems);
+      run.build.supportSystems = sanitizeSupportSystems(nextSystems, run.build);
       run.build.supportSystemId = choice.systemId;
       run.build.supportSystemTier = choice.systemTier || 1;
       run.build.upgrades.push(
@@ -4901,12 +4939,20 @@
       packageStep: 1,
     };
     const draftType = getForgeDraftType(forgeOptions);
+    const armoryLabel = getArmoryLabel(forgeOptions);
     const startsPackage = draftType === "package" || draftType === "armory";
     state.phase = "forge";
     state.pendingFinalForge = isFinalForge;
     state.forgeStep = 1;
     state.forgeMaxSteps = startsPackage ? 2 : 1;
     state.forgeDraftType = draftType;
+    if (!isFinalForge && isLateBreakArmory(forgeOptions) && unlockLateSupportBay(state.build)) {
+      state.build.upgrades.push("Aux Bay Uplink");
+      pushCombatFeed(
+        "Wave 8 돌파. Late Break Armory가 열리며 세 번째 support bay가 해금된다.",
+        "ARMORY"
+      );
+    }
     state.forgeChoices = buildForgeChoices(
       state.build,
       Math.random,
@@ -4921,13 +4967,15 @@
     pushCombatFeed(
       isFinalForge
         ? "최종 웨이브 정리 완료. 마지막 포지에서 최종 각인과 화력 배치를 마감한다."
+        : isLateBreakArmory(forgeOptions)
+          ? "Wave 8 돌파. Late Break Armory에서 6장 중 대형 카드 두 장을 골라 세 번째 베이까지 포함한 최종 화력 틀을 잠근다."
         : draftType === "armory"
           ? "Wave 5 돌파. Act Break Armory에서 6장 중 대형 카드 두 장을 골라 Act 2 빌드 정체성을 위험하게 고정한다."
           : "웨이브 종료. 포지 카드로 다음 화력 축을 고른다.",
       "FORGE"
     );
     setBanner(
-      isFinalForge ? "최종 포지" : draftType === "armory" ? "Act Break Armory" : "포지 정지",
+      isFinalForge ? "최종 포지" : draftType === "armory" ? armoryLabel : "포지 정지",
       1.2
     );
     renderForgeOverlay();
@@ -5206,7 +5254,7 @@
       );
       pushCombatFeed(
         state.forgeDraftType === "armory"
-          ? `${choice.tag} · ${choice.title} 적용. Armory draft 두 번째 장에서 남은 대형 화력/차체 카드 1장을 더 고른다.`
+          ? `${choice.tag} · ${choice.title} 적용. ${getArmoryLabel({ nextWave: state.waveIndex + 2 })} 두 번째 장에서 남은 대형 화력/차체 카드 1장을 더 고른다.`
           : `${choice.tag} · ${choice.title} 적용. 패키지 마감 슬롯에서 보조 시스템 또는 안정화 카드를 1장 더 고른다.`,
         "FORGE"
       );
@@ -6860,6 +6908,7 @@
       ? `${state.weapon.capstoneLabel} · ${state.weapon.capstoneTraitLabel}`
       : "활성 촉매 재구성 없음";
     const forgeSystemSummary = getSupportSystemSummary(state.supportSystem);
+    const supportBaySummary = `${getInstalledSupportSystems(state.build).length}/${getSupportBayCapacity(state.build)} 베이`;
     const benchEntries = getBenchEntries(state.build);
     const benchSummary = benchEntries.length
       ? benchEntries
@@ -6876,9 +6925,16 @@
         ? `${FINISHER_RECIPE_DEFS[state.build.coreId].label} 촉매 확보`
         : `${FINISHER_RECIPE_DEFS[state.build.coreId].label} 촉매 필요`
       : "촉매 조건 미도달";
+    const forgeOptions = {
+      finalForge: state.pendingFinalForge,
+      nextWave: state.waveIndex + 2,
+    };
+    const armoryLabel = getArmoryLabel(forgeOptions);
     const packageSummary =
       state.forgeDraftType === "armory"
-        ? `Act Break Armory ${state.forgeStep}/${state.forgeMaxSteps} · 6장 중 2픽, 대형 화력이 과투입되어 안전한 lane 보장이 없다`
+        ? isLateBreakArmory(forgeOptions)
+          ? `${armoryLabel} ${state.forgeStep}/${state.forgeMaxSteps} · 6장 중 2픽, 세 번째 베이까지 열린 상태에서 마지막 과투입을 강제한다`
+          : `${armoryLabel} ${state.forgeStep}/${state.forgeMaxSteps} · 6장 중 2픽, 대형 화력이 과투입되어 안전한 lane 보장이 없다`
         : state.forgeMaxSteps > 1
         ? `패키지 ${state.forgeStep}/${state.forgeMaxSteps} · 1슬롯 화력/전환, 2슬롯 시스템/안정화`
         : state.waveIndex + 2 >= FORGE_PACKAGE_START_WAVE && !state.pendingFinalForge
@@ -6889,7 +6945,9 @@
         ? `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 세 장은 완성, 촉매 연소, 안정화로 고정되며 각 카드가 바로 이어질 12초 cash-out 시험을 미리 보여준다.`
         : `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 촉매가 없어도 비상 점화와 안정화 fail-soft 카드가 열리며, 각 카드가 다른 12초 cash-out 시험으로 바로 이어진다.`
       : state.forgeDraftType === "armory"
-        ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 5를 넘기면 일반 패키지 대신 Act Break Armory가 열린다. 이번 포지는 6장 중 2장을 고르며, 주무장 진화와 공세 카드가 여러 장 겹쳐 떠 안전한 lane별 정답을 보장하지 않는다.`
+        ? isLateBreakArmory(forgeOptions)
+          ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 8을 넘기며 ${armoryLabel}가 열린다. 세 번째 support bay가 해금됐고, 이번 포지는 6장 중 2장을 골라 최종 전투 구간 직전의 과한 조합을 잠근다.`
+          : `고철 ${Math.round(state.resources.scrap)} 보유. Wave 5를 넘기면 일반 패키지 대신 ${armoryLabel}가 열린다. 이번 포지는 6장 중 2장을 고르며, 주무장 진화와 공세 카드가 여러 장 겹쳐 떠 안전한 lane별 정답을 보장하지 않는다.`
       : `고철 ${Math.round(state.resources.scrap)} 보유. 장착은 무기 등급을 올리거나 바꾸고, 각인은 속성을 붙이며, 재구성/분해는 보관 코어를 정리한다. ${packageSummary}.`;
     elements.forgeContext.innerHTML = `
       <article class="forge-context__card">
@@ -6900,7 +6958,7 @@
       <article class="forge-context__card">
         <p class="panel__eyebrow">속성 / 진화 / 시스템</p>
         <strong>${affixSummary}</strong>
-        <p>${evolutionSummary} · ${capstoneSummary} · ${forgeSystemSummary} · 보관 ${benchEntries.length}종 · ${catalystSummary} · 분해 예상 고철 ${getRecycleValue(state.build)}</p>
+        <p>${evolutionSummary} · ${capstoneSummary} · ${forgeSystemSummary} · ${supportBaySummary} · 보관 ${benchEntries.length}종 · ${catalystSummary} · 분해 예상 고철 ${getRecycleValue(state.build)}</p>
       </article>
     `;
     elements.forgeCards.innerHTML = state.forgeChoices

@@ -55,6 +55,7 @@ assert.equal(signatureBuild.signatureId, "scrap_pact");
 assert.equal(signatureBuild.maxHpBonus, 8);
 assert.equal(signatureBuild.pickupBonus, 18);
 assert.equal(signatureBuild.scrapMultiplier, 1.08);
+assert.equal(signatureBuild.supportBayCap, 2);
 assert.equal(JSON.stringify(signatureBuild.affixes), JSON.stringify(["salvage_link"]));
 
 const build = game.createInitialBuild("scrap_pact");
@@ -416,6 +417,35 @@ assert.ok(
     ["주무장 진화", "공세 모듈", "대형 화력"].includes(choice.laneLabel)
   )
 );
+const lateArmoryBuild = game.createInitialBuild("relay_oath");
+lateArmoryBuild.pendingCores = [];
+lateArmoryBuild.supportBayCap = 3;
+lateArmoryBuild.supportSystems = [
+  { id: "aegis_halo", tier: 2 },
+  { id: "ember_ring", tier: 2 },
+];
+const lateArmoryChoices = game.buildForgeChoices(
+  lateArmoryBuild,
+  () => 0,
+  220,
+  { nextWave: 9, finalForge: false }
+);
+assert.equal(lateArmoryChoices.length, 6);
+assert.ok(lateArmoryChoices.some((choice) => choice.laneLabel === "공세 모듈"));
+const thirdBayChoice = lateArmoryChoices.find(
+  (choice) =>
+    choice.type === "system" &&
+    choice.systemTier === 1 &&
+    ["seeker_array", "volt_drones"].includes(choice.systemId)
+);
+assert.ok(thirdBayChoice);
+game.applyForgeChoice(
+  { build: lateArmoryBuild, player: null, resources: { scrap: 999 }, stats: {} },
+  thirdBayChoice
+);
+const lateArmorySystems = game.computeSupportSystemStats(lateArmoryBuild);
+assert.equal(lateArmoryBuild.supportSystems.length, 3);
+assert.ok(lateArmorySystems.orbitCount >= 5);
 const actModuleFollowupBuild = game.createInitialBuild("relay_oath");
 actModuleFollowupBuild.pendingCores = [];
 const actOneModuleFollowup = game.buildForgeFollowupChoices(
