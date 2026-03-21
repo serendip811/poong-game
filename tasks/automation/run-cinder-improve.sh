@@ -5,7 +5,7 @@ export PATH="/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PAT
 
 ROOT="/Users/seren/workspace/poong-game"
 TASK_DIR="$ROOT/tasks/automation"
-LOG_DIR="$TASK_DIR/logs"
+LOG_DIR="/Users/seren/.local/state/cinder-circuit-automation"
 LOCK_DIR="$TASK_DIR/.improve.lock"
 CRITIQUE_LOCK_DIR="$TASK_DIR/.critique.lock"
 CODEX_BIN="/usr/local/bin/codex"
@@ -57,7 +57,7 @@ PY
 {
   printf '\n[%s] improve start\n' "$(date '+%Y-%m-%d %H:%M:%S')"
   notify "start" "loop started"
-  cat "$PROMPT_FILE" | "$CODEX_BIN" exec --full-auto -C "$ROOT" -o "$LAST_FILE" -
+  cat "$PROMPT_FILE" | "$CODEX_BIN" exec --dangerously-bypass-approvals-and-sandbox -C "$ROOT" -o "$LAST_FILE" -
   printf '[%s] improve done\n' "$(date '+%Y-%m-%d %H:%M:%S')"
   notify "done" "$(summary_text)"
 } >> "$LOG_FILE" 2>&1

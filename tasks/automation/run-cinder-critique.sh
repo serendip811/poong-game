@@ -5,7 +5,7 @@ export PATH="/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PAT
 
 ROOT="/Users/seren/workspace/poong-game"
 TASK_DIR="$ROOT/tasks/automation"
-LOG_DIR="$TASK_DIR/logs"
+LOG_DIR="/Users/seren/.local/state/cinder-circuit-automation"
 LOCK_DIR="$TASK_DIR/.critique.lock"
 CODEX_BIN="/usr/local/bin/codex"
 PROMPT_FILE="$TASK_DIR/cinder-circuit-critique-prompt.md"
