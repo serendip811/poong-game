@@ -197,12 +197,14 @@
       spawnAcceleration: 0.32,
       eliteEvery: 6,
       mix: {
-        scuttler: 0.22,
-        brute: 0.3,
-        shrike: 0.48,
+        scuttler: 0.2,
+        brute: 0.28,
+        shrike: 0.34,
+        mortar: 0.18,
       },
-      note: "Act 2 후반의 정점. 넓은 전장에서 위험 구역을 가르며 다음 armory 직전 빌드를 증명해야 한다.",
-      directive: "crown bastions. 점거 코어를 방치하면 전장 중앙이 닫히므로 파괴 순서와 진입 각을 읽어야 한다.",
+      note: "Act 2 후반의 정점. 첫 mortar 포격조가 bastion 뒤에서 느린 탄막을 깔기 시작해, 넓은 전장에서도 회전 경로와 요격 가치가 같이 올라간다.",
+      directive:
+        "crown bastions. 점거 코어를 방치하면 전장 중앙이 닫히고, 뒤쪽 mortar 포격이 접근 각을 덮는다. 코어 돌입과 포격조 끊기 순서를 함께 읽어야 한다.",
       driveGainFactor: 1.32,
       arena: SECOND_ACT_ARENA,
       hazard: {
@@ -233,14 +235,15 @@
       spawnAcceleration: 0.33,
       eliteEvery: 5,
       mix: {
-        scuttler: 0.18,
-        brute: 0.28,
-        shrike: 0.34,
-        warden: 0.2,
+        scuttler: 0.16,
+        brute: 0.26,
+        shrike: 0.28,
+        mortar: 0.16,
+        warden: 0.14,
       },
-      note: "두 번째 전투 구간의 결산. 첫 warden 사선이 bastion 점거와 겹쳐 마지막 Act 2 정답을 강요한다.",
+      note: "두 번째 전투 구간의 결산. 첫 warden 사선에 mortar 포격까지 겹쳐, 이제 마지막 Act 2 답은 단순 라인 절단이 아니라 포격원과 점거 코어 우선순위까지 포함한다.",
       directive:
-        "forgecross lockout. 고정 포대만 먼저 자를지, 점거 코어를 먼저 부술지 즉시 판단해야 Wave 9 Late Break Armory 직전 숨통이 열린다.",
+        "forgecross lockout. 고정 포대만 먼저 자를지, bastion 코어를 먼저 부술지, 뒤쪽 mortar 포격을 먼저 끊을지 즉시 판단해야 Wave 9 Late Break Armory 직전 숨통이 열린다.",
       driveGainFactor: 1.36,
       arena: SECOND_ACT_ARENA,
       hazard: {
@@ -271,13 +274,15 @@
       spawnAcceleration: 0.34,
       eliteEvery: 5,
       mix: {
-        scuttler: 0.14,
+        scuttler: 0.12,
         brute: 0.18,
-        shrike: 0.24,
-        warden: 0.44,
+        shrike: 0.2,
+        mortar: 0.18,
+        warden: 0.32,
       },
-      note: "세 번째 전투 구간의 시작. 추격 대신 장거리 봉쇄를 끊으며 다시 길을 여는 법부터 익힌다.",
-      directive: "warden crossfire. 바깥 사선을 정리하지 않으면 안전 루트와 고철 회수선이 계속 잠긴다.",
+      note: "세 번째 전투 구간의 시작. 바깥 봉쇄선만 자르면 끝나지 않는다. 뒤쪽 mortar가 느린 포격을 쌓아 회수선과 방어 시스템의 가치를 함께 시험한다.",
+      directive:
+        "lockgrid crossfire. warden 사선으로 길을 열면서도, 살아남은 mortar 포격이 안전 루트에 느린 탄벽을 쌓기 전에 포격원을 잘라야 한다.",
       driveGainFactor: 1.38,
       arena: THIRD_ACT_ARENA,
       hazard: {
@@ -301,14 +306,15 @@
       spawnAcceleration: 0.35,
       eliteEvery: 5,
       mix: {
-        scuttler: 0.12,
+        scuttler: 0.1,
         brute: 0.2,
-        shrike: 0.2,
-        warden: 0.48,
+        shrike: 0.18,
+        mortar: 0.18,
+        warden: 0.34,
       },
-      note: "warden이 점거 코어를 지키며 길목을 잠근다. 외곽 사선만 끊는 것으로는 부족하고, 봉쇄 구역 자체를 부숴야 다시 회전이 열린다.",
+      note: "warden이 점거 코어를 지키는 동안 mortar 포격이 돌입 루트를 덮는다. 외곽 사선만 끊는 것으로는 부족하고, 포격 압박 속에서 봉쇄 구역 자체를 부숴야 다시 회전이 열린다.",
       directive:
-        "warden bastions. 점거 코어를 부수지 않으면 외곽 회수선과 탈출 각이 동시에 잠기므로, 사선 정리와 코어 돌입 순서를 함께 판단해야 한다.",
+        "warden bastions. 점거 코어를 부수지 않으면 외곽 회수선과 탈출 각이 동시에 잠기고, 뒤쪽 mortar 포격이 돌입각을 천천히 지워버린다. 사선 정리와 코어 돌입 순서를 함께 판단해야 한다.",
       driveGainFactor: 1.42,
       arena: THIRD_ACT_ARENA,
       hazard: {
@@ -339,14 +345,15 @@
       spawnAcceleration: 0.36,
       eliteEvery: 5,
       mix: {
-        scuttler: 0.14,
-        brute: 0.24,
-        shrike: 0.28,
-        warden: 0.34,
+        scuttler: 0.12,
+        brute: 0.22,
+        shrike: 0.24,
+        mortar: 0.2,
+        warden: 0.22,
       },
-      note: "세 번째 구간의 답을 바꾼다. 움직이는 제련 폭주가 플레이어를 감아 들어오므로, 고정 포대만 끊는 대신 전장을 크게 회전하며 밀집 추격조와 warden 각도를 함께 흘려야 한다.",
+      note: "세 번째 구간의 답을 다시 바꾼다. 움직이는 제련 폭주에 mortar 포격이 겹쳐, 단순 포대 정리보다 이동 경로를 갈아타며 느린 탄막과 추격조를 함께 찢어야 한다.",
       directive:
-        "starforge pursuit. 추적 화구가 현재 위치를 따라붙으니 한 lane에 오래 머물 수 없다. 바깥 포대 정리보다 이동 경로를 계속 갈아타며 압박 덩어리를 찢어야 한다.",
+        "starforge pursuit. 추적 화구가 현재 위치를 따라붙는 동안 mortar 포격이 탈출 루트에 늦게 도착한다. 한 lane에 오래 머물 수 없고, 이동 경로를 계속 갈아타며 압박 덩어리를 찢어야 한다.",
       driveGainFactor: 1.46,
       arena: THIRD_ACT_ARENA,
       hazard: {
@@ -373,14 +380,15 @@
       spawnAcceleration: 0.37,
       eliteEvery: 4,
       mix: {
-        scuttler: 0.1,
+        scuttler: 0.08,
         brute: 0.16,
-        shrike: 0.18,
-        warden: 0.56,
+        shrike: 0.16,
+        mortar: 0.18,
+        warden: 0.42,
       },
-      note: "최종 전장은 라인 소유권을 끝까지 유지해야 버틴다. 세 번째 support bay까지 열린 빌드가 없으면 외곽과 중앙을 동시에 지킬 여유가 없다.",
+      note: "최종 전장은 라인 소유권과 탄막 관리 둘 다 끝까지 유지해야 버틴다. 세 번째 support bay까지 열린 빌드가 없으면 외곽과 중앙, 그리고 누적 포격 궤도까지 동시에 감당하기 어렵다.",
       directive:
-        "forge lattice. 사중 폭주가 퇴로를 끊는 동안 warden 사선이 겹쳐 들어오므로, 외곽 정리와 즉시 돌파를 반복하며 마지막 전장을 억지로 열어야 한다.",
+        "forge lattice. 사중 폭주가 퇴로를 끊는 동안 warden 사선과 mortar 포격이 겹쳐 들어온다. 외곽 정리와 즉시 돌파를 반복하며 마지막 전장을 억지로 열어야 한다.",
       driveGainFactor: 1.52,
       arena: THIRD_ACT_ARENA,
       hazard: {
@@ -448,6 +456,16 @@
       damage: 12,
       scrap: 2,
       particleColor: "#a7fff4",
+    },
+    mortar: {
+      label: "Mortar",
+      color: "#9cc7ff",
+      radius: 15,
+      hp: 52,
+      speed: 58,
+      damage: 11,
+      scrap: 3,
+      particleColor: "#d7ebff",
     },
     warden: {
       label: "Warden",
@@ -6661,6 +6679,19 @@
       if (enemy.type === "shrike") {
         enemy.wobble += dt * 5;
         angle += Math.sin(enemy.wobble) * 0.6;
+      } else if (enemy.type === "mortar") {
+        enemy.wobble += dt * 2.4;
+        const distanceToPlayer = Math.hypot(state.player.x - enemy.x, state.player.y - enemy.y);
+        const preferredRange = 320;
+        if (distanceToPlayer < preferredRange * 0.74) {
+          angle += Math.PI + Math.sin(enemy.wobble) * 0.2;
+          speedMultiplier *= 1.08;
+        } else if (distanceToPlayer <= preferredRange * 1.12) {
+          angle += enemy.orbitDirection * 0.84 + Math.sin(enemy.wobble) * 0.18;
+          speedMultiplier *= 0.82;
+        } else {
+          speedMultiplier *= 0.94;
+        }
       } else if (enemy.type === "warden") {
         enemy.wobble += dt * 2.6;
         const distanceToPlayer = Math.hypot(state.player.x - enemy.x, state.player.y - enemy.y);
@@ -6687,6 +6718,19 @@
         if (distance < projectileRange) {
           spawnEnemyShot(enemy, enemy.type === "elite");
           enemy.attackCooldown = enemy.type === "elite" ? 1.6 : 2.1;
+        }
+      } else if (enemy.type === "mortar" && enemy.attackCooldown <= 0) {
+        if (distance < 460) {
+          spawnEnemyShot(enemy, {
+            speed: state.waveIndex >= 9 ? 182 : 170,
+            radius: state.waveIndex >= 9 ? 9 : 8,
+            damage: state.waveIndex >= 9 ? 11 : 9,
+            life: 4.4,
+            color: "#cfe6ff",
+            count: state.waveIndex >= 9 ? 4 : 3,
+            spread: state.waveIndex >= 9 ? 0.24 : 0.32,
+          });
+          enemy.attackCooldown = state.waveIndex >= 9 ? 2.55 : 2.9;
         }
       } else if (enemy.type === "warden" && enemy.attackCooldown <= 0) {
         if (distance < 360) {
@@ -6884,6 +6928,8 @@
         ? 24
         : enemy.type === "brute"
           ? 10
+          : enemy.type === "mortar"
+            ? 11
           : enemy.type === "warden"
             ? 12
             : 7
@@ -7634,6 +7680,14 @@
           enemy.radius * 2,
           enemy.radius * 2
         );
+      } else if (enemy.type === "mortar") {
+        drawPolygon(context, enemy.x, enemy.y, enemy.radius, 6, Math.PI / 6 + enemy.wobble * 0.08);
+        context.fill();
+        context.strokeStyle = "rgba(231, 244, 255, 0.82)";
+        context.lineWidth = 2;
+        context.beginPath();
+        context.arc(enemy.x, enemy.y, enemy.radius * 0.48, 0, Math.PI * 2);
+        context.stroke();
       } else if (enemy.type === "shrike") {
         drawPolygon(context, enemy.x, enemy.y, enemy.radius, 3, enemy.wobble);
         context.fill();

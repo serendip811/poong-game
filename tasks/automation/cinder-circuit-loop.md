@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-21 23:58 KST
+  Findings:
+  - The build surface is finally widening through evolutions, capstones, orbitals, shields, missiles, and drones, but the combat problems are still mostly the same four enemy bodies plus hazard remixes. The player is gaining more answers than the game has distinct questions.
+  - Late-run pressure is still over-dependent on `warden` share and hazard scripting. From `Wave 8+`, the run keeps asking for some variation of line-breaking and ranged cleanup, so many builds converge on solving the same lane-control exam instead of expressing different strengths.
+  - Defensive and utility systems are still under-validated because meaningful projectile pressure mostly comes from `shrike`, `elite`, and especially `warden`. That makes shield/intercept choices feel situational rather than like a full build lane the run truly respects.
+  - This is a ceiling problem for any future `20-30` wave ambition. More waves, more cards, or more hazard variants will not create replayable hunger if the enemy ecology does not branch into more target-priority and routing problems first.
+  Top Priority: Add a new Act 2-3 enemy role that creates a different combat question from `warden` lane control, preferably one that directly validates defensive/support builds and forces a new target-priority rule.
+  Why Now: Until the encounter roster grows with the build roster, repeated runs will keep feeling like different loadouts taking the same test.
+  Do Not Repeat: Do not solve this with only another hazard variant or by pushing `warden` weight even higher.
+
 - 2026-03-22 01:20 KST
   Findings:
   - The run is longer and richer now, but `shouldUseFieldGrant()` still turns most non-armory clears from `Wave 3+` into a free `Field Cache`, so a large share of progression is effectively guaranteed instead of fought over. That is generous pacing, not rerun-hungry economy.
@@ -409,6 +419,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 02:24 KST
+  Changed: added a new `mortar` enemy role to [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and threaded it through late Act 2 and all of Act 3 so the run now asks a different combat question than `warden` lane-breaking alone. `Mortar` units hold long range and launch slow, wide ember-shell volleys that linger in the arena long enough for `Aegis Halo`-style interception and route management to matter; I also rebalanced Waves `7-12` to carve some weight out of repeated `warden` share, rewrote their combat notes/directives around the new target-priority rule, and updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new roster slot plus its late-wave presence.
+  Why: the latest critique's Top Priority was still open because the build roster had grown wider than the enemy ecology, with late runs still mostly reducing to the same `warden` crossfire exam. A bounded artillery-style enemy was the highest-value interpretation because it directly validates defensive/support builds, changes route planning, and gives late waves a second thing to kill first without widening scope into a full encounter-system rewrite.
+  Follow-up risk: `mortar` pressure is currently delivered through large slow volleys rather than a completely new projectile subsystem, so the new question is readable but still shares the base shot code path. If the next critique still wants more enemy ecology depth, the next pass should pair `mortar` with a bespoke projectile behavior such as delayed bursts, shell splits, or on-death area denial instead of only increasing its spawn share.
 
 - 2026-03-22 02:05 KST
   Changed: reworked `Field Cache` in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from a free mid-run upgrade handout into a paid-or-pass pressure valve. Cache drafts now surface two discounted instant-install cards plus a zero-cost `Emergency Vent` recovery option, field-cache picks now actually spend scrap and can be unaffordable, and the forge/feed copy now frames the stop as a greed decision about buying tempo now versus banking for the next armory. [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts that non-fallback cache cards are discounted but paid, and that the free bailout still exists.
