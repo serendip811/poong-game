@@ -24,24 +24,30 @@ const game = sandbox.module.exports;
 assert.equal(game.GAME_TITLE, "Cinder Circuit");
 assert.equal(game.MAX_WAVES, 12);
 assert.equal(game.WAVE_CONFIG.length, 12);
+assert.equal(game.ACT_BREAK_ARMORY_WAVE, 5);
+assert.equal(game.LATE_BREAK_ARMORY_WAVE, 9);
+assert.equal(game.getActLabelForWave(4).shortLabel, "Act 1");
+assert.equal(game.getActLabelForWave(5).shortLabel, "Act 2");
+assert.equal(game.getActLabelForWave(9).shortLabel, "Act 3");
 assert.ok(game.WAVE_CONFIG[0].spawnBudget < game.WAVE_CONFIG[2].spawnBudget);
 assert.ok(game.WAVE_CONFIG[4].hazard);
-assert.ok(game.WAVE_CONFIG[3].hazard.interval > game.WAVE_CONFIG[4].hazard.interval);
+assert.ok(game.WAVE_CONFIG[3].hazard.damage > game.WAVE_CONFIG[4].hazard.damage);
 assert.ok(game.WAVE_CONFIG[4].driveGainFactor > game.WAVE_CONFIG[3].driveGainFactor);
-assert.equal(game.WAVE_CONFIG[5].arena.width, 1280);
-assert.equal(game.WAVE_CONFIG[5].arena.height, 720);
-assert.equal(game.WAVE_CONFIG[5].hazard.type, "territory");
-assert.ok(game.WAVE_CONFIG[5].hazard.coreHp > 0);
+assert.equal(game.WAVE_CONFIG[4].arena.width, 1280);
+assert.equal(game.WAVE_CONFIG[4].arena.height, 720);
+assert.equal(game.WAVE_CONFIG[4].hazard.type, "territory");
+assert.ok(game.WAVE_CONFIG[4].hazard.coreHp > 0);
 assert.ok(game.WAVE_CONFIG[7].spawnBudget > game.WAVE_CONFIG[4].spawnBudget);
-assert.ok(game.WAVE_CONFIG[7].hazard.count > game.WAVE_CONFIG[4].hazard.count);
+assert.ok(game.WAVE_CONFIG[7].mix.warden > 0);
+assert.ok(game.WAVE_CONFIG[7].hazard.coreHp > game.WAVE_CONFIG[4].hazard.coreHp);
 assert.equal(game.WAVE_CONFIG[7].hazard.type, "territory");
-assert.ok(game.WAVE_CONFIG[7].hazard.turretInterval < game.WAVE_CONFIG[5].hazard.turretInterval);
+assert.ok(game.WAVE_CONFIG[7].hazard.turretInterval < game.WAVE_CONFIG[4].hazard.turretInterval);
 assert.equal(game.WAVE_CONFIG[8].arena.width, 1440);
 assert.equal(game.WAVE_CONFIG[8].hazard.type || "pulse", "pulse");
 assert.ok(game.WAVE_CONFIG[8].mix.warden > game.WAVE_CONFIG[8].mix.shrike);
 assert.equal(game.WAVE_CONFIG[9].arena.height, 820);
 assert.equal(game.WAVE_CONFIG[9].hazard.type, "territory");
-assert.ok(game.WAVE_CONFIG[9].hazard.coreHp > game.WAVE_CONFIG[7].hazard.coreHp);
+assert.ok(game.WAVE_CONFIG[9].hazard.coreHp > game.WAVE_CONFIG[4].hazard.coreHp);
 assert.ok(game.WAVE_CONFIG[9].mix.warden > game.WAVE_CONFIG[9].mix.brute);
 assert.equal(game.WAVE_CONFIG[10].arena.height, 820);
 assert.equal(game.WAVE_CONFIG[10].hazard.type, "drift");
@@ -179,7 +185,7 @@ assert.equal(waveThreeForgeChoices.length, 3);
 assert.ok(waveThreeForgeChoices.every((choice) => choice.laneLabel !== "보조 시스템"));
 assert.ok(waveThreeForgeChoices.every((choice) => choice.laneLabel !== "생존/경제"));
 assert.equal(game.shouldUseFieldGrant({ nextWave: 3, finalForge: false }), true);
-assert.equal(game.shouldUseFieldGrant({ nextWave: 6, finalForge: false }), false);
+assert.equal(game.shouldUseFieldGrant({ nextWave: 5, finalForge: false }), false);
 assert.equal(game.shouldUseFieldGrant({ nextWave: 9, finalForge: false }), false);
 assert.equal(game.shouldUseFieldGrant({ nextWave: 12, finalForge: true }), false);
 const fieldGrantBuild = game.createInitialBuild("relay_oath");
@@ -361,7 +367,7 @@ game.applyForgeChoice(
   emberSecondBayChoice
 );
 const aegisTierTwoChoice = game
-  .buildForgeFollowupChoices(aegisBuild, () => 0, 180, { nextWave: 5, finalForge: false }, packagePrimaryChoice)
+  .buildForgeFollowupChoices(aegisBuild, () => 0, 180, { nextWave: 6, finalForge: false }, packagePrimaryChoice)
   .find(
     (choice) =>
       choice.laneLabel === "보조 시스템" &&
@@ -403,7 +409,7 @@ const actBreakArmoryChoices = game.buildForgeChoices(
   actTwoModuleBuild,
   () => 0,
   180,
-  { nextWave: 6, finalForge: false }
+  { nextWave: 5, finalForge: false }
 );
 assert.equal(actBreakArmoryChoices.length, 6);
 assert.ok(actBreakArmoryChoices.some((choice) => choice.laneLabel === "주무장 진화"));
@@ -430,7 +436,7 @@ const actBreakFollowupChoices = game.buildForgeFollowupChoices(
   actTwoModuleBuild,
   () => 0,
   180 - armoryFirstPick.cost,
-  { nextWave: 6, finalForge: false },
+  { nextWave: 5, finalForge: false },
   armoryFirstPick
 );
 assert.ok(actBreakFollowupChoices.length >= 4);
@@ -508,7 +514,7 @@ const voltInstallChoice = game
     actModuleFollowupBuild,
     () => 0,
     180,
-    { nextWave: 5, finalForge: false },
+    { nextWave: 6, finalForge: false },
     packagePrimaryChoice
   )
   .find((choice) => choice.laneLabel === "공세 모듈" && choice.systemId === "volt_drones");

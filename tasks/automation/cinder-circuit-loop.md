@@ -14,6 +14,17 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 01:05 KST
+  Findings:
+  - The game now has `Wave 1-12`, but the run still feels authored like a `5-wave / 7-minute` MVP with extra waves bolted on. A player can feel that mismatch: the structure does not yet create the long, rising hunger a rerun-heavy action roguelite needs.
+  - `Wave 1-8` already spend most of the run proving the core loop, so `Wave 9-12` land more like a late appendix than the payoff half of a larger campaign. The third-act support/module ceiling arrives too late to generate much anticipation before the run is over.
+  - Build breadth is better on paper through evolutions, support systems, missiles, drones, and shields, but too much of the excitement still lives in card descriptions instead of battlefield takeover. The player needs more obvious "my build just became a new machine" moments well before the final bracket.
+  - The larger `THIRD_ACT_ARENA` helps, yet `activeCap 41-48` with heavy `warden` weighting still creates too much spread-out lane maintenance and not enough overlapping enemy ecology. The space is bigger, but the decisions are still too often "reopen space, then mop up."
+  - The docs still frame the game as a short-run prototype, which matters because encounter pacing, power expectations, and escalation are still being authored under that ceiling instead of toward a real `20-30` wave future.
+  Top Priority: Re-author the run around three explicit acts with earlier visible power milestones and a longer back half, so the current `Wave 1-12` already feels like the front stretch of a real long-form escalation instead of a finished short run plus extensions.
+  Why Now: Until the run skeleton itself expects long escalation, every new wave, enemy, or upgrade will keep landing as added content rather than compounding payoff.
+  Do Not Repeat: Do not answer this with only another late-wave hazard or more upgrade variants if the overall run is still mentally authored as `5 waves, then done`.
+
 - 2026-03-22 00:40 KST
   Findings:
   - The run now reaches `Wave 12`, but the new back half is still too single-answer for a rerun game. `Wave 9-12` all lean on some version of `warden lane denial`, so once the player learns "break the outer lock first," the last four waves stop feeling like a bracket and start feeling like repeated homework.
@@ -388,6 +399,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 01:42 KST
+  Changed: re-authored the run spine in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) into a clearer `4-4-4` structure by moving the first `Act Break Armory` up to after Wave 4, turning `Wave 4` into an actual `Meltdown` finale, and promoting `Wave 5` into the larger-arena `Afterglow` opener for Act 2. I also rewrote `Wave 8` into `Forgecross`, a second-act capstone that mixes early `warden` pressure into bastion territory before the late armory, and updated the wave-track HUD plus forge copy so the run now visibly reads as `Act 1 / Act 2 / Act 3` instead of one long prototype lane. [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts the earlier armory breakpoint, act labels, and the new Wave 5/Wave 8 role changes.
+  Why: the latest critique’s Top Priority was to re-author the run around three explicit acts with earlier visible power milestones and a longer-feeling back half. I took the highest-value bounded interpretation as "pull the first major commitment forward and make the wave table/UI present a clean 4-wave act cadence" because that changes how the whole run is authored without widening this pass into another new progression layer or more appended waves.
+  Follow-up risk: the run skeleton reads much more like a long-form roguelite now, but Act 2 still relies on recombining the existing bastion/warden vocabulary rather than debuting a fully new mid-late enemy role. If the next critique still wants more hunger in the middle, the next pass should spend this earlier armory on one more distinct Act 2-only combat question instead of only moving milestones again.
 
 - 2026-03-22 01:24 KST
   Changed: rebuilt `Wave 11 · Starforge` in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) away from another pure `warden` lane-clear script and into a moving late-game exam. The wave now uses a new `drift` hazard profile, `Starforge Pursuit`, which spawns two orbiting pursuit zones that actively chase the player’s route during the fight; at the same time the enemy mix shifts some weight from `warden` into `shrike`/`brute` pressure so the player has to keep rotating the whole arena instead of just deleting outer firing lines first. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new Wave 11 hazard type and composition change.

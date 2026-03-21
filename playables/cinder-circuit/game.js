@@ -87,64 +87,36 @@
       },
     },
     {
-      id: "overload",
-      label: "Wave 4 · Overload",
-      duration: 68,
-      spawnBudget: 104,
-      activeCap: 28,
-      baseSpawnInterval: 0.57,
-      spawnIntervalMin: 0.19,
-      spawnAcceleration: 0.31,
-      eliteEvery: 8,
-      mix: {
-        scuttler: 0.32,
-        brute: 0.32,
-        shrike: 0.36,
-      },
-      note: "브루트 전열과 이중 폭주가 겹치며 sustain과 이동 판단을 동시에 시험한다.",
-      directive: "Twin Surges. 오래 버티는 적을 끊고 안전 지대를 짧게 갈아타야 한다.",
-      driveGainFactor: 1.08,
-      hazard: {
-        label: "Twin Surges",
-        interval: 10.2,
-        count: 2,
-        radius: 62,
-        telegraph: 0.98,
-        duration: 3.9,
-        damage: 12,
-      },
-    },
-    {
       id: "meltdown",
-      label: "Wave 5 · Meltdown",
+      label: "Wave 4 · Meltdown",
       duration: 74,
-      spawnBudget: 127,
-      activeCap: 33,
-      baseSpawnInterval: 0.48,
-      spawnIntervalMin: 0.15,
+      spawnBudget: 126,
+      activeCap: 32,
+      baseSpawnInterval: 0.49,
+      spawnIntervalMin: 0.16,
       spawnAcceleration: 0.33,
       eliteEvery: 7,
       mix: {
-        scuttler: 0.3,
-        brute: 0.27,
-        shrike: 0.43,
+        scuttler: 0.28,
+        brute: 0.28,
+        shrike: 0.44,
       },
-      note: "최종 웨이브는 엘리트 돌파와 짧은 화력 창을 연결해야 안정적으로 정리된다.",
-      directive: "Twin Surges + elite breach. 오버드라이브를 돌파 타이밍에 맞춰 써야 한다.",
-      driveGainFactor: 1.18,
+      note: "첫 전투 구간의 결산. 압축된 작업장에서 이중 폭주와 엘리트 돌파를 버텨야 첫 Armory가 값어치를 만든다.",
+      directive: "Meltdown Surges. 좁은 방에서 화력 창을 억지로 열고, Wave 5 Act Break Armory 전까지 돌파 루트를 직접 만든다.",
+      driveGainFactor: 1.16,
       hazard: {
         label: "Meltdown Surge",
-        interval: 8.4,
+        interval: 8.9,
         count: 2,
         radius: 70,
-        telegraph: 0.88,
-        duration: 4,
+        telegraph: 0.9,
+        duration: 4.1,
         damage: 13,
       },
     },
     {
       id: "afterglow",
-      label: "Wave 6 · Afterglow",
+      label: "Wave 5 · Afterglow",
       duration: 78,
       spawnBudget: 138,
       activeCap: 34,
@@ -157,7 +129,7 @@
         brute: 0.28,
         shrike: 0.46,
       },
-      note: "제련실이 확장되며 측면 회피와 드랍 우회 수집이 다시 살아난다.",
+      note: "두 번째 전투 구간의 시작. Armory 직후 넓어진 작업장에서 측면 회피와 드랍 우회 수집이 다시 살아난다.",
       directive: "넓은 작업장 + bastion anchor. 점거 구역의 코어를 빨리 부숴야 외곽 회전 루트가 다시 열린다.",
       driveGainFactor: 1.22,
       arena: SECOND_ACT_ARENA,
@@ -180,7 +152,7 @@
     },
     {
       id: "breakline",
-      label: "Wave 7 · Breakline",
+      label: "Wave 6 · Breakline",
       duration: 82,
       spawnBudget: 154,
       activeCap: 36,
@@ -193,7 +165,7 @@
         brute: 0.3,
         shrike: 0.46,
       },
-      note: "넓어진 공간을 오래 점유하는 적이 늘어나 고철 경로를 끊임없이 다시 골라야 한다.",
+      note: "Act 2 중반. 넓어진 공간을 오래 점유하는 적이 늘어나 고철 경로를 끊임없이 다시 골라야 한다.",
       directive: "anchor crossfire. 점거 코어를 끊지 않으면 엘리트와 고철 루트가 동시에 막힌다.",
       driveGainFactor: 1.26,
       arena: SECOND_ACT_ARENA,
@@ -216,7 +188,7 @@
     },
     {
       id: "crownfire",
-      label: "Wave 8 · Crownfire",
+      label: "Wave 7 · Crownfire",
       duration: 86,
       spawnBudget: 172,
       activeCap: 39,
@@ -229,7 +201,7 @@
         brute: 0.3,
         shrike: 0.48,
       },
-      note: "후반부 정점. 넓은 전장에서 위험 구역을 가르며 마무리 빌드를 증명해야 한다.",
+      note: "Act 2 후반의 정점. 넓은 전장에서 위험 구역을 가르며 다음 armory 직전 빌드를 증명해야 한다.",
       directive: "crown bastions. 점거 코어를 방치하면 전장 중앙이 닫히므로 파괴 순서와 진입 각을 읽어야 한다.",
       driveGainFactor: 1.32,
       arena: SECOND_ACT_ARENA,
@@ -248,6 +220,44 @@
         turretDamage: 10,
         turretSpeed: 232,
         enemyPullRadius: 164,
+      },
+    },
+    {
+      id: "forgecross",
+      label: "Wave 8 · Forgecross",
+      duration: 90,
+      spawnBudget: 184,
+      activeCap: 41,
+      baseSpawnInterval: 0.375,
+      spawnIntervalMin: 0.115,
+      spawnAcceleration: 0.33,
+      eliteEvery: 5,
+      mix: {
+        scuttler: 0.18,
+        brute: 0.28,
+        shrike: 0.34,
+        warden: 0.2,
+      },
+      note: "두 번째 전투 구간의 결산. 첫 warden 사선이 bastion 점거와 겹쳐 마지막 Act 2 정답을 강요한다.",
+      directive:
+        "forgecross lockout. 고정 포대만 먼저 자를지, 점거 코어를 먼저 부술지 즉시 판단해야 Wave 9 Late Break Armory 직전 숨통이 열린다.",
+      driveGainFactor: 1.36,
+      arena: SECOND_ACT_ARENA,
+      hazard: {
+        label: "Forgecross Bastion Grid",
+        type: "territory",
+        interval: 7.4,
+        count: 3,
+        radius: 106,
+        telegraph: 0.88,
+        duration: 9.4,
+        damage: 12,
+        coreHp: 62,
+        coreRadius: 18,
+        turretInterval: 0.9,
+        turretDamage: 10,
+        turretSpeed: 236,
+        enemyPullRadius: 168,
       },
     },
     {
@@ -401,6 +411,11 @@
       width: arena && Number.isFinite(arena.width) ? arena.width : ARENA_WIDTH,
       height: arena && Number.isFinite(arena.height) ? arena.height : ARENA_HEIGHT,
     };
+  }
+
+  function getActLabelForWave(waveNumber) {
+    const act = ACT_LABELS.find((entry) => waveNumber >= entry.start && waveNumber <= entry.end);
+    return act || ACT_LABELS[ACT_LABELS.length - 1];
   }
 
   const ENEMY_DEFS = {
@@ -1170,8 +1185,13 @@
 
   const DEFAULT_SIGNATURE_ID = "relay_oath";
   const FORGE_PACKAGE_START_WAVE = 3;
-  const ACT_BREAK_ARMORY_WAVE = 6;
+  const ACT_BREAK_ARMORY_WAVE = 5;
   const LATE_BREAK_ARMORY_WAVE = 9;
+  const ACT_LABELS = [
+    { start: 1, end: 4, label: "Act 1 · Ignition", shortLabel: "Act 1" },
+    { start: 5, end: 8, label: "Act 2 · Bastion Run", shortLabel: "Act 2" },
+    { start: 9, end: 12, label: "Act 3 · Crown Siege", shortLabel: "Act 3" },
+  ];
   const FIELD_GRANT_MAX_COST = 48;
   const ACT_BREAK_ARMORY_MAX_CHOICES = 6;
   const ACT_BREAK_CHASSIS_MOD_IDS = [
@@ -4505,8 +4525,11 @@
     SUPPORT_SYSTEM_DEFS,
     SIGNATURE_DEFS,
     DEFAULT_SIGNATURE_ID,
+    ACT_BREAK_ARMORY_WAVE,
+    LATE_BREAK_ARMORY_WAVE,
     createInitialBuild,
     getSignatureDef,
+    getActLabelForWave,
     computePlayerStats,
     computeWeaponStats,
     computeSupportSystemStats,
@@ -4850,14 +4873,18 @@
     if (!elements.waveTrack || !elements.runTrackLabel) {
       return;
     }
+    const currentWaveNumber = clamp(state.waveIndex + 1, 1, MAX_WAVES);
+    const currentAct = getActLabelForWave(currentWaveNumber);
     const label =
       state.phase === "forge"
-        ? `Forge Stop · Wave ${state.waveIndex + 1}`
+        ? `Forge Stop · ${currentAct.shortLabel} · Wave ${state.waveIndex + 1}`
         : state.phase === "result"
           ? "Run Complete"
-          : `Wave ${state.waveIndex + 1} / ${MAX_WAVES}`;
+          : `${currentAct.shortLabel} · Wave ${state.waveIndex + 1} / ${MAX_WAVES}`;
     elements.runTrackLabel.textContent = label;
     elements.waveTrack.innerHTML = WAVE_CONFIG.map((wave, index) => {
+      const waveNumber = index + 1;
+      const act = getActLabelForWave(waveNumber);
       const stateName =
         state.phase === "result"
           ? index < state.stats.wavesCleared
@@ -4870,7 +4897,7 @@
               : "upcoming";
       return `
         <article class="wave-track__node" data-state="${stateName}">
-          <p class="panel__eyebrow">Wave ${index + 1}</p>
+          <p class="panel__eyebrow">${act.shortLabel} · Wave ${waveNumber}</p>
           <strong>${wave.id.toUpperCase()}</strong>
           <p>${wave.note}</p>
         </article>
@@ -5226,7 +5253,7 @@
         : isLateBreakArmory(forgeOptions)
           ? "Wave 8 돌파. Late Break Armory에서 6장 중 대형 카드 두 장을 골라 세 번째 베이까지 포함한 4웨이브짜리 Act 3 화력 틀을 잠근다."
         : draftType === "armory"
-          ? "Wave 5 돌파. Act Break Armory에서 6장 중 대형 카드 두 장을 골라 Act 2 빌드 정체성을 위험하게 고정한다."
+          ? "Wave 4 돌파. Act Break Armory에서 6장 중 대형 카드 두 장을 골라 4웨이브짜리 Act 2 빌드 정체성을 일찍 고정한다."
           : "웨이브 종료. 포지 카드로 다음 화력 축을 고른다.",
       "FORGE"
     );
@@ -7272,7 +7299,7 @@
       : state.forgeDraftType === "armory"
         ? isLateBreakArmory(forgeOptions)
           ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 8을 넘기며 ${armoryLabel}가 열린다. 세 번째 support bay가 해금됐고, 이번 포지는 6장 중 2장을 골라 4웨이브짜리 최종 전투 구간 전체를 버틸 과한 조합을 잠근다.`
-          : `고철 ${Math.round(state.resources.scrap)} 보유. Wave 5를 넘기면 일반 패키지 대신 ${armoryLabel}가 열린다. 이번 포지는 6장 중 2장을 고르며, 주무장 진화와 공세 카드가 여러 장 겹쳐 떠 안전한 lane별 정답을 보장하지 않는다.`
+          : `고철 ${Math.round(state.resources.scrap)} 보유. Wave 4를 넘기면 일반 패키지 대신 ${armoryLabel}가 열린다. 이번 포지는 6장 중 2장을 고르며, 주무장 진화와 공세 카드가 여러 장 겹쳐 떠 4웨이브짜리 Act 2 운영을 일찍 잠근다.`
       : `고철 ${Math.round(state.resources.scrap)} 보유. 장착은 무기 등급을 올리거나 바꾸고, 각인은 속성을 붙이며, 재구성/분해는 보관 코어를 정리한다. ${packageSummary}.`;
     elements.forgeContext.innerHTML = `
       <article class="forge-context__card">
