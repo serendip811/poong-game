@@ -73,7 +73,12 @@ mirrorLateBuild.bastionDoctrineId = "mirror_hunt";
 const mirrorWaveNine = game.resolveWaveConfig(8, mirrorLateBuild);
 assert.equal(mirrorWaveNine.label, "Wave 9 · Relay Hunt");
 assert.ok(mirrorWaveNine.mix.shrike > mirrorWaveNine.mix.warden);
+assert.ok(mirrorWaveNine.activeCap < game.WAVE_CONFIG[8].activeCap);
 assert.equal(mirrorWaveNine.hazard.type || "pulse", "pulse");
+const mirrorWaveTwelve = game.resolveWaveConfig(11, mirrorLateBuild);
+assert.equal(mirrorWaveTwelve.label, "Wave 12 · Mirror Crown");
+assert.ok(mirrorWaveTwelve.activeCap < game.WAVE_CONFIG[11].activeCap);
+assert.ok(mirrorWaveTwelve.mix.shrike > mirrorWaveTwelve.mix.warden);
 const bastionLateBuild = game.createInitialBuild("scrap_pact");
 bastionLateBuild.bastionDoctrineId = "kiln_bastion";
 const bastionWaveNine = game.resolveWaveConfig(8, bastionLateBuild);
@@ -423,6 +428,23 @@ game.applyForgeChoice(
   { build: doctrineCapstoneBuild, player: null, resources: { scrap: 999 }, stats: {} },
   mirrorArchitectureChoice
 );
+const mirrorWaveThreeWeapon = game.computeWeaponStats(doctrineCapstoneBuild);
+assert.equal(mirrorWaveThreeWeapon.doctrineFormLabel, "Hunt Frame");
+assert.equal(mirrorWaveThreeWeapon.doctrineStage, 1);
+assert.equal(
+  JSON.stringify(mirrorWaveThreeWeapon.doctrineFirePattern.offsets),
+  JSON.stringify([-0.22, 0.22])
+);
+doctrineCapstoneBuild.doctrineChaseClaimed = true;
+const mirrorWaveSevenWeapon = game.computeWeaponStats(doctrineCapstoneBuild);
+assert.equal(mirrorWaveSevenWeapon.doctrineFormLabel, "Relay Storm Frame");
+assert.equal(mirrorWaveSevenWeapon.doctrineStage, 2);
+assert.ok(mirrorWaveSevenWeapon.chain > mirrorWaveThreeWeapon.chain);
+assert.ok(mirrorWaveSevenWeapon.cooldown < mirrorWaveThreeWeapon.cooldown);
+assert.equal(
+  JSON.stringify(mirrorWaveSevenWeapon.doctrineFirePattern.offsets),
+  JSON.stringify([-0.34, -0.17, 0, 0.17, 0.34])
+);
 const doctrineLateArmoryChoices = game.buildForgeChoices(
   doctrineCapstoneBuild,
   () => 0,
@@ -440,6 +462,9 @@ game.applyForgeChoice(
   doctrineCapstoneChoice
 );
 assert.equal(doctrineCapstoneBuild.doctrineCapstoneId, "relay_storm_lattice");
+const mirrorCapstoneWeapon = game.computeWeaponStats(doctrineCapstoneBuild);
+assert.equal(mirrorCapstoneWeapon.doctrineFormLabel, "Relay Storm Frame");
+assert.equal(mirrorCapstoneWeapon.doctrineStage, 2);
 const doctrineCapstoneSystemStats = game.computeSupportSystemStats(doctrineCapstoneBuild);
 assert.equal(doctrineCapstoneSystemStats.doctrineCapstoneLabel, "Relay Storm Lattice");
 assert.ok(doctrineCapstoneSystemStats.statusNote.includes("Relay Storm Lattice"));

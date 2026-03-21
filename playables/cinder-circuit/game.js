@@ -416,22 +416,22 @@
         directive:
           "relay hunt. 가벼운 추적 무리가 외곽 회수선에 먼저 몰리고, 짧은 폭주가 회전 루트를 계속 갈아엎는다. 한 lane을 억지로 열기보다 넓은 외곽 스윕으로 backline을 먼저 잘라야 한다.",
         driveGainFactor: 1.42,
-        activeCap: 43,
-        spawnBudget: 190,
+        activeCap: 39,
+        spawnBudget: 184,
         mix: {
-          scuttler: 0.22,
+          scuttler: 0.24,
           brute: 0.12,
-          shrike: 0.36,
-          mortar: 0.12,
-          warden: 0.18,
+          shrike: 0.42,
+          mortar: 0.08,
+          warden: 0.14,
         },
         hazard: {
           label: "Relay Lances",
           interval: 7.8,
-          count: 4,
-          radius: 66,
+          count: 3,
+          radius: 64,
           telegraph: 0.76,
-          duration: 3.8,
+          duration: 3.4,
           damage: 13,
         },
       },
@@ -441,26 +441,26 @@
         directive:
           "split pursuit. 빠른 shrike 편대와 얇은 warden 사선이 동시에 물러나며 다시 물어뜯는다. 드리프트 화구를 이용해 군집을 쪼개고, 벽 반사나 자율 추격으로 외곽 정리를 이어가야 한다.",
         driveGainFactor: 1.46,
-        activeCap: 45,
-        spawnBudget: 202,
+        activeCap: 41,
+        spawnBudget: 194,
         mix: {
-          scuttler: 0.18,
+          scuttler: 0.2,
           brute: 0.12,
-          shrike: 0.42,
-          mortar: 0.1,
-          warden: 0.18,
+          shrike: 0.46,
+          mortar: 0.08,
+          warden: 0.14,
         },
         hazard: {
           label: "Relay Pursuit",
           type: "drift",
           interval: 8.1,
-          count: 3,
-          radius: 72,
+          count: 2,
+          radius: 68,
           telegraph: 0.7,
-          duration: 5.5,
+          duration: 5.1,
           damage: 14,
-          driftSpeed: 132,
-          driftOrbit: 0.5,
+          driftSpeed: 120,
+          driftOrbit: 0.42,
         },
       },
       10: {
@@ -469,22 +469,22 @@
         directive:
           "glass run. 짧은 교차 폭주와 추격조 확산. 중앙 정리보다 외곽 둘레를 빠르게 비워 다음 진입 각을 선점하는지가 핵심이다.",
         driveGainFactor: 1.5,
-        activeCap: 47,
-        spawnBudget: 218,
+        activeCap: 43,
+        spawnBudget: 208,
         mix: {
-          scuttler: 0.2,
+          scuttler: 0.22,
           brute: 0.1,
-          shrike: 0.4,
-          mortar: 0.14,
-          warden: 0.16,
+          shrike: 0.48,
+          mortar: 0.1,
+          warden: 0.1,
         },
         hazard: {
           label: "Glass Crossfire",
           interval: 7.1,
-          count: 3,
-          radius: 76,
+          count: 2,
+          radius: 72,
           telegraph: 0.68,
-          duration: 4.2,
+          duration: 3.9,
           damage: 14,
         },
       },
@@ -494,22 +494,22 @@
         directive:
           "mirror crown. 사중 교차 폭주와 빠른 측면 재진입. 벽 반사, 추적 드론, drive 돌입을 이어 붙여 화면 가장자리부터 역순으로 청소해야 한다.",
         driveGainFactor: 1.56,
-        activeCap: 49,
-        spawnBudget: 236,
+        activeCap: 45,
+        spawnBudget: 224,
         mix: {
-          scuttler: 0.16,
+          scuttler: 0.18,
           brute: 0.1,
-          shrike: 0.42,
-          mortar: 0.12,
-          warden: 0.2,
+          shrike: 0.5,
+          mortar: 0.08,
+          warden: 0.14,
         },
         hazard: {
           label: "Mirror Crown Crossfire",
           interval: 6.8,
-          count: 4,
-          radius: 82,
+          count: 3,
+          radius: 78,
           telegraph: 0.66,
-          duration: 4.4,
+          duration: 4,
           damage: 15,
         },
       },
@@ -1978,6 +1978,50 @@
   };
 
   const DOCTRINE_WEAPON_LADDER_DEFS = {
+    mirror_hunt: {
+      coreId: "ricochet",
+      stages: {
+        1: {
+          label: "Hunt Frame",
+          traitLabel: "쌍익 추적 분광",
+          statusNote: "Hunt Frame이 양옆 추적 분광을 덧대 반사 진입과 측면 스윕을 동시에 더 쉽게 연다.",
+          damageBonus: 3,
+          cooldownMultiplier: 0.96,
+          firePattern: {
+            offsets: [-0.22, 0.22],
+            damageMultiplier: 0.5,
+            speedMultiplier: 1.06,
+            radius: 4.1,
+            life: 1.18,
+            pierceBonus: 0,
+            bounceBonus: 1,
+            chainBonus: 0,
+            color: "#f5e2ff",
+          },
+        },
+        2: {
+          label: "Relay Storm Frame",
+          traitLabel: "오익 사냥 격자",
+          statusNote:
+            "Relay Storm Frame이 다섯 갈래 추적 격자를 깔고 반사 연쇄까지 물어, 플레이어가 직접 열린 외곽을 순식간에 갈아 버린다.",
+          damageBonus: 8,
+          cooldownMultiplier: 0.9,
+          chainBonus: 1,
+          chainRangeBonus: 30,
+          firePattern: {
+            offsets: [-0.34, -0.17, 0, 0.17, 0.34],
+            damageMultiplier: 0.46,
+            speedMultiplier: 1.1,
+            radius: 4,
+            life: 1.22,
+            pierceBonus: 0,
+            bounceBonus: 1,
+            chainBonus: 1,
+            color: "#fff0ff",
+          },
+        },
+      },
+    },
     kiln_bastion: {
       coreId: "scatter",
       stages: {
@@ -4332,8 +4376,12 @@
     if (!ladder || ladder.coreId !== coreId) {
       return null;
     }
-    const stage = getDoctrineWeaponStage(build, doctrine);
-    const stageDef = ladder.stages[stage];
+    let stage = getDoctrineWeaponStage(build, doctrine);
+    let stageDef = ladder.stages[stage];
+    while (stage > 0 && !stageDef) {
+      stage -= 1;
+      stageDef = ladder.stages[stage];
+    }
     const form =
       stageDef && stageDef.variants && build.doctrineCapstoneId
         ? stageDef.variants[build.doctrineCapstoneId] || null

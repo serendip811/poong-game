@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 22:15 KST
+  Findings:
+  - The run now has real branch language, but the payoff timing is still backwards. `Architecture Draft`, `Bastion Draft`, `Late Break Armory`, `Catalyst Crucible`, and the final cash-out stack so much build explanation and locking near the back half that the player spends too much of the run preparing to become broken and too little time actually being broken.
+  - Late combat still does not breathe enough for a release-feeling action roguelite. Arena size grows to `1280x720` and `1440x820`, but `activeCap 41-49` plus `mortar`/`warden` pressure and hazard cores keep converting that room into route maintenance instead of aggressive routing, target sniping, and commit-or-greed movement decisions.
+  - Build richness exists on paper, yet the practical power floor still leans too hard on helper automation. `Volt Drones`, `Seeker Array`, `Aegis Halo`, and `Kiln Sentry` often provide the most reliable late-wave relief, which means the run's most trustworthy answer is still "add more support cleanup" rather than "finish a weapon form I cannot wait to pilot."
+  - The doctrine ladder remains structurally uneven in visible player payoff. `Storm Artillery` gets two explicit end-state gun fantasies, while `Mirror Hunt` and `Kiln Bastion` still read more like strong operating shells wrapped around autonomous systems than long-chase weapon destinies a player would rerun to wield for several waves.
+  Top Priority: Move one doctrine's true monster-form weapon transformation forward to around Wave 6-7 and leave multiple full waves afterward that are tuned to let that form dominate open space rather than immediately ending the run.
+  Why Now: If the player only gets a brief taste of the build's best state, repetition collapses no matter how many forge labels or support layers exist.
+  Do Not Repeat: Do not fix this with another draft stop, another helper tier, or another short finale trial.
+
 - 2026-03-22 21:40 KST
   Findings:
   - Act 3 is materially better than the older bastion loop because `Wave 10-12` finally introduces relay and drift rules that ask for different routing, but the run is still too asymmetrical in how builds answer that pressure. `Storm Artillery` gets a real weapon ladder with two stage-3 end forms, while `Mirror Hunt` and `Kiln Bastion` still climax mainly as drone/turret ecosystems that play the fight for you.
@@ -641,6 +651,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 22:35 KST
+  Changed: added a full `Mirror Hunt` doctrine weapon ladder in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `ricochet` now becomes a player-driven chase gun instead of waiting for `Volt Drones` and `Relay Storm Lattice` to sell the build. `Hunt Frame` now appears as soon as the doctrine is locked, and completing the Wave `6-8` pursuit upgrades it into `Relay Storm Frame`, a five-lane chained prism barrage that stays active even after the late support capstone is installed. I also retuned the doctrine-specific `Wave 9-12` mirror bracket to reduce `activeCap`, `mortar`/`warden` tax, and hazard density so the early monster form gets four full late waves to sweep open space instead of spending that power budget on sanitation. [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts the new stage `1/2` mirror weapon forms, the capstone fallback behavior, and the lighter late-wave mirror pressure.
+  Why: the newest critique’s Top Priority was to move one doctrine’s true monster-form weapon transformation forward to around `Wave 6-7` and leave multiple full waves afterward where that form actually gets to dominate. The highest-value bounded interpretation was `Mirror Hunt`, because it was still the branch most visibly cashing out through autonomous cleanup rather than through a rerun-worthy gun the player personally pilots.
+  Follow-up risk: `Mirror Hunt` now has an earlier monster-form payoff, but `Kiln Bastion` still gets its loudest battlefield swing later than this and late combat outside the mirror bracket may still feel too crowded for future `20-30` wave pacing. If critique keeps pushing on payoff timing, the next pass should bring `Kiln Bastion`’s real end-state online on the same Wave `6-7` cadence rather than adding another support layer.
 
 - 2026-03-22 21:55 KST
   Changed: added a full `Kiln Bastion` doctrine weapon ladder in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), so `scatter` now visibly mutates the moment the doctrine is locked instead of waiting for `Kiln Sentry` to do the interesting work. `Kiln Frame` adds a direct player-fired furnace seed, `Crucible Scatter` upgrades that into a triple reclaim trench after the pursuit completes, and the late-armory `Bulwark Foundry` capstone now upgrades the gun again into `Bulwark Furnace`, an on-screen five-seed pocket-making salvo while the sentry field remains the secondary hold-ground amplifier. I also updated the `Bulwark Foundry` capstone copy to sell that weapon-first payoff and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the doctrine’s stage `1/2/3` weapon forms.
