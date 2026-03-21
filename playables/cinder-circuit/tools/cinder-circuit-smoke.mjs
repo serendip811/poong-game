@@ -377,6 +377,63 @@ assert.equal(doctrineCapstoneBuild.doctrineCapstoneId, "relay_storm_lattice");
 const doctrineCapstoneSystemStats = game.computeSupportSystemStats(doctrineCapstoneBuild);
 assert.equal(doctrineCapstoneSystemStats.doctrineCapstoneLabel, "Relay Storm Lattice");
 assert.ok(doctrineCapstoneSystemStats.statusNote.includes("Relay Storm Lattice"));
+const artilleryDoctrineBuild = game.createInitialBuild("rail_zeal");
+artilleryDoctrineBuild.pendingCores = [];
+const artilleryArchitectureChoice = game
+  .buildArchitectureDraftChoices(artilleryDoctrineBuild)
+  .find((choice) => choice.title === "Storm Artillery Doctrine");
+assert.ok(artilleryArchitectureChoice);
+game.applyForgeChoice(
+  { build: artilleryDoctrineBuild, player: null, resources: { scrap: 999 }, stats: {} },
+  artilleryArchitectureChoice
+);
+const artilleryWaveThreeWeapon = game.computeWeaponStats(artilleryDoctrineBuild);
+assert.equal(artilleryWaveThreeWeapon.evolutionLabel, "Twin Spine");
+assert.equal(artilleryWaveThreeWeapon.doctrineFormLabel, "Siege Frame");
+assert.equal(artilleryWaveThreeWeapon.doctrineTraitLabel, "외곽 공성선");
+assert.equal(
+  JSON.stringify(artilleryWaveThreeWeapon.doctrineFirePattern.offsets),
+  JSON.stringify([-0.22, 0.22])
+);
+const artilleryChaseChoice = game
+  .buildForgeChoices(artilleryDoctrineBuild, () => 0, 180, { nextWave: 4, finalForge: false })
+  .find((choice) => choice.action === "doctrine_chase");
+assert.ok(artilleryChaseChoice);
+game.applyForgeChoice(
+  { build: artilleryDoctrineBuild, player: null, resources: { scrap: 999 }, stats: {} },
+  artilleryChaseChoice
+);
+const artilleryWaveFiveWeapon = game.computeWeaponStats(artilleryDoctrineBuild);
+assert.equal(artilleryWaveFiveWeapon.doctrineFormLabel, "Thunder Rack");
+assert.equal(artilleryWaveFiveWeapon.doctrineStage, 2);
+assert.equal(artilleryWaveFiveWeapon.chain, 2);
+assert.equal(
+  JSON.stringify(artilleryWaveFiveWeapon.doctrineFirePattern.offsets),
+  JSON.stringify([-0.3, -0.12, 0.12, 0.3])
+);
+const artilleryLateArmoryChoices = game.buildForgeChoices(
+  artilleryDoctrineBuild,
+  () => 0,
+  180,
+  { nextWave: 9, finalForge: false }
+);
+const artilleryCapstoneChoice = artilleryLateArmoryChoices.find(
+  (choice) => choice.action === "doctrine_capstone"
+);
+assert.ok(artilleryCapstoneChoice);
+game.applyForgeChoice(
+  { build: artilleryDoctrineBuild, player: null, resources: { scrap: 999 }, stats: {} },
+  artilleryCapstoneChoice
+);
+const artilleryWaveNineWeapon = game.computeWeaponStats(artilleryDoctrineBuild);
+assert.equal(artilleryWaveNineWeapon.doctrineFormLabel, "Sky Lance Battery");
+assert.equal(artilleryWaveNineWeapon.doctrineStage, 3);
+assert.ok(artilleryWaveNineWeapon.cooldown < artilleryWaveFiveWeapon.cooldown);
+assert.ok(artilleryWaveNineWeapon.chainRange > artilleryWaveFiveWeapon.chainRange);
+assert.equal(
+  JSON.stringify(artilleryWaveNineWeapon.doctrineFirePattern.offsets),
+  JSON.stringify([-0.36, -0.22, -0.08, 0.08, 0.22, 0.36])
+);
 const fortressDoctrineBuild = game.createInitialBuild("scrap_pact");
 fortressDoctrineBuild.pendingCores = [];
 const fortressDoctrineChoice = game

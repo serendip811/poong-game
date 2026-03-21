@@ -1822,6 +1822,76 @@
     },
   };
 
+  const DOCTRINE_WEAPON_LADDER_DEFS = {
+    storm_artillery: {
+      coreId: "lance",
+      stages: {
+        1: {
+          label: "Siege Frame",
+          traitLabel: "외곽 공성선",
+          statusNote: "Siege Frame이 주 레일 바깥에 공성 보조선을 깔아 먼 포대까지 함께 꿰뚫는다.",
+          damageBonus: 3,
+          cooldownMultiplier: 0.96,
+          firePattern: {
+            offsets: [-0.22, 0.22],
+            damageMultiplier: 0.52,
+            speedMultiplier: 1.14,
+            radius: 5.1,
+            life: 1.2,
+            pierceBonus: 1,
+            bounceBonus: 0,
+            chainBonus: 0,
+            color: "#d8fbff",
+          },
+        },
+        2: {
+          label: "Thunder Rack",
+          traitLabel: "오연 공성선",
+          statusNote:
+            "Thunder Rack이 넓은 다중 공성선을 펼쳐 긴 사선을 오래 유지하고 후열까지 연쇄 절개한다.",
+          damageBonus: 6,
+          cooldownMultiplier: 0.92,
+          pierceBonus: 1,
+          chainBonus: 1,
+          chainRangeBonus: 22,
+          firePattern: {
+            offsets: [-0.3, -0.12, 0.12, 0.3],
+            damageMultiplier: 0.54,
+            speedMultiplier: 1.18,
+            radius: 5,
+            life: 1.24,
+            pierceBonus: 1,
+            bounceBonus: 0,
+            chainBonus: 1,
+            color: "#eefeff",
+          },
+        },
+        3: {
+          label: "Sky Lance Battery",
+          traitLabel: "칠연 천공망",
+          statusNote:
+            "Sky Lance Battery가 화면 폭의 천공망을 깔아 후열 포대와 차폐선을 동시에 찢는다.",
+          damageBonus: 10,
+          cooldownMultiplier: 0.88,
+          pierceBonus: 2,
+          chainBonus: 1,
+          chainRangeBonus: 38,
+          firePattern: {
+            offsets: [-0.36, -0.22, -0.08, 0.08, 0.22, 0.36],
+            damageMultiplier: 0.56,
+            speedMultiplier: 1.22,
+            radius: 5.2,
+            life: 1.28,
+            pierceBonus: 2,
+            bounceBonus: 0,
+            chainBonus: 1,
+            color: "#ffffff",
+          },
+        },
+      },
+    },
+  };
+
   const DEFAULT_SIGNATURE_ID = "relay_oath";
   const ARCHITECTURE_DRAFT_WAVE = 3;
   const FORGE_PACKAGE_START_WAVE = 3;
@@ -3883,6 +3953,46 @@
     );
   }
 
+  function getDoctrineWeaponStage(build, doctrine = null) {
+    if (!build) {
+      return 0;
+    }
+    const activeDoctrine = doctrine || getBastionDoctrineDef(build);
+    if (!activeDoctrine) {
+      return 0;
+    }
+    let stage = 1;
+    if (build.doctrineChaseClaimed) {
+      stage = 2;
+    }
+    if (build.doctrineCapstoneId && activeDoctrine.lateCapstoneId === build.doctrineCapstoneId) {
+      stage = 3;
+    }
+    return stage;
+  }
+
+  function getDoctrineWeaponForm(build, coreId) {
+    if (!build || !coreId) {
+      return null;
+    }
+    const doctrine = getBastionDoctrineDef(build);
+    if (!doctrine) {
+      return null;
+    }
+    const ladder = DOCTRINE_WEAPON_LADDER_DEFS[doctrine.id];
+    if (!ladder || ladder.coreId !== coreId) {
+      return null;
+    }
+    const stage = getDoctrineWeaponStage(build, doctrine);
+    const form = ladder.stages[stage];
+    return form
+      ? {
+          stage,
+          ...form,
+        }
+      : null;
+  }
+
   function doctrineAllowsSystemInstall(build, systemId) {
     const doctrine = build && build.bastionDoctrineId ? getBastionDoctrineDef(build) : null;
     if (!doctrine || !Array.isArray(doctrine.preferredSystemIds) || doctrine.preferredSystemIds.length === 0) {
@@ -3991,6 +4101,11 @@
       evolutionTraitLabel: null,
       evolutionStatusNote: null,
       evolutionFirePattern: null,
+      doctrineStage: 0,
+      doctrineFormLabel: null,
+      doctrineTraitLabel: null,
+      doctrineStatusNote: null,
+      doctrineFirePattern: null,
       capstoneFire: null,
       capstoneOnHit: null,
       capstoneOnBounce: null,
@@ -4016,6 +4131,29 @@
       stats.capstoneLabel = catalystCapstone.label;
       if (typeof catalystCapstone.applyWeapon === "function") {
         catalystCapstone.applyWeapon(stats, build);
+      }
+    }
+    const doctrineWeaponForm = getDoctrineWeaponForm(build, core.id);
+    if (doctrineWeaponForm) {
+      stats.doctrineStage = doctrineWeaponForm.stage;
+      stats.doctrineFormLabel = doctrineWeaponForm.label;
+      stats.doctrineTraitLabel = doctrineWeaponForm.traitLabel;
+      stats.doctrineStatusNote = doctrineWeaponForm.statusNote;
+      stats.doctrineFirePattern = doctrineWeaponForm.firePattern;
+      stats.damage += doctrineWeaponForm.damageBonus || 0;
+      stats.cooldown = clamp(
+        stats.cooldown * (doctrineWeaponForm.cooldownMultiplier || 1),
+        0.08,
+        0.4
+      );
+      stats.pierce += doctrineWeaponForm.pierceBonus || 0;
+      stats.chain += doctrineWeaponForm.chainBonus || 0;
+      if (stats.chain > 0) {
+        const baseChainRange = core.id === "lance" ? 188 : 164;
+        stats.chainRange = Math.max(
+          stats.chainRange || 0,
+          baseChainRange + (doctrineWeaponForm.chainRangeBonus || 0)
+        );
       }
     }
     stats.damage = round(stats.damage, 1);
@@ -7839,6 +7977,87 @@
     return target;
   }
 
+  function fireWeaponPattern(pattern, weapon, baseAngle, driveActive) {
+    if (!pattern) {
+      return;
+    }
+    if (pattern.kind === "slag_seed") {
+      const count = Math.max(1, pattern.count || 1);
+      const half = (count - 1) / 2;
+      for (let seedIndex = 0; seedIndex < count; seedIndex += 1) {
+        const offset = (seedIndex - half) * (pattern.spread || 0);
+        const angle = baseAngle + offset;
+        state.projectiles.push(
+          createPlayerProjectile(angle, weapon, driveActive, {
+            vx:
+              Math.cos(angle) *
+              weapon.projectileSpeed *
+              pattern.speedMultiplier *
+              (driveActive ? 1.12 : 1),
+            vy:
+              Math.sin(angle) *
+              weapon.projectileSpeed *
+              pattern.speedMultiplier *
+              (driveActive ? 1.12 : 1),
+            radius: pattern.radius,
+            damage: round(
+              (weapon.damage + (driveActive ? 8 : 0)) * pattern.damageMultiplier,
+              1
+            ),
+            life: pattern.life,
+            pierce: 0,
+            bounce: 0,
+            chain: 0,
+            chainRange: 0,
+            color: pattern.color,
+            slagSeed: {
+              blastRadius: pattern.blastRadius,
+              blastDamage: round(
+                (weapon.damage + (driveActive ? 8 : 0)) * pattern.blastDamageMultiplier,
+                1
+              ),
+              poolRadius: pattern.poolRadius,
+              poolDuration: pattern.poolDuration,
+              poolTickInterval: pattern.poolTickInterval,
+              poolDamage: round(
+                (weapon.damage + (driveActive ? 8 : 0)) * pattern.poolDamageMultiplier,
+                1
+              ),
+              poolColor: pattern.poolColor,
+              particleColor: pattern.color,
+            },
+          })
+        );
+      }
+      return;
+    }
+    pattern.offsets.forEach((offset) => {
+      const angle = baseAngle + offset;
+      state.projectiles.push(
+        createPlayerProjectile(angle, weapon, driveActive, {
+          vx:
+            Math.cos(angle) *
+            weapon.projectileSpeed *
+            pattern.speedMultiplier *
+            (driveActive ? 1.12 : 1),
+          vy:
+            Math.sin(angle) *
+            weapon.projectileSpeed *
+            pattern.speedMultiplier *
+            (driveActive ? 1.12 : 1),
+          radius: pattern.radius,
+          damage: round((weapon.damage + (driveActive ? 8 : 0)) * pattern.damageMultiplier, 1),
+          life: pattern.life,
+          pierce: weapon.pierce + pattern.pierceBonus,
+          bounce: weapon.bounce + pattern.bounceBonus,
+          chain: weapon.chain + pattern.chainBonus,
+          chainRange: weapon.chainRange,
+          color: pattern.color,
+        })
+      );
+    });
+  }
+
   function emitCapstoneLinkParticles(from, to, color, steps = 5) {
     if (!from || !to) {
       return;
@@ -8413,90 +8632,8 @@
       state.projectiles.push(createPlayerProjectile(angle, weapon, driveActive));
     }
 
-    if (weapon.evolutionFirePattern) {
-      if (weapon.evolutionFirePattern.kind === "slag_seed") {
-        const count = Math.max(1, weapon.evolutionFirePattern.count || 1);
-        const half = (count - 1) / 2;
-        for (let seedIndex = 0; seedIndex < count; seedIndex += 1) {
-          const offset = (seedIndex - half) * (weapon.evolutionFirePattern.spread || 0);
-          const angle = baseAngle + offset;
-          state.projectiles.push(
-            createPlayerProjectile(angle, weapon, driveActive, {
-              vx:
-                Math.cos(angle) *
-                weapon.projectileSpeed *
-                weapon.evolutionFirePattern.speedMultiplier *
-                (driveActive ? 1.12 : 1),
-              vy:
-                Math.sin(angle) *
-                weapon.projectileSpeed *
-                weapon.evolutionFirePattern.speedMultiplier *
-                (driveActive ? 1.12 : 1),
-              radius: weapon.evolutionFirePattern.radius,
-              damage: round(
-                (weapon.damage + (driveActive ? 8 : 0)) *
-                  weapon.evolutionFirePattern.damageMultiplier,
-                1
-              ),
-              life: weapon.evolutionFirePattern.life,
-              pierce: 0,
-              bounce: 0,
-              chain: 0,
-              chainRange: 0,
-              color: weapon.evolutionFirePattern.color,
-              slagSeed: {
-                blastRadius: weapon.evolutionFirePattern.blastRadius,
-                blastDamage: round(
-                  (weapon.damage + (driveActive ? 8 : 0)) *
-                    weapon.evolutionFirePattern.blastDamageMultiplier,
-                  1
-                ),
-                poolRadius: weapon.evolutionFirePattern.poolRadius,
-                poolDuration: weapon.evolutionFirePattern.poolDuration,
-                poolTickInterval: weapon.evolutionFirePattern.poolTickInterval,
-                poolDamage: round(
-                  (weapon.damage + (driveActive ? 8 : 0)) *
-                    weapon.evolutionFirePattern.poolDamageMultiplier,
-                  1
-                ),
-                poolColor: weapon.evolutionFirePattern.poolColor,
-                particleColor: weapon.evolutionFirePattern.color,
-              },
-            })
-          );
-        }
-      } else {
-        weapon.evolutionFirePattern.offsets.forEach((offset) => {
-          const angle = baseAngle + offset;
-          state.projectiles.push(
-            createPlayerProjectile(angle, weapon, driveActive, {
-              vx:
-                Math.cos(angle) *
-                weapon.projectileSpeed *
-                weapon.evolutionFirePattern.speedMultiplier *
-                (driveActive ? 1.12 : 1),
-              vy:
-                Math.sin(angle) *
-                weapon.projectileSpeed *
-                weapon.evolutionFirePattern.speedMultiplier *
-                (driveActive ? 1.12 : 1),
-              radius: weapon.evolutionFirePattern.radius,
-              damage: round(
-                (weapon.damage + (driveActive ? 8 : 0)) *
-                  weapon.evolutionFirePattern.damageMultiplier,
-                1
-              ),
-              life: weapon.evolutionFirePattern.life,
-              pierce: weapon.pierce + weapon.evolutionFirePattern.pierceBonus,
-              bounce: weapon.bounce + weapon.evolutionFirePattern.bounceBonus,
-              chain: weapon.chain + weapon.evolutionFirePattern.chainBonus,
-              chainRange: weapon.chainRange,
-              color: weapon.evolutionFirePattern.color,
-            })
-          );
-        });
-      }
-    }
+    fireWeaponPattern(weapon.evolutionFirePattern, weapon, baseAngle, driveActive);
+    fireWeaponPattern(weapon.doctrineFirePattern, weapon, baseAngle, driveActive);
 
     if (weapon.capstoneFire) {
       if (weapon.capstoneFire.kind === "temper_slug") {
@@ -9329,6 +9466,9 @@
     const evolutionSummary = weapon.evolutionLabel
       ? `${weapon.evolutionLabel} · ${weapon.evolutionTraitLabel}`
       : null;
+    const doctrineSummary = weapon.doctrineFormLabel
+      ? `${weapon.doctrineFormLabel} · ${weapon.doctrineTraitLabel}`
+      : null;
     const capstoneSummary = weapon.capstoneLabel
       ? `${weapon.capstoneLabel} · ${weapon.capstoneTraitLabel}`
       : null;
@@ -9356,11 +9496,12 @@
               : createMiniPill("TRAIT", "직선 탄도")
           }
           ${weapon.evolutionLabel ? createMiniPill("EVO", weapon.evolutionLabel, "accent") : ""}
+          ${weapon.doctrineFormLabel ? createMiniPill("DOC", weapon.doctrineFormLabel, "hot") : ""}
           ${capstoneSummary ? createMiniPill("CAP", weapon.capstoneLabel, "hot") : ""}
           ${state.supportSystem ? createMiniPill("SYS", state.supportSystem.label, "accent") : ""}
           ${weapon.affixLabels.map((label) => createMiniPill("속성", label, "cool")).join("")}
         </div>
-        <p class="summary-note">${[affixSummary, evolutionSummary, capstoneSummary, supportSystemSummary, kilnFieldSummary, `보관 ${weapon.benchCopies}개 대기`].filter(Boolean).join(" · ")}</p>
+        <p class="summary-note">${[affixSummary, evolutionSummary, doctrineSummary, capstoneSummary, supportSystemSummary, kilnFieldSummary, `보관 ${weapon.benchCopies}개 대기`].filter(Boolean).join(" · ")}</p>
       `;
     }
 
@@ -9449,7 +9590,7 @@
         }">${
           state.player.overheated
             ? "사격 정지: 열을 비워야 한다."
-            : `${weapon.evolutionStatusNote ? `${weapon.evolutionStatusNote} ` : ""}${weapon.capstoneStatusNote ? `${weapon.capstoneStatusNote} ` : ""}${state.supportSystem ? `${state.supportSystem.statusNote} ` : ""}${hazardStatus.note} 자동 사격은 과열 전까지 유지된다.`
+            : `${weapon.evolutionStatusNote ? `${weapon.evolutionStatusNote} ` : ""}${weapon.doctrineStatusNote ? `${weapon.doctrineStatusNote} ` : ""}${weapon.capstoneStatusNote ? `${weapon.capstoneStatusNote} ` : ""}${state.supportSystem ? `${state.supportSystem.statusNote} ` : ""}${hazardStatus.note} 자동 사격은 과열 전까지 유지된다.`
         }</p>
       `;
     }
@@ -9475,6 +9616,9 @@
     const evolutionSummary = state.weapon.evolutionLabel
       ? `${state.weapon.evolutionLabel} · ${state.weapon.evolutionTraitLabel}`
       : "주무장 진화 없음";
+    const doctrineSummary = state.weapon.doctrineFormLabel
+      ? `${state.weapon.doctrineFormLabel} · ${state.weapon.doctrineTraitLabel}`
+      : "교리 전용 주무장 없음";
     const capstoneSummary = state.weapon.capstoneLabel
       ? `${state.weapon.capstoneLabel} · ${state.weapon.capstoneTraitLabel}`
       : "활성 촉매 재구성 없음";
@@ -9550,7 +9694,7 @@
       <article class="forge-context__card">
         <p class="panel__eyebrow">속성 / 진화 / 시스템</p>
         <strong>${affixSummary}</strong>
-        <p>${evolutionSummary} · ${capstoneSummary} · ${forgeSystemSummary} · ${supportBaySummary} · 보관 ${benchEntries.length}종 · ${catalystSummary} · 분해 예상 고철 ${getRecycleValue(state.build)}</p>
+        <p>${evolutionSummary} · ${doctrineSummary} · ${capstoneSummary} · ${forgeSystemSummary} · ${supportBaySummary} · 보관 ${benchEntries.length}종 · ${catalystSummary} · 분해 예상 고철 ${getRecycleValue(state.build)}</p>
       </article>
     `;
     elements.forgeCards.innerHTML = state.forgeChoices

@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 02:30 KST
+  Findings:
+  - The code now sells three distinct Act 3 doctrine brackets, but the rerun fantasy is still too text-authored. `Relay Hunt`, `Foundry Hold`, and `Lance Siege` remix pacing and target bias, yet all three still lean on the same late roster families and hazard vocabulary, so the player learns variants of one answer instead of craving different endgames.
+  - The main weapon finally has tiered evolutions, but the strongest visible spikes are still too often `Volt Drones`, `Seeker Array`, `Kiln Sentry`, `Aegis Halo`, and doctrine apex automation. When the helpers look more outrageous than the gun, the build hunger stays auxiliary.
+  - The structure is now openly authored for a longer roguelite run, but the docs still anchor the game to `5웨이브` and `7분 내외`. That mismatch is no longer harmless documentation drift; it keeps the project judging success by prototype scope while the implementation is trying to promise a much bigger ceiling.
+  - `MAX_SUPPORT_BAYS = 2` with a late unlock to `3` keeps the final loadout readable, but also too tidy. For a run already advertising doctrine locks, catalyst ignition, weapon evolutions, and apex cards, the end state still risks feeling like a composed kit instead of an excessive war machine.
+  Top Priority: Rebuild each doctrine around a weapon-first end-state ladder, where Wave 3, Wave 5, and Wave 8 each push the favored gun into a doctrine-exclusive firing form and support systems only amplify that path instead of carrying it.
+  Why Now: Until the gun owns the fantasy, longer brackets and richer drafts will keep reading like administration around helper loadouts.
+  Do Not Repeat: Do not answer this with another drone/missile/shield layer or more doctrine prose if the main weapon still is not the thing players are rerunning to see.
+
 - 2026-03-22 14:20 KST
   Findings:
   - The run is now long enough to expose a harsher truth: too much build identity is still menu-authored instead of combat-authored. `Architecture Draft`, repeated `Bastion Draft` beats, two Armories, `Catalyst Crucible`, and the final forge do a lot of declaring, but Waves `9-12` still do not make the player feel radically different for choosing one doctrine over another.
@@ -541,6 +551,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 15:10 KST
+  Changed: rebuilt one concrete doctrine ladder in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Storm Artillery` now upgrades the main `Lance` itself at each promised milestone instead of letting support automation carry the branch. Once the doctrine is locked, the gun gains a doctrine-only firing form on top of its normal evolution path: `Wave 3` doctrine lock now adds the `Siege Frame` outer rails, the `Wave 4-6` doctrine chase upgrades that into `Thunder Rack`, and the `Wave 9` doctrine apex turns it into `Sky Lance Battery`, with each step adding a visibly wider lance lattice plus direct gun-stat escalation. I also surfaced the doctrine form in the HUD/forge summaries and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new `Storm Artillery` weapon stages at doctrine lock, chase, and apex.
+  Why: the newest critique’s Top Priority was a weapon-first ladder at `Wave 3`, `Wave 5`, and `Wave 8` where the favored gun becomes the rerun fantasy and support systems only amplify it. The highest-value bounded interpretation was to fully convert one doctrine into that structure, and `Storm Artillery` was the cleanest target because `Lance` already had a readable long-range silhouette that could be pushed into a much louder late-run siege weapon without widening this pass into a multi-doctrine rewrite.
+  Follow-up risk: `Storm Artillery` now has a clearer gun-owned payoff curve, but `Mirror Hunt` and `Kiln Bastion` still rely more heavily on support-side spectacle for their late identity. If the next critique still sees helpers outshining the gun, the next pass should give one of those branches an equivalent doctrine-only firing ladder rather than adding more support families.
 
 - 2026-03-22 14:46 KST
   Changed: replaced the generic shared Act 3 bracket in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) with doctrine-resolved late-wave variants for `Wave 9-12`. After `Wave 8`, `Mirror Hunt`, `Kiln Bastion`, and `Storm Artillery` now each rewrite the late bracket’s labels, encounter notes, directives, enemy mixes, and hazard tuning so the run asks different questions: hunt builds get faster perimeter-chase exams, bastion builds get heavier reclaim-and-hold territory fights, and artillery builds get backline siege brackets with denser mortar pressure. I also extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert that these doctrine-specific Act 3 variants actually resolve and stay distinct from the static base table.
