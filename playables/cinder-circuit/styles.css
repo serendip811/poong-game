@@ -1089,6 +1089,8 @@ body[data-overdrive="true"] .backdrop__glow--right {
 .forge-overlay__panel {
   width: min(980px, 100%);
   padding: 24px;
+  max-height: min(84vh, 760px);
+  overflow: auto;
   border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   background:
@@ -1132,15 +1134,17 @@ body[data-overdrive="true"] .backdrop__glow--right {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
   margin-top: 18px;
+  align-items: start;
 }
 
 .forge-card {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 10px;
+  gap: 8px;
   width: 100%;
-  padding: 18px;
+  min-width: 0;
+  padding: 14px;
   color: var(--text);
   text-align: left;
   transition:
@@ -1208,12 +1212,12 @@ body[data-overdrive="true"] .backdrop__glow--right {
 
 .forge-card h3 {
   margin: 2px 0 0;
-  font-size: 1.08rem;
+  font-size: 0.98rem;
 }
 
 .forge-card__preview {
   width: 100%;
-  padding: 10px 12px;
+  padding: 8px 10px;
   border-radius: 14px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.035);
@@ -1246,7 +1250,8 @@ body[data-overdrive="true"] .backdrop__glow--right {
 .result-build p {
   margin: 0;
   color: var(--muted);
-  line-height: 1.58;
+  line-height: 1.42;
+  font-size: 0.9rem;
 }
 
 .forge-card__tag,
@@ -1265,14 +1270,14 @@ body[data-overdrive="true"] .backdrop__glow--right {
 .forge-card__meta {
   margin-top: auto;
   color: #ffd4b3;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   letter-spacing: 0.03em;
 }
 
 .forge-card__slot {
   margin-top: 2px;
   color: var(--muted);
-  font-size: 0.88rem;
+  font-size: 0.8rem;
 }
 
 .arena-foot {
@@ -1380,6 +1385,10 @@ body[data-overdrive="true"] .backdrop__glow--right {
   .build-panel--right {
     justify-items: stretch;
   }
+
+  .forge-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 900px) {
@@ -1421,6 +1430,11 @@ body[data-overdrive="true"] .backdrop__glow--right {
   .forge-overlay {
     inset: 70px 10px 44px;
     padding: 12px;
+  }
+
+  .forge-overlay__panel {
+    max-height: min(82vh, 680px);
+    padding: 18px;
   }
 
   .pause-overlay {
