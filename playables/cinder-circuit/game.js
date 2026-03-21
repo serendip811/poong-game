@@ -507,6 +507,8 @@
   const SUPPORT_SYSTEM_DEFS = {
     ember_ring: {
       id: "ember_ring",
+      forgeWaveMin: 3,
+      forgeLane: "보조 시스템",
       tag: "SYSTEM",
       color: "#ffd166",
       orbitColor: "rgba(255, 209, 102, 0.18)",
@@ -592,6 +594,8 @@
     },
     aegis_halo: {
       id: "aegis_halo",
+      forgeWaveMin: 3,
+      forgeLane: "보조 시스템",
       tag: "SYSTEM",
       color: "#8ae7ff",
       orbitColor: "rgba(138, 231, 255, 0.2)",
@@ -672,6 +676,180 @@
           interceptPulseRadius: 62,
           previewText: "요격 3기 + 대형 파동",
           statusNote: "Aegis Halo Mk.III가 삼각 방호진으로 탄막을 지우고 더 큰 파동으로 주변 적까지 밀어낸다.",
+        },
+      },
+    },
+    seeker_array: {
+      id: "seeker_array",
+      forgeWaveMin: 6,
+      forgeLane: "공세 모듈",
+      tag: "ORDNANCE",
+      color: "#ff9b54",
+      orbitColor: "rgba(255, 155, 84, 0.2)",
+      strokeColor: "rgba(255, 224, 191, 0.72)",
+      renderShape: "missile",
+      tiers: {
+        1: {
+          tier: 1,
+          label: "Seeker Array",
+          title: "Seeker Array",
+          cost: 46,
+          description:
+            "후반부부터 해금되는 추적 미사일 랙 1기를 설치한다. 멀리 벌어진 적에게 자동 사격을 꽂아 넓은 작업장에서 화력 회수를 돕는다.",
+          slotText: "공세 모듈 설치 · 추적 미사일 랙",
+          orbitCount: 1,
+          orbitRadius: 76,
+          orbitSpeed: 1.42,
+          satelliteRadius: 9,
+          touchDamage: 10,
+          touchCooldown: 0.32,
+          shotCooldown: 1.35,
+          shotRange: 340,
+          shotDamage: 26,
+          shotSpeed: 430,
+          interceptRange: 0,
+          interceptCooldown: 0,
+          interceptPulseDamage: 0,
+          interceptPulseRadius: 0,
+          previewText: "추적 미사일",
+          statusNote: "Seeker Array가 멀리 벌어진 적에게 추적 미사일을 꽂아 외곽 정리선을 만든다.",
+        },
+        2: {
+          tier: 2,
+          label: "Seeker Array Mk.II",
+          title: "Seeker Array Mk.II",
+          cost: 60,
+          description:
+            "Seeker Array를 2기 편대로 증설한다. 미사일 발사 간격이 짧아지고 두 갈래 탄막이 측면 교차 화선을 먼저 정리한다.",
+          slotText: "공세 모듈 증설 · 미사일 랙 2기",
+          orbitCount: 2,
+          orbitRadius: 88,
+          orbitSpeed: 1.58,
+          satelliteRadius: 9.5,
+          touchDamage: 12,
+          touchCooldown: 0.24,
+          shotCooldown: 0.96,
+          shotRange: 384,
+          shotDamage: 24,
+          shotSpeed: 470,
+          interceptRange: 0,
+          interceptCooldown: 0,
+          interceptPulseDamage: 0,
+          interceptPulseRadius: 0,
+          previewText: "미사일 랙 2기",
+          statusNote: "Seeker Array Mk.II가 두 갈래 자동 미사일로 측면 교차 화선을 먼저 찢는다.",
+        },
+        3: {
+          tier: 3,
+          label: "Seeker Array Mk.III",
+          title: "Seeker Array Mk.III",
+          cost: 74,
+          description:
+            "Seeker Array를 3기 포격 고리로 확장한다. 넓은 외곽을 돌며 짧은 간격으로 미사일을 쏟아 후반부 잔당과 사격진을 동시에 무너뜨린다.",
+          slotText: "공세 모듈 증설 · 삼중 미사일 포격",
+          orbitCount: 3,
+          orbitRadius: 98,
+          orbitSpeed: 1.7,
+          satelliteRadius: 10,
+          touchDamage: 14,
+          touchCooldown: 0.2,
+          shotCooldown: 0.72,
+          shotRange: 420,
+          shotDamage: 25,
+          shotSpeed: 510,
+          interceptRange: 0,
+          interceptCooldown: 0,
+          interceptPulseDamage: 0,
+          interceptPulseRadius: 0,
+          previewText: "삼중 미사일 고리",
+          statusNote: "Seeker Array Mk.III가 외곽을 도는 삼중 포격 고리로 후반부 잔당과 사격진을 함께 무너뜨린다.",
+        },
+      },
+    },
+    volt_drones: {
+      id: "volt_drones",
+      forgeWaveMin: 6,
+      forgeLane: "공세 모듈",
+      tag: "DRONE",
+      color: "#7fffd4",
+      orbitColor: "rgba(127, 255, 212, 0.18)",
+      strokeColor: "rgba(221, 255, 247, 0.7)",
+      renderShape: "drone",
+      tiers: {
+        1: {
+          tier: 1,
+          label: "Volt Drones",
+          title: "Volt Drones",
+          cost: 44,
+          description:
+            "자율 공격 드론 2기를 띄운다. 드론이 플레이어 주변을 넓게 돌며 자동 전격탄으로 후방 추격선을 끊는다.",
+          slotText: "공세 모듈 설치 · 자율 드론 2기",
+          orbitCount: 2,
+          orbitRadius: 66,
+          orbitSpeed: 1.84,
+          satelliteRadius: 8.5,
+          touchDamage: 14,
+          touchCooldown: 0.24,
+          shotCooldown: 1.08,
+          shotRange: 272,
+          shotDamage: 14,
+          shotSpeed: 560,
+          interceptRange: 0,
+          interceptCooldown: 0,
+          interceptPulseDamage: 0,
+          interceptPulseRadius: 0,
+          previewText: "자율 드론 2기",
+          statusNote: "Volt Drones가 후방 추격선을 자동 전격탄으로 끊어 회전 복귀를 쉽게 만든다.",
+        },
+        2: {
+          tier: 2,
+          label: "Volt Drones Mk.II",
+          title: "Volt Drones Mk.II",
+          cost: 58,
+          description:
+            "드론 편대를 3기로 늘리고 사격 주기를 압축한다. 회전 경로가 두꺼워져 플레이어가 외곽을 더 공격적으로 가를 수 있다.",
+          slotText: "공세 모듈 증설 · 드론 3기 + 고속 전격탄",
+          orbitCount: 3,
+          orbitRadius: 74,
+          orbitSpeed: 2.02,
+          satelliteRadius: 8.8,
+          touchDamage: 16,
+          touchCooldown: 0.2,
+          shotCooldown: 0.8,
+          shotRange: 294,
+          shotDamage: 16,
+          shotSpeed: 600,
+          interceptRange: 0,
+          interceptCooldown: 0,
+          interceptPulseDamage: 0,
+          interceptPulseRadius: 0,
+          previewText: "드론 3기 편대",
+          statusNote: "Volt Drones Mk.II가 더 두꺼운 편대로 외곽 회전선을 자동 사격으로 지킨다.",
+        },
+        3: {
+          tier: 3,
+          label: "Volt Drones Mk.III",
+          title: "Volt Drones Mk.III",
+          cost: 72,
+          description:
+            "드론을 4기로 증설하고 궤도를 더 빠르게 감는다. 플레이어 주위에 움직이는 자동 화력 막이 생겨 후반부 측면 재진입을 더 과감하게 열어 준다.",
+          slotText: "공세 모듈 증설 · 드론 4기 + 과충전 전격망",
+          orbitCount: 4,
+          orbitRadius: 82,
+          orbitSpeed: 2.18,
+          satelliteRadius: 9.1,
+          touchDamage: 18,
+          touchCooldown: 0.16,
+          shotCooldown: 0.62,
+          shotRange: 316,
+          shotDamage: 18,
+          shotSpeed: 640,
+          interceptRange: 0,
+          interceptCooldown: 0,
+          interceptPulseDamage: 0,
+          interceptPulseRadius: 0,
+          previewText: "드론 4기 전격망",
+          statusNote: "Volt Drones Mk.III가 플레이어 주위를 감는 자동 전격망으로 측면 재진입을 더 과감하게 연다.",
         },
       },
     },
@@ -1959,6 +2137,22 @@
     return SUPPORT_SYSTEM_DEFS[installedSystems[0].id] || null;
   }
 
+  function getSupportSystemForgeLane(systemId) {
+    const system = SUPPORT_SYSTEM_DEFS[systemId];
+    return system && system.forgeLane ? system.forgeLane : "보조 시스템";
+  }
+
+  function isSupportSystemUnlocked(systemId, nextWave = 0) {
+    const system = SUPPORT_SYSTEM_DEFS[systemId];
+    if (!system) {
+      return false;
+    }
+    const unlockWave = Number.isFinite(system.forgeWaveMin)
+      ? system.forgeWaveMin
+      : FORGE_PACKAGE_START_WAVE;
+    return nextWave >= unlockWave;
+  }
+
   function sanitizeSupportSystems(systems) {
     if (!Array.isArray(systems)) {
       return [];
@@ -2095,15 +2289,18 @@
     };
   }
 
-  function createSupportSystemChoices(build, rng) {
+  function createSupportSystemChoices(build, rng, options = null) {
     if (!build) {
       return [];
     }
     const random = typeof rng === "function" ? rng : Math.random;
+    const nextWave = options && Number.isFinite(options.nextWave) ? options.nextWave : 0;
     const installedSystems = getInstalledSupportSystems(build);
     const installedMap = new Map(installedSystems.map((entry) => [entry.id, entry]));
     const installChoices = shuffle(
-      Object.keys(SUPPORT_SYSTEM_DEFS).filter((systemId) => !installedMap.has(systemId)),
+      Object.keys(SUPPORT_SYSTEM_DEFS).filter(
+        (systemId) => !installedMap.has(systemId) && isSupportSystemUnlocked(systemId, nextWave)
+      ),
       random
     )
       .map((systemId) => {
@@ -2132,6 +2329,7 @@
           systemId: system.id,
           systemTier: 1,
           bayAction: "install",
+          forgeLaneLabel: getSupportSystemForgeLane(system.id),
           cost: tierDef.cost,
         };
       })
@@ -2158,6 +2356,7 @@
           systemId: system.id,
           systemTier: tierDef.tier,
           bayAction: "upgrade",
+          forgeLaneLabel: getSupportSystemForgeLane(system.id),
           cost: tierDef.cost,
         };
       })
@@ -3124,6 +3323,7 @@
     const evolutionCandidates = [];
     const commitCandidates = [];
     const pivotCandidates = [];
+    const offensiveModuleCandidates = [];
     const subsystemCandidates = [];
     const sustainCandidates = [];
     const currentAffixIds = sanitizeAffixIds(build.affixes, getAffixCapacity(build));
@@ -3134,7 +3334,7 @@
     const finisherChoice = createRecipeFinisherChoice(build);
     const weaponEvolutionChoice = createWeaponEvolutionChoice(build, options);
     const supportSystemChoices = shouldOfferSupportSystem(build, options)
-      ? createSupportSystemChoices(build, random)
+      ? createSupportSystemChoices(build, random, options)
       : [];
     const guaranteedMidrunChase = shouldGuaranteeMidrunChase(options)
       ? createGuaranteedChaseChoice(build)
@@ -3184,7 +3384,11 @@
     });
 
     supportSystemChoices.forEach((choice) => {
-      pushChoiceIfOpen(subsystemCandidates, choice, choiceCatalog);
+      if (choice.forgeLaneLabel === "공세 모듈") {
+        pushChoiceIfOpen(offensiveModuleCandidates, choice, choiceCatalog);
+      } else {
+        pushChoiceIfOpen(subsystemCandidates, choice, choiceCatalog);
+      }
     });
 
     if (Number.isFinite(scrapBank) && scrapBank < 32 && recycleChoice) {
@@ -3257,11 +3461,16 @@
       const choices = [];
       const takenIds = new Set();
       const secondaryChoices = [
+        takeFirstAvailableChoice(offensiveModuleCandidates, takenIds, "공세 모듈"),
         takeFirstAvailableChoice(subsystemCandidates, takenIds, "보조 시스템"),
         takeFirstAvailableChoice(sustainCandidates, takenIds, "생존/경제"),
       ].filter(Boolean);
       choices.push(...secondaryChoices);
-      const extraSecondaryPool = [...subsystemCandidates, ...sustainCandidates];
+      const extraSecondaryPool = [
+        ...offensiveModuleCandidates,
+        ...subsystemCandidates,
+        ...sustainCandidates,
+      ];
       for (const choice of extraSecondaryPool) {
         if (choices.length >= 3) {
           break;
@@ -3270,7 +3479,14 @@
           continue;
         }
         takenIds.add(choice.id);
-        choices.push(markForgeLane(choice, choice.type === "system" ? "보조 시스템" : "생존/경제"));
+        choices.push(
+          markForgeLane(
+            choice,
+            choice.type === "system"
+              ? choice.forgeLaneLabel || "보조 시스템"
+              : "생존/경제"
+          )
+        );
       }
       if (
         Number.isFinite(scrapBank) &&
@@ -3295,16 +3511,32 @@
       takeFirstAvailableChoice(evolutionCandidates, takenIds, "주무장 진화"),
       takeFirstAvailableChoice(commitCandidates, takenIds, "빌드 고정"),
       takeFirstAvailableChoice(pivotCandidates, takenIds, "전환"),
+      takeFirstAvailableChoice(offensiveModuleCandidates, takenIds, "공세 모듈"),
       takeFirstAvailableChoice(subsystemCandidates, takenIds, "보조 시스템"),
       takeFirstAvailableChoice(sustainCandidates, takenIds, "생존/경제"),
     ].filter(Boolean);
     const choices = getInstalledSupportSystems(build).length === 0 && subsystemCandidates.length > 1
       ? laneChoices.filter((choice) => choice.laneLabel !== "생존/경제")
       : laneChoices;
-    const maxChoices = subsystemCandidates.length > 0 ? 5 : 4;
+    const maxChoices =
+      subsystemCandidates.length > 0 || offensiveModuleCandidates.length > 0 ? 6 : 4;
     const extraChoicePool = getInstalledSupportSystems(build).length === 0 && subsystemCandidates.length > 1
-      ? [...subsystemCandidates, ...evolutionCandidates, ...commitCandidates, ...pivotCandidates, ...sustainCandidates]
-      : [...evolutionCandidates, ...commitCandidates, ...pivotCandidates, ...subsystemCandidates, ...sustainCandidates];
+      ? [
+          ...offensiveModuleCandidates,
+          ...subsystemCandidates,
+          ...evolutionCandidates,
+          ...commitCandidates,
+          ...pivotCandidates,
+          ...sustainCandidates,
+        ]
+      : [
+          ...evolutionCandidates,
+          ...commitCandidates,
+          ...pivotCandidates,
+          ...offensiveModuleCandidates,
+          ...subsystemCandidates,
+          ...sustainCandidates,
+        ];
 
     for (const choice of extraChoicePool) {
       if (choices.length >= maxChoices) {
@@ -3314,7 +3546,12 @@
         continue;
       }
       takenIds.add(choice.id);
-      choices.push(markForgeLane(choice, choice.type === "system" ? "보조 시스템" : "예비"));
+      choices.push(
+        markForgeLane(
+          choice,
+          choice.type === "system" ? choice.forgeLaneLabel || "보조 시스템" : "예비"
+        )
+      );
     }
 
     if (
@@ -3351,7 +3588,11 @@
       ? buildForgeChoices(build, random, scrapBank, { ...options, packageStep: 2 }).filter((choice) => {
           if (
             !choice ||
-            (choice.laneLabel !== "보조 시스템" && choice.laneLabel !== "생존/경제")
+            (
+              choice.laneLabel !== "공세 모듈" &&
+              choice.laneLabel !== "보조 시스템" &&
+              choice.laneLabel !== "생존/경제"
+            )
           ) {
             return false;
           }
@@ -6296,6 +6537,32 @@
             Math.PI * 2
           );
           context.stroke();
+        } else if (satellite.renderShape === "missile") {
+          context.save();
+          context.translate(satellite.x, satellite.y);
+          context.rotate(satellite.angle + Math.PI / 2);
+          context.beginPath();
+          context.moveTo(0, -satellite.radius - 2);
+          context.lineTo(satellite.radius * 0.9, satellite.radius + 1);
+          context.lineTo(0, satellite.radius * 0.45);
+          context.lineTo(-satellite.radius * 0.9, satellite.radius + 1);
+          context.closePath();
+          context.fill();
+          context.stroke();
+          context.restore();
+        } else if (satellite.renderShape === "drone") {
+          context.save();
+          context.translate(satellite.x, satellite.y);
+          context.rotate(satellite.angle);
+          context.beginPath();
+          context.moveTo(0, -satellite.radius - 1);
+          context.lineTo(satellite.radius + 1, 0);
+          context.lineTo(0, satellite.radius + 1);
+          context.lineTo(-satellite.radius - 1, 0);
+          context.closePath();
+          context.fill();
+          context.stroke();
+          context.restore();
         } else {
           context.beginPath();
           context.arc(satellite.x, satellite.y, satellite.radius, 0, Math.PI * 2);

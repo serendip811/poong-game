@@ -36,7 +36,7 @@ assert.equal(game.createFinalCashoutWave().arena.width, 1280);
 assert.equal(game.DEFAULT_SIGNATURE_ID, "relay_oath");
 assert.equal(
   JSON.stringify(Object.keys(game.SUPPORT_SYSTEM_DEFS).sort()),
-  JSON.stringify(["aegis_halo", "ember_ring"])
+  JSON.stringify(["aegis_halo", "ember_ring", "seeker_array", "volt_drones"])
 );
 
 const signatureBuild = game.createInitialBuild("scrap_pact");
@@ -213,7 +213,10 @@ const packageFollowupChoices = game.buildForgeFollowupChoices(
 assert.ok(packageFollowupChoices.length >= 1);
 assert.ok(
   packageFollowupChoices.every(
-    (choice) => choice.laneLabel === "보조 시스템" || choice.laneLabel === "생존/경제"
+    (choice) =>
+      choice.laneLabel === "공세 모듈" ||
+      choice.laneLabel === "보조 시스템" ||
+      choice.laneLabel === "생존/경제"
   )
 );
 assert.equal(
@@ -306,6 +309,67 @@ const aegisTierThree = game.computeSupportSystemStats(aegisBuild);
 assert.equal(aegisTierThree.orbitCount, 3);
 assert.ok(aegisTierThree.interceptRange > aegisTierTwo.interceptRange);
 assert.ok(aegisTierThree.interceptPulseRadius > aegisTierTwo.interceptPulseRadius);
+
+const actTwoModuleBuild = game.createInitialBuild("relay_oath");
+actTwoModuleBuild.pendingCores = [];
+const actOneModuleFollowup = game.buildForgeFollowupChoices(
+  actTwoModuleBuild,
+  () => 0,
+  180,
+  { nextWave: 5, finalForge: false },
+  packagePrimaryChoice
+);
+assert.ok(!actOneModuleFollowup.some((choice) => choice.laneLabel === "공세 모듈"));
+const actTwoModuleFollowup = game.buildForgeFollowupChoices(
+  actTwoModuleBuild,
+  () => 0,
+  180,
+  { nextWave: 6, finalForge: false },
+  packagePrimaryChoice
+);
+assert.equal(
+  JSON.stringify(actTwoModuleFollowup.filter((choice) => choice.laneLabel === "공세 모듈").map((choice) => choice.systemId).sort()),
+  JSON.stringify(["seeker_array"])
+);
+const seekerInstallChoice = actTwoModuleFollowup.find(
+  (choice) => choice.laneLabel === "공세 모듈" && choice.systemId === "seeker_array"
+);
+assert.ok(seekerInstallChoice);
+game.applyForgeChoice(
+  { build: actTwoModuleBuild, player: null, resources: { scrap: 999 }, stats: {} },
+  seekerInstallChoice
+);
+const seekerTierOne = game.computeSupportSystemStats(actTwoModuleBuild);
+assert.equal(seekerTierOne.orbitCount, 1);
+assert.ok(seekerTierOne.shotCooldown > 0);
+assert.equal(seekerTierOne.renderShape, "missile");
+const voltInstallChoice = game
+  .buildForgeFollowupChoices(
+    actTwoModuleBuild,
+    () => 0,
+    180,
+    { nextWave: 7, finalForge: false },
+    packagePrimaryChoice
+  )
+  .find((choice) => choice.laneLabel === "공세 모듈" && choice.systemId === "volt_drones");
+assert.ok(voltInstallChoice);
+game.applyForgeChoice(
+  { build: actTwoModuleBuild, player: null, resources: { scrap: 999 }, stats: {} },
+  voltInstallChoice
+);
+const dualOffenseStats = game.computeSupportSystemStats(actTwoModuleBuild);
+assert.equal(dualOffenseStats.orbitCount, 3);
+const actTwoUpgradeChoices = game.buildForgeFollowupChoices(
+  actTwoModuleBuild,
+  () => 0,
+  180,
+  { nextWave: 8, finalForge: false },
+  packagePrimaryChoice
+);
+assert.equal(
+  JSON.stringify(actTwoUpgradeChoices.filter((choice) => choice.laneLabel === "공세 모듈").map((choice) => choice.systemTier).sort()),
+  JSON.stringify([2, 2])
+);
 
 const emberBuild = game.createInitialBuild("relay_oath");
 emberBuild.coreId = "ember";

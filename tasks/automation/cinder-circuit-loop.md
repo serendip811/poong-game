@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-21 22:10 KST
+  Findings:
+  - `WAVE_CONFIG` now reaches Wave 8 and the second-act `1280x720` room does give the combat more air, but Waves 6-8 still escalate mostly through more shrikes, more surge count, and tighter timers from the same hazard family. The run is longer, not meaningfully broader.
+  - Act 2 arrives after most build payoff is already spent: `MAX_WEAPON_EVOLUTION_TIER` is still `2`, `SUPPORT_SYSTEM_DEFS` still only covers two three-tier families, and the late forges are therefore more likely to read as upkeep, reroll, or capstone prep than as fresh power hunger.
+  - `buildForgeFollowupChoices()` still reserves package slot 2 for `보조 시스템` or `생존/경제`, which keeps the between-wave rhythm too deterministic. A longer roguelite run needs back-half forge moments where offense, defense, and utility can collide into greedier authorship than "main spike, then maintenance."
+  - The larger arena helps, but without new enemy behaviors or pressure shapes that exploit space differently, the player is still mostly solving kiting geometry and crossfire cleanup instead of making richer route and territory decisions.
+  Top Priority: Add a Wave 6+ forge lane of offensive utility modules with visible tiered payoffs, such as missiles, autonomous drones, orbitals, or shield emitters, that can stack alongside the existing systems so Act 2 still has real build discoveries left.
+  Why Now: The run finally lasts long enough for a back half, and right now that back half exposes how quickly the current build vocabulary runs out.
+  Do Not Repeat: Do not spend the next pass only on more Wave 7-8 density, surge variants, or small stat perks if Act 2 still has no new build layer to unlock.
+
 - 2026-03-21 21:42 KST
   Findings:
   - `WAVE_CONFIG` is still a single 5-wave act in a fixed `960x540` arena, and the `12s` cash-out is only a flourish on top of that, not a real second phase. This loop still does not prove it can sustain the longer escalation curve a replayable action roguelite needs.
@@ -278,6 +288,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-21 22:25 KST
+  Changed: added two Wave 6+ offensive utility module families in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js): `Seeker Array` for visible autonomous missile racks and `Volt Drones` for fast orbiting attack drones, both with three tiers so Act 2 still has new build discoveries left instead of only upkeep upgrades. The same pass taught support-system drafting to respect unlock waves and a new `공세 모듈` forge lane, so package follow-up slot 2 can now surface offense, defense, or sustain rather than being hard-locked to `보조 시스템` / `생존/경제`. In-arena rendering now gives missile and drone modules distinct silhouettes, and [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now covers Wave 6 unlock timing, late-lane surfacing, and offensive-module upgrade progression.
+  Why: the newest critique’s Top Priority explicitly asked for a Wave 6+ offensive utility lane with visible tiered payoffs that can stack alongside existing systems. I took the highest-value bounded interpretation as "ship two late-game autonomous module families and let the second forge slot draft them as a separate lane" because that restores build hunger in the back half without widening this pass into a full enemy or arena redesign.
+  Follow-up risk: Act 2 now has fresh module discoveries, but Waves 6-8 still mostly test those builds against familiar kiting and crossfire problems. If the next critique still finds the back half too samey, it should target new territory-pressure patterns or enemy behaviors that specifically force missile/drone builds to make stronger route decisions.
 
 - 2026-03-21 22:05 KST
   Changed: extended the run in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from a single 5-wave act to an 8-wave ladder with a true back half. Waves 6-8 (`Afterglow`, `Breakline`, `Crownfire`) now escalate spawn budgets, caps, and hazard patterns beyond the old `Meltdown` ceiling, and they switch combat into a larger `1280x720` arena so late pressure plays as wider routing and recovery rather than only more crowd compression in the launch room. The same pass made arena size wave-aware across player movement, enemy edge spawns, projectile bounces, hazard placement, recenter logic, canvas scaling, and final cash-out transitions; [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) was updated to cover the new wave count, second-act arena profile, and larger final cash-out space. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
