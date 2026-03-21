@@ -18,7 +18,7 @@ Working rules:
 - After changing code, update `tasks/automation/cinder-circuit-loop.md` by prepending a new entry under `## Latest Improvement`.
 - Include what changed, why, and any new follow-up risk in that entry.
 - Run the existing smoke test if your change touches gameplay or UI logic.
-- Do not run `git add`, `git commit`, or `git push` yourself; the wrapper script handles git after you finish.
+- Do not run `git add`, `git commit`, or `git push` yourself; the wrapper script handles the commit after you finish.
 
 Constraints:
 - Keep the improvement bounded. One coherent change per run.

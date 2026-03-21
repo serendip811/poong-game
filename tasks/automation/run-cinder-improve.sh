@@ -69,8 +69,8 @@ PY
   fi
 }
 
-auto_commit_push() {
-  local status_output commit_message token auth_header
+auto_commit_only() {
+  local status_output commit_message
   status_output=$(/usr/bin/git -C "$ROOT" status --short)
   if [ -z "$status_output" ]; then
     return 0
@@ -83,18 +83,13 @@ auto_commit_push() {
 
   /usr/bin/git -C "$ROOT" add -A
   /usr/bin/git -C "$ROOT" commit -m "$commit_message"
-  if ! /usr/bin/git -C "$ROOT" push origin main; then
-    token=$("/usr/local/bin/gh" auth token)
-    auth_header=$(printf 'x-access-token:%s' "$token" | /usr/bin/base64)
-    /usr/bin/git -C "$ROOT" -c credential.helper= -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $auth_header" push origin main
-  fi
 }
 
 {
   printf '\n[%s] improve start\n' "$(date '+%Y-%m-%d %H:%M:%S')"
   notify "start" "loop started"
   cat "$PROMPT_FILE" | "$CODEX_BIN" exec --dangerously-bypass-approvals-and-sandbox -C "$ROOT" -o "$LAST_FILE" -
-  auto_commit_push
+  auto_commit_only
   printf '[%s] improve done\n' "$(date '+%Y-%m-%d %H:%M:%S')"
   notify "done" "$(summary_text)"
 } >> "$LOG_FILE" 2>&1
