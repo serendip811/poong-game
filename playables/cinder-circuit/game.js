@@ -1908,10 +1908,10 @@
       slotText: "교리 완성 · 회수 요새 주조",
       cost: 80,
       laneLabel: "Doctrine Apex",
-      summary: "전방 포탑 거점장이 용광 방벽과 수리장을 함께 펼쳐, 되찾은 구역이 곧 전열 복구선이 된다.",
-      statusNote: "Bulwark Foundry가 전방 포대마다 용광 거점장을 펼쳐 되찾은 구역이 그대로 수리·살상 구역이 된다.",
+      summary: "Scatter가 전방 용광 화구를 직조하고 Kiln Sentry 거점장이 그 pocket를 굳혀, 되찾은 구역이 곧 전열 복구선이 된다.",
+      statusNote: "Bulwark Foundry가 Scatter를 용광 pocket 설계 무기로 완성하고, sentry 거점장이 그 뒤를 수리·살상 구역으로 잠근다.",
       description:
-        "Kiln Bastion 전용 최종 교리 카드. Kiln Sentry 거점이 용광 거점장을 크게 넓혀 적과 점거 코어를 태우고, 그 안으로 복귀한 플레이어는 더 빠르게 냉각·수리되어 같은 구역을 반복 점거하는 운영이 완성된다.",
+        "Kiln Bastion 전용 최종 교리 카드. Scatter가 전방에 용광 화구 salvo를 깔아 pocket 입구 자체를 직접 설계하고, Kiln Sentry 거점은 그 뒤를 넓은 용광 거점장으로 굳혀 플레이어가 같은 구역을 반복 reclaim하는 운영을 완성한다.",
     },
     storm_artillery: {
       id: "sky_lance_battery",
@@ -1978,6 +1978,91 @@
   };
 
   const DOCTRINE_WEAPON_LADDER_DEFS = {
+    kiln_bastion: {
+      coreId: "scatter",
+      stages: {
+        1: {
+          label: "Kiln Frame",
+          traitLabel: "전방 용광 씨앗",
+          statusNote: "Kiln Frame이 산탄 사이에 용광 씨앗을 함께 박아 reclaim pocket 앞에 직접 불도랑을 깐다.",
+          damageBonus: 3,
+          cooldownMultiplier: 0.97,
+          firePattern: {
+            kind: "slag_seed",
+            count: 1,
+            spread: 0,
+            speedMultiplier: 0.68,
+            radius: 6.4,
+            life: 0.7,
+            damageMultiplier: 0.7,
+            blastRadius: 54,
+            blastDamageMultiplier: 0.72,
+            poolRadius: 62,
+            poolDuration: 1.45,
+            poolTickInterval: 0.32,
+            poolDamageMultiplier: 0.16,
+            color: "#ffd59b",
+            poolColor: "rgba(255, 163, 84, 0.28)",
+          },
+        },
+        2: {
+          label: "Crucible Scatter",
+          traitLabel: "삼중 용광 도랑",
+          statusNote:
+            "Crucible Scatter가 전방 삼중 용광 씨앗으로 되찾은 pocket 가장자리를 직접 봉쇄해, 전열을 다시 같은 구역으로 유도한다.",
+          damageBonus: 6,
+          cooldownMultiplier: 0.94,
+          pierceBonus: 1,
+          firePattern: {
+            kind: "slag_seed",
+            count: 3,
+            spread: 0.2,
+            speedMultiplier: 0.72,
+            radius: 6.8,
+            life: 0.74,
+            damageMultiplier: 0.68,
+            blastRadius: 62,
+            blastDamageMultiplier: 0.82,
+            poolRadius: 74,
+            poolDuration: 1.7,
+            poolTickInterval: 0.3,
+            poolDamageMultiplier: 0.18,
+            color: "#ffe1b0",
+            poolColor: "rgba(255, 170, 92, 0.32)",
+          },
+        },
+        3: {
+          variants: {
+            bulwark_foundry: {
+              label: "Bulwark Furnace",
+              traitLabel: "오중 요새 화구",
+              statusNote:
+                "Bulwark Furnace가 전방에 오중 용광 화구를 깔아 pocket 입구를 직접 봉쇄하고, sentry 거점장은 그 뒤를 굳히는 보조층으로 남는다.",
+              damageBonus: 10,
+              cooldownMultiplier: 0.9,
+              pierceBonus: 1,
+              firePattern: {
+                kind: "slag_seed",
+                count: 5,
+                spread: 0.17,
+                speedMultiplier: 0.76,
+                radius: 7.2,
+                life: 0.78,
+                damageMultiplier: 0.72,
+                blastRadius: 68,
+                blastDamageMultiplier: 0.9,
+                poolRadius: 82,
+                poolDuration: 1.95,
+                poolTickInterval: 0.28,
+                poolDamageMultiplier: 0.2,
+                color: "#fff0c2",
+                poolColor: "rgba(255, 188, 104, 0.34)",
+              },
+            },
+          },
+        },
+      },
+    },
     storm_artillery: {
       coreId: "lance",
       stages: {

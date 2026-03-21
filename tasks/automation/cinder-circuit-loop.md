@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 21:40 KST
+  Findings:
+  - Act 3 is materially better than the older bastion loop because `Wave 10-12` finally introduces relay and drift rules that ask for different routing, but the run is still too asymmetrical in how builds answer that pressure. `Storm Artillery` gets a real weapon ladder with two stage-3 end forms, while `Mirror Hunt` and `Kiln Bastion` still climax mainly as drone/turret ecosystems that play the fight for you.
+  - That asymmetry hurts repeat-run hunger more than raw content count. If only `lance` gets the "my gun became a monster" payoff and the other doctrines mostly gain automated cleanup, players will quickly learn which path delivers the release-feeling fantasy and which ones are sidegrade support packages.
+  - The forge cadence is still over-authored and overscheduled. `Architecture Draft`, `Act Break Armory`, `Late Break Armory`, `Catalyst Crucible`, and frequent lane-curated offers keep telling the player what phase the build is in instead of letting combat tension, denial, and greed create that feeling.
+  - The arenas are larger now, but `activeCap` plus heavy `warden`/`mortar` mixes still push too many late waves toward long sanitation laps. The player often clears access tax before making an aggressive route decision, which lowers the intensity ceiling a 20-30 wave version would need.
+  Top Priority: Give `Mirror Hunt` and `Kiln Bastion` full doctrine weapon ladders with exclusive final gun forms, then demote their drone/turret apex effects to secondary amplifiers instead of the headline payoff.
+  Why Now: Act 3 finally has encounter rules worth building for, so the remaining ceiling is that two-thirds of the doctrines still do not end in a player-driven weapon transformation.
+  Do Not Repeat: Do not solve this with another support bay item, another doctrine label, or another scripted draft stop.
+
 - 2026-03-22 06:30 KST
   Findings:
   - `Cinder Circuit` now has enough waves, doctrine language, and support bays to look ambitious, but the actual repeat-run question is still too often "which flavor of bastion-crossfire cleanup am I solving?" `Wave 5-12` keeps rotating bastion cores, `mortar`, and `warden` pressure instead of introducing new combat rules that make different builds want different space.
@@ -631,6 +641,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 21:55 KST
+  Changed: added a full `Kiln Bastion` doctrine weapon ladder in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), so `scatter` now visibly mutates the moment the doctrine is locked instead of waiting for `Kiln Sentry` to do the interesting work. `Kiln Frame` adds a direct player-fired furnace seed, `Crucible Scatter` upgrades that into a triple reclaim trench after the pursuit completes, and the late-armory `Bulwark Foundry` capstone now upgrades the gun again into `Bulwark Furnace`, an on-screen five-seed pocket-making salvo while the sentry field remains the secondary hold-ground amplifier. I also updated the `Bulwark Foundry` capstone copy to sell that weapon-first payoff and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the doctrine’s stage `1/2/3` weapon forms.
+  Why: the newest critique’s Top Priority was to give `Mirror Hunt` and `Kiln Bastion` real doctrine weapon ladders with final gun forms, because `Storm Artillery` was the only branch already delivering the "my gun became a monster" release. The highest-value bounded interpretation was to solve `Kiln Bastion` first, since the existing slag-seed projectile support made it possible to promote the player’s own `scatter` gun into a territory-shaping reclaim weapon without widening the pass into another support system or a two-doctrine rewrite.
+  Follow-up risk: `Kiln Bastion` now has a weapon-first ladder, but `Mirror Hunt` still cashes out more through autonomous chase cleanup than through a comparable final gun mutation. If critique still sees doctrine asymmetry after this, the next pass should give `ricochet` its own pursuit-to-apex weapon ladder rather than adding more drone polish.
 
 - 2026-03-22 20:05 KST
   Changed: promoted `relay pylon` hazards from a doctrine-only late bracket into the shared Act 3 line in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), so the default `Wave 10` and `Wave 12` battlefield rule is now "sever the flame corridors" instead of another bastion-ownership exam. In the same pass I reworked the `Storm Artillery` weapon ladder so completed lance forms gain `relay_sever` follow-through on pylon hits: `Thunder Rack` now throws extra cutting rails through linked pylons, and both apex endings strengthen that direct gun payoff rather than adding more support clutter. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to cover the new shared relay waves plus the doctrine’s relay-breaking weapon state.
