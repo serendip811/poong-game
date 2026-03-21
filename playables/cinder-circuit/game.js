@@ -1168,6 +1168,7 @@
   const FORGE_PACKAGE_START_WAVE = 3;
   const ACT_BREAK_ARMORY_WAVE = 6;
   const LATE_BREAK_ARMORY_WAVE = 9;
+  const FIELD_GRANT_MAX_COST = 48;
   const ACT_BREAK_ARMORY_MAX_CHOICES = 6;
   const ACT_BREAK_CHASSIS_MOD_IDS = [
     "drive_sync",
@@ -2667,7 +2668,7 @@
   }
 
   function shouldForceForgePackage(options) {
-    if (!options || options.finalForge) {
+    if (!options || options.finalForge || options.fastGrant) {
       return false;
     }
     return (options.nextWave || 0) >= FORGE_PACKAGE_START_WAVE;
@@ -2690,6 +2691,14 @@
 
   function getArmoryLabel(options) {
     return isLateBreakArmory(options) ? "Late Break Armory" : "Act Break Armory";
+  }
+
+  function shouldUseFieldGrant(options) {
+    if (!options || options.finalForge) {
+      return false;
+    }
+    const nextWave = options.nextWave || 0;
+    return nextWave >= FORGE_PACKAGE_START_WAVE && !shouldRunActBreakArmory(options);
   }
 
   function unlockLateSupportBay(build) {
@@ -4047,6 +4056,94 @@
     return nextWave >= FORGE_PACKAGE_START_WAVE;
   }
 
+  function isEligibleFieldGrantChoice(choice) {
+    if (!choice) {
+      return false;
+    }
+    if (choice.type === "fallback") {
+      return true;
+    }
+    if (!["evolution", "system", "affix", "mod"].includes(choice.type)) {
+      return false;
+    }
+    return Number.isFinite(choice.cost) ? choice.cost <= FIELD_GRANT_MAX_COST : false;
+  }
+
+  function scoreFieldGrantChoice(choice) {
+    if (!choice) {
+      return -1;
+    }
+    if (choice.type === "evolution") {
+      return 500 + (choice.evolutionTier || 0) * 10;
+    }
+    if (choice.type === "system") {
+      const laneBonus = choice.forgeLaneLabel === "공세 모듈" ? 40 : 20;
+      return 420 + laneBonus + (choice.systemTier || 0) * 8;
+    }
+    if (choice.type === "affix") {
+      return 320;
+    }
+    if (choice.type === "mod") {
+      const offensiveBonus = ["shock_lens", "pulse_gate", "arc_array", "rail_sleeve"].includes(choice.modId)
+        ? 30
+        : 0;
+      return 260 + offensiveBonus;
+    }
+    if (choice.type === "fallback") {
+      return 20;
+    }
+    return 0;
+  }
+
+  function buildFieldGrantChoice(build, rng, nextWave) {
+    const pool = buildForgeChoices(build, rng, FIELD_GRANT_MAX_COST, {
+      nextWave,
+      finalForge: false,
+      fastGrant: true,
+    }).filter(isEligibleFieldGrantChoice);
+    if (pool.length === 0) {
+      return {
+        type: "fallback",
+        id: "fieldgrant:emergency_vent",
+        tag: "CACHE",
+        title: "Emergency Vent",
+        description: "전장 보급품이 냉각제와 간이 수복만 남겼다.",
+        slotText: "현장 보급",
+        cost: 0,
+      };
+    }
+    return pool
+      .slice()
+      .sort((left, right) => {
+        const scoreDelta = scoreFieldGrantChoice(right) - scoreFieldGrantChoice(left);
+        if (scoreDelta !== 0) {
+          return scoreDelta;
+        }
+        return (right.cost || 0) - (left.cost || 0);
+      })[0];
+  }
+
+  function applyFieldGrant(run) {
+    if (!run) {
+      return null;
+    }
+    const nextWave = Number.isFinite(run.waveIndex) ? run.waveIndex + 2 : 0;
+    const choice = buildFieldGrantChoice(run.build, Math.random, nextWave);
+    const appliedChoice = applyForgeChoice(run, choice);
+    if (!appliedChoice) {
+      return null;
+    }
+    const grantLabel = appliedChoice.forgeLaneLabel || appliedChoice.laneLabel || appliedChoice.tag || "CACHE";
+    pushCombatFeed(
+      `${grantLabel} 현장 보급 확보. ${appliedChoice.title}이 즉시 적용되어 전장을 멈추지 않고 다음 웨이브로 밀어붙인다.`,
+      "CACHE"
+    );
+    setBanner(`Field Cache · ${appliedChoice.title}`, 1.1);
+    refreshDerivedStats(false);
+    updateHUD();
+    return appliedChoice;
+  }
+
   function buildForgeFollowupChoices(build, rng, scrapBank, options = null, previousChoice = null) {
     const random = typeof rng === "function" ? rng : Math.random;
     if (shouldRunActBreakArmory(options)) {
@@ -4360,7 +4457,9 @@
     buildHazardCandidates,
     buildForgeChoices,
     buildForgeFollowupChoices,
+    buildFieldGrantChoice,
     applyForgeChoice,
+    shouldUseFieldGrant,
     getCatalystCapstone,
     shouldOpenForgePackage,
   };
@@ -6751,8 +6850,19 @@
         state.waveClearTimer = POST_WAVE_LOOT_GRACE;
         state.hazards = [];
         state.stats.wavesCleared = state.waveIndex + 1;
+        const nextWave = state.waveIndex + 2;
+        const nextPhaseLabel = state.wave.completesRun
+          ? "최종 포지"
+          : shouldRunActBreakArmory({ nextWave, finalForge: false })
+            ? getArmoryLabel({ nextWave })
+            : shouldUseFieldGrant({ nextWave, finalForge: false })
+              ? "Field Cache"
+              : "포지";
         setBanner("전장 정리", 0.9);
-        pushCombatFeed("적 반응 정지. 남은 고철을 회수할 짧은 여유가 생겼다.", "CLEAR");
+        pushCombatFeed(
+          `적 반응 정지. 남은 고철을 회수한 뒤 ${nextPhaseLabel}로 이어진다.`,
+          "CLEAR"
+        );
         return;
       }
 
@@ -6760,6 +6870,9 @@
       if (state.waveClearTimer <= 0) {
         if (state.wave.completesRun) {
           finishRun(true);
+        } else if (shouldUseFieldGrant({ nextWave: state.waveIndex + 2, finalForge: false })) {
+          applyFieldGrant(state);
+          beginWave(state.waveIndex + 1);
         } else {
           enterForge();
         }

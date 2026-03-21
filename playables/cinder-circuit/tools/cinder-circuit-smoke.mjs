@@ -176,6 +176,17 @@ assert.equal(midrunForgeFinisherChoice.tag, "FINISHER");
 assert.equal(waveThreeForgeChoices.length, 3);
 assert.ok(waveThreeForgeChoices.every((choice) => choice.laneLabel !== "보조 시스템"));
 assert.ok(waveThreeForgeChoices.every((choice) => choice.laneLabel !== "생존/경제"));
+assert.equal(game.shouldUseFieldGrant({ nextWave: 3, finalForge: false }), true);
+assert.equal(game.shouldUseFieldGrant({ nextWave: 6, finalForge: false }), false);
+assert.equal(game.shouldUseFieldGrant({ nextWave: 9, finalForge: false }), false);
+assert.equal(game.shouldUseFieldGrant({ nextWave: 12, finalForge: true }), false);
+const fieldGrantBuild = game.createInitialBuild("relay_oath");
+fieldGrantBuild.pendingCores = [];
+const fieldGrantChoice = game.buildFieldGrantChoice(fieldGrantBuild, () => 0, 4);
+assert.ok(["evolution", "system", "affix", "mod", "fallback"].includes(fieldGrantChoice.type));
+assert.ok((fieldGrantChoice.cost || 0) <= 48);
+assert.notEqual(fieldGrantChoice.type, "core");
+assert.notEqual(fieldGrantChoice.type, "utility");
 
 const evolutionBuild = game.createInitialBuild("relay_oath");
 const evolutionChoice = game.buildForgeChoices(evolutionBuild, () => 0, 180, { nextWave: 3 }).find(

@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-21 23:59 KST
+  Findings:
+  - The run now reaches `Wave 12`, but `maybeAdvancePhase()` still hard-stops into a forge after every clear and `FORGE_PACKAGE_START_WAVE = 3` turns most of the back half into two-step draft interruptions. The game gained length without gaining sustained combat momentum.
+  - That cadence kills intensity and will not scale to a real `20-30` wave ambition. A rerun-hungry action roguelite needs long stretches where the player rides a build under pressure, not a stop-and-read routine after nearly every minute of action.
+  - Build depth is broader, but too much of it is delivered through menus instead of earned in-combat payoff. Three support bays, evolutions, missiles, shields, drones, and orbitals exist, yet the run still feels authored around frequent card administration rather than prolonged power expression.
+  - The current bracket structure also loses anticipation because the player is rarely left wanting the next major commitment; another forge is always seconds away. That flattens greed, risk, and the satisfaction of surviving on a locked-in setup.
+  Top Priority: Restructure progression so most waves chain directly into the next fight, reserving full forge/armory stops for act breaks and a few major commitment moments while shifting smaller rewards into fast between-wave grants or live combat pickups.
+  Why Now: Until the run can sustain pressure for multiple waves in a row, more enemies, more systems, and more late content will keep reading like a stretched prototype.
+  Do Not Repeat: Do not answer this with only more waves or more draft cards if the core loop still pauses constantly to administer the build.
+
 - 2026-03-21 23:20 KST
   Findings:
   - The run now reaches `Wave 10` and the late armory unlocks a third support bay, but that payoff lands with only `Wave 9-10` left. The game is still spending its biggest build reveal at the exact moment it should be proving that reveal can carry a real back half.
@@ -358,6 +368,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 00:55 KST
+  Changed: restructured the ordinary post-wave cadence in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so Waves 3-5, 6-8, and 9-12 mostly chain directly through combat instead of opening a full forge after every clear. Normal clears now resolve into a free `Field Cache` auto-grant that picks one bounded mid-cost reward from the existing forge ecosystem, applies it immediately, and starts the next wave; the full forge UI is now reserved for the Wave 5 `Act Break Armory`, the Wave 8 `Late Break Armory`, and the final forge. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new field-grant cadence helpers and reward bounds.
+  Why: the latest critique’s Top Priority was to stop interrupting nearly every clear with a full draft and move routine progression into faster between-wave rewards so the run can sustain pressure over longer brackets. I took the highest-value bounded interpretation as "keep the existing armory/finale commitment moments, but convert ordinary package stops into immediate cache grants" because that changes the run’s rhythm right away without widening scope into a new pickup economy or another menu system.
+  Follow-up risk: the cadence is much stronger now, but the current `Field Cache` grants are free and auto-selected, so they may accelerate builds a bit too cleanly or feel slightly over-authored once players learn the priority logic. If the next critique wants more texture here, the next pass should tune the cache pool into a lighter draft or live pickup format rather than restoring full forge stops.
 
 - 2026-03-21 17:12 KST
   Changed: extended Act 3 in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from two waves to four by adding `Wave 10 · Ember Ward` and `Wave 12 · Cinder Crown`, while shifting the old `Starforge` exam to `Wave 11`. The new `Ember Ward` wave swaps the third bracket out of pure surge crossfire and into a `territory` holdout where `warden` lines protect bastion cores, forcing the player to break firing lanes and reclaim sealed routes before the run reaches its final exam. I also updated the late-armory forge copy so Wave 8 now clearly promises a full four-wave back half for the newly unlocked third support bay, and refreshed [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the 12-wave structure and the new late-act hazard mutation.
