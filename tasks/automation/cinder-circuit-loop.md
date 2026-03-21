@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 19:05 KST
+  Findings:
+  - The run is now long enough to expose its real ceiling: `Wave 5-12` adds space and more forge layers, but the combat question keeps collapsing into the same bastion-core, mortar, and warden lane-reopen exam. That is not enough encounter variety to carry repeat runs, let alone a future `20-30` wave game.
+  - The larger arenas help, but `activeCap` keeps rising alongside territory hazards, so extra space often becomes wider cleanup rather than richer routing. The player is still usually restoring one safe circuit and vacuuming stragglers instead of making sharp movement gambles across multiple live fronts.
+  - The doctrine/apex structure is ambitious on paper, yet too much of the payoff still sits in authored package language instead of battlefield contrast. If `Sky Lance Battery`, `Stormspire Needle`, and `Bulwark Foundry` all enter fights that ask broadly the same territory-break problem, their differences flatten fast.
+  - Support systems remain over-weighted in the run's readability. Three bays of satellites, shields, missiles, drones, and sentries make builds look busy, but they also keep stealing the feeling that the player is personally piloting a terrifying weapon form through a unique combat ecology.
+  Top Priority: Build one new late-act encounter family that creates a different battlefield rule than bastion ownership, then tune one doctrine/apex path specifically to dominate that rule while another path struggles against it.
+  Why Now: Until the encounter ecosystem branches as hard as the build system, longer runs will feel like more structure wrapped around the same test.
+  Do Not Repeat: Do not answer this with another forge layer or another apex card if late waves still reduce to reclaiming space from bastions under ranged crossfire.
+
 - 2026-03-22 18:40 KST
   Findings:
   - The run now has long-form doctrine framing, shard pursuits, and late armories, but too much of the payoff still resolves into support automation. `Relay Storm Lattice`, `Bulwark Foundry`, and `Sky Lance Grid` all sell the fantasy of the build finishing itself around the player instead of turning the player’s own gun into the star.
@@ -611,6 +621,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 19:35 KST
+  Changed: added a new late-act `relay` encounter family in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and used it to rebuild the `Storm Artillery` Act 3 bracket around link-breaking instead of more bastion ownership exams. `Wave 10-12` for that doctrine now spawn relay pylons that draw damaging flame corridors across the arena until their cores are destroyed, with new HUD/readout text, render treatment, and hazard-core handling so the player can read the lattice and snipe it apart. I also tuned relay-core damage so `Storm Artillery` gets a concrete doctrine/apex bonus against those pylons while `Kiln Bastion` underperforms there, then updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new relay-wave variants.
+  Why: the newest critique’s Top Priority was to add one late-act encounter family with a different battlefield rule than bastion ownership, then make one doctrine clearly excel at it. The highest-value bounded interpretation was a relay-lattice hazard family, because it creates a new long-sightline routing and target-priority problem while letting the existing `Storm Artillery` weapon ladder become the obvious answer through live gunplay rather than more helper authorship.
+  Follow-up risk: the new relay family currently lives in the `Storm Artillery` late bracket, so it creates strong doctrine contrast but not yet broad roster-wide variety. If critique still wants the encounter ecosystem to branch harder, the next pass should spread relay exams or another non-bastion family into generic or rival late brackets instead of only deepening artillery-specific tuning.
 
 - 2026-03-22 19:05 KST
   Changed: split the `Storm Artillery` doctrine apex in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) into two mutually exclusive late-armory weapon endings instead of one support-led automation payoff. `Late Break Armory` for a completed `Storm Artillery` run now offers `Sky Lance Battery` or `Stormspire Needle`: the first keeps the long-range wide-screen lance lattice fantasy with a bigger multi-rail barrage, while the second compresses the gun into a narrower heavy-pierce spear that branches side shocks off direct hits. I also rewrote the doctrine/chase copy to advertise the fork earlier and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the smoke test now asserts the two apex offers plus the separate stage-2 and stage-3 weapon forms.

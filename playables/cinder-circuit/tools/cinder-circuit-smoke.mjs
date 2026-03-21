@@ -94,8 +94,18 @@ assert.ok(bastionWaveTwelve.hazard.salvageScrap > bastionWaveEleven.hazard.salva
 assert.ok(bastionWaveTwelve.activeCap < game.WAVE_CONFIG[11].activeCap);
 const artilleryLateBuild = game.createInitialBuild("rail_zeal");
 artilleryLateBuild.bastionDoctrineId = "storm_artillery";
+const artilleryWaveTen = game.resolveWaveConfig(9, artilleryLateBuild);
+assert.equal(artilleryWaveTen.label, "Wave 10 · Thunder Corridor");
+assert.equal(artilleryWaveTen.hazard.type, "relay");
+assert.ok(artilleryWaveTen.hazard.relayRange > 0);
+assert.ok(artilleryWaveTen.hazard.coreHp > 0);
+const artilleryWaveEleven = game.resolveWaveConfig(10, artilleryLateBuild);
+assert.equal(artilleryWaveEleven.label, "Wave 11 · Sky Battery");
+assert.equal(artilleryWaveEleven.hazard.type, "relay");
+assert.ok(artilleryWaveEleven.hazard.count > artilleryWaveTen.hazard.count);
 const artilleryWaveTwelve = game.resolveWaveConfig(11, artilleryLateBuild);
 assert.equal(artilleryWaveTwelve.label, "Wave 12 · Lance Crown");
+assert.equal(artilleryWaveTwelve.hazard.type, "relay");
 assert.ok(artilleryWaveTwelve.mix.mortar >= artilleryWaveTwelve.mix.warden);
 assert.equal(artilleryWaveTwelve.hazard.count, 4);
 assert.equal(game.resolveWaveConfig(8, game.createInitialBuild("relay_oath")).label, game.WAVE_CONFIG[8].label);

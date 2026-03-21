@@ -675,9 +675,9 @@
       },
       9: {
         label: "Wave 10 · Thunder Corridor",
-        note: "Storm Artillery 중반은 이동 화구 사이로 긴 관통선을 오래 유지하는 시험이다. 뒤쪽 포격이 살아 있는 동안 좁은 사선이라도 계속 열어 두는 빌드가 크게 보상받는다.",
+        note: "Storm Artillery 중반은 relay pylon 회랑을 절개하는 첫 siege 시험이다. 연결선이 전장을 잘게 끊어도, 긴 관통선을 유지하는 빌드는 멀리서 pylon과 후열을 함께 뜯어낼 수 있다.",
         directive:
-          "thunder corridor. 추적 화구가 천천히 corridor를 접고, mortar가 탈출 루트 밖에서 사격을 이어간다. 긴 라인을 유지하며 후열을 먼저 꿰뚫는 인내가 필요하다.",
+          "thunder corridor. relay pylon이 화염 회랑을 엮고 mortar가 그 뒤를 받친다. 안전 pocket를 오래 지키기보다 먼 pylon부터 꿰어 corridor를 찢어야 다시 회전 루트가 열린다.",
         driveGainFactor: 1.46,
         activeCap: 44,
         spawnBudget: 204,
@@ -689,23 +689,26 @@
           warden: 0.32,
         },
         hazard: {
-          label: "Thunder Corridor",
-          type: "drift",
-          interval: 8.3,
-          count: 2,
-          radius: 96,
+          label: "Thunder Corridor Relay",
+          type: "relay",
+          interval: 8.1,
+          count: 3,
+          radius: 54,
           telegraph: 0.76,
-          duration: 6,
+          duration: 9.4,
           damage: 15,
-          driftSpeed: 106,
-          driftOrbit: 0.36,
+          coreHp: 76,
+          coreRadius: 17,
+          relayRange: 420,
+          relayWidth: 34,
+          relayDamage: 12,
         },
       },
       10: {
         label: "Wave 11 · Sky Battery",
-        note: "후반 artillery 시험은 backline 포대 과밀이다. 먼 적 무리를 동시에 꿰뚫거나 유도 낙뢰로 끊지 못하면 전장이 포격 궤도로 서서히 닫힌다.",
+        note: "후반 artillery 시험은 backline 포대 과밀이 아니라 relay lattice 절개다. 먼 pylon을 빠르게 부수지 못하면 연결 회랑이 계속 겹쳐져 안전 지대가 얇게 찢긴다.",
         directive:
-          "sky battery. 포격조 밀도 상승과 재배치된 warden 차폐선. 짧은 근접 교전보다 긴 절개와 자동 포격 연동이 훨씬 큰 값을 낸다.",
+          "sky battery. 이중 relay lattice와 재배치된 warden 차폐선. 짧은 근접 교전보다 긴 절개와 자동 포격 연동으로 먼 pylon을 먼저 무너뜨리는 편이 훨씬 큰 값을 낸다.",
         driveGainFactor: 1.5,
         activeCap: 47,
         spawnBudget: 220,
@@ -717,20 +720,26 @@
           warden: 0.32,
         },
         hazard: {
-          label: "Sky Battery Surge",
-          interval: 7.4,
-          count: 3,
-          radius: 84,
+          label: "Sky Battery Lattice",
+          type: "relay",
+          interval: 7.5,
+          count: 4,
+          radius: 58,
           telegraph: 0.7,
-          duration: 4.5,
+          duration: 9.8,
           damage: 15,
+          coreHp: 84,
+          coreRadius: 18,
+          relayRange: 460,
+          relayWidth: 36,
+          relayDamage: 13,
         },
       },
       11: {
         label: "Wave 12 · Lance Crown",
-        note: "Storm Artillery 결산은 포대 군락을 끝까지 꿰뚫는 마지막 siege 시험이다. 후열을 지우는 시간이 짧을수록 중앙은 자연히 열린다.",
+        note: "Storm Artillery 결산은 relay crown을 끝까지 절개하는 마지막 siege 시험이다. 먼 pylon과 포격조를 동시에 지우는 시간이 짧을수록 중앙은 자연히 열린다.",
         directive:
-          "lance crown. 사중 천공 폭주와 두꺼운 후열 포격. 정면 난전을 오래 붙들기보다 먼 포대부터 지워 전장의 사격 밀도를 무너뜨려야 한다.",
+          "lance crown. 사중 relay crown과 두꺼운 후열 포격. 정면 난전을 오래 붙들기보다 먼 pylon부터 지워 전장의 화염 회랑 밀도를 무너뜨려야 한다.",
         driveGainFactor: 1.56,
         activeCap: 49,
         spawnBudget: 238,
@@ -742,13 +751,19 @@
           warden: 0.32,
         },
         hazard: {
-          label: "Lance Crown Barrage",
-          interval: 6.9,
+          label: "Lance Crown Relay",
+          type: "relay",
+          interval: 6.8,
           count: 4,
-          radius: 86,
+          radius: 60,
           telegraph: 0.66,
-          duration: 4.7,
+          duration: 10.2,
           damage: 16,
+          coreHp: 92,
+          coreRadius: 18,
+          relayRange: 500,
+          relayWidth: 38,
+          relayDamage: 14,
         },
       },
     },
@@ -780,6 +795,14 @@
     drivePerSecond: 2.4,
     heatFactor: 1.9,
     damageMitigation: 0.32,
+  };
+  const RELAY_HAZARD_DOCTRINE_BONUS = {
+    storm_artillery: 1.35,
+    kiln_bastion: 0.85,
+  };
+  const RELAY_HAZARD_CAPSTONE_BONUS = {
+    sky_lance_battery: 1.35,
+    stormspire_needle: 1.55,
   };
 
   function getArenaSize(config = null) {
@@ -824,6 +847,68 @@
   function getActLabelForWave(waveNumber) {
     const act = ACT_LABELS.find((entry) => waveNumber >= entry.start && waveNumber <= entry.end);
     return act || ACT_LABELS[ACT_LABELS.length - 1];
+  }
+
+  function isHazardCoreTarget(hazard) {
+    return Boolean(
+      hazard &&
+        (hazard.type === "territory" || hazard.type === "relay") &&
+        hazard.telegraphTime <= 0 &&
+        hazard.activeTime > 0 &&
+        hazard.coreHp > 0 &&
+        hazard.coreRadius > 0
+    );
+  }
+
+  function getHazardCoreDamageMultiplier(hazard) {
+    if (!hazard || hazard.type !== "relay") {
+      return 1;
+    }
+    const doctrine = getBastionDoctrineDef(state.build);
+    const capstone = getDoctrineCapstoneDef(state.build);
+    let multiplier = 1;
+    if (doctrine && RELAY_HAZARD_DOCTRINE_BONUS[doctrine.id]) {
+      multiplier *= RELAY_HAZARD_DOCTRINE_BONUS[doctrine.id];
+    }
+    if (capstone && RELAY_HAZARD_CAPSTONE_BONUS[capstone.id]) {
+      multiplier *= RELAY_HAZARD_CAPSTONE_BONUS[capstone.id];
+    }
+    return multiplier;
+  }
+
+  function getRelayLinksForHazard(hazard, hazards = state.hazards) {
+    if (!hazard || hazard.type !== "relay" || hazard.telegraphTime > 0 || hazard.activeTime <= 0) {
+      return [];
+    }
+    const links = [];
+    const range = hazard.relayRange || 0;
+    if (range <= 0) {
+      return links;
+    }
+    for (const other of hazards) {
+      if (other === hazard || other.type !== "relay" || other.telegraphTime > 0 || other.activeTime <= 0) {
+        continue;
+      }
+      const distance = Math.hypot(other.x - hazard.x, other.y - hazard.y);
+      if (distance <= range && hazard.x <= other.x) {
+        links.push({ other, distance });
+      }
+    }
+    links.sort((left, right) => left.distance - right.distance);
+    return links.slice(0, 2).map((entry) => entry.other);
+  }
+
+  function distanceToSegment(px, py, ax, ay, bx, by) {
+    const abx = bx - ax;
+    const aby = by - ay;
+    const lengthSq = abx * abx + aby * aby;
+    if (lengthSq <= 0.0001) {
+      return Math.hypot(px - ax, py - ay);
+    }
+    const t = clamp(((px - ax) * abx + (py - ay) * aby) / lengthSq, 0, 1);
+    const closestX = ax + abx * t;
+    const closestY = ay + aby * t;
+    return Math.hypot(px - closestX, py - closestY);
   }
 
   const ENEMY_DEFS = {
@@ -6588,6 +6673,18 @@
           tone: "summary-chip--hot",
         };
       }
+      const relayHazards = currentState.hazards.filter(
+        (hazard) => hazard.type === "relay" && hazard.telegraphTime <= 0 && hazard.activeTime > 0
+      );
+      if (relayHazards.length > 0) {
+        return {
+          chipLabel: `${wave.hazard.label} LIVE`,
+          detailLabel: "relay pylon",
+          detailValue: `${relayHazards.length}개 링크 중`,
+          note: `${relayHazards.length}개 relay pylon이 화염 회랑을 엮고 있다. 먼 pylon 하나만 먼저 끊어도 연결선이 무너져 회전 루트가 열린다.`,
+          tone: "summary-chip--hot",
+        };
+      }
       const driftHazards = currentState.hazards.filter(
         (hazard) => hazard.type === "drift" && hazard.telegraphTime <= 0 && hazard.activeTime > 0
       );
@@ -6613,12 +6710,16 @@
     const detailLabel =
       wave.hazard.type === "territory"
         ? "다음 점거"
+        : wave.hazard.type === "relay"
+          ? "다음 relay"
         : wave.hazard.type === "drift"
           ? "다음 추적"
           : "다음 폭주";
     const note =
       wave.hazard.type === "territory"
         ? `${wave.hazard.count}개 점거 코어가 ${wave.hazard.telegraph.toFixed(1)}초 예고 후 전장을 봉쇄한다.`
+        : wave.hazard.type === "relay"
+          ? `${wave.hazard.count}개 relay pylon이 ${wave.hazard.telegraph.toFixed(1)}초 예고 후 화염 회랑을 엮는다. 긴 사선으로 먼 pylon을 먼저 끊어야 한다.`
         : wave.hazard.type === "drift"
           ? `${wave.hazard.count}개 추적 화구가 ${wave.hazard.telegraph.toFixed(1)}초 예고 후 플레이어 동선을 따라붙는다.`
           : `${wave.hazard.count}개 구역이 ${wave.hazard.telegraph.toFixed(1)}초 예고 후 폭주한다.`;
@@ -8116,6 +8217,9 @@
       salvageBurstRadius: Number.isFinite(config.salvageBurstRadius) ? config.salvageBurstRadius : 0,
       salvageDropLife: Number.isFinite(config.salvageDropLife) ? config.salvageDropLife : 10,
       salvageReleased: false,
+      relayRange: Number.isFinite(config.relayRange) ? config.relayRange : 0,
+      relayWidth: Number.isFinite(config.relayWidth) ? config.relayWidth : 0,
+      relayDamage: Number.isFinite(config.relayDamage) ? config.relayDamage : config.damage,
       driftSpeed: Number.isFinite(config.driftSpeed) ? config.driftSpeed : 0,
       driftOrbit: Number.isFinite(config.driftOrbit) ? config.driftOrbit : 0.34,
       orbitDirection: Math.random() < 0.5 ? -1 : 1,
@@ -8227,11 +8331,29 @@
         }
         if (hazard.pulseTimer <= 0) {
           const distance = Math.hypot(state.player.x - hazard.x, state.player.y - hazard.y);
-          if (
-            distance < hazard.radius + state.player.radius &&
-            state.player.invulnerableTime <= 0
-          ) {
-            takePlayerDamage(hazard.damage, "hazard");
+          let hitPlayer =
+            distance < hazard.radius + state.player.radius && state.player.invulnerableTime <= 0;
+          if (!hitPlayer && hazard.type === "relay" && hazard.relayWidth > 0) {
+            for (const linkedHazard of getRelayLinksForHazard(hazard)) {
+              const linkDistance = distanceToSegment(
+                state.player.x,
+                state.player.y,
+                hazard.x,
+                hazard.y,
+                linkedHazard.x,
+                linkedHazard.y
+              );
+              if (linkDistance <= hazard.relayWidth + state.player.radius) {
+                hitPlayer = true;
+                break;
+              }
+            }
+          }
+          if (hitPlayer) {
+            takePlayerDamage(
+              hazard.type === "relay" ? hazard.relayDamage || hazard.damage : hazard.damage,
+              "hazard"
+            );
           }
           hazard.pulseTimer = 0.35;
         }
@@ -8247,7 +8369,7 @@
         }
       }
 
-      if (hazard.type === "territory" && hazard.coreHp <= 0 && hazard.activeTime > 0) {
+      if (isHazardCoreTarget(hazard) && hazard.coreHp <= 0 && hazard.activeTime > 0) {
         destroyHazard(hazard, "destroyed");
       }
 
@@ -8377,19 +8499,14 @@
       }
     }
     for (const hazard of state.hazards) {
-      if (
-        hazard.type !== "territory" ||
-        hazard.telegraphTime > 0 ||
-        hazard.activeTime <= 0 ||
-        hazard.coreHp <= 0
-      ) {
+      if (!isHazardCoreTarget(hazard)) {
         continue;
       }
       const distance = Math.hypot(hazard.x - x, hazard.y - y);
       if (distance > radius + hazard.coreRadius) {
         continue;
       }
-      hazard.coreHp -= damage * hazardDamageFactor;
+      hazard.coreHp -= damage * hazardDamageFactor * getHazardCoreDamageMultiplier(hazard);
     }
   }
 
@@ -9654,17 +9771,12 @@
         }
         if (!consumed) {
           for (const hazard of state.hazards) {
-            if (
-              hazard.type !== "territory" ||
-              hazard.telegraphTime > 0 ||
-              hazard.activeTime <= 0 ||
-              hazard.coreHp <= 0
-            ) {
+            if (!isHazardCoreTarget(hazard)) {
               continue;
             }
             const distance = Math.hypot(projectile.x - hazard.x, projectile.y - hazard.y);
             if (distance < projectile.radius + hazard.coreRadius) {
-              hazard.coreHp -= projectile.damage;
+              hazard.coreHp -= projectile.damage * getHazardCoreDamageMultiplier(hazard);
               state.particles.push(createParticle(projectile.x, projectile.y, "#ffd7a6", 0.7));
               if (projectile.pierce > 0) {
                 projectile.pierce -= 1;
@@ -10595,6 +10707,8 @@
         context.fillStyle =
           hazard.type === "territory"
             ? `rgba(255, 128, 79, ${clamp(activeAlpha + 0.08, 0.18, 0.46)})`
+            : hazard.type === "relay"
+              ? `rgba(255, 185, 92, ${clamp(activeAlpha + 0.08, 0.2, 0.48)})`
             : hazard.type === "drift"
               ? `rgba(255, 151, 79, ${clamp(activeAlpha + 0.1, 0.22, 0.5)})`
             : `rgba(255, 104, 61, ${activeAlpha})`;
@@ -10626,6 +10740,44 @@
           context.restore();
 
           context.strokeStyle = "rgba(255, 238, 212, 0.9)";
+          context.lineWidth = 3;
+          context.beginPath();
+          context.arc(
+            hazard.x,
+            hazard.y,
+            hazard.coreRadius + 8,
+            -Math.PI / 2,
+            -Math.PI / 2 + Math.PI * 2 * hpRatio
+          );
+          context.stroke();
+        } else if (hazard.type === "relay") {
+          const hpRatio =
+            hazard.coreMaxHp > 0 ? clamp(hazard.coreHp / hazard.coreMaxHp, 0, 1) : 0;
+          for (const linkedHazard of getRelayLinksForHazard(hazard)) {
+            context.strokeStyle = "rgba(255, 240, 188, 0.72)";
+            context.lineWidth = Math.max(2, (hazard.relayWidth || 24) * 0.2);
+            context.beginPath();
+            context.moveTo(hazard.x, hazard.y);
+            context.lineTo(linkedHazard.x, linkedHazard.y);
+            context.stroke();
+            context.strokeStyle = "rgba(255, 124, 61, 0.32)";
+            context.lineWidth = Math.max(8, (hazard.relayWidth || 24) * 0.95);
+            context.beginPath();
+            context.moveTo(hazard.x, hazard.y);
+            context.lineTo(linkedHazard.x, linkedHazard.y);
+            context.stroke();
+          }
+          context.save();
+          context.translate(hazard.x, hazard.y);
+          context.rotate(performance.now() * 0.0017 * hazard.orbitDirection);
+          context.fillStyle = "rgba(255, 239, 207, 0.94)";
+          context.strokeStyle = "rgba(255, 164, 84, 0.96)";
+          context.lineWidth = 2.2;
+          drawPolygon(context, 0, 0, hazard.coreRadius, 6, Math.PI / 6);
+          context.fill();
+          context.stroke();
+          context.restore();
+          context.strokeStyle = "rgba(255, 246, 224, 0.92)";
           context.lineWidth = 3;
           context.beginPath();
           context.arc(
