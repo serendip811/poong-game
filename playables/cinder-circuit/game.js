@@ -4095,14 +4095,53 @@
     return 0;
   }
 
-  function buildFieldGrantChoice(build, rng, nextWave) {
+  function getFieldGrantChoiceBucket(choice) {
+    if (!choice) {
+      return "fallback";
+    }
+    if (choice.type === "system") {
+      return choice.forgeLaneLabel || "system";
+    }
+    if (choice.type === "evolution") {
+      return `evolution:${choice.coreId || "active"}`;
+    }
+    if (choice.type === "affix") {
+      return "affix";
+    }
+    if (choice.type === "mod") {
+      return choice.modId || "mod";
+    }
+    return choice.type || "choice";
+  }
+
+  function createFieldGrantCard(choice) {
+    if (!choice) {
+      return null;
+    }
+    return {
+      ...choice,
+      cost: 0,
+      slotText: "현장 장착",
+      fieldGrant: true,
+    };
+  }
+
+  function buildFieldGrantChoices(build, rng, nextWave) {
     const pool = buildForgeChoices(build, rng, FIELD_GRANT_MAX_COST, {
       nextWave,
       finalForge: false,
       fastGrant: true,
-    }).filter(isEligibleFieldGrantChoice);
+    })
+      .filter(isEligibleFieldGrantChoice)
+      .sort((left, right) => {
+        const scoreDelta = scoreFieldGrantChoice(right) - scoreFieldGrantChoice(left);
+        if (scoreDelta !== 0) {
+          return scoreDelta;
+        }
+        return (right.cost || 0) - (left.cost || 0);
+      });
     if (pool.length === 0) {
-      return {
+      return [createFieldGrantCard({
         type: "fallback",
         id: "fieldgrant:emergency_vent",
         tag: "CACHE",
@@ -4110,38 +4149,62 @@
         description: "전장 보급품이 냉각제와 간이 수복만 남겼다.",
         slotText: "현장 보급",
         cost: 0,
-      };
+      })];
     }
-    return pool
-      .slice()
-      .sort((left, right) => {
-        const scoreDelta = scoreFieldGrantChoice(right) - scoreFieldGrantChoice(left);
-        if (scoreDelta !== 0) {
-          return scoreDelta;
-        }
-        return (right.cost || 0) - (left.cost || 0);
-      })[0];
+    const choices = [];
+    const takenIds = new Set();
+    const takenBuckets = new Set();
+    for (const choice of pool) {
+      const bucket = getFieldGrantChoiceBucket(choice);
+      if (takenBuckets.has(bucket)) {
+        continue;
+      }
+      choices.push(createFieldGrantCard(choice));
+      takenIds.add(choice.id);
+      takenBuckets.add(bucket);
+      if (choices.length >= 2) {
+        break;
+      }
+    }
+    for (const choice of pool) {
+      if (choices.length >= 2) {
+        break;
+      }
+      if (takenIds.has(choice.id)) {
+        continue;
+      }
+      choices.push(createFieldGrantCard(choice));
+      takenIds.add(choice.id);
+    }
+    if (choices.length === 1) {
+      choices.push(createFieldGrantCard({
+        type: "fallback",
+        id: "fieldgrant:emergency_vent",
+        tag: "CACHE",
+        title: "Emergency Vent",
+        description: "남은 보급품이 냉각제와 간이 수복만 남아 즉시 안정화한다.",
+        slotText: "현장 보급",
+        cost: 0,
+      }));
+    }
+    return choices;
   }
 
-  function applyFieldGrant(run) {
-    if (!run) {
-      return null;
-    }
-    const nextWave = Number.isFinite(run.waveIndex) ? run.waveIndex + 2 : 0;
-    const choice = buildFieldGrantChoice(run.build, Math.random, nextWave);
-    const appliedChoice = applyForgeChoice(run, choice);
-    if (!appliedChoice) {
-      return null;
-    }
-    const grantLabel = appliedChoice.forgeLaneLabel || appliedChoice.laneLabel || appliedChoice.tag || "CACHE";
+  function enterFieldGrant() {
+    const nextWave = state.waveIndex + 2;
+    state.phase = "forge";
+    state.pendingFinalForge = false;
+    state.forgeStep = 1;
+    state.forgeMaxSteps = 1;
+    state.forgeDraftType = "field_grant";
+    state.forgeChoices = buildFieldGrantChoices(state.build, Math.random, nextWave);
     pushCombatFeed(
-      `${grantLabel} 현장 보급 확보. ${appliedChoice.title}이 즉시 적용되어 전장을 멈추지 않고 다음 웨이브로 밀어붙인다.`,
+      "Field Cache 확보. 두 가지 즉시 장착안 중 하나를 고르면 전장을 다시 가동한다.",
       "CACHE"
     );
-    setBanner(`Field Cache · ${appliedChoice.title}`, 1.1);
-    refreshDerivedStats(false);
+    setBanner("Field Cache", 0.95);
+    renderForgeOverlay();
     updateHUD();
-    return appliedChoice;
   }
 
   function buildForgeFollowupChoices(build, rng, scrapBank, options = null, previousChoice = null) {
@@ -4457,7 +4520,7 @@
     buildHazardCandidates,
     buildForgeChoices,
     buildForgeFollowupChoices,
-    buildFieldGrantChoice,
+    buildFieldGrantChoices,
     applyForgeChoice,
     shouldUseFieldGrant,
     getCatalystCapstone,
@@ -5402,13 +5465,26 @@
     if (!choice) {
       return;
     }
-    if (state.resources.scrap < choice.cost) {
+    const fieldGrantDraft = state.forgeDraftType === "field_grant";
+    if (!fieldGrantDraft && state.resources.scrap < choice.cost) {
       setBanner("고철 부족", 0.8);
       return;
     }
-    state.resources.scrap -= choice.cost;
-    state.stats.scrapSpent += choice.cost;
+    if (!fieldGrantDraft) {
+      state.resources.scrap -= choice.cost;
+      state.stats.scrapSpent += choice.cost;
+    }
     applyForgeChoice(state, choice);
+    if (fieldGrantDraft) {
+      const grantLabel = choice.forgeLaneLabel || choice.laneLabel || choice.tag || "CACHE";
+      pushCombatFeed(
+        `${grantLabel} 현장 보급 적용. ${choice.title}을 잠그고 다음 웨이브로 즉시 밀어붙인다.`,
+        "CACHE"
+      );
+      refreshDerivedStats(false);
+      beginWave(state.waveIndex + 1);
+      return;
+    }
     const opensPackage = shouldOpenForgePackage(state, choice) && state.forgeStep === 1;
     if (opensPackage) {
       state.forgeStep = 2;
@@ -6871,8 +6947,7 @@
         if (state.wave.completesRun) {
           finishRun(true);
         } else if (shouldUseFieldGrant({ nextWave: state.waveIndex + 2, finalForge: false })) {
-          applyFieldGrant(state);
-          beginWave(state.waveIndex + 1);
+          enterFieldGrant();
         } else {
           enterForge();
         }
@@ -6886,7 +6961,9 @@
     }
     const waveConfig = state.wave || WAVE_CONFIG[state.waveIndex];
     const waveLabel =
-      state.phase === "forge" ? `${waveConfig.label} · Forge` : waveConfig.label;
+      state.phase === "forge"
+        ? `${waveConfig.label} · ${state.forgeDraftType === "field_grant" ? "Field Cache" : "Forge"}`
+        : waveConfig.label;
     const hpRatio = state.player.maxHp > 0 ? state.player.hp / state.player.maxHp : 0;
     const heatRatio = state.player.heat / 100;
     const driveRatio =
@@ -7035,7 +7112,13 @@
     if (elements.liveReadout) {
       elements.liveReadout.innerHTML = `
         <div class="summary-head">
-          <strong>${state.phase === "forge" ? "포지 선택 중" : "전투 진행 중"}</strong>
+          <strong>${
+            state.phase === "forge"
+              ? state.forgeDraftType === "field_grant"
+                ? "Field Cache 선택 중"
+                : "포지 선택 중"
+              : "전투 진행 중"
+          }</strong>
           <span class="summary-chip ${
             state.player.overdriveActiveTime > 0 || state.player.drive >= 100
               ? "summary-chip--cool"
@@ -7113,7 +7196,9 @@
     };
     const armoryLabel = getArmoryLabel(forgeOptions);
     const packageSummary =
-      state.forgeDraftType === "armory"
+      state.forgeDraftType === "field_grant"
+        ? "Field Cache · 2장 중 1픽, 고철 소모 없이 즉시 장착하고 곧바로 다음 웨이브로 이어진다"
+        : state.forgeDraftType === "armory"
         ? isLateBreakArmory(forgeOptions)
           ? `${armoryLabel} ${state.forgeStep}/${state.forgeMaxSteps} · 6장 중 2픽, 세 번째 베이까지 열린 상태에서 마지막 과투입을 강제한다`
           : `${armoryLabel} ${state.forgeStep}/${state.forgeMaxSteps} · 6장 중 2픽, 대형 화력이 과투입되어 안전한 lane 보장이 없다`
@@ -7126,6 +7211,8 @@
       ? catalystReady
         ? `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 세 장은 완성, 촉매 연소, 안정화로 고정되며 각 카드가 바로 이어질 12초 cash-out 시험을 미리 보여준다.`
         : `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 촉매가 없어도 비상 점화와 안정화 fail-soft 카드가 열리며, 각 카드가 다른 12초 cash-out 시험으로 바로 이어진다.`
+      : state.forgeDraftType === "field_grant"
+        ? `고철 ${Math.round(state.resources.scrap)} 보유. Field Cache다. 두 장 중 하나만 즉시 장착하며, 선택이 끝나는 즉시 다음 웨이브가 시작된다. 저렴한 자동 추천 대신 지금 필요한 화력 또는 안정화를 직접 잠근다.`
       : state.forgeDraftType === "armory"
         ? isLateBreakArmory(forgeOptions)
           ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 8을 넘기며 ${armoryLabel}가 열린다. 세 번째 support bay가 해금됐고, 이번 포지는 6장 중 2장을 골라 4웨이브짜리 최종 전투 구간 전체를 버틸 과한 조합을 잠근다.`
@@ -7165,7 +7252,7 @@
             data-kind="${kind}"
             data-index="${index}"
             data-verb="${choice.verb}"
-            ${state.resources.scrap < choice.cost ? "disabled" : ""}
+            ${state.forgeDraftType !== "field_grant" && state.resources.scrap < choice.cost ? "disabled" : ""}
           >
             <span class="forge-card__tag">${choice.laneLabel ? `${choice.laneLabel} · ${choice.tag}` : choice.tag}</span>
             <h3>${choice.title}</h3>
@@ -7173,7 +7260,9 @@
             <div class="forge-card__preview">${previewRows}</div>
             <span class="forge-card__meta">${choice.slotText}</span>
             <span class="forge-card__slot">${
-              state.resources.scrap < choice.cost
+              state.forgeDraftType === "field_grant"
+                ? `${index + 1}번 선택 · 즉시 장착`
+                : state.resources.scrap < choice.cost
                 ? `${index + 1}번 선택 · 고철 부족`
                 : `${index + 1}번 선택 · 고철 ${choice.cost}`
             }</span>

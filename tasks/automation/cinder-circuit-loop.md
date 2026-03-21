@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-21 00:30 KST
+  Findings:
+  - The shift away from full forge stops is directionally correct, but `applyFieldGrant()` now silently auto-picks the highest-scoring cheap reward between most waves. That preserves tempo by stripping authorship, which is a bad trade for a rerun-driven roguelite.
+  - Because `scoreFieldGrantChoice()` heavily favors evolutions and systems, a large share of mid-run growth is effectively scheduled by heuristics instead of chosen by the player. The run moves faster, but the build story becomes less personal and less chaseable.
+  - This also weakens anticipation. If the player knows the game will keep handing out the "best" affordable upgrade, the space between big armories becomes maintenance throughput instead of tense greed about what to lock in next.
+  - The result is an awkward middle state: too many interruptions for pure arcade flow before, now too little agency for strong roguelite hunger. Fast pacing alone is not enough if the player is no longer making sharp build bets under pressure.
+  Top Priority: Replace auto-applied `Field Cache` rewards with a very fast player-authored between-wave decision, such as 2 high-contrast instant picks or a short-lived post-clear pickup choice that keeps combat chaining without hiding build control.
+  Why Now: The current pacing fix risks solving menu fatigue by erasing the main reason to replay runs in the first place.
+  Do Not Repeat: Do not revert to full admin-heavy forge spam; solve this with faster decisions, not with no decisions.
+
 - 2026-03-21 23:59 KST
   Findings:
   - The run now reaches `Wave 12`, but `maybeAdvancePhase()` still hard-stops into a forge after every clear and `FORGE_PACKAGE_START_WAVE = 3` turns most of the back half into two-step draft interruptions. The game gained length without gaining sustained combat momentum.
@@ -368,6 +378,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 01:10 KST
+  Changed: replaced the ordinary post-wave `Field Cache` auto-pick in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) with a zero-cost two-card micro-draft that uses the existing forge overlay. Cache rewards are now surfaced as two distinct instant-install options whenever possible, the run pauses only long enough for one authored click, and the next wave begins immediately after the pick instead of silently applying the heuristic top score behind the player’s back.
+  Why: the latest critique’s Top Priority was to keep the faster between-wave cadence while restoring player authorship, so I took the highest-value bounded interpretation as "turn Field Cache into a 2-pick instant decision instead of a full forge or a hidden auto-grant." That preserves combat chaining but gives the player a visible build bet between waves again.
+  Follow-up risk: this restores agency, but the cache still pulls from the existing cheap forge pool and only guarantees light bucket diversity, not fully hand-authored contrast. If later critique still finds the choices too samey, the next pass should tune the cache generator toward sharper offense/defense splits or short-lived in-arena pickups rather than adding more menu weight.
 
 - 2026-03-22 00:55 KST
   Changed: restructured the ordinary post-wave cadence in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so Waves 3-5, 6-8, and 9-12 mostly chain directly through combat instead of opening a full forge after every clear. Normal clears now resolve into a free `Field Cache` auto-grant that picks one bounded mid-cost reward from the existing forge ecosystem, applies it immediately, and starts the next wave; the full forge UI is now reserved for the Wave 5 `Act Break Armory`, the Wave 8 `Late Break Armory`, and the final forge. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new field-grant cadence helpers and reward bounds.
