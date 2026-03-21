@@ -255,7 +255,7 @@
       label: "Wave 9 · Lockgrid",
       duration: 90,
       spawnBudget: 186,
-      activeCap: 40,
+      activeCap: 41,
       baseSpawnInterval: 0.37,
       spawnIntervalMin: 0.11,
       spawnAcceleration: 0.34,
@@ -266,7 +266,7 @@
         shrike: 0.24,
         warden: 0.44,
       },
-      note: "세 번째 전투 구간. 추격 대신 장거리 봉쇄를 끊으며 다시 길을 열어야 한다.",
+      note: "세 번째 전투 구간의 시작. 추격 대신 장거리 봉쇄를 끊으며 다시 길을 여는 법부터 익힌다.",
       directive: "warden crossfire. 바깥 사선을 정리하지 않으면 안전 루트와 고철 회수선이 계속 잠긴다.",
       driveGainFactor: 1.38,
       arena: THIRD_ACT_ARENA,
@@ -281,24 +281,62 @@
       },
     },
     {
-      id: "starforge",
-      label: "Wave 10 · Starforge",
-      duration: 96,
-      spawnBudget: 204,
-      activeCap: 42,
-      baseSpawnInterval: 0.34,
-      spawnIntervalMin: 0.1,
+      id: "emberward",
+      label: "Wave 10 · Ember Ward",
+      duration: 94,
+      spawnBudget: 198,
+      activeCap: 43,
+      baseSpawnInterval: 0.35,
+      spawnIntervalMin: 0.105,
       spawnAcceleration: 0.35,
       eliteEvery: 5,
       mix: {
         scuttler: 0.12,
+        brute: 0.2,
+        shrike: 0.2,
+        warden: 0.48,
+      },
+      note: "warden이 점거 코어를 지키며 길목을 잠근다. 외곽 사선만 끊는 것으로는 부족하고, 봉쇄 구역 자체를 부숴야 다시 회전이 열린다.",
+      directive:
+        "warden bastions. 점거 코어를 부수지 않으면 외곽 회수선과 탈출 각이 동시에 잠기므로, 사선 정리와 코어 돌입 순서를 함께 판단해야 한다.",
+      driveGainFactor: 1.42,
+      arena: THIRD_ACT_ARENA,
+      hazard: {
+        label: "Ember Ward Bastion",
+        type: "territory",
+        interval: 8.6,
+        count: 2,
+        radius: 112,
+        telegraph: 0.84,
+        duration: 9.4,
+        damage: 13,
+        coreHp: 66,
+        coreRadius: 18,
+        turretInterval: 0.88,
+        turretDamage: 11,
+        turretSpeed: 236,
+        enemyPullRadius: 176,
+      },
+    },
+    {
+      id: "starforge",
+      label: "Wave 11 · Starforge",
+      duration: 98,
+      spawnBudget: 216,
+      activeCap: 45,
+      baseSpawnInterval: 0.32,
+      spawnIntervalMin: 0.095,
+      spawnAcceleration: 0.36,
+      eliteEvery: 5,
+      mix: {
+        scuttler: 0.1,
         brute: 0.18,
         shrike: 0.2,
-        warden: 0.5,
+        warden: 0.52,
       },
-      note: "최종 전장은 warden 라인을 찢어야만 화력 창이 생긴다. 끝까지 경로 소유권을 두고 싸우는 구간.",
+      note: "세 번째 구간의 압박이 다시 열린다. 방금 되찾은 공간을 유지하려면 warden 라인을 더 빠르게 찢어 화력 창을 강제로 확보해야 한다.",
       directive: "triple surge + warden ring. 중앙 돌진보다 외곽 포대를 정리하며 화력 창을 만든다.",
-      driveGainFactor: 1.44,
+      driveGainFactor: 1.46,
       arena: THIRD_ACT_ARENA,
       hazard: {
         label: "Starforge Surge",
@@ -308,6 +346,37 @@
         telegraph: 0.76,
         duration: 4.7,
         damage: 15,
+      },
+    },
+    {
+      id: "cindercrown",
+      label: "Wave 12 · Cinder Crown",
+      duration: 104,
+      spawnBudget: 232,
+      activeCap: 48,
+      baseSpawnInterval: 0.295,
+      spawnIntervalMin: 0.09,
+      spawnAcceleration: 0.37,
+      eliteEvery: 4,
+      mix: {
+        scuttler: 0.1,
+        brute: 0.16,
+        shrike: 0.18,
+        warden: 0.56,
+      },
+      note: "최종 전장은 라인 소유권을 끝까지 유지해야 버틴다. 세 번째 support bay까지 열린 빌드가 없으면 외곽과 중앙을 동시에 지킬 여유가 없다.",
+      directive:
+        "forge lattice. 사중 폭주가 퇴로를 끊는 동안 warden 사선이 겹쳐 들어오므로, 외곽 정리와 즉시 돌파를 반복하며 마지막 전장을 억지로 열어야 한다.",
+      driveGainFactor: 1.52,
+      arena: THIRD_ACT_ARENA,
+      hazard: {
+        label: "Cinder Crown Surge",
+        interval: 7.6,
+        count: 4,
+        radius: 88,
+        telegraph: 0.72,
+        duration: 4.9,
+        damage: 16,
       },
     },
   ];
@@ -4968,7 +5037,7 @@
       isFinalForge
         ? "최종 웨이브 정리 완료. 마지막 포지에서 최종 각인과 화력 배치를 마감한다."
         : isLateBreakArmory(forgeOptions)
-          ? "Wave 8 돌파. Late Break Armory에서 6장 중 대형 카드 두 장을 골라 세 번째 베이까지 포함한 최종 화력 틀을 잠근다."
+          ? "Wave 8 돌파. Late Break Armory에서 6장 중 대형 카드 두 장을 골라 세 번째 베이까지 포함한 4웨이브짜리 Act 3 화력 틀을 잠근다."
         : draftType === "armory"
           ? "Wave 5 돌파. Act Break Armory에서 6장 중 대형 카드 두 장을 골라 Act 2 빌드 정체성을 위험하게 고정한다."
           : "웨이브 종료. 포지 카드로 다음 화력 축을 고른다.",
@@ -6946,7 +7015,7 @@
         : `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 촉매가 없어도 비상 점화와 안정화 fail-soft 카드가 열리며, 각 카드가 다른 12초 cash-out 시험으로 바로 이어진다.`
       : state.forgeDraftType === "armory"
         ? isLateBreakArmory(forgeOptions)
-          ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 8을 넘기며 ${armoryLabel}가 열린다. 세 번째 support bay가 해금됐고, 이번 포지는 6장 중 2장을 골라 최종 전투 구간 직전의 과한 조합을 잠근다.`
+          ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 8을 넘기며 ${armoryLabel}가 열린다. 세 번째 support bay가 해금됐고, 이번 포지는 6장 중 2장을 골라 4웨이브짜리 최종 전투 구간 전체를 버틸 과한 조합을 잠근다.`
           : `고철 ${Math.round(state.resources.scrap)} 보유. Wave 5를 넘기면 일반 패키지 대신 ${armoryLabel}가 열린다. 이번 포지는 6장 중 2장을 고르며, 주무장 진화와 공세 카드가 여러 장 겹쳐 떠 안전한 lane별 정답을 보장하지 않는다.`
       : `고철 ${Math.round(state.resources.scrap)} 보유. 장착은 무기 등급을 올리거나 바꾸고, 각인은 속성을 붙이며, 재구성/분해는 보관 코어를 정리한다. ${packageSummary}.`;
     elements.forgeContext.innerHTML = `

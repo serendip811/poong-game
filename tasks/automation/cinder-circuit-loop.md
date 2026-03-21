@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-21 23:20 KST
+  Findings:
+  - The run now reaches `Wave 10` and the late armory unlocks a third support bay, but that payoff lands with only `Wave 9-10` left. The game is still spending its biggest build reveal at the exact moment it should be proving that reveal can carry a real back half.
+  - Act 3 is too short and too single-note for rerun hunger. `lockgrid` and `starforge` are both variations of "clear warden firing lines first," so the third bracket teaches one answer and ends before it can mutate into a fuller late-run language.
+  - The larger `THIRD_ACT_ARENA` is directionally right, but `activeCap 40 -> 42` across a much wider room risks thinning pressure into cleanup laps instead of forcing overlapping decisions about lane ownership, scrap routing, and when to break formation for kills.
+  - The design docs still frame `5웨이브` and `7분 내외`, which is no longer just outdated documentation; it keeps the game mentally authored like a short prototype even as the implementation starts asking for long-run bracket planning and expected power milestones.
+  Top Priority: Turn Act 3 into a real bracket by extending it to at least four waves, with one additional late enemy or hazard interaction before the final exam so the Wave 8 late armory and third support bay have time to matter.
+  Why Now: Right now the run ends just as its most promising build layer finally comes online.
+  Do Not Repeat: Do not solve this with only a harder `Wave 10` or more raw spawn numbers if the late-game still lasts two waves and one repeated answer.
+
 - 2026-03-22 00:12 KST
   Findings:
   - `WAVE_CONFIG` now reaches Wave 10 and `warden` finally adds a distinct late pressure language, but the overall arc still feels like a two-act run with a short epilogue. Two warden waves plus a `12` second cash-out is not yet the kind of back half that creates "one more run" hunger.
@@ -348,6 +358,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-21 17:12 KST
+  Changed: extended Act 3 in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from two waves to four by adding `Wave 10 · Ember Ward` and `Wave 12 · Cinder Crown`, while shifting the old `Starforge` exam to `Wave 11`. The new `Ember Ward` wave swaps the third bracket out of pure surge crossfire and into a `territory` holdout where `warden` lines protect bastion cores, forcing the player to break firing lanes and reclaim sealed routes before the run reaches its final exam. I also updated the late-armory forge copy so Wave 8 now clearly promises a full four-wave back half for the newly unlocked third support bay, and refreshed [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the 12-wave structure and the new late-act hazard mutation.
+  Why: the latest critique’s Top Priority was to turn Act 3 into a real bracket with at least four waves and one additional late enemy or hazard interaction before the final exam. I took the highest-value bounded interpretation as "keep the existing warden family, but make the third bracket alternate between lane-clearing and territory-breaking problems across four authored waves" because that gives the Wave 8 late armory actual runway without widening this pass into a brand-new faction or progression tree.
+  Follow-up risk: Act 3 now lasts long enough for the third support bay to matter, but its new variation still comes from recombining `warden` pressure with existing hazard tech. If the next critique still wants stronger rerun hunger, the next pass should add one more late-only enemy role or wave-specific rule change instead of only escalating the final two waves numerically.
 
 - 2026-03-22 00:41 KST
   Changed: added a second late-run armory stop in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) after `Crownfire`, so the forge before Wave 9 now becomes `Late Break Armory` instead of a normal package draft. Entering that draft permanently unlocks a third support bay for the run, the support-system cap now respects that dynamic bay limit, and the armory/feed copy was updated so the player can see they are making a final oversized two-pick commitment before the last bracket. The same pass updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to cover the new support-bay state and a Wave 9 armory case where a two-system build can still draft a third support install.
