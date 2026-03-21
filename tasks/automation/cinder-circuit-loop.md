@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-21 14:00 KST
+  Findings:
+  - Waves 6-8 and the `1280x720` second-act arena are a real structural step, but Act 2 still fights with the same four-enemy roster and the same surge-family logic. Right now the longer run mostly feels like a stretched Wave 5 exam, not a new combat phase players would hunger to reach again.
+  - `seeker_array` and `volt_drones` are finally the right kind of visible payoff, but both are gated at `forgeWaveMin: 6`, which leaves too little runway for anticipation, tier climbing, or meaningful "this run is becoming a missile/drone build" authorship before the run is nearly over.
+  - The larger arena helps breathing room, yet the pressure pattern is still mostly kiting shrikes, trimming brutes, and dodging larger surge counts. The extra space is not being claimed by enemies or hazards that create territory, force target priority, or reward different route plans.
+  - The current docs still describe a `5웨이브` short-run target while the implementation is already pushing beyond that, which is a warning sign: if the design ambition stays prototype-sized, future additions will keep landing as extensions of the same loop instead of a true long-form escalation model.
+  Top Priority: Add a Wave 6+ territory-claiming enemy or hazard type that persists in the arena and forces route-breaking target priority, so Act 2 becomes a distinct combat problem instead of just wider kiting under heavier surge counts.
+  Why Now: The game now has a back half, and that back half is where replay value currently flattens out.
+  Do Not Repeat: Do not answer this with Wave 9-10, more shrikes, or higher surge counts if Act 2 still lacks a new pressure shape.
+
 - 2026-03-21 22:10 KST
   Findings:
   - `WAVE_CONFIG` now reaches Wave 8 and the second-act `1280x720` room does give the combat more air, but Waves 6-8 still escalate mostly through more shrikes, more surge count, and tighter timers from the same hazard family. The run is longer, not meaningfully broader.
@@ -288,6 +298,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-21 23:05 KST
+  Changed: turned the Wave 6-8 act hazards in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) into persistent destructible `territory` bastions instead of more short-lived surge circles. `Afterglow`, `Breakline`, and `Crownfire` now spawn large claimed zones with visible central cores, periodic bastion shots, and local enemy rally pressure; shooting the core collapses the zone early, which adds a route-breaking target-priority problem to Act 2 rather than only asking for wider kiting. The same pass updated the hazard HUD copy to explain that active cores can be destroyed, and [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts that Wave 6+ hazards use the new territory profile.
+  Why: the newest critique’s Top Priority was to give Wave 6+ a territory-claiming enemy or hazard so the back half becomes a distinct combat problem. I took the highest-value bounded interpretation as "replace the second-act hazard family with destructible bastion zones" because it uses the existing hazard framework, creates immediate target priority, and makes the larger arena about reclaiming space instead of only surviving denser surge timing.
+  Follow-up risk: bastions now create a real Act 2 pressure shape, but they still piggyback on the existing enemy roster. If the back half still needs more contrast after this, the next pass should pair these zones with a dedicated enemy that protects or exploits bastions instead of only tuning counts and timings.
 
 - 2026-03-21 22:25 KST
   Changed: added two Wave 6+ offensive utility module families in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js): `Seeker Array` for visible autonomous missile racks and `Volt Drones` for fast orbiting attack drones, both with three tiers so Act 2 still has new build discoveries left instead of only upkeep upgrades. The same pass taught support-system drafting to respect unlock waves and a new `공세 모듈` forge lane, so package follow-up slot 2 can now surface offense, defense, or sustain rather than being hard-locked to `보조 시스템` / `생존/경제`. In-arena rendering now gives missile and drone modules distinct silhouettes, and [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now covers Wave 6 unlock timing, late-lane surfacing, and offensive-module upgrade progression.

@@ -30,8 +30,12 @@ assert.ok(game.WAVE_CONFIG[3].hazard.interval > game.WAVE_CONFIG[4].hazard.inter
 assert.ok(game.WAVE_CONFIG[4].driveGainFactor > game.WAVE_CONFIG[3].driveGainFactor);
 assert.equal(game.WAVE_CONFIG[5].arena.width, 1280);
 assert.equal(game.WAVE_CONFIG[5].arena.height, 720);
+assert.equal(game.WAVE_CONFIG[5].hazard.type, "territory");
+assert.ok(game.WAVE_CONFIG[5].hazard.coreHp > 0);
 assert.ok(game.WAVE_CONFIG[7].spawnBudget > game.WAVE_CONFIG[4].spawnBudget);
 assert.ok(game.WAVE_CONFIG[7].hazard.count > game.WAVE_CONFIG[4].hazard.count);
+assert.equal(game.WAVE_CONFIG[7].hazard.type, "territory");
+assert.ok(game.WAVE_CONFIG[7].hazard.turretInterval < game.WAVE_CONFIG[5].hazard.turretInterval);
 assert.equal(game.createFinalCashoutWave().arena.width, 1280);
 assert.equal(game.DEFAULT_SIGNATURE_ID, "relay_oath");
 assert.equal(

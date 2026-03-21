@@ -154,17 +154,24 @@
         shrike: 0.46,
       },
       note: "제련실이 확장되며 측면 회피와 드랍 우회 수집이 다시 살아난다.",
-      directive: "넓은 작업장 + tri-surge. 중앙 집착보다 외곽 회전과 복귀 타이밍이 중요하다.",
+      directive: "넓은 작업장 + bastion anchor. 점거 구역의 코어를 빨리 부숴야 외곽 회전 루트가 다시 열린다.",
       driveGainFactor: 1.22,
       arena: SECOND_ACT_ARENA,
       hazard: {
-        label: "Tri Surge",
-        interval: 8.1,
-        count: 3,
-        radius: 74,
-        telegraph: 0.9,
-        duration: 4.1,
-        damage: 13,
+        label: "Afterglow Bastion",
+        type: "territory",
+        interval: 9.3,
+        count: 2,
+        radius: 92,
+        telegraph: 1,
+        duration: 8.4,
+        damage: 10,
+        coreHp: 42,
+        coreRadius: 16,
+        turretInterval: 1.15,
+        turretDamage: 8,
+        turretSpeed: 208,
+        enemyPullRadius: 142,
       },
     },
     {
@@ -183,17 +190,24 @@
         shrike: 0.46,
       },
       note: "넓어진 공간을 오래 점유하는 적이 늘어나 고철 경로를 끊임없이 다시 골라야 한다.",
-      directive: "wide crossfire surge. 엘리트 각과 드랍 루트를 함께 읽어야 한다.",
+      directive: "anchor crossfire. 점거 코어를 끊지 않으면 엘리트와 고철 루트가 동시에 막힌다.",
       driveGainFactor: 1.26,
       arena: SECOND_ACT_ARENA,
       hazard: {
-        label: "Breakline Crossfire",
-        interval: 7.6,
+        label: "Breakline Bastion",
+        type: "territory",
+        interval: 8.2,
         count: 3,
-        radius: 82,
-        telegraph: 0.84,
-        duration: 4.2,
-        damage: 14,
+        radius: 96,
+        telegraph: 0.96,
+        duration: 8.8,
+        damage: 11,
+        coreHp: 50,
+        coreRadius: 17,
+        turretInterval: 1.02,
+        turretDamage: 9,
+        turretSpeed: 220,
+        enemyPullRadius: 152,
       },
     },
     {
@@ -212,17 +226,24 @@
         shrike: 0.48,
       },
       note: "후반부 정점. 넓은 전장에서 위험 구역을 가르며 마무리 빌드를 증명해야 한다.",
-      directive: "quad surge pressure. 안전지대를 미리 예측하고 화력 창을 짧게 눌러야 한다.",
+      directive: "crown bastions. 점거 코어를 방치하면 전장 중앙이 닫히므로 파괴 순서와 진입 각을 읽어야 한다.",
       driveGainFactor: 1.32,
       arena: SECOND_ACT_ARENA,
       hazard: {
-        label: "Crownfire Lattice",
-        interval: 7,
-        count: 4,
-        radius: 84,
-        telegraph: 0.78,
-        duration: 4.4,
-        damage: 15,
+        label: "Crownfire Bastion Grid",
+        type: "territory",
+        interval: 7.5,
+        count: 3,
+        radius: 102,
+        telegraph: 0.92,
+        duration: 9.2,
+        damage: 12,
+        coreHp: 58,
+        coreRadius: 18,
+        turretInterval: 0.92,
+        turretDamage: 10,
+        turretSpeed: 232,
+        enemyPullRadius: 164,
       },
     },
   ];
@@ -4006,6 +4027,21 @@
     }
 
     if (currentState.hazards.length > 0) {
+      const territoryHazards = currentState.hazards.filter(
+        (hazard) =>
+          hazard.type === "territory" &&
+          hazard.telegraphTime <= 0 &&
+          hazard.activeTime > 0
+      );
+      if (territoryHazards.length > 0) {
+        return {
+          chipLabel: `${wave.hazard.label} LIVE`,
+          detailLabel: "점거 코어",
+          detailValue: `${territoryHazards.length}개 활성`,
+          note: `${territoryHazards.length}개 점거 코어가 화염 구역을 유지 중이다. 코어를 파괴하면 구역이 즉시 해제된다.`,
+          tone: "summary-chip--hot",
+        };
+      }
       return {
         chipLabel: `${wave.hazard.label} LIVE`,
         detailLabel: "폭주",
@@ -4018,9 +4054,12 @@
     const nextWindow = Math.max(0, wave.hazardTimer || 0);
     return {
       chipLabel: wave.hazard.label,
-      detailLabel: "다음 폭주",
+      detailLabel: wave.hazard.type === "territory" ? "다음 점거" : "다음 폭주",
       detailValue: `${nextWindow.toFixed(1)}s`,
-      note: `${wave.hazard.count}개 구역이 ${wave.hazard.telegraph.toFixed(1)}초 예고 후 폭주한다.`,
+      note:
+        wave.hazard.type === "territory"
+          ? `${wave.hazard.count}개 점거 코어가 ${wave.hazard.telegraph.toFixed(1)}초 예고 후 전장을 봉쇄한다.`
+          : `${wave.hazard.count}개 구역이 ${wave.hazard.telegraph.toFixed(1)}초 예고 후 폭주한다.`,
       tone: nextWindow <= 2.5 ? "summary-chip--hot" : "",
     };
   }
@@ -5148,12 +5187,51 @@
       x: position.x,
       y: position.y,
       radius: config.radius,
+      type: config.type || "pulse",
       telegraphTime: config.telegraph,
       activeTime: config.duration,
       damage: config.damage,
       pulseTimer: 0.18,
       label: config.label,
+      coreHp: Number.isFinite(config.coreHp) ? config.coreHp : 0,
+      coreMaxHp: Number.isFinite(config.coreHp) ? config.coreHp : 0,
+      coreRadius: Number.isFinite(config.coreRadius) ? config.coreRadius : 0,
+      turretInterval: Number.isFinite(config.turretInterval) ? config.turretInterval : 0,
+      turretCooldown: Number.isFinite(config.turretInterval) ? config.turretInterval * 0.6 : 0,
+      turretDamage: Number.isFinite(config.turretDamage) ? config.turretDamage : 0,
+      turretSpeed: Number.isFinite(config.turretSpeed) ? config.turretSpeed : 0,
+      enemyPullRadius: Number.isFinite(config.enemyPullRadius) ? config.enemyPullRadius : config.radius + 42,
     });
+  }
+
+  function spawnHazardShot(hazard) {
+    const dx = state.player.x - hazard.x;
+    const dy = state.player.y - hazard.y;
+    const distance = Math.hypot(dx, dy) || 1;
+    const speed = hazard.turretSpeed || 208;
+    state.projectiles.push({
+      owner: "enemy",
+      x: hazard.x,
+      y: hazard.y,
+      vx: (dx / distance) * speed,
+      vy: (dy / distance) * speed,
+      radius: 6,
+      damage: hazard.turretDamage || 8,
+      life: 2.8,
+      color: "#ffb36b",
+    });
+  }
+
+  function destroyHazard(hazard, reason = "expired") {
+    hazard.telegraphTime = 0;
+    hazard.activeTime = 0;
+    if (reason === "destroyed") {
+      state.shake = Math.max(state.shake, 5);
+      for (let index = 0; index < 10; index += 1) {
+        state.particles.push(createParticle(hazard.x, hazard.y, "#ffd7a6", 1));
+      }
+      pushCombatFeed(`${hazard.label} 코어 파괴. 점거 구역이 붕괴했다.`, "CORE");
+    }
   }
 
   function updateHazards(dt) {
@@ -5178,9 +5256,20 @@
           }
           hazard.pulseTimer = 0.35;
         }
+        if (hazard.type === "territory" && hazard.turretInterval > 0) {
+          hazard.turretCooldown -= dt;
+          if (hazard.turretCooldown <= 0) {
+            spawnHazardShot(hazard);
+            hazard.turretCooldown += hazard.turretInterval;
+          }
+        }
         if (Math.random() < 0.3) {
           state.particles.push(createParticle(hazard.x, hazard.y, "#ff8c42", 0.9));
         }
+      }
+
+      if (hazard.type === "territory" && hazard.coreHp <= 0 && hazard.activeTime > 0) {
+        destroyHazard(hazard, "destroyed");
       }
 
       if (hazard.telegraphTime > 0 || hazard.activeTime > 0) {
@@ -5774,13 +5863,33 @@
       let dx = state.player.x - enemy.x;
       let dy = state.player.y - enemy.y;
       let angle = Math.atan2(dy, dx);
+      let speedMultiplier = 1;
+
+      const territoryHazard = state.hazards.find((hazard) => {
+        if (hazard.type !== "territory" || hazard.telegraphTime > 0 || hazard.activeTime <= 0) {
+          return false;
+        }
+        const distance = Math.hypot(enemy.x - hazard.x, enemy.y - hazard.y);
+        return distance < (hazard.enemyPullRadius || hazard.radius + 42);
+      });
+      if (territoryHazard) {
+        const hazardDistance = Math.hypot(enemy.x - territoryHazard.x, enemy.y - territoryHazard.y) || 1;
+        if (hazardDistance > territoryHazard.radius * 0.58) {
+          dx = territoryHazard.x - enemy.x;
+          dy = territoryHazard.y - enemy.y;
+          angle = Math.atan2(dy, dx);
+        }
+        if (hazardDistance < territoryHazard.radius) {
+          speedMultiplier = 1.18;
+        }
+      }
 
       if (enemy.type === "shrike") {
         enemy.wobble += dt * 5;
         angle += Math.sin(enemy.wobble) * 0.6;
       }
 
-      const speed = def.speed * (1 + state.waveIndex * 0.06);
+      const speed = def.speed * (1 + state.waveIndex * 0.06) * speedMultiplier;
       enemy.x += Math.cos(angle) * speed * dt;
       enemy.y += Math.sin(angle) * speed * dt;
       enemy.contactCooldown = Math.max(0, enemy.contactCooldown - dt);
@@ -5888,6 +5997,29 @@
               projectile.pierce -= 1;
             } else {
               consumed = true;
+            }
+          }
+        }
+        if (!consumed) {
+          for (const hazard of state.hazards) {
+            if (
+              hazard.type !== "territory" ||
+              hazard.telegraphTime > 0 ||
+              hazard.activeTime <= 0 ||
+              hazard.coreHp <= 0
+            ) {
+              continue;
+            }
+            const distance = Math.hypot(projectile.x - hazard.x, projectile.y - hazard.y);
+            if (distance < projectile.radius + hazard.coreRadius) {
+              hazard.coreHp -= projectile.damage;
+              state.particles.push(createParticle(projectile.x, projectile.y, "#ffd7a6", 0.7));
+              if (projectile.pierce > 0) {
+                projectile.pierce -= 1;
+              } else {
+                consumed = true;
+              }
+              break;
             }
           }
         }
@@ -6466,7 +6598,10 @@
         context.fill();
       } else {
         const activeAlpha = clamp(hazard.activeTime / 4.4, 0.15, 0.38);
-        context.fillStyle = `rgba(255, 104, 61, ${activeAlpha})`;
+        context.fillStyle =
+          hazard.type === "territory"
+            ? `rgba(255, 128, 79, ${clamp(activeAlpha + 0.08, 0.18, 0.46)})`
+            : `rgba(255, 104, 61, ${activeAlpha})`;
         context.beginPath();
         context.arc(hazard.x, hazard.y, hazard.radius, 0, Math.PI * 2);
         context.fill();
@@ -6475,6 +6610,37 @@
         context.beginPath();
         context.arc(hazard.x, hazard.y, hazard.radius * 0.72, 0, Math.PI * 2);
         context.stroke();
+        if (hazard.type === "territory") {
+          const hpRatio =
+            hazard.coreMaxHp > 0 ? clamp(hazard.coreHp / hazard.coreMaxHp, 0, 1) : 0;
+          context.save();
+          context.translate(hazard.x, hazard.y);
+          context.rotate(performance.now() * 0.0014);
+          context.fillStyle = "rgba(255, 228, 191, 0.9)";
+          context.strokeStyle = "rgba(255, 110, 61, 0.95)";
+          context.lineWidth = 2;
+          context.beginPath();
+          context.moveTo(0, -hazard.coreRadius);
+          context.lineTo(hazard.coreRadius, 0);
+          context.lineTo(0, hazard.coreRadius);
+          context.lineTo(-hazard.coreRadius, 0);
+          context.closePath();
+          context.fill();
+          context.stroke();
+          context.restore();
+
+          context.strokeStyle = "rgba(255, 238, 212, 0.9)";
+          context.lineWidth = 3;
+          context.beginPath();
+          context.arc(
+            hazard.x,
+            hazard.y,
+            hazard.coreRadius + 8,
+            -Math.PI / 2,
+            -Math.PI / 2 + Math.PI * 2 * hpRatio
+          );
+          context.stroke();
+        }
       }
     }
 
