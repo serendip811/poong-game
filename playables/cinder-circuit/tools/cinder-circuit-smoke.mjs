@@ -319,7 +319,26 @@ const bastionOvercommitChoices = game.buildBastionDraftChoices(
   () => 0,
   6
 );
-const doctrineChaseChoice = bastionOvercommitChoices.find(
+assert.equal(bastionOvercommitChoices.length, 3);
+const systemsForgeChoice = bastionOvercommitChoices.find(
+  (choice) => choice.type === "utility" && choice.action === "bastion_bay_forge"
+);
+const wave6MutationChoice = bastionOvercommitChoices.find(
+  (choice) => choice.type === "evolution"
+);
+assert.ok(systemsForgeChoice);
+assert.ok(wave6MutationChoice);
+assert.equal(systemsForgeChoice.title, "Auxiliary Junction");
+assert.ok(systemsForgeChoice.cost > 0);
+game.applyForgeChoice(architectureRun, systemsForgeChoice);
+assert.equal(architectureRun.build.supportBayCap, 3);
+assert.ok(architectureRun.build.upgrades.includes("Auxiliary Junction: support bay +1"));
+const wave8DoctrineChaseChoices = game.buildBastionDraftChoices(
+  architectureRun.build,
+  () => 0,
+  8
+);
+const doctrineChaseChoice = wave8DoctrineChaseChoices.find(
   (choice) => choice.type === "utility" && choice.action === "doctrine_chase"
 );
 assert.ok(doctrineChaseChoice);
@@ -494,7 +513,7 @@ const artilleryChaseChoice = game
   .buildBastionDraftChoices(
     Object.assign(artilleryDoctrineBuild, { overcommitUnlocked: true, overcommitResolved: true }),
     () => 0,
-    6
+    8
   )
   .find((choice) => choice.action === "doctrine_chase");
 assert.ok(artilleryChaseChoice);

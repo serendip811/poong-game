@@ -4080,6 +4080,19 @@
         ...finaleRows,
       ];
     }
+    if (choice.type === "utility" && choice.action === "bastion_bay_forge") {
+      return [
+        {
+          label: "베이",
+          value: choice.bayUnlock ? "즉시 +1" : "유지",
+        },
+        {
+          label: "시스템",
+          value: choice.systemChoice ? choice.systemChoice.title : "조기 해금",
+        },
+        ...finaleRows,
+      ];
+    }
     if (choice.type === "system") {
       const systemDef = SUPPORT_SYSTEM_DEFS[choice.systemId];
       const tierDef = systemDef && systemDef.tiers[choice.systemTier];
@@ -4929,7 +4942,7 @@
       return false;
     }
     const nextWave = Number.isFinite(options.nextWave) ? options.nextWave : 0;
-    return nextWave >= 4 && nextWave <= 6;
+    return nextWave >= 4 && nextWave <= 8;
   }
 
   function shouldRunOvercommitTrial(build, waveNumber) {
@@ -6006,7 +6019,61 @@
     };
   }
 
+  function createBastionSystemsForgeChoice(build, rng, nextWave) {
+    if (!build) {
+      return null;
+    }
+    const random = typeof rng === "function" ? rng : Math.random;
+    const doctrine = getBastionDoctrineDef(build);
+    const supportChoices = createSupportSystemChoices(build, random, {
+      nextWave,
+      finalForge: false,
+    });
+    sortChoicesForDoctrine(supportChoices, doctrine);
+    const systemChoice = supportChoices[0];
+    if (!systemChoice) {
+      return {
+        type: "utility",
+        action: "bastion_bay_forge",
+        id: "utility:bastion_bay_forge:unlock",
+        verb: "확장",
+        tag: "BAY",
+        title: "Auxiliary Junction",
+        description:
+          "세 번째 support bay를 지금 바로 열어 Wave 7-8 포지에서 더 넓은 시스템 조합을 먼저 받는다.",
+        slotText: "조기 베이 확장 · support bay +1",
+        cost: 0,
+        laneLabel: "시스템 포지",
+        forgeLaneLabel: "시스템 포지",
+        bayUnlock: true,
+      };
+    }
+    return {
+      type: "utility",
+      action: "bastion_bay_forge",
+      id: `utility:bastion_bay_forge:${systemChoice.id}`,
+      verb: "주조",
+      tag: "BAY",
+      title: "Auxiliary Junction",
+      description: `세 번째 support bay를 Wave 6부터 조기 개방하고 ${systemChoice.title}을(를) 즉시 끼워 넣는다. ${systemChoice.description} Late Break Armory까지 기다리지 않고 중반부터 시스템 조합 폭을 넓힌다.`,
+      slotText: `조기 베이 확장 · ${systemChoice.title}`,
+      cost: Math.max(16, Math.round((systemChoice.cost || 0) * 0.7)),
+      originalCost: systemChoice.cost || 0,
+      laneLabel: "시스템 포지",
+      forgeLaneLabel: "시스템 포지",
+      bayUnlock: true,
+      systemChoice,
+    };
+  }
+
   function buildBastionDraftChoices(build, rng, nextWave) {
+    if (nextWave === 6 && build && build.bastionDoctrineId) {
+      const weaponMutationChoice =
+        createWeaponEvolutionChoice(build, { nextWave, finalForge: false }) ||
+        createBastionDraftSpikeChoice(build, rng, nextWave);
+      const systemsForgeChoice = createBastionSystemsForgeChoice(build, rng, nextWave);
+      return [weaponMutationChoice, systemsForgeChoice, createBastionDraftPactChoice()].filter(Boolean);
+    }
     const spikeChoice = build && build.bastionDoctrineId
       ? createDoctrineChaseChoice(build, { nextWave, finalForge: false }) ||
         createBastionDraftSpikeChoice(build, rng, nextWave)
@@ -6569,6 +6636,20 @@
         run.player.hp = Math.max(1, run.player.hp - Math.max(0, choice.hpLoss || 0));
         run.player.heat = Math.max(0, run.player.heat - 24);
         run.player.overheated = false;
+      }
+      return choice;
+    }
+
+    if (choice.type === "utility" && choice.action === "bastion_bay_forge") {
+      if (choice.bayUnlock) {
+        unlockLateSupportBay(run.build);
+        run.build.upgrades.push("Auxiliary Junction: support bay +1");
+      }
+      if (choice.systemChoice) {
+        applyForgeChoice(run, {
+          ...choice.systemChoice,
+          cost: 0,
+        });
       }
       return choice;
     }
@@ -7945,6 +8026,8 @@
             ? `${grantLabel} 적용. Bastion Draft를 안정화로 넘기고 다음 웨이브를 바로 연다.`
             : choice.action === "bastion_pact"
               ? `${grantLabel} 적용. 최대 체력을 깎아 고철을 쥐고 다음 웨이브를 연다.`
+              : choice.action === "bastion_bay_forge"
+                ? `${grantLabel} 적용. 세 번째 support bay를 조기 개방하고 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 먼저 장착한 채 다음 웨이브를 연다.`
               : choice.action === "bastion_doctrine"
                 ? `${choice.doctrineLabel} 적용. 즉시 ${choice.doctrineChoice ? choice.doctrineChoice.title : "spike"}를 확보하고 이후 포지를 해당 교리 쪽으로 기울인 채 다음 웨이브를 연다.`
               : `${grantLabel} 적용. 고철 ${choice.cost}을 태워 ${choice.title}을 일찍 확보하고 다음 웨이브를 강행한다.`
@@ -10757,6 +10840,8 @@
         ? state.build.bastionDoctrineId
           ? state.build.overcommitUnlocked && !state.build.doctrineChaseClaimed
             ? "Bastion Draft · 회수한 contraband salvage를 장기 Forge Pursuit 계약으로 바꾸거나, 계약/안정화로 greed를 접는다"
+            : state.waveIndex + 2 === 6
+              ? "Systems Forge · 무기 변이, 조기 support bay 확장, 고통 계약 중 1픽으로 Act 2 중반의 빌드 폭을 직접 비튼다"
             : "Bastion Draft · 기존 교리 위에 추가 spike 또는 고통 계약을 더 얹어 Act 2 greed를 강제한다"
           : "Bastion Draft · 시그니처 교리 1장, 고통 계약 1장, 무료 안정화 1장 중 1픽으로 Act 2 posture를 기울이고 late wildcard bay를 예고한다"
         : state.forgeDraftType === "catalyst_draft"
@@ -10782,6 +10867,8 @@
         ? state.build.bastionDoctrineId
           ? state.build.overcommitUnlocked && !state.build.doctrineChaseClaimed
             ? `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. Wave 5에서 회수한 contraband salvage가 살아 있어 장기 Forge Pursuit 계약이 열렸다. 지금 pursuit를 걸고 Wave 6-8 marked elite에서 shard를 모아 조기 monster form을 완성할지, Siege Salvage Pact나 무료 안정화로 greed를 접을지 정한다.`
+            : state.waveIndex + 2 === 6
+              ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 6 Systems Forge다. 한 장은 주무장 변이를 바로 당겨 중반 화력 실루엣을 바꾸고, 한 장은 세 번째 support bay를 조기 개방하면서 시스템을 즉시 꽂아 Wave 7-8 조합 폭을 넓히며, 마지막 한 장은 최대 체력과 현재 체력을 태워 고철을 훔쳐 오는 Siege Salvage Pact다. 지금 무기, 시스템, greed 중 무엇으로 Act 2를 비틀지 정한다.`
             : `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 이미 채택한 교리 위에 추가 spike 1장과 Siege Salvage Pact, 무료 안정화가 다시 뜬다. 지금 더 깊게 묶일지, 체력을 태워 greed를 당길지 결정한다.`
           : `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 한 장은 시그니처 전용 교리라 즉시 spike를 확보하면서 초반 support bay와 이후 포지 후보를 한 계통 쪽으로 강하게 기울이고, Late Break Armory에서는 마지막 bay 1칸만 우회 조합용으로 풀어 준다. 한 장은 최대 체력을 깎고 고철을 당겨오는 Siege Salvage Pact, 마지막 한 장은 무료 안정화다. Act 2 posture를 잠글지, 더 아프게 탐욕할지 직접 정한다.`
         : state.forgeDraftType === "catalyst_draft"
@@ -10846,6 +10933,8 @@
                     ? `${index + 1}번 선택 · 고철 부족`
                     : choice.action === "bastion_pact"
                       ? `${index + 1}번 선택 · 체력 대가 계약`
+                      : choice.action === "bastion_bay_forge"
+                        ? `${index + 1}번 선택 · 시스템 + 베이 ${choice.cost}`
                       : choice.cost > 0
                         ? `${index + 1}번 선택 · spike 고철 ${choice.cost}`
                         : `${index + 1}번 선택 · 무료 안정화`

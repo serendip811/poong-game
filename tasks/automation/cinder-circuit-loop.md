@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 23:10 KST
+  Findings:
+  - The run still feels too pre-authored in the middle. `Architecture Draft`, `Act Break Armory`, `Bastion Draft` at `Wave 6/8`, `Late Break Armory`, and `Catalyst Crucible` script nearly every major spike, so repeat runs risk becoming bracket memorization instead of greed, denial, and improvisation.
+  - Build layering is still too thin for the game's stated ceiling. `MAX_SUPPORT_BAYS = 2` until `Wave 9`, and doctrine rules heavily bias those first bays, so missiles, shields, orbitals, and utility modules arrive too late or too narrowly to make the mid-run feel like a real machine-building sandbox.
+  - Weapon ladders exist, but too many non-doctrine upgrades still read as denser lane coverage rather than a new way to pilot space. If the exciting form changes mostly live in doctrine chase states while baseline evolutions stay incremental, most runs spend too long feeling competent instead of transformative.
+  - Combat asks are growing faster than the player's expressive toolkit. The arena and enemy variants now imply a future `20-30` wave game, but the between-wave economy still does not let the player pivot into defense, utility, autonomous pressure, or all-in greed with enough mid-run force.
+  Top Priority: Turn one of the `Wave 6/8` Bastion Draft stops into a true systems-forge that always presents one weapon mutation, one non-weapon subsystem play, and one painful greed/sacrifice option, with at least one path unlocking broader bay access before `Wave 9`.
+  Why Now: A longer run will not stay replayable if the middle third still hard-rails both build shape and payoff timing.
+  Do Not Repeat: Do not answer this with another named draft that still only schedules the same spike types.
+
 - 2026-03-22 22:15 KST
   Findings:
   - The run now has real branch language, but the payoff timing is still backwards. `Architecture Draft`, `Bastion Draft`, `Late Break Armory`, `Catalyst Crucible`, and the final cash-out stack so much build explanation and locking near the back half that the player spends too much of the run preparing to become broken and too little time actually being broken.
@@ -651,6 +661,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 23:28 KST
+  Changed: turned the `Wave 6` `Bastion Draft` stop into a true mid-run `Systems Forge` in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). Doctrine runs at that stop now always get exactly one direct weapon mutation, one non-weapon subsystem line through `Auxiliary Junction`, and one painful greed contract through `Siege Salvage Pact`. `Auxiliary Junction` immediately unlocks the third `support bay` two waves early and installs or upgrades a real support system at a discount, so the player can break out of the old `Wave 9` bay bottleneck before the middle third calcifies. I also updated the forge overlay/combat-feed copy to explain the new choice shape and refreshed [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so it asserts the new `Wave 6` systems-forge contract plus the delayed `Wave 8` doctrine pursuit offer.
+  Why: the newest critique’s Top Priority was to turn one of the `Wave 6/8` Bastion Drafts into a real systems-forge with a weapon path, a subsystem path, and a painful greed path, with at least one option unlocking broader bay access before `Wave 9`. The highest-value bounded interpretation was to rebuild `Wave 6`, because that is the earliest point where the run can widen mid-run build identity instead of waiting for the late armory to finally legalize real system layering.
+  Follow-up risk: this solves the bay-timing bottleneck for one stop, but the `Wave 8` draft is still comparatively authored around pursuit/greed cleanup and does not yet offer an equally broad subsystem pivot. If critique keeps pushing on mid-run replayability, the next pass should loosen `Wave 8` into a harsher branch or expand early wildcard access, not add another named draft shell.
 
 - 2026-03-22 22:35 KST
   Changed: added a full `Mirror Hunt` doctrine weapon ladder in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `ricochet` now becomes a player-driven chase gun instead of waiting for `Volt Drones` and `Relay Storm Lattice` to sell the build. `Hunt Frame` now appears as soon as the doctrine is locked, and completing the Wave `6-8` pursuit upgrades it into `Relay Storm Frame`, a five-lane chained prism barrage that stays active even after the late support capstone is installed. I also retuned the doctrine-specific `Wave 9-12` mirror bracket to reduce `activeCap`, `mortar`/`warden` tax, and hazard density so the early monster form gets four full late waves to sweep open space instead of spending that power budget on sanitation. [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts the new stage `1/2` mirror weapon forms, the capstone fallback behavior, and the lighter late-wave mirror pressure.
