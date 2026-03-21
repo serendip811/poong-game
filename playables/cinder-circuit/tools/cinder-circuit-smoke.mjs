@@ -65,10 +65,10 @@ const rng = () => {
 };
 
 const choices = game.buildForgeChoices(build, rng, 180);
-assert.equal(choices.length, 3);
+assert.equal(choices.length, 4);
 assert.equal(
   JSON.stringify(choices.map((choice) => choice.laneLabel).sort()),
-  JSON.stringify(["빌드 고정", "생존/경제", "전환"])
+  JSON.stringify(["빌드 고정", "생존/경제", "예비", "전환"])
 );
 assert.ok(choices.some((choice) => choice.laneLabel === "전환" && choice.type === "core"));
 assert.ok(choices.some((choice) => choice.laneLabel === "생존/경제"));
@@ -131,9 +131,15 @@ midrunChaseBuild.attunedCopies = 1;
 const genericForgeChoices = game.buildForgeChoices(midrunChaseBuild, () => 0, 180);
 assert.ok(!genericForgeChoices.some((choice) => choice.laneLabel === "빌드 고정" && choice.recipeLabel === "Kiln Bloom"));
 const waveTwoForgeChoices = game.buildForgeChoices(midrunChaseBuild, () => 0, 180, { nextWave: 2 });
-assert.equal(waveTwoForgeChoices.length, 3);
+assert.equal(waveTwoForgeChoices.length, 4);
 assert.ok(!waveTwoForgeChoices.some((choice) => choice.type === "system"));
 const waveThreeForgeChoices = game.buildForgeChoices(midrunChaseBuild, () => 0, 180, { nextWave: 3 });
+const waveThreeEvolutionChoice = waveThreeForgeChoices.find(
+  (choice) => choice.laneLabel === "주무장 진화" && choice.type === "evolution"
+);
+assert.ok(waveThreeEvolutionChoice);
+assert.equal(waveThreeEvolutionChoice.coreId, "scatter");
+assert.equal(waveThreeEvolutionChoice.evolutionTier, 1);
 const midrunForgeFinisherChoice = waveThreeForgeChoices.find(
   (choice) => choice.laneLabel === "빌드 고정" && choice.recipeLabel === "Kiln Bloom"
 );
@@ -146,6 +152,21 @@ assert.equal(waveThreeForgeChoices.length, 3);
 assert.ok(waveThreeForgeChoices.every((choice) => choice.laneLabel !== "보조 시스템"));
 assert.ok(waveThreeForgeChoices.every((choice) => choice.laneLabel !== "생존/경제"));
 
+const evolutionBuild = game.createInitialBuild("relay_oath");
+const evolutionChoice = game.buildForgeChoices(evolutionBuild, () => 0, 180, { nextWave: 3 }).find(
+  (choice) => choice.type === "evolution"
+);
+assert.ok(evolutionChoice);
+game.applyForgeChoice(
+  { build: evolutionBuild, player: null, resources: { scrap: 999 }, stats: {} },
+  evolutionChoice
+);
+const evolvedWeapon = game.computeWeaponStats(evolutionBuild);
+assert.equal(evolvedWeapon.evolutionTier, 1);
+assert.equal(evolvedWeapon.evolutionLabel, "Prism Crown");
+assert.equal(evolvedWeapon.evolutionTraitLabel, "삼중 분광탄");
+assert.equal(JSON.stringify(evolvedWeapon.evolutionFirePattern.offsets), JSON.stringify([0]));
+
 const systemRun = {
   build: midrunChaseBuild,
   player: null,
@@ -156,7 +177,10 @@ const packageBuild = game.createInitialBuild("relay_oath");
 packageBuild.pendingCores = [];
 const packageWaveThreeChoices = game.buildForgeChoices(packageBuild, () => 0, 180, { nextWave: 3 });
 const packagePrimaryChoice = packageWaveThreeChoices.find(
-  (choice) => choice.laneLabel === "빌드 고정" || choice.laneLabel === "전환"
+  (choice) =>
+    choice.laneLabel === "주무장 진화" ||
+    choice.laneLabel === "빌드 고정" ||
+    choice.laneLabel === "전환"
 );
 assert.ok(packagePrimaryChoice);
 assert.equal(

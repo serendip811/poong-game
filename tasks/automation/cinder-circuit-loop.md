@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-21 21:05 KST
+  Findings:
+  - `WAVE_CONFIG` is still a single 5-wave density ladder in one `960x540` room, so Wave 4-5 pressure mostly becomes compression management under `Twin Surges` and shrike fire instead of the broader routing, flanking, and recovery beats a replayable action roguelite needs.
+  - The new two-bay support system is a real step up, but `SUPPORT_SYSTEM_DEFS` still only contains two families with a hard `2 bay / 3 tier` ceiling, so slot 2 starts reading as solved module housekeeping far too early for any future `20-30` wave ambition.
+  - Visual payoff is currently concentrated in the support lane; `computeWeaponStats()` still cashes too much main-weapon growth out as throughput math and modest perk bumps, so the gun the player aims most of the run does not mutate often enough in silhouette, firing pattern, or battlefield role.
+  - The encounter layer still leans on more spawns, more elites, and the same surge hazard family instead of introducing new pressure shapes that let stronger builds feel expressive rather than merely crowded.
+  Top Priority: Add a new Wave 3+ build lane that delivers visible main-weapon evolutions at clear breakpoints, so each mid-run forge can offer at least one run-shaping payoff on the primary gun rather than asking the support slot to carry all the spectacle.
+  Why Now: Until the main weapon starts transforming as sharply as the support modules, repeated runs will feel like surviving a tighter room with better numbers, not chasing a build.
+  Do Not Repeat: Do not treat the two-bay module patch as solved depth while the arena, encounter vocabulary, and primary-weapon payoff curve are still this short.
+
 - 2026-03-21 20:18 KST
   Findings:
   - The new two-step forge is an improvement, but `buildForgeFollowupChoices()` hard-locks slot 2 to `보조 시스템` or `생존/경제`, so mid-run packages still too often end as "take one real build card, then patch survival" instead of assembling a power stack that raises anticipation every wave.
@@ -258,6 +268,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-21 21:28 KST
+  Changed: added a new Wave 3+ `주무장 진화` forge lane in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). Each core now carries a persistent two-tier evolution track that can be drafted mid-run and immediately changes the primary gun’s on-screen pattern instead of only nudging stats: `Ember` fans out into side ignition lines, `Scatter` grows long-range flak shards, `Lance` splits into multi-rail volleys, and `Ricochet` widens into prism fans. The HUD, forge previews, and combat status text now surface those evolution identities, and [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) was updated to cover the extra lane plus one applied evolution path. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique’s top priority was to make Wave 3+ forges show a visible main-weapon payoff instead of asking support modules to carry all the spectacle. I took the highest-value bounded interpretation as "add a dedicated evolution card that upgrades the currently equipped core into a new firing pattern" because it gives every mid-run forge a run-shaping primary-gun breakpoint without widening scope into a full encounter or arena overhaul.
+  Follow-up risk: the primary gun now mutates in silhouette and spread, but the lane is still a single linear two-step evolution per core. If later critiques still find weapon growth too authored or too short for longer runs, the next pass should branch these evolutions into alternate families or add a third tier so Wave 5+ planning can diverge instead of only climbing one track.
 
 - 2026-03-21 20:40 KST
   Changed: turned the old single-line support progression in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) into a two-bay module system. Wave 3+ follow-up forges now keep drafting rival `보조 시스템` families after the first install instead of collapsing to one deterministic upgrade path, so a run can stack `Ember Ring` and `Aegis Halo` together, then keep upgrading either bay. Support runtime, HUD summaries, and in-arena rendering now aggregate mixed offensive and defensive bays at once, which makes the second forge slot pay out as visibly larger orbital formations, combined interceptor coverage, and simultaneous auto-bolt pressure rather than just one upgraded helper line. The existing smoke coverage in [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) still passes against the new support flow.

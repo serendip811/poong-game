@@ -719,6 +719,217 @@
 
   const DEFAULT_SIGNATURE_ID = "relay_oath";
   const FORGE_PACKAGE_START_WAVE = 3;
+  const MAX_WEAPON_EVOLUTION_TIER = 2;
+  const WEAPON_EVOLUTION_DEFS = {
+    ember: {
+      tiers: {
+        1: {
+          tier: 1,
+          title: "Fork Array",
+          label: "Fork Array",
+          tag: "EVOLVE",
+          cost: 44,
+          description:
+            "주 총열 양옆에 보조 점화 총열을 더한다. 정면 단일선 대신 얇은 삼중 화선을 깔아 중반 측면 진입선을 함께 긁는다.",
+          slotText: "주무장 진화 · 삼열 점화",
+          previewText: "보조 총열 2기",
+          traitLabel: "삼열 점화",
+          statusNote: "Fork Array가 주탄 양옆으로 점화선을 더 깔아 측면 진입선을 함께 긁는다.",
+          firePattern: {
+            offsets: [-0.16, 0.16],
+            damageMultiplier: 0.62,
+            speedMultiplier: 1.04,
+            radius: 4.4,
+            life: 1.12,
+            pierceBonus: 0,
+            bounceBonus: 0,
+            chainBonus: 0,
+            color: "#ffe08a",
+          },
+        },
+        2: {
+          tier: 2,
+          title: "Sunspoke Manifold",
+          label: "Sunspoke Manifold",
+          tag: "EVOLVE",
+          cost: 62,
+          description:
+            "Fork Array를 4개 보조 총열로 증설한다. 정면 조준만 해도 넓은 부채꼴 화선이 열려 후반 웨이브의 측면 재진입을 훨씬 빨리 긁어낸다.",
+          slotText: "주무장 진화 · 오열 점화",
+          previewText: "보조 총열 4기",
+          traitLabel: "오열 점화",
+          statusNote: "Sunspoke Manifold가 넓은 부채꼴 화선을 열어 정면과 측면을 함께 태운다.",
+          firePattern: {
+            offsets: [-0.22, -0.08, 0.08, 0.22],
+            damageMultiplier: 0.58,
+            speedMultiplier: 1.06,
+            radius: 4.4,
+            life: 1.14,
+            pierceBonus: 0,
+            bounceBonus: 0,
+            chainBonus: 0,
+            color: "#fff1a8",
+          },
+        },
+      },
+    },
+    scatter: {
+      tiers: {
+        1: {
+          tier: 1,
+          title: "Flak Bloom",
+          label: "Flak Bloom",
+          tag: "EVOLVE",
+          cost: 42,
+          description:
+            "산탄 외곽에 장거리 파편탄 두 발을 덧댄다. 근접 압박만 강한 무기에서 벗어나 중거리 교전과 측면 정리를 동시에 챙긴다.",
+          slotText: "주무장 진화 · 외곽 파편 2발",
+          previewText: "장거리 파편탄",
+          traitLabel: "외곽 파편 x2",
+          statusNote: "Flak Bloom이 산탄 양끝에 장거리 파편탄을 덧대 중거리 정리선을 늘린다.",
+          firePattern: {
+            offsets: [-0.34, 0.34],
+            damageMultiplier: 0.54,
+            speedMultiplier: 1.18,
+            radius: 3.9,
+            life: 1.22,
+            pierceBonus: 0,
+            bounceBonus: 0,
+            chainBonus: 0,
+            color: "#ffc27a",
+          },
+        },
+        2: {
+          tier: 2,
+          title: "Kiln Storm",
+          label: "Kiln Storm",
+          tag: "EVOLVE",
+          cost: 60,
+          description:
+            "외곽 파편탄을 네 갈래로 넓힌다. 산탄의 근접 폭딜은 유지하면서도 화면 양옆에 추가 절개선을 만들어 혼전 정리가 훨씬 또렷해진다.",
+          slotText: "주무장 진화 · 외곽 파편 4발",
+          previewText: "확장 파편탄",
+          traitLabel: "외곽 파편 x4",
+          statusNote: "Kiln Storm이 외곽 파편탄을 네 갈래로 뿌려 근접 압박 바깥도 함께 훑는다.",
+          firePattern: {
+            offsets: [-0.42, -0.22, 0.22, 0.42],
+            damageMultiplier: 0.48,
+            speedMultiplier: 1.22,
+            radius: 3.8,
+            life: 1.26,
+            pierceBonus: 0,
+            bounceBonus: 0,
+            chainBonus: 0,
+            color: "#ffd7a3",
+          },
+        },
+      },
+    },
+    lance: {
+      tiers: {
+        1: {
+          tier: 1,
+          title: "Twin Spine",
+          label: "Twin Spine",
+          tag: "EVOLVE",
+          cost: 46,
+          description:
+            "주 레일 옆으로 보조 레일 두 줄을 깐다. 정면 절개에만 묶이지 않고 엘리트 옆 라인까지 동시에 찢는 이중 레일이 열린다.",
+          slotText: "주무장 진화 · 이중 보조 레일",
+          previewText: "보조 레일 2줄",
+          traitLabel: "삼중 레일",
+          statusNote: "Twin Spine이 메인 레일 옆으로 보조 레일을 깔아 얇은 전열 셋을 한 번에 찢는다.",
+          firePattern: {
+            offsets: [-0.08, 0.08],
+            damageMultiplier: 0.68,
+            speedMultiplier: 1.08,
+            radius: 5.4,
+            life: 1.14,
+            pierceBonus: 1,
+            bounceBonus: 0,
+            chainBonus: 0,
+            color: "#b6f4ff",
+          },
+        },
+        2: {
+          tier: 2,
+          title: "Trident Rail",
+          label: "Trident Rail",
+          tag: "EVOLVE",
+          cost: 64,
+          description:
+            "보조 레일을 다시 증설해 삼지창처럼 펼친다. 단일 관통선이 여러 진입 라인을 동시에 꿰뚫는 후반용 화면 장악기로 변한다.",
+          slotText: "주무장 진화 · 확장 삼지창 레일",
+          previewText: "확장 보조 레일",
+          traitLabel: "오연 레일",
+          statusNote: "Trident Rail이 넓게 벌어진 보조 레일로 복수의 진입 라인을 동시에 관통한다.",
+          firePattern: {
+            offsets: [-0.16, -0.05, 0.05, 0.16],
+            damageMultiplier: 0.62,
+            speedMultiplier: 1.12,
+            radius: 5.2,
+            life: 1.16,
+            pierceBonus: 1,
+            bounceBonus: 0,
+            chainBonus: 0,
+            color: "#d8fbff",
+          },
+        },
+      },
+    },
+    ricochet: {
+      tiers: {
+        1: {
+          tier: 1,
+          title: "Prism Crown",
+          label: "Prism Crown",
+          tag: "EVOLVE",
+          cost: 43,
+          description:
+            "중앙 분광탄 한 발을 더해 반사 진입 각을 더 쉽게 잡는다. 양갈래 총열이 세 갈래 팬으로 넓어지며 측면 스윕이 분명해진다.",
+          slotText: "주무장 진화 · 중앙 분광탄",
+          previewText: "분광탄 1발 추가",
+          traitLabel: "삼중 분광탄",
+          statusNote: "Prism Crown이 중앙 분광탄을 더해 벽 반사 각을 더 안정적으로 건다.",
+          firePattern: {
+            offsets: [0],
+            damageMultiplier: 0.74,
+            speedMultiplier: 1,
+            radius: 4.3,
+            life: 1.18,
+            pierceBonus: 0,
+            bounceBonus: 1,
+            chainBonus: 0,
+            color: "#f0d4ff",
+          },
+        },
+        2: {
+          tier: 2,
+          title: "Glass Choir",
+          label: "Glass Choir",
+          tag: "EVOLVE",
+          cost: 61,
+          description:
+            "분광탄을 다섯 갈래 합창으로 확장한다. 벽을 스치기만 해도 여러 입사각이 동시에 생겨 후반의 측면 정리와 연쇄 진입이 크게 쉬워진다.",
+          slotText: "주무장 진화 · 오중 분광탄",
+          previewText: "분광탄 3발 추가",
+          traitLabel: "오중 분광탄",
+          statusNote: "Glass Choir가 다섯 갈래 분광탄으로 벽 반사 각을 넓게 깐다.",
+          firePattern: {
+            offsets: [-0.18, 0, 0.18],
+            damageMultiplier: 0.66,
+            speedMultiplier: 1.02,
+            radius: 4.2,
+            life: 1.2,
+            pierceBonus: 0,
+            bounceBonus: 1,
+            chainBonus: 0,
+            color: "#f7e6ff",
+          },
+        },
+      },
+    },
+  };
   const FINISHER_RECIPE_DEFS = {
     ember: {
       label: "Crown Pyre",
@@ -1415,6 +1626,7 @@
     supportSystemId: null,
     supportSystemTier: 0,
     supportSystems: [],
+    weaponEvolutions: {},
     pendingCores: [],
     upgrades: [],
     damageBonus: 0,
@@ -1871,6 +2083,56 @@
     return (options.nextWave || 0) >= FORGE_PACKAGE_START_WAVE;
   }
 
+  function sanitizeWeaponEvolutionState(weaponEvolutions) {
+    const normalized = {};
+    const source =
+      weaponEvolutions && typeof weaponEvolutions === "object" ? weaponEvolutions : {};
+    Object.keys(WEAPON_EVOLUTION_DEFS).forEach((coreId) => {
+      normalized[coreId] = clamp(
+        Number.isFinite(source[coreId]) ? Math.floor(source[coreId]) : 0,
+        0,
+        MAX_WEAPON_EVOLUTION_TIER
+      );
+    });
+    return normalized;
+  }
+
+  function getWeaponEvolutionTier(build, coreId) {
+    if (!build || !WEAPON_EVOLUTION_DEFS[coreId]) {
+      return 0;
+    }
+    return sanitizeWeaponEvolutionState(build.weaponEvolutions)[coreId] || 0;
+  }
+
+  function createWeaponEvolutionChoice(build, options) {
+    if (!build || !WEAPON_EVOLUTION_DEFS[build.coreId] || (options && options.finalForge)) {
+      return null;
+    }
+    const nextWave = options && Number.isFinite(options.nextWave) ? options.nextWave : 0;
+    if (nextWave < FORGE_PACKAGE_START_WAVE) {
+      return null;
+    }
+    const currentTier = getWeaponEvolutionTier(build, build.coreId);
+    const nextTier = currentTier + 1;
+    const tierDef = WEAPON_EVOLUTION_DEFS[build.coreId].tiers[nextTier];
+    if (!tierDef) {
+      return null;
+    }
+    return {
+      type: "evolution",
+      id: `evolution:${build.coreId}:t${nextTier}`,
+      verb: "진화",
+      tag: tierDef.tag || "EVOLVE",
+      title: tierDef.title,
+      description: tierDef.description,
+      slotText: tierDef.slotText,
+      coreId: build.coreId,
+      evolutionTier: nextTier,
+      previewText: tierDef.previewText,
+      cost: tierDef.cost,
+    };
+  }
+
   function createForgePreviewRows(choice) {
     if (!choice) {
       return [];
@@ -1902,6 +2164,13 @@
       return [
         { label: "분류", value: MOD_DEFS[choice.modId].tag },
         { label: "효과", value: "현재 무기 직접 강화" },
+        ...finaleRows,
+      ];
+    }
+    if (choice.type === "evolution") {
+      return [
+        { label: "무기", value: CORE_DEFS[choice.coreId].short },
+        { label: "진화", value: `T${choice.evolutionTier} · ${choice.previewText}` },
         ...finaleRows,
       ];
     }
@@ -2052,6 +2321,7 @@
         supportSystemId: BASE_BUILD.supportSystemId,
         supportSystemTier: BASE_BUILD.supportSystemTier,
         supportSystems: BASE_BUILD.supportSystems.slice(),
+        weaponEvolutions: { ...BASE_BUILD.weaponEvolutions },
         pendingCores: [],
         upgrades: [],
         damageBonus: BASE_BUILD.damageBonus,
@@ -2185,6 +2455,11 @@
       capstoneLabel: null,
       capstoneTraitLabel: null,
       capstoneStatusNote: null,
+      evolutionTier: 0,
+      evolutionLabel: null,
+      evolutionTraitLabel: null,
+      evolutionStatusNote: null,
+      evolutionFirePattern: null,
       capstoneFire: null,
       capstoneOnHit: null,
       capstoneOnBounce: null,
@@ -2194,6 +2469,16 @@
         affix.applyWeapon(stats, build);
       }
     });
+    const evolutionTier = getWeaponEvolutionTier(build, core.id);
+    const evolutionDef =
+      WEAPON_EVOLUTION_DEFS[core.id] && WEAPON_EVOLUTION_DEFS[core.id].tiers[evolutionTier];
+    if (evolutionDef) {
+      stats.evolutionTier = evolutionTier;
+      stats.evolutionLabel = evolutionDef.label;
+      stats.evolutionTraitLabel = evolutionDef.traitLabel;
+      stats.evolutionStatusNote = evolutionDef.statusNote;
+      stats.evolutionFirePattern = evolutionDef.firePattern;
+    }
     const catalystCapstone = getCatalystCapstone(build, core.id);
     if (catalystCapstone) {
       stats.capstoneId = catalystCapstone.id;
@@ -2732,6 +3017,7 @@
     const random = typeof rng === "function" ? rng : Math.random;
     const pending = getPendingCoreIds(build);
     const choiceCatalog = new Set();
+    const evolutionCandidates = [];
     const commitCandidates = [];
     const pivotCandidates = [];
     const subsystemCandidates = [];
@@ -2742,6 +3028,7 @@
     const reforgeChoice = catalystReforgeChoice || createReforgeChoice(build, random);
     const affixReforgeChoice = createAffixReforgeChoice(build, random);
     const finisherChoice = createRecipeFinisherChoice(build);
+    const weaponEvolutionChoice = createWeaponEvolutionChoice(build, options);
     const supportSystemChoices = shouldOfferSupportSystem(build, options)
       ? createSupportSystemChoices(build, random)
       : [];
@@ -2749,6 +3036,7 @@
       ? createGuaranteedChaseChoice(build)
       : null;
     const packagePrimary = shouldForceForgePackage(options) && (options.packageStep || 1) === 1;
+    pushChoiceIfOpen(evolutionCandidates, weaponEvolutionChoice, choiceCatalog);
     pushChoiceIfOpen(commitCandidates, guaranteedMidrunChase || finisherChoice, choiceCatalog);
 
     const sameCoreChoice = createCoreChoice(build.coreId, build);
@@ -2827,11 +3115,12 @@
       const choices = [];
       const takenIds = new Set();
       const primaryChoices = [
+        takeFirstAvailableChoice(evolutionCandidates, takenIds, "주무장 진화"),
         takeFirstAvailableChoice(commitCandidates, takenIds, "빌드 고정"),
         takeFirstAvailableChoice(pivotCandidates, takenIds, "전환"),
       ].filter(Boolean);
       choices.push(...primaryChoices);
-      const extraPrimaryPool = [...commitCandidates, ...pivotCandidates];
+      const extraPrimaryPool = [...evolutionCandidates, ...commitCandidates, ...pivotCandidates];
       for (const choice of extraPrimaryPool) {
         if (choices.length >= 3) {
           break;
@@ -2899,6 +3188,7 @@
 
     const takenIds = new Set();
     const laneChoices = [
+      takeFirstAvailableChoice(evolutionCandidates, takenIds, "주무장 진화"),
       takeFirstAvailableChoice(commitCandidates, takenIds, "빌드 고정"),
       takeFirstAvailableChoice(pivotCandidates, takenIds, "전환"),
       takeFirstAvailableChoice(subsystemCandidates, takenIds, "보조 시스템"),
@@ -2907,10 +3197,10 @@
     const choices = getInstalledSupportSystems(build).length === 0 && subsystemCandidates.length > 1
       ? laneChoices.filter((choice) => choice.laneLabel !== "생존/경제")
       : laneChoices;
-    const maxChoices = subsystemCandidates.length > 0 ? 4 : 3;
+    const maxChoices = subsystemCandidates.length > 0 ? 5 : 4;
     const extraChoicePool = getInstalledSupportSystems(build).length === 0 && subsystemCandidates.length > 1
-      ? [...subsystemCandidates, ...commitCandidates, ...pivotCandidates, ...sustainCandidates]
-      : [...commitCandidates, ...pivotCandidates, ...subsystemCandidates, ...sustainCandidates];
+      ? [...subsystemCandidates, ...evolutionCandidates, ...commitCandidates, ...pivotCandidates, ...sustainCandidates]
+      : [...evolutionCandidates, ...commitCandidates, ...pivotCandidates, ...subsystemCandidates, ...sustainCandidates];
 
     for (const choice of extraChoicePool) {
       if (choices.length >= maxChoices) {
@@ -3036,6 +3326,17 @@
       const mod = MOD_DEFS[choice.modId];
       mod.apply(run.build, run);
       run.build.upgrades.push(mod.label);
+      return choice;
+    }
+
+    if (choice.type === "evolution") {
+      const nextWeaponEvolutions = sanitizeWeaponEvolutionState(run.build.weaponEvolutions);
+      nextWeaponEvolutions[choice.coreId] = Math.max(
+        nextWeaponEvolutions[choice.coreId] || 0,
+        choice.evolutionTier || 1
+      );
+      run.build.weaponEvolutions = nextWeaponEvolutions;
+      run.build.upgrades.push(`주무장 진화: ${choice.title}`);
       return choice;
     }
 
@@ -3384,6 +3685,7 @@
       weapon.pierce > 0 ? `관통 ${weapon.pierce}` : null,
       weapon.bounce > 0 ? `반사 ${weapon.bounce}` : null,
       weapon.chain > 0 ? `연쇄 ${weapon.chain}` : null,
+      weapon.evolutionTraitLabel ? weapon.evolutionTraitLabel : null,
       weapon.capstoneTraitLabel ? weapon.capstoneTraitLabel : null,
     ].filter(Boolean);
   }
@@ -4832,6 +5134,38 @@
       state.projectiles.push(createPlayerProjectile(angle, weapon, driveActive));
     }
 
+    if (weapon.evolutionFirePattern) {
+      weapon.evolutionFirePattern.offsets.forEach((offset) => {
+        const angle = baseAngle + offset;
+        state.projectiles.push(
+          createPlayerProjectile(angle, weapon, driveActive, {
+            vx:
+              Math.cos(angle) *
+              weapon.projectileSpeed *
+              weapon.evolutionFirePattern.speedMultiplier *
+              (driveActive ? 1.12 : 1),
+            vy:
+              Math.sin(angle) *
+              weapon.projectileSpeed *
+              weapon.evolutionFirePattern.speedMultiplier *
+              (driveActive ? 1.12 : 1),
+            radius: weapon.evolutionFirePattern.radius,
+            damage: round(
+              (weapon.damage + (driveActive ? 8 : 0)) *
+                weapon.evolutionFirePattern.damageMultiplier,
+              1
+            ),
+            life: weapon.evolutionFirePattern.life,
+            pierce: weapon.pierce + weapon.evolutionFirePattern.pierceBonus,
+            bounce: weapon.bounce + weapon.evolutionFirePattern.bounceBonus,
+            chain: weapon.chain + weapon.evolutionFirePattern.chainBonus,
+            chainRange: weapon.chainRange,
+            color: weapon.evolutionFirePattern.color,
+          })
+        );
+      });
+    }
+
     if (weapon.capstoneFire) {
       if (weapon.capstoneFire.kind === "temper_slug") {
         state.projectiles.push(
@@ -5464,6 +5798,9 @@
     const weapon = state.weapon;
     const traitSummary = traitLabels.join(" · ");
     const affixSummary = weapon.affixLabels.length ? weapon.affixLabels.join(" · ") : "속성 없음";
+    const evolutionSummary = weapon.evolutionLabel
+      ? `${weapon.evolutionLabel} · ${weapon.evolutionTraitLabel}`
+      : null;
     const capstoneSummary = weapon.capstoneLabel
       ? `${weapon.capstoneLabel} · ${weapon.capstoneTraitLabel}`
       : null;
@@ -5490,11 +5827,12 @@
               ? traitLabels.map((label) => createMiniPill("TRAIT", label, "accent")).join("")
               : createMiniPill("TRAIT", "직선 탄도")
           }
+          ${weapon.evolutionLabel ? createMiniPill("EVO", weapon.evolutionLabel, "accent") : ""}
           ${capstoneSummary ? createMiniPill("CAP", weapon.capstoneLabel, "hot") : ""}
           ${state.supportSystem ? createMiniPill("SYS", state.supportSystem.label, "accent") : ""}
           ${weapon.affixLabels.map((label) => createMiniPill("속성", label, "cool")).join("")}
         </div>
-        <p class="summary-note">${[affixSummary, capstoneSummary, supportSystemSummary, `보관 ${weapon.benchCopies}개 대기`].filter(Boolean).join(" · ")}</p>
+        <p class="summary-note">${[affixSummary, evolutionSummary, capstoneSummary, supportSystemSummary, `보관 ${weapon.benchCopies}개 대기`].filter(Boolean).join(" · ")}</p>
       `;
     }
 
@@ -5571,7 +5909,7 @@
         }">${
           state.player.overheated
             ? "사격 정지: 열을 비워야 한다."
-            : `${weapon.capstoneStatusNote ? `${weapon.capstoneStatusNote} ` : ""}${state.supportSystem ? `${state.supportSystem.statusNote} ` : ""}${hazardStatus.note} 자동 사격은 과열 전까지 유지된다.`
+            : `${weapon.evolutionStatusNote ? `${weapon.evolutionStatusNote} ` : ""}${weapon.capstoneStatusNote ? `${weapon.capstoneStatusNote} ` : ""}${state.supportSystem ? `${state.supportSystem.statusNote} ` : ""}${hazardStatus.note} 자동 사격은 과열 전까지 유지된다.`
         }</p>
       `;
     }
@@ -5594,6 +5932,9 @@
     const affixSummary = state.weapon.affixLabels.length
       ? state.weapon.affixLabels.join(" · ")
       : "속성 없음";
+    const evolutionSummary = state.weapon.evolutionLabel
+      ? `${state.weapon.evolutionLabel} · ${state.weapon.evolutionTraitLabel}`
+      : "주무장 진화 없음";
     const capstoneSummary = state.weapon.capstoneLabel
       ? `${state.weapon.capstoneLabel} · ${state.weapon.capstoneTraitLabel}`
       : "활성 촉매 재구성 없음";
@@ -5632,9 +5973,9 @@
         <p>${state.weapon.tierLabel} · ${state.weapon.benchSyncLabel} · ${traitSummary}</p>
       </article>
       <article class="forge-context__card">
-        <p class="panel__eyebrow">속성 / 시스템</p>
+        <p class="panel__eyebrow">속성 / 진화 / 시스템</p>
         <strong>${affixSummary}</strong>
-        <p>${capstoneSummary} · ${forgeSystemSummary} · 보관 ${benchEntries.length}종 · ${catalystSummary} · 분해 예상 고철 ${getRecycleValue(state.build)}</p>
+        <p>${evolutionSummary} · ${capstoneSummary} · ${forgeSystemSummary} · 보관 ${benchEntries.length}종 · ${catalystSummary} · 분해 예상 고철 ${getRecycleValue(state.build)}</p>
       </article>
     `;
     elements.forgeCards.innerHTML = state.forgeChoices
