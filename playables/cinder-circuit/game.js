@@ -666,6 +666,7 @@
   };
 
   const DEFAULT_SIGNATURE_ID = "relay_oath";
+  const FORGE_PACKAGE_START_WAVE = 3;
   const FINISHER_RECIPE_DEFS = {
     ember: {
       label: "Crown Pyre",
@@ -2665,6 +2666,43 @@
     return shuffle(choices.slice(0, maxChoices), random);
   }
 
+  function shouldOpenForgePackage(run, choice) {
+    if (!run || !choice || choice.type !== "system" || run.pendingFinalForge) {
+      return false;
+    }
+    const nextWave = Number.isFinite(run.waveIndex) ? run.waveIndex + 2 : 0;
+    return nextWave >= FORGE_PACKAGE_START_WAVE;
+  }
+
+  function buildForgeFollowupChoices(build, rng, scrapBank, options = null, previousChoice = null) {
+    const choices = buildForgeChoices(build, rng, scrapBank, options).filter((choice) => {
+      if (!choice || choice.type === "system") {
+        return false;
+      }
+      if (previousChoice && choice.id === previousChoice.id) {
+        return false;
+      }
+      return true;
+    });
+    if (choices.length > 0) {
+      return choices;
+    }
+    return [
+      markForgeLane(
+        {
+          type: "fallback",
+          id: "fallback:emergency_vent",
+          tag: "무료",
+          title: "Emergency Vent",
+          description: "보조 시스템을 고정한 뒤 남은 패키지 슬롯을 무료 안정화로 마감한다.",
+          slotText: "패키지 보정",
+          cost: 0,
+        },
+        "생존/경제"
+      ),
+    ];
+  }
+
   function applyForgeChoice(run, choice) {
     if (!run || !run.build || !choice) {
       return null;
@@ -2893,8 +2931,10 @@
     chooseHazardSpawn,
     buildHazardCandidates,
     buildForgeChoices,
+    buildForgeFollowupChoices,
     applyForgeChoice,
     getCatalystCapstone,
+    shouldOpenForgePackage,
   };
 
   if (typeof module !== "undefined" && module.exports) {
@@ -3088,6 +3128,8 @@
       hazards: [],
       particles: [],
       forgeChoices: [],
+      forgeStep: 1,
+      forgeMaxSteps: 1,
       resources: {
         scrap: 0,
       },
@@ -3466,6 +3508,8 @@
     const isFinalForge = state.waveIndex >= MAX_WAVES - 1;
     state.phase = "forge";
     state.pendingFinalForge = isFinalForge;
+    state.forgeStep = 1;
+    state.forgeMaxSteps = 1;
     state.forgeChoices = buildForgeChoices(
       state.build,
       Math.random,
@@ -3744,6 +3788,26 @@
     state.resources.scrap -= choice.cost;
     state.stats.scrapSpent += choice.cost;
     applyForgeChoice(state, choice);
+    const opensPackage = shouldOpenForgePackage(state, choice) && state.forgeStep === 1;
+    if (opensPackage) {
+      state.forgeStep = 2;
+      state.forgeMaxSteps = 2;
+      state.forgeChoices = buildForgeFollowupChoices(
+        state.build,
+        Math.random,
+        state.resources.scrap,
+        { finalForge: false, nextWave: state.waveIndex + 2 },
+        choice
+      );
+      pushCombatFeed(
+        `${choice.tag} · ${choice.title} 적용. 패키지 슬롯이 열려 추가 선택 1회를 더 고른다.`,
+        "FORGE"
+      );
+      refreshDerivedStats(false);
+      renderForgeOverlay();
+      updateHUD();
+      return;
+    }
     pushCombatFeed(`${choice.tag} · ${choice.title} 적용.`, "FORGE");
     refreshDerivedStats(false);
     if (shouldFinishAfterForge(state)) {
@@ -5219,11 +5283,17 @@
         ? `${FINISHER_RECIPE_DEFS[state.build.coreId].label} 촉매 확보`
         : `${FINISHER_RECIPE_DEFS[state.build.coreId].label} 촉매 필요`
       : "촉매 조건 미도달";
+    const packageSummary =
+      state.forgeMaxSteps > 1
+        ? `패키지 ${state.forgeStep}/${state.forgeMaxSteps} · 보조 시스템 뒤 추가 선택 1회`
+        : state.waveIndex + 2 >= FORGE_PACKAGE_START_WAVE && !state.pendingFinalForge
+          ? "Wave 3+ 포지는 보조 시스템 선택 시 추가 패키지 슬롯 1회"
+          : "단일 포지 선택";
     elements.forgeSubtitle.textContent = state.pendingFinalForge
       ? catalystReady
         ? `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 세 장은 완성, 촉매 연소, 안정화로 고정되며 각 카드가 바로 이어질 12초 cash-out 시험을 미리 보여준다.`
         : `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 촉매가 없어도 비상 점화와 안정화 fail-soft 카드가 열리며, 각 카드가 다른 12초 cash-out 시험으로 바로 이어진다.`
-      : `고철 ${Math.round(state.resources.scrap)} 보유. 장착은 무기 등급을 올리거나 바꾸고, 각인은 속성을 붙이며, 재구성/분해는 보관 코어를 정리한다.`;
+      : `고철 ${Math.round(state.resources.scrap)} 보유. 장착은 무기 등급을 올리거나 바꾸고, 각인은 속성을 붙이며, 재구성/분해는 보관 코어를 정리한다. ${packageSummary}.`;
     elements.forgeContext.innerHTML = `
       <article class="forge-context__card">
         <p class="panel__eyebrow">현재 무기</p>

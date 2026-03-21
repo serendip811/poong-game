@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-21 19:05 KST
+  Findings:
+  - `buildForgeChoices()` shows more lanes now, but the run still only lets the player buy one isolated card per intermission; across a 5-wave structure that is not enough build throughput to create the compounding hunger, pivots, and payoff cadence a replayable action roguelite needs.
+  - The new subsystem lane is still a tiny branch, not an ecosystem: `SUPPORT_SYSTEM_DEFS` only offers two families and both cap at `Mk.II`, so support progression effectively ends right after it begins instead of opening longer-term module planning for a future `20-30` wave curve.
+  - `computeWeaponStats()` still cashes most growth out as stat efficiency with a few small pattern bumps, so weapons rarely undergo a visible silhouette change that makes the player feel they have truly assembled something new rather than simply tuned the same gun upward.
+  - The fixed `960x540` arena plus Wave 4-5 caps, elites, and twin-surge overlap still pushes late combat toward congestion management; pressure rises, but movement choices do not gain enough room, flank value, or scrap-routing drama as the run escalates.
+  Top Priority: Change the Wave 3+ forge cadence so each visit can assemble a package instead of a single upgrade, for example one weapon commitment plus one subsystem/defense slot, with ongoing module tracks that stay relevant beyond `Mk.II`.
+  Why Now: If build assembly stays this thin, extending the run will only magnify repetition instead of anticipation.
+  Do Not Repeat: Do not mistake "more visible cards" for depth while each forge still resolves to one narrow purchase and subsystem growth dead-ends almost immediately.
+
 - 2026-03-21 18:22 KST
   Findings:
   - The run is still fundamentally a single 5-wave act in `WAVE_CONFIG`, so even with better forge readability it does not yet demonstrate the pacing contrast, recovery beats, or escalation architecture needed for a repeatable action roguelite that could plausibly stretch toward `20-30` waves.
@@ -226,6 +236,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-21 19:20 KST
+  Changed: updated the Wave 3+ forge flow in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so taking a `보조 시스템` card no longer ends the stop immediately. Mid-run subsystem picks now open one follow-up package slot in the same forge, rebuilding the card row into non-system `빌드 고정` / `전환` / `생존/경제` options so the intermission can resolve as "install or upgrade a subsystem, then pair it with one more combat or sustain choice" instead of spending the whole visit on a single helper card. The forge subtitle now calls out that package rule while active, and [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts that Wave 3 opens the package flow, earlier waves do not, and the follow-up pool excludes a second subsystem pick.
+  Why: the latest critique’s top priority was to make Wave 3+ forges assemble a package rather than one isolated purchase. I took the highest-value bounded interpretation as "let subsystem commitment unlock one extra pick in the same stop" because it immediately increases build throughput and decision weight without widening scope into a full forge-economy rewrite.
+  Follow-up risk: this makes subsystem stops materially richer, but only when the first pick is a system card. If later critique still finds build assembly too thin, the next pass should either extend package logic to an explicit weapon lane or deepen subsystem progression beyond `Mk.II` so the second pick keeps paying forward into longer runs.
 
 - 2026-03-21 18:35 KST
   Changed: reworked mid-run forge generation in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so support progression now sits in its own explicit `보조 시스템` lane instead of replacing the sustain slot. The first eligible forge now starts one wave earlier and surfaces both `Ember Ring` and `Aegis Halo` install cards in the same stop, while later upgrade stops keep subsystem upgrades visible alongside a separate `생존/경제` card. [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts the two-card install branch, the earlier unlock timing, and the coexistence of subsystem and sustain lanes on upgrade forges.
