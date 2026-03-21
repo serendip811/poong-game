@@ -1328,9 +1328,11 @@
       label: "Mirror Hunt Doctrine",
       tag: "HUNT",
       short: "추적 미사일 · 드라이브 압박",
+      branchFamilyLabel: "추적 드론",
+      starterSystemId: "volt_drones",
       description:
         "반사 코어를 추적 압박 회로에 묶는다. Act 2부터 외곽 정리와 드라이브 순환을 함께 밀어붙이는 사냥형 운영을 강제한다.",
-      perkText: "Drive +12% · Move +14 · 이후 포지가 추적/연쇄 라인을 먼저 민다.",
+      perkText: "Drive +12% · Move +14 · Volt Drones 즉시 설치 · 이후 포지가 추적/연쇄 라인을 먼저 민다.",
       preferredSystemIds: ["seeker_array", "volt_drones"],
       preferredModIds: ["drive_sync", "arc_array", "step_servos"],
       preferredAffixIds: ["arc_link", "overclock"],
@@ -1348,9 +1350,11 @@
       label: "Kiln Bastion Doctrine",
       tag: "FORT",
       short: "전방 포탑 · 회수 요새",
+      branchFamilyLabel: "전방 포탑",
+      starterSystemId: "kiln_sentry",
       description:
         "수거 회로를 전방 거점 운영으로 굳힌다. 포탑과 방호 차체를 더 자주 밀어 올려, Act 2 전장을 회수 가능한 요새로 바꾸게 만든다.",
-      perkText: "Max HP +14 · Hazard Mitigation +8% · 이후 포지가 포탑/방호 라인을 먼저 민다.",
+      perkText: "Max HP +14 · Hazard Mitigation +8% · Kiln Sentry 즉시 설치 · 이후 포지가 포탑/방호 라인을 먼저 민다.",
       preferredSystemIds: ["kiln_sentry", "aegis_halo"],
       preferredModIds: ["armor_mesh", "magnet_rig", "reactor_cap"],
       preferredAffixIds: ["salvage_link", "thermal_weave"],
@@ -1368,10 +1372,12 @@
       label: "Storm Artillery Doctrine",
       tag: "SIEGE",
       short: "돌파 포격 · 냉각 압박",
+      branchFamilyLabel: "추적 포격",
+      starterSystemId: "seeker_array",
       description:
         "관통 냉각 회로를 장거리 포격 교리로 고정한다. 관통/연쇄 보강과 자율 포격을 더 자주 밀어 올려 긴 사선을 끝까지 유지하게 만든다.",
-      perkText: "Damage +4 · Cool +6 · 이후 포지가 관통/포격 라인을 먼저 민다.",
-      preferredSystemIds: ["volt_drones", "seeker_array"],
+      perkText: "Damage +4 · Cool +6 · Seeker Array 즉시 설치 · 이후 포지가 관통/포격 라인을 먼저 민다.",
+      preferredSystemIds: ["seeker_array", "ember_ring"],
       preferredModIds: ["rail_sleeve", "arc_array", "heat_sink"],
       preferredAffixIds: ["phase_rounds", "arc_link"],
       reservedLane: "공세 모듈",
@@ -1385,6 +1391,7 @@
   };
 
   const DEFAULT_SIGNATURE_ID = "relay_oath";
+  const ARCHITECTURE_DRAFT_WAVE = 3;
   const FORGE_PACKAGE_START_WAVE = 3;
   const ACT_BREAK_ARMORY_WAVE = 5;
   const LATE_BREAK_ARMORY_WAVE = 9;
@@ -2972,6 +2979,13 @@
     return nextWave === ACT_BREAK_ARMORY_WAVE || nextWave === LATE_BREAK_ARMORY_WAVE;
   }
 
+  function shouldRunArchitectureDraft(options) {
+    if (!options || options.finalForge) {
+      return false;
+    }
+    return (options.nextWave || 0) === ARCHITECTURE_DRAFT_WAVE;
+  }
+
   function isLateBreakArmory(options) {
     if (!options) {
       return false;
@@ -2998,6 +3012,7 @@
     const nextWave = options.nextWave || 0;
     return (
       nextWave >= FORGE_PACKAGE_START_WAVE &&
+      !shouldRunArchitectureDraft(options) &&
       !shouldRunActBreakArmory(options) &&
       !shouldRunBastionDraft(options)
     );
@@ -3017,6 +3032,9 @@
     }
     if (shouldRunActBreakArmory(options)) {
       return "armory";
+    }
+    if (shouldRunArchitectureDraft(options)) {
+      return "architecture_draft";
     }
     if (shouldRunBastionDraft(options)) {
       return "bastion_draft";
@@ -3143,6 +3161,16 @@
       return [
         { label: "획득", value: `고철 ${choice.scrapValue}` },
         { label: "대상", value: "보관 코어 전체" },
+        ...finaleRows,
+      ];
+    }
+    if (choice.type === "utility" && choice.action === "architecture_doctrine") {
+      return [
+        { label: "교리", value: choice.doctrineLabel || "아키텍처" },
+        {
+          label: "즉시",
+          value: choice.doctrineChoice ? choice.doctrineChoice.title : "starter subsystem 설치",
+        },
         ...finaleRows,
       ];
     }
@@ -3332,6 +3360,14 @@
       );
       if (adoptedDoctrine) {
         return adoptedDoctrine;
+      }
+    }
+    if (typeof buildOrSignatureId === "string") {
+      const directDoctrine = Object.values(BASTION_DOCTRINE_DEFS).find(
+        (doctrine) => doctrine.id === buildOrSignatureId
+      );
+      if (directDoctrine) {
+        return directDoctrine;
       }
     }
     const signatureId =
@@ -4621,6 +4657,50 @@
     };
   }
 
+  function createArchitectureDoctrineChoice(doctrine) {
+    if (!doctrine || !doctrine.starterSystemId || !SUPPORT_SYSTEM_DEFS[doctrine.starterSystemId]) {
+      return null;
+    }
+    const starterSystem = SUPPORT_SYSTEM_DEFS[doctrine.starterSystemId];
+    const starterTier = starterSystem.tiers[1];
+    if (!starterTier) {
+      return null;
+    }
+    return {
+      type: "utility",
+      action: "architecture_doctrine",
+      id: `utility:architecture_doctrine:${doctrine.id}`,
+      verb: "잠금",
+      tag: "ARCH",
+      title: doctrine.label,
+      description:
+        `${doctrine.description} 즉시 ${starterTier.title}을(를) 무료 설치해 ${doctrine.branchFamilyLabel} 계통을 바로 켜고, ${doctrine.reserveText} 이후 포지 후보도 ${doctrine.short} 쪽으로만 기울인다.`,
+      slotText: `아키텍처 잠금 · ${starterTier.title} 설치 · ${doctrine.short}`,
+      cost: 0,
+      laneLabel: "아키텍처",
+      forgeLaneLabel: "아키텍처",
+      doctrineId: doctrine.id,
+      doctrineLabel: doctrine.label,
+      doctrineChoice: {
+        type: "system",
+        systemId: doctrine.starterSystemId,
+        systemTier: 1,
+        cost: 0,
+        tag: starterSystem.tag,
+        title: starterTier.title,
+        description: starterTier.description,
+        slotText: starterTier.slotText,
+        forgeLaneLabel: starterSystem.forgeLane,
+      },
+    };
+  }
+
+  function buildArchitectureDraftChoices() {
+    return Object.values(BASTION_DOCTRINE_DEFS)
+      .map((doctrine) => createArchitectureDoctrineChoice(doctrine))
+      .filter(Boolean);
+  }
+
   function createBastionDraftPactChoice() {
     return {
       type: "utility",
@@ -4728,6 +4808,22 @@
     return choices;
   }
 
+  function enterArchitectureDraft() {
+    state.phase = "forge";
+    state.pendingFinalForge = false;
+    state.forgeStep = 1;
+    state.forgeMaxSteps = 1;
+    state.forgeDraftType = "architecture_draft";
+    state.forgeChoices = buildArchitectureDraftChoices();
+    pushCombatFeed(
+      "Architecture Draft 개시. 세 개의 장기 교리 중 하나를 즉시 잠가 starter subsystem을 무료 설치하고 이후 포지 계통까지 함께 고정한다.",
+      "ARCH"
+    );
+    setBanner("Architecture Draft", 0.95);
+    renderForgeOverlay();
+    updateHUD();
+  }
+
   function enterFieldGrant() {
     const nextWave = state.waveIndex + 2;
     state.phase = "forge";
@@ -4773,6 +4869,9 @@
   }
 
   function getForgeDraftDisplayName(draftType) {
+    if (draftType === "architecture_draft") {
+      return "Architecture Draft";
+    }
     if (draftType === "field_grant") {
       return "Field Cache";
     }
@@ -5059,12 +5158,26 @@
     }
 
     if (choice.type === "utility" && choice.action === "bastion_doctrine") {
-      const doctrine = getBastionDoctrineDef(run.build);
+      const doctrine = getBastionDoctrineDef(choice.doctrineId || run.build);
       if (doctrine && run.build.bastionDoctrineId !== doctrine.id) {
         run.build.bastionDoctrineId = doctrine.id;
         doctrine.apply(run.build, run);
         run.build.upgrades.push(`교리 채택: ${doctrine.label}`);
       }
+      if (choice.doctrineChoice) {
+        applyForgeChoice(run, choice.doctrineChoice);
+      }
+      return choice;
+    }
+
+    if (choice.type === "utility" && choice.action === "architecture_doctrine") {
+      const doctrine = getBastionDoctrineDef(choice.doctrineId || run.build);
+      if (!doctrine || run.build.bastionDoctrineId === doctrine.id) {
+        return choice;
+      }
+      run.build.bastionDoctrineId = doctrine.id;
+      doctrine.apply(run.build, run);
+      run.build.upgrades.push(`아키텍처 잠금: ${doctrine.label}`);
       if (choice.doctrineChoice) {
         applyForgeChoice(run, choice.doctrineChoice);
       }
@@ -5131,6 +5244,7 @@
     buildHazardCandidates,
     buildForgeChoices,
     buildForgeFollowupChoices,
+    buildArchitectureDraftChoices,
     buildFieldGrantChoices,
     buildBastionDraftChoices,
     applyForgeChoice,
@@ -6137,7 +6251,9 @@
       return;
     }
     const instantDraft =
-      state.forgeDraftType === "field_grant" || state.forgeDraftType === "bastion_draft";
+      state.forgeDraftType === "architecture_draft" ||
+      state.forgeDraftType === "field_grant" ||
+      state.forgeDraftType === "bastion_draft";
     if (state.resources.scrap < choice.cost) {
       setBanner("고철 부족", 0.8);
       return;
@@ -6150,7 +6266,11 @@
     if (instantDraft) {
       const grantLabel = choice.forgeLaneLabel || choice.laneLabel || choice.tag || "CACHE";
       pushCombatFeed(
-        state.forgeDraftType === "bastion_draft"
+        state.forgeDraftType === "architecture_draft"
+          ? choice.action === "architecture_doctrine"
+            ? `${choice.doctrineLabel} 적용. ${choice.doctrineChoice ? choice.doctrineChoice.title : "starter subsystem"}를 즉시 설치하고 이후 포지를 해당 아키텍처 계통으로 잠근 채 다음 웨이브를 연다.`
+            : `${grantLabel} 적용. 아키텍처를 잠근 채 다음 웨이브를 연다.`
+        : state.forgeDraftType === "bastion_draft"
           ? choice.type === "fallback"
             ? `${grantLabel} 적용. Bastion Draft를 안정화로 넘기고 다음 웨이브를 바로 연다.`
             : choice.action === "bastion_pact"
@@ -6161,7 +6281,11 @@
           : choice.type === "fallback"
             ? `${grantLabel} 현장 보급 적용. 고철은 아낀 채 ${choice.title}로 상태만 정리하고 다음 웨이브를 즉시 연다.`
             : `${grantLabel} 현장 보급 적용. 고철 ${choice.cost}을 태워 ${choice.title}을 잠그고 다음 웨이브를 즉시 밀어붙인다.`,
-        state.forgeDraftType === "bastion_draft" ? "DRAFT" : "CACHE"
+        state.forgeDraftType === "architecture_draft"
+          ? "ARCH"
+          : state.forgeDraftType === "bastion_draft"
+            ? "DRAFT"
+            : "CACHE"
       );
       refreshDerivedStats(false);
       beginWave(state.waveIndex + 1);
@@ -7979,6 +8103,8 @@
             ? getArmoryLabel({ nextWave })
             : shouldRunBastionDraft({ nextWave, finalForge: false })
               ? "Bastion Draft"
+            : shouldRunArchitectureDraft({ nextWave, finalForge: false })
+              ? "Architecture Draft"
             : shouldUseFieldGrant({ nextWave, finalForge: false })
               ? "Field Cache"
               : "포지";
@@ -7994,6 +8120,8 @@
       if (state.waveClearTimer <= 0) {
         if (state.wave.completesRun) {
           finishRun(true);
+        } else if (shouldRunArchitectureDraft({ nextWave: state.waveIndex + 2, finalForge: false })) {
+          enterArchitectureDraft();
         } else if (shouldRunBastionDraft({ nextWave: state.waveIndex + 2, finalForge: false })) {
           enterBastionDraft();
         } else if (shouldUseFieldGrant({ nextWave: state.waveIndex + 2, finalForge: false })) {
@@ -8164,11 +8292,13 @@
         <div class="summary-head">
           <strong>${
             state.phase === "forge"
-              ? state.forgeDraftType === "field_grant"
-                ? "Field Cache 선택 중"
-                : state.forgeDraftType === "bastion_draft"
-                  ? "Bastion Draft 선택 중"
-                  : "포지 선택 중"
+              ? state.forgeDraftType === "architecture_draft"
+                ? "Architecture Draft 선택 중"
+                : state.forgeDraftType === "field_grant"
+                  ? "Field Cache 선택 중"
+                  : state.forgeDraftType === "bastion_draft"
+                    ? "Bastion Draft 선택 중"
+                    : "포지 선택 중"
               : "전투 진행 중"
           }</strong>
           <span class="summary-chip ${
@@ -8248,7 +8378,9 @@
     };
     const armoryLabel = getArmoryLabel(forgeOptions);
     const packageSummary =
-      state.forgeDraftType === "field_grant"
+      state.forgeDraftType === "architecture_draft"
+        ? "Architecture Draft · 세 장기 교리 중 1픽, starter subsystem을 무료 설치하고 이후 포지 풀과 남은 베이 방향을 즉시 잠근다"
+        : state.forgeDraftType === "field_grant"
         ? "Field Cache · 할인 장착 2장과 무료 회수 1장 중 1픽, 지금 고철을 태울지 아낄지 고른다"
         : state.forgeDraftType === "bastion_draft"
         ? state.build.bastionDoctrineId
@@ -8267,6 +8399,8 @@
       ? catalystReady
         ? `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 세 장은 완성, 촉매 연소, 안정화로 고정되며 각 카드가 바로 이어질 12초 cash-out 시험을 미리 보여준다.`
         : `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 촉매가 없어도 비상 점화와 안정화 fail-soft 카드가 열리며, 각 카드가 다른 12초 cash-out 시험으로 바로 이어진다.`
+      : state.forgeDraftType === "architecture_draft"
+        ? `Wave 3 진입 직전 Architecture Draft다. 세 장기 교리 중 하나를 골라 starter subsystem을 무료 설치하고, 남은 support bay와 이후 포지 후보를 그 계통으로 잠근다. 지금부터 이번 런의 전장을 어떤 기계로 바꿀지 결정한다.`
       : state.forgeDraftType === "field_grant"
         ? `고철 ${Math.round(state.resources.scrap)} 보유. Field Cache다. 할인된 즉시 장착 2장과 무료 Emergency Vent 중 하나를 고른다. 지금 스파이크를 사서 당길지, 고철을 쥐고 다음 큰 포지까지 버틸지 직접 판단해야 한다.`
         : state.forgeDraftType === "bastion_draft"
@@ -8320,7 +8454,9 @@
             <div class="forge-card__preview">${previewRows}</div>
             <span class="forge-card__meta">${choice.slotText}</span>
             <span class="forge-card__slot">${
-              state.forgeDraftType === "field_grant"
+              state.forgeDraftType === "architecture_draft"
+                ? `${index + 1}번 선택 · 무료 branch lock`
+                : state.forgeDraftType === "field_grant"
                 ? state.resources.scrap < choice.cost
                   ? `${index + 1}번 선택 · 고철 부족`
                   : choice.cost > 0

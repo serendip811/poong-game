@@ -193,7 +193,24 @@ assert.equal(midrunForgeFinisherChoice.tag, "FINISHER");
 assert.equal(waveThreeForgeChoices.length, 3);
 assert.ok(waveThreeForgeChoices.every((choice) => choice.laneLabel !== "보조 시스템"));
 assert.ok(waveThreeForgeChoices.every((choice) => choice.laneLabel !== "생존/경제"));
-assert.equal(game.shouldUseFieldGrant({ nextWave: 3, finalForge: false }), true);
+assert.equal(game.shouldUseFieldGrant({ nextWave: 3, finalForge: false }), false);
+const architectureDraftChoices = game.buildArchitectureDraftChoices();
+assert.equal(architectureDraftChoices.length, 3);
+assert.ok(architectureDraftChoices.every((choice) => choice.action === "architecture_doctrine"));
+assert.ok(architectureDraftChoices.every((choice) => choice.cost === 0));
+const architectureRun = {
+  build: game.createInitialBuild("relay_oath"),
+  player: null,
+  resources: { scrap: 999 },
+  stats: {},
+};
+game.applyForgeChoice(architectureRun, architectureDraftChoices[0]);
+assert.ok(architectureRun.build.bastionDoctrineId);
+assert.ok(
+  architectureRun.build.upgrades.some((upgrade) => upgrade.startsWith("아키텍처 잠금: "))
+);
+assert.equal(architectureRun.build.supportSystems.length, 1);
+assert.equal(architectureRun.build.supportSystems[0].tier, 1);
 assert.equal(game.shouldUseFieldGrant({ nextWave: 5, finalForge: false }), false);
 assert.equal(game.shouldUseFieldGrant({ nextWave: 9, finalForge: false }), false);
 assert.equal(game.shouldUseFieldGrant({ nextWave: 12, finalForge: true }), false);

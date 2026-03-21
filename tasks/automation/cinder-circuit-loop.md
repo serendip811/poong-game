@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-21 23:10 KST
+  Findings:
+  - The implementation now stretches to `12` waves and `3` acts, but the design target in `docs/games/cinder-circuit-design.md` still frames the game as a `5웨이브` short run. That mismatch shows up in the loop itself: the structure has grown longer, while the build ambition is still calibrated like a prototype that expects to end just after the first real power spike.
+  - `Bastion Draft` is too late and too thin to carry long-form rerun excitement. It only appears at `Wave 6` and `Wave 8`, and each stop is basically one doctrine/spike, one pain contract, or one vent. That is a dramatic label on top of a very small decision surface, not a run-defining architecture layer players will anticipate from Wave 1.
+  - The support ecology is broader than before, but it still resolves into a small handful of orbitals, missiles, drones, and a sentry track. For a game aiming toward `20-30` waves, this is not enough visible system diversity to sustain repeated runs with distinct fantasies like fortress control, roaming artillery, shielded bruiser routing, or autonomous territory denial.
+  - Act pressure still converges too hard on lane reopening under `warden`/`mortar`/hazard overlap. The larger `SECOND_ACT_ARENA` and `THIRD_ACT_ARENA` give the fight more room, but the player is still mostly solving the same ownership problem with bigger numbers instead of meeting new spatial asks that change what kind of build they wish they had.
+  Top Priority: Add a Wave `3-4` architecture draft that forces one exclusive long-run branch and seeds its own future offer pool, with each branch granting a visible new subsystem family immediately rather than another discounted spike card.
+  Why Now: Until the run commits early to a bigger build fantasy, extending acts and waves will keep exposing sameness faster than it creates obsession.
+  Do Not Repeat: Do not answer this with another `Field Cache`, one-off discount, or same-gun-but-bigger evolution pass.
+
 - 2026-03-21 22:34 KST
   Findings:
   - The run now spans `12` waves and `3` acts, but too much of the power curve is still delivered as broadly compatible upkeep. `Field Cache`, doctrine-biased sorting, and repeated forge smoothing make many runs feel serviceable for a long time instead of forcing an exciting commitment that locks in future appetite.
@@ -469,6 +479,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-21 KST
+  Changed: added a new early `Architecture Draft` to [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) that fires before `Wave 3` instead of letting that stop default to `Field Cache`. The draft now offers three exclusive long-run doctrine branches (`Mirror Hunt`, `Kiln Bastion`, `Storm Artillery`) regardless of signature, each at `0` cost, and each branch immediately installs a visible tier-1 subsystem family (`Volt Drones`, `Kiln Sentry`, or `Seeker Array`) while locking later support/mod/affix offers to that doctrine’s authored pool. I also updated forge/feed overlay copy so the branch lock reads as an irreversible architecture commitment instead of another discount event, exported the new draft builder, and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new early draft and starter-system install.
+  Why: the latest critique’s Top Priority was to add a `Wave 3-4` architecture draft that forces an exclusive branch and grants a visible subsystem family immediately. This was the highest-value bounded interpretation because it moves build identity into Act 1, creates an immediate “my run became a machine” moment, and seeds future offer denial without trying to author multiple new subsystem families in one pass.
+  Follow-up risk: the three branches are now meaningfully earlier and more exclusive, but hunt and siege still both live in the offensive support ecosystem and differentiate mostly through their starter subsystem plus mod/affix filtering. If later critiques still find those branches too adjacent, the next pass should add one doctrine-exclusive offensive module family or a branch-specific sacrifice rather than only tightening filters further.
 
 - 2026-03-21 KST
   Changed: turned the existing doctrine draft into an actual architecture lock in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). Once `Mirror Hunt`, `Kiln Bastion`, or `Storm Artillery` is adopted, future support-system installs are now filtered to that doctrine's family instead of merely sorted toward it, and forge affix/mod pools are likewise narrowed to the doctrine's authored chase set. I also updated Bastion Draft and forge copy so the choice explicitly advertises that it reserves the remaining support bays and cuts off rival module families, and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert that hunt runs only see offensive installs while fortress runs stop seeing offensive-module installs.
