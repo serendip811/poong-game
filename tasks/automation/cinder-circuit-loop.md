@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 18:40 KST
+  Findings:
+  - The run now has long-form doctrine framing, shard pursuits, and late armories, but too much of the payoff still resolves into support automation. `Relay Storm Lattice`, `Bulwark Foundry`, and `Sky Lance Grid` all sell the fantasy of the build finishing itself around the player instead of turning the player’s own gun into the star.
+  - That weakens repeat-run hunger. A player should be desperate to finish a weapon form because piloting it feels transformed, not mainly because more drones, turrets, or remote strikes will start cleaning the map for them.
+  - The doctrine rails are still overly curated. Starter systems, preferred lanes, reserved bays, and the late wildcard slot make many runs feel like selecting one of three authored packages, then responsibly filling it out, rather than discovering a broken machine worth chasing again.
+  - This ceiling becomes more obvious if the game wants `20-30` waves later. Three respectable doctrine plans can carry a prototype, but a longer roguelite needs more intra-run branch tension where the same early commitment can still split into radically different weapon-endings and movement habits.
+  Top Priority: Rebuild one doctrine so its long pursuit culminates in two mutually exclusive main-weapon apex forms with visibly different firing behavior and piloting demands, while support systems stay secondary amplifiers instead of the headline payoff.
+  Why Now: Until the player is chasing a weapon transformation they personally get to wield, the build game will read as authored loadout management instead of obsession.
+  Do Not Repeat: Do not solve this by adding another autonomous helper or by renaming the same doctrine package with harsher flavor text.
+
 - 2026-03-22 18:05 KST
   Findings:
   - The run has many named build layers now, but too little long-horizon hunger. `Architecture Draft`, `Bastion Draft`, `Catalyst Crucible`, and the armories keep delivering power as scheduled packages instead of making the player spend several waves chasing a specific terrifying form.
@@ -601,6 +611,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 19:05 KST
+  Changed: split the `Storm Artillery` doctrine apex in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) into two mutually exclusive late-armory weapon endings instead of one support-led automation payoff. `Late Break Armory` for a completed `Storm Artillery` run now offers `Sky Lance Battery` or `Stormspire Needle`: the first keeps the long-range wide-screen lance lattice fantasy with a bigger multi-rail barrage, while the second compresses the gun into a narrower heavy-pierce spear that branches side shocks off direct hits. I also rewrote the doctrine/chase copy to advertise the fork earlier and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the smoke test now asserts the two apex offers plus the separate stage-2 and stage-3 weapon forms.
+  Why: the newest critique’s Top Priority was to make one doctrine culminate in two distinct main-weapon apex forms with different firing behavior and piloting demands. The highest-value bounded interpretation was to refactor `Storm Artillery`, because it already had a clear weapon-first ladder and could be turned from a single authored siege ending into a real late-run fork without widening this pass into a multi-doctrine rewrite.
+  Follow-up risk: `Storm Artillery` now has a true weapon fork, but `Mirror Hunt` and `Kiln Bastion` still resolve more heavily through support-runtime payoff than through player-wielded gun branches. If critique still finds doctrine endings too authored, the next pass should give one of those doctrines the same kind of mutually exclusive weapon apex split instead of adding more passive automation.
 
 - 2026-03-22 18:22 KST
   Changed: replaced the old one-shot `doctrine_chase` payoff in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) with a visible multi-wave `Forge Pursuit`. The Wave `3` `Architecture Draft` and Wave `6` `Bastion Draft` copy now explicitly sell each doctrine as a long recipe, but taking the chase card no longer dumps an immediate weapon+system bundle into the build. Instead it commits the run to a doctrine-specific frame pursuit, shows shard progress in the HUD/forge summaries, and spawns marked pursuit elites across Waves `6-8`; collecting two frame shards during live combat auto-applies the doctrine’s staged weapon/support spike, while missing the window leaves the pursuit unfinished. I also added pursuit target/drop rendering and updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the smoke test expects a commitment-based pursuit contract instead of the old instant bundle.

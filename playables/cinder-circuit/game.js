@@ -1788,7 +1788,7 @@
       reserveText:
         "초반 두 support bay는 포격 모듈 쪽으로 강하게 기울고, Late Break Armory에서 열린 마지막 bay 1칸만 방호/거점 시스템까지 우회 장착할 수 있다.",
       favoredCoreId: "lance",
-      lateCapstoneId: "sky_lance_grid",
+      lateCapstoneIds: ["sky_lance_battery", "stormspire_needle"],
       apply(build) {
         build.damageBonus += 4;
         build.coolRateBonus += 6;
@@ -1824,17 +1824,30 @@
         "Kiln Bastion 전용 최종 교리 카드. Kiln Sentry 거점이 용광 거점장을 크게 넓혀 적과 점거 코어를 태우고, 그 안으로 복귀한 플레이어는 더 빠르게 냉각·수리되어 같은 구역을 반복 점거하는 운영이 완성된다.",
     },
     storm_artillery: {
-      id: "sky_lance_grid",
+      id: "sky_lance_battery",
       doctrineId: "storm_artillery",
-      label: "Sky Lance Grid",
-      title: "Sky Lance Grid",
-      slotText: "교리 완성 · 유도 천공 포격",
+      label: "Sky Lance Battery",
+      title: "Sky Lance Battery",
+      slotText: "교리 완성 · 광역 천공망",
       cost: 82,
       laneLabel: "Doctrine Apex",
-      summary: "포격 모듈이 먼 적 무리를 자동 표적화해 천공 낙뢰를 꽂으며 후열 전체를 갈라놓는다.",
-      statusNote: "Sky Lance Grid가 먼 적 무리에 자동 천공 낙뢰를 꽂아 후열 전체를 강제로 흔든다.",
+      summary: "주 레일이 화면 폭으로 벌어진 천공망으로 완성되어, 멀리서 쓸어도 후열과 차폐선을 동시에 찢는다.",
+      statusNote: "Sky Lance Battery가 넓은 천공망을 펼쳐 후열 전체를 직접 베어 넘긴다.",
       description:
-        "Storm Artillery 전용 최종 교리 카드. Seeker Array와 ember 계열 포격이 먼 적 무리에 자동 천공 낙뢰를 호출해, 후열 압박과 라인 절개를 플레이어 조준과 분리된 포병 엔진으로 만든다.",
+        "Storm Artillery 전용 최종 교리 카드. Lance를 넓은 배터리 사격 형태로 완성해 플레이어가 직접 후열과 측면을 가르는 화면 폭 공성선이 된다. Seeker Array는 빈 사선을 정리하는 보조층으로만 남는다.",
+    },
+    stormspire_needle: {
+      id: "stormspire_needle",
+      doctrineId: "storm_artillery",
+      label: "Stormspire Needle",
+      title: "Stormspire Needle",
+      slotText: "교리 완성 · 집중 천공 첨탑",
+      cost: 82,
+      laneLabel: "Doctrine Apex",
+      summary: "주 레일이 좁고 거대한 첨탑 사격으로 압축되어, 적열이나 코어를 정확히 꿰면 전도 파편이 옆 열까지 찢는다.",
+      statusNote: "Stormspire Needle이 좁은 과관통 첨탑 사격으로 코어와 엘리트를 꿰뚫고 옆 열까지 갈라낸다.",
+      description:
+        "Storm Artillery 전용 최종 교리 카드. Lance를 소수의 초중량 첨탑 사격으로 압축해, 플레이어가 직접 적열과 코어를 일직선으로 세워야 최대 화력이 나온다. Seeker Array는 빗나간 측면만 정리하는 보조층으로 남는다.",
     },
   };
 
@@ -1919,25 +1932,59 @@
           },
         },
         3: {
-          label: "Sky Lance Battery",
-          traitLabel: "칠연 천공망",
-          statusNote:
-            "Sky Lance Battery가 화면 폭의 천공망을 깔아 후열 포대와 차폐선을 동시에 찢는다.",
-          damageBonus: 10,
-          cooldownMultiplier: 0.88,
-          pierceBonus: 2,
-          chainBonus: 1,
-          chainRangeBonus: 38,
-          firePattern: {
-            offsets: [-0.36, -0.22, -0.08, 0.08, 0.22, 0.36],
-            damageMultiplier: 0.56,
-            speedMultiplier: 1.22,
-            radius: 5.2,
-            life: 1.28,
-            pierceBonus: 2,
-            bounceBonus: 0,
-            chainBonus: 1,
-            color: "#ffffff",
+          variants: {
+            sky_lance_battery: {
+              label: "Sky Lance Battery",
+              traitLabel: "칠연 천공망",
+              statusNote:
+                "Sky Lance Battery가 화면 폭의 천공망을 깔아 후열 포대와 차폐선을 동시에 찢는다.",
+              damageBonus: 10,
+              cooldownMultiplier: 0.88,
+              pierceBonus: 2,
+              chainBonus: 1,
+              chainRangeBonus: 38,
+              firePattern: {
+                offsets: [-0.36, -0.22, -0.08, 0.08, 0.22, 0.36],
+                damageMultiplier: 0.56,
+                speedMultiplier: 1.22,
+                radius: 5.2,
+                life: 1.28,
+                pierceBonus: 2,
+                bounceBonus: 0,
+                chainBonus: 1,
+                color: "#ffffff",
+              },
+            },
+            stormspire_needle: {
+              label: "Stormspire Needle",
+              traitLabel: "삼중 첨탑 관통",
+              statusNote:
+                "Stormspire Needle이 좁은 삼중 첨탑 레일로 코어와 엘리트를 꿰고, 중심 적중점에서 전도 파편이 옆 열을 갈라낸다.",
+              damageBonus: 16,
+              cooldownMultiplier: 0.94,
+              pierceBonus: 4,
+              chainBonus: 1,
+              chainRangeBonus: 18,
+              firePattern: {
+                offsets: [-0.08, 0.08],
+                damageMultiplier: 0.78,
+                speedMultiplier: 1.28,
+                radius: 6.3,
+                life: 1.34,
+                pierceBonus: 3,
+                bounceBonus: 0,
+                chainBonus: 0,
+                color: "#fff5dd",
+              },
+              onHit: {
+                kind: "stormspire_branch",
+                burstCount: 2,
+                range: 172,
+                damageMultiplier: 0.66,
+                speedMultiplier: 1.05,
+                color: "#a6f3ff",
+              },
+            },
           },
         },
       },
@@ -4019,6 +4066,29 @@
     );
   }
 
+  function getDoctrineLateCapstoneDefs(buildOrDoctrine) {
+    const doctrine = getBastionDoctrineDef(buildOrDoctrine);
+    if (!doctrine) {
+      return [];
+    }
+    const capstoneIds = Array.isArray(doctrine.lateCapstoneIds) && doctrine.lateCapstoneIds.length > 0
+      ? doctrine.lateCapstoneIds
+      : doctrine.lateCapstoneId
+        ? [doctrine.lateCapstoneId]
+        : [];
+    return capstoneIds
+      .map((capstoneId) => getDoctrineCapstoneDef(capstoneId))
+      .filter(Boolean);
+  }
+
+  function getDoctrineLateCapstoneLabel(buildOrDoctrine) {
+    const capstones = getDoctrineLateCapstoneDefs(buildOrDoctrine);
+    if (capstones.length === 0) {
+      return null;
+    }
+    return capstones.map((capstone) => capstone.title).join(" / ");
+  }
+
   function getDoctrineForgePursuitDef(buildOrDoctrineId) {
     if (!buildOrDoctrineId) {
       return null;
@@ -4042,7 +4112,10 @@
     if (build.doctrineChaseClaimed) {
       stage = 2;
     }
-    if (build.doctrineCapstoneId && activeDoctrine.lateCapstoneId === build.doctrineCapstoneId) {
+    if (
+      build.doctrineCapstoneId &&
+      getDoctrineLateCapstoneDefs(activeDoctrine).some((capstone) => capstone.id === build.doctrineCapstoneId)
+    ) {
       stage = 3;
     }
     return stage;
@@ -4061,7 +4134,11 @@
       return null;
     }
     const stage = getDoctrineWeaponStage(build, doctrine);
-    const form = ladder.stages[stage];
+    const stageDef = ladder.stages[stage];
+    const form =
+      stageDef && stageDef.variants && build.doctrineCapstoneId
+        ? stageDef.variants[build.doctrineCapstoneId] || null
+        : stageDef;
     return form
       ? {
           stage,
@@ -4221,6 +4298,7 @@
       doctrineTraitLabel: null,
       doctrineStatusNote: null,
       doctrineFirePattern: null,
+      doctrineOnHit: null,
       capstoneFire: null,
       capstoneOnHit: null,
       capstoneOnBounce: null,
@@ -4255,6 +4333,7 @@
       stats.doctrineTraitLabel = doctrineWeaponForm.traitLabel;
       stats.doctrineStatusNote = doctrineWeaponForm.statusNote;
       stats.doctrineFirePattern = doctrineWeaponForm.firePattern;
+      stats.doctrineOnHit = doctrineWeaponForm.onHit || null;
       stats.damage += doctrineWeaponForm.damageBonus || 0;
       stats.cooldown = clamp(
         stats.cooldown * (doctrineWeaponForm.cooldownMultiplier || 1),
@@ -4616,8 +4695,7 @@
       return null;
     }
     const doctrine = getBastionDoctrineDef(build);
-    const capstone =
-      doctrine && doctrine.lateCapstoneId ? getDoctrineCapstoneDef(doctrine.lateCapstoneId) : null;
+    const capstoneLabel = getDoctrineLateCapstoneLabel(doctrine);
     const pursuit = getDoctrineForgePursuitDef(doctrine);
     if (!doctrine || !pursuit) {
       return null;
@@ -4630,15 +4708,15 @@
       tag: "CHASE",
       title: pursuit.label,
       description:
-        `${doctrine.label}의 장기 forge pursuit. ${pursuit.description}${capstone ? ` 완성에 성공하면 ${capstone.title} 교리 완성 카드도 그대로 살아 남는다.` : ""}`,
+        `${doctrine.label}의 장기 forge pursuit. ${pursuit.description}${capstoneLabel ? ` 완성에 성공하면 ${capstoneLabel} 교리 완성 카드가 살아 남아 마지막에 주무장 종점을 고를 수 있다.` : ""}`,
       slotText: `Forge Pursuit 개시 · ${pursuit.goal} shards 필요 · Wave 6-8 marked elite`,
       cost: 0,
       laneLabel: "교리 추격",
       forgeLaneLabel: "교리 추격",
       doctrineId: doctrine.id,
       doctrineLabel: doctrine.label,
-      doctrineCapstoneId: capstone ? capstone.id : null,
-      capstoneLabel: capstone ? capstone.label : null,
+      doctrineCapstoneId: null,
+      capstoneLabel: capstoneLabel,
       pursuitLabel: pursuit.label,
       pursuitGoal: pursuit.goal,
       pursuitShardLabel: pursuit.shardLabel,
@@ -4914,7 +4992,7 @@
     const offensiveModuleCandidates = [];
     const subsystemCandidates = [];
     const chassisCandidates = [];
-    const doctrineCapstoneChoice = createDoctrineCapstoneChoice(build, options);
+    const doctrineCapstoneChoices = createDoctrineCapstoneChoices(build, options);
     const supportSystemChoices = shouldOfferSupportSystem(build, options)
       ? createSupportSystemChoices(build, random, options)
       : [];
@@ -4936,7 +5014,9 @@
       .filter((choice) => choice && canApplyAffixChoice(build, choice.affixId, choice.replaceTarget));
 
     pushChoiceIfOpen(evolutionCandidates, createWeaponEvolutionChoice(build, options), choiceCatalog);
-    pushChoiceIfOpen(offensiveSpikeCandidates, doctrineCapstoneChoice, choiceCatalog);
+    doctrineCapstoneChoices.forEach((choice) => {
+      pushChoiceIfOpen(offensiveSpikeCandidates, choice, choiceCatalog);
+    });
     pushChoiceIfOpen(offensiveSpikeCandidates, finisherChoice, choiceCatalog);
     if (currentCoreChoice && currentCoreChoice.benchCopies > 0) {
       pushChoiceIfOpen(offensiveSpikeCandidates, currentCoreChoice, choiceCatalog);
@@ -5492,19 +5572,16 @@
     };
   }
 
-  function createDoctrineCapstoneChoice(build, options = null) {
+  function createDoctrineCapstoneChoices(build, options = null) {
     if (!build || !isLateBreakArmory(options) || build.doctrineCapstoneId) {
-      return null;
+      return [];
     }
     const doctrine = getBastionDoctrineDef(build);
-    if (!doctrine || !doctrine.lateCapstoneId) {
-      return null;
+    const capstones = getDoctrineLateCapstoneDefs(doctrine);
+    if (!doctrine || capstones.length === 0) {
+      return [];
     }
-    const capstone = getDoctrineCapstoneDef(doctrine.lateCapstoneId);
-    if (!capstone) {
-      return null;
-    }
-    return {
+    return capstones.map((capstone) => ({
       type: "utility",
       action: "doctrine_capstone",
       id: `utility:doctrine_capstone:${capstone.id}`,
@@ -5520,7 +5597,7 @@
       doctrineLabel: doctrine.label,
       doctrineCapstoneId: capstone.id,
       capstoneLabel: capstone.label,
-    };
+    }));
   }
 
   function getDoctrinePreferenceScore(choice, doctrine) {
@@ -5566,9 +5643,7 @@
   function createBastionDoctrineChoice(build, rng, nextWave) {
     const doctrine = getBastionDoctrineDef(build);
     const spikeChoice = createBastionDraftSpikeChoice(build, rng, nextWave);
-    const lateCapstone = doctrine && doctrine.lateCapstoneId
-      ? getDoctrineCapstoneDef(doctrine.lateCapstoneId)
-      : null;
+    const lateCapstoneLabel = getDoctrineLateCapstoneLabel(doctrine);
     if (!doctrine || !spikeChoice) {
       return spikeChoice;
     }
@@ -5580,7 +5655,7 @@
       tag: "DOCTRINE",
       title: doctrine.label,
       description:
-        `${doctrine.description} 즉시 ${spikeChoice.title}을(를) 할인 장착하고, ${doctrine.reserveText} 이후 포지 후보도 ${doctrine.short} 방향을 먼저 민다.${lateCapstone ? ` Wave 6-8 marked elite shard를 모으는 ${lateCapstone.title} forge pursuit가 열리고, Wave 9 Late Break Armory에서는 ${lateCapstone.title} 교리 완성 카드가 열린다.` : ""}`,
+        `${doctrine.description} 즉시 ${spikeChoice.title}을(를) 할인 장착하고, ${doctrine.reserveText} 이후 포지 후보도 ${doctrine.short} 방향을 먼저 민다.${lateCapstoneLabel ? ` Wave 6-8 marked elite shard를 모으는 장기 forge pursuit가 열리고, Wave 9 Late Break Armory에서는 ${lateCapstoneLabel} 교리 완성 카드가 열린다.` : ""}`,
       slotText: `교리 채택 · ${spikeChoice.title} · ${doctrine.short} · ${doctrine.reservedLane}`,
       cost: spikeChoice.cost,
       laneLabel: "교리 채택",
@@ -5620,9 +5695,7 @@
     const starterSystem = SUPPORT_SYSTEM_DEFS[doctrine.starterSystemId];
     const starterTier = starterSystem.tiers[1];
     const weaponChoice = createArchitectureDoctrineWeaponChoice(build, doctrine);
-    const lateCapstone = doctrine && doctrine.lateCapstoneId
-      ? getDoctrineCapstoneDef(doctrine.lateCapstoneId)
-      : null;
+    const lateCapstoneLabel = getDoctrineLateCapstoneLabel(doctrine);
     if (!starterTier || !weaponChoice) {
       return null;
     }
@@ -5634,14 +5707,14 @@
       tag: "ARCH",
       title: doctrine.label,
       description:
-        `${doctrine.description} 즉시 주무장을 ${weaponChoice.title} 형태로 재배선하고 ${starterTier.title}을(를) 무료 설치해 ${doctrine.branchFamilyLabel} 계통을 바로 켠다. ${doctrine.reserveText} 이후 포지 후보도 ${doctrine.short} 쪽을 먼저 민다.${lateCapstone ? ` Wave 5 overcommit를 통과하면 ${lateCapstone.title} forge pursuit 계약이 열리고, 이후 Wave 6-8 marked elite shard를 모아 조기 완성을 노릴 수 있다. Late Break Armory에서는 ${lateCapstone.title} 완성 카드까지 열린다.` : ""}`,
+        `${doctrine.description} 즉시 주무장을 ${weaponChoice.title} 형태로 재배선하고 ${starterTier.title}을(를) 무료 설치해 ${doctrine.branchFamilyLabel} 계통을 바로 켠다. ${doctrine.reserveText} 이후 포지 후보도 ${doctrine.short} 쪽을 먼저 민다.${lateCapstoneLabel ? ` Wave 5 overcommit를 통과하면 forge pursuit 계약이 열리고, 이후 Wave 6-8 marked elite shard를 모아 조기 완성을 노릴 수 있다. Late Break Armory에서는 ${lateCapstoneLabel} 완성 카드까지 열린다.` : ""}`,
       slotText: `아키텍처 잠금 · ${weaponChoice.title} + ${starterTier.title} · ${doctrine.short}`,
       cost: 0,
       laneLabel: "아키텍처",
       forgeLaneLabel: "아키텍처",
       doctrineId: doctrine.id,
       doctrineLabel: doctrine.label,
-      doctrineCapstoneLabel: lateCapstone ? lateCapstone.title : null,
+      doctrineCapstoneLabel: lateCapstoneLabel,
       weaponChoice,
       doctrineChoice: {
         type: "system",
@@ -8250,6 +8323,12 @@
       chain: weapon.chain,
       chainRange: weapon.chainRange,
       color: weapon.color,
+      doctrineOnHit: weapon.doctrineOnHit
+        ? {
+            ...weapon.doctrineOnHit,
+            remainingBursts: weapon.doctrineOnHit.burstCount,
+          }
+        : null,
       capstoneOnHit: weapon.capstoneOnHit
         ? {
             ...weapon.capstoneOnHit,
@@ -8696,9 +8775,6 @@
     if (capstone.id === "relay_storm_lattice") {
       activated = triggerMirrorHuntCapstone();
       state.supportSystemRuntime.doctrineCapstoneCooldown = 4.2;
-    } else if (capstone.id === "sky_lance_grid") {
-      activated = triggerStormArtilleryCapstone();
-      state.supportSystemRuntime.doctrineCapstoneCooldown = 4.6;
     }
     if (!activated) {
       state.supportSystemRuntime.doctrineCapstoneCooldown = 1.2;
@@ -8863,6 +8939,49 @@
           chain: 0,
           chainRange: 0,
           color: onHit.color,
+          capstoneOnHit: null,
+          capstoneOnBounce: null,
+        })
+      );
+      emitted += 1;
+    }
+    onHit.remainingBursts = 0;
+  }
+
+  function emitStormspireNeedleBursts(projectile, sourceEnemy) {
+    const onHit = projectile && projectile.doctrineOnHit;
+    if (!onHit || onHit.kind !== "stormspire_branch" || onHit.remainingBursts <= 0) {
+      return;
+    }
+    let emitted = 0;
+    for (const enemy of state.enemies) {
+      if (
+        enemy === sourceEnemy ||
+        enemy.defeated ||
+        enemy.hp <= 0 ||
+        emitted >= onHit.remainingBursts
+      ) {
+        continue;
+      }
+      const distance = Math.hypot(enemy.x - sourceEnemy.x, enemy.y - sourceEnemy.y);
+      if (distance > onHit.range) {
+        continue;
+      }
+      const angle = Math.atan2(enemy.y - sourceEnemy.y, enemy.x - sourceEnemy.x);
+      state.projectiles.push(
+        createDerivedProjectile(projectile, angle, {
+          x: sourceEnemy.x,
+          y: sourceEnemy.y,
+          speed: (Math.hypot(projectile.vx, projectile.vy) || 1) * onHit.speedMultiplier,
+          radius: Math.max(projectile.radius - 0.1, 5),
+          damage: round(projectile.damage * onHit.damageMultiplier, 1),
+          life: 0.28,
+          pierce: 1,
+          bounce: 0,
+          chain: 0,
+          chainRange: 0,
+          color: onHit.color,
+          doctrineOnHit: null,
           capstoneOnHit: null,
           capstoneOnBounce: null,
         })
@@ -9517,6 +9636,7 @@
             if (enemy.hp <= 0) {
               destroyEnemy(enemy);
             }
+            emitStormspireNeedleBursts(projectile, enemy);
             emitStormRailBursts(projectile, enemy);
             const chained = tryChainProjectile(projectile, enemy);
             if (chained) {

@@ -403,6 +403,10 @@ const artilleryArchitectureChoice = game
   .buildArchitectureDraftChoices(artilleryDoctrineBuild)
   .find((choice) => choice.title === "Storm Artillery Doctrine");
 assert.ok(artilleryArchitectureChoice);
+assert.equal(
+  artilleryArchitectureChoice.doctrineCapstoneLabel,
+  "Sky Lance Battery / Stormspire Needle"
+);
 game.applyForgeChoice(
   { build: artilleryDoctrineBuild, player: null, resources: { scrap: 999 }, stats: {} },
   artilleryArchitectureChoice
@@ -437,28 +441,69 @@ assert.equal(
   JSON.stringify(artilleryWaveFiveWeapon.doctrineFirePattern.offsets),
   JSON.stringify([-0.22, 0.22])
 );
+artilleryDoctrineBuild.doctrineChaseClaimed = true;
+const artilleryWaveSevenWeapon = game.computeWeaponStats(artilleryDoctrineBuild);
+assert.equal(artilleryWaveSevenWeapon.doctrineFormLabel, "Thunder Rack");
+assert.equal(artilleryWaveSevenWeapon.doctrineStage, 2);
+assert.equal(
+  JSON.stringify(artilleryWaveSevenWeapon.doctrineFirePattern.offsets),
+  JSON.stringify([-0.3, -0.12, 0.12, 0.3])
+);
 const artilleryLateArmoryChoices = game.buildForgeChoices(
   artilleryDoctrineBuild,
   () => 0,
   180,
   { nextWave: 9, finalForge: false }
 );
-const artilleryCapstoneChoice = artilleryLateArmoryChoices.find(
+const artilleryCapstoneChoices = artilleryLateArmoryChoices.filter(
   (choice) => choice.action === "doctrine_capstone"
 );
-assert.ok(artilleryCapstoneChoice);
+assert.equal(artilleryCapstoneChoices.length, 2);
+const batteryCapstoneChoice = artilleryCapstoneChoices.find(
+  (choice) => choice.doctrineCapstoneId === "sky_lance_battery"
+);
+const needleCapstoneChoice = artilleryCapstoneChoices.find(
+  (choice) => choice.doctrineCapstoneId === "stormspire_needle"
+);
+assert.ok(batteryCapstoneChoice);
+assert.ok(needleCapstoneChoice);
 game.applyForgeChoice(
   { build: artilleryDoctrineBuild, player: null, resources: { scrap: 999 }, stats: {} },
-  artilleryCapstoneChoice
+  batteryCapstoneChoice
 );
 const artilleryWaveNineWeapon = game.computeWeaponStats(artilleryDoctrineBuild);
 assert.equal(artilleryWaveNineWeapon.doctrineFormLabel, "Sky Lance Battery");
 assert.equal(artilleryWaveNineWeapon.doctrineStage, 3);
-assert.ok(artilleryWaveNineWeapon.cooldown < artilleryWaveFiveWeapon.cooldown);
-assert.ok(artilleryWaveNineWeapon.chainRange > artilleryWaveFiveWeapon.chainRange);
+assert.ok(artilleryWaveNineWeapon.cooldown < artilleryWaveSevenWeapon.cooldown);
+assert.ok(artilleryWaveNineWeapon.chainRange > artilleryWaveSevenWeapon.chainRange);
 assert.equal(
   JSON.stringify(artilleryWaveNineWeapon.doctrineFirePattern.offsets),
   JSON.stringify([-0.36, -0.22, -0.08, 0.08, 0.22, 0.36])
+);
+const artilleryNeedleBuild = game.createInitialBuild("rail_zeal");
+artilleryNeedleBuild.pendingCores = [];
+const artilleryNeedleArchitectureChoice = game
+  .buildArchitectureDraftChoices(artilleryNeedleBuild)
+  .find((choice) => choice.title === "Storm Artillery Doctrine");
+assert.ok(artilleryNeedleArchitectureChoice);
+game.applyForgeChoice(
+  { build: artilleryNeedleBuild, player: null, resources: { scrap: 999 }, stats: {} },
+  artilleryNeedleArchitectureChoice
+);
+artilleryNeedleBuild.doctrineChaseClaimed = true;
+game.applyForgeChoice(
+  { build: artilleryNeedleBuild, player: null, resources: { scrap: 999 }, stats: {} },
+  needleCapstoneChoice
+);
+const artilleryNeedleWeapon = game.computeWeaponStats(artilleryNeedleBuild);
+assert.equal(artilleryNeedleWeapon.doctrineFormLabel, "Stormspire Needle");
+assert.equal(artilleryNeedleWeapon.doctrineStage, 3);
+assert.ok(artilleryNeedleWeapon.damage > artilleryWaveNineWeapon.damage);
+assert.ok(artilleryNeedleWeapon.pierce > artilleryWaveNineWeapon.pierce);
+assert.equal(artilleryNeedleWeapon.doctrineOnHit.kind, "stormspire_branch");
+assert.equal(
+  JSON.stringify(artilleryNeedleWeapon.doctrineFirePattern.offsets),
+  JSON.stringify([-0.08, 0.08])
 );
 const fortressDoctrineBuild = game.createInitialBuild("scrap_pact");
 fortressDoctrineBuild.pendingCores = [];
