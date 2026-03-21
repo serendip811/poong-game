@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 00:40 KST
+  Findings:
+  - The run now reaches `Wave 12`, but the new back half is still too single-answer for a rerun game. `Wave 9-12` all lean on some version of `warden lane denial`, so once the player learns "break the outer lock first," the last four waves stop feeling like a bracket and start feeling like repeated homework.
+  - The larger `THIRD_ACT_ARENA` helps readability, but `activeCap 41 -> 48` across `1440x820` means late pressure is carried more by scripted lockouts than by dense enemy ecology. Too often the player reopens one lane, vacuums the spread-out field, then repeats, which is calmer than the build ceiling implies.
+  - Build breadth exists on paper through evolutions, missiles, drones, shields, orbitals, and a late third support bay, but the run still does not create enough forward hunger inside the final bracket. The player gets one big overcommit moment, then mostly proves the same answer for four waves instead of chasing the next visible transformation.
+  - The design docs still pitch `5웨이브` and `7분 내외`, which matters because the game is still behaving like an expanded prototype: more content appended to the old loop rather than a run structure authored around long-form escalation, bracket identity, and expected power spikes.
+  Top Priority: Rebuild one of the `Wave 10-12` slots into a different late-game combat exam that breaks the current `clear warden lanes first` monopoly, forcing a new positional answer and giving the late build a second thing to prove besides static line-breaking.
+  Why Now: Until the final bracket contains multiple combat questions, adding more waves or more upgrades will just stretch one solved pattern.
+  Do Not Repeat: Do not answer this by appending `Wave 13+` or just inflating spawn counts if the last act is still one repeated lane-clear test.
+
 - 2026-03-21 00:30 KST
   Findings:
   - The shift away from full forge stops is directionally correct, but `applyFieldGrant()` now silently auto-picks the highest-scoring cheap reward between most waves. That preserves tempo by stripping authorship, which is a bad trade for a rerun-driven roguelite.
@@ -378,6 +388,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 01:24 KST
+  Changed: rebuilt `Wave 11 · Starforge` in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) away from another pure `warden` lane-clear script and into a moving late-game exam. The wave now uses a new `drift` hazard profile, `Starforge Pursuit`, which spawns two orbiting pursuit zones that actively chase the player’s route during the fight; at the same time the enemy mix shifts some weight from `warden` into `shrike`/`brute` pressure so the player has to keep rotating the whole arena instead of just deleting outer firing lines first. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new Wave 11 hazard type and composition change.
+  Why: the latest critique’s Top Priority was to rebuild one `Wave 10-12` slot into a different late-game combat exam that breaks the current `clear warden lanes first` monopoly. I took the highest-value bounded interpretation as "swap one wave into a moving pursuit hazard test" because that creates a second authored positional question inside the last bracket without widening scope into a whole new enemy family.
+  Follow-up risk: the new `drift` hazard is a real behavior change, but right now it only exists on one authored wave. If later critique still finds the late bracket too binary, the next pass should either add another late-only hazard interaction that combos with `drift` or deepen enemy responses to moving hazard ownership instead of just making pursuit circles faster.
 
 - 2026-03-22 01:10 KST
   Changed: replaced the ordinary post-wave `Field Cache` auto-pick in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) with a zero-cost two-card micro-draft that uses the existing forge overlay. Cache rewards are now surfaced as two distinct instant-install options whenever possible, the run pauses only long enough for one authored click, and the next wave begins immediately after the pick instead of silently applying the heuristic top score behind the player’s back.

@@ -323,29 +323,33 @@
       label: "Wave 11 · Starforge",
       duration: 98,
       spawnBudget: 216,
-      activeCap: 45,
+      activeCap: 46,
       baseSpawnInterval: 0.32,
       spawnIntervalMin: 0.095,
       spawnAcceleration: 0.36,
       eliteEvery: 5,
       mix: {
-        scuttler: 0.1,
-        brute: 0.18,
-        shrike: 0.2,
-        warden: 0.52,
+        scuttler: 0.14,
+        brute: 0.24,
+        shrike: 0.28,
+        warden: 0.34,
       },
-      note: "세 번째 구간의 압박이 다시 열린다. 방금 되찾은 공간을 유지하려면 warden 라인을 더 빠르게 찢어 화력 창을 강제로 확보해야 한다.",
-      directive: "triple surge + warden ring. 중앙 돌진보다 외곽 포대를 정리하며 화력 창을 만든다.",
+      note: "세 번째 구간의 답을 바꾼다. 움직이는 제련 폭주가 플레이어를 감아 들어오므로, 고정 포대만 끊는 대신 전장을 크게 회전하며 밀집 추격조와 warden 각도를 함께 흘려야 한다.",
+      directive:
+        "starforge pursuit. 추적 화구가 현재 위치를 따라붙으니 한 lane에 오래 머물 수 없다. 바깥 포대 정리보다 이동 경로를 계속 갈아타며 압박 덩어리를 찢어야 한다.",
       driveGainFactor: 1.46,
       arena: THIRD_ACT_ARENA,
       hazard: {
-        label: "Starforge Surge",
-        interval: 8.3,
-        count: 3,
-        radius: 82,
-        telegraph: 0.76,
-        duration: 4.7,
+        label: "Starforge Pursuit",
+        type: "drift",
+        interval: 8.7,
+        count: 2,
+        radius: 84,
+        telegraph: 0.74,
+        duration: 5.8,
         damage: 15,
+        driftSpeed: 112,
+        driftOrbit: 0.42,
       },
     },
     {
@@ -4658,6 +4662,18 @@
           tone: "summary-chip--hot",
         };
       }
+      const driftHazards = currentState.hazards.filter(
+        (hazard) => hazard.type === "drift" && hazard.telegraphTime <= 0 && hazard.activeTime > 0
+      );
+      if (driftHazards.length > 0) {
+        return {
+          chipLabel: `${wave.hazard.label} LIVE`,
+          detailLabel: "추적 화구",
+          detailValue: `${driftHazards.length}개 추격 중`,
+          note: `${driftHazards.length}개 추적 화구가 현재 위치를 감아 들어온다. 한 lane에 고정되지 말고 크게 회전하며 압박 덩어리를 끊어야 한다.`,
+          tone: "summary-chip--hot",
+        };
+      }
       return {
         chipLabel: `${wave.hazard.label} LIVE`,
         detailLabel: "폭주",
@@ -4668,14 +4684,23 @@
     }
 
     const nextWindow = Math.max(0, wave.hazardTimer || 0);
+    const detailLabel =
+      wave.hazard.type === "territory"
+        ? "다음 점거"
+        : wave.hazard.type === "drift"
+          ? "다음 추적"
+          : "다음 폭주";
+    const note =
+      wave.hazard.type === "territory"
+        ? `${wave.hazard.count}개 점거 코어가 ${wave.hazard.telegraph.toFixed(1)}초 예고 후 전장을 봉쇄한다.`
+        : wave.hazard.type === "drift"
+          ? `${wave.hazard.count}개 추적 화구가 ${wave.hazard.telegraph.toFixed(1)}초 예고 후 플레이어 동선을 따라붙는다.`
+          : `${wave.hazard.count}개 구역이 ${wave.hazard.telegraph.toFixed(1)}초 예고 후 폭주한다.`;
     return {
       chipLabel: wave.hazard.label,
-      detailLabel: wave.hazard.type === "territory" ? "다음 점거" : "다음 폭주",
+      detailLabel,
       detailValue: `${nextWindow.toFixed(1)}s`,
-      note:
-        wave.hazard.type === "territory"
-          ? `${wave.hazard.count}개 점거 코어가 ${wave.hazard.telegraph.toFixed(1)}초 예고 후 전장을 봉쇄한다.`
-          : `${wave.hazard.count}개 구역이 ${wave.hazard.telegraph.toFixed(1)}초 예고 후 폭주한다.`,
+      note,
       tone: nextWindow <= 2.5 ? "summary-chip--hot" : "",
     };
   }
@@ -5856,6 +5881,9 @@
       turretDamage: Number.isFinite(config.turretDamage) ? config.turretDamage : 0,
       turretSpeed: Number.isFinite(config.turretSpeed) ? config.turretSpeed : 0,
       enemyPullRadius: Number.isFinite(config.enemyPullRadius) ? config.enemyPullRadius : config.radius + 42,
+      driftSpeed: Number.isFinite(config.driftSpeed) ? config.driftSpeed : 0,
+      driftOrbit: Number.isFinite(config.driftOrbit) ? config.driftOrbit : 0.34,
+      orbitDirection: Math.random() < 0.5 ? -1 : 1,
     });
   }
 
@@ -5901,6 +5929,34 @@
       } else {
         hazard.activeTime -= dt;
         hazard.pulseTimer -= dt;
+        if (hazard.type === "drift" && hazard.driftSpeed > 0) {
+          const chaseVector = normalizeVector(
+            state.player.x - hazard.x,
+            state.player.y - hazard.y,
+            1,
+            0
+          );
+          const orbitVector = {
+            x: -chaseVector.y * hazard.orbitDirection,
+            y: chaseVector.x * hazard.orbitDirection,
+          };
+          const driftVector = normalizeVector(
+            chaseVector.x + orbitVector.x * hazard.driftOrbit,
+            chaseVector.y + orbitVector.y * hazard.driftOrbit,
+            chaseVector.x,
+            chaseVector.y
+          );
+          const arena = getCurrentArenaSize();
+          const nextPosition = clampHazardAnchor(
+            hazard.x + driftVector.x * hazard.driftSpeed * dt,
+            hazard.y + driftVector.y * hazard.driftSpeed * dt,
+            hazard.radius,
+            arena.width,
+            arena.height
+          );
+          hazard.x = nextPosition.x;
+          hazard.y = nextPosition.y;
+        }
         if (hazard.pulseTimer <= 0) {
           const distance = Math.hypot(state.player.x - hazard.x, state.player.y - hazard.y);
           if (
@@ -7350,6 +7406,8 @@
         context.fillStyle =
           hazard.type === "territory"
             ? `rgba(255, 128, 79, ${clamp(activeAlpha + 0.08, 0.18, 0.46)})`
+            : hazard.type === "drift"
+              ? `rgba(255, 151, 79, ${clamp(activeAlpha + 0.1, 0.22, 0.5)})`
             : `rgba(255, 104, 61, ${activeAlpha})`;
         context.beginPath();
         context.arc(hazard.x, hazard.y, hazard.radius, 0, Math.PI * 2);
@@ -7389,6 +7447,24 @@
             -Math.PI / 2 + Math.PI * 2 * hpRatio
           );
           context.stroke();
+        } else if (hazard.type === "drift") {
+          const orbitAngle = performance.now() * 0.0022 * hazard.orbitDirection;
+          context.save();
+          context.translate(hazard.x, hazard.y);
+          context.rotate(orbitAngle);
+          context.strokeStyle = "rgba(255, 245, 214, 0.82)";
+          context.lineWidth = 3;
+          context.beginPath();
+          context.arc(0, 0, hazard.radius * 0.48, -Math.PI * 0.2, Math.PI * 0.65);
+          context.stroke();
+          context.beginPath();
+          context.arc(0, 0, hazard.radius * 0.3, Math.PI * 0.45, Math.PI * 1.3);
+          context.stroke();
+          context.fillStyle = "rgba(255, 223, 184, 0.92)";
+          context.beginPath();
+          context.arc(hazard.radius * 0.18, -hazard.radius * 0.18, 7, 0, Math.PI * 2);
+          context.fill();
+          context.restore();
         }
       }
     }
