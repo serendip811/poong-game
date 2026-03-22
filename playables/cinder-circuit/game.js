@@ -4347,6 +4347,30 @@
     return capstones.map((capstone) => capstone.title).join(" / ");
   }
 
+  function getDoctrinePursuitCapstoneDef(buildOrDoctrine) {
+    const doctrine = getBastionDoctrineDef(buildOrDoctrine);
+    const capstones = getDoctrineLateCapstoneDefs(doctrine);
+    if (!doctrine || capstones.length === 0) {
+      return null;
+    }
+    if (capstones.length === 1) {
+      return capstones[0];
+    }
+    if (doctrine.id === "storm_artillery") {
+      const build = typeof buildOrDoctrine === "object" ? buildOrDoctrine : null;
+      const affixes = build && Array.isArray(build.affixes) ? build.affixes : [];
+      const pierceWeight =
+        (build && (build.pierceBonus || 0)) +
+        (affixes.includes("phase_rounds") ? 2 : 0) +
+        ((build && build.coreId === "lance") ? 1 : 0);
+      return (
+        getDoctrineCapstoneDef(pierceWeight >= 3 ? "stormspire_needle" : "sky_lance_battery") ||
+        capstones[0]
+      );
+    }
+    return capstones[0];
+  }
+
   function getDoctrineForgePursuitDef(buildOrDoctrineId) {
     if (!buildOrDoctrineId) {
       return null;
@@ -4972,7 +4996,7 @@
       tag: "CHASE",
       title: pursuit.label,
       description:
-        `${doctrine.label}의 장기 forge pursuit. ${pursuit.description}${capstoneLabel ? ` 완성에 성공하면 ${capstoneLabel} 교리 완성 카드가 살아 남아 마지막에 주무장 종점을 고를 수 있다.` : ""}`,
+        `${doctrine.label}의 장기 forge pursuit. ${pursuit.description}${capstoneLabel ? ` 완성에 성공하면 ${capstoneLabel} 계열 monster form이 즉시 잠겨 남은 전투를 그 형태로 바로 소모한다.` : ""}`,
       slotText: `Forge Pursuit 개시 · ${pursuit.goal} shards 필요 · Wave 6-8 marked elite`,
       cost: 0,
       laneLabel: "교리 추격",
@@ -5919,7 +5943,7 @@
       tag: "DOCTRINE",
       title: doctrine.label,
       description:
-        `${doctrine.description} 즉시 ${spikeChoice.title}을(를) 할인 장착하고, ${doctrine.reserveText} 이후 포지 후보도 ${doctrine.short} 방향을 먼저 민다.${lateCapstoneLabel ? ` Wave 6-8 marked elite shard를 모으는 장기 forge pursuit가 열리고, Wave 9 Late Break Armory에서는 ${lateCapstoneLabel} 교리 완성 카드가 열린다.` : ""}`,
+        `${doctrine.description} 즉시 ${spikeChoice.title}을(를) 할인 장착하고, ${doctrine.reserveText} 이후 포지 후보도 ${doctrine.short} 방향을 먼저 민다.${lateCapstoneLabel ? ` Wave 6-8 marked elite shard를 모으는 장기 forge pursuit가 열리고, 완성 시 ${lateCapstoneLabel} 계열 교리 monster form이 즉시 잠긴다.` : ""}`,
       slotText: `교리 채택 · ${spikeChoice.title} · ${doctrine.short} · ${doctrine.reservedLane}`,
       cost: spikeChoice.cost,
       laneLabel: "교리 채택",
@@ -5971,7 +5995,7 @@
       tag: "ARCH",
       title: doctrine.label,
       description:
-        `${doctrine.description} 즉시 주무장을 ${weaponChoice.title} 형태로 재배선하고 ${starterTier.title}을(를) 무료 설치해 ${doctrine.branchFamilyLabel} 계통을 바로 켠다. ${doctrine.reserveText} 이후 포지 후보도 ${doctrine.short} 쪽을 먼저 민다.${lateCapstoneLabel ? ` Wave 5 overcommit를 통과하면 forge pursuit 계약이 열리고, 이후 Wave 6-8 marked elite shard를 모아 조기 완성을 노릴 수 있다. Late Break Armory에서는 ${lateCapstoneLabel} 완성 카드까지 열린다.` : ""}`,
+        `${doctrine.description} 즉시 주무장을 ${weaponChoice.title} 형태로 재배선하고 ${starterTier.title}을(를) 무료 설치해 ${doctrine.branchFamilyLabel} 계통을 바로 켠다. ${doctrine.reserveText} 이후 포지 후보도 ${doctrine.short} 쪽을 먼저 민다.${lateCapstoneLabel ? ` Wave 5 overcommit를 통과하면 forge pursuit 계약이 열리고, 이후 Wave 6-8 marked elite shard를 모아 ${lateCapstoneLabel} 계열 조기 완성을 노릴 수 있다.` : ""}`,
       slotText: `아키텍처 잠금 · ${weaponChoice.title} + ${starterTier.title} · ${doctrine.short}`,
       cost: 0,
       laneLabel: "아키텍처",
@@ -6791,6 +6815,7 @@
     shouldRunCatalystDraft,
     getDoctrineWeaponForm,
     getDoctrineCapstoneDef,
+    getDoctrinePursuitCapstoneDef,
     getCatalystCapstone,
     shouldOpenForgePackage,
   };
@@ -7219,6 +7244,7 @@
     }
     const doctrine = getBastionDoctrineDef(state.build);
     const pursuit = getDoctrineForgePursuitDef(state.build);
+    const capstone = getDoctrinePursuitCapstoneDef(state.build);
     const weaponChoice = createDoctrineChaseWeaponChoice(state.build, doctrine, {
       nextWave: state.waveIndex + 2,
       finalForge: false,
@@ -7233,16 +7259,20 @@
     if (systemChoice) {
       applyForgeChoice(state, systemChoice);
     }
+    if (capstone) {
+      state.build.doctrineCapstoneId = capstone.id;
+      state.build.upgrades.push(`교리 완성: ${capstone.label}`);
+    }
     state.build.doctrineChaseClaimed = true;
     state.doctrinePursuit.active = false;
     state.build.upgrades.push(
       `교리 추격 완성: ${(pursuit && pursuit.shortLabel) || (doctrine && doctrine.label) || "Doctrine Frame"}`
     );
     pushCombatFeed(
-      `${(pursuit && pursuit.label) || "Forge Pursuit"} 완성. 주무장과 지원층이 같은 종점으로 한 번에 잠겼다.`,
+      `${(pursuit && pursuit.label) || "Forge Pursuit"} 완성. ${capstone ? `${capstone.label}까지 즉시 잠겨` : "주무장과 지원층이"} 남은 웨이브를 바로 monster form으로 소모한다.`,
       "FRAME"
     );
-    setBanner((pursuit && pursuit.shortLabel) || "Frame 완성", 0.9);
+    setBanner(capstone ? capstone.label : (pursuit && pursuit.shortLabel) || "Frame 완성", 0.9);
     refreshDerivedStats(false);
   }
 
@@ -7772,8 +7802,8 @@
       isFinalForge
         ? "최종 웨이브 정리 완료. 마지막 포지에서 최종 각인과 화력 배치를 마감한다."
         : isLateBreakArmory(forgeOptions)
-          ? "Wave 8 돌파. Late Break Armory에서 6장 중 대형 카드 두 장을 골라 세 번째 베이와 교리 wildcard까지 포함한 4웨이브짜리 Act 3 화력 틀을 뒤튼다."
-        : draftType === "armory"
+          ? "Wave 8 돌파. Late Break Armory에서 6장 중 대형 카드 두 장을 골라 세 번째 베이와 교리 wildcard까지 포함한 Act 3 운영 틀을 monster form 위에 덧씌운다."
+          : draftType === "armory"
           ? "Wave 4 돌파. Act Break Armory에서 6장 중 대형 카드 두 장을 골라 4웨이브짜리 Act 2 빌드 정체성을 일찍 고정한다."
           : "웨이브 종료. 포지 카드로 다음 화력 축을 고른다.",
       "FORGE"
@@ -10905,7 +10935,7 @@
         ? "Catalyst Crucible · 회수한 촉매를 지금 태워 Act 3 본편을 괴물 화력이나 운영형 안정화로 먼저 고정한다"
         : state.forgeDraftType === "armory"
         ? isLateBreakArmory(forgeOptions)
-          ? `${armoryLabel} ${state.forgeStep}/${state.forgeMaxSteps} · 6장 중 2픽, 세 번째 베이와 교리 wildcard·완성 카드까지 열려 최종 전장 posture를 뒤튼다`
+          ? `${armoryLabel} ${state.forgeStep}/${state.forgeMaxSteps} · 6장 중 2픽, 세 번째 베이와 교리 wildcard가 열려 이미 잠근 monster form에 우회 시스템을 얹는다`
           : `${armoryLabel} ${state.forgeStep}/${state.forgeMaxSteps} · 6장 중 2픽, 대형 화력이 과투입되어 안전한 lane 보장이 없다`
         : state.forgeMaxSteps > 1
         ? `패키지 ${state.forgeStep}/${state.forgeMaxSteps} · 1슬롯 화력/전환, 2슬롯 시스템/안정화`
@@ -10923,7 +10953,7 @@
         : state.forgeDraftType === "bastion_draft"
         ? state.build.bastionDoctrineId
           ? state.build.overcommitUnlocked && !state.build.doctrineChaseClaimed
-            ? `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. Wave 5에서 회수한 contraband salvage가 살아 있어 장기 Forge Pursuit 계약이 열렸다. 지금 pursuit를 걸고 Wave 6-8 marked elite에서 shard를 모아 조기 monster form을 완성할지, Siege Salvage Pact나 무료 안정화로 greed를 접을지 정한다.`
+            ? `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. Wave 5에서 회수한 contraband salvage가 살아 있어 장기 Forge Pursuit 계약이 열렸다. 지금 pursuit를 걸고 Wave 6-8 marked elite에서 shard를 모아 조기 monster form을 즉시 잠글지, Siege Salvage Pact나 무료 안정화로 greed를 접을지 정한다.`
             : state.waveIndex + 2 === 6
               ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 6 Systems Forge다. 한 장은 주무장 변이를 바로 당겨 중반 화력 실루엣을 바꾸고, 한 장은 세 번째 support bay를 조기 개방하면서 시스템을 즉시 꽂아 Wave 7-8 조합 폭을 넓히며, 마지막 한 장은 최대 체력과 현재 체력을 태워 고철을 훔쳐 온 뒤 3웨이브 동안 Siege Debt를 떠안는 계약이다. 지금 무기, 시스템, greed 중 무엇으로 Act 2를 비틀지 정한다.`
             : `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 이미 채택한 교리 위에 추가 spike 1장과 Siege Salvage Pact, 무료 안정화가 다시 뜬다. 지금 더 깊게 묶일지, 체력을 태워 greed를 당길지 결정한다.`
@@ -10932,7 +10962,7 @@
         ? `고철 ${Math.round(state.resources.scrap)} 보유. Catalyst Crucible이다. 이제 막 회수한 촉매를 무료로 점화하거나 안정화해 남은 Act 3 웨이브를 완성형 회로로 직접 소모한다. 최종 포지까지 묵혀 두는 대신 지금부터 괴물 형태를 실제 전장에 투입한다.`
         : state.forgeDraftType === "armory"
         ? isLateBreakArmory(forgeOptions)
-          ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 8을 넘기며 ${armoryLabel}가 열린다. 세 번째 support bay가 해금됐고, 교리를 택한 런이라면 마지막 bay 1칸이 우회 조합용 wildcard로 풀리며 doctrine apex 카드도 함께 열려 이번 포지 2픽이 최종 전장 posture 자체를 바꾼다.`
+          ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 8을 넘기며 ${armoryLabel}가 열린다. 세 번째 support bay가 해금됐고, 교리를 택한 런이라면 마지막 bay 1칸이 우회 조합용 wildcard로 풀려 이미 잠긴 monster form 위에 부족한 시스템을 덧댄다.`
           : `고철 ${Math.round(state.resources.scrap)} 보유. Wave 4를 넘기면 일반 패키지 대신 ${armoryLabel}가 열린다. 이번 포지는 6장 중 2장을 고르며, 주무장 진화와 공세 카드가 여러 장 겹쳐 떠 4웨이브짜리 Act 2 운영을 일찍 잠근다.`
       : `고철 ${Math.round(state.resources.scrap)} 보유. 장착은 무기 등급을 올리거나 바꾸고, 각인은 속성을 붙이며, 재구성/분해는 보관 코어를 정리한다. ${packageSummary}.`;
     elements.forgeContext.innerHTML = `

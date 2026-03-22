@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 23:40 KST
+  Findings:
+  - The run now has enough doctrine, pursuit, catalyst, and support-bay structure to look ambitious, but it still cashes too much of that ambition into labeled forge wrappers instead of playable ownership time. `Architecture Draft`, `Systems Forge`, `Late Break Armory`, and `Catalyst Crucible` explain the fantasy well; they do not leave enough waves to live in it.
+  - Too many run-defining layers still converge around `Wave 8-10`. Doctrine late variants only start after `Late Break Armory`, `doctrine apex` is tied to that same window, and `Catalyst Crucible` begins at `Wave 10`, so several of the build's loudest forms arrive when the run is already nearly finished.
+  - The combat asks are clearer, but the game is still more interested in route repair than dominance expression. `territory -> mortar/warden -> relay` is a solid escalation chain, yet with `activeCap 41-48` it keeps asking "how do I reopen space?" more often than "what insane machine did I build to own this space?"
+  - The design doc is still actively dragging the ceiling down. `docs/games/cinder-circuit-design.md` still sells a `5웨이브` short-run MVP, which is the wrong product ambition for an implementation already building doctrine ladders, support chassis, and branch-specific late-wave variants.
+  Top Priority: Reframe the game around an earlier lock-in and a longer payoff phase by making one full monster-state arrive no later than `Wave 7`, then extending the post-lock portion so the player gets several waves of branch-specific combat after the build is truly online.
+  Why Now: Until the run spends more time cashing out power than describing future power, every new system risks reading as prototype scaffolding.
+  Do Not Repeat: Do not add another forge event, new label, or late-only capstone without also buying more playable ownership time for that power.
+
 - 2026-03-22 08:30 KST
   Findings:
   - The run is still pretending to be a longer-form roguelite without actually paying that fantasy off soon enough. `Wave 6-8` doctrine pursuit, `Late Break Armory`, and final capstones mean the player spends too much of a 12-wave run assembling permission to become powerful instead of getting several waves to enjoy a broken form.
@@ -671,6 +681,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 23:58 KST
+  Changed: moved doctrine pursuit in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from a stage-2 teaser into a true early lock-in. Completing the `Wave 6-8` shard chase now immediately assigns the doctrine’s final capstone as well as the pursuit weapon/system spike, so a successful run hits its full doctrine monster form by `Wave 7` instead of waiting for `Late Break Armory` to finally cash it out. I also rewrote the forge and armory copy so the UI now describes `Late Break Armory` as wildcard/system reinforcement on top of an already-online monster build, not as the place where the real payoff still begins. [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts the new pursuit-capstone resolver, including the early `Storm Artillery` fork logic.
+  Why: the latest critique’s Top Priority was to make one full monster state arrive no later than `Wave 7` and buy more post-lock ownership time. The highest-value bounded interpretation was to cash out doctrine pursuit immediately, because the run already had `Wave 6-8` shard scaffolding and five later waves to enjoy the form, but the actual capstone was still trapped behind a later wrapper.
+  Follow-up risk: this fixes payoff timing more than raw run length. If critique still wants a longer ownership phase after this earlier lock-in lands, the next pass should add more branch-specific post-lock combat or extend the bracket itself rather than pushing the capstone later again.
 
 - 2026-03-22 08:43 KST
   Changed: upgraded the `Wave 6` `Siege Salvage Pact` in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from a one-shot scrap bribe into a real mid-run greed contract. Taking the pact now stores a `3`-wave `Siege Debt`, and the next three combat waves open with extra spawn budget, higher active caps, faster enemy movement, stronger hazard ticks, and `+24%` incoming damage. I also surfaced that debt in the `Wave 6` forge copy, the combat feed, and the wave objective panel so the tax is readable instead of hidden. [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts that the `Wave 6` systems-forge still offers the pact and that applying it really grants the debt state.
