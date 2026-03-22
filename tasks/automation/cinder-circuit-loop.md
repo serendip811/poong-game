@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-23 00:10:00 KST
+  Findings:
+  - The run now has more systems than the original prototype, but its power economy still tops out too neatly. `MAX_SUPPORT_BAYS = 2` with controlled late unlocks, fixed chassis commitment, and scheduled capstone beats make most end states look like finished kits, not unstable machines the player is desperate to overfeed for another 10-15 waves.
+  - Too many upgrades still resolve as "complete the layer" instead of "bet on a greed line." `Architecture Draft`, `Bastion Draft`, `Catalyst Crucible`, and the late armory mostly ask which sanctioned package to finalize, not whether to sacrifice defense, economy, or route safety for a much higher ceiling.
+  - The source-facing docs still talk like a short `5웨이브`, `7분 내외` session while the implementation is already gesturing toward a much larger action roguelite. That mismatch is now harming design judgment: the run keeps adding content inside a prototype envelope instead of establishing a true long-form escalation model.
+  - Weapon evolution is broader, but there is still no clear late-run "second ascension" layer beyond the doctrine/capstone finish. If the gun, chassis, and support stack all feel effectively settled by Wave 9-12, a future `20-30` wave structure will only stretch maintenance instead of creating new hunger.
+  Top Priority: Define and implement a post-Wave-8 greed escalation layer that lets strong runs overclock past their normal finished form by trading survivability or stability for illegal-feeling weapon/body growth instead of merely adding one more support completion step.
+  Why Now: The game needs a believable ceiling before more waves can feel exciting rather than padded.
+  Do Not Repeat: Do not add more named forge stops or tidy completion rewards if the machine still feels "done" before the back half would even begin.
+
 - 2026-03-22 23:59:58 KST
   Findings:
   - `Architecture Draft` at Wave 3 is still doing too much of the run's authorship too early. Free doctrine wiring, a free starter subsystem, and preferred-lane bias mean the build's headline fantasy is often declared before the player has had enough combat friction to want, fear, or earn that commitment.
@@ -741,6 +751,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-23 00:35 KST
+  Changed: added a post-`Wave 8` greed layer in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) that appears as a live `Wave 9` `black-site uplink` instead of another forge stop. When `Wave 9` begins, the player now gets one-time on-field access to three `illegal overclock` pickups: `Glass Broadside`, `Meltdown Cycler`, and `Rupture Crown`. Each one permanently sacrifices survivability or cooling stability, but pushes the main weapon past its normal finished state with visible new fire behavior for the rest of the run: twin side batteries, a meltdown fire-rate surge, or an added crown fan volley. I also added HUD/readout/render support so the chosen overclock reads as an active late-run identity layer, and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to cover the new overclock definitions, choice generation, and resulting weapon-state mutations.
+  Why: the latest critique’s Top Priority was to create a real post-`Wave 8` greed escalation layer that overfeeds already-strong runs by forcing a trade between safety/stability and illegal-feeling weapon growth. The highest-value bounded interpretation was to deliver that escalation inside combat at the start of `Wave 9`, because that adds a visible second ascension without reopening the run with one more named admin stop or another tidy support completion reward.
+  Follow-up risk: the overclock layer now creates a visible late-run hunger beat, but it currently happens as a single `Wave 9` one-pick and only mutates the main gun. If later critique says the ceiling is higher but still too finite, the next pass should let overclocks deepen again in `Wave 11+` or create stronger chassis/support interactions instead of only adding more raw projectile patterns.
 
 - 2026-03-22 12:18 KST
   Changed: reworked the `Wave 3` `Architecture Draft` in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from a full doctrine lock into a lighter `architecture forecast`. Picking one of the three doctrine cards now only rewires the main gun into that branch's provisional frame and stores an `architectureForecastId`; it no longer installs a free starter subsystem or immediately reserves the early support bays. The real doctrine commitment was moved to `Wave 6`: [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) now presents three doctrine adoption cards there, promotes the forecasted branch to the top with a deeper discount, and then flows straight into the existing `Chassis Breakpoint` so the player locks doctrine, body plan, and flex-bay package only after two more waves of combat evidence. I also updated the forge/combat-feed copy to explain the new forecast-then-commit cadence and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to cover forecast state, delayed doctrine adoption, and the revised Wave `6` choice set.

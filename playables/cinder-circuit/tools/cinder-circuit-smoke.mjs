@@ -171,6 +171,42 @@ assert.ok(chassisRun.build.wave6ChassisBreakpoint);
 assert.ok(chassisRun.build.supportBayCap >= 3);
 assert.equal(chassisRun.build.chassisId, wave6ChassisPackages[0].chassisId);
 assert.ok(game.shouldSkipOwnershipAdminStop(chassisRun.build, 9));
+const illegalOverclockBuild = game.createInitialBuild("relay_oath");
+const illegalOverclockChoices = game.createIllegalOverclockChoices(illegalOverclockBuild);
+assert.equal(illegalOverclockChoices.length, 3);
+assert.ok(illegalOverclockChoices.every((choice) => choice.action === "illegal_overclock"));
+const broadsideChoice = illegalOverclockChoices.find(
+  (choice) => choice.illegalOverclockId === "glass_broadside"
+);
+assert.ok(broadsideChoice);
+const broadsideRun = {
+  build: illegalOverclockBuild,
+  resources: { scrap: 0 },
+  stats: { scrapCollected: 0, scrapSpent: 0 },
+  player: { hp: 100, maxHp: 100, heat: 32, overheated: false },
+};
+game.applyForgeChoice(broadsideRun, broadsideChoice);
+assert.equal(broadsideRun.build.illegalOverclockId, "glass_broadside");
+assert.equal(broadsideRun.build.maxHpBonus, -18);
+const broadsideWeapon = game.computeWeaponStats(broadsideRun.build);
+assert.equal(broadsideWeapon.illegalOverclockLabel, "Glass Broadside");
+assert.equal(broadsideWeapon.illegalOverclockFirePattern.kind, "broadside");
+assert.equal(broadsideWeapon.illegalOverclockFirePattern.offsets.length, 2);
+const baseRelayWeapon = game.computeWeaponStats(game.createInitialBuild("relay_oath"));
+const cyclerBuild = game.createInitialBuild("relay_oath");
+const cyclerRun = {
+  build: cyclerBuild,
+  resources: { scrap: 0 },
+  stats: { scrapCollected: 0, scrapSpent: 0 },
+  player: { hp: 100, maxHp: 100, heat: 0, overheated: false },
+};
+game.applyForgeChoice(
+  cyclerRun,
+  illegalOverclockChoices.find((choice) => choice.illegalOverclockId === "meltdown_cycler")
+);
+const cyclerWeapon = game.computeWeaponStats(cyclerBuild);
+assert.equal(cyclerWeapon.illegalOverclockLabel, "Meltdown Cycler");
+assert.ok(cyclerWeapon.cooldown < baseRelayWeapon.cooldown);
 const artilleryFrameBuild = game.createInitialBuild("rail_zeal");
 artilleryFrameBuild.bastionDoctrineId = "storm_artillery";
 artilleryFrameBuild.coreId = "lance";
@@ -221,6 +257,10 @@ assert.equal(
 assert.equal(
   JSON.stringify(Object.keys(game.CHASSIS_BREAKPOINT_DEFS).sort()),
   JSON.stringify(["bulwark_treads", "salvage_winch", "vector_thrusters"])
+);
+assert.equal(
+  JSON.stringify(Object.keys(game.ILLEGAL_OVERCLOCK_DEFS).sort()),
+  JSON.stringify(["glass_broadside", "meltdown_cycler", "rupture_crown"])
 );
 
 const signatureBuild = game.createInitialBuild("scrap_pact");

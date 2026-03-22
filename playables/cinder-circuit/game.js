@@ -11,6 +11,8 @@
     width: 1440,
     height: 820,
   };
+  const ILLEGAL_OVERCLOCK_WAVE = 9;
+  const ILLEGAL_OVERCLOCK_DROP_LIFE = 12;
 
   const WAVE_CONFIG = [
     {
@@ -1800,6 +1802,95 @@
     },
   };
 
+  const ILLEGAL_OVERCLOCK_DEFS = {
+    glass_broadside: {
+      id: "glass_broadside",
+      label: "Glass Broadside",
+      title: "Glass Broadside",
+      tag: "ILLEGAL",
+      color: "#8fe4ff",
+      description:
+        "측면에 금지 포대를 용접해 주포가 쌍선 broadside까지 같이 분사된다. 대신 외피를 뜯어내 최대 체력과 hazard buffer를 버린다.",
+      slotText: "쌍선 broadside · 최대 체력/완충 손실",
+      traitLabel: "쌍선 broadside",
+      statusNote: "주포 양옆 금지 포대가 항상 같이 열려 전방 lane을 더 넓게 찢지만, 외피가 얇아져 맞교환이 급격히 위험해진다.",
+      apply(build) {
+        build.maxHpBonus -= 18;
+        build.hazardMitigation -= 0.06;
+      },
+      applyWeapon(stats) {
+        stats.illegalOverclockFirePattern = {
+          kind: "broadside",
+          offsets: [-0.34, 0.34],
+          speedMultiplier: 1.08,
+          radius: 5.2,
+          damageMultiplier: 0.62,
+          life: 0.9,
+          pierceBonus: 0,
+          bounceBonus: 0,
+          chainBonus: 0,
+          color: "#8fe4ff",
+        };
+      },
+    },
+    meltdown_cycler: {
+      id: "meltdown_cycler",
+      label: "Meltdown Cycler",
+      title: "Meltdown Cycler",
+      tag: "ILLEGAL",
+      color: "#ff9f59",
+      description:
+        "냉각 회로를 찢고 발사 주기를 불법으로 당긴다. 주포는 훨씬 빨라지고 산탄/반사 계열은 한 단계 더 넘치지만, 열 안정성이 무너져 오래 붙들고 쏘기 어렵다.",
+      slotText: "연사 폭주 · 냉각/안정성 손실",
+      traitLabel: "연사 폭주",
+      statusNote: "냉각보다 발사 주기가 먼저 앞질러 장전을 미친 듯이 당긴다. 대신 과열이 더 빨리 쌓여 안정적인 난사가 불가능해진다.",
+      apply(build) {
+        build.coolRateBonus -= 10;
+        build.heatFactor *= 1.22;
+      },
+      applyWeapon(stats) {
+        stats.cooldown = clamp(stats.cooldown * 0.8, 0.08, 0.4);
+        stats.damage = round(stats.damage * 1.08, 1);
+        if (stats.core.id === "scatter") {
+          stats.pellets += 1;
+        }
+        if (stats.core.id === "ricochet") {
+          stats.bounce += 1;
+        }
+      },
+    },
+    rupture_crown: {
+      id: "rupture_crown",
+      label: "Rupture Crown",
+      title: "Rupture Crown",
+      tag: "ILLEGAL",
+      color: "#ffd7a6",
+      description:
+        "주포 위에 파열 crown을 얹어 전방 fan burst를 계속 덧발사한다. 대신 장갑과 냉각을 같이 희생해 오래 버티는 운영을 포기해야 한다.",
+      slotText: "전방 crown fan · 체력/냉각 손실",
+      traitLabel: "crown fan",
+      statusNote: "앞머리에 파열 crown이 붙어 얇은 fan burst가 계속 겹친다. 폭이 넓어진 대신 몸체와 냉각이 얇아져 무리한 유지전이 위험하다.",
+      apply(build) {
+        build.maxHpBonus -= 14;
+        build.coolRateBonus -= 6;
+      },
+      applyWeapon(stats) {
+        stats.illegalOverclockFirePattern = {
+          kind: "crown",
+          offsets: [-0.52, -0.18, 0.18, 0.52],
+          speedMultiplier: 0.96,
+          radius: 4.8,
+          damageMultiplier: 0.4,
+          life: 0.74,
+          pierceBonus: 0,
+          bounceBonus: 0,
+          chainBonus: 0,
+          color: "#ffd7a6",
+        };
+      },
+    },
+  };
+
   const SIGNATURE_DEFS = {
     relay_oath: {
       id: "relay_oath",
@@ -3336,6 +3427,8 @@
     doctrinePursuitExpired: false,
     overcommitUnlocked: false,
     overcommitResolved: false,
+    illegalOverclockId: null,
+    illegalOverclockOffered: false,
     bastionPactDebtWaves: 0,
     wave6ChassisBreakpoint: false,
     chassisId: null,
@@ -3376,6 +3469,16 @@
           ? buildOrId.chassisId
           : null;
     return chassisId ? CHASSIS_BREAKPOINT_DEFS[chassisId] || null : null;
+  }
+
+  function getIllegalOverclockDef(buildOrId) {
+    const overclockId =
+      typeof buildOrId === "string"
+        ? buildOrId
+        : buildOrId && typeof buildOrId === "object"
+          ? buildOrId.illegalOverclockId
+          : null;
+    return overclockId ? ILLEGAL_OVERCLOCK_DEFS[overclockId] || null : null;
   }
 
   function getChassisSummary(build) {
@@ -4339,6 +4442,8 @@
         doctrinePursuitExpired: BASE_BUILD.doctrinePursuitExpired,
         overcommitUnlocked: BASE_BUILD.overcommitUnlocked,
         overcommitResolved: BASE_BUILD.overcommitResolved,
+        illegalOverclockId: BASE_BUILD.illegalOverclockId,
+        illegalOverclockOffered: BASE_BUILD.illegalOverclockOffered,
         bastionPactDebtWaves: BASE_BUILD.bastionPactDebtWaves,
         wave6ChassisBreakpoint: BASE_BUILD.wave6ChassisBreakpoint,
         chassisId: BASE_BUILD.chassisId,
@@ -4720,6 +4825,11 @@
       capstoneFire: null,
       capstoneOnHit: null,
       capstoneOnBounce: null,
+      illegalOverclockId: null,
+      illegalOverclockLabel: null,
+      illegalOverclockTraitLabel: null,
+      illegalOverclockStatusNote: null,
+      illegalOverclockFirePattern: null,
     };
     getAffixDefs(build).forEach((affix) => {
       if (typeof affix.applyWeapon === "function") {
@@ -4767,6 +4877,16 @@
           stats.chainRange || 0,
           baseChainRange + (doctrineWeaponForm.chainRangeBonus || 0)
         );
+      }
+    }
+    const illegalOverclock = getIllegalOverclockDef(build);
+    if (illegalOverclock) {
+      stats.illegalOverclockId = illegalOverclock.id;
+      stats.illegalOverclockLabel = illegalOverclock.label;
+      stats.illegalOverclockTraitLabel = illegalOverclock.traitLabel;
+      stats.illegalOverclockStatusNote = illegalOverclock.statusNote;
+      if (typeof illegalOverclock.applyWeapon === "function") {
+        illegalOverclock.applyWeapon(stats, build);
       }
     }
     stats.damage = round(stats.damage, 1);
@@ -5228,6 +5348,26 @@
       cost: 18,
       nextCoreIds,
     };
+  }
+
+  function createIllegalOverclockChoices(build) {
+    if (!build || build.illegalOverclockId) {
+      return [];
+    }
+    return Object.values(ILLEGAL_OVERCLOCK_DEFS).map((overclock) => ({
+      type: "utility",
+      action: "illegal_overclock",
+      id: `utility:illegal_overclock:${overclock.id}`,
+      verb: "과투입",
+      tag: overclock.tag,
+      title: overclock.title,
+      description: overclock.description,
+      slotText: overclock.slotText,
+      cost: 0,
+      illegalOverclockId: overclock.id,
+      laneLabel: "불법 과투입",
+      forgeLaneLabel: "불법 과투입",
+    }));
   }
 
   function createCatalystReforgeChoice(build) {
@@ -7031,6 +7171,31 @@
       return choice;
     }
 
+    if (choice.type === "utility" && choice.action === "illegal_overclock") {
+      if (run.build.illegalOverclockId) {
+        return null;
+      }
+      const overclock = getIllegalOverclockDef(choice.illegalOverclockId);
+      if (!overclock) {
+        return null;
+      }
+      run.build.illegalOverclockId = overclock.id;
+      run.build.illegalOverclockOffered = true;
+      if (typeof overclock.apply === "function") {
+        overclock.apply(run.build, run);
+      }
+      run.build.upgrades.push(`불법 과투입: ${overclock.label}`);
+      if (run.player) {
+        run.player.hp = Math.min(
+          Math.max(1, run.player.hp),
+          Math.max(1, 100 + run.build.maxHpBonus)
+        );
+        run.player.heat = Math.max(0, run.player.heat - 12);
+        run.player.overheated = false;
+      }
+      return choice;
+    }
+
     if (choice.type === "fallback" && run.player) {
       run.player.hp = Math.min(run.player.maxHp, run.player.hp + 16);
       run.player.heat = Math.max(0, run.player.heat - 60);
@@ -7070,6 +7235,7 @@
     MOD_DEFS,
     SUPPORT_SYSTEM_DEFS,
     CHASSIS_BREAKPOINT_DEFS,
+    ILLEGAL_OVERCLOCK_DEFS,
     DOCTRINE_CAPSTONE_DEFS,
     SIGNATURE_DEFS,
     DEFAULT_SIGNATURE_ID,
@@ -7101,11 +7267,13 @@
     buildFieldGrantChoices,
     buildBastionDraftChoices,
     buildWave6ChassisBreakpointChoices,
+    createIllegalOverclockChoices,
     buildCatalystDraftChoices,
     applyForgeChoice,
     applyChassisBreakpoint,
     getSupportBayCapacity,
     getChassisBreakpointDef,
+    getIllegalOverclockDef,
     doctrineAllowsSystemInstall,
     unlockLateSupportBay,
     shouldSkipOwnershipAdminStop,
@@ -7314,6 +7482,7 @@
       weapon.bounce > 0 ? `반사 ${weapon.bounce}` : null,
       weapon.chain > 0 ? `연쇄 ${weapon.chain}` : null,
       weapon.evolutionTraitLabel ? weapon.evolutionTraitLabel : null,
+      weapon.illegalOverclockTraitLabel ? weapon.illegalOverclockTraitLabel : null,
       weapon.capstoneTraitLabel ? weapon.capstoneTraitLabel : null,
     ].filter(Boolean);
   }
@@ -8221,6 +8390,35 @@
     beginWave(0);
   }
 
+  function deployIllegalOverclockChoices() {
+    if (!state.build || state.build.illegalOverclockId || state.build.illegalOverclockOffered) {
+      return;
+    }
+    const choices = createIllegalOverclockChoices(state.build);
+    if (choices.length === 0) {
+      return;
+    }
+    state.build.illegalOverclockOffered = true;
+    const spreadRadius = 56;
+    const groupId = `illegal-overclock-${state.waveIndex + 1}`;
+    choices.forEach((choice, index) => {
+      const angle = (index / choices.length) * Math.PI * 2 - Math.PI / 2;
+      state.drops.push({
+        kind: "illegal_overclock_cache",
+        x: state.player.x + Math.cos(angle) * spreadRadius,
+        y: state.player.y + Math.sin(angle) * spreadRadius,
+        life: ILLEGAL_OVERCLOCK_DROP_LIFE,
+        choice,
+        groupId,
+      });
+    });
+    pushCombatFeed(
+      "Wave 9 black-site uplink 개시. 불법 과투입 3종 중 하나를 전장에서 직접 집으면 남은 런 전체를 위해 무기를 금지 성장선으로 밀어 올린다. 대신 체력이나 냉각 안정성을 영구로 버린다.",
+      "ILLEGAL"
+    );
+    setBanner("Black-Site Uplink", 0.9);
+  }
+
   function beginWave(index) {
     const resolvedConfig = resolveWaveConfig(index, state.build);
     const config = {
@@ -8338,6 +8536,9 @@
         "첫 elite가 Combat Cache를 떨어뜨린다. 현장에서 하나를 회수하면 Field Cache 정지 없이 바로 다음 웨이브로 이어진다.",
         "CACHE"
       );
+    }
+    if (waveNumber === ILLEGAL_OVERCLOCK_WAVE) {
+      deployIllegalOverclockChoices();
     }
     setBanner(config.label, 1.4);
     renderForgeOverlay();
@@ -10386,6 +10587,7 @@
 
     fireWeaponPattern(weapon.evolutionFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.doctrineFirePattern, weapon, baseAngle, driveActive);
+    fireWeaponPattern(weapon.illegalOverclockFirePattern, weapon, baseAngle, driveActive);
     const chassisFireProfile = fireChassisWeaponPosture(weapon, baseAngle, driveActive);
 
     if (weapon.capstoneFire) {
@@ -11244,6 +11446,27 @@
       return true;
     }
 
+    if (drop.kind === "illegal_overclock_cache") {
+      const choice = drop.choice;
+      if (!choice || state.build.illegalOverclockId) {
+        return true;
+      }
+      applyForgeChoice(state, choice);
+      refreshDerivedStats(false);
+      state.drops.forEach((entry) => {
+        if (entry.kind === "illegal_overclock_cache" && entry.groupId === drop.groupId) {
+          entry.life = 0;
+        }
+      });
+      const overclock = getIllegalOverclockDef(state.build);
+      pushCombatFeed(
+        `${(overclock && overclock.label) || choice.title} 접속. ${(overclock && overclock.statusNote) || "불법 과투입이 남은 런 전체를 덮는다."}`,
+        "ILLEGAL"
+      );
+      setBanner((overclock && overclock.label) || "ILLEGAL", 0.8);
+      return true;
+    }
+
     return false;
   }
 
@@ -11426,6 +11649,9 @@
     const doctrineSummary = weapon.doctrineFormLabel
       ? `${weapon.doctrineFormLabel} · ${weapon.doctrineTraitLabel}`
       : null;
+    const illegalOverclockSummary = weapon.illegalOverclockLabel
+      ? `${weapon.illegalOverclockLabel} · ${weapon.illegalOverclockTraitLabel}`
+      : null;
     const capstoneSummary = weapon.capstoneLabel
       ? `${weapon.capstoneLabel} · ${weapon.capstoneTraitLabel}`
       : null;
@@ -11454,6 +11680,7 @@
           }
           ${weapon.evolutionLabel ? createMiniPill("EVO", weapon.evolutionLabel, "accent") : ""}
           ${weapon.doctrineFormLabel ? createMiniPill("DOC", weapon.doctrineFormLabel, "hot") : ""}
+          ${weapon.illegalOverclockLabel ? createMiniPill("ILLEGAL", weapon.illegalOverclockLabel, "hot") : ""}
           ${capstoneSummary ? createMiniPill("CAP", weapon.capstoneLabel, "hot") : ""}
           ${state.supportSystem ? createMiniPill("SYS", state.supportSystem.label, "accent") : ""}
           ${weapon.affixLabels.map((label) => createMiniPill("속성", label, "cool")).join("")}
@@ -11462,6 +11689,7 @@
           affixSummary,
           evolutionSummary,
           doctrineSummary,
+          illegalOverclockSummary,
           capstoneSummary,
           supportSystemSummary,
           getDoctrineForgePursuitDef(state.build) && state.build.doctrinePursuitCommitted
@@ -11505,10 +11733,12 @@
       const pursuitRows = [];
       const combatCacheRows = [];
       const pactRows = [];
+      const illegalOverclockRows = [];
       let overcommitNote = "";
       let pursuitNote = "";
       let combatCacheNote = "";
       let pactNote = "";
+      let illegalOverclockNote = "";
       if (state.wave && state.wave.bastionPactDebt) {
         pactRows.push(createStatusRow("Siege Debt", `${state.wave.bastionPactDebt.wavesRemaining} left`));
         pactRows.push(createStatusRow("Debt Tax", "+24% damage / +4 cap"));
@@ -11578,6 +11808,25 @@
             ? "드롭된 Combat Cache 중 하나만 회수할 수 있다. 놓치면 이번 웨이브의 현장 spike는 사라진다."
             : "이번 웨이브 첫 elite가 Combat Cache를 떨어뜨린다. 회수에 성공하면 Field Cache 정지 없이 다음 웨이브로 직결된다.";
       }
+      if (state.build.illegalOverclockId) {
+        const illegalOverclock = getIllegalOverclockDef(state.build);
+        illegalOverclockRows.push(
+          createStatusRow("Illegal", illegalOverclock ? illegalOverclock.label : "접속")
+        );
+        illegalOverclockRows.push(createStatusRow("Greed", "locked"));
+        illegalOverclockNote = illegalOverclock
+          ? illegalOverclock.statusNote
+          : "불법 과투입이 활성화되어 있다.";
+      } else if (
+        state.phase === "wave" &&
+        state.wave &&
+        state.waveIndex + 1 === ILLEGAL_OVERCLOCK_WAVE &&
+        state.drops.some((drop) => drop.kind === "illegal_overclock_cache")
+      ) {
+        illegalOverclockRows.push(createStatusRow("Illegal", "uplink live"));
+        illegalOverclockRows.push(createStatusRow("Greed", "1 pick"));
+        illegalOverclockNote = "Wave 9 black-site uplink가 열렸다. 불법 과투입 3종 중 하나만 집을 수 있고, 남은 둘은 바로 닫힌다.";
+      }
       elements.waveObjective.innerHTML = `
         <div class="summary-head">
           <strong>${waveConfig.label}</strong>
@@ -11591,11 +11840,12 @@
           ${createStatusRow("드랍", String(state.drops.length))}
           ${createStatusRow(hazardStatus.detailLabel, hazardStatus.detailValue)}
           ${combatCacheRows.join("")}
+          ${illegalOverclockRows.join("")}
           ${pactRows.join("")}
           ${overcommitRows.join("")}
           ${pursuitRows.join("")}
         </div>
-        <p class="summary-note">${combatCacheNote || pactNote || pursuitNote || overcommitNote || hazardStatus.note}</p>
+        <p class="summary-note">${illegalOverclockNote || combatCacheNote || pactNote || pursuitNote || overcommitNote || hazardStatus.note}</p>
       `;
     }
 
@@ -11639,7 +11889,7 @@
         }">${
           state.player.overheated
             ? "사격 정지: 열을 비워야 한다."
-            : `${weapon.evolutionStatusNote ? `${weapon.evolutionStatusNote} ` : ""}${weapon.doctrineStatusNote ? `${weapon.doctrineStatusNote} ` : ""}${weapon.capstoneStatusNote ? `${weapon.capstoneStatusNote} ` : ""}${state.supportSystem ? `${state.supportSystem.statusNote} ` : ""}${hazardStatus.note} 자동 사격은 과열 전까지 유지된다.`
+            : `${weapon.evolutionStatusNote ? `${weapon.evolutionStatusNote} ` : ""}${weapon.doctrineStatusNote ? `${weapon.doctrineStatusNote} ` : ""}${weapon.illegalOverclockStatusNote ? `${weapon.illegalOverclockStatusNote} ` : ""}${weapon.capstoneStatusNote ? `${weapon.capstoneStatusNote} ` : ""}${state.supportSystem ? `${state.supportSystem.statusNote} ` : ""}${hazardStatus.note} 자동 사격은 과열 전까지 유지된다.`
         }</p>
       `;
     }
@@ -11668,6 +11918,9 @@
     const doctrineSummary = state.weapon.doctrineFormLabel
       ? `${state.weapon.doctrineFormLabel} · ${state.weapon.doctrineTraitLabel}`
       : "교리 전용 주무장 없음";
+    const illegalOverclockSummary = state.weapon.illegalOverclockLabel
+      ? `${state.weapon.illegalOverclockLabel} · ${state.weapon.illegalOverclockTraitLabel}`
+      : "불법 과투입 없음";
     const capstoneSummary = state.weapon.capstoneLabel
       ? `${state.weapon.capstoneLabel} · ${state.weapon.capstoneTraitLabel}`
       : "활성 촉매 재구성 없음";
@@ -11770,7 +12023,7 @@
       <article class="forge-context__card">
         <p class="panel__eyebrow">속성 / 진화 / 시스템</p>
         <strong>${affixSummary}</strong>
-        <p>${evolutionSummary} · ${doctrineSummary} · ${capstoneSummary} · ${chassisSummary} · ${forgeSystemSummary} · ${doctrinePursuitSummary} · ${supportBaySummary} · 보관 ${benchEntries.length}종 · ${catalystSummary} · 분해 예상 고철 ${getRecycleValue(state.build)}</p>
+        <p>${evolutionSummary} · ${doctrineSummary} · ${illegalOverclockSummary} · ${capstoneSummary} · ${chassisSummary} · ${forgeSystemSummary} · ${doctrinePursuitSummary} · ${supportBaySummary} · 보관 ${benchEntries.length}종 · ${catalystSummary} · 분해 예상 고철 ${getRecycleValue(state.build)}</p>
       </article>
     `;
     elements.forgeCards.innerHTML = state.forgeChoices
@@ -12028,6 +12281,8 @@
           ? 12
           : drop.kind === "overcommit_salvage" || drop.kind === "doctrine_pursuit_shard"
             ? OVERCOMMIT_SALVAGE_LIFE
+            : drop.kind === "illegal_overclock_cache"
+              ? ILLEGAL_OVERCLOCK_DROP_LIFE
             : drop.kind === "combat_cache"
               ? COMBAT_CACHE_DROP_LIFE
             : 10;
@@ -12037,6 +12292,22 @@
       if (drop.kind === "scrap") {
         context.fillStyle = "rgba(255, 209, 102, 0.9)";
         context.fillRect(drop.x - 4, drop.y - 4, 8, 8);
+      } else if (drop.kind === "illegal_overclock_cache") {
+        const choice = drop.choice || {};
+        const overclock = getIllegalOverclockDef(choice.illegalOverclockId);
+        context.strokeStyle = "rgba(255, 189, 122, 0.95)";
+        context.lineWidth = 2.6;
+        context.beginPath();
+        context.arc(drop.x, drop.y, 14, 0, Math.PI * 2);
+        context.stroke();
+        context.fillStyle = overclock ? overclock.color : "rgba(255, 152, 78, 0.92)";
+        context.beginPath();
+        drawPolygon(context, drop.x, drop.y, 9, 6, performance.now() * 0.0024);
+        context.fill();
+        context.fillStyle = "rgba(22, 10, 4, 0.92)";
+        context.font = "bold 10px monospace";
+        context.textAlign = "center";
+        context.fillText(choice.tag || "ILLEGAL", drop.x, drop.y + 28);
       } else if (drop.kind === "combat_cache") {
         const choice = drop.choice || {};
         context.strokeStyle = choice.type === "fallback" ? "rgba(136, 229, 198, 0.95)" : "rgba(255, 212, 122, 0.95)";
@@ -12397,6 +12668,7 @@
       context.fillStyle =
         state.player.invulnerableTime > 0 ? "#fff0c9" : state.weapon.color;
       drawPlayerChassisFrame(context);
+      drawPlayerIllegalOverclockFrame(context);
       context.beginPath();
       context.arc(state.player.x, state.player.y, state.player.radius, 0, Math.PI * 2);
       context.fill();
@@ -12496,6 +12768,63 @@
         context.lineTo(
           fork.x + Math.cos(facing + 0.18 * direction) * 8,
           fork.y + Math.sin(facing + 0.18 * direction) * 8
+        );
+        context.stroke();
+      });
+    }
+  }
+
+  function drawPlayerIllegalOverclockFrame(context) {
+    if (!state.player || !state.weapon || !state.weapon.illegalOverclockId) {
+      return;
+    }
+    const facing = state.player.facing || 0;
+    if (state.weapon.illegalOverclockId === "glass_broadside") {
+      [-1, 1].forEach((direction) => {
+        const wing = getOffsetPoint(state.player.x, state.player.y, facing, 2, 19 * direction);
+        context.fillStyle = "rgba(143, 228, 255, 0.86)";
+        context.beginPath();
+        context.moveTo(wing.x + Math.cos(facing) * 10, wing.y + Math.sin(facing) * 10);
+        context.lineTo(
+          wing.x - Math.cos(facing) * 4 - Math.sin(facing) * 5 * direction,
+          wing.y - Math.sin(facing) * 4 + Math.cos(facing) * 5 * direction
+        );
+        context.lineTo(
+          wing.x - Math.cos(facing) * 8 + Math.sin(facing) * 5 * direction,
+          wing.y - Math.sin(facing) * 8 - Math.cos(facing) * 5 * direction
+        );
+        context.closePath();
+        context.fill();
+      });
+      return;
+    }
+    if (state.weapon.illegalOverclockId === "meltdown_cycler") {
+      context.strokeStyle = "rgba(255, 159, 89, 0.78)";
+      context.lineWidth = 2.5;
+      context.beginPath();
+      context.arc(
+        state.player.x,
+        state.player.y,
+        state.player.radius + 13 + Math.sin(performance.now() * 0.026) * 1.2,
+        0,
+        Math.PI * 2
+      );
+      context.stroke();
+      return;
+    }
+    if (state.weapon.illegalOverclockId === "rupture_crown") {
+      [-0.52, -0.18, 0.18, 0.52].forEach((offset) => {
+        const angle = facing + offset;
+        context.strokeStyle = "rgba(255, 215, 166, 0.84)";
+        context.lineWidth = 2.2;
+        context.beginPath();
+        context.moveTo(
+          state.player.x + Math.cos(angle) * (state.player.radius + 2),
+          state.player.y + Math.sin(angle) * (state.player.radius + 2)
+        );
+        context.lineTo(
+          state.player.x + Math.cos(angle) * (state.player.radius + 12),
+          state.player.y + Math.sin(angle) * (state.player.radius + 12)
         );
         context.stroke();
       });
