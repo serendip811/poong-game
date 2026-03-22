@@ -14,6 +14,17 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-23 00:48 KST
+  Findings:
+  - The run is longer now, but it still is not built like a `20-30` wave-capable spine. `POST_CAPSTONE_WAVE_COUNT = 7` helps, yet the late ladder mostly keeps remixing `relay`, `territory`, and `drift` pressure with `mortar`/`warden` denial, so the player is still proving they can reopen space rather than mastering several different endgame survival grammars.
+  - The arena has more room (`1280x720` to `1440x820`), but encounter pressure still spends that space too quickly. `Wave 5-12` and the `Afterburn` pool keep stacking anchors, pylons, wardens, and delayed bombardment until movement is usually obligation routing, not a real choice between diving, holding ground, circling wide, or greed-pathing for drops.
+  - Build breadth is improving on paper, but the fantasy is still over-administered. `Architecture Draft`, `Wave 6 Ascension Draft`, `Catalyst Crucible`, and `Late Break Armory` keep explaining when the player is allowed to become powerful; that is weaker than letting one clearly transformed war-machine come online early and then asking the player to survive inside it for a long bracket.
+  - Support systems now include shields, missiles, drones, and orbitals, but the hunger is still too slot-driven. `MAX_SUPPORT_BAYS = 2` growing toward `4` reads as capacity management, and much of the pay-off is described in forge text rather than sold instantly on-screen through unmistakable weapon/body escalation.
+  - UI/UX is still below strong reference standards. Compared with `Hades` boon framing and `Brotato`'s near-instant HUD/stat readability, the current forge overlay still leans on dense subtitles, doctrine language, and system taxonomy, so the player has to parse design intent instead of immediately understanding what just got stronger, riskier, or run-defining.
+  Top Priority: Collapse the mid-run administration into one unmistakable `Wave 6` transformation that visibly mutates the main gun and body at once, then use the recovered structure to build several truly different late-wave pressure families beyond repeated lockout repair.
+  Why Now: Until the player gets a readable monster-form early and enough combat runway to exploit it under varied pressure, repeat runs will feel managed rather than addictive.
+  Do Not Repeat: Do not answer this with more forge stages, more taxonomy, or another late helper layer that still leaves the core combat question as lane repair.
+
 - 2026-03-22 23:59:58 KST
   Findings:
   - The run is still selling too much escalation vocabulary and not enough immediate hunger. `Architecture Draft`, `Ascension Draft`, `Late Break Armory`, `Catalyst Crucible`, `Afterburn Ascension`, and live splice rules make the build arc feel administered when a strong rerun roguelite should make players crave one terrifying form early and then survive inside it.
@@ -906,6 +917,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-23 04:22 KST
+  Changed: strengthened the `Wave 6` monster-form read in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) by binding each ascension doctrine/chassis pair to a persistent live-combat profile instead of leaving most of the payoff in forge text. `Mirror Hunt + Vector Thrusters`, `Kiln Bastion + Salvage Winch`, and `Storm Artillery + Bulwark Treads` now each add a doctrine-specific bonus volley on every primary shot and draw a larger body/gun silhouette directly on the player frame, so the midpoint lock visibly mutates both firing posture and chassis outline for the rest of the run. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the latest critique’s Top Priority was to collapse mid-run administration into one unmistakable `Wave 6` transformation that mutates the main gun and body at once. The highest-value bounded interpretation was to spend one pass on moment-to-moment readability and hunger: make the already-existing ascension choice look and fire like a different war machine immediately, without adding another menu, label, or helper layer.
+  Follow-up risk: the new monster-form read is much louder, but the three `Wave 6` forms still share the same surrounding encounter ecology after they come online. If the next critique still pushes on long-run sameness, the next bounded step should spend this clearer form identity on a new late-wave pressure family that rewards diving, holding, or greed-routing differently by form.
 
 - 2026-03-23 04:05 KST
   Changed: tightened the midpoint run spine in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 6 Ascension` is now the decisive mid-run lock instead of the first step in another admin chain. Runs that take the `Wave 6` monster-form breakpoint now mark `wave6ChassisBreakpoint` as a true ownership state, which suppresses the old `Wave 8 Bastion Draft` menu entirely, keeps the `Late Break Armory` skip intact, and updates the ascension card/combat-feed copy to explicitly sell that the build is already online. I also made `contraband salvage` pay out earlier: if the player cleared the `Wave 5` overcommit trial, choosing a `Wave 6 Ascension` now auto-ignites the doctrine `Forge Pursuit` immediately instead of making the run wait for another draft screen. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

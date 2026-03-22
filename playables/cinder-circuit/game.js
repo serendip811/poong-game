@@ -9258,6 +9258,150 @@
     return clamp(state.player?.moveIntentMagnitude || 0, 0, 1);
   }
 
+  function getWave6AscensionProfile(build = state.build) {
+    if (!build) {
+      return null;
+    }
+    const doctrine = getBastionDoctrineDef(build);
+    const chassis = getChassisBreakpointDef(build);
+    if (!doctrine || !chassis) {
+      return null;
+    }
+    if (doctrine.id === "mirror_hunt" && chassis.id === "vector_thrusters") {
+      return {
+        id: "mirror_hunt",
+        color: "#9fe7ff",
+      };
+    }
+    if (doctrine.id === "kiln_bastion" && chassis.id === "salvage_winch") {
+      return {
+        id: "kiln_bastion",
+        color: "#ffb36b",
+      };
+    }
+    if (doctrine.id === "storm_artillery" && chassis.id === "bulwark_treads") {
+      return {
+        id: "storm_artillery",
+        color: "#fff0c9",
+      };
+    }
+    return null;
+  }
+
+  function fireWave6AscensionVolley(weapon, baseAngle, driveActive) {
+    const profile = getWave6AscensionProfile();
+    if (!state.player || !profile) {
+      return { cooldownMultiplier: 1, heatMultiplier: 1 };
+    }
+
+    if (profile.id === "mirror_hunt") {
+      [-1, 1].forEach((direction) => {
+        state.projectiles.push(
+          createOffsetPlayerProjectile(baseAngle + 0.1 * direction, weapon, driveActive, {
+            lateral: 21 * direction,
+            forward: 18,
+            overrides: {
+              vx: Math.cos(baseAngle + 0.1 * direction) * weapon.projectileSpeed * 1.08,
+              vy: Math.sin(baseAngle + 0.1 * direction) * weapon.projectileSpeed * 1.08,
+              damage: round((weapon.damage + (driveActive ? 8 : 0)) * 0.4, 1),
+              radius: Math.max(4.1, weapon.core.id === "lance" ? 5.2 : 4.3),
+              life: 1.02,
+              color: "#9fe7ff",
+            },
+          })
+        );
+      });
+      if (getPlayerMoveIntentMagnitude() > 0.55 || state.player.chassisVectorTime > 0) {
+        state.projectiles.push(
+          createOffsetPlayerProjectile(baseAngle, weapon, driveActive, {
+            forward: 28,
+            overrides: {
+              vx: Math.cos(baseAngle) * weapon.projectileSpeed * 1.22 * (driveActive ? 1.08 : 1),
+              vy: Math.sin(baseAngle) * weapon.projectileSpeed * 1.22 * (driveActive ? 1.08 : 1),
+              damage: round((weapon.damage + (driveActive ? 8 : 0)) * 0.64, 1),
+              radius: weapon.core.id === "lance" ? 5.6 : 4.8,
+              life: 0.94,
+              pierce: weapon.pierce + 1,
+              color: "#d8fbff",
+            },
+          })
+        );
+      }
+      return { cooldownMultiplier: 0.96, heatMultiplier: 1.05 };
+    }
+
+    if (profile.id === "kiln_bastion") {
+      [-1, 1].forEach((direction) => {
+        state.projectiles.push(
+          createOffsetPlayerProjectile(baseAngle + 0.14 * direction, weapon, driveActive, {
+            lateral: 18 * direction,
+            forward: 14,
+            overrides: {
+              vx: Math.cos(baseAngle + 0.14 * direction) * weapon.projectileSpeed * 0.84,
+              vy: Math.sin(baseAngle + 0.14 * direction) * weapon.projectileSpeed * 0.84,
+              damage: round((weapon.damage + (driveActive ? 8 : 0)) * 0.46, 1),
+              radius: 5.4,
+              life: 0.96,
+              color: "#ffb36b",
+            },
+          })
+        );
+      });
+      state.projectiles.push(
+        createOffsetPlayerProjectile(baseAngle, weapon, driveActive, {
+          forward: 24,
+          overrides: {
+            vx: Math.cos(baseAngle) * weapon.projectileSpeed * 0.86,
+            vy: Math.sin(baseAngle) * weapon.projectileSpeed * 0.86,
+            damage: round((weapon.damage + (driveActive ? 8 : 0)) * 0.7, 1),
+            radius: 6,
+            life: 1.08,
+            pierce: weapon.pierce + 1,
+            color: "#ffd6a8",
+          },
+        })
+      );
+      return { cooldownMultiplier: 1.04, heatMultiplier: 1.08 };
+    }
+
+    if (profile.id === "storm_artillery") {
+      [-1, 1].forEach((direction) => {
+        state.projectiles.push(
+          createOffsetPlayerProjectile(baseAngle + 0.05 * direction, weapon, driveActive, {
+            lateral: 16 * direction,
+            forward: 20,
+            overrides: {
+              vx: Math.cos(baseAngle + 0.05 * direction) * weapon.projectileSpeed * 0.96,
+              vy: Math.sin(baseAngle + 0.05 * direction) * weapon.projectileSpeed * 0.96,
+              damage: round((weapon.damage + (driveActive ? 8 : 0)) * 0.48, 1),
+              radius: weapon.core.id === "lance" ? 5.8 : 5,
+              life: 1.12,
+              pierce: weapon.pierce + 1,
+              color: "#ffe0af",
+            },
+          })
+        );
+      });
+      state.projectiles.push(
+        createOffsetPlayerProjectile(baseAngle, weapon, driveActive, {
+          forward: 30,
+          overrides: {
+            vx: Math.cos(baseAngle) * weapon.projectileSpeed * 1.06,
+            vy: Math.sin(baseAngle) * weapon.projectileSpeed * 1.06,
+            damage: round((weapon.damage + (driveActive ? 8 : 0)) * 0.82, 1),
+            radius: weapon.core.id === "lance" ? 6.6 : 5.8,
+            life: 1.2,
+            pierce: weapon.pierce + 2,
+            color: "#fff0c9",
+          },
+        })
+      );
+      return { cooldownMultiplier: 1.06, heatMultiplier: 1.1 };
+    }
+
+    return { cooldownMultiplier: 1, heatMultiplier: 1 };
+  }
+
   function fireChassisWeaponPosture(weapon, baseAngle, driveActive) {
     const chassis = getChassisBreakpointDef(state.build);
     if (!state.player || !chassis) {
@@ -12119,6 +12263,7 @@
     fireWeaponPattern(weapon.lateAscensionFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.illegalOverclockFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.apexMutationFirePattern, weapon, baseAngle, driveActive);
+    const ascensionFireProfile = fireWave6AscensionVolley(weapon, baseAngle, driveActive);
     const chassisFireProfile = fireChassisWeaponPosture(weapon, baseAngle, driveActive);
 
     if (weapon.capstoneFire) {
@@ -12191,12 +12336,16 @@
       state.player.heat +
         weapon.heatPerShot *
           (driveActive ? 0.58 : 1) *
+          (ascensionFireProfile.heatMultiplier || 1) *
           (chassisFireProfile.heatMultiplier || 1),
       0,
       100
     );
     state.player.fireCooldown =
-      weapon.cooldown * (driveActive ? 0.6 : 1) * (chassisFireProfile.cooldownMultiplier || 1);
+      weapon.cooldown *
+      (driveActive ? 0.6 : 1) *
+      (ascensionFireProfile.cooldownMultiplier || 1) *
+      (chassisFireProfile.cooldownMultiplier || 1);
     if (state.player.heat >= 100) {
       state.player.overheated = true;
       pushCombatFeed("과열 발생. 사격 회복 전까지 회피와 냉각이 우선이다.", "HEAT");
@@ -14689,6 +14838,7 @@
 
       context.fillStyle =
         state.player.invulnerableTime > 0 ? "#fff0c9" : state.weapon.color;
+      drawPlayerWave6AscensionFrame(context);
       drawPlayerChassisFrame(context);
       drawPlayerLateAscensionFrame(context);
       drawPlayerApexFrame(context);
@@ -14795,6 +14945,84 @@
         );
         context.stroke();
       });
+    }
+  }
+
+  function drawPlayerWave6AscensionFrame(context) {
+    const profile = getWave6AscensionProfile();
+    if (!state.player || !profile) {
+      return;
+    }
+    const facing = state.player.facing || 0;
+
+    if (profile.id === "mirror_hunt") {
+      [-1, 1].forEach((direction) => {
+        const wingRoot = getOffsetPoint(state.player.x, state.player.y, facing, 2, 18 * direction);
+        const wingTip = getOffsetPoint(state.player.x, state.player.y, facing, 20, 26 * direction);
+        context.fillStyle = "rgba(159, 231, 255, 0.28)";
+        context.beginPath();
+        context.moveTo(wingRoot.x, wingRoot.y);
+        context.lineTo(wingTip.x, wingTip.y);
+        context.lineTo(
+          wingRoot.x - Math.cos(facing) * 8 + Math.sin(facing) * 5 * direction,
+          wingRoot.y - Math.sin(facing) * 8 - Math.cos(facing) * 5 * direction
+        );
+        context.closePath();
+        context.fill();
+      });
+      context.strokeStyle = "rgba(216, 251, 255, 0.84)";
+      context.lineWidth = 2;
+      context.beginPath();
+      context.moveTo(
+        state.player.x + Math.cos(facing) * 10,
+        state.player.y + Math.sin(facing) * 10
+      );
+      context.lineTo(
+        state.player.x + Math.cos(facing) * 24,
+        state.player.y + Math.sin(facing) * 24
+      );
+      context.stroke();
+      return;
+    }
+
+    if (profile.id === "kiln_bastion") {
+      [-1, 1].forEach((direction) => {
+        const furnace = getOffsetPoint(state.player.x, state.player.y, facing, -2, 16 * direction);
+        context.fillStyle = "rgba(255, 179, 107, 0.3)";
+        context.beginPath();
+        context.arc(furnace.x, furnace.y, 8, 0, Math.PI * 2);
+        context.fill();
+      });
+      context.strokeStyle = "rgba(255, 214, 168, 0.82)";
+      context.lineWidth = 2.4;
+      context.beginPath();
+      context.arc(
+        state.player.x + Math.cos(facing) * 8,
+        state.player.y + Math.sin(facing) * 8,
+        state.player.radius + 4,
+        facing - 0.72,
+        facing + 0.72
+      );
+      context.stroke();
+      return;
+    }
+
+    if (profile.id === "storm_artillery") {
+      [-1, 0, 1].forEach((lane) => {
+        const barrel = getOffsetPoint(state.player.x, state.player.y, facing, 18, lane * 10);
+        context.fillStyle = "rgba(255, 240, 201, 0.78)";
+        context.fillRect(
+          barrel.x - 3 - Math.sin(facing) * 4,
+          barrel.y - 3 + Math.cos(facing) * 4,
+          6,
+          12
+        );
+      });
+      context.strokeStyle = "rgba(255, 224, 175, 0.68)";
+      context.lineWidth = 2;
+      context.beginPath();
+      context.arc(state.player.x, state.player.y, state.player.radius + 14, 0, Math.PI * 2);
+      context.stroke();
     }
   }
 
