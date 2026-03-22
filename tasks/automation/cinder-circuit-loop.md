@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 09:30 KST
+  Findings:
+  - The implementation now has real doctrine ladders, catalyst branches, support bays, and distinct late-wave variants, but the run still ends before those systems earn their cost. A game selling `monster form`, `Catalyst Crucible`, and capstone recipes cannot cash out primarily through `Wave 10-12` plus a `12초 cash-out 시험`.
+  - Too much of the current excitement is still in the forge copy instead of the combat state. `Architecture Draft`, `Systems Forge`, `Late Break Armory`, and `Catalyst Crucible` describe a huge machine-building fantasy, yet repeated play still spends more time selecting that fantasy than exploiting it in live combat.
+  - Main-weapon growth has improved, but many late spikes still read as denser line coverage layered with autonomous help rather than truly new battlefield rules. More barrels and extra rails are good; they are not enough on their own to create the "one more run for that form" hunger if the payoff window is this short.
+  - Arena size now breathes more, but encounter scripting still over-weights lockout maintenance. `bastion -> mortar -> warden -> relay` remains a strong pressure chain, yet it keeps making finished builds prove they can reopen space instead of letting them spend real time abusing, defending, and overextending from power.
+  Top Priority: Replace the current end-of-run `12초 cash-out` finish with at least `2-3` full post-capstone waves that begin immediately after the player's first true completed form, so the best build state gets real ownership time instead of a short exam.
+  Why Now: If the run's most desirable form only exists for a brief trial, players will admire the scaffolding once and stop craving reruns.
+  Do Not Repeat: Do not add another late forge package or capstone label until the game lets completed builds live on the battlefield longer.
+
 - 2026-03-22 23:40 KST
   Findings:
   - The run now has enough doctrine, pursuit, catalyst, and support-bay structure to look ambitious, but it still cashes too much of that ambition into labeled forge wrappers instead of playable ownership time. `Architecture Draft`, `Systems Forge`, `Late Break Armory`, and `Catalyst Crucible` explain the fantasy well; they do not leave enough waves to live in it.
@@ -681,6 +691,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 23:59 KST
+  Changed: replaced the old final `12초 cash-out` in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) with a true three-wave post-capstone `Afterburn` bracket. The final forge now transitions straight into `Wave 13-15`, each wave reusing full late-run budgets, arena scale, and hazard rules while blending in the selected finisher/support/fail-soft trial profile so the chosen ending shape still matters. I also extended the HUD wave track to show the new `Act 4` bracket, updated final-forge preview/copy so it advertises a `3연전` ownership phase instead of a short exam, and refreshed [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new afterburn previews, transition state, and exported wave generator.
+  Why: the latest critique’s Top Priority was to stop ending runs with a tiny final test and give completed forms multiple full waves of real battlefield ownership. The highest-value bounded interpretation was to keep the existing final forge choice surface but swap its payout from a short survival check into three consecutive late-game waves with no extra menu interruption.
+  Follow-up risk: this buys much more payoff time, but the afterburn bracket currently remixes existing late-act rules rather than adding entirely new post-capstone encounter families. If critique still wants even stronger rerun hunger, the next pass should make `Wave 13-15` diverge more sharply by doctrine instead of just extending the common late pressure model.
 
 - 2026-03-22 23:58 KST
   Changed: moved doctrine pursuit in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from a stage-2 teaser into a true early lock-in. Completing the `Wave 6-8` shard chase now immediately assigns the doctrine’s final capstone as well as the pursuit weapon/system spike, so a successful run hits its full doctrine monster form by `Wave 7` instead of waiting for `Late Break Armory` to finally cash it out. I also rewrote the forge and armory copy so the UI now describes `Late Break Armory` as wildcard/system reinforcement on top of an already-online monster build, not as the place where the real payoff still begins. [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts the new pursuit-capstone resolver, including the early `Storm Artillery` fork logic.

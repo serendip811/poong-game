@@ -777,8 +777,10 @@
   const MAX_WAVES = WAVE_CONFIG.length;
   const POST_WAVE_LOOT_GRACE = 2.4;
   const COMBAT_CACHE_DROP_LIFE = 14;
+  const POST_CAPSTONE_WAVE_COUNT = 3;
   const FINAL_CASHOUT_DURATION = 12;
   const FINAL_CASHOUT_SPAWN_BUDGET = 26;
+  const POST_CAPSTONE_WAVE_LABELS = ["Afterburn I", "Afterburn II", "Afterburn III"];
   const KILN_BASTION_FIELD_BASE = {
     radiusFactor: 0.24,
     enemyDamage: 7,
@@ -2247,6 +2249,7 @@
     { start: 1, end: 4, label: "Act 1 · Ignition", shortLabel: "Act 1" },
     { start: 5, end: 8, label: "Act 2 · Bastion Run", shortLabel: "Act 2" },
     { start: 9, end: 12, label: "Act 3 · Crown Siege", shortLabel: "Act 3" },
+    { start: 13, end: 15, label: "Act 4 · Afterburn", shortLabel: "Act 4" },
   ];
   const FIELD_GRANT_MAX_COST = 48;
   const FIELD_GRANT_DISCOUNT_MULTIPLIER = 0.65;
@@ -5198,7 +5201,7 @@
       label: wave.bannerLabel || wave.label,
       directive: wave.directive,
       hazard: wave.hazard ? `${wave.hazard.label} x${wave.hazard.count}` : "Hazard 없음",
-      tempo: `${wave.timeLeft}초 · 적 상한 ${wave.activeCap}`,
+      tempo: `${POST_CAPSTONE_WAVE_COUNT}연전 시작 · 적 상한 ${wave.activeCap}`,
     };
   }
 
@@ -6774,6 +6777,7 @@
     MAX_WAVES,
     WAVE_CONFIG,
     resolveWaveConfig,
+    POST_CAPSTONE_WAVE_COUNT,
     FINAL_CASHOUT_DURATION,
     ENEMY_DEFS,
     CORE_DEFS,
@@ -6799,6 +6803,7 @@
     hasFinisherCatalyst,
     buildCanEarnFinisherCatalyst,
     shouldFinishAfterForge,
+    createPostCapstoneWave,
     createFinalCashoutWave,
     getFinalCashoutTransitionProfile,
     applyFinalCashoutTransition,
@@ -7087,6 +7092,11 @@
       wave: null,
       waveClearTimer: 0,
       pendingFinalForge: false,
+      postCapstone: {
+        active: false,
+        stageIndex: 0,
+        total: POST_CAPSTONE_WAVE_COUNT,
+      },
       enemies: [],
       projectiles: [],
       drops: [],
@@ -7315,18 +7325,38 @@
     if (!elements.waveTrack || !elements.runTrackLabel) {
       return;
     }
-    const currentWaveNumber = clamp(state.waveIndex + 1, 1, MAX_WAVES);
+    const currentWaveNumber = Math.max(1, state.waveIndex + 1);
     const currentAct = getActLabelForWave(currentWaveNumber);
+    const totalTrackWaves =
+      MAX_WAVES +
+      (state.postCapstone && state.postCapstone.active
+        ? state.postCapstone.total
+        : state.phase === "result" && state.stats.wavesCleared > MAX_WAVES
+          ? POST_CAPSTONE_WAVE_COUNT
+          : 0);
     const label =
       state.phase === "forge"
         ? `Forge Stop · ${currentAct.shortLabel} · Wave ${state.waveIndex + 1}`
         : state.phase === "result"
           ? "Run Complete"
-          : `${currentAct.shortLabel} · Wave ${state.waveIndex + 1} / ${MAX_WAVES}`;
+          : `${currentAct.shortLabel} · Wave ${state.waveIndex + 1} / ${totalTrackWaves}`;
     elements.runTrackLabel.textContent = label;
-    elements.waveTrack.innerHTML = WAVE_CONFIG.map((wave, index) => {
-      const waveNumber = index + 1;
-      const act = getActLabelForWave(waveNumber);
+    const trackEntries = WAVE_CONFIG.map((wave, index) => ({
+      waveNumber: index + 1,
+      act: getActLabelForWave(index + 1),
+      id: wave.id.toUpperCase(),
+      note: wave.note,
+    }));
+    for (let index = 0; index < totalTrackWaves - MAX_WAVES; index += 1) {
+      const waveNumber = MAX_WAVES + index + 1;
+      trackEntries.push({
+        waveNumber,
+        act: getActLabelForWave(waveNumber),
+        id: POST_CAPSTONE_WAVE_LABELS[index].toUpperCase(),
+        note: "최종 포지 이후 완성형 빌드가 실제 전장을 연속 점유하는 post-capstone afterburn bracket.",
+      });
+    }
+    elements.waveTrack.innerHTML = trackEntries.map((entry, index) => {
       const stateName =
         state.phase === "result"
           ? index < state.stats.wavesCleared
@@ -7339,9 +7369,9 @@
               : "upcoming";
       return `
         <article class="wave-track__node" data-state="${stateName}">
-          <p class="panel__eyebrow">${act.shortLabel} · Wave ${waveNumber}</p>
-          <strong>${wave.id.toUpperCase()}</strong>
-          <p>${wave.note}</p>
+          <p class="panel__eyebrow">${entry.act.shortLabel} · Wave ${entry.waveNumber}</p>
+          <strong>${entry.id}</strong>
+          <p>${entry.note}</p>
         </article>
       `;
     }).join("");
@@ -7661,6 +7691,8 @@
     state.waveIndex = index;
     state.phase = "wave";
     state.pendingFinalForge = false;
+    state.postCapstone.active = false;
+    state.postCapstone.stageIndex = 0;
     state.arena = arena;
     state.wave = {
       index,
@@ -7800,7 +7832,7 @@
     state.player.overheated = false;
     pushCombatFeed(
       isFinalForge
-        ? "최종 웨이브 정리 완료. 마지막 포지에서 최종 각인과 화력 배치를 마감한다."
+        ? "최종 웨이브 정리 완료. 마지막 포지에서 최종 각인과 3연속 afterburn 압박 배치를 마감한다."
         : isLateBreakArmory(forgeOptions)
           ? "Wave 8 돌파. Late Break Armory에서 6장 중 대형 카드 두 장을 골라 세 번째 베이와 교리 wildcard까지 포함한 Act 3 운영 틀을 monster form 위에 덧씌운다."
           : draftType === "armory"
@@ -7849,61 +7881,106 @@
     );
   }
 
-  function createFinalCashoutWave(index = MAX_WAVES - 1, build = null) {
-    const baseConfig = WAVE_CONFIG[clamp(index, 0, MAX_WAVES - 1)];
-    const variant =
+  function getSelectedFinaleVariant(build) {
+    return (
       getFinalCashoutFailSoftVariant(build) ||
       getFinalCashoutSupportVariant(build) ||
-      getFinalCashoutCapstoneVariant(build);
-    const defaultHazard = baseConfig.hazard
+      getFinalCashoutCapstoneVariant(build)
+    );
+  }
+
+  function blendEnemyMix(baseMix, overlayMix, overlayWeight = 0.3) {
+    const keys = Array.from(new Set([...Object.keys(baseMix || {}), ...Object.keys(overlayMix || {})]));
+    if (keys.length === 0) {
+      return {};
+    }
+    const blended = {};
+    let total = 0;
+    keys.forEach((key) => {
+      const value =
+        (baseMix && Number.isFinite(baseMix[key]) ? baseMix[key] * (1 - overlayWeight) : 0) +
+        (overlayMix && Number.isFinite(overlayMix[key]) ? overlayMix[key] * overlayWeight : 0);
+      blended[key] = value;
+      total += value;
+    });
+    if (total <= 0) {
+      const share = 1 / keys.length;
+      keys.forEach((key) => {
+        blended[key] = share;
+      });
+      return blended;
+    }
+    keys.forEach((key) => {
+      blended[key] = blended[key] / total;
+    });
+    return blended;
+  }
+
+  function createPostCapstoneWave(stageIndex = 0, build = null) {
+    const boundedStage = clamp(stageIndex, 0, POST_CAPSTONE_WAVE_COUNT - 1);
+    const baseIndex = clamp(MAX_WAVES - POST_CAPSTONE_WAVE_COUNT + boundedStage, 0, MAX_WAVES - 1);
+    const baseConfig = resolveWaveConfig(baseIndex, build);
+    const variant = getSelectedFinaleVariant(build);
+    const spawnBias = variant
+      ? clamp((variant.spawnBudget - FINAL_CASHOUT_SPAWN_BUDGET) * 4, -8, 20)
+      : 0;
+    const capBias = variant
+      ? clamp(Math.round((variant.activeCap - 18) * 0.5), -2, 4)
+      : 0;
+    const hazard = baseConfig.hazard
       ? {
           ...baseConfig.hazard,
-          interval: Math.max(6.2, baseConfig.hazard.interval * 0.82),
-          telegraph: Math.max(0.72, baseConfig.hazard.telegraph * 0.92),
+          ...(variant && variant.hazard ? variant.hazard : {}),
+          interval: Math.max(
+            5.4,
+            (variant && variant.hazard && Number.isFinite(variant.hazard.interval)
+              ? variant.hazard.interval
+              : baseConfig.hazard.interval) * (0.98 - boundedStage * 0.05)
+          ),
+          telegraph: Math.max(
+            0.6,
+            (variant && variant.hazard && Number.isFinite(variant.hazard.telegraph)
+              ? variant.hazard.telegraph
+              : baseConfig.hazard.telegraph) * (1.04 - boundedStage * 0.04)
+          ),
         }
       : null;
-    const hazard = variant && defaultHazard
-      ? {
-          ...defaultHazard,
-          ...variant.hazard,
-        }
-      : defaultHazard;
     return {
-      index,
-      timeLeft: FINAL_CASHOUT_DURATION,
-      spawnBudget: variant ? variant.spawnBudget : FINAL_CASHOUT_SPAWN_BUDGET,
+      index: MAX_WAVES + boundedStage,
+      timeLeft: baseConfig.duration,
+      spawnBudget: Math.max(96, baseConfig.spawnBudget + spawnBias + boundedStage * 16),
       spawned: 0,
-      spawnTimer: 0.2,
-      label: `${baseConfig.label} · ${variant ? variant.cashoutLabel : "Cash-Out"}`,
-      bannerLabel: variant ? variant.bannerLabel : "Meltdown Cash-Out",
+      spawnTimer: 0.35,
+      label: `Wave ${MAX_WAVES + boundedStage + 1} · ${POST_CAPSTONE_WAVE_LABELS[boundedStage]}${variant ? ` · ${variant.cashoutLabel}` : ""}`,
+      bannerLabel: `${variant ? variant.bannerLabel || variant.cashoutLabel : "Afterburn"} · ${POST_CAPSTONE_WAVE_LABELS[boundedStage]}`,
       note: variant
-        ? variant.note
-        : "완성된 무기로 마지막 폭주 압박을 직접 정리하는 구간.",
+        ? `${variant.note} 짧은 시험이 아니라 완성된 형태를 실제 웨이브 셋에 풀어 놓는 post-capstone ownership 구간이다.`
+        : "완성된 무기가 3연속 후반 wave를 실제로 먹어 치우는 post-capstone ownership 구간.",
       directive: variant ? variant.directive : baseConfig.directive,
-      activeCap: variant
-        ? variant.activeCap
-        : Math.max(18, Math.round(baseConfig.activeCap * 0.7)),
-      baseSpawnInterval: variant
-        ? variant.baseSpawnInterval
-        : Math.max(0.22, baseConfig.baseSpawnInterval * 0.74),
-      spawnIntervalMin: variant
-        ? variant.spawnIntervalMin
-        : Math.max(0.1, baseConfig.spawnIntervalMin * 0.9),
+      activeCap: Math.max(28, baseConfig.activeCap + capBias + boundedStage * 2),
+      baseSpawnInterval: Math.max(
+        baseConfig.spawnIntervalMin,
+        baseConfig.baseSpawnInterval * (0.96 - boundedStage * 0.04)
+      ),
+      spawnIntervalMin: Math.max(0.085, baseConfig.spawnIntervalMin * (0.96 - boundedStage * 0.02)),
       spawnAcceleration: baseConfig.spawnAcceleration,
-      eliteEvery: variant ? variant.eliteEvery : Math.max(5, baseConfig.eliteEvery - 1),
-      mix: variant ? { ...variant.mix } : { ...baseConfig.mix },
+      eliteEvery: Math.max(4, baseConfig.eliteEvery - (boundedStage > 0 ? 1 : 0)),
+      mix: blendEnemyMix(baseConfig.mix, variant ? variant.mix : null, 0.3 + boundedStage * 0.04),
       cleanupPhase: false,
       awaitingForge: false,
-      completesRun: true,
-      driveGainFactor: variant
-        ? variant.driveGainFactor
-        : Math.max(baseConfig.driveGainFactor || 1, 1.22),
+      completesRun: boundedStage >= POST_CAPSTONE_WAVE_COUNT - 1,
+      driveGainFactor: Math.max(baseConfig.driveGainFactor || 1, 1.44 + boundedStage * 0.08),
       arena: getArenaSize(baseConfig),
       hazard,
-      hazardTimer: hazard
-        ? hazard.interval * (variant && variant.hazard ? variant.hazard.timerFactor : 0.55)
-        : Number.POSITIVE_INFINITY,
+      hazardTimer: hazard ? hazard.interval * 0.72 : Number.POSITIVE_INFINITY,
+      postCapstoneStage: boundedStage + 1,
+      postCapstoneTotal: POST_CAPSTONE_WAVE_COUNT,
+      skipForgeOnClear: boundedStage < POST_CAPSTONE_WAVE_COUNT - 1,
     };
+  }
+
+  function createFinalCashoutWave(index = MAX_WAVES - 1, build = null) {
+    return createPostCapstoneWave(0, build);
   }
 
   function getFinalCashoutTransitionProfile(build = null) {
@@ -7934,6 +8011,12 @@
     const profile = getFinalCashoutTransitionProfile(run.build);
     run.phase = "wave";
     run.pendingFinalForge = false;
+    run.postCapstone = {
+      active: true,
+      stageIndex: 0,
+      total: POST_CAPSTONE_WAVE_COUNT,
+    };
+    run.waveIndex = MAX_WAVES;
     run.wave = createFinalCashoutWave(run.waveIndex, run.build);
     run.arena = getArenaSize(run.wave);
     run.waveClearTimer = 0;
@@ -7970,10 +8053,48 @@
     pushCombatFeed(`최종 포지 완료. ${state.wave.note}`, "LAST");
     setBanner(
       transition && transition.preserveArenaState
-        ? `${state.wave.bannerLabel || "Meltdown Cash-Out"} · 압박 유지`
-        : state.wave.bannerLabel || "Meltdown Cash-Out",
+        ? `${state.wave.bannerLabel || "Afterburn"} · 압박 유지`
+        : state.wave.bannerLabel || "Afterburn",
       1.2
     );
+    renderForgeOverlay();
+    updateHUD();
+  }
+
+  function beginNextPostCapstoneWave() {
+    if (!state.postCapstone || !state.postCapstone.active) {
+      return;
+    }
+    const nextStage = state.postCapstone.stageIndex + 1;
+    if (nextStage >= state.postCapstone.total) {
+      finishRun(true);
+      return;
+    }
+    state.postCapstone.stageIndex = nextStage;
+    state.waveIndex = MAX_WAVES + nextStage;
+    state.phase = "wave";
+    state.wave = createPostCapstoneWave(nextStage, state.build);
+    state.arena = getArenaSize(state.wave);
+    state.waveClearTimer = 0;
+    state.enemies = [];
+    state.projectiles = [];
+    state.drops = [];
+    state.hazards = [];
+    state.slagPools = [];
+    state.particles = [];
+    state.supportDeployables = [];
+    resetOvercommitState(state);
+    resetDoctrinePursuitState(state);
+    syncArenaCanvas();
+    state.player.x = state.arena.width / 2;
+    state.player.y = state.arena.height / 2;
+    state.player.heat = Math.max(0, state.player.heat - 18);
+    state.player.overheated = false;
+    state.player.fireCooldown = 0;
+    state.player.dashCharges = state.player.dashMax;
+    state.player.dashCooldownTimer = 0;
+    pushCombatFeed(`${state.wave.label} 진입. ${state.wave.note}`, `W${state.waveIndex + 1}`);
+    setBanner(state.wave.bannerLabel || state.wave.label, 1.2);
     renderForgeOverlay();
     updateHUD();
   }
@@ -7984,6 +8105,7 @@
     state.screen = "result";
     state.phase = "result";
     state.pendingFinalForge = false;
+    state.postCapstone.active = false;
     state.result = {
       victory,
       wavesCleared: state.stats.wavesCleared,
@@ -10520,7 +10642,9 @@
         state.stats.wavesCleared = state.waveIndex + 1;
         const nextWave = state.waveIndex + 2;
         const nextPhaseLabel = state.wave.completesRun
-          ? "최종 포지"
+          ? "결과 패널"
+          : state.wave.skipForgeOnClear
+            ? `Wave ${nextWave}`
           : shouldRunActBreakArmory({ nextWave, finalForge: false })
             ? getArmoryLabel({ nextWave })
             : shouldRunBastionDraft({ nextWave, finalForge: false })
@@ -10544,6 +10668,8 @@
       if (state.waveClearTimer <= 0) {
         if (state.wave.completesRun) {
           finishRun(true);
+        } else if (state.wave.skipForgeOnClear) {
+          beginNextPostCapstoneWave();
         } else if (shouldRunArchitectureDraft({ nextWave: state.waveIndex + 2, finalForge: false })) {
           enterArchitectureDraft();
         } else if (shouldRunBastionDraft({ nextWave: state.waveIndex + 2, finalForge: false })) {
@@ -10944,8 +11070,8 @@
           : "단일 포지 선택";
     elements.forgeSubtitle.textContent = state.pendingFinalForge
       ? catalystReady
-        ? `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 세 장은 완성, 촉매 연소, 안정화로 고정되며 각 카드가 바로 이어질 12초 cash-out 시험을 미리 보여준다.`
-        : `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 촉매가 없어도 비상 점화와 안정화 fail-soft 카드가 열리며, 각 카드가 다른 12초 cash-out 시험으로 바로 이어진다.`
+        ? `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 세 장은 완성, 촉매 연소, 안정화로 고정되며 각 카드가 바로 이어질 3연속 post-capstone afterburn bracket의 시작 형태를 미리 보여준다.`
+        : `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 촉매가 없어도 비상 점화와 안정화 fail-soft 카드가 열리며, 각 카드가 다른 3연속 post-capstone afterburn bracket으로 바로 이어진다.`
       : state.forgeDraftType === "architecture_draft"
         ? `Wave 3 진입 직전 Architecture Draft다. 세 장기 교리 중 하나를 골라 주무장을 즉시 해당 교리 형태로 재배선하고 starter subsystem을 무료 설치하며, 초반 두 support bay와 이후 포지 후보를 그 계통 쪽으로 강하게 기울인다. Late Break Armory가 열리면 마지막 bay 1칸만 우회 조합용으로 풀린다. 지금부터 이번 런이 어떤 최종 병기로 자랄지 바로 드러난다.`
       : state.forgeDraftType === "field_grant"

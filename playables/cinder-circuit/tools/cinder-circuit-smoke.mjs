@@ -30,6 +30,7 @@ assert.equal(game.ACT3_CATALYST_DRAFT_WAVE, 10);
 assert.equal(game.getActLabelForWave(4).shortLabel, "Act 1");
 assert.equal(game.getActLabelForWave(5).shortLabel, "Act 2");
 assert.equal(game.getActLabelForWave(9).shortLabel, "Act 3");
+assert.equal(game.getActLabelForWave(13).shortLabel, "Act 4");
 assert.ok(game.WAVE_CONFIG[0].spawnBudget < game.WAVE_CONFIG[2].spawnBudget);
 assert.ok(game.WAVE_CONFIG[4].hazard);
 assert.ok(game.WAVE_CONFIG[3].hazard.damage > game.WAVE_CONFIG[4].hazard.damage);
@@ -1077,10 +1078,10 @@ assert.equal(
 assert.equal(emberFailSoftFinalChoices[0].action, "cashout_failsoft");
 assert.equal(emberFailSoftFinalChoices[0].cost, 18);
 assert.equal(emberFailSoftFinalChoices[0].failSoftLabel, "Ember Wake");
-assert.equal(emberFailSoftFinalChoices[0].finalePreview.label, "Ember Wake Trial");
+assert.ok(emberFailSoftFinalChoices[0].finalePreview.label.includes("Ember Wake Trial"));
 assert.equal(emberFailSoftFinalChoices[1].action, "cashout_support");
 assert.equal(emberFailSoftFinalChoices[1].cost, 0);
-assert.equal(emberFailSoftFinalChoices[1].finalePreview.label, "Pilot Light Trial");
+assert.ok(emberFailSoftFinalChoices[1].finalePreview.label.includes("Pilot Light Trial"));
 assert.notEqual(
   emberFailSoftFinalChoices[0].finalePreview.hazard,
   emberFailSoftFinalChoices[1].finalePreview.hazard
@@ -1113,7 +1114,7 @@ assert.equal(emberFinalChoices[0].recipeLabel, "Crown Pyre");
 assert.equal(emberFinalChoices[0].affixId, "hotshot");
 assert.equal(emberFinalChoices[1].action, "catalyst_reforge");
 assert.equal(emberFinalChoices[1].capstoneLabel, "Sear Halo");
-assert.equal(emberFinalChoices[1].finalePreview.label, "Sear Halo Trial");
+assert.ok(emberFinalChoices[1].finalePreview.label.includes("Sear Halo Trial"));
 assert.equal(emberFinalChoices[2].action, "cashout_support");
 assert.equal(emberFinalChoices[2].supportLabel, "Pilot Light");
 assert.equal(emberFinalChoices[2].finalePreview.hazard, "Pilot Rings x2");
@@ -1216,14 +1217,15 @@ assert.equal(
 assert.ok(finalForgeChoices.every((choice) => choice.finalePreview));
 assert.ok(!finalForgeChoices.some((choice) => choice.action === "reforge" || choice.action === "affix_reforge"));
 assert.equal(finalForgeChoices[0].affixId, "hotshot");
-assert.equal(finalForgeChoices[0].finalePreview.label, "Meltdown Cash-Out");
+assert.ok(finalForgeChoices[0].finalePreview.label.includes("Afterburn I"));
 assert.equal(finalForgeChoices[1].action, "catalyst_reforge");
-assert.equal(finalForgeChoices[1].finalePreview.label, "Flash Temper Trial");
+assert.ok(finalForgeChoices[1].finalePreview.label.includes("Flash Temper Trial"));
 assert.equal(finalForgeChoices[2].action, "cashout_support");
 assert.equal(finalForgeChoices[2].supportLabel, "Quench Loop");
 assert.equal(finalForgeChoices[2].cost, 0);
-assert.equal(finalForgeChoices[2].finalePreview.label, "Quench Loop Trial");
+assert.ok(finalForgeChoices[2].finalePreview.label.includes("Quench Loop Trial"));
 assert.equal(finalForgeChoices[2].finalePreview.hazard, "Quench Lanes x1");
+assert.ok(finalForgeChoices[2].finalePreview.tempo.includes("3연전"));
 const lowScrapFinalChoices = game.buildForgeChoices(catalystGateBuild, () => 0, 0, { finalForge: true });
 assert.ok(lowScrapFinalChoices.some((choice) => choice.action === "cashout_support" && choice.cost === 0));
 game.applyForgeChoice(blockedRun, catalystFinisherChoice);
@@ -1246,12 +1248,12 @@ assert.equal(missedCatalystFinalChoices[0].action, "cashout_failsoft");
 assert.equal(missedCatalystFinalChoices[0].cost, 18);
 assert.equal(missedCatalystFinalChoices[0].laneLabel, "비상 점화");
 assert.equal(missedCatalystFinalChoices[0].failSoft, true);
-assert.equal(missedCatalystFinalChoices[0].finalePreview.label, "Slag Burst Trial");
+assert.ok(missedCatalystFinalChoices[0].finalePreview.label.includes("Slag Burst Trial"));
 assert.equal(missedCatalystFinalChoices[1].action, "cashout_support");
 assert.equal(missedCatalystFinalChoices[1].cost, 0);
 assert.equal(missedCatalystFinalChoices[1].laneLabel, "안정화");
 assert.equal(missedCatalystFinalChoices[1].failSoft, true);
-assert.equal(missedCatalystFinalChoices[1].finalePreview.label, "Quench Loop Trial");
+assert.ok(missedCatalystFinalChoices[1].finalePreview.label.includes("Quench Loop Trial"));
 assert.ok(
   !missedCatalystFinalChoices.some(
     (choice) => choice.action === "reforge" || choice.action === "affix_reforge"
@@ -1374,17 +1376,23 @@ assert.equal(
   false
 );
 const finalCashoutWave = game.createFinalCashoutWave(game.MAX_WAVES - 1);
-assert.equal(finalCashoutWave.timeLeft, game.FINAL_CASHOUT_DURATION);
-assert.equal(finalCashoutWave.completesRun, true);
+assert.equal(finalCashoutWave.timeLeft, game.WAVE_CONFIG[9].duration);
+assert.equal(finalCashoutWave.completesRun, false);
 assert.equal(finalCashoutWave.awaitingForge, false);
 assert.ok(finalCashoutWave.spawnBudget > 0);
-assert.ok(finalCashoutWave.activeCap < game.WAVE_CONFIG[game.MAX_WAVES - 1].activeCap);
-assert.ok(finalCashoutWave.hazard.interval < game.WAVE_CONFIG[game.MAX_WAVES - 1].hazard.interval);
-assert.ok(finalCashoutWave.label.includes("Cash-Out"));
+assert.ok(finalCashoutWave.activeCap >= game.WAVE_CONFIG[9].activeCap);
+assert.ok(finalCashoutWave.hazard.interval < game.WAVE_CONFIG[9].hazard.interval);
+assert.ok(finalCashoutWave.label.includes("Afterburn I"));
+assert.equal(finalCashoutWave.postCapstoneTotal, game.POST_CAPSTONE_WAVE_COUNT);
+
+const finalAfterburnWave = game.createPostCapstoneWave(2, catalystPivotBuild);
+assert.equal(finalAfterburnWave.completesRun, true);
+assert.equal(finalAfterburnWave.postCapstoneStage, 3);
+assert.ok(finalAfterburnWave.label.includes("Afterburn III"));
 
 const temperCashoutWave = game.createFinalCashoutWave(game.MAX_WAVES - 1, flashTemperChoice ? catalystPivotBuild : null);
 assert.equal(temperCashoutWave.label.includes("Temper Trial"), true);
-assert.equal(temperCashoutWave.bannerLabel, "Flash Temper Trial");
+assert.equal(temperCashoutWave.bannerLabel, "Flash Temper Trial · Afterburn I");
 assert.equal(temperCashoutWave.hazard.count, 1);
 assert.ok(temperCashoutWave.mix.brute > finalCashoutWave.mix.brute);
 assert.ok(temperCashoutWave.spawnBudget > finalCashoutWave.spawnBudget);
@@ -1403,16 +1411,16 @@ assert.ok(mirrorCashoutWave.baseSpawnInterval <= railCashoutWave.baseSpawnInterv
 
 const quenchCashoutWave = game.createFinalCashoutWave(game.MAX_WAVES - 1, supportBuild);
 assert.equal(quenchCashoutWave.label.includes("Quench Trial"), true);
-assert.equal(quenchCashoutWave.bannerLabel, "Quench Loop Trial");
+assert.equal(quenchCashoutWave.bannerLabel, "Quench Loop Trial · Afterburn I");
 assert.equal(quenchCashoutWave.hazard.label, "Quench Lanes");
-assert.ok(quenchCashoutWave.activeCap < finalCashoutWave.activeCap);
+assert.ok(quenchCashoutWave.activeCap <= finalCashoutWave.activeCap);
 assert.ok(quenchCashoutWave.hazard.telegraph > finalCashoutWave.hazard.telegraph);
 assert.equal(game.getFinalCashoutTransitionProfile(supportBuild).preserveArenaState, true);
 assert.equal(game.getFinalCashoutTransitionProfile(supportBuild).refillDash, false);
 
 const emberHaloCashoutWave = game.createFinalCashoutWave(game.MAX_WAVES - 1, emberCapstoneBuild);
 assert.equal(emberHaloCashoutWave.label.includes("Halo Trial"), true);
-assert.equal(emberHaloCashoutWave.bannerLabel, "Sear Halo Trial");
+assert.equal(emberHaloCashoutWave.bannerLabel, "Sear Halo Trial · Afterburn I");
 assert.equal(emberHaloCashoutWave.hazard.count, 3);
 assert.ok(emberHaloCashoutWave.mix.scuttler > finalCashoutWave.mix.scuttler);
 
@@ -1421,7 +1429,7 @@ assert.equal(game.getFinalCashoutTransitionProfile(emberCapstoneBuild).refillDas
 
 const emberPilotCashoutWave = game.createFinalCashoutWave(game.MAX_WAVES - 1, emberSupportBuild);
 assert.equal(emberPilotCashoutWave.label.includes("Pilot Trial"), true);
-assert.equal(emberPilotCashoutWave.bannerLabel, "Pilot Light Trial");
+assert.equal(emberPilotCashoutWave.bannerLabel, "Pilot Light Trial · Afterburn I");
 assert.equal(emberPilotCashoutWave.hazard.label, "Pilot Rings");
 assert.ok(emberPilotCashoutWave.hazard.telegraph > finalCashoutWave.hazard.telegraph);
 
@@ -1452,6 +1460,8 @@ const supportTransition = game.applyFinalCashoutTransition(supportTransitionRun)
 assert.equal(supportTransition.preserveArenaState, true);
 assert.equal(supportTransitionRun.phase, "wave");
 assert.equal(supportTransitionRun.pendingFinalForge, false);
+assert.equal(supportTransitionRun.waveIndex, game.MAX_WAVES);
+assert.equal(supportTransitionRun.postCapstone.active, true);
 assert.equal(supportTransitionRun.enemies.length, 1);
 assert.equal(supportTransitionRun.drops.length, 1);
 assert.equal(supportTransitionRun.hazards.length, 1);
@@ -1488,6 +1498,8 @@ const capstoneTransitionRun = {
 };
 const capstoneTransition = game.applyFinalCashoutTransition(capstoneTransitionRun);
 assert.equal(capstoneTransition.preserveArenaState, false);
+assert.equal(capstoneTransitionRun.waveIndex, game.MAX_WAVES);
+assert.equal(capstoneTransitionRun.postCapstone.active, true);
 assert.equal(capstoneTransitionRun.enemies.length, 0);
 assert.equal(capstoneTransitionRun.drops.length, 0);
 assert.equal(capstoneTransitionRun.hazards.length, 0);
