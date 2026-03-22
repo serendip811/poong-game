@@ -729,11 +729,14 @@ const artilleryLateArmoryChoices = game.buildForgeChoices(
 const artilleryCapstoneChoices = artilleryLateArmoryChoices.filter(
   (choice) => choice.action === "doctrine_capstone"
 );
-assert.equal(artilleryCapstoneChoices.length, 2);
-const batteryCapstoneChoice = artilleryCapstoneChoices.find(
+assert.equal(artilleryCapstoneChoices.length, 0);
+const artilleryAfterburnWave = game.createPostCapstoneWave(0, artilleryDoctrineBuild);
+assert.ok(artilleryAfterburnWave.afterburnAscension);
+assert.equal(artilleryAfterburnWave.afterburnAscension.choices.length, 2);
+const batteryCapstoneChoice = artilleryAfterburnWave.afterburnAscension.choices.find(
   (choice) => choice.doctrineCapstoneId === "sky_lance_battery"
 );
-const needleCapstoneChoice = artilleryCapstoneChoices.find(
+const needleCapstoneChoice = artilleryAfterburnWave.afterburnAscension.choices.find(
   (choice) => choice.doctrineCapstoneId === "stormspire_needle"
 );
 assert.ok(batteryCapstoneChoice);
@@ -743,10 +746,13 @@ game.applyForgeChoice(
   batteryCapstoneChoice
 );
 const artilleryWaveNineWeapon = game.computeWeaponStats(artilleryDoctrineBuild);
+const artilleryBatteryPlayer = game.computePlayerStats(artilleryDoctrineBuild);
 assert.equal(artilleryWaveNineWeapon.doctrineFormLabel, "Sky Lance Battery");
 assert.equal(artilleryWaveNineWeapon.doctrineStage, 3);
 assert.ok(artilleryWaveNineWeapon.cooldown < artilleryWaveSevenWeapon.cooldown);
 assert.ok(artilleryWaveNineWeapon.chainRange > artilleryWaveSevenWeapon.chainRange);
+assert.equal(artilleryBatteryPlayer.dashMax, 3);
+assert.ok(artilleryBatteryPlayer.moveSpeed > 248);
 assert.equal(
   JSON.stringify(artilleryWaveNineWeapon.doctrineFirePattern.offsets),
   JSON.stringify([-0.36, -0.22, -0.08, 0.08, 0.22, 0.36])

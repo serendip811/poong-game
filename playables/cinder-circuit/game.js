@@ -885,6 +885,31 @@
     sky_lance_battery: 1.35,
     stormspire_needle: 1.55,
   };
+  const AFTERBURN_ASCENSION_DROP_LIFE = 14;
+  const STORM_ARTILLERY_AFTERBURN_ENDFORM_DEFS = {
+    sky_lance_battery: {
+      bodyLabel: "Vector Battery Frame",
+      bodyText: "dash stock +1 · dash recovery +0.42s · move speed +16",
+      statusNote:
+        "Sky Lance Battery가 차체를 벡터 포대 프레임으로 갈아 끼워 더 자주 lane을 넘나들며 넓은 천공망을 직접 깐다.",
+      applyPlayer(stats) {
+        stats.moveSpeed += 16;
+        stats.dashMax += 1;
+        stats.dashCooldown = clamp(stats.dashCooldown - 0.42, 1.2, 3.2);
+      },
+    },
+    stormspire_needle: {
+      bodyLabel: "Siege Spine Frame",
+      bodyText: "max HP +18 · hazard mitigation +8% · move speed -10",
+      statusNote:
+        "Stormspire Needle이 차체를 공성 척추 프레임으로 바꿔 느려지는 대신 더 두껍게 버티며 정지 사격 각을 길게 잡게 만든다.",
+      applyPlayer(stats) {
+        stats.maxHp += 18;
+        stats.moveSpeed -= 10;
+        stats.hazardMitigation = clamp(stats.hazardMitigation + 0.08, 0, 0.45);
+      },
+    },
+  };
 
   function getArenaSize(config = null) {
     const arena =
@@ -3543,6 +3568,7 @@
     architectureForecastId: null,
     bastionDoctrineId: null,
     doctrineCapstoneId: null,
+    afterburnAscensionOffered: false,
     doctrineChaseClaimed: false,
     doctrinePursuitCommitted: false,
     doctrinePursuitProgress: 0,
@@ -4620,6 +4646,7 @@
         architectureForecastId: BASE_BUILD.architectureForecastId,
         bastionDoctrineId: BASE_BUILD.bastionDoctrineId,
         doctrineCapstoneId: BASE_BUILD.doctrineCapstoneId,
+        afterburnAscensionOffered: BASE_BUILD.afterburnAscensionOffered,
         doctrineChaseClaimed: BASE_BUILD.doctrineChaseClaimed,
         doctrinePursuitCommitted: BASE_BUILD.doctrinePursuitCommitted,
         doctrinePursuitProgress: BASE_BUILD.doctrinePursuitProgress,
@@ -4804,6 +4831,52 @@
     return doctrineId ? DOCTRINE_FORGE_PURSUIT_DEFS[doctrineId] || null : null;
   }
 
+  function getStormArtilleryAfterburnEndform(buildOrCapstoneId) {
+    const capstone = getDoctrineCapstoneDef(buildOrCapstoneId);
+    if (!capstone || capstone.doctrineId !== "storm_artillery") {
+      return null;
+    }
+    return STORM_ARTILLERY_AFTERBURN_ENDFORM_DEFS[capstone.id] || null;
+  }
+
+  function shouldOfferStormArtilleryAfterburnAscension(build) {
+    return Boolean(
+      build &&
+      build.bastionDoctrineId === "storm_artillery" &&
+      build.doctrineChaseClaimed &&
+      !build.doctrineCapstoneId
+    );
+  }
+
+  function getStormArtilleryAfterburnAscensionChoices(build) {
+    const doctrine = getBastionDoctrineDef(build);
+    if (!shouldOfferStormArtilleryAfterburnAscension(build) || !doctrine) {
+      return [];
+    }
+    return getDoctrineLateCapstoneDefs(doctrine).map((capstone) => {
+      const endform = getStormArtilleryAfterburnEndform(capstone);
+      return {
+        type: "utility",
+        action: "doctrine_capstone",
+        id: `utility:afterburn_ascension:${capstone.id}`,
+        verb: "ascend",
+        tag: capstone.id === "sky_lance_battery" ? "SKY" : "SPIRE",
+        title: capstone.title,
+        description: `${capstone.description} ${endform ? endform.statusNote : ""}`,
+        slotText: `Afterburn Ascension · ${capstone.slotText}`,
+        cost: 0,
+        laneLabel: "Afterburn Ascension",
+        forgeLaneLabel: "Afterburn Ascension",
+        doctrineId: doctrine.id,
+        doctrineLabel: doctrine.label,
+        doctrineCapstoneId: capstone.id,
+        capstoneLabel: capstone.label,
+        bodyLabel: endform ? endform.bodyLabel : null,
+        bodyText: endform ? endform.bodyText : null,
+      };
+    });
+  }
+
   function getDoctrineWeaponStage(build, doctrine = null) {
     if (!build) {
       return 0;
@@ -4930,6 +5003,10 @@
       overdriveDuration: 5.5 + build.overdriveDurationBonus,
       hazardMitigation: clamp(build.hazardMitigation, 0, 0.45),
     };
+    const stormArtilleryEndform = getStormArtilleryAfterburnEndform(build);
+    if (stormArtilleryEndform && typeof stormArtilleryEndform.applyPlayer === "function") {
+      stormArtilleryEndform.applyPlayer(stats, build);
+    }
     getAffixDefs(build).forEach((affix) => {
       if (typeof affix.applyPlayer === "function") {
         affix.applyPlayer(stats, build);
@@ -6406,6 +6483,9 @@
       return [];
     }
     const doctrine = getBastionDoctrineDef(build);
+    if (doctrine && doctrine.id === "storm_artillery") {
+      return [];
+    }
     const capstones = getDoctrineLateCapstoneDefs(doctrine);
     if (!doctrine || capstones.length === 0) {
       return [];
@@ -7006,6 +7086,39 @@
     setBanner("Combat Cache", 0.9);
   }
 
+  function deployStormArtilleryAfterburnAscension(enemy) {
+    const ascension = state.wave && state.wave.afterburnAscension;
+    if (!ascension || ascension.deployed || ascension.claimed) {
+      return;
+    }
+    const choices = Array.isArray(ascension.choices) ? ascension.choices.filter(Boolean) : [];
+    if (choices.length === 0) {
+      ascension.deployed = true;
+      ascension.claimed = true;
+      return;
+    }
+    ascension.deployed = true;
+    ascension.groupId = `afterburn-ascension-${state.waveIndex + 1}-${state.stats.kills}`;
+    state.build.afterburnAscensionOffered = true;
+    const spreadRadius = choices.length === 1 ? 0 : 44;
+    choices.forEach((choice, index) => {
+      const angle = (index / choices.length) * Math.PI - Math.PI / 2;
+      state.drops.push({
+        kind: "afterburn_ascension_cache",
+        x: enemy.x + Math.cos(angle) * spreadRadius,
+        y: enemy.y + Math.sin(angle) * spreadRadius,
+        life: AFTERBURN_ASCENSION_DROP_LIFE,
+        choice,
+        groupId: ascension.groupId,
+      });
+    });
+    pushCombatFeed(
+      "Afterburn split 노출. Storm Artillery가 두 endform으로 갈라졌다. 압박 속에서 하나만 회수하면 남은 afterburn이 그 몸으로 굳는다.",
+      "ASCEND"
+    );
+    setBanner("Afterburn Ascension", 0.95);
+  }
+
   function getBastionDraftIntroText(build) {
     if (!build || !build.bastionDoctrineId) {
       const doctrine = getBastionDoctrineDef(build);
@@ -7401,6 +7514,7 @@
         run.build.bastionDoctrineId = doctrine.id;
         run.build.architectureForecastId = doctrine.id;
         run.build.doctrineCapstoneId = null;
+        run.build.afterburnAscensionOffered = false;
         run.build.doctrineChaseClaimed = false;
         doctrine.apply(run.build, run);
         run.build.upgrades.push(`교리 채택: ${doctrine.label}`);
@@ -7419,6 +7533,7 @@
       run.build.architectureForecastId = doctrine.id;
       run.build.bastionDoctrineId = null;
       run.build.doctrineCapstoneId = null;
+      run.build.afterburnAscensionOffered = false;
       run.build.doctrineChaseClaimed = false;
       run.build.doctrinePursuitCommitted = false;
       run.build.doctrinePursuitProgress = 0;
@@ -8144,20 +8259,30 @@
     if (systemChoice) {
       applyForgeChoice(state, systemChoice);
     }
-    if (capstone) {
+    if (capstone && doctrine && doctrine.id !== "storm_artillery") {
       state.build.doctrineCapstoneId = capstone.id;
       state.build.upgrades.push(`교리 완성: ${capstone.label}`);
     }
     state.build.doctrineChaseClaimed = true;
+    state.build.afterburnAscensionOffered = false;
     state.doctrinePursuit.active = false;
     state.build.upgrades.push(
       `교리 추격 완성: ${(pursuit && pursuit.shortLabel) || (doctrine && doctrine.label) || "Doctrine Frame"}`
     );
     pushCombatFeed(
-      `${(pursuit && pursuit.label) || "Forge Pursuit"} 완성. ${capstone ? `${capstone.label}까지 즉시 잠겨` : "주무장과 지원층이"} 남은 웨이브를 바로 monster form으로 소모한다.`,
+      doctrine && doctrine.id === "storm_artillery"
+        ? `${(pursuit && pursuit.label) || "Forge Pursuit"} 완성. Thunder Rack까지는 즉시 잠겼고, 최종 Sky Lance / Stormspire 분기는 Afterburn 전장에서 직접 뜯어내야 한다.`
+        : `${(pursuit && pursuit.label) || "Forge Pursuit"} 완성. ${capstone ? `${capstone.label}까지 즉시 잠겨` : "주무장과 지원층이"} 남은 웨이브를 바로 monster form으로 소모한다.`,
       "FRAME"
     );
-    setBanner(capstone ? capstone.label : (pursuit && pursuit.shortLabel) || "Frame 완성", 0.9);
+    setBanner(
+      doctrine && doctrine.id === "storm_artillery"
+        ? "Afterburn Ascension Armed"
+        : capstone
+          ? capstone.label
+          : (pursuit && pursuit.shortLabel) || "Frame 완성",
+      0.9
+    );
     refreshDerivedStats(false);
   }
 
@@ -9220,6 +9345,14 @@
       postCapstoneStage: boundedStage + 1,
       postCapstoneTotal: POST_CAPSTONE_WAVE_COUNT,
       skipForgeOnClear: boundedStage < POST_CAPSTONE_WAVE_COUNT - 1,
+      afterburnAscension: shouldOfferStormArtilleryAfterburnAscension(build)
+        ? {
+            deployed: false,
+            claimed: false,
+            groupId: null,
+            choices: getStormArtilleryAfterburnAscensionChoices(build),
+          }
+        : null,
       apexPredator: shouldSpawnApexPredator(build, MAX_WAVES + boundedStage + 1)
         ? {
             spawned: false,
@@ -9302,6 +9435,12 @@
     const transition = applyFinalCashoutTransition(state);
     syncArenaCanvas();
     pushCombatFeed(`최종 포지 완료. ${state.wave.note}`, "LAST");
+    if (state.wave.afterburnAscension) {
+      pushCombatFeed(
+        "Storm Artillery endform lane 개방. 이번 afterburn 첫 elite가 Sky Lance / Stormspire split cache를 뱉는다.",
+        "ASCEND"
+      );
+    }
     setBanner(
       transition && transition.preserveArenaState
         ? `${state.wave.bannerLabel || "Afterburn"} · 압박 유지`
@@ -9345,6 +9484,12 @@
     state.player.dashCharges = state.player.dashMax;
     state.player.dashCooldownTimer = 0;
     pushCombatFeed(`${state.wave.label} 진입. ${state.wave.note}`, `W${state.waveIndex + 1}`);
+    if (state.wave.afterburnAscension) {
+      pushCombatFeed(
+        "Storm Artillery endform lane 재개방. 이번 웨이브 첫 elite를 잡아 남은 Afterburn body split 중 하나를 뜯어내야 한다.",
+        "ASCEND"
+      );
+    }
     setBanner(state.wave.bannerLabel || state.wave.label, 1.2);
     renderForgeOverlay();
     updateHUD();
@@ -11848,6 +11993,7 @@
       }
       if (enemy.type === "elite") {
         deployCombatCache(enemy);
+        deployStormArtilleryAfterburnAscension(enemy);
       }
       if (enemy.overcommitTarget && state.overcommit.active) {
         state.overcommit.targetDefeated = true;
@@ -11927,6 +12073,14 @@
             "Catalyst cache가 식었다. 변이는 놓쳤고 촉매는 마지막 포지까지 남는다.",
             "MOLT"
           );
+        }
+      } else if (drop.life <= 0 && drop.kind === "afterburn_ascension_cache") {
+        if (state.wave && state.wave.afterburnAscension && !state.wave.afterburnAscension.claimed) {
+          pushCombatFeed(
+            "Afterburn split이 닫혔다. 이번 웨이브의 endform 선택권은 사라졌지만 다음 afterburn에서 다시 찢어낼 수 있다.",
+            "ASCEND"
+          );
+          state.wave.afterburnAscension.claimed = true;
         }
       } else if (drop.life > 0) {
         nextDrops.push(drop);
@@ -12083,6 +12237,29 @@
         "CACHE"
       );
       setBanner(`${choice.tag} 확보`, 0.8);
+      return true;
+    }
+
+    if (drop.kind === "afterburn_ascension_cache") {
+      const ascension = state.wave && state.wave.afterburnAscension;
+      const choice = drop.choice;
+      if (!choice || !ascension || ascension.claimed || state.build.doctrineCapstoneId) {
+        return true;
+      }
+      applyForgeChoice(state, choice);
+      refreshDerivedStats(false);
+      ascension.claimed = true;
+      state.drops.forEach((entry) => {
+        if (entry.kind === "afterburn_ascension_cache" && entry.groupId === drop.groupId) {
+          entry.life = 0;
+        }
+      });
+      const endform = getStormArtilleryAfterburnEndform(choice.doctrineCapstoneId);
+      pushCombatFeed(
+        `${choice.title} 접합. ${choice.bodyLabel || "차체 변형"}가 함께 잠겨 ${endform ? endform.statusNote : "남은 afterburn이 새 body plan으로 고정된다."}`,
+        "ASCEND"
+      );
+      setBanner(choice.title, 0.9);
       return true;
     }
 
@@ -12308,6 +12485,9 @@
     const capstoneSummary = weapon.capstoneLabel
       ? `${weapon.capstoneLabel} · ${weapon.capstoneTraitLabel}`
       : null;
+    const stormArtilleryEndformSummary = getStormArtilleryAfterburnEndform(state.build)
+      ? `${getStormArtilleryAfterburnEndform(state.build).bodyLabel} · ${getStormArtilleryAfterburnEndform(state.build).bodyText}`
+      : null;
     if (elements.activeCore) {
       elements.activeCore.innerHTML = `
         <div class="summary-head">
@@ -12346,6 +12526,7 @@
           illegalOverclockSummary,
           apexMutationSummary,
           capstoneSummary,
+          stormArtilleryEndformSummary,
           supportSystemSummary,
           getDoctrineForgePursuitDef(state.build) && state.build.doctrinePursuitCommitted
             ? `${getDoctrineForgePursuitDef(state.build).shortLabel} ${state.build.doctrinePursuitProgress}/${getDoctrineForgePursuitDef(state.build).goal}${state.build.doctrineChaseClaimed ? " 완성" : state.build.doctrinePursuitExpired ? " 실패" : ""}`
@@ -12391,6 +12572,7 @@
       const illegalOverclockRows = [];
       const apexRows = [];
       const catalystCrucibleRows = [];
+      const ascensionRows = [];
       let overcommitNote = "";
       let pursuitNote = "";
       let combatCacheNote = "";
@@ -12398,6 +12580,7 @@
       let illegalOverclockNote = "";
       let apexNote = "";
       let catalystCrucibleNote = "";
+      let ascensionNote = "";
       if (state.wave && state.wave.bastionPactDebt) {
         pactRows.push(createStatusRow("Siege Debt", `${state.wave.bastionPactDebt.wavesRemaining} left`));
         pactRows.push(createStatusRow("Debt Tax", "+24% damage / +4 cap"));
@@ -12446,6 +12629,29 @@
         pursuitRows.push(createStatusRow("Forge Pursuit", `${pursuit.shortLabel} 완성`));
         pursuitRows.push(createStatusRow("Frame Shards", `${pursuit.goal}/${pursuit.goal}`));
         pursuitNote = `${pursuit.shortLabel} 완성. 조기 monster form이 이미 전장을 바꾸고 있다.`;
+      }
+      if (state.phase === "wave" && state.wave && state.wave.afterburnAscension) {
+        const ascension = state.wave.afterburnAscension;
+        ascensionRows.push(
+          createStatusRow(
+            "Ascension",
+            ascension.claimed ? "다음 웨이브 재개" : ascension.deployed ? "split live" : "첫 elite 대기"
+          )
+        );
+        ascensionRows.push(createStatusRow("Doctrine", "Sky / Spire"));
+        ascensionNote = ascension.claimed
+          ? "이번 웨이브의 Storm Artillery split cache는 닫혔다. 아직 endform을 못 골랐다면 다음 afterburn에서 다시 뜯어낼 수 있다."
+          : ascension.deployed
+            ? "두 split cache 중 하나만 회수할 수 있다. 어떤 쪽을 집느냐에 따라 남은 afterburn의 주포와 body plan이 갈라진다."
+            : "이번 afterburn 첫 elite가 Storm Artillery split cache를 떨어뜨린다. 전장 한복판에서 최종 weapon/body endform 하나를 직접 회수해야 한다.";
+      } else {
+        const endform = getStormArtilleryAfterburnEndform(state.build);
+        const capstone = getDoctrineCapstoneDef(state.build);
+        if (endform && capstone) {
+          ascensionRows.push(createStatusRow("Ascension", endform.bodyLabel || "endform live"));
+          ascensionRows.push(createStatusRow("Doctrine", capstone.title));
+          ascensionNote = endform.statusNote;
+        }
       }
       if (state.phase === "wave" && state.wave && state.wave.combatCache) {
         const combatCache = state.wave.combatCache;
@@ -12545,11 +12751,12 @@
           ${illegalOverclockRows.join("")}
           ${apexRows.join("")}
           ${catalystCrucibleRows.join("")}
+          ${ascensionRows.join("")}
           ${pactRows.join("")}
           ${overcommitRows.join("")}
           ${pursuitRows.join("")}
         </div>
-        <p class="summary-note">${catalystCrucibleNote || apexNote || illegalOverclockNote || combatCacheNote || pactNote || pursuitNote || overcommitNote || hazardStatus.note}</p>
+        <p class="summary-note">${catalystCrucibleNote || ascensionNote || apexNote || illegalOverclockNote || combatCacheNote || pactNote || pursuitNote || overcommitNote || hazardStatus.note}</p>
       `;
     }
 
@@ -12990,8 +13197,10 @@
             ? CATALYST_CRUCIBLE_DROP_LIFE
           : drop.kind === "overcommit_salvage" || drop.kind === "doctrine_pursuit_shard"
             ? OVERCOMMIT_SALVAGE_LIFE
-            : drop.kind === "illegal_overclock_cache"
+          : drop.kind === "illegal_overclock_cache"
               ? ILLEGAL_OVERCLOCK_DROP_LIFE
+            : drop.kind === "afterburn_ascension_cache"
+              ? AFTERBURN_ASCENSION_DROP_LIFE
             : drop.kind === "combat_cache"
               ? COMBAT_CACHE_DROP_LIFE
             : 10;
@@ -13056,6 +13265,27 @@
         context.font = "bold 10px monospace";
         context.textAlign = "center";
         context.fillText(choice.tag || "CACHE", drop.x, drop.y + 26);
+      } else if (drop.kind === "afterburn_ascension_cache") {
+        const choice = drop.choice || {};
+        context.strokeStyle =
+          choice.doctrineCapstoneId === "stormspire_needle"
+            ? "rgba(255, 234, 180, 0.98)"
+            : "rgba(203, 247, 255, 0.98)";
+        context.lineWidth = 2.7;
+        context.beginPath();
+        context.arc(drop.x, drop.y, 15, 0, Math.PI * 2);
+        context.stroke();
+        context.fillStyle =
+          choice.doctrineCapstoneId === "stormspire_needle"
+            ? "rgba(255, 184, 116, 0.94)"
+            : "rgba(138, 231, 255, 0.92)";
+        context.beginPath();
+        drawPolygon(context, drop.x, drop.y, 10, 3, -Math.PI / 2 + performance.now() * 0.0022);
+        context.fill();
+        context.fillStyle = "rgba(22, 10, 4, 0.92)";
+        context.font = "bold 10px monospace";
+        context.textAlign = "center";
+        context.fillText(choice.tag || "ASCEND", drop.x, drop.y + 28);
       } else if (drop.kind === "overcommit_salvage") {
         context.strokeStyle = "rgba(255, 231, 130, 0.95)";
         context.lineWidth = 2;

@@ -14,6 +14,17 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 15:10:00 KST
+  Findings:
+  - The run now has plenty of named layers, but too many of the important answers are pre-authored by the time late combat starts. `Architecture Draft`, `Wave 6 Bastion Draft`, `Chassis Breakpoint`, starter systems, reserved support lanes, and `Late Break Armory` keep deciding the build for the player before the battlefield has a chance to force a surprising fork.
+  - `Afterburn I-III` scales numbers off `Wave 12`, but it still reads like a fixed epilogue bracket instead of a new climb. More spawn budget and hazard bonuses are not enough when the player is no longer chasing an unfinished form or making a fresh strategic commitment.
+  - Visible power is still too often outsourced to the perimeter. Satellites, drones, sentries, missile racks, and reserve-bay rules give the build a lot to manage, but they also make the strongest runs feel like well-configured automation rather than a weapon/body mutation the player is desperate to pilot again.
+  - The arena is bigger, yet movement decisions still get smothered by layered hazard ownership and helper coverage. A release-feeling action roguelite needs more moments where the player chooses to dive, hold, or reroute because of a high-value transformation opportunity in combat, not because another authored system package came online.
+  - The docs still describe a `5웨이브`, `7분 내외` prototype while the implementation is already building a multi-act rerun game. That mismatch keeps legitimizing closure beats and scripted package stops where the project now needs renewable late-run uncertainty.
+  Top Priority: Turn `Afterburn` from a fixed victory-lap suffix into the first branch of a renewable late-run ascension, where at least one doctrine can still split into multiple combat-earned main-weapon/body endforms after `Wave 8` instead of cashing out into support-bay completion.
+  Why Now: Longer runs only become replayable when the player can still ruin or complete a dream build deep into the run.
+  Do Not Repeat: Do not answer this with another draft screen, another reserve-bay exception, or another support subsystem tier.
+
 - 2026-03-22 14:30:42 KST
   Findings:
   - The run still peaks too early and then deflates. `Wave 12` reaches roughly `232` spawn budget / `48` active cap, then the supposed climax converts into three `Afterburn` trials built from a `26`-budget template. That reads like a postscript, not a second ascent players would replay to reach.
@@ -791,6 +802,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 15:40 KST
+  Changed: rewired `Storm Artillery` in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so its late split is no longer paid out by `Late Break Armory`. Completing the doctrine pursuit now stops at `Thunder Rack`, keeps the doctrine unfinished through `Wave 9-12`, and pushes the final fork into `Afterburn` combat. During `Afterburn`, the first elite now drops two live `Afterburn Ascension` caches, and the player must dive to claim either `Sky Lance Battery` or `Stormspire Needle` on the battlefield. Claiming one immediately locks the matching stage-3 main-weapon form and also mutates the body plan: `Sky Lance Battery` becomes a faster vector-battery frame with more dash freedom, while `Stormspire Needle` becomes a slower but tougher siege-spine frame. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert that `Storm Artillery` no longer gets doctrine-capstone cards in the late armory and instead receives two `Afterburn` ascension choices.
+  Why: the latest critique’s Top Priority asked for `Afterburn` to become the first branch of a renewable late-run ascension where at least one doctrine can still split into multiple combat-earned main-weapon/body endforms after `Wave 8`. The highest-value bounded interpretation was to pull one existing doctrine fork out of menu authorship and force the decision back onto the battlefield, because that creates a real late-run "I still have one more form to finish" chase without adding another draft screen or another support subsystem tier.
+  Follow-up risk: this gives `Storm Artillery` a real post-`Wave 8` weapon/body fork, but only one doctrine currently uses the new ascension lane and the split still hinges on a first-elite cache rather than a broader family of late-run territory/ecology tests. If later critique keeps pushing replay hunger, the next bounded step should extend the same in-combat ascension pattern to another doctrine or make the split objective itself more spatially demanding instead of restoring another menu fork.
 
 - 2026-03-22 15:05 KST
   Changed: rebuilt the post-`Wave 12` `Afterburn` generator in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 13-15` now start from the actual `Wave 12` crown template instead of softer `Wave 10-12` remix pressure, then ramp upward each stage. The bracket now adds longer durations, higher spawn budgets, higher active caps, faster spawn pacing, and harsher hazard tuning on top of the late-act crown, so post-capstone combat no longer drops into a low-budget victory lap. I also rewrote the post-capstone note/directive text to explicitly frame `Afterburn` as a forbidden-territory ascent where the player should hunt the roaming `Cinder Maw` for the last `Predator Molt`, and updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert that `Afterburn` now exceeds `Wave 12` pressure and accelerates its apex breach timing across the bracket.
