@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 11:00 KST
+  Findings:
+  - The run now has more mid-run layering, but repeat-run hunger is still weak because most late power expresses as ambient automation. `Volt Drones`, `Seeker Array`, `Kiln Sentry`, `Aegis Halo`, and even doctrine apex states mostly clean lanes for the player instead of forcing a new piloting style that makes `Wave 9-12` feel different in the hands.
+  - Act 3 doctrine variants differentiate target order more than movement fantasy. `Relay Hunt`, `Foundry Hold`, and `Lance Siege` change mixes and hazard labels, but the player is still mostly circling, reopening space, and deleting remote anchors under familiar pressure grammar.
+  - The arena is larger, yet enemy pressure still fills it with obligation more than opportunity. `activeCap 39-49` plus repeated pylon/core/mortar chores make the big rooms feel like longer cleanup routes instead of spaces where a finished build can choose to dive, hold ground, overextend, or kite by doctrine.
+  - The build stack is broader, but it still lacks a clearly separate utility/defense economy. Support bays now carry offense, defense, and automation together, so too many picks still read as "which helper do I bolt on" instead of "what machine role am I committing to for the rest of the run."
+  Top Priority: Add a dedicated utility chassis layer at the `Wave 6` breakpoint that is separate from support-bay weapon systems and permanently changes movement/combat rules for the rest of the run.
+  Why Now: Until one run-shaping layer changes how the player pilots the arena instead of just adding more autonomous damage, longer runs will still plateau into managed cleanup.
+  Do Not Repeat: Do not answer this with another passive satellite tier, extra forge copy, or one more doctrine-only helper.
+
 - 2026-03-22 23:59 KST
   Findings:
   - The run now has real breadth on paper, but it is still over-administered in play. `Architecture Draft`, `Field Cache`, `Bastion Draft / Systems Forge`, `Catalyst Crucible`, `Late Break Armory`, and the final forge keep interrupting momentum, so the player spends too much of a supposedly escalating action run in authored build menus instead of sustained combat ownership.
@@ -711,6 +721,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-23 00:48 KST
+  Changed: upgraded the second half of the `Wave 6` `Chassis Breakpoint` in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from "pick one more flex subsystem" into a true utility-chassis layer. The forced breakpoint pick now offers three permanent chassis packages, each still opening the doctrine-free flex `support bay` immediately but also attaching a new piloting rule for the rest of the run: `Vector Thrusters` turns dashes into impact clears plus a short slipstream window, `Bulwark Treads` rewards holding ground with anchor pulses and mitigation, and `Salvage Winch` converts scrap/salvage routes into movement-and-combat surges. I also updated the forge preview/HUD copy so the new layer reads as `utility chassis + subsystem`, added on-screen player tells for active chassis states, and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new chassis packages, chassis persistence, and admin-skip behavior.
+  Why: the newest critique’s Top Priority was not just "more bay room" but a dedicated utility chassis layer at `Wave 6` that permanently changes movement/combat rules and is separate from support-bay weapon systems. The highest-value bounded interpretation was to keep the existing two-pick breakpoint and upgrade its mandatory second pick into a chassis package, because that preserves the newly improved `Wave 6-9` uninterrupted ownership bracket while finally making the midpoint choice change how the player actually pilots the arena.
+  Follow-up risk: the new chassis layer gives real movement/combat identity, but each package currently maps to one fixed rule set and one bundled subsystem at selection time. If later critique says the breakpoint is finally legible but still too solved, the next pass should widen chassis-specific follow-up interactions or add chassis-only upgrade hooks later in the run instead of piling more power back into autonomous support damage.
 
 - 2026-03-23 00:20 KST
   Changed: replaced the old one-pick `Wave 6 Systems Forge` path in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) with a forced two-step `Chassis Breakpoint`. Doctrine runs now take one mid-run spike/greed pick first, then must take a second chassis pick that immediately opens a third `support bay` and installs a subsystem into a doctrine-free flex lane. I also wired that breakpoint to auto-skip the next guaranteed admin stop: when `Wave 8` ends, the game now performs an `Ownership Relay` uplink that grants the next bay without opening `Late Break Armory`, so `Wave 6-9` plays as one uninterrupted ownership bracket. The forge/HUD copy was updated to explain the new breakpoint and skip, and [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts the new two-step flow, immediate subsystem layering, and armory-skip flag.

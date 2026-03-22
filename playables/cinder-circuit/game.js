@@ -1669,6 +1669,51 @@
     },
   };
 
+  const CHASSIS_BREAKPOINT_DEFS = {
+    vector_thrusters: {
+      id: "vector_thrusters",
+      label: "Vector Thrusters",
+      title: "Vector Thrusters",
+      tag: "VECTOR",
+      description:
+        "대시 착지 때 충격파를 내며 탄막을 걷어내고, 잠깐 동안 가속과 연사 리듬이 함께 오른다. 위험한 lane을 직접 찢고 반대편으로 다시 파고드는 섀시다.",
+      slotText: "대시 충격파 + 짧은 slipstream",
+      statusNote: "대시 착지 충격파와 slipstream 가속으로 빈 lane을 직접 연다.",
+      apply(build) {
+        build.moveSpeedBonus += 12;
+        build.dashCooldownBonus += 0.22;
+      },
+    },
+    bulwark_treads: {
+      id: "bulwark_treads",
+      label: "Bulwark Treads",
+      title: "Bulwark Treads",
+      tag: "BULWARK",
+      description:
+        "한 지점을 잠시 붙잡으면 섀시가 자동으로 anchor 상태에 들어가 방호가 두꺼워지고, 주기적으로 근접 압박을 밀어내는 pulse를 발산한다. 뛰기보다 버티며 전선을 세우는 섀시다.",
+      slotText: "정지 anchor + 방호 pulse",
+      statusNote: "한 지점을 지키면 방호 pulse가 돌아 hold-ground 운영이 가능해진다.",
+      apply(build) {
+        build.maxHpBonus += 14;
+        build.hazardMitigation += 0.08;
+      },
+    },
+    salvage_winch: {
+      id: "salvage_winch",
+      label: "Salvage Winch",
+      title: "Salvage Winch",
+      tag: "WINCH",
+      description:
+        "고철이나 특수 회수를 물면 바로 chassis surge가 걸려 이동과 사격 템포가 치솟고, 회수 지점 주변 압박을 짧게 밀어낸다. drop route를 전투 루트로 바꾸는 회수 섀시다.",
+      slotText: "pickup surge + 회수 pulse",
+      statusNote: "drop route를 밟을수록 chassis surge가 이어져 회수 자체가 공격 리듬이 된다.",
+      apply(build) {
+        build.pickupBonus += 20;
+        build.driveGainBonus += 0.14;
+      },
+    },
+  };
+
   const AFFIX_DEFS = {
     hotshot: {
       id: "hotshot",
@@ -3292,6 +3337,7 @@
     overcommitResolved: false,
     bastionPactDebtWaves: 0,
     wave6ChassisBreakpoint: false,
+    chassisId: null,
     supportBayCap: 2,
     auxiliaryJunctionLevel: 0,
     supportSystemId: null,
@@ -3319,6 +3365,21 @@
 
   function clamp(value, min, max) {
     return Math.min(max, Math.max(min, value));
+  }
+
+  function getChassisBreakpointDef(buildOrId) {
+    const chassisId =
+      typeof buildOrId === "string"
+        ? buildOrId
+        : buildOrId && typeof buildOrId === "object"
+          ? buildOrId.chassisId
+          : null;
+    return chassisId ? CHASSIS_BREAKPOINT_DEFS[chassisId] || null : null;
+  }
+
+  function getChassisSummary(build) {
+    const chassis = getChassisBreakpointDef(build);
+    return chassis ? `${chassis.label} · ${chassis.statusNote}` : "유틸리티 섀시 없음";
   }
 
   function round(value, digits) {
@@ -3935,6 +3996,29 @@
     return true;
   }
 
+  function applyChassisBreakpoint(build, chassisId, run) {
+    if (!build || !chassisId || build.chassisId === chassisId) {
+      return false;
+    }
+    const chassis = getChassisBreakpointDef(chassisId);
+    if (!chassis) {
+      return false;
+    }
+    build.chassisId = chassis.id;
+    if (typeof chassis.apply === "function") {
+      chassis.apply(build, run);
+    }
+    if (run && run.player) {
+      run.player.chassisVectorTime = 0;
+      run.player.chassisSalvageBurstTime = 0;
+      run.player.chassisPickupPulseCooldown = 0;
+      run.player.chassisAnchorCharge = 0;
+      run.player.chassisAnchorPulseCooldown = 0;
+      run.player.chassisAnchorActiveTime = 0;
+    }
+    return true;
+  }
+
   function getForgeDraftType(options) {
     if (options && options.finalForge) {
       return "final";
@@ -4114,6 +4198,10 @@
     if (choice.type === "utility" && choice.action === "bastion_bay_forge") {
       return [
         {
+          label: "섀시",
+          value: choice.chassisTitle || "유틸리티 레이어",
+        },
+        {
           label: "베이",
           value: choice.bayUnlock ? "즉시 +1" : "유지",
         },
@@ -4251,6 +4339,7 @@
         overcommitResolved: BASE_BUILD.overcommitResolved,
         bastionPactDebtWaves: BASE_BUILD.bastionPactDebtWaves,
         wave6ChassisBreakpoint: BASE_BUILD.wave6ChassisBreakpoint,
+        chassisId: BASE_BUILD.chassisId,
         supportBayCap: BASE_BUILD.supportBayCap,
         auxiliaryJunctionLevel: BASE_BUILD.auxiliaryJunctionLevel,
         supportSystemId: BASE_BUILD.supportSystemId,
@@ -6199,23 +6288,30 @@
     pushChoice(wildcardChoices[0]);
     pushChoice(doctrineChoices[0]);
     [...wildcardChoices.slice(1), ...doctrineChoices.slice(1)].forEach(pushChoice);
-    const chassisChoices = ordered.slice(0, 3).map((choice) => ({
-      type: "utility",
-      action: "bastion_bay_forge",
-      id: `utility:bastion_chassis_break:${choice.systemId}`,
-      verb: "접합",
-      tag: "BAY",
-      title: choice.title,
-      description: `섀시 breakpoint로 세 번째 support bay를 즉시 열고 ${choice.title}을(를) 교리 reserve를 무시하는 flex lane에 직결한다. ${choice.description} Wave 8에서는 정지 없이 네 번째 bay까지 자동 uplink되어 Late Break Armory를 건너뛴다.`,
-      slotText: `섀시 breakpoint · flex lane · ${choice.slotText}`,
-      cost: Math.max(12, Math.round((choice.cost || 0) * 0.7)),
-      originalCost: choice.cost || 0,
-      laneLabel: "섀시 breakpoint",
-      forgeLaneLabel: "섀시 breakpoint",
-      bayUnlock: true,
-      systemChoice: choice,
-      skipNextAdminStop: true,
-    }));
+    const chassisDefs = Object.values(CHASSIS_BREAKPOINT_DEFS);
+    const fallbackSystemChoice = ordered[0] || null;
+    const chassisChoices = chassisDefs.map((chassisDef, index) => {
+      const choice = ordered[index] || fallbackSystemChoice;
+      return {
+        type: "utility",
+        action: "bastion_bay_forge",
+        id: `utility:bastion_chassis_break:${chassisDef.id}:${choice ? choice.systemId : "flex_unlock"}`,
+        verb: "접합",
+        tag: chassisDef.tag,
+        title: chassisDef.title,
+        description: `${chassisDef.description} 세 번째 support bay는 즉시 교리 reserve를 무시하는 flex lane으로 열리고${choice ? ` ${choice.title}을(를) 함께 직결한다.` : " flex subsystem lane만 먼저 확보한다."} Wave 8에서는 정지 없이 네 번째 bay까지 자동 uplink되어 Late Break Armory를 건너뛴다.`,
+        slotText: `섀시 breakpoint · ${chassisDef.slotText}${choice ? ` · ${choice.title}` : ""}`,
+        cost: Math.max(12, Math.round(((choice && choice.cost) || 0) * 0.7)),
+        originalCost: (choice && choice.cost) || 0,
+        laneLabel: "섀시 breakpoint",
+        forgeLaneLabel: "섀시 breakpoint",
+        bayUnlock: true,
+        chassisId: chassisDef.id,
+        chassisTitle: chassisDef.title,
+        systemChoice: choice,
+        skipNextAdminStop: true,
+      };
+    });
     if (chassisChoices.length > 0) {
       return chassisChoices;
     }
@@ -6224,15 +6320,17 @@
       action: "bastion_bay_forge",
       id: "utility:bastion_chassis_break:flex_unlock",
       verb: "접합",
-      tag: "BAY",
-      title: "Wildcard Relay",
+      tag: CHASSIS_BREAKPOINT_DEFS.vector_thrusters.tag,
+      title: CHASSIS_BREAKPOINT_DEFS.vector_thrusters.title,
       description:
-        "세 번째 support bay를 즉시 열고 교리 reserve와 무관한 flex lane 1칸을 확보한다. Wave 8에서는 전장 정지 없이 네 번째 bay까지 자동 uplink되어 ownership bracket을 이어 간다.",
-      slotText: "섀시 breakpoint · flex bay 즉시 개방",
+        "대시 충격파와 slipstream을 여는 Vector Thrusters를 장착하고, 세 번째 support bay를 즉시 교리 reserve와 무관한 flex lane으로 확보한다. Wave 8에서는 전장 정지 없이 네 번째 bay까지 자동 uplink되어 ownership bracket을 이어 간다.",
+      slotText: "섀시 breakpoint · Vector Thrusters · flex bay 즉시 개방",
       cost: 0,
       laneLabel: "섀시 breakpoint",
       forgeLaneLabel: "섀시 breakpoint",
       bayUnlock: true,
+      chassisId: CHASSIS_BREAKPOINT_DEFS.vector_thrusters.id,
+      chassisTitle: CHASSIS_BREAKPOINT_DEFS.vector_thrusters.title,
       skipNextAdminStop: true,
     }];
   }
@@ -6826,6 +6924,10 @@
           run.build.wave6ChassisBreakpoint = true;
         }
       }
+      if (choice.chassisId && applyChassisBreakpoint(run.build, choice.chassisId, run)) {
+        const chassis = getChassisBreakpointDef(choice.chassisId);
+        run.build.upgrades.push(`유틸리티 섀시: ${(chassis && chassis.label) || choice.chassisTitle || choice.chassisId}`);
+      }
       if (choice.systemChoice) {
         applyForgeChoice(run, {
           ...choice.systemChoice,
@@ -6931,6 +7033,7 @@
     AFFIX_DEFS,
     MOD_DEFS,
     SUPPORT_SYSTEM_DEFS,
+    CHASSIS_BREAKPOINT_DEFS,
     DOCTRINE_CAPSTONE_DEFS,
     SIGNATURE_DEFS,
     DEFAULT_SIGNATURE_ID,
@@ -6964,7 +7067,9 @@
     buildWave6ChassisBreakpointChoices,
     buildCatalystDraftChoices,
     applyForgeChoice,
+    applyChassisBreakpoint,
     getSupportBayCapacity,
+    getChassisBreakpointDef,
     doctrineAllowsSystemInstall,
     unlockLateSupportBay,
     shouldSkipOwnershipAdminStop,
@@ -7581,6 +7686,12 @@
       bastionRepairCooldown: 0,
       bastionDamageMitigation: 0,
       bastionHeatFactor: 1,
+      chassisVectorTime: 0,
+      chassisSalvageBurstTime: 0,
+      chassisPickupPulseCooldown: 0,
+      chassisAnchorCharge: 0,
+      chassisAnchorPulseCooldown: 0,
+      chassisAnchorActiveTime: 0,
       dashTrail: 0,
       facing: 0,
     };
@@ -7623,6 +7734,12 @@
     state.player.dashCooldown = state.playerStats.dashCooldown;
     state.player.bastionDamageMitigation = Math.max(0, state.player.bastionDamageMitigation || 0);
     state.player.bastionHeatFactor = Math.max(1, state.player.bastionHeatFactor || 1);
+    state.player.chassisVectorTime = Math.max(0, state.player.chassisVectorTime || 0);
+    state.player.chassisSalvageBurstTime = Math.max(0, state.player.chassisSalvageBurstTime || 0);
+    state.player.chassisPickupPulseCooldown = Math.max(0, state.player.chassisPickupPulseCooldown || 0);
+    state.player.chassisAnchorCharge = clamp(state.player.chassisAnchorCharge || 0, 0, 1);
+    state.player.chassisAnchorPulseCooldown = Math.max(0, state.player.chassisAnchorPulseCooldown || 0);
+    state.player.chassisAnchorActiveTime = Math.max(0, state.player.chassisAnchorActiveTime || 0);
     if (preserveRatio) {
       state.player.hp = Math.max(1, Math.round(state.player.maxHp * hpRatio));
     } else {
@@ -7633,6 +7750,107 @@
       0,
       state.player.dashMax
     );
+  }
+
+  function getChassisMoveSpeedBonus() {
+    const chassis = getChassisBreakpointDef(state.build);
+    if (!state.player || !chassis) {
+      return 0;
+    }
+    if (chassis.id === "vector_thrusters" && state.player.chassisVectorTime > 0) {
+      return 54;
+    }
+    if (chassis.id === "salvage_winch" && state.player.chassisSalvageBurstTime > 0) {
+      return 42;
+    }
+    return 0;
+  }
+
+  function getChassisCooldownFactor() {
+    const chassis = getChassisBreakpointDef(state.build);
+    if (!state.player || !chassis) {
+      return 1;
+    }
+    if (chassis.id === "vector_thrusters" && state.player.chassisVectorTime > 0) {
+      return 1.18;
+    }
+    if (chassis.id === "bulwark_treads" && state.player.chassisAnchorActiveTime > 0) {
+      return 1.12;
+    }
+    if (chassis.id === "salvage_winch" && state.player.chassisSalvageBurstTime > 0) {
+      return 1.14;
+    }
+    return 1;
+  }
+
+  function triggerChassisPulse(x, y, radius, damage, color, options = {}) {
+    applyPlayerAreaDamage(x, y, radius, damage, {
+      hazardDamageFactor: Number.isFinite(options.hazardDamageFactor)
+        ? options.hazardDamageFactor
+        : 0.65,
+    });
+    if (options.clearEnemyShots) {
+      state.projectiles.forEach((projectile) => {
+        if (projectile.owner !== "enemy") {
+          return;
+        }
+        const distance = Math.hypot(projectile.x - x, projectile.y - y);
+        if (distance <= radius + projectile.radius) {
+          projectile.life = 0;
+        }
+      });
+    }
+    state.shake = Math.max(state.shake, options.shake || 4);
+    for (let index = 0; index < 10; index += 1) {
+      state.particles.push(createParticle(x, y, color, 0.9));
+    }
+  }
+
+  function triggerSalvageWinchSurge(duration = 1.4, pulseDamage = 0) {
+    if (!state.player) {
+      return;
+    }
+    state.player.chassisSalvageBurstTime = Math.max(state.player.chassisSalvageBurstTime || 0, duration);
+    if (pulseDamage > 0 && state.player.chassisPickupPulseCooldown <= 0) {
+      state.player.chassisPickupPulseCooldown = 0.45;
+      triggerChassisPulse(state.player.x, state.player.y, 74, pulseDamage, "#9fffcf", {
+        hazardDamageFactor: 0.45,
+        clearEnemyShots: false,
+        shake: 2,
+      });
+    }
+  }
+
+  function updatePlayerChassisState(dt, moveMagnitude) {
+    const chassis = getChassisBreakpointDef(state.build);
+    if (!state.player || !chassis) {
+      return;
+    }
+    state.player.chassisVectorTime = Math.max(0, state.player.chassisVectorTime - dt);
+    state.player.chassisSalvageBurstTime = Math.max(0, state.player.chassisSalvageBurstTime - dt);
+    state.player.chassisPickupPulseCooldown = Math.max(0, state.player.chassisPickupPulseCooldown - dt);
+    state.player.chassisAnchorPulseCooldown = Math.max(0, state.player.chassisAnchorPulseCooldown - dt);
+    state.player.chassisAnchorActiveTime = Math.max(0, state.player.chassisAnchorActiveTime - dt);
+    if (chassis.id !== "bulwark_treads") {
+      state.player.chassisAnchorCharge = 0;
+      return;
+    }
+    if (moveMagnitude < 0.2) {
+      state.player.chassisAnchorCharge = Math.min(1, state.player.chassisAnchorCharge + dt / 0.48);
+    } else {
+      state.player.chassisAnchorCharge = Math.max(0, state.player.chassisAnchorCharge - dt * 2.6);
+    }
+    if (state.player.chassisAnchorCharge >= 1) {
+      state.player.chassisAnchorActiveTime = Math.max(state.player.chassisAnchorActiveTime, 0.18);
+      if (state.player.chassisAnchorPulseCooldown <= 0) {
+        state.player.chassisAnchorPulseCooldown = 1.2;
+        triggerChassisPulse(state.player.x, state.player.y, 86, 18, "#ffd59f", {
+          hazardDamageFactor: 0.5,
+          clearEnemyShots: false,
+          shake: 3,
+        });
+      }
+    }
   }
 
   function syncSupportSystemRuntime() {
@@ -8379,7 +8597,7 @@
         [choice.systemChoice ? choice.systemChoice.id : null]
       );
       pushCombatFeed(
-        `${choice.tag} · ${choice.title} 잠금. 이제 즉시 열린 flex bay에 꽂을 subsystem 1장을 더 골라야 한다. 이 선택이 끝나면 Wave 8 Late Break Armory는 자동 uplink로 대체된다.`,
+        `${choice.tag} · ${choice.title} 잠금. 이제 즉시 열린 flex bay에 꽂을 subsystem과 영구 utility chassis 규칙이 묶인 패키지 1장을 더 골라야 한다. 이 선택이 끝나면 Wave 8 Late Break Armory는 자동 uplink로 대체된다.`,
         "DRAFT"
       );
       refreshDerivedStats(false);
@@ -8401,8 +8619,8 @@
               ? `${grantLabel} 적용. 최대 체력을 깎아 고철을 쥔 대신 3웨이브 Siege Debt를 떠안고 다음 웨이브를 연다.`
               : choice.action === "bastion_bay_forge"
                 ? choice.skipNextAdminStop
-                  ? `${grantLabel} 적용. 세 번째 support bay를 flex lane으로 즉시 열고 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 장착했다. Wave 8에서는 정지 없이 네 번째 bay가 자동 uplink되어 Wave 6-9 bracket을 그대로 이어 간다.`
-                  : `${grantLabel} 적용. 세 번째 support bay를 즉시 열고 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 먼저 장착한 채, Wave 8 네 번째 bay까지 예약하고 다음 웨이브를 연다.`
+                  ? `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}를 잠그고 세 번째 support bay를 flex lane으로 즉시 열어 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 장착했다. Wave 8에서는 정지 없이 네 번째 bay가 자동 uplink되어 Wave 6-9 bracket을 그대로 이어 간다.`
+                  : `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}와 함께 세 번째 support bay를 즉시 열고 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 먼저 장착한 채, Wave 8 네 번째 bay까지 예약하고 다음 웨이브를 연다.`
                 : choice.action === "bastion_doctrine"
                 ? `${choice.doctrineLabel} 적용. 즉시 ${choice.doctrineChoice ? choice.doctrineChoice.title : "spike"}를 확보하고 이후 포지를 해당 교리 쪽으로 기울인 채 다음 웨이브를 연다.`
               : `${grantLabel} 적용. 고철 ${choice.cost}을 태워 ${choice.title}을 일찍 확보하고 다음 웨이브를 강행한다.`
@@ -10125,15 +10343,16 @@
     }
 
     const magnitude = Math.hypot(move.x, move.y) || 1;
+    updatePlayerChassisState(dt, Math.hypot(move.x, move.y));
     const speed =
-      state.player.moveSpeed + (state.player.overdriveActiveTime > 0 ? 34 : 0);
+      state.player.moveSpeed + getChassisMoveSpeedBonus() + (state.player.overdriveActiveTime > 0 ? 34 : 0);
     state.player.x += (move.x / magnitude) * speed * dt;
     state.player.y += (move.y / magnitude) * speed * dt;
 
     state.player.x = clamp(state.player.x, 18, arena.width - 18);
     state.player.y = clamp(state.player.y, 18, arena.height - 18);
 
-    state.player.fireCooldown = Math.max(0, state.player.fireCooldown - dt);
+    state.player.fireCooldown = Math.max(0, state.player.fireCooldown - dt * getChassisCooldownFactor());
     state.player.invulnerableTime = Math.max(0, state.player.invulnerableTime - dt);
     state.player.heat = Math.max(
       0,
@@ -10216,6 +10435,15 @@
     state.shake = Math.max(state.shake, 6);
     for (let index = 0; index < 10; index += 1) {
       state.particles.push(createParticle(state.player.x, state.player.y, "#ffd166", 1.1));
+    }
+    const chassis = getChassisBreakpointDef(state.build);
+    if (chassis && chassis.id === "vector_thrusters") {
+      state.player.chassisVectorTime = 1.2;
+      triggerChassisPulse(state.player.x, state.player.y, 84, 22, "#8ae7ff", {
+        hazardDamageFactor: 0.55,
+        clearEnemyShots: true,
+        shake: 5,
+      });
     }
   }
 
@@ -10387,7 +10615,15 @@
       source === "hazard"
         ? pactAdjusted * (1 - state.player.hazardMitigation)
         : pactAdjusted;
-    const mitigated = hazardMitigated * (1 - (state.player.bastionDamageMitigation || 0));
+    const chassisMitigation =
+      getChassisBreakpointDef(state.build)?.id === "bulwark_treads" &&
+      state.player.chassisAnchorActiveTime > 0
+        ? 0.24
+        : 0;
+    const mitigated =
+      hazardMitigated *
+      (1 - (state.player.bastionDamageMitigation || 0)) *
+      (1 - chassisMitigation);
     state.player.hp = Math.max(0, state.player.hp - mitigated);
     state.player.invulnerableTime = 0.36;
     state.shake = Math.max(state.shake, 8);
@@ -10677,11 +10913,15 @@
   }
 
   function collectDrop(drop) {
+    const chassis = getChassisBreakpointDef(state.build);
     if (drop.kind === "scrap") {
       const value = round(drop.value * state.player.scrapMultiplier, 0);
       state.resources.scrap += value;
       state.stats.scrapCollected += value;
       gainDrive(value * 0.24);
+      if (chassis && chassis.id === "salvage_winch") {
+        triggerSalvageWinchSurge(1.35, 16);
+      }
       setBanner(`고철 +${value}`, 0.45);
       return true;
     }
@@ -10705,6 +10945,9 @@
         gainDrive(CORE_OVERFLOW_SCRAP * 0.24);
         setBanner(`${CORE_DEFS[drop.coreId].short} 초과분 분해 +${CORE_OVERFLOW_SCRAP}`, 0.8);
       }
+      if (chassis && chassis.id === "salvage_winch") {
+        triggerSalvageWinchSurge(1.6, 0);
+      }
       return true;
     }
 
@@ -10719,6 +10962,9 @@
         );
         setBanner(`${CORE_DEFS[drop.coreId].short} 촉매 확보`, 0.9);
       }
+      if (chassis && chassis.id === "salvage_winch") {
+        triggerSalvageWinchSurge(1.6, 0);
+      }
       return true;
     }
 
@@ -10728,6 +10974,9 @@
       state.stats.scrapCollected += value;
       state.overcommit.salvageCollected += 1;
       gainDrive(value * 0.3);
+      if (chassis && chassis.id === "salvage_winch") {
+        triggerSalvageWinchSurge(1.45, 18);
+      }
       setBanner(
         `Contraband ${state.overcommit.salvageCollected}/${state.overcommit.salvageRequired}`,
         0.55
@@ -10745,6 +10994,9 @@
       state.stats.scrapCollected += value;
       state.build.doctrinePursuitProgress += 1;
       gainDrive(value * 0.34);
+      if (chassis && chassis.id === "salvage_winch") {
+        triggerSalvageWinchSurge(1.45, 18);
+      }
       setBanner(
         `${(pursuit && pursuit.shortLabel) || "Frame"} ${state.build.doctrinePursuitProgress}/${(pursuit && pursuit.goal) || 2}`,
         0.65
@@ -11215,6 +11467,7 @@
     const capstoneSummary = state.weapon.capstoneLabel
       ? `${state.weapon.capstoneLabel} · ${state.weapon.capstoneTraitLabel}`
       : "활성 촉매 재구성 없음";
+    const chassisSummary = getChassisSummary(state.build);
     const forgeSystemSummary = getSupportSystemSummary(state.supportSystem);
     const supportBaySummary = `${getInstalledSupportSystems(state.build).length}/${getSupportBayCapacity(state.build)} 베이`;
     const benchEntries = getBenchEntries(state.build);
@@ -11259,7 +11512,7 @@
         : state.forgeDraftType === "bastion_draft"
         ? state.build.bastionDoctrineId
           ? wave6ChassisDraft
-            ? `Chassis Breakpoint ${state.forgeStep}/${state.forgeMaxSteps} · 1픽으로 중반 spike나 greed를 잠근 뒤, 2픽으로 교리 free flex subsystem을 즉시 접합하고 Wave 8 Late Break Armory를 건너뛴다`
+            ? `Chassis Breakpoint ${state.forgeStep}/${state.forgeMaxSteps} · 1픽으로 중반 spike나 greed를 잠근 뒤, 2픽으로 utility chassis와 교리 free flex subsystem을 함께 접합하고 Wave 8 Late Break Armory를 건너뛴다`
             : state.build.overcommitUnlocked && !state.build.doctrineChaseClaimed
               ? "Bastion Draft · 회수한 contraband salvage를 장기 Forge Pursuit 계약으로 바꾸거나, 계약/안정화로 greed를 접는다"
             : "Bastion Draft · 기존 교리 위에 추가 spike 또는 고통 계약을 더 얹어 Act 2 greed를 강제한다"
@@ -11289,8 +11542,8 @@
         ? state.build.bastionDoctrineId
           ? wave6ChassisDraft
             ? state.forgeStep === 1
-              ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 6 Chassis Breakpoint 1/2다. 먼저 주무장 spike, 교리 pursuit/spike, 또는 Siege Salvage Pact 중 하나를 잠근다. 이 픽 뒤에는 즉시 flex subsystem 1장을 강제로 접합하고, Wave 8 Late Break Armory는 자동 uplink로 대체된다.`
-              : `고철 ${Math.round(state.resources.scrap)} 보유. Wave 6 Chassis Breakpoint 2/2다. 지금 고르는 subsystem은 세 번째 support bay를 즉시 열면서 교리 reserve를 무시하는 flex lane에 장착된다. 이 선택이 끝나면 Wave 6-9 bracket은 추가 메뉴 정지 없이 이어진다.`
+              ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 6 Chassis Breakpoint 1/2다. 먼저 주무장 spike, 교리 pursuit/spike, 또는 Siege Salvage Pact 중 하나를 잠근다. 이 픽 뒤에는 utility chassis 1장과 flex subsystem 1장을 묶은 패키지를 강제로 접합하고, Wave 8 Late Break Armory는 자동 uplink로 대체된다.`
+              : `고철 ${Math.round(state.resources.scrap)} 보유. Wave 6 Chassis Breakpoint 2/2다. 지금 고르는 패키지는 세 번째 support bay를 즉시 열면서 교리 reserve를 무시하는 flex subsystem 1장과 영구 utility chassis 규칙을 같이 장착한다. 이 선택이 끝나면 Wave 6-9 bracket은 추가 메뉴 정지 없이 이어진다.`
             : state.build.overcommitUnlocked && !state.build.doctrineChaseClaimed
               ? `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. Wave 5에서 회수한 contraband salvage가 살아 있어 장기 Forge Pursuit 계약이 열렸다. 지금 pursuit를 걸고 Wave 6-8 marked elite에서 shard를 모아 조기 monster form을 즉시 잠글지, Siege Salvage Pact나 무료 안정화로 greed를 접을지 정한다.`
             : `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 이미 채택한 교리 위에 추가 spike 1장과 Siege Salvage Pact, 무료 안정화가 다시 뜬다. 지금 더 깊게 묶일지, 체력을 태워 greed를 당길지 결정한다.`
@@ -11313,7 +11566,7 @@
       <article class="forge-context__card">
         <p class="panel__eyebrow">속성 / 진화 / 시스템</p>
         <strong>${affixSummary}</strong>
-        <p>${evolutionSummary} · ${doctrineSummary} · ${capstoneSummary} · ${forgeSystemSummary} · ${doctrinePursuitSummary} · ${supportBaySummary} · 보관 ${benchEntries.length}종 · ${catalystSummary} · 분해 예상 고철 ${getRecycleValue(state.build)}</p>
+        <p>${evolutionSummary} · ${doctrineSummary} · ${capstoneSummary} · ${chassisSummary} · ${forgeSystemSummary} · ${doctrinePursuitSummary} · ${supportBaySummary} · 보관 ${benchEntries.length}종 · ${catalystSummary} · 분해 예상 고철 ${getRecycleValue(state.build)}</p>
       </article>
     `;
     elements.forgeCards.innerHTML = state.forgeChoices
@@ -11873,6 +12126,54 @@
         context.arc(state.player.x, state.player.y, 18, 0, Math.PI * 2);
         context.fill();
         context.globalAlpha = 1;
+      }
+
+      if (state.player.chassisVectorTime > 0) {
+        context.strokeStyle = "rgba(138, 231, 255, 0.65)";
+        context.lineWidth = 3;
+        context.beginPath();
+        context.arc(
+          state.player.x,
+          state.player.y,
+          state.player.radius + 16 + Math.sin(performance.now() * 0.03) * 2,
+          0,
+          Math.PI * 2
+        );
+        context.stroke();
+      }
+
+      if (state.player.chassisAnchorActiveTime > 0) {
+        context.strokeStyle = "rgba(255, 213, 159, 0.7)";
+        context.lineWidth = 4;
+        context.beginPath();
+        context.arc(state.player.x, state.player.y, state.player.radius + 18, 0, Math.PI * 2);
+        context.stroke();
+      } else if (state.player.chassisAnchorCharge > 0.08) {
+        context.strokeStyle = "rgba(255, 213, 159, 0.38)";
+        context.lineWidth = 2;
+        context.beginPath();
+        context.arc(
+          state.player.x,
+          state.player.y,
+          state.player.radius + 14,
+          -Math.PI / 2,
+          -Math.PI / 2 + Math.PI * 2 * state.player.chassisAnchorCharge
+        );
+        context.stroke();
+      }
+
+      if (state.player.chassisSalvageBurstTime > 0) {
+        context.strokeStyle = "rgba(159, 255, 207, 0.62)";
+        context.lineWidth = 3;
+        context.beginPath();
+        context.arc(
+          state.player.x,
+          state.player.y,
+          state.player.radius + 12 + Math.sin(performance.now() * 0.02) * 1.5,
+          0,
+          Math.PI * 2
+        );
+        context.stroke();
       }
 
       if (state.player.overdriveActiveTime > 0) {

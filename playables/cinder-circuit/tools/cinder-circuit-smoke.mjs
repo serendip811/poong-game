@@ -124,6 +124,13 @@ const siegePactChoice = systemsForgeChoices.find((choice) => choice.action === "
 assert.ok(siegePactChoice);
 assert.equal(siegePactChoice.debtWaves, 3);
 assert.match(siegePactChoice.description, /Siege Debt/);
+const wave6ChassisPackages = game.buildWave6ChassisBreakpointChoices(systemsForgeBuild, () => 0, 6);
+assert.equal(wave6ChassisPackages.length, 3);
+assert.equal(
+  JSON.stringify(wave6ChassisPackages.map((choice) => choice.chassisId).sort()),
+  JSON.stringify(["bulwark_treads", "salvage_winch", "vector_thrusters"])
+);
+assert.ok(wave6ChassisPackages.every((choice) => choice.skipNextAdminStop));
 const initialMaxHpBonus = systemsForgeBuild.maxHpBonus;
 const pactRun = {
   build: systemsForgeBuild,
@@ -135,6 +142,18 @@ game.applyForgeChoice(pactRun, siegePactChoice);
 assert.equal(pactRun.build.bastionPactDebtWaves, 3);
 assert.equal(pactRun.resources.scrap, 56);
 assert.equal(pactRun.build.maxHpBonus, initialMaxHpBonus - 22);
+const chassisRun = {
+  build: game.createInitialBuild("scrap_pact"),
+  resources: { scrap: 0 },
+  stats: { scrapCollected: 0, scrapSpent: 0 },
+  player: { hp: 100, maxHp: 100, heat: 0, overheated: false },
+};
+chassisRun.build.bastionDoctrineId = "kiln_bastion";
+game.applyForgeChoice(chassisRun, wave6ChassisPackages[0]);
+assert.ok(chassisRun.build.wave6ChassisBreakpoint);
+assert.ok(chassisRun.build.supportBayCap >= 3);
+assert.equal(chassisRun.build.chassisId, wave6ChassisPackages[0].chassisId);
+assert.ok(game.shouldSkipOwnershipAdminStop(chassisRun.build, 9));
 const artilleryFrameBuild = game.createInitialBuild("rail_zeal");
 artilleryFrameBuild.bastionDoctrineId = "storm_artillery";
 artilleryFrameBuild.coreId = "lance";
@@ -181,6 +200,10 @@ assert.equal(game.DEFAULT_SIGNATURE_ID, "relay_oath");
 assert.equal(
   JSON.stringify(Object.keys(game.SUPPORT_SYSTEM_DEFS).sort()),
   JSON.stringify(["aegis_halo", "ember_ring", "kiln_sentry", "seeker_array", "volt_drones"])
+);
+assert.equal(
+  JSON.stringify(Object.keys(game.CHASSIS_BREAKPOINT_DEFS).sort()),
+  JSON.stringify(["bulwark_treads", "salvage_winch", "vector_thrusters"])
 );
 
 const signatureBuild = game.createInitialBuild("scrap_pact");
