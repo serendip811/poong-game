@@ -7321,6 +7321,56 @@
     return choice.laneLabel || "Field Cache";
   }
 
+  function scoreFieldGrantDefenseChoice(choice) {
+    if (!choice) {
+      return -1;
+    }
+    if (choice.type === "system") {
+      const installBonus = choice.bayAction === "install" ? 180 : 110;
+      const visualBonus =
+        choice.systemId === "aegis_halo"
+          ? 52
+          : choice.systemId === "ember_ring"
+            ? 44
+            : choice.systemId === "kiln_sentry"
+              ? 38
+              : 24;
+      return 900 + installBonus + visualBonus + (choice.systemTier || 1) * 10;
+    }
+    if (choice.type === "affix") {
+      return choice.affixId === "thermal_weave" ? 250 : 220;
+    }
+    if (choice.type === "mod") {
+      return choice.modId === "armor_mesh"
+        ? 210
+        : choice.modId === "step_servos"
+          ? 190
+          : choice.modId === "coolant_purge"
+            ? 180
+            : choice.modId === "magnet_rig"
+              ? 170
+              : 120;
+    }
+    if (choice.type === "fallback") {
+      return 0;
+    }
+    return -1;
+  }
+
+  function createFieldGrantDefenseChoice(build, rng, nextWave, fallbackPool = []) {
+    const random = typeof rng === "function" ? rng : Math.random;
+    const visibleDefenseChoices = createSupportSystemChoices(build, random, {
+      nextWave,
+      finalForge: false,
+    })
+      .filter((choice) => choice && isFieldGrantSurvivalChoice(choice))
+      .sort((left, right) => scoreFieldGrantDefenseChoice(right) - scoreFieldGrantDefenseChoice(left));
+    if (visibleDefenseChoices.length > 0) {
+      return visibleDefenseChoices[0];
+    }
+    return fallbackPool.find((choice) => choice && isFieldGrantSurvivalChoice(choice)) || null;
+  }
+
   function createFieldGrantCard(choice) {
     if (!choice) {
       return null;
@@ -7344,8 +7394,8 @@
         choice.type === "utility" && choice.action === "field_greed"
           ? "현장 계약"
           : choice.type === "fallback"
-          ? "현장 안정화"
-          : `현장 장착 · 할인 ${Math.max(0, originalCost - fieldGrantCost)}`,
+          ? choice.slotText || "현장 안정화"
+          : `${choice.slotText || "현장 장착"} · 할인 ${Math.max(0, originalCost - fieldGrantCost)}`,
       fieldGrant: true,
     };
   }
@@ -7984,7 +8034,7 @@
       ) ||
       null;
     const survivalChoice =
-      pool.find((choice) => choice && isFieldGrantSurvivalChoice(choice)) || {
+      createFieldGrantDefenseChoice(build, rng, nextWave, pool) || {
       type: "fallback",
       id: "fieldgrant:emergency_vent",
       tag: "CACHE",
