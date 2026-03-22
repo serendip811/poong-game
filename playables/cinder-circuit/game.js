@@ -48,8 +48,9 @@
   const WAVE6_ASCENSION_ONLINE_SURGE_DURATION = 7.4;
   const LATE_FIELD_CACHE_START_WAVE = 10;
   const LATE_FIELD_CACHE_INTERVAL = 2;
-  const MAX_LATE_FIELD_MUTATION_LEVEL = 5;
-  const MAX_LATE_FIELD_AEGIS_LEVEL = 4;
+  const MAX_LATE_FIELD_MUTATION_LEVEL = 7;
+  const MAX_LATE_FIELD_AEGIS_LEVEL = 5;
+  const LATE_FIELD_BREAKPOINT_INTERVAL = 4;
   const BLACK_LEDGER_RAID_OVERLAY = {
     brander: 0.34,
     lancer: 0.24,
@@ -4909,7 +4910,18 @@
   }
 
   function isArsenalBreakpointWave(nextWave) {
-    return Number.isFinite(nextWave) && nextWave === LATE_FIELD_CACHE_START_WAVE;
+    return (
+      shouldUseLateFieldCache(nextWave) &&
+      Number.isFinite(nextWave) &&
+      (nextWave - LATE_FIELD_CACHE_START_WAVE) % LATE_FIELD_BREAKPOINT_INTERVAL === 0
+    );
+  }
+
+  function getLateFieldBreakpointRank(nextWave) {
+    if (!isArsenalBreakpointWave(nextWave)) {
+      return 0;
+    }
+    return Math.floor((nextWave - LATE_FIELD_CACHE_START_WAVE) / LATE_FIELD_BREAKPOINT_INTERVAL) + 1;
   }
 
   function getLateFieldMutationLevel(build) {
@@ -4929,12 +4941,26 @@
   }
 
   function getLateFieldMutationTierLabel(level) {
-    const labels = ["Twin Battery", "Broadside Rack", "Siege Bloom", "War Crown", "Endline Array"];
+    const labels = [
+      "Twin Battery",
+      "Broadside Rack",
+      "Siege Bloom",
+      "War Crown",
+      "Endline Array",
+      "Cataclysm Rack",
+      "Dreadnova Array",
+    ];
     return labels[Math.max(0, Math.min(labels.length - 1, level - 1))] || "Twin Battery";
   }
 
   function getLateFieldAegisTierLabel(level) {
-    const labels = ["Aegis Ring", "Bastion Halo", "Intercept Halo", "Warplate Halo"];
+    const labels = [
+      "Aegis Ring",
+      "Bastion Halo",
+      "Intercept Halo",
+      "Warplate Halo",
+      "Citadel Halo",
+    ];
     return labels[Math.max(0, Math.min(labels.length - 1, level - 1))] || "Aegis Ring";
   }
 
@@ -6056,7 +6082,7 @@
     }
     const lateFieldMutationLevel = getLateFieldMutationLevel(build);
     if (lateFieldMutationLevel > 0) {
-      const offsetCount = Math.min(6, 2 + lateFieldMutationLevel);
+      const offsetCount = Math.min(8, 2 + lateFieldMutationLevel);
       const spacing =
         core.id === "scatter"
           ? 0.14
@@ -7582,24 +7608,31 @@
 
   function createLateFieldMutationChoice(build, nextWave) {
     const breakpointWave = isArsenalBreakpointWave(nextWave);
+    const breakpointRank = getLateFieldBreakpointRank(nextWave);
     const nextLevel = Math.min(
       MAX_LATE_FIELD_MUTATION_LEVEL,
       getLateFieldMutationLevel(build) + (breakpointWave ? 2 : 1)
     );
-    const barrelCount = Math.min(6, 2 + nextLevel);
+    const barrelCount = Math.min(8, 2 + nextLevel);
+    const breakpointTitle =
+      breakpointRank >= 3
+        ? "Overdrive Arsenal Cataclysm"
+        : breakpointRank === 2
+          ? "Overdrive Arsenal Overlord"
+          : "Overdrive Arsenal Prime";
     return {
       type: "utility",
       action: "field_mutation",
       id: `utility:field_mutation:${build.coreId}:${nextWave}:${nextLevel}`,
       verb: "변이",
       tag: "MUTATE",
-      title: breakpointWave ? "Overdrive Arsenal Prime" : `Overdrive Arsenal ${nextLevel}`,
+      title: breakpointWave ? breakpointTitle : `Overdrive Arsenal ${nextLevel}`,
       description:
         breakpointWave
-          ? `Wave 10 breakpoint용 주포 변이. ${CORE_DEFS[build.coreId].label}에 측면 배럴과 과열 포문을 한 번에 증설해 바로 ${getLateFieldMutationTierLabel(nextLevel)} 화망으로 점프한다.`
+          ? `Wave ${nextWave} breakpoint용 주포 변이. ${CORE_DEFS[build.coreId].label}에 측면 배럴과 과열 포문을 한 번에 증설해 바로 ${getLateFieldMutationTierLabel(nextLevel)} 화망으로 점프한다. 이번 등급은 다음 late cache 전까지 주포 실루엣 자체를 다시 갈아엎는다.`
           : `후반 전장용 주포 증설 패키지. ${CORE_DEFS[build.coreId].label}에 추가 배럴과 보조 포문을 바로 붙여 ${getLateFieldMutationTierLabel(nextLevel)} 화망으로 바꾼다.`,
       slotText: breakpointWave
-        ? `추가 배럴 +${barrelCount} · flank volley live`
+        ? `추가 배럴 +${barrelCount} · breakpoint rank ${breakpointRank}`
         : `추가 배럴 +${barrelCount} · MK ${nextLevel} 화망`,
       cost: 0,
       laneLabel: "Main Weapon Mutation",
@@ -7610,23 +7643,30 @@
 
   function createLateFieldAegisChoice(build, nextWave) {
     const breakpointWave = isArsenalBreakpointWave(nextWave);
+    const breakpointRank = getLateFieldBreakpointRank(nextWave);
     const nextLevel = Math.min(
       MAX_LATE_FIELD_AEGIS_LEVEL,
       getLateFieldAegisLevel(build) + (breakpointWave ? 2 : 1)
     );
+    const breakpointTitle =
+      breakpointRank >= 3
+        ? "Citadel Halo"
+        : breakpointRank === 2
+          ? "Bulwark Halo"
+          : "Warplate Halo";
     return {
       type: "utility",
       action: "field_aegis",
       id: `utility:field_aegis:${nextWave}:${nextLevel}`,
       verb: "장착",
       tag: breakpointWave ? "HALO" : "AEGIS",
-      title: breakpointWave ? "Warplate Halo" : getLateFieldAegisTierLabel(nextLevel),
+      title: breakpointWave ? breakpointTitle : getLateFieldAegisTierLabel(nextLevel),
       description:
         breakpointWave
-          ? "Wave 10 생존 브레이크포인트. 재충전식 warplate를 두 겹까지 예열해 큰 한 방을 지우고, 발동 순간 주변 탄막과 추격선까지 함께 뜯어낸다."
+          ? `Wave ${nextWave} 생존 브레이크포인트. 재충전식 plate 층을 즉시 두 단계 끌어올려 큰 한 방을 지우고, 발동 순간 주변 탄막과 추격선까지 함께 뜯어낸다. 이후 남은 bracket은 이 plate 실루엣을 더 오래 굴리는 시험이 된다.`
           : "후반 생존층 패키지. 재충전식 guard plate를 달아 큰 한 방을 깎아내고, 발동 순간 근처 탄막까지 함께 털어낸다.",
       slotText: breakpointWave
-        ? `warplate ${getLateFieldAegisMaxCharges({ lateFieldAegisLevel: nextLevel })}충전 · 피해 ${Math.round(getLateFieldAegisReduction(nextLevel) * 100)}% 완충`
+        ? `plate ${getLateFieldAegisMaxCharges({ lateFieldAegisLevel: nextLevel })}충전 · rank ${breakpointRank} 완충`
         : `guard plate ${getLateFieldAegisMaxCharges({ lateFieldAegisLevel: nextLevel })}충전 · 피해 ${Math.round(getLateFieldAegisReduction(nextLevel) * 100)}% 완충`,
       cost: 0,
       laneLabel: "Defense / Utility",
@@ -7638,20 +7678,27 @@
   function createLateFieldGreedContractChoice(build, nextWave) {
     const waveScale = Math.max(0, nextWave - LATE_FIELD_CACHE_START_WAVE);
     const breakpointWave = isArsenalBreakpointWave(nextWave);
+    const breakpointRank = getLateFieldBreakpointRank(nextWave);
     return {
       type: "utility",
       action: "field_greed",
       id: `utility:field_greed:late:${nextWave}`,
       verb: "계약",
       tag: "PACT",
-      title: breakpointWave ? "Black Ledger Raid" : "Black Ledger Contract",
+      title: breakpointWave
+        ? breakpointRank >= 3
+          ? "Black Ledger Catastrophe"
+          : breakpointRank === 2
+            ? "Black Ledger Grand Raid"
+            : "Black Ledger Raid"
+        : "Black Ledger Contract",
       description:
         breakpointWave
-          ? "Wave 10 greed breakpoint. 다음 Scrapstorm를 불법 금고 습격으로 바꿔 contraband vault를 더 크게 열고 고철 폭발을 키우지만, 전장 밀도와 청구서도 즉시 같이 끌어올린다."
-          : "후반용 탐욕 계약. 다음 대형 cache 전까지 쓸 고철과 회수율을 크게 당겨오지만, 즉시 체력 청구서를 받고 Siege Debt도 두 웨이브 분량으로 붙는다.",
+          ? `Wave ${nextWave} greed breakpoint. 다음 ${breakpointRank >= 2 ? "두" : "한"} 웨이브를 불법 금고 습격으로 비틀어 contraband vault와 payout을 키우지만, 전장 밀도와 청구서도 즉시 같이 끌어올린다.`
+          : "후반용 탐욕 계약. 다음 웨이브를 바로 Black Ledger raid로 비틀고, 다음 대형 cache 전까지 쓸 고철과 회수율을 크게 당겨오지만 즉시 체력 청구서와 Siege Debt도 같이 붙는다.",
       slotText: breakpointWave
-        ? "고철 +58 · 회수 +18% · vault burst x2 · 2웨이브 Siege Debt"
-        : `고철 +${46 + waveScale * 4} · 회수 +${14 + waveScale * 2}% · 2웨이브 Siege Debt`,
+        ? `고철 +58 · 회수 +18% · raid ${breakpointRank >= 2 ? "x2" : "x1"} · 2웨이브 Siege Debt`
+        : `고철 +${46 + waveScale * 4} · 회수 +${14 + waveScale * 2}% · 다음 웨이브 raid`,
       cost: 0,
       scrapGain: breakpointWave ? 58 : 46 + waveScale * 4,
       scrapMultiplierGain: breakpointWave ? 0.18 : 0.14 + waveScale * 0.01,
@@ -7659,7 +7706,7 @@
       hpLoss: breakpointWave ? 16 : 14 + waveScale,
       maxHpPenalty: breakpointWave ? 12 : 10 + Math.floor(waveScale / 2),
       debtWaves: 2,
-      blackLedgerRaidWaves: breakpointWave ? 1 : 0,
+      blackLedgerRaidWaves: breakpointWave ? (breakpointRank >= 2 ? 2 : 1) : 1,
     };
   }
 
@@ -7671,7 +7718,7 @@
       MAX_LATE_FIELD_MUTATION_LEVEL,
       Math.max(2, getLateFieldMutationLevel(build) + 2)
     );
-    const barrelCount = Math.min(6, 2 + nextLevel);
+    const barrelCount = Math.min(8, 2 + nextLevel);
     return {
       type: "utility",
       action: "field_mutation",
@@ -8545,8 +8592,8 @@
     pushCombatFeed(
       shouldUseLateFieldCache(nextWave)
         ? isArsenalBreakpointWave(nextWave)
-          ? "Arsenal Breakpoint 확보. 이번 Wave 10 직전 캐시는 후반부 첫 판돈으로 승격되어, 과격한 주포 변이, 생존형 warplate, 금고 습격 계약 중 하나를 즉시 잠근다."
-          : "Arsenal Cache 확보. Wave 10 이후 짝수 late wave마다 대형 현장 패키지가 열려 주포 변이, 재충전 방어층, 블랙마켓 계약 중 하나를 즉시 잠근다."
+          ? `Arsenal Breakpoint 확보. 이번 Wave ${nextWave} 직전 캐시는 후반부 재상승 판돈으로 승격되어, 과격한 주포 변이, 생존형 halo, 금고 습격 계약 중 하나를 즉시 잠근다.`
+          : "Arsenal Cache 확보. Wave 10 이후 짝수 late wave마다 대형 현장 패키지가 열려 주포 변이, 재충전 방어층, 즉시 raid를 여는 블랙마켓 계약 중 하나를 잠근다."
         : nextWave >= RISK_MUTATION_START_WAVE
         ? "Field Cache 확보. 이제 현장 선택은 Main Weapon Mutation, Defense / Utility, Greed Contract 세 욕구만 남기고 바로 다음 웨이브로 밀어붙인다."
         : "Field Cache 확보. 이제 현장 선택은 주포 변이, 생존층, 탐욕 계약 세 장으로만 나와 즉시 판돈을 고르게 한다.",
@@ -15858,10 +15905,10 @@
           ? "이번 웨이브의 live cache를 이미 잠갔다. 정리 후 Field Cache 정지 없이 다음 웨이브로 즉시 이어진다."
           : combatCache.deployed
             ? shouldUseLateFieldCache(state.waveIndex + 2)
-              ? "드롭된 Arsenal Cache 중 하나만 회수할 수 있다. 이번 late cache는 주포 변이, guard plate, 블랙마켓 계약 중 하나를 즉시 잠가 후반 곡선을 다시 밀어 올린다."
+              ? "드롭된 Arsenal Cache 중 하나만 회수할 수 있다. 이번 late cache는 주포 변이, guard plate, 블랙마켓 계약 중 하나를 즉시 잠가 후반 곡선을 다시 밀어 올리고 다음 raid 목적지까지 바꾼다."
               : "드롭된 Combat Cache 중 하나만 회수할 수 있다. 놓치면 이번 웨이브의 현장 spike는 사라진다."
             : shouldUseLateFieldCache(state.waveIndex + 2)
-              ? "이번 짝수 late wave 첫 elite가 Arsenal Cache를 떨어뜨린다. 회수에 성공하면 후반 대형 패키지 1장을 바로 잠근 채 다음 웨이브로 직결된다."
+              ? "이번 짝수 late wave 첫 elite가 Arsenal Cache를 떨어뜨린다. 회수에 성공하면 후반 대형 패키지 1장을 바로 잠근 채 다음 웨이브 raid와 변이 곡선까지 직결된다."
               : "이번 웨이브 첫 elite가 Combat Cache를 떨어뜨린다. 회수에 성공하면 Field Cache 정지 없이 다음 웨이브로 직결된다.";
       }
       if (state.build.illegalOverclockId || getRiskMutationLevel(state.build) > 0) {
@@ -16113,7 +16160,7 @@
         ? isArsenalBreakpointWave(state.waveIndex + 2)
           ? "Arsenal Breakpoint · outrageous main gun, warplate survival form, or a greed raid that twists the next fight"
           : state.waveIndex + 2 >= RISK_MUTATION_START_WAVE
-          ? "Field Cache · Main Weapon Mutation, Defense / Utility, Greed Contract 중 1픽으로 late form과 청구서를 함께 고른다"
+          ? "Field Cache · Main Weapon Mutation, Defense / Utility, Greed Contract 중 1픽으로 late form과 다음 raid 청구서를 함께 고른다"
           : "Field Cache · 주포 변이, 생존층, 탐욕 계약 세 장 중 1픽으로 지금 판돈을 고른다"
         : state.forgeDraftType === "bastion_draft"
         ? wave6AscensionDraft
@@ -16144,9 +16191,9 @@
         ? `Wave 3 진입 직전 Architecture Draft다. 이제 세 장기 교리 중 하나를 바로 monster form으로 잠가 주포 stage-1 mutation, utility chassis, 세 번째 support bay flex lane까지 한 번에 연다. Wave 6 Bastion Draft는 재선택이 아니라 pursuit 계약이나 greed spike를 얹는 후속 분기다.`
       : state.forgeDraftType === "field_grant"
         ? isArsenalBreakpointWave(state.waveIndex + 2)
-          ? `고철 ${Math.round(state.resources.scrap)} 보유. Arsenal Breakpoint다. 이번 한 번은 세 욕구만 크게 읽히면 된다. Overdrive Arsenal Prime은 즉시 추가 배럴을 두 단계 당겨 오고, Warplate Halo는 run-saving guard plate를 예열하며, Black Ledger Raid는 다음 Scrapstorm objective를 jackpot 금고 습격으로 비튼다.`
+          ? `고철 ${Math.round(state.resources.scrap)} 보유. Arsenal Breakpoint다. 이번 Wave ${state.waveIndex + 2} 판돈은 세 욕구만 크게 읽히면 된다. Overdrive Arsenal 계열은 즉시 추가 배럴을 두 단계 당겨 오고, halo 계열은 재충전식 plate 층을 예열하며, Black Ledger raid 계열은 다음 전투 objective를 불법 금고 습격으로 비튼다.`
           : shouldUseLateFieldCache(state.waveIndex + 2)
-          ? `고철 ${Math.round(state.resources.scrap)} 보유. Arsenal Cache다. 이제 Wave 10 이후 짝수 late wave마다 대형 현장 패키지 1장을 바로 잠근다. 주포 변이는 배럴 수 자체를 늘리고, Aegis는 재충전식 guard plate를 열며, 블랙마켓 계약은 다음 대형 cache 전까지 쓸 고철을 앞당기는 대신 청구서를 두 웨이브 분량으로 붙인다.`
+          ? `고철 ${Math.round(state.resources.scrap)} 보유. Arsenal Cache다. 이제 Wave 10 이후 짝수 late wave마다 대형 현장 패키지 1장을 바로 잠근다. 주포 변이는 배럴 수 자체를 늘리고, Aegis는 재충전식 guard plate를 열며, 블랙마켓 계약은 다음 웨이브를 즉시 raid로 비틀어 payout과 청구서를 함께 키운다.`
           : state.waveIndex + 2 >= RISK_MUTATION_START_WAVE
           ? `고철 ${Math.round(state.resources.scrap)} 보유. Field Cache다. 이제 late reward는 Main Weapon Mutation, Defense / Utility, Greed Contract 세 욕구로만 정리된다. Dominant Mutation은 주포/차체를 당겨 오고, 생존층은 다음 교차 압박을 버티게 하며, 탐욕 계약은 고철을 먼저 주는 대신 다음 웨이브 청구서를 즉시 붙인다.`
           : `고철 ${Math.round(state.resources.scrap)} 보유. Field Cache다. 이번 현장 선택은 주포 변이, 생존층, 탐욕 계약 세 장뿐이다. 지금 더 위험하게 당겨서 강해질지, 상태를 정리하고 다음 큰 포지까지 버틸지 직접 고른다.`
@@ -17387,7 +17434,7 @@
     }
     const facing = state.player.facing || 0;
     const level = state.weapon.lateFieldMutationLevel;
-    const finCount = Math.min(6, 2 + level);
+    const finCount = Math.min(8, 2 + level);
     const half = (finCount - 1) / 2;
     for (let index = 0; index < finCount; index += 1) {
       const fin = getOffsetPoint(state.player.x, state.player.y, facing, 3, (index - half) * 11);
