@@ -554,10 +554,17 @@
   const MAX_WAVES = WAVE_CONFIG.length;
   const POST_WAVE_LOOT_GRACE = 2.4;
   const COMBAT_CACHE_DROP_LIFE = 14;
-  const POST_CAPSTONE_WAVE_COUNT = 3;
+  const POST_CAPSTONE_WAVE_COUNT = 5;
   const FINAL_CASHOUT_DURATION = 12;
   const FINAL_CASHOUT_SPAWN_BUDGET = 26;
-  const POST_CAPSTONE_WAVE_LABELS = ["Afterburn I", "Afterburn II", "Afterburn III"];
+  const POST_CAPSTONE_WAVE_LABELS = [
+    "Afterburn I",
+    "Afterburn II",
+    "Afterburn III",
+    "Afterburn IV",
+    "Afterburn V",
+  ];
+  const POST_CAPSTONE_SHARED_WAVE_PLAN = [9, 10, 11, 10, 11];
   const POST_CAPSTONE_ASCENSION_PROFILE = [
     {
       durationBonus: 6,
@@ -603,6 +610,36 @@
       hazardRelayDamageBonus: 3,
       driveGainFloor: 1.8,
       apexSpawnTimer: 6,
+    },
+    {
+      durationBonus: 18,
+      spawnBudgetBonus: 80,
+      activeCapBonus: 12,
+      baseSpawnScale: 0.74,
+      minSpawnScale: 0.84,
+      hazardIntervalScale: 0.7,
+      hazardTelegraphScale: 0.82,
+      hazardCountBonus: 1,
+      hazardDamageBonus: 5,
+      hazardCoreHpBonus: 36,
+      hazardRelayDamageBonus: 4,
+      driveGainFloor: 1.9,
+      apexSpawnTimer: 5.5,
+    },
+    {
+      durationBonus: 22,
+      spawnBudgetBonus: 98,
+      activeCapBonus: 14,
+      baseSpawnScale: 0.7,
+      minSpawnScale: 0.8,
+      hazardIntervalScale: 0.66,
+      hazardTelegraphScale: 0.78,
+      hazardCountBonus: 2,
+      hazardDamageBonus: 6,
+      hazardCoreHpBonus: 46,
+      hazardRelayDamageBonus: 5,
+      driveGainFloor: 2,
+      apexSpawnTimer: 5.1,
     },
   ];
   const KILN_BASTION_FIELD_BASE = {
@@ -8789,7 +8826,7 @@
         waveNumber,
         act: getActLabelForWave(waveNumber),
         id: POST_CAPSTONE_WAVE_LABELS[index].toUpperCase(),
-        note: "최종 포지 이후 완성형 빌드가 실제 전장을 연속 점유하는 post-capstone afterburn bracket.",
+        note: "최종 포지 이후 late-act shared pool이 다시 섞이며 완성형 빌드가 실제 전장을 더 오래 점유하는 post-capstone afterburn bracket.",
       });
     }
     elements.waveTrack.innerHTML = trackEntries.map((entry, index) => {
@@ -9638,7 +9675,7 @@
     state.player.overheated = false;
     pushCombatFeed(
       isFinalForge
-        ? "최종 웨이브 정리 완료. 마지막 포지에서 최종 각인과 3연속 afterburn 압박 배치를 마감한다."
+        ? "최종 웨이브 정리 완료. 마지막 포지에서 최종 각인과 5연속 afterburn 압박 배치를 마감한다."
         : isLateBreakArmory(forgeOptions)
           ? state.build.auxiliaryJunctionLevel > 0
             ? "Wave 8 돌파. Late Break Armory에서 6장 중 대형 카드 두 장을 골라 네 번째 베이와 이중 교리 flex lane까지 포함한 Act 3 운영 틀을 monster form 위에 덧씌운다."
@@ -9726,7 +9763,12 @@
 
   function createPostCapstoneWave(stageIndex = 0, build = null) {
     const boundedStage = clamp(stageIndex, 0, POST_CAPSTONE_WAVE_COUNT - 1);
-    const baseConfig = resolveWaveConfig(MAX_WAVES - 1, build);
+    const baseWaveIndex = clamp(
+      POST_CAPSTONE_SHARED_WAVE_PLAN[boundedStage] || (MAX_WAVES - 1),
+      0,
+      MAX_WAVES - 1
+    );
+    const baseConfig = resolveWaveConfig(baseWaveIndex, build);
     const escalation =
       POST_CAPSTONE_ASCENSION_PROFILE[boundedStage] ||
       POST_CAPSTONE_ASCENSION_PROFILE[POST_CAPSTONE_ASCENSION_PROFILE.length - 1];
@@ -9787,9 +9829,9 @@
       label: `Wave ${MAX_WAVES + boundedStage + 1} · ${POST_CAPSTONE_WAVE_LABELS[boundedStage]}${variant ? ` · ${variant.cashoutLabel}` : ""}`,
       bannerLabel: `${variant ? variant.bannerLabel || variant.cashoutLabel : "Afterburn"} · ${POST_CAPSTONE_WAVE_LABELS[boundedStage]}`,
       note: variant
-        ? `${variant.note} 이제는 짧은 시험이 아니라 Wave 12 crown보다 더 높은 forbidden-territory bracket이며, roaming apex를 잡아 마지막 body splice를 뜯어내는 post-capstone ascent다.`
-        : "완성된 무기가 Wave 12 crown보다 더 높은 압박과 roaming apex breach를 연속으로 버티며 마지막 변이를 뜯어내는 post-capstone ascent.",
-      directive: `${variant ? variant.directive : baseConfig.directive} Afterburn에서는 구조물만 정리하고 끝나지 않는다. 더 빠른 crown 압박 속에서 roaming apex를 추적 처치해 마지막 Predator Molt를 챙겨야 한다.`,
+        ? `${variant.note} 이제는 짧은 시험이 아니라 late-act shared pool이 계속 뒤섞이는 forbidden-territory bracket이며, roaming apex를 잡아 마지막 body splice를 뜯어내는 post-capstone ascent다.`
+        : "완성된 무기가 late-act shared pool 전체를 더 높은 압박으로 다시 통과하며 roaming apex breach와 마지막 변이를 연속으로 뜯어내는 post-capstone ascent.",
+      directive: `${variant ? variant.directive : baseConfig.directive} Afterburn에서는 구조물만 정리하고 끝나지 않는다. late-act shared pool이 계속 섞여 돌아오므로 lockgrid, pursuit, crown 압박 모두를 더 빠른 속도로 다시 견뎌야 한다.`,
       activeCap: Math.max(baseConfig.activeCap + 2, baseConfig.activeCap + escalation.activeCapBonus + capBias),
       baseSpawnInterval: Math.max(
         0.074,
@@ -13619,8 +13661,8 @@
           : "단일 포지 선택";
     elements.forgeSubtitle.textContent = state.pendingFinalForge
       ? catalystReady
-        ? `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 세 장은 완성, 촉매 연소, 안정화로 고정되며 각 카드가 바로 이어질 3연속 post-capstone afterburn bracket의 시작 형태를 미리 보여준다.`
-        : `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 촉매가 없어도 비상 점화와 안정화 fail-soft 카드가 열리며, 각 카드가 다른 3연속 post-capstone afterburn bracket으로 바로 이어진다.`
+        ? `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 세 장은 완성, 촉매 연소, 안정화로 고정되며 각 카드가 바로 이어질 5연속 post-capstone afterburn bracket의 시작 형태를 미리 보여준다.`
+        : `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 촉매가 없어도 비상 점화와 안정화 fail-soft 카드가 열리며, 각 카드가 다른 5연속 post-capstone afterburn bracket으로 바로 이어진다.`
       : state.forgeDraftType === "architecture_draft"
         ? `Wave 3 진입 직전 Architecture Draft다. 세 장기 교리 중 하나를 예고해 주무장만 즉시 해당 프레임으로 재배선하고, support bay reserve나 starter subsystem lock은 아직 미룬다. Wave 6 Bastion Draft에서 세 교리 중 실제 commitment를 다시 골라 몸체와 지원층까지 확정한다.`
       : state.forgeDraftType === "field_grant"
