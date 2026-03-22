@@ -1125,6 +1125,33 @@
     },
   };
 
+  function getDoctrineLiveAscensionBody(capstoneOrId) {
+    const capstone =
+      typeof capstoneOrId === "object" ? capstoneOrId : getDoctrineCapstoneDef(capstoneOrId);
+    if (!capstone) {
+      return { bodyLabel: null, bodyText: null };
+    }
+    if (capstone.id === "relay_storm_lattice") {
+      return {
+        bodyLabel: "Stormglass Rake Frame",
+        bodyText: "측면 분광 익판과 전방 절개 척추가 붙어 반사 벽과 직접 조준을 한 몸처럼 밀어붙이는 추격 섀시다.",
+      };
+    }
+    if (capstone.id === "bulwark_foundry") {
+      return {
+        bodyLabel: "Foundry Carapace",
+        bodyText: "거점장 안에서 냉각과 복구가 크게 강화되고, 남은 late waves도 이 pocket-chassis 위에서 이어진다.",
+      };
+    }
+    const stormEndform = getStormArtilleryAfterburnEndform(capstone.id);
+    return stormEndform
+      ? {
+          bodyLabel: stormEndform.bodyLabel,
+          bodyText: stormEndform.bodyText,
+        }
+      : { bodyLabel: null, bodyText: null };
+  }
+
   function getArenaSize(config = null) {
     const arena =
       config && config.arena
@@ -9271,10 +9298,10 @@
     return shouldRunCatalystDraft({ nextWave: waveNumber, finalForge: false }, build);
   }
 
-  function shouldRunKilnBastionAscension(build, waveNumber) {
+  function shouldRunDoctrineLiveAscension(build, waveNumber) {
     return Boolean(
       build &&
-      build.bastionDoctrineId === "kiln_bastion" &&
+      build.bastionDoctrineId &&
       build.doctrineChaseClaimed &&
       !build.doctrineCapstoneId &&
       waveNumber >= 9 &&
@@ -9282,32 +9309,40 @@
     );
   }
 
-  function createKilnBastionAscensionChoice(build) {
-    const capstone = getDoctrineCapstoneDef("bulwark_foundry");
-    if (!capstone || !build || build.doctrineCapstoneId) {
-      return null;
+  function createDoctrineLiveAscensionChoices(build) {
+    const doctrine = getBastionDoctrineDef(build);
+    if (!doctrine || !shouldRunDoctrineLiveAscension(build, 9)) {
+      return [];
     }
-    return {
-      type: "utility",
-      action: "doctrine_capstone",
-      id: "utility:kiln_live_ascension:bulwark_foundry",
-      verb: "ascend",
-      tag: "FOUNDRY",
-      title: capstone.title,
-      description:
-        "Wave 9부터 첫 marked elite가 떨어뜨리는 live foundry cache를 회수해 Scatter와 차체를 즉시 용광 요새 형태로 접합한다. Late Break Armory 정지 대신 전장 한복판에서 pocket 화력과 거점장 몸체를 굳힌다.",
-      slotText: "Live Ascension · 교리 완성 · 회수 요새 주조",
-      cost: 0,
-      laneLabel: "Live Ascension",
-      forgeLaneLabel: "Live Ascension",
-      doctrineId: "kiln_bastion",
-      doctrineLabel: "Kiln Bastion Doctrine",
-      doctrineCapstoneId: capstone.id,
-      capstoneLabel: capstone.label,
-      bodyLabel: "Foundry Carapace",
-      bodyText:
-        "거점장 안에서 냉각과 복구가 크게 강화되고, 남은 afterburn도 이 pocket-chassis 위에서 이어진다.",
-    };
+    return getDoctrineLateCapstoneDefs(doctrine).map((capstone) => {
+      const liveBody = getDoctrineLiveAscensionBody(capstone);
+      return {
+        type: "utility",
+        action: "doctrine_capstone",
+        id: `utility:doctrine_live_ascension:${capstone.id}`,
+        verb: "ascend",
+        tag:
+          capstone.id === "relay_storm_lattice"
+            ? "LATTICE"
+            : capstone.id === "bulwark_foundry"
+              ? "FOUNDRY"
+              : capstone.id === "stormspire_needle"
+                ? "SPIRE"
+                : "SKY",
+        title: capstone.title,
+        description: `${capstone.description} Wave 9 첫 marked elite가 떨군 live ascension cache를 직접 회수해야 주포와 차체가 이 형태로 굳는다.`,
+        slotText: `Live Ascension · ${capstone.slotText}`,
+        cost: 0,
+        laneLabel: "Live Ascension",
+        forgeLaneLabel: "Live Ascension",
+        doctrineId: doctrine.id,
+        doctrineLabel: doctrine.label,
+        doctrineCapstoneId: capstone.id,
+        capstoneLabel: capstone.label,
+        bodyLabel: liveBody.bodyLabel,
+        bodyText: liveBody.bodyText,
+      };
+    });
   }
 
   function createCatalystCrucibleLiveChoice(build) {
@@ -9464,32 +9499,38 @@
     setBanner("Catalyst Crucible", 0.95);
   }
 
-  function deployKilnBastionAscension(enemy) {
-    const ascension = state.wave && state.wave.kilnAscension;
+  function deployDoctrineLiveAscension(enemy) {
+    const ascension = state.wave && state.wave.doctrineAscension;
     if (!ascension || ascension.deployed || ascension.claimed) {
       return;
     }
-    const choice = ascension.choice;
-    if (!choice) {
+    const choices = Array.isArray(ascension.choices) ? ascension.choices.filter(Boolean) : [];
+    if (choices.length === 0) {
       ascension.deployed = true;
       ascension.claimed = true;
       return;
     }
     ascension.deployed = true;
-    ascension.groupId = `kiln-ascension-${state.waveIndex + 1}-${state.stats.kills}`;
-    state.drops.push({
-      kind: "afterburn_ascension_cache",
-      x: enemy.x,
-      y: enemy.y,
-      life: AFTERBURN_ASCENSION_DROP_LIFE,
-      choice,
-      groupId: ascension.groupId,
+    ascension.groupId = `doctrine-ascension-${state.waveIndex + 1}-${state.stats.kills}`;
+    const spreadRadius = choices.length === 1 ? 0 : 44;
+    choices.forEach((choice, index) => {
+      const angle = (index / choices.length) * Math.PI - Math.PI / 2;
+      state.drops.push({
+        kind: "afterburn_ascension_cache",
+        x: enemy.x + Math.cos(angle) * spreadRadius,
+        y: enemy.y + Math.sin(angle) * spreadRadius,
+        life: AFTERBURN_ASCENSION_DROP_LIFE,
+        choice,
+        groupId: ascension.groupId,
+      });
     });
     pushCombatFeed(
-      "Bulwark Foundry cache 노출. Late Break Armory 대신 live ascension이 열렸다. 압박 속에서 회수하면 Scatter와 몸체가 즉시 요새 형태로 굳는다.",
+      choices.length > 1
+        ? "Live ascension split 노출. 교리 완성이 둘로 갈라졌다. 압박 속에서 하나만 회수하면 주포와 차체가 그 형태로 즉시 굳는다."
+        : "Live ascension cache 노출. Late Break Armory 대신 교리 완성 cache가 열렸다. 압박 속에서 회수하면 주포와 차체가 즉시 monster form으로 굳는다.",
       "ASCEND"
     );
-    setBanner("Bulwark Foundry", 0.95);
+    setBanner("Live Ascension", 0.95);
   }
 
   function armOvercommitTrial(run) {
@@ -9566,7 +9607,6 @@
     }
     const doctrine = getBastionDoctrineDef(state.build);
     const pursuit = getDoctrineForgePursuitDef(state.build);
-    const capstone = getDoctrinePursuitCapstoneDef(state.build);
     const weaponChoice = createDoctrineChaseWeaponChoice(state.build, doctrine, {
       nextWave: state.waveIndex + 2,
       finalForge: false,
@@ -9581,15 +9621,6 @@
     if (systemChoice) {
       applyForgeChoice(state, systemChoice);
     }
-    if (
-      capstone &&
-      doctrine &&
-      doctrine.id !== "storm_artillery" &&
-      doctrine.id !== "kiln_bastion"
-    ) {
-      state.build.doctrineCapstoneId = capstone.id;
-      state.build.upgrades.push(`교리 완성: ${capstone.label}`);
-    }
     state.build.doctrineChaseClaimed = true;
     state.build.afterburnAscensionOffered = false;
     state.doctrinePursuit.active = false;
@@ -9598,20 +9629,18 @@
     );
     pushCombatFeed(
       doctrine && doctrine.id === "storm_artillery"
-        ? `${(pursuit && pursuit.label) || "Forge Pursuit"} 완성. Thunder Rack까지는 즉시 잠겼고, 최종 Sky Lance / Stormspire 분기는 Afterburn 전장에서 직접 뜯어내야 한다.`
+        ? `${(pursuit && pursuit.label) || "Forge Pursuit"} 완성. Thunder Rack까지는 즉시 잠겼고, Wave 9 live ascension에서 Sky Lance / Stormspire body split 중 하나를 전장에서 직접 회수해야 한다.`
         : doctrine && doctrine.id === "kiln_bastion"
           ? `${(pursuit && pursuit.label) || "Forge Pursuit"} 완성. Crucible Scatter와 거점장은 먼저 잠겼고, 진짜 Bulwark Foundry body splice는 Wave 9 live ascension에서 직접 뜯어내야 한다.`
-        : `${(pursuit && pursuit.label) || "Forge Pursuit"} 완성. ${capstone ? `${capstone.label}까지 즉시 잠겨` : "주무장과 지원층이"} 남은 웨이브를 바로 monster form으로 소모한다.`,
+          : `${(pursuit && pursuit.label) || "Forge Pursuit"} 완성. Relay Storm Frame은 잠겼지만 최종 Stormglass body splice는 Wave 9 live ascension cache를 직접 회수해야 완성된다.`,
       "FRAME"
     );
     setBanner(
       doctrine && doctrine.id === "storm_artillery"
-        ? "Afterburn Ascension Armed"
+        ? "Live Ascension Armed"
         : doctrine && doctrine.id === "kiln_bastion"
           ? "Bulwark Foundry Armed"
-        : capstone
-          ? capstone.label
-          : (pursuit && pursuit.shortLabel) || "Frame 완성",
+          : "Relay Lattice Armed",
       0.9
     );
     refreshDerivedStats(false);
@@ -10698,12 +10727,12 @@
         : null,
       lateAscensionCarrierType: config.ascensionCarrierType || null,
       lateAscensionCarrierSpawned: false,
-      kilnAscension: shouldRunKilnBastionAscension(state.build, waveNumber)
+      doctrineAscension: shouldRunDoctrineLiveAscension(state.build, waveNumber)
         ? {
             deployed: false,
             claimed: false,
             groupId: null,
-            choice: createKilnBastionAscensionChoice(state.build),
+            choices: createDoctrineLiveAscensionChoices(state.build),
           }
         : null,
       apexPredator: shouldSpawnApexPredator(state.build, waveNumber)
@@ -10804,9 +10833,11 @@
         "ASCEND"
       );
     }
-    if (state.wave.kilnAscension) {
+    if (state.wave.doctrineAscension) {
       pushCombatFeed(
-        "Bulwark Foundry live ascension 활성화. 이번 웨이브 첫 marked elite가 foundry cache를 떨어뜨리며, 회수하면 Late Break Armory 없이 pocket monster form으로 남은 run을 민다.",
+        state.wave.doctrineAscension.choices.length > 1
+          ? "Live doctrine ascension 활성화. 이번 웨이브 첫 marked elite가 split cache를 떨어뜨리며, 회수한 쪽의 주포/차체가 바로 남은 late waves를 고정한다."
+          : "Live doctrine ascension 활성화. 이번 웨이브 첫 marked elite가 교리 완성 cache를 떨어뜨리며, 회수하면 주포와 차체가 바로 monster form으로 굳는다.",
         "ASCEND"
       );
     }
@@ -14174,7 +14205,7 @@
         deployFinaleMutation(enemy);
         deployCombatCache(enemy);
         deployLateAscension(enemy);
-        deployKilnBastionAscension(enemy);
+        deployDoctrineLiveAscension(enemy);
         deployStormArtilleryAfterburnAscension(enemy);
       }
       if (enemy.overcommitTarget && state.overcommit.active) {
@@ -14265,12 +14296,12 @@
           state.wave.lateAscension.claimed = true;
         }
       } else if (drop.life <= 0 && drop.kind === "afterburn_ascension_cache") {
-        if (state.wave && state.wave.kilnAscension && !state.wave.kilnAscension.claimed) {
+        if (state.wave && state.wave.doctrineAscension && !state.wave.doctrineAscension.claimed) {
           pushCombatFeed(
-            "Bulwark Foundry cache가 식었다. 이번 웨이브 ascension은 놓쳤지만 다음 late wave에서 다시 찢어낼 수 있다.",
+            "Live doctrine cache가 식었다. 이번 웨이브 ascension은 놓쳤지만 다음 late wave에서 다시 찢어낼 수 있다.",
             "ASCEND"
           );
-          state.wave.kilnAscension.claimed = true;
+          state.wave.doctrineAscension.claimed = true;
         } else if (
           state.wave &&
           state.wave.afterburnAscension &&
@@ -14481,12 +14512,12 @@
 
     if (drop.kind === "afterburn_ascension_cache") {
       const ascension = state.wave && state.wave.afterburnAscension;
-      const kilnAscension = state.wave && state.wave.kilnAscension;
+      const doctrineAscension = state.wave && state.wave.doctrineAscension;
       const choice = drop.choice;
       if (
         !choice ||
         state.build.doctrineCapstoneId ||
-        ((ascension && ascension.claimed) || (kilnAscension && kilnAscension.claimed))
+        ((ascension && ascension.claimed) || (doctrineAscension && doctrineAscension.claimed))
       ) {
         return true;
       }
@@ -14495,8 +14526,8 @@
       if (ascension) {
         ascension.claimed = true;
       }
-      if (kilnAscension) {
-        kilnAscension.claimed = true;
+      if (doctrineAscension) {
+        doctrineAscension.claimed = true;
       }
       state.drops.forEach((entry) => {
         if (entry.kind === "afterburn_ascension_cache" && entry.groupId === drop.groupId) {
@@ -14504,8 +14535,8 @@
         }
       });
       pushCombatFeed(
-        state.wave && state.wave.kilnAscension
-          ? `${choice.title} 접합. ${choice.bodyLabel || "차체 변형"}가 함께 잠겨 ${choice.bodyText || "남은 런이 용광 pocket body plan으로 고정된다."}`
+        state.wave && state.wave.doctrineAscension
+          ? `${choice.title} 접합. ${choice.bodyLabel || "차체 변형"}가 함께 잠겨 ${choice.bodyText || "남은 late waves가 이 교리 body plan으로 고정된다."}`
           : `${choice.title} 접합. ${choice.bodyLabel || "차체 변형"}가 함께 잠겨 ${
               getStormArtilleryAfterburnEndform(choice.doctrineCapstoneId)?.statusNote ||
               "남은 afterburn이 새 body plan으로 고정된다."
@@ -14618,7 +14649,7 @@
             ? `Wave ${nextWave}`
           : shouldRunCatalystCrucibleObjective(state.build, nextWave)
             ? `Wave ${nextWave}`
-          : shouldRunKilnBastionAscension(state.build, nextWave)
+          : shouldRunDoctrineLiveAscension(state.build, nextWave)
             ? `Wave ${nextWave}`
           : shouldSkipOwnershipAdminStop(state.build, nextWave)
             ? `Wave ${nextWave}`
@@ -14649,17 +14680,27 @@
           beginNextPostCapstoneWave();
         } else if (shouldRunCatalystCrucibleObjective(state.build, state.waveIndex + 2)) {
           beginWave(state.waveIndex + 1);
-        } else if (shouldRunKilnBastionAscension(state.build, state.waveIndex + 2)) {
+        } else if (shouldRunDoctrineLiveAscension(state.build, state.waveIndex + 2)) {
+          const doctrine = getBastionDoctrineDef(state.build);
+          const liveCapstones = createDoctrineLiveAscensionChoices(state.build);
+          const liveLabel =
+            liveCapstones.length > 1
+              ? `${liveCapstones.map((choice) => choice.title).join(" / ")} split`
+              : liveCapstones[0]
+                ? liveCapstones[0].title
+                : doctrine
+                  ? doctrine.label
+                  : "Live Ascension";
           const unlocked = unlockLateSupportBay(state.build);
           if (unlocked) {
-            state.build.upgrades.push("Live Foundry Uplink: support bay +1 without armory stop");
+            state.build.upgrades.push("Live Ascension Uplink: support bay +1 without armory stop");
           }
           pushCombatFeed(
             unlocked
               ? state.build.auxiliaryJunctionLevel > 0
-                ? "Wave 8 돌파. Late Break Armory를 live ascension lane으로 교체했다. 네 번째 support bay와 추가 flex lane은 즉시 uplink되고, Wave 9 marked elite가 Bulwark Foundry cache를 떨어뜨린다."
-                : "Wave 8 돌파. Late Break Armory를 live ascension lane으로 교체했다. 세 번째 support bay와 교리 우회 flex lane은 즉시 uplink되고, Wave 9 marked elite가 Bulwark Foundry cache를 떨어뜨린다."
-              : "Wave 8 돌파. Late Break Armory를 건너뛰고 live ascension lane으로 진입한다. Wave 9 marked elite를 추적해 Bulwark Foundry cache를 직접 회수해야 한다.",
+                ? `Wave 8 돌파. Late Break Armory를 ${liveLabel} live ascension lane으로 교체했다. 네 번째 support bay와 추가 flex lane은 즉시 uplink되고, Wave 9 marked elite가 doctrine cache를 떨어뜨린다.`
+                : `Wave 8 돌파. Late Break Armory를 ${liveLabel} live ascension lane으로 교체했다. 세 번째 support bay와 교리 우회 flex lane은 즉시 uplink되고, Wave 9 marked elite가 doctrine cache를 떨어뜨린다.`
+              : `Wave 8 돌파. Late Break Armory를 건너뛰고 ${liveLabel} live ascension lane으로 진입한다. Wave 9 marked elite를 추적해 doctrine cache를 직접 회수해야 한다.`,
             "ASCEND"
           );
           refreshDerivedStats(false);
@@ -14950,7 +14991,29 @@
         pursuitRows.push(createStatusRow("Frame Shards", `${pursuit.goal}/${pursuit.goal}`));
         pursuitNote = `${pursuit.shortLabel} 완성. 조기 monster form이 이미 전장을 바꾸고 있다.`;
       }
-      if (state.phase === "wave" && state.wave && state.wave.afterburnAscension) {
+      if (state.phase === "wave" && state.wave && state.wave.doctrineAscension) {
+        const ascension = state.wave.doctrineAscension;
+        const doctrine = getBastionDoctrineDef(state.build);
+        ascensionRows.push(
+          createStatusRow(
+            "Live Ascension",
+            ascension.claimed ? "회수 완료" : ascension.deployed ? "split live" : "첫 elite 대기"
+          )
+        );
+        ascensionRows.push(
+          createStatusRow(
+            "Doctrine",
+            ascension.choices.length > 1
+              ? "2-way split"
+              : (doctrine && doctrine.label) || "Doctrine"
+          )
+        );
+        ascensionNote = ascension.claimed
+          ? "이번 웨이브의 doctrine ascension cache는 닫혔다. 아직 capstone을 못 집었다면 다음 late wave에서 다시 찢어낼 수 있다."
+          : ascension.deployed
+            ? "드롭된 doctrine cache 중 하나만 회수할 수 있다. 무엇을 집느냐에 따라 남은 late waves의 주포와 차체가 갈라진다."
+            : "이번 late wave 첫 marked elite가 doctrine ascension cache를 떨어뜨린다. 전장 한복판에서 하나를 직접 회수해야 교리 monster form이 완성된다.";
+      } else if (state.phase === "wave" && state.wave && state.wave.afterburnAscension) {
         const ascension = state.wave.afterburnAscension;
         ascensionRows.push(
           createStatusRow(
@@ -16173,6 +16236,7 @@
         state.player.invulnerableTime > 0 ? "#fff0c9" : state.weapon.color;
       drawPlayerWave6AscensionFrame(context);
       drawPlayerChassisFrame(context);
+      drawPlayerDoctrineCapstoneFrame(context);
       drawPlayerLateAscensionFrame(context);
       drawPlayerRiskMutationFrame(context);
       drawPlayerApexFrame(context);
@@ -16385,6 +16449,100 @@
     context.beginPath();
     context.arc(state.player.x, state.player.y, state.player.radius + 11 + level * 1.5, 0, Math.PI * 2);
     context.stroke();
+  }
+
+  function drawPlayerDoctrineCapstoneFrame(context) {
+    if (!state.player || !state.build || !state.build.doctrineCapstoneId) {
+      return;
+    }
+    const capstone = getDoctrineCapstoneDef(state.build);
+    if (!capstone) {
+      return;
+    }
+    const facing = state.player.facing || 0;
+    if (capstone.id === "relay_storm_lattice") {
+      [-1.5, -0.9, -0.35, 0.35, 0.9, 1.5].forEach((lane) => {
+        const wing = getOffsetPoint(state.player.x, state.player.y, facing, -2, 15 * lane);
+        context.fillStyle = "rgba(199, 251, 255, 0.82)";
+        context.beginPath();
+        context.moveTo(
+          wing.x + Math.cos(facing) * 11,
+          wing.y + Math.sin(facing) * 11
+        );
+        context.lineTo(
+          wing.x - Math.cos(facing) * 5 - Math.sin(facing) * 6 * Math.sign(lane || 1),
+          wing.y - Math.sin(facing) * 5 + Math.cos(facing) * 6 * Math.sign(lane || 1)
+        );
+        context.lineTo(
+          wing.x - Math.cos(facing) * 11 + Math.sin(facing) * 6 * Math.sign(lane || 1),
+          wing.y - Math.sin(facing) * 11 - Math.cos(facing) * 6 * Math.sign(lane || 1)
+        );
+        context.closePath();
+        context.fill();
+      });
+      context.strokeStyle = "rgba(237, 254, 255, 0.74)";
+      context.lineWidth = 2;
+      context.beginPath();
+      context.arc(state.player.x, state.player.y, state.player.radius + 14, 0, Math.PI * 2);
+      context.stroke();
+      return;
+    }
+    if (capstone.id === "bulwark_foundry") {
+      [-1, 1].forEach((direction) => {
+        const coil = getOffsetPoint(state.player.x, state.player.y, facing, -5, 18 * direction);
+        context.strokeStyle = "rgba(255, 209, 152, 0.82)";
+        context.lineWidth = 2.4;
+        context.beginPath();
+        context.arc(coil.x, coil.y, 8, 0, Math.PI * 2);
+        context.stroke();
+      });
+      context.strokeStyle = "rgba(255, 234, 195, 0.72)";
+      context.lineWidth = 2.6;
+      context.beginPath();
+      context.arc(state.player.x, state.player.y, state.player.radius + 15, 0, Math.PI * 2);
+      context.stroke();
+      return;
+    }
+    if (capstone.id === "sky_lance_battery") {
+      [-2, -1, 1, 2].forEach((lane) => {
+        const barrel = getOffsetPoint(state.player.x, state.player.y, facing, 16, lane * 8);
+        context.fillStyle = "rgba(255, 248, 224, 0.82)";
+        context.fillRect(
+          barrel.x - 3 - Math.sin(facing) * 5,
+          barrel.y - 3 + Math.cos(facing) * 5,
+          6,
+          14
+        );
+      });
+      context.strokeStyle = "rgba(255, 238, 204, 0.68)";
+      context.lineWidth = 2.2;
+      context.beginPath();
+      context.arc(state.player.x, state.player.y, state.player.radius + 15, 0, Math.PI * 2);
+      context.stroke();
+      return;
+    }
+    if (capstone.id === "stormspire_needle") {
+      [-0.55, 0, 0.55].forEach((lane) => {
+        const spine = getOffsetPoint(state.player.x, state.player.y, facing, 6, 18 * lane);
+        context.strokeStyle = "rgba(255, 241, 214, 0.86)";
+        context.lineWidth = 2.6;
+        context.beginPath();
+        context.moveTo(
+          spine.x - Math.cos(facing) * 4,
+          spine.y - Math.sin(facing) * 4
+        );
+        context.lineTo(
+          spine.x + Math.cos(facing) * 16,
+          spine.y + Math.sin(facing) * 16
+        );
+        context.stroke();
+      });
+      context.strokeStyle = "rgba(255, 228, 178, 0.72)";
+      context.lineWidth = 2;
+      context.beginPath();
+      context.arc(state.player.x, state.player.y, state.player.radius + 13, 0, Math.PI * 2);
+      context.stroke();
+    }
   }
 
   function drawPlayerRiskMutationFrame(context) {
