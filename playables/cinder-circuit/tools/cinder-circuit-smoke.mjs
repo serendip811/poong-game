@@ -304,13 +304,28 @@ assert.equal(chassisRun.build.chassisId, wave6ChassisPackages[0].chassisId);
 assert.ok(game.shouldSkipOwnershipAdminStop(chassisRun.build, 9));
 const predatorCacheChoices = game.buildFieldGrantChoices(predatorBaitRun.build, () => 0, 10);
 assert.ok(predatorCacheChoices.some((choice) => choice.action === "risk_mutation"));
+assert.equal(predatorCacheChoices.length, 3);
 assert.equal(
-  predatorCacheChoices.filter(
-    (choice) => choice.action === "predator_bait" || choice.action === "risk_mutation"
-  ).length,
-  1
+  JSON.stringify(predatorCacheChoices.map((choice) => choice.laneLabel)),
+  JSON.stringify(["Main Weapon Mutation", "Defense / Utility", "Greed Contract"])
 );
+assert.ok(predatorCacheChoices.some((choice) => choice.action === "field_greed"));
 const riskMutationChoice = predatorCacheChoices.find((choice) => choice.action === "risk_mutation");
+const greedContractChoice = predatorCacheChoices.find((choice) => choice.action === "field_greed");
+assert.ok(greedContractChoice);
+const greedRun = {
+  build: game.createInitialBuild("scrap_pact"),
+  resources: { scrap: 0 },
+  stats: { scrapCollected: 0, scrapSpent: 0 },
+  player: { hp: 100, maxHp: 100, heat: 24, overheated: false },
+};
+const baseGreedMultiplier = greedRun.build.scrapMultiplier;
+const baseGreedPickup = greedRun.build.pickupBonus;
+game.applyForgeChoice(greedRun, greedContractChoice);
+assert.equal(greedRun.resources.scrap, 34);
+assert.equal(greedRun.build.bastionPactDebtWaves, 1);
+assert.equal(greedRun.build.scrapMultiplier, baseGreedMultiplier + 0.1);
+assert.equal(greedRun.build.pickupBonus, baseGreedPickup + 10);
 const riskMutationRun = {
   build: game.createInitialBuild("scrap_pact"),
   resources: { scrap: 0 },
@@ -1036,17 +1051,23 @@ assert.ok(!fortressInstallSystemIds.includes("volt_drones"));
 const fieldGrantBuild = game.createInitialBuild("relay_oath");
 fieldGrantBuild.pendingCores = [];
 const fieldGrantChoices = game.buildFieldGrantChoices(fieldGrantBuild, () => 0, 4);
-assert.ok(fieldGrantChoices.length >= 2);
-assert.ok(fieldGrantChoices.length <= 3);
-assert.ok(fieldGrantChoices.every((choice) => ["evolution", "system", "affix", "mod", "fallback"].includes(choice.type)));
+assert.equal(fieldGrantChoices.length, 3);
+assert.equal(
+  JSON.stringify(fieldGrantChoices.map((choice) => choice.laneLabel)),
+  JSON.stringify(["Main Weapon Mutation", "Defense / Utility", "Greed Contract"])
+);
+assert.ok(
+  fieldGrantChoices.every((choice) =>
+    ["evolution", "system", "affix", "mod", "fallback", "utility"].includes(choice.type)
+  )
+);
 assert.ok(fieldGrantChoices.every((choice) => choice.fieldGrant === true));
 assert.ok(fieldGrantChoices.every((choice) => choice.type !== "core"));
-assert.ok(fieldGrantChoices.every((choice) => choice.type !== "utility"));
-assert.ok(fieldGrantChoices.some((choice) => choice.type === "fallback" && choice.cost === 0));
+assert.ok(fieldGrantChoices.some((choice) => choice.type === "utility" && choice.action === "field_greed"));
 assert.ok(
   fieldGrantChoices
-    .filter((choice) => choice.type !== "fallback")
-    .every((choice) => choice.cost >= 10 && choice.originalCost > choice.cost)
+    .filter((choice) => choice.type !== "fallback" && choice.cost > 0)
+    .every((choice) => choice.originalCost > choice.cost)
 );
 
 const evolutionBuild = game.createInitialBuild("relay_oath");

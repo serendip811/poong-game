@@ -7283,13 +7283,52 @@
     return choice.type || "choice";
   }
 
+  function isFieldGrantSurvivalChoice(choice) {
+    if (!choice) {
+      return false;
+    }
+    if (choice.type === "fallback") {
+      return true;
+    }
+    if (choice.type === "system") {
+      return choice.forgeLaneLabel !== "공세 모듈";
+    }
+    if (choice.type === "affix") {
+      return ["thermal_weave", "salvage_link"].includes(choice.affixId);
+    }
+    if (choice.type === "mod") {
+      return ["coolant_purge", "magnet_rig", "armor_mesh", "step_servos"].includes(choice.modId);
+    }
+    return false;
+  }
+
+  function getFieldGrantLaneLabel(choice) {
+    if (!choice) {
+      return "Field Cache";
+    }
+    if (
+      choice.type === "evolution" ||
+      (choice.type === "utility" && (choice.action === "risk_mutation" || choice.action === "predator_bait"))
+    ) {
+      return "Main Weapon Mutation";
+    }
+    if (choice.type === "utility" && choice.action === "field_greed") {
+      return "Greed Contract";
+    }
+    if (isFieldGrantSurvivalChoice(choice)) {
+      return "Defense / Utility";
+    }
+    return choice.laneLabel || "Field Cache";
+  }
+
   function createFieldGrantCard(choice) {
     if (!choice) {
       return null;
     }
     const originalCost = Math.max(0, choice.cost || 0);
     const fieldGrantCost =
-      choice.type === "fallback"
+      choice.type === "fallback" ||
+      (choice.type === "utility" && choice.action === "field_greed")
         ? 0
         : Math.max(
             FIELD_GRANT_MIN_COST,
@@ -7299,11 +7338,39 @@
       ...choice,
       cost: fieldGrantCost,
       originalCost,
+      laneLabel: getFieldGrantLaneLabel(choice),
+      forgeLaneLabel: getFieldGrantLaneLabel(choice),
       slotText:
-        choice.type === "fallback"
+        choice.type === "utility" && choice.action === "field_greed"
+          ? "현장 계약"
+          : choice.type === "fallback"
           ? "현장 안정화"
           : `현장 장착 · 할인 ${Math.max(0, originalCost - fieldGrantCost)}`,
       fieldGrant: true,
+    };
+  }
+
+  function createFieldGreedContractChoice(build, nextWave) {
+    if (!build || !Number.isFinite(nextWave) || nextWave < FORGE_PACKAGE_START_WAVE) {
+      return null;
+    }
+    return {
+      type: "utility",
+      action: "field_greed",
+      id: `utility:field_greed:${nextWave}`,
+      verb: "계약",
+      tag: "PACT",
+      title: "Greed Contract",
+      description:
+        "현장에서 바로 scrap credit를 당겨 고철과 회수 효율을 먼저 챙긴다. 대신 다음 웨이브 하나는 Siege Debt가 붙어 적 밀도와 hazard가 함께 거칠어지고, 몸체도 조금 찢긴 채 들어간다.",
+      slotText: "고철 +34 · 회수 +10% · 1웨이브 Siege Debt",
+      cost: 0,
+      scrapGain: 34,
+      scrapMultiplierGain: 0.1,
+      pickupBonus: 10,
+      hpLoss: 10,
+      maxHpPenalty: 8,
+      debtWaves: 1,
     };
   }
 
@@ -7907,48 +7974,17 @@
         }
         return (right.cost || 0) - (left.cost || 0);
       });
-    const dominantMutationChoice = createDominantMutationChoice(build, nextWave);
-    if (dominantMutationChoice) {
-      pool.unshift(dominantMutationChoice);
-    }
-    if (pool.length === 0) {
-      return [createFieldGrantCard({
-        type: "fallback",
-        id: "fieldgrant:emergency_vent",
-        tag: "CACHE",
-        title: "Emergency Vent",
-        description: "전장 보급품이 냉각제와 간이 수복만 남겼다. 고철은 아끼고 다음 웨이브로 바로 간다.",
-        slotText: "현장 보급",
-        cost: 0,
-        laneLabel: "회수",
-      })];
-    }
-    const choices = [];
-    const takenIds = new Set();
-    const takenBuckets = new Set();
-    for (const choice of pool) {
-      const bucket = getFieldGrantChoiceBucket(choice);
-      if (takenBuckets.has(bucket)) {
-        continue;
-      }
-      choices.push(createFieldGrantCard(choice));
-      takenIds.add(choice.id);
-      takenBuckets.add(bucket);
-      if (choices.length >= 2) {
-        break;
-      }
-    }
-    for (const choice of pool) {
-      if (choices.length >= 2) {
-        break;
-      }
-      if (takenIds.has(choice.id)) {
-        continue;
-      }
-      choices.push(createFieldGrantCard(choice));
-      takenIds.add(choice.id);
-    }
-    choices.push(createFieldGrantCard({
+    const dominantMutationChoice =
+      createDominantMutationChoice(build, nextWave) ||
+      pool.find(
+        (choice) =>
+          choice &&
+          (choice.type === "evolution" ||
+            (choice.type === "utility" && choice.action === "predator_bait"))
+      ) ||
+      null;
+    const survivalChoice =
+      pool.find((choice) => choice && isFieldGrantSurvivalChoice(choice)) || {
       type: "fallback",
       id: "fieldgrant:emergency_vent",
       tag: "CACHE",
@@ -7956,8 +7992,25 @@
       description: "고철을 쓰지 않고 열과 체력만 정리한 채 다음 웨이브로 바로 넘긴다.",
       slotText: "현장 보급",
       cost: 0,
-      laneLabel: "회수",
-    }));
+      laneLabel: "Defense / Utility",
+    };
+    const greedChoice = createFieldGreedContractChoice(build, nextWave);
+    const choices = [
+      dominantMutationChoice
+        ? createFieldGrantCard(dominantMutationChoice)
+        : createFieldGrantCard({
+            type: "fallback",
+            id: "fieldgrant:mutation_fallback",
+            tag: "CACHE",
+            title: "Emergency Vent",
+            description: "이번 캐시는 변이 회로가 비어 있어 상태만 정리한다.",
+            slotText: "현장 보급",
+            cost: 0,
+            laneLabel: "Main Weapon Mutation",
+          }),
+      createFieldGrantCard(survivalChoice),
+      greedChoice ? createFieldGrantCard(greedChoice) : null,
+    ].filter(Boolean);
     return choices;
   }
 
@@ -8053,8 +8106,8 @@
     state.forgeChoices = buildFieldGrantChoices(state.build, Math.random, nextWave);
     pushCombatFeed(
       nextWave >= RISK_MUTATION_START_WAVE
-        ? "Field Cache 확보. 이제 late reward는 한 장의 Dominant Mutation 카드가 먼저 잡고, 나머지는 그 옆의 현장 보강으로만 붙는다."
-        : "Field Cache 확보. 할인 장착으로 지금 고철을 태우거나, Emergency Vent로 자원을 아낀 채 전장을 다시 가동한다.",
+        ? "Field Cache 확보. 이제 현장 선택은 Main Weapon Mutation, Defense / Utility, Greed Contract 세 욕구만 남기고 바로 다음 웨이브로 밀어붙인다."
+        : "Field Cache 확보. 이제 현장 선택은 주포 변이, 생존층, 탐욕 계약 세 장으로만 나와 즉시 판돈을 고르게 한다.",
       "CACHE"
     );
     setBanner("Field Cache", 0.95);
@@ -8829,6 +8882,31 @@
       );
       if (run.player) {
         run.player.heat = Math.max(0, run.player.heat - 10);
+        run.player.overheated = false;
+      }
+      return choice;
+    }
+
+    if (choice.type === "utility" && choice.action === "field_greed") {
+      if (run.resources) {
+        run.resources.scrap += Math.max(0, choice.scrapGain || 0);
+      }
+      if (run.stats) {
+        run.stats.scrapCollected += Math.max(0, choice.scrapGain || 0);
+      }
+      run.build.scrapMultiplier += choice.scrapMultiplierGain || 0;
+      run.build.pickupBonus += choice.pickupBonus || 0;
+      run.build.maxHpBonus -= Math.max(0, choice.maxHpPenalty || 0);
+      run.build.bastionPactDebtWaves = Math.max(
+        run.build.bastionPactDebtWaves || 0,
+        Math.max(0, choice.debtWaves || 0)
+      );
+      run.build.upgrades.push(
+        `Greed Contract: 고철 +${Math.max(0, choice.scrapGain || 0)} / 회수 +${Math.round((choice.scrapMultiplierGain || 0) * 100)}% / Siege Debt ${Math.max(0, choice.debtWaves || 0)}웨이브`
+      );
+      if (run.player) {
+        run.player.hp = Math.max(1, run.player.hp - Math.max(0, choice.hpLoss || 0));
+        run.player.heat = Math.max(0, run.player.heat - 22);
         run.player.overheated = false;
       }
       return choice;
@@ -11622,6 +11700,8 @@
                 : `${choice.supportLabel || choice.title} 안정화. 남은 Act 3 웨이브를 이 회로 운영으로 먼저 시험한다.`
           : choice.type === "fallback"
             ? `${grantLabel} 현장 보급 적용. 고철은 아낀 채 ${choice.title}로 상태만 정리하고 다음 웨이브를 즉시 연다.`
+            : choice.action === "field_greed"
+              ? `${grantLabel} 적용. 고철과 회수 효율을 먼저 당기는 대신 다음 웨이브 하나에 Siege Debt를 붙여 greed 청구서를 바로 받는다.`
             : `${grantLabel} 현장 보급 적용. 고철 ${choice.cost}을 태워 ${choice.title}을 잠그고 다음 웨이브를 즉시 밀어붙인다.`,
         state.forgeDraftType === "architecture_draft"
           ? "ARCH"
@@ -15476,8 +15556,8 @@
         ? "Architecture Draft · 세 장기 교리 중 1픽으로 Wave 3부터 monster form을 잠그고, Wave 6은 pursuit 또는 greed branch만 남긴다"
         : state.forgeDraftType === "field_grant"
         ? state.waveIndex + 2 >= RISK_MUTATION_START_WAVE
-          ? "Field Cache · 한 장의 Dominant Mutation이 late monster form을 먼저 끌고 가고, 나머지 현장 장착은 그 옆의 보조 bet로만 붙는다"
-          : "Field Cache · 할인 장착 2장과 무료 회수 1장 중 1픽, 지금 고철을 태울지 아낄지 고른다"
+          ? "Field Cache · Main Weapon Mutation, Defense / Utility, Greed Contract 중 1픽으로 late form과 청구서를 함께 고른다"
+          : "Field Cache · 주포 변이, 생존층, 탐욕 계약 세 장 중 1픽으로 지금 판돈을 고른다"
         : state.forgeDraftType === "bastion_draft"
         ? wave6AscensionDraft
           ? "Ascension Draft · 세 장기 교리 중 1픽으로 즉시 weapon mutation, utility chassis, doctrine-free flex lane을 함께 잠그고 Wave 8 Armory를 건너뛴다"
@@ -15507,8 +15587,8 @@
         ? `Wave 3 진입 직전 Architecture Draft다. 이제 세 장기 교리 중 하나를 바로 monster form으로 잠가 주포 stage-1 mutation, utility chassis, 세 번째 support bay flex lane까지 한 번에 연다. Wave 6 Bastion Draft는 재선택이 아니라 pursuit 계약이나 greed spike를 얹는 후속 분기다.`
       : state.forgeDraftType === "field_grant"
         ? state.waveIndex + 2 >= RISK_MUTATION_START_WAVE
-          ? `고철 ${Math.round(state.resources.scrap)} 보유. Field Cache다. late reward는 이제 여러 관리 트랙이 아니라 Dominant Mutation 한 장이 먼저 잡는다. 그 카드를 집으면 주무장/차체 변이가 즉시 전진하고, 다음 웨이브 압박세와 묶인 채 나머지 즉시 장착은 옆의 보조 선택으로만 남는다.`
-          : `고철 ${Math.round(state.resources.scrap)} 보유. Field Cache다. 할인된 즉시 장착 2장과 무료 Emergency Vent 중 하나를 고른다. 지금 스파이크를 사서 당길지, 고철을 쥐고 다음 큰 포지까지 버틸지 직접 판단해야 한다.`
+          ? `고철 ${Math.round(state.resources.scrap)} 보유. Field Cache다. 이제 late reward는 Main Weapon Mutation, Defense / Utility, Greed Contract 세 욕구로만 정리된다. Dominant Mutation은 주포/차체를 당겨 오고, 생존층은 다음 교차 압박을 버티게 하며, 탐욕 계약은 고철을 먼저 주는 대신 다음 웨이브 청구서를 즉시 붙인다.`
+          : `고철 ${Math.round(state.resources.scrap)} 보유. Field Cache다. 이번 현장 선택은 주포 변이, 생존층, 탐욕 계약 세 장뿐이다. 지금 더 위험하게 당겨서 강해질지, 상태를 정리하고 다음 큰 포지까지 버틸지 직접 고른다.`
         : state.forgeDraftType === "bastion_draft"
         ? wave6AscensionDraft
           ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 6 Ascension Draft다. 이제 세 장기 교리 중 하나를 irreversible form으로 잠근다. 이 한 번의 픽이 주무장 stage-1 mutation, utility chassis, 그리고 교리 reserve를 무시하는 off-doctrine flex lane을 동시에 켜고, Wave 8 Late Break Armory는 전장 uplink로 대체한다.`
