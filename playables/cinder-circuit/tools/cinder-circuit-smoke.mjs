@@ -72,6 +72,18 @@ assert.ok(game.WAVE_CONFIG[11].hazard.relayWidth > 0);
 assert.ok(game.WAVE_CONFIG[11].activeCap > game.WAVE_CONFIG[9].activeCap);
 assert.ok(game.WAVE_CONFIG[11].mix.mortar > 0);
 assert.ok(game.WAVE_CONFIG[11].mix.mortar > game.WAVE_CONFIG[11].mix.shrike - 0.05);
+const predatorBaitBuild = game.createInitialBuild("scrap_pact");
+const predatorBaitChoice = game.createPredatorBaitChoice(predatorBaitBuild, 9);
+assert.ok(predatorBaitChoice);
+assert.equal(predatorBaitChoice.action, "predator_bait");
+const predatorBaitRun = {
+  build: predatorBaitBuild,
+  resources: { scrap: 0 },
+  stats: { scrapCollected: 0, scrapSpent: 0 },
+  player: { hp: 100, maxHp: 100, heat: 24, overheated: false },
+};
+game.applyForgeChoice(predatorBaitRun, predatorBaitChoice);
+assert.equal(predatorBaitRun.build.predatorBaitCharges, 1);
 const mirrorLateBuild = game.createInitialBuild("relay_oath");
 mirrorLateBuild.bastionDoctrineId = "mirror_hunt";
 const mirrorWaveNine = game.resolveWaveConfig(8, mirrorLateBuild);
@@ -166,6 +178,12 @@ assert.ok(afterburnFive.spawnBudget > afterburnThree.spawnBudget);
 assert.ok(afterburnSeven.spawnBudget > afterburnFive.spawnBudget);
 assert.ok(afterburnSeven.activeCap > afterburnFive.activeCap);
 assert.equal(afterburnSeven.completesRun, true);
+assert.ok(afterburnOne.combatCache);
+assert.ok(afterburnTwo.combatCache);
+assert.equal(afterburnSeven.combatCache, null);
+assert.ok(
+  afterburnOne.combatCache.choices.some((choice) => choice && choice.action === "predator_bait")
+);
 const systemsForgeBuild = game.createInitialBuild("scrap_pact");
 const architectureChoices = game.buildArchitectureDraftChoices(systemsForgeBuild);
 assert.equal(architectureChoices.length, 3);
@@ -233,6 +251,8 @@ assert.ok(chassisRun.build.wave6ChassisBreakpoint);
 assert.ok(chassisRun.build.supportBayCap >= 3);
 assert.equal(chassisRun.build.chassisId, wave6ChassisPackages[0].chassisId);
 assert.ok(game.shouldSkipOwnershipAdminStop(chassisRun.build, 9));
+const predatorCacheChoices = game.buildFieldGrantChoices(predatorBaitRun.build, () => 0, 10);
+assert.ok(predatorCacheChoices.some((choice) => choice.action === "predator_bait"));
 const lateAscensionBuild = game.createInitialBuild("relay_oath");
 lateAscensionBuild.supportBayCap = 3;
 lateAscensionBuild.supportSystems = [

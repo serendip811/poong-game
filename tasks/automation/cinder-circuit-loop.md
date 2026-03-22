@@ -14,6 +14,17 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-23 02:05 KST
+  Findings:
+  - `playables/cinder-circuit/game.js` is no longer a tiny prototype, but the game still thinks like one because `docs/games/cinder-circuit-design.md` and `docs/games/cinder-circuit-source-analysis.md` are anchored to `5웨이브`, `7분 내외`, and a compressed finish. That mismatch keeps producing tidy completion beats instead of a rerun spine that could honestly support `20-30` waves.
+  - The current long run still cashes out too early and then administrates the aftermath. `Architecture Draft`, `Bastion/Ascension Draft`, `Late Break Armory`, `Catalyst Crucible`, final forge, and `Afterburn I-VII` make the player learn the schedule more than chase a dangerous build horizon; the emotional peak is "my form is assembled" rather than "I can still become more absurd if I risk it."
+  - Combat space is bigger, but the decision language still leans too hard on the same lockout ecology. `relay`, `territory`, and `drift` with repeated `warden` and `mortar` taxation mostly ask for route repair and backline cleanup, so movement is often obligation management instead of distinct choices like holding, diving, greed-running, or surviving a brief panic bracket.
+  - Build breadth is real, but build hunger is still weak because too much value is expressed as slots, bays, doctrines, uplinks, caches, and support summaries. Strong rerun games make the next spike obvious on sight; here the player still parses a system map while the main weapon/body mutation fantasy remains less immediate than the surrounding infrastructure.
+  - The forge/HUD readability is still under reference quality. The subtitle/context stack in `game.js` remains taxonomy-heavy compared with the instant value framing of `Hades`, `Brotato`, or even cleaner arena shooters where the player can identify the one run-defining pick in a second.
+  Top Priority: Replace the fixed Wave 9-12 escalation schedule with one repeatable late-run greed rule starting around Wave 8, where each cleared wave can offer a dangerous optional combat objective that permanently mutates the main weapon/body in a loud visible way while also adding a new pressure modifier to the next wave.
+  Why Now: Until the back half gives strong runs something reckless to keep chasing, extra waves will read as extended maintenance instead of replayable payoff.
+  Do Not Repeat: Do not add another critique entry that only says "collapse forge layers" unless it also specifies the repeatable combat-reward loop that replaces them.
+
 - 2026-03-23 01:18 KST
   Findings:
   - `playables/cinder-circuit/game.js` now supports a real back half with `POST_CAPSTONE_WAVE_COUNT = 7`, but the run still spends too much of its emotional budget on explaining the itinerary: `Architecture Draft`, `Bastion/Ascension Draft`, `Late Break Armory`, `Catalyst Crucible`, live uplinks, mutation caches, and final forge all compete to be the "big moment." A rerun-driven action roguelite needs fewer ceremony beats and more time actually piloting a terrifying finished form.
@@ -937,6 +948,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-23 02:25 KST
+  Changed: added a repeatable `Predator Bait` greed contract in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). From the Wave 8+ cache flow, runs can now take an optional field/combat contract that overfeeds the next wave with higher enemy budget, active cap, and hazard pressure, but forces an earlier `Cinder Maw` breach whose kill upgrades the permanent `Predator Molt` weapon/body splice. I also extended post-capstone waves to keep dropping `Combat Cache`, so the same greed rule now survives into `Afterburn` instead of stopping at the Wave 12 handoff, and updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to cover the new contract and late-wave cache availability. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the latest critique's Top Priority was to replace the fixed Wave 9-12 escalation with a repeatable late-run greed rule that keeps offering dangerous optional objectives in exchange for loud permanent mutation. The highest-value bounded interpretation was to reuse the existing `Cinder Maw` body/gun splice as the visible payoff, then wrap it in a renewable contract the player can keep choosing deep into the run instead of adding another authored one-shot stop.
+  Risk: `Predator Bait` currently shares one reusable pressure package across all doctrines, so if it proves too dominant or too free the next pass should tune the pressure surcharge or vary the hunt modifier by hazard family rather than adding another menu layer.
 
 - 2026-03-23 01:35 KST
   Changed: added a new late-game `salvage` hazard family in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). `Contraband Vault` cores now open briefly, punish overstay, and burst into large scrap drops when destroyed instead of functioning as another lane-repair objective. I reworked main-run `Wave 10` into `Wave 10 · Scrapstorm`, updated the shared late-act override for that slot, and added an `Afterburn Heist Vault` encounter so the back half now contains a real greed/assassination pressure bracket alongside `territory`, `relay`, and `drift`. I also extended HUD summaries, combat feed text, hazard targeting, and hazard rendering so the new pressure family reads immediately as a high-value dive target rather than another generic orange circle. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

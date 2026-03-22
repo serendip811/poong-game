@@ -558,6 +558,7 @@
   const MAX_WAVES = WAVE_CONFIG.length;
   const POST_WAVE_LOOT_GRACE = 2.4;
   const COMBAT_CACHE_DROP_LIFE = 14;
+  const PREDATOR_BAIT_START_WAVE = 9;
   const POST_CAPSTONE_WAVE_COUNT = 7;
   const FINAL_CASHOUT_DURATION = 12;
   const FINAL_CASHOUT_SPAWN_BUDGET = 26;
@@ -3653,6 +3654,7 @@
     illegalOverclockOffered: false,
     illegalOverclockMutationLevel: 0,
     apexMutationLevel: 0,
+    predatorBaitCharges: 0,
     bastionPactDebtWaves: 0,
     wave6ChassisBreakpoint: false,
     chassisId: null,
@@ -4871,6 +4873,7 @@
         illegalOverclockOffered: BASE_BUILD.illegalOverclockOffered,
         illegalOverclockMutationLevel: BASE_BUILD.illegalOverclockMutationLevel,
         apexMutationLevel: BASE_BUILD.apexMutationLevel,
+        predatorBaitCharges: BASE_BUILD.predatorBaitCharges,
         bastionPactDebtWaves: BASE_BUILD.bastionPactDebtWaves,
         wave6ChassisBreakpoint: BASE_BUILD.wave6ChassisBreakpoint,
         chassisId: BASE_BUILD.chassisId,
@@ -6001,6 +6004,34 @@
     };
   }
 
+  function createPredatorBaitChoice(build, nextWave) {
+    if (
+      !build ||
+      !Number.isFinite(nextWave) ||
+      nextWave < PREDATOR_BAIT_START_WAVE ||
+      getApexMutationLevel(build) >= MAX_APEX_MUTATION_LEVEL
+    ) {
+      return null;
+    }
+    const nextLevel = getApexMutationLevel(build) + 1;
+    return {
+      type: "utility",
+      action: "predator_bait",
+      id: `utility:predator_bait:${nextWave}:${nextLevel}`,
+      verb: "유인",
+      tag: "MAW",
+      title: `Predator Bait ${getApexMutationTierLabel(nextLevel)}`,
+      description:
+        "다음 웨이브 초반에 Cinder Maw를 강제로 끌어들여 body splice를 노린다. 대신 적 예산, active cap, hazard 강도가 전부 한 단계 더 올라 안전 운영이 크게 줄어든다.",
+      slotText: "다음 웨이브 조기 apex hunt · 압박 증폭",
+      cost: 0,
+      laneLabel: "Predator Bait",
+      forgeLaneLabel: "Predator Bait",
+      nextApexLevel: nextLevel,
+      nextWave,
+    };
+  }
+
   function createCatalystReforgeChoice(build) {
     if (!build || !hasFinisherCatalyst(build, build.coreId)) {
       return null;
@@ -6657,6 +6688,9 @@
     if (choice.type === "fallback") {
       return true;
     }
+    if (choice.type === "utility" && choice.action === "predator_bait") {
+      return true;
+    }
     if (!["evolution", "system", "affix", "mod"].includes(choice.type)) {
       return false;
     }
@@ -6686,6 +6720,9 @@
     if (choice.type === "fallback") {
       return 20;
     }
+    if (choice.type === "utility" && choice.action === "predator_bait") {
+      return 470 + ((choice.nextApexLevel || 1) * 12);
+    }
     return 0;
   }
 
@@ -6704,6 +6741,9 @@
     }
     if (choice.type === "mod") {
       return choice.modId || "mod";
+    }
+    if (choice.type === "utility" && choice.action === "predator_bait") {
+      return "predator_bait";
     }
     return choice.type || "choice";
   }
@@ -7309,6 +7349,10 @@
         }
         return (right.cost || 0) - (left.cost || 0);
       });
+    const predatorBaitChoice = createPredatorBaitChoice(build, nextWave);
+    if (predatorBaitChoice) {
+      pool.unshift(predatorBaitChoice);
+    }
     if (pool.length === 0) {
       return [createFieldGrantCard({
         type: "fallback",
@@ -8157,6 +8201,21 @@
       return choice;
     }
 
+    if (choice.type === "utility" && choice.action === "predator_bait") {
+      if (getApexMutationLevel(run.build) >= MAX_APEX_MUTATION_LEVEL) {
+        return null;
+      }
+      run.build.predatorBaitCharges = Math.max(1, (run.build.predatorBaitCharges || 0) + 1);
+      run.build.upgrades.push(
+        "Predator Bait: 다음 웨이브 조기 Cinder Maw / 적 예산 +24 / active cap +5"
+      );
+      if (run.player) {
+        run.player.heat = Math.max(0, run.player.heat - 10);
+        run.player.overheated = false;
+      }
+      return choice;
+    }
+
     if (choice.type === "fallback" && run.player) {
       run.player.hp = Math.min(run.player.maxHp, run.player.hp + 16);
       run.player.heat = Math.max(0, run.player.heat - 60);
@@ -8267,6 +8326,7 @@
     createLateAscensionChoices,
     createIllegalOverclockChoices,
     createIllegalOverclockMutationChoice,
+    createPredatorBaitChoice,
     getApexMutationLevel,
     applyApexPredatorMutation,
     buildCatalystDraftChoices,
@@ -10028,6 +10088,9 @@
     const waveNumber = index + 1;
     const pactDebtWavesBefore = Math.max(0, state.build.bastionPactDebtWaves || 0);
     const pactDebtActive = pactDebtWavesBefore > 0;
+    const predatorBaitArmed =
+      (state.build.predatorBaitCharges || 0) > 0 &&
+      getApexMutationLevel(state.build) < MAX_APEX_MUTATION_LEVEL;
     if (pactDebtActive) {
       config.spawnBudget += 18;
       config.activeCap += 4;
@@ -10035,6 +10098,21 @@
       if (config.hazard) {
         config.hazard.interval = Math.max(4.8, config.hazard.interval * 0.86);
         config.hazard.damage += 3;
+      }
+    }
+    if (predatorBaitArmed) {
+      config.spawnBudget += 24;
+      config.activeCap += 5;
+      config.baseSpawnInterval = Math.max(config.spawnIntervalMin, config.baseSpawnInterval * 0.9);
+      if (config.hazard) {
+        config.hazard.interval = Math.max(4.6, config.hazard.interval * 0.88);
+        config.hazard.damage += 2;
+        if (Number.isFinite(config.hazard.count)) {
+          config.hazard.count += 1;
+        }
+        if (Number.isFinite(config.hazard.coreHp)) {
+          config.hazard.coreHp += 10;
+        }
       }
     }
     state.waveIndex = index;
@@ -10117,6 +10195,24 @@
       pushCombatFeed(
         `Siege Debt 활성화. 이번 웨이브는 적 예산 +18, active cap +4, incoming damage +24%로 열린다. 남은 debt ${state.build.bastionPactDebtWaves}웨이브.`,
         "PACT"
+      );
+    }
+    if (predatorBaitArmed) {
+      state.build.predatorBaitCharges = Math.max(0, (state.build.predatorBaitCharges || 0) - 1);
+      if (state.wave.apexPredator) {
+        state.wave.apexPredator.spawnTimer = Math.min(6.8, Math.max(4.8, config.duration * 0.14));
+        state.wave.apexPredator.contractArmed = true;
+      } else {
+        state.wave.apexPredator = {
+          spawned: false,
+          defeated: false,
+          spawnTimer: Math.min(6.8, Math.max(4.8, config.duration * 0.14)),
+          contractArmed: true,
+        };
+      }
+      pushCombatFeed(
+        "Predator Bait 점화. 이번 웨이브는 적 밀도와 hazard가 더 거칠게 열리고, 조기 Cinder Maw를 잘라내면 Predator Molt가 즉시 한 단계 더 잠긴다.",
+        "MAW"
       );
     }
     resetDoctrinePursuitState(state);
@@ -10446,6 +10542,18 @@
             choices: getStormArtilleryAfterburnAscensionChoices(build),
           }
         : null,
+      combatCache:
+        boundedStage < POST_CAPSTONE_WAVE_COUNT - 1 &&
+        build &&
+        Array.isArray(build.pendingCores)
+          ? {
+              armed: true,
+              deployed: false,
+              claimed: false,
+              groupId: null,
+              choices: getCombatCacheChoicesForWave(build, MAX_WAVES + boundedStage + 2),
+            }
+          : null,
       finaleMutation: shouldOfferFinaleMutation(build)
         ? {
             deployed: false,
@@ -10545,6 +10653,12 @@
         "LAST"
       );
     }
+    if (state.wave.combatCache) {
+      pushCombatFeed(
+        "Afterburn cache 활성화. 이번 bracket 첫 elite가 현장 장착 캐시를 뿌리며, Predator Bait까지 포함해 다음 금지 구간의 압박과 변이를 직접 고를 수 있다.",
+        "CACHE"
+      );
+    }
     if (state.wave.afterburnAscension) {
       pushCombatFeed(
         "Storm Artillery endform lane 개방. 이번 afterburn 첫 elite가 Sky Lance / Stormspire split cache를 뱉는다.",
@@ -10604,6 +10718,12 @@
       pushCombatFeed(
         "Act 4 splice 재개방. 아직 마지막 변이를 못 골랐다면 이번 Afterburn 첫 elite를 다시 잘라 mutation cache를 직접 회수해야 한다.",
         "LAST"
+      );
+    }
+    if (state.wave.combatCache) {
+      pushCombatFeed(
+        "Afterburn cache 재가동. 이번 웨이브 첫 elite가 다음 금지 구간으로 이어질 현장 장착 캐시를 다시 떨어뜨린다.",
+        "CACHE"
       );
     }
     if (state.wave.afterburnAscension) {
@@ -14058,8 +14178,12 @@
           )
         );
         apexNote = state.wave.apexPredator.spawned
-          ? "Cinder Maw는 구조물을 남기지 않고 옆구리를 파고들며 charge를 반복한다. 늦게 반응해 한 lane을 붙들면 곧바로 압박이 닫힌다."
-          : "이 웨이브 후반에 roaming apex가 난입한다. 구조물 정리 순서보다 먼저, 어디로 미리 rotate할지 읽어 둬야 한다.";
+          ? state.wave.apexPredator.contractArmed
+            ? "Predator Bait가 점화된 Cinder Maw다. 이번 웨이브는 적 밀도와 hazard도 같이 올라, apex를 자르러 나갈 타이밍이 곧 생존 루트를 결정한다."
+            : "Cinder Maw는 구조물을 남기지 않고 옆구리를 파고들며 charge를 반복한다. 늦게 반응해 한 lane을 붙들면 곧바로 압박이 닫힌다."
+          : state.wave.apexPredator.contractArmed
+            ? "Predator Bait 계약으로 roaming apex가 훨씬 일찍 난입한다. 지금 길을 넓혀 두지 못하면 body splice를 노리기도 전에 외곽이 닫힌다."
+            : "이 웨이브 후반에 roaming apex가 난입한다. 구조물 정리 순서보다 먼저, 어디로 미리 rotate할지 읽어 둬야 한다.";
       } else if (getApexMutationLevel(state.build) > 0) {
         apexRows.push(createStatusRow("Apex", `Predator Molt ${getApexMutationLevel(state.build)}`));
         apexRows.push(createStatusRow("Predator", "body splice live"));
