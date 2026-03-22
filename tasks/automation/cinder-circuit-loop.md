@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 16:20:00 KST
+  Findings:
+  - The run is long enough to feel ambitious, but its strongest decisions are still being settled by scheduled admin beats instead of combat. `Architecture Draft`, `Wave 6 Bastion Draft`, `Chassis Breakpoint`, `Late Break Armory`, `Catalyst Crucible`, and the final forge keep telling the player what phase the build is in.
+  - The `Afterburn` bracket still reads like a cashout suffix, not the start of forbidden territory. It is built on `FINAL_CASHOUT_SPAWN_BUDGET = 26` plus bonuses, so the game asks for a form-finished victory lap right when a release-feeling roguelite should be opening a nastier second climb.
+  - Doctrine payoff remains uneven in the worst possible way for reruns: `Storm Artillery` gets direct player-fired endforms, while `Mirror Hunt` and `Kiln Bastion` still climax mainly as drones, missiles, sentries, and pockets doing the memorable work for you.
+  - The arena is larger, but late pressure still mostly fills it with ownership taxes. `relay`, `drift`, and `bastion` hazards plus rising `activeCap` create route-cleaning labor more often than high-value movement gambles that would stay interesting across a future 20-30 wave curve.
+  Top Priority: Replace one mid/late forge stop with an in-combat ascension event for either `Mirror Hunt` or `Kiln Bastion` that permanently mutates the main weapon/body after `Wave 8`, then make `Afterburn` continue from that mutated state instead of from a final cashout screen.
+  Why Now: Until late power is earned and piloted in combat, longer runs will feel administered instead of addictive.
+  Do Not Repeat: Do not answer this with another support bay unlock, another reserve-lane exception, or another helper-driven apex package.
+
 - 2026-03-22 15:10:00 KST
   Findings:
   - The run now has plenty of named layers, but too many of the important answers are pre-authored by the time late combat starts. `Architecture Draft`, `Wave 6 Bastion Draft`, `Chassis Breakpoint`, starter systems, reserved support lanes, and `Late Break Armory` keep deciding the build for the player before the battlefield has a chance to force a surprising fork.
@@ -802,6 +812,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 15:43 KST
+  Changed: rerouted `Kiln Bastion`'s late payoff in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) out of the `Wave 9` `Late Break Armory` stop and into a live `Bulwark Foundry` ascension lane. Finishing the doctrine pursuit no longer auto-awards the final `Bulwark Foundry` capstone; instead it now arms a post-`Wave 8` battlefield mutation. On eligible `Wave 9-12` kiln runs, the armory stop is skipped, the missing support bay uplink is granted automatically, and the first elite drops a `Bulwark Foundry` cache that must be collected in combat. Picking it immediately locks the stage-3 `Bulwark Furnace` scatter form and the stronger foundry body state, so `Afterburn` starts from that mutated weapon/body instead of waiting for another late admin beat. I kept the implementation bounded by reusing the existing live-cache/ascension path rather than adding another forge screen, and validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the latest critique's Top Priority was to replace one mid/late forge stop with an in-combat ascension event for `Mirror Hunt` or `Kiln Bastion` after `Wave 8`, then let `Afterburn` continue from that mutated state. `Kiln Bastion` was the highest-value bounded interpretation because it already had a stage-3 gun definition but was still receiving its loudest payoff through authored late-stop flow instead of through a live "dive in and claim the monster form" combat moment.
+  Follow-up risk: `Kiln Bastion` now has the right late-run delivery mechanism, but the live ascension is still a single-cache pickup attached to the first elite rather than a broader encounter family with multiple spatial outcomes. If critique keeps pushing on replay hunger, the next bounded step should make this ascension contest more tactically expressive or extend the same post-`Wave 8` lane to `Mirror Hunt`, not restore another menu-authored doctrine payout.
 
 - 2026-03-22 15:40 KST
   Changed: rewired `Storm Artillery` in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so its late split is no longer paid out by `Late Break Armory`. Completing the doctrine pursuit now stops at `Thunder Rack`, keeps the doctrine unfinished through `Wave 9-12`, and pushes the final fork into `Afterburn` combat. During `Afterburn`, the first elite now drops two live `Afterburn Ascension` caches, and the player must dive to claim either `Sky Lance Battery` or `Stormspire Needle` on the battlefield. Claiming one immediately locks the matching stage-3 main-weapon form and also mutates the body plan: `Sky Lance Battery` becomes a faster vector-battery frame with more dash freedom, while `Stormspire Needle` becomes a slower but tougher siege-spine frame. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert that `Storm Artillery` no longer gets doctrine-capstone cards in the late armory and instead receives two `Afterburn` ascension choices.

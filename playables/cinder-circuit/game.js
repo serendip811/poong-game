@@ -8128,6 +8128,45 @@
     return shouldRunCatalystDraft({ nextWave: waveNumber, finalForge: false }, build);
   }
 
+  function shouldRunKilnBastionAscension(build, waveNumber) {
+    return Boolean(
+      build &&
+      build.bastionDoctrineId === "kiln_bastion" &&
+      build.doctrineChaseClaimed &&
+      !build.doctrineCapstoneId &&
+      waveNumber >= 9 &&
+      waveNumber <= MAX_WAVES
+    );
+  }
+
+  function createKilnBastionAscensionChoice(build) {
+    const capstone = getDoctrineCapstoneDef("bulwark_foundry");
+    if (!capstone || !build || build.doctrineCapstoneId) {
+      return null;
+    }
+    return {
+      type: "utility",
+      action: "doctrine_capstone",
+      id: "utility:kiln_live_ascension:bulwark_foundry",
+      verb: "ascend",
+      tag: "FOUNDRY",
+      title: capstone.title,
+      description:
+        "Wave 9부터 첫 marked elite가 떨어뜨리는 live foundry cache를 회수해 Scatter와 차체를 즉시 용광 요새 형태로 접합한다. Late Break Armory 정지 대신 전장 한복판에서 pocket 화력과 거점장 몸체를 굳힌다.",
+      slotText: "Live Ascension · 교리 완성 · 회수 요새 주조",
+      cost: 0,
+      laneLabel: "Live Ascension",
+      forgeLaneLabel: "Live Ascension",
+      doctrineId: "kiln_bastion",
+      doctrineLabel: "Kiln Bastion Doctrine",
+      doctrineCapstoneId: capstone.id,
+      capstoneLabel: capstone.label,
+      bodyLabel: "Foundry Carapace",
+      bodyText:
+        "거점장 안에서 냉각과 복구가 크게 강화되고, 남은 afterburn도 이 pocket-chassis 위에서 이어진다.",
+    };
+  }
+
   function createCatalystCrucibleLiveChoice(build) {
     const capstoneChoice = createCatalystReforgeChoice(build);
     if (!capstoneChoice) {
@@ -8168,6 +8207,34 @@
       "MOLT"
     );
     setBanner("Catalyst Crucible", 0.95);
+  }
+
+  function deployKilnBastionAscension(enemy) {
+    const ascension = state.wave && state.wave.kilnAscension;
+    if (!ascension || ascension.deployed || ascension.claimed) {
+      return;
+    }
+    const choice = ascension.choice;
+    if (!choice) {
+      ascension.deployed = true;
+      ascension.claimed = true;
+      return;
+    }
+    ascension.deployed = true;
+    ascension.groupId = `kiln-ascension-${state.waveIndex + 1}-${state.stats.kills}`;
+    state.drops.push({
+      kind: "afterburn_ascension_cache",
+      x: enemy.x,
+      y: enemy.y,
+      life: AFTERBURN_ASCENSION_DROP_LIFE,
+      choice,
+      groupId: ascension.groupId,
+    });
+    pushCombatFeed(
+      "Bulwark Foundry cache 노출. Late Break Armory 대신 live ascension이 열렸다. 압박 속에서 회수하면 Scatter와 몸체가 즉시 요새 형태로 굳는다.",
+      "ASCEND"
+    );
+    setBanner("Bulwark Foundry", 0.95);
   }
 
   function armOvercommitTrial(run) {
@@ -8259,7 +8326,12 @@
     if (systemChoice) {
       applyForgeChoice(state, systemChoice);
     }
-    if (capstone && doctrine && doctrine.id !== "storm_artillery") {
+    if (
+      capstone &&
+      doctrine &&
+      doctrine.id !== "storm_artillery" &&
+      doctrine.id !== "kiln_bastion"
+    ) {
       state.build.doctrineCapstoneId = capstone.id;
       state.build.upgrades.push(`교리 완성: ${capstone.label}`);
     }
@@ -8272,12 +8344,16 @@
     pushCombatFeed(
       doctrine && doctrine.id === "storm_artillery"
         ? `${(pursuit && pursuit.label) || "Forge Pursuit"} 완성. Thunder Rack까지는 즉시 잠겼고, 최종 Sky Lance / Stormspire 분기는 Afterburn 전장에서 직접 뜯어내야 한다.`
+        : doctrine && doctrine.id === "kiln_bastion"
+          ? `${(pursuit && pursuit.label) || "Forge Pursuit"} 완성. Crucible Scatter와 거점장은 먼저 잠겼고, 진짜 Bulwark Foundry body splice는 Wave 9 live ascension에서 직접 뜯어내야 한다.`
         : `${(pursuit && pursuit.label) || "Forge Pursuit"} 완성. ${capstone ? `${capstone.label}까지 즉시 잠겨` : "주무장과 지원층이"} 남은 웨이브를 바로 monster form으로 소모한다.`,
       "FRAME"
     );
     setBanner(
       doctrine && doctrine.id === "storm_artillery"
         ? "Afterburn Ascension Armed"
+        : doctrine && doctrine.id === "kiln_bastion"
+          ? "Bulwark Foundry Armed"
         : capstone
           ? capstone.label
           : (pursuit && pursuit.shortLabel) || "Frame 완성",
@@ -9051,6 +9127,14 @@
             choices: getCombatCacheChoicesForWave(state.build, waveNumber + 1),
           }
         : null,
+      kilnAscension: shouldRunKilnBastionAscension(state.build, waveNumber)
+        ? {
+            deployed: false,
+            claimed: false,
+            groupId: null,
+            choice: createKilnBastionAscensionChoice(state.build),
+          }
+        : null,
       apexPredator: shouldSpawnApexPredator(state.build, waveNumber)
         ? {
             spawned: false,
@@ -9116,6 +9200,12 @@
       pushCombatFeed(
         "첫 elite가 Combat Cache를 떨어뜨린다. 현장에서 하나를 회수하면 Field Cache 정지 없이 바로 다음 웨이브로 이어진다.",
         "CACHE"
+      );
+    }
+    if (state.wave.kilnAscension) {
+      pushCombatFeed(
+        "Bulwark Foundry live ascension 활성화. 이번 웨이브 첫 marked elite가 foundry cache를 떨어뜨리며, 회수하면 Late Break Armory 없이 pocket monster form으로 남은 run을 민다.",
+        "ASCEND"
       );
     }
     if (waveNumber === ILLEGAL_OVERCLOCK_WAVE) {
@@ -11993,6 +12083,7 @@
       }
       if (enemy.type === "elite") {
         deployCombatCache(enemy);
+        deployKilnBastionAscension(enemy);
         deployStormArtilleryAfterburnAscension(enemy);
       }
       if (enemy.overcommitTarget && state.overcommit.active) {
@@ -12075,7 +12166,17 @@
           );
         }
       } else if (drop.life <= 0 && drop.kind === "afterburn_ascension_cache") {
-        if (state.wave && state.wave.afterburnAscension && !state.wave.afterburnAscension.claimed) {
+        if (state.wave && state.wave.kilnAscension && !state.wave.kilnAscension.claimed) {
+          pushCombatFeed(
+            "Bulwark Foundry cache가 식었다. 이번 웨이브 ascension은 놓쳤지만 다음 late wave에서 다시 찢어낼 수 있다.",
+            "ASCEND"
+          );
+          state.wave.kilnAscension.claimed = true;
+        } else if (
+          state.wave &&
+          state.wave.afterburnAscension &&
+          !state.wave.afterburnAscension.claimed
+        ) {
           pushCombatFeed(
             "Afterburn split이 닫혔다. 이번 웨이브의 endform 선택권은 사라졌지만 다음 afterburn에서 다시 찢어낼 수 있다.",
             "ASCEND"
@@ -12242,21 +12343,35 @@
 
     if (drop.kind === "afterburn_ascension_cache") {
       const ascension = state.wave && state.wave.afterburnAscension;
+      const kilnAscension = state.wave && state.wave.kilnAscension;
       const choice = drop.choice;
-      if (!choice || !ascension || ascension.claimed || state.build.doctrineCapstoneId) {
+      if (
+        !choice ||
+        state.build.doctrineCapstoneId ||
+        ((ascension && ascension.claimed) || (kilnAscension && kilnAscension.claimed))
+      ) {
         return true;
       }
       applyForgeChoice(state, choice);
       refreshDerivedStats(false);
-      ascension.claimed = true;
+      if (ascension) {
+        ascension.claimed = true;
+      }
+      if (kilnAscension) {
+        kilnAscension.claimed = true;
+      }
       state.drops.forEach((entry) => {
         if (entry.kind === "afterburn_ascension_cache" && entry.groupId === drop.groupId) {
           entry.life = 0;
         }
       });
-      const endform = getStormArtilleryAfterburnEndform(choice.doctrineCapstoneId);
       pushCombatFeed(
-        `${choice.title} 접합. ${choice.bodyLabel || "차체 변형"}가 함께 잠겨 ${endform ? endform.statusNote : "남은 afterburn이 새 body plan으로 고정된다."}`,
+        state.wave && state.wave.kilnAscension
+          ? `${choice.title} 접합. ${choice.bodyLabel || "차체 변형"}가 함께 잠겨 ${choice.bodyText || "남은 런이 용광 pocket body plan으로 고정된다."}`
+          : `${choice.title} 접합. ${choice.bodyLabel || "차체 변형"}가 함께 잠겨 ${
+              getStormArtilleryAfterburnEndform(choice.doctrineCapstoneId)?.statusNote ||
+              "남은 afterburn이 새 body plan으로 고정된다."
+            }`,
         "ASCEND"
       );
       setBanner(choice.title, 0.9);
@@ -12340,6 +12455,8 @@
             ? `Wave ${nextWave}`
           : shouldRunCatalystCrucibleObjective(state.build, nextWave)
             ? `Wave ${nextWave}`
+          : shouldRunKilnBastionAscension(state.build, nextWave)
+            ? `Wave ${nextWave}`
           : shouldSkipOwnershipAdminStop(state.build, nextWave)
             ? `Wave ${nextWave}`
           : shouldRunActBreakArmory({ nextWave, finalForge: false })
@@ -12366,6 +12483,21 @@
         } else if (state.wave.skipForgeOnClear) {
           beginNextPostCapstoneWave();
         } else if (shouldRunCatalystCrucibleObjective(state.build, state.waveIndex + 2)) {
+          beginWave(state.waveIndex + 1);
+        } else if (shouldRunKilnBastionAscension(state.build, state.waveIndex + 2)) {
+          const unlocked = unlockLateSupportBay(state.build);
+          if (unlocked) {
+            state.build.upgrades.push("Live Foundry Uplink: support bay +1 without armory stop");
+          }
+          pushCombatFeed(
+            unlocked
+              ? state.build.auxiliaryJunctionLevel > 0
+                ? "Wave 8 돌파. Late Break Armory를 live ascension lane으로 교체했다. 네 번째 support bay와 추가 flex lane은 즉시 uplink되고, Wave 9 marked elite가 Bulwark Foundry cache를 떨어뜨린다."
+                : "Wave 8 돌파. Late Break Armory를 live ascension lane으로 교체했다. 세 번째 support bay와 교리 우회 flex lane은 즉시 uplink되고, Wave 9 marked elite가 Bulwark Foundry cache를 떨어뜨린다."
+              : "Wave 8 돌파. Late Break Armory를 건너뛰고 live ascension lane으로 진입한다. Wave 9 marked elite를 추적해 Bulwark Foundry cache를 직접 회수해야 한다.",
+            "ASCEND"
+          );
+          refreshDerivedStats(false);
           beginWave(state.waveIndex + 1);
         } else if (shouldSkipOwnershipAdminStop(state.build, state.waveIndex + 2)) {
           const unlocked = unlockLateSupportBay(state.build);
@@ -13267,18 +13399,27 @@
         context.fillText(choice.tag || "CACHE", drop.x, drop.y + 26);
       } else if (drop.kind === "afterburn_ascension_cache") {
         const choice = drop.choice || {};
-        context.strokeStyle =
+        const ascensionPalette =
           choice.doctrineCapstoneId === "stormspire_needle"
-            ? "rgba(255, 234, 180, 0.98)"
-            : "rgba(203, 247, 255, 0.98)";
+            ? {
+                stroke: "rgba(255, 234, 180, 0.98)",
+                fill: "rgba(255, 184, 116, 0.94)",
+              }
+            : choice.doctrineCapstoneId === "bulwark_foundry"
+              ? {
+                  stroke: "rgba(255, 232, 182, 0.98)",
+                  fill: "rgba(255, 171, 84, 0.94)",
+                }
+              : {
+                  stroke: "rgba(203, 247, 255, 0.98)",
+                  fill: "rgba(138, 231, 255, 0.92)",
+                };
+        context.strokeStyle = ascensionPalette.stroke;
         context.lineWidth = 2.7;
         context.beginPath();
         context.arc(drop.x, drop.y, 15, 0, Math.PI * 2);
         context.stroke();
-        context.fillStyle =
-          choice.doctrineCapstoneId === "stormspire_needle"
-            ? "rgba(255, 184, 116, 0.94)"
-            : "rgba(138, 231, 255, 0.92)";
+        context.fillStyle = ascensionPalette.fill;
         context.beginPath();
         drawPolygon(context, drop.x, drop.y, 10, 3, -Math.PI / 2 + performance.now() * 0.0022);
         context.fill();
