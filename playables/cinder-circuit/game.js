@@ -3862,6 +3862,17 @@
     return `MOLT ${clamp(Math.round(level || 0), 1, MAX_ILLEGAL_OVERCLOCK_MUTATIONS)}`;
   }
 
+  function getDominantMutationOverclockId(build) {
+    if (!build) {
+      return "meltdown_cycler";
+    }
+    return build.coreId === "lance"
+      ? "rupture_crown"
+      : build.coreId === "ricochet"
+        ? "glass_broadside"
+        : "meltdown_cycler";
+  }
+
   function getRiskMutationCoreDef(buildOrId) {
     const coreId =
       typeof buildOrId === "string"
@@ -6255,14 +6266,28 @@
       verb: "변이",
       tag: mutation.tag,
       title: `${mutation.title} ${getRiskMutationTierLabel(nextLevel)}`,
-      description: `${mutation.description} 다음 Wave ${nextWave}는 spawn budget, active cap, hazard count가 함께 오른다.`,
-      slotText: `${mutation.slotText} · Wave ${nextWave} 압박세`,
+      description: `${
+        mutation.description
+      } ${
+        !build.illegalOverclockId
+          ? "첫 접합에서는 금지 성장선까지 자동으로 묶어 late reward를 한 개의 monster lane으로 고정한다. "
+          : ""
+      }다음 Wave ${nextWave}는 spawn budget, active cap, hazard count가 함께 오른다.`,
+      slotText: `${mutation.slotText}${!build.illegalOverclockId ? " · contraband splice 동봉" : ""} · Wave ${nextWave} 압박세`,
       cost: 0,
-      laneLabel: "Risk Mutation",
-      forgeLaneLabel: "Risk Mutation",
+      laneLabel: "Dominant Mutation",
+      forgeLaneLabel: "Dominant Mutation",
       riskMutationLevel: nextLevel,
       riskMutationWave: nextWave,
     };
+  }
+
+  function createDominantMutationChoice(build, nextWave) {
+    const riskMutationChoice = createRiskMutationChoice(build, nextWave);
+    if (riskMutationChoice) {
+      return riskMutationChoice;
+    }
+    return createPredatorBaitChoice(build, nextWave);
   }
 
   function createCatalystReforgeChoice(build) {
@@ -7591,13 +7616,9 @@
         }
         return (right.cost || 0) - (left.cost || 0);
       });
-    const predatorBaitChoice = createPredatorBaitChoice(build, nextWave);
-    const riskMutationChoice = createRiskMutationChoice(build, nextWave);
-    if (riskMutationChoice) {
-      pool.unshift(riskMutationChoice);
-    }
-    if (predatorBaitChoice) {
-      pool.unshift(predatorBaitChoice);
+    const dominantMutationChoice = createDominantMutationChoice(build, nextWave);
+    if (dominantMutationChoice) {
+      pool.unshift(dominantMutationChoice);
     }
     if (pool.length === 0) {
       return [createFieldGrantCard({
@@ -7740,7 +7761,9 @@
     state.forgeDraftType = "field_grant";
     state.forgeChoices = buildFieldGrantChoices(state.build, Math.random, nextWave);
     pushCombatFeed(
-      "Field Cache 확보. 할인 장착으로 지금 고철을 태우거나, Emergency Vent로 자원을 아낀 채 전장을 다시 가동한다.",
+      nextWave >= RISK_MUTATION_START_WAVE
+        ? "Field Cache 확보. 이제 late reward는 한 장의 Dominant Mutation 카드가 먼저 잡고, 나머지는 그 옆의 현장 보강으로만 붙는다."
+        : "Field Cache 확보. 할인 장착으로 지금 고철을 태우거나, Emergency Vent로 자원을 아낀 채 전장을 다시 가동한다.",
       "CACHE"
     );
     setBanner("Field Cache", 0.95);
@@ -7780,8 +7803,13 @@
     const cacheSummary = choices
       .map((choice) => `${choice.tag} ${choice.title}${choice.cost > 0 ? `(${choice.cost})` : ""}`)
       .join(" / ");
+    const hasDominantMutation = choices.some(
+      (choice) => choice.action === "risk_mutation" || choice.action === "predator_bait"
+    );
     pushCombatFeed(
-      `Combat Cache 노출. ${cacheSummary} 중 하나를 전장에서 직접 회수하면 다음 웨이브로 즉시 연결된다.`,
+      hasDominantMutation
+        ? `Mutation Cache 노출. ${cacheSummary} 중 한 장만 집을 수 있으며, 가장 큰 카드는 late monster form을 다음 웨이브까지 직접 끌고 간다.`
+        : `Combat Cache 노출. ${cacheSummary} 중 하나를 전장에서 직접 회수하면 다음 웨이브로 즉시 연결된다.`,
       "CACHE"
     );
     setBanner("Combat Cache", 0.9);
@@ -8226,8 +8254,38 @@
         : getRiskMutationLevel(run.build) + 1;
       run.build.riskMutationLevel = Math.max(getRiskMutationLevel(run.build), nextLevel);
       run.build.riskMutationQueuedLevel = Math.max(getRiskMutationQueuedLevel(run.build), nextLevel);
+      let bundledIllegalNote = "";
+      if (!run.build.illegalOverclockId) {
+        const overclockId = getDominantMutationOverclockId(run.build);
+        const overclock = getIllegalOverclockDef(overclockId);
+        if (overclock) {
+          run.build.illegalOverclockId = overclock.id;
+          run.build.illegalOverclockOffered = true;
+          if (typeof overclock.apply === "function") {
+            overclock.apply(run.build, run);
+          }
+          bundledIllegalNote = ` / contraband splice ${overclock.label}`;
+          run.build.upgrades.push(`Dominant Mutation splice: ${overclock.label}`);
+        }
+      }
+      const targetIllegalMutationLevel = Math.min(
+        MAX_ILLEGAL_OVERCLOCK_MUTATIONS,
+        Math.floor(nextLevel / 2)
+      );
+      if (run.build.illegalOverclockId) {
+        const overclock = getIllegalOverclockDef(run.build);
+        while (getIllegalOverclockMutationLevel(run.build) < targetIllegalMutationLevel) {
+          const illegalNextLevel = getIllegalOverclockMutationLevel(run.build) + 1;
+          run.build.illegalOverclockMutationLevel = illegalNextLevel;
+          if (overclock && typeof overclock.applyMutation === "function") {
+            overclock.applyMutation(run.build, run, illegalNextLevel);
+          }
+          bundledIllegalNote = `${bundledIllegalNote} / ${getIllegalMutationTierLabel(illegalNextLevel)}`;
+          run.build.upgrades.push(`Dominant Mutation molt ${illegalNextLevel}: ${(overclock && overclock.label) || "Contraband"}`);
+        }
+      }
       run.build.upgrades.push(
-        `Risk Mutation: ${choice.title} / 다음 Wave ${choice.riskMutationWave || "?"} 압박세`
+        `Dominant Mutation: ${choice.title}${bundledIllegalNote} / 다음 Wave ${choice.riskMutationWave || "?"} 압박세`
       );
       if (run.player) {
         run.player.heat = Math.max(0, run.player.heat - 12);
@@ -10543,11 +10601,6 @@
         "Bulwark Foundry live ascension 활성화. 이번 웨이브 첫 marked elite가 foundry cache를 떨어뜨리며, 회수하면 Late Break Armory 없이 pocket monster form으로 남은 run을 민다.",
         "ASCEND"
       );
-    }
-    if (waveNumber === ILLEGAL_OVERCLOCK_WAVE) {
-      deployIllegalOverclockChoices();
-    } else if (waveNumber >= ILLEGAL_MUTATION_START_WAVE) {
-      deployIllegalMutationCache();
     }
     setBanner(config.label, 1.4);
     renderForgeOverlay();
@@ -14222,9 +14275,17 @@
           ${weapon.evolutionLabel ? createMiniPill("EVO", weapon.evolutionLabel, "accent") : ""}
           ${weapon.doctrineFormLabel ? createMiniPill("DOC", weapon.doctrineFormLabel, "hot") : ""}
           ${weapon.lateAscensionLabel ? createMiniPill("ASCEND", weapon.lateAscensionLabel, "hot") : ""}
-          ${weapon.illegalOverclockLabel ? createMiniPill("ILLEGAL", weapon.illegalOverclockLabel, "hot") : ""}
-          ${weapon.riskMutationLabel ? createMiniPill("RISK", getRiskMutationTierLabel(weapon.riskMutationLevel), "hot") : ""}
-          ${weapon.apexMutationLabel ? createMiniPill("APEX", weapon.apexMutationLabel, "hot") : ""}
+          ${
+            weapon.riskMutationLabel || weapon.illegalOverclockLabel || weapon.apexMutationLabel
+              ? createMiniPill(
+                  "MOLT",
+                  weapon.riskMutationLabel
+                    ? `${getRiskMutationTierLabel(weapon.riskMutationLevel)}${weapon.illegalOverclockLabel ? ` · ${weapon.illegalOverclockLabel}` : ""}`
+                    : weapon.apexMutationLabel || weapon.illegalOverclockLabel,
+                  "hot"
+                )
+              : ""
+          }
           ${capstoneSummary ? createMiniPill("CAP", weapon.capstoneLabel, "hot") : ""}
           ${state.supportSystem ? createMiniPill("SYS", state.supportSystem.label, "accent") : ""}
           ${weapon.affixLabels.map((label) => createMiniPill("속성", label, "cool")).join("")}
@@ -14428,28 +14489,42 @@
             ? "드롭된 Combat Cache 중 하나만 회수할 수 있다. 놓치면 이번 웨이브의 현장 spike는 사라진다."
             : "이번 웨이브 첫 elite가 Combat Cache를 떨어뜨린다. 회수에 성공하면 Field Cache 정지 없이 다음 웨이브로 직결된다.";
       }
-      if (state.build.illegalOverclockId) {
+      if (state.build.illegalOverclockId || getRiskMutationLevel(state.build) > 0) {
         const illegalOverclock = getIllegalOverclockDef(state.build);
         illegalOverclockRows.push(
-          createStatusRow("Illegal", illegalOverclock ? illegalOverclock.label : "접속")
+          createStatusRow(
+            "Dominant Mutation",
+            getRiskMutationLevel(state.build) > 0
+              ? getRiskMutationTierLabel(getRiskMutationLevel(state.build))
+              : illegalOverclock
+                ? illegalOverclock.label
+                : "접속"
+          )
         );
-        illegalOverclockRows.push(createStatusRow("Greed", "locked"));
-        illegalOverclockNote = illegalOverclock
-          ? illegalOverclock.statusNote
-          : "불법 과투입이 활성화되어 있다.";
-      } else if (
-        state.phase === "wave" &&
-        state.wave &&
-        state.waveIndex + 1 === ILLEGAL_OVERCLOCK_WAVE &&
-        state.drops.some((drop) => drop.kind === "illegal_overclock_cache")
-      ) {
-        illegalOverclockRows.push(createStatusRow("Illegal", "uplink live"));
-        illegalOverclockRows.push(createStatusRow("Greed", "1 pick"));
-        illegalOverclockNote = "Wave 9 black-site uplink가 열렸다. 불법 과투입 3종 중 하나만 집을 수 있고, 남은 둘은 바로 닫힌다.";
+        illegalOverclockRows.push(
+          createStatusRow(
+            "Splice",
+            illegalOverclock
+              ? `${illegalOverclock.label}${getIllegalOverclockMutationLevel(state.build) > 0 ? ` · ${getIllegalMutationTierLabel(getIllegalOverclockMutationLevel(state.build))}` : ""}`
+              : "growing"
+          )
+        );
+        illegalOverclockNote =
+          getRiskMutationLevel(state.build) > 0
+            ? `${
+                state.weapon.riskMutationStatusNote || "주 변이가 주무장 포문과 차체 프레임을 유지 중이다."
+              } ${
+                illegalOverclock
+                  ? `${illegalOverclock.label}는 이제 별도 black-site 선택이 아니라 이 변이 레인 안에 접혀 있다.`
+                  : ""
+              }`
+            : illegalOverclock
+              ? illegalOverclock.statusNote
+              : "불법 과투입이 활성화되어 있다.";
       }
       if (getRiskMutationLevel(state.build) > 0) {
         riskMutationRows.push(
-          createStatusRow("Risk Mutation", getRiskMutationTierLabel(getRiskMutationLevel(state.build)))
+          createStatusRow("Wave Tax", getRiskMutationTierLabel(getRiskMutationLevel(state.build)))
         );
         riskMutationRows.push(
           createStatusRow(
@@ -14660,7 +14735,9 @@
       state.forgeDraftType === "architecture_draft"
         ? "Architecture Draft · 세 장기 교리 중 1픽, 주무장 프레임만 먼저 시험하고 진짜 doctrine/body commitment는 Wave 6으로 미룬다"
         : state.forgeDraftType === "field_grant"
-        ? "Field Cache · 할인 장착 2장과 무료 회수 1장 중 1픽, 지금 고철을 태울지 아낄지 고른다"
+        ? state.waveIndex + 2 >= RISK_MUTATION_START_WAVE
+          ? "Field Cache · 한 장의 Dominant Mutation이 late monster form을 먼저 끌고 가고, 나머지 현장 장착은 그 옆의 보조 bet로만 붙는다"
+          : "Field Cache · 할인 장착 2장과 무료 회수 1장 중 1픽, 지금 고철을 태울지 아낄지 고른다"
         : state.forgeDraftType === "bastion_draft"
         ? wave6AscensionDraft
           ? "Ascension Draft · 세 장기 교리 중 1픽으로 즉시 weapon mutation, utility chassis, doctrine-free flex lane을 함께 잠그고 Wave 8 Armory를 건너뛴다"
@@ -14689,7 +14766,9 @@
       : state.forgeDraftType === "architecture_draft"
         ? `Wave 3 진입 직전 Architecture Draft다. 세 장기 교리 중 하나를 예고해 주무장만 즉시 해당 프레임으로 재배선하고, support bay reserve나 starter subsystem lock은 아직 미룬다. Wave 6 Bastion Draft에서 세 교리 중 실제 commitment를 다시 골라 몸체와 지원층까지 확정한다.`
       : state.forgeDraftType === "field_grant"
-        ? `고철 ${Math.round(state.resources.scrap)} 보유. Field Cache다. 할인된 즉시 장착 2장과 무료 Emergency Vent 중 하나를 고른다. 지금 스파이크를 사서 당길지, 고철을 쥐고 다음 큰 포지까지 버틸지 직접 판단해야 한다.`
+        ? state.waveIndex + 2 >= RISK_MUTATION_START_WAVE
+          ? `고철 ${Math.round(state.resources.scrap)} 보유. Field Cache다. late reward는 이제 여러 관리 트랙이 아니라 Dominant Mutation 한 장이 먼저 잡는다. 그 카드를 집으면 주무장/차체 변이가 즉시 전진하고, 다음 웨이브 압박세와 묶인 채 나머지 즉시 장착은 옆의 보조 선택으로만 남는다.`
+          : `고철 ${Math.round(state.resources.scrap)} 보유. Field Cache다. 할인된 즉시 장착 2장과 무료 Emergency Vent 중 하나를 고른다. 지금 스파이크를 사서 당길지, 고철을 쥐고 다음 큰 포지까지 버틸지 직접 판단해야 한다.`
         : state.forgeDraftType === "bastion_draft"
         ? wave6AscensionDraft
           ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 6 Ascension Draft다. 이제 세 장기 교리 중 하나를 irreversible form으로 잠근다. 이 한 번의 픽이 주무장 stage-1 mutation, utility chassis, 그리고 교리 reserve를 무시하는 off-doctrine flex lane을 동시에 켜고, Wave 8 Late Break Armory는 전장 uplink로 대체한다.`

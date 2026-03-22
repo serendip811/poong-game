@@ -182,7 +182,7 @@ assert.ok(afterburnOne.combatCache);
 assert.ok(afterburnTwo.combatCache);
 assert.equal(afterburnSeven.combatCache, null);
 assert.ok(
-  afterburnOne.combatCache.choices.some((choice) => choice && choice.action === "predator_bait")
+  afterburnOne.combatCache.choices.some((choice) => choice && choice.action === "risk_mutation")
 );
 const systemsForgeBuild = game.createInitialBuild("scrap_pact");
 const architectureChoices = game.buildArchitectureDraftChoices(systemsForgeBuild);
@@ -252,8 +252,13 @@ assert.ok(chassisRun.build.supportBayCap >= 3);
 assert.equal(chassisRun.build.chassisId, wave6ChassisPackages[0].chassisId);
 assert.ok(game.shouldSkipOwnershipAdminStop(chassisRun.build, 9));
 const predatorCacheChoices = game.buildFieldGrantChoices(predatorBaitRun.build, () => 0, 10);
-assert.ok(predatorCacheChoices.some((choice) => choice.action === "predator_bait"));
 assert.ok(predatorCacheChoices.some((choice) => choice.action === "risk_mutation"));
+assert.equal(
+  predatorCacheChoices.filter(
+    (choice) => choice.action === "predator_bait" || choice.action === "risk_mutation"
+  ).length,
+  1
+);
 const riskMutationChoice = predatorCacheChoices.find((choice) => choice.action === "risk_mutation");
 const riskMutationRun = {
   build: game.createInitialBuild("scrap_pact"),
@@ -265,6 +270,7 @@ const baseAfterburnPreview = game.createPostCapstoneWave(1, riskMutationRun.buil
 game.applyForgeChoice(riskMutationRun, riskMutationChoice);
 assert.equal(riskMutationRun.build.riskMutationLevel, 1);
 assert.equal(riskMutationRun.build.riskMutationQueuedLevel, 1);
+assert.equal(riskMutationRun.build.illegalOverclockId, "meltdown_cycler");
 const taxedAfterburnPreview = game.createPostCapstoneWave(1, riskMutationRun.build);
 assert.ok(taxedAfterburnPreview.spawnBudget > baseAfterburnPreview.spawnBudget);
 assert.ok(taxedAfterburnPreview.activeCap > baseAfterburnPreview.activeCap);
@@ -272,6 +278,15 @@ assert.ok(taxedAfterburnPreview.hazard.count > baseAfterburnPreview.hazard.count
 const riskMutationWeapon = game.computeWeaponStats(riskMutationRun.build);
 assert.equal(riskMutationWeapon.riskMutationLevel, 1);
 assert.ok(riskMutationWeapon.riskMutationFirePattern);
+assert.equal(riskMutationWeapon.illegalOverclockLabel, "Meltdown Cycler");
+const secondRiskMutationChoice = game
+  .buildFieldGrantChoices(riskMutationRun.build, () => 0, 11)
+  .find((choice) => choice.action === "risk_mutation");
+assert.ok(secondRiskMutationChoice);
+game.applyForgeChoice(riskMutationRun, secondRiskMutationChoice);
+assert.equal(riskMutationRun.build.riskMutationLevel, 2);
+assert.equal(riskMutationRun.build.illegalOverclockMutationLevel, 1);
+assert.match(game.computeWeaponStats(riskMutationRun.build).illegalOverclockTraitLabel, /MOLT 1/);
 const lateAscensionBuild = game.createInitialBuild("relay_oath");
 lateAscensionBuild.supportBayCap = 3;
 lateAscensionBuild.supportSystems = [
