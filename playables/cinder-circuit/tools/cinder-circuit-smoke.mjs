@@ -293,6 +293,18 @@ assert.ok(game.ENEMY_DEFS.apex.hp > game.ENEMY_DEFS.elite.hp);
 assert.ok(game.ENEMY_DEFS.mortar.scrap >= game.ENEMY_DEFS.shrike.scrap);
 assert.ok(game.ENEMY_DEFS.mortar.speed < game.ENEMY_DEFS.shrike.speed);
 assert.equal(game.createFinalCashoutWave().arena.width, 1440);
+const afterburnBuild = game.createInitialBuild("relay_oath");
+const afterburnWaveOne = game.createPostCapstoneWave(0, afterburnBuild);
+const afterburnWaveThree = game.createPostCapstoneWave(2, afterburnBuild);
+assert.ok(afterburnWaveOne.spawnBudget > game.WAVE_CONFIG[11].spawnBudget);
+assert.ok(afterburnWaveOne.activeCap > game.WAVE_CONFIG[11].activeCap);
+assert.ok(afterburnWaveThree.spawnBudget > afterburnWaveOne.spawnBudget);
+assert.ok(afterburnWaveThree.activeCap > afterburnWaveOne.activeCap);
+assert.ok(afterburnWaveThree.timeLeft > afterburnWaveOne.timeLeft);
+assert.ok(afterburnWaveOne.hazard.interval < game.WAVE_CONFIG[11].hazard.interval);
+assert.ok(afterburnWaveThree.hazard.count >= afterburnWaveOne.hazard.count);
+assert.ok(afterburnWaveOne.apexPredator);
+assert.ok(afterburnWaveThree.apexPredator.spawnTimer < afterburnWaveOne.apexPredator.spawnTimer);
 assert.equal(game.DEFAULT_SIGNATURE_ID, "relay_oath");
 assert.equal(
   JSON.stringify(Object.keys(game.SUPPORT_SYSTEM_DEFS).sort()),
@@ -1523,12 +1535,12 @@ assert.equal(
   false
 );
 const finalCashoutWave = game.createFinalCashoutWave(game.MAX_WAVES - 1);
-assert.equal(finalCashoutWave.timeLeft, game.WAVE_CONFIG[9].duration);
+assert.equal(finalCashoutWave.timeLeft, game.WAVE_CONFIG[11].duration + 6);
 assert.equal(finalCashoutWave.completesRun, false);
 assert.equal(finalCashoutWave.awaitingForge, false);
 assert.ok(finalCashoutWave.spawnBudget > 0);
-assert.ok(finalCashoutWave.activeCap >= game.WAVE_CONFIG[9].activeCap);
-assert.ok(finalCashoutWave.hazard.interval < game.WAVE_CONFIG[9].hazard.interval);
+assert.ok(finalCashoutWave.activeCap > game.WAVE_CONFIG[11].activeCap);
+assert.ok(finalCashoutWave.hazard.interval < game.WAVE_CONFIG[11].hazard.interval);
 assert.ok(finalCashoutWave.label.includes("Afterburn I"));
 assert.equal(finalCashoutWave.postCapstoneTotal, game.POST_CAPSTONE_WAVE_COUNT);
 
@@ -1548,7 +1560,7 @@ const railCashoutWave = game.createFinalCashoutWave(game.MAX_WAVES - 1, stormRai
 assert.equal(railCashoutWave.label.includes("Rail Trial"), true);
 assert.equal(railCashoutWave.hazard.count, 3);
 assert.ok(railCashoutWave.mix.scuttler > finalCashoutWave.mix.scuttler);
-assert.ok(railCashoutWave.activeCap < game.WAVE_CONFIG[game.MAX_WAVES - 1].activeCap);
+assert.ok(railCashoutWave.activeCap >= game.WAVE_CONFIG[game.MAX_WAVES - 1].activeCap);
 
 const mirrorCashoutWave = game.createFinalCashoutWave(game.MAX_WAVES - 1, mirrorSpiralBuild);
 assert.equal(mirrorCashoutWave.label.includes("Mirror Trial"), true);

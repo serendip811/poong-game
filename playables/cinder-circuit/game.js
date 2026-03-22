@@ -808,6 +808,53 @@
   const FINAL_CASHOUT_DURATION = 12;
   const FINAL_CASHOUT_SPAWN_BUDGET = 26;
   const POST_CAPSTONE_WAVE_LABELS = ["Afterburn I", "Afterburn II", "Afterburn III"];
+  const POST_CAPSTONE_ASCENSION_PROFILE = [
+    {
+      durationBonus: 6,
+      spawnBudgetBonus: 24,
+      activeCapBonus: 4,
+      baseSpawnScale: 0.9,
+      minSpawnScale: 0.94,
+      hazardIntervalScale: 0.88,
+      hazardTelegraphScale: 0.94,
+      hazardCountBonus: 0,
+      hazardDamageBonus: 2,
+      hazardCoreHpBonus: 10,
+      hazardRelayDamageBonus: 1,
+      driveGainFloor: 1.58,
+      apexSpawnTimer: 7.8,
+    },
+    {
+      durationBonus: 10,
+      spawnBudgetBonus: 42,
+      activeCapBonus: 7,
+      baseSpawnScale: 0.84,
+      minSpawnScale: 0.9,
+      hazardIntervalScale: 0.8,
+      hazardTelegraphScale: 0.9,
+      hazardCountBonus: 1,
+      hazardDamageBonus: 3,
+      hazardCoreHpBonus: 18,
+      hazardRelayDamageBonus: 2,
+      driveGainFloor: 1.68,
+      apexSpawnTimer: 6.9,
+    },
+    {
+      durationBonus: 14,
+      spawnBudgetBonus: 62,
+      activeCapBonus: 10,
+      baseSpawnScale: 0.78,
+      minSpawnScale: 0.86,
+      hazardIntervalScale: 0.74,
+      hazardTelegraphScale: 0.86,
+      hazardCountBonus: 1,
+      hazardDamageBonus: 4,
+      hazardCoreHpBonus: 28,
+      hazardRelayDamageBonus: 3,
+      driveGainFloor: 1.8,
+      apexSpawnTimer: 6,
+    },
+  ];
   const KILN_BASTION_FIELD_BASE = {
     radiusFactor: 0.24,
     enemyDamage: 7,
@@ -9090,58 +9137,83 @@
 
   function createPostCapstoneWave(stageIndex = 0, build = null) {
     const boundedStage = clamp(stageIndex, 0, POST_CAPSTONE_WAVE_COUNT - 1);
-    const baseIndex = clamp(MAX_WAVES - POST_CAPSTONE_WAVE_COUNT + boundedStage, 0, MAX_WAVES - 1);
-    const baseConfig = resolveWaveConfig(baseIndex, build);
+    const baseConfig = resolveWaveConfig(MAX_WAVES - 1, build);
+    const escalation =
+      POST_CAPSTONE_ASCENSION_PROFILE[boundedStage] ||
+      POST_CAPSTONE_ASCENSION_PROFILE[POST_CAPSTONE_ASCENSION_PROFILE.length - 1];
     const variant = getSelectedFinaleVariant(build);
     const spawnBias = variant
-      ? clamp((variant.spawnBudget - FINAL_CASHOUT_SPAWN_BUDGET) * 4, -8, 20)
+      ? clamp((variant.spawnBudget - FINAL_CASHOUT_SPAWN_BUDGET) * 4, -8, 24)
       : 0;
     const capBias = variant
-      ? clamp(Math.round((variant.activeCap - 18) * 0.5), -2, 4)
+      ? clamp(Math.round((variant.activeCap - 18) * 0.7), -2, 6)
       : 0;
     const hazard = baseConfig.hazard
       ? {
           ...baseConfig.hazard,
           ...(variant && variant.hazard ? variant.hazard : {}),
           interval: Math.max(
-            5.4,
+            4.8,
             (variant && variant.hazard && Number.isFinite(variant.hazard.interval)
               ? variant.hazard.interval
-              : baseConfig.hazard.interval) * (0.98 - boundedStage * 0.05)
+              : baseConfig.hazard.interval) * escalation.hazardIntervalScale
           ),
           telegraph: Math.max(
-            0.6,
+            0.56,
             (variant && variant.hazard && Number.isFinite(variant.hazard.telegraph)
               ? variant.hazard.telegraph
-              : baseConfig.hazard.telegraph) * (1.04 - boundedStage * 0.04)
+              : baseConfig.hazard.telegraph) * escalation.hazardTelegraphScale
           ),
+          count: Math.max(
+            1,
+            (variant && variant.hazard && Number.isFinite(variant.hazard.count)
+              ? variant.hazard.count
+              : baseConfig.hazard.count || 1) + escalation.hazardCountBonus
+          ),
+          damage:
+            (variant && variant.hazard && Number.isFinite(variant.hazard.damage)
+              ? variant.hazard.damage
+              : baseConfig.hazard.damage || 0) + escalation.hazardDamageBonus,
+          coreHp: Number.isFinite(baseConfig.hazard.coreHp)
+            ? (variant && variant.hazard && Number.isFinite(variant.hazard.coreHp)
+                ? variant.hazard.coreHp
+                : baseConfig.hazard.coreHp) + escalation.hazardCoreHpBonus
+            : baseConfig.hazard.coreHp,
+          relayDamage: Number.isFinite(baseConfig.hazard.relayDamage)
+            ? (variant && variant.hazard && Number.isFinite(variant.hazard.relayDamage)
+                ? variant.hazard.relayDamage
+                : baseConfig.hazard.relayDamage) + escalation.hazardRelayDamageBonus
+            : baseConfig.hazard.relayDamage,
         }
       : null;
     return {
       index: MAX_WAVES + boundedStage,
-      timeLeft: baseConfig.duration,
-      spawnBudget: Math.max(96, baseConfig.spawnBudget + spawnBias + boundedStage * 16),
+      timeLeft: baseConfig.duration + escalation.durationBonus,
+      spawnBudget: Math.max(
+        baseConfig.spawnBudget + 16,
+        baseConfig.spawnBudget + escalation.spawnBudgetBonus + spawnBias
+      ),
       spawned: 0,
       spawnTimer: 0.35,
       label: `Wave ${MAX_WAVES + boundedStage + 1} · ${POST_CAPSTONE_WAVE_LABELS[boundedStage]}${variant ? ` · ${variant.cashoutLabel}` : ""}`,
       bannerLabel: `${variant ? variant.bannerLabel || variant.cashoutLabel : "Afterburn"} · ${POST_CAPSTONE_WAVE_LABELS[boundedStage]}`,
       note: variant
-        ? `${variant.note} 짧은 시험이 아니라 완성된 형태를 실제 웨이브 셋에 풀어 놓는 post-capstone ownership 구간이다.`
-        : "완성된 무기가 3연속 후반 wave를 실제로 먹어 치우는 post-capstone ownership 구간.",
-      directive: variant ? variant.directive : baseConfig.directive,
-      activeCap: Math.max(28, baseConfig.activeCap + capBias + boundedStage * 2),
+        ? `${variant.note} 이제는 짧은 시험이 아니라 Wave 12 crown보다 더 높은 forbidden-territory bracket이며, roaming apex를 잡아 마지막 body splice를 뜯어내는 post-capstone ascent다.`
+        : "완성된 무기가 Wave 12 crown보다 더 높은 압박과 roaming apex breach를 연속으로 버티며 마지막 변이를 뜯어내는 post-capstone ascent.",
+      directive: `${variant ? variant.directive : baseConfig.directive} Afterburn에서는 구조물만 정리하고 끝나지 않는다. 더 빠른 crown 압박 속에서 roaming apex를 추적 처치해 마지막 Predator Molt를 챙겨야 한다.`,
+      activeCap: Math.max(baseConfig.activeCap + 2, baseConfig.activeCap + escalation.activeCapBonus + capBias),
       baseSpawnInterval: Math.max(
-        baseConfig.spawnIntervalMin,
-        baseConfig.baseSpawnInterval * (0.96 - boundedStage * 0.04)
+        0.074,
+        baseConfig.baseSpawnInterval * escalation.baseSpawnScale
       ),
-      spawnIntervalMin: Math.max(0.085, baseConfig.spawnIntervalMin * (0.96 - boundedStage * 0.02)),
+      spawnIntervalMin: Math.max(0.076, baseConfig.spawnIntervalMin * escalation.minSpawnScale),
       spawnAcceleration: baseConfig.spawnAcceleration,
-      eliteEvery: Math.max(4, baseConfig.eliteEvery - (boundedStage > 0 ? 1 : 0)),
+      eliteEvery: Math.max(3, baseConfig.eliteEvery - 1 - (boundedStage > 0 ? 1 : 0)),
       mix: blendEnemyMix(baseConfig.mix, variant ? variant.mix : null, 0.3 + boundedStage * 0.04),
       cleanupPhase: false,
       awaitingForge: false,
       completesRun: boundedStage >= POST_CAPSTONE_WAVE_COUNT - 1,
-      driveGainFactor: Math.max(baseConfig.driveGainFactor || 1, 1.44 + boundedStage * 0.08),
+      driveGainFactor: Math.max(baseConfig.driveGainFactor || 1, escalation.driveGainFloor),
       arena: getArenaSize(baseConfig),
       hazard,
       hazardTimer: hazard ? hazard.interval * 0.72 : Number.POSITIVE_INFINITY,
@@ -9152,7 +9224,7 @@
         ? {
             spawned: false,
             defeated: false,
-            spawnTimer: Math.min(APEX_PREDATOR_SPAWN_DELAY, Math.max(7, baseConfig.duration * 0.2)),
+            spawnTimer: Math.min(escalation.apexSpawnTimer, Math.max(5.6, baseConfig.duration * 0.16)),
           }
         : null,
     };

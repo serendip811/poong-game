@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 14:30:42 KST
+  Findings:
+  - The run still peaks too early and then deflates. `Wave 12` reaches roughly `232` spawn budget / `48` active cap, then the supposed climax converts into three `Afterburn` trials built from a `26`-budget template. That reads like a postscript, not a second ascent players would replay to reach.
+  - Combat space is larger, but the game still spends too much of its ambition in scheduled admin beats: `Architecture Draft`, `Act Break Armory`, `Bastion Draft`, `Late Break Armory`, `Catalyst Crucible`, then final forge. The player is often following an authored upgrade itinerary instead of fighting to earn the next dangerous form in motion.
+  - Build readability is still too support-led. Satellites, shields, sentries, missiles, and drones are numerous, visible, and often more legible than the main gun's growth, so the fantasy trends toward managing a helpful perimeter instead of piloting a weapon/chassis mutation the player wants to chase across many runs.
+  - The design docs still sell a `5웨이브`, `7분 내외` prototype while the implementation is already a multi-act `15`-wave game. That mismatch keeps encouraging "short run closure" solutions exactly where the project now needs a long escalation model with room for `20-30` wave ambition.
+  Top Priority: Rebuild the post-`Wave 12` structure into a true escalation bracket that keeps or exceeds late-wave combat pressure while offering one more combat-earned main-weapon/chassis mutation, so the end of a strong run feels like entering forbidden territory rather than cashing out.
+  Why Now: If the payoff arc collapses right after the build comes online, longer runs will feel padded instead of addictive.
+  Do Not Repeat: Do not patch this with another forge screen, another helper subsystem, or another low-pressure victory lap wave set.
+
 - 2026-03-22 14:00:32 KST
   Findings:
   - The run is longer and more legible now, but too many late waves still reduce to the same battlefield verb: break the hazard structure first, then clean up the rest. `bastion`, `relay`, and `drift` variants change presentation, yet the player is still mostly solving "which anchor/pylon do I kill first?" instead of facing enemy ecologies that demand different movement and weapon commitments.
@@ -781,6 +791,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 15:05 KST
+  Changed: rebuilt the post-`Wave 12` `Afterburn` generator in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 13-15` now start from the actual `Wave 12` crown template instead of softer `Wave 10-12` remix pressure, then ramp upward each stage. The bracket now adds longer durations, higher spawn budgets, higher active caps, faster spawn pacing, and harsher hazard tuning on top of the late-act crown, so post-capstone combat no longer drops into a low-budget victory lap. I also rewrote the post-capstone note/directive text to explicitly frame `Afterburn` as a forbidden-territory ascent where the player should hunt the roaming `Cinder Maw` for the last `Predator Molt`, and updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert that `Afterburn` now exceeds `Wave 12` pressure and accelerates its apex breach timing across the bracket.
+  Why: the newest critique’s Top Priority was to rebuild the post-`Wave 12` structure into a true escalation bracket that maintains or exceeds late-wave combat pressure while still offering one more combat-earned weapon/body mutation. The highest-value bounded interpretation was not another new menu or subsystem, but to harden the existing `Afterburn` ladder itself so the already-added apex mutation lane lands inside a genuinely dangerous second ascent instead of on top of under-tuned cleanup waves.
+  Follow-up risk: `Afterburn` now feels like a real continuation of the run rather than a cooldown lap, but it still relies on one roaming apex family and inherited late-act hazard languages. If later critique still wants more endgame rerun hunger, the next bounded step should split post-capstone pressure into more distinct apex/ecology variants instead of only pushing raw numbers higher.
 
 - 2026-03-22 14:19 KST
   Changed: added one late-act roaming apex family in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js): `Cinder Maw`. Starting in `Wave 11` and continuing into `Afterburn` until capped, one `Cinder Maw` can breach into the wave as a moving hunter instead of another bastion/relay structure. It flanks at mid-range, repeatedly charge-sweeps across the arena, and throws short fan bursts while moving, so the player now has to pre-rotate and survive a roaming kill threat rather than solve one more anchor/pylon priority test. Killing it immediately grants a stacked `Predator Molt` body-weapon mutation with no menu stop: the chassis gains speed/dash posture but loses max HP/cooling, the main gun grows visible side-spine fire, and if the run already took an illegal overclock the kill also forces the next illegal mutation tier at the same moment. I updated the HUD/readout, forge summary, player frame, and smoke coverage so this new second-ascent lane is readable.
