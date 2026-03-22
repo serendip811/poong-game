@@ -35,6 +35,9 @@
     coolRatePenalty: 6,
     hazardPenalty: 0.05,
   };
+  const APEX_PREDATOR_START_WAVE = 11;
+  const MAX_APEX_MUTATION_LEVEL = 3;
+  const APEX_PREDATOR_SPAWN_DELAY = 12;
 
   const WAVE_CONFIG = [
     {
@@ -1002,6 +1005,16 @@
       damage: 18,
       scrap: 5,
       particleColor: "#ffe3a4",
+    },
+    apex: {
+      label: "Cinder Maw",
+      color: "#ff9f59",
+      radius: 28,
+      hp: 310,
+      speed: 82,
+      damage: 22,
+      scrap: 9,
+      particleColor: "#ffd7a8",
     },
   };
 
@@ -3492,6 +3505,7 @@
     illegalOverclockId: null,
     illegalOverclockOffered: false,
     illegalOverclockMutationLevel: 0,
+    apexMutationLevel: 0,
     bastionPactDebtWaves: 0,
     wave6ChassisBreakpoint: false,
     chassisId: null,
@@ -3554,6 +3568,28 @@
 
   function getIllegalMutationTierLabel(level) {
     return `MOLT ${clamp(Math.round(level || 0), 1, MAX_ILLEGAL_OVERCLOCK_MUTATIONS)}`;
+  }
+
+  function getApexMutationLevel(build) {
+    return clamp(
+      Math.round((build && build.apexMutationLevel) || 0),
+      0,
+      MAX_APEX_MUTATION_LEVEL
+    );
+  }
+
+  function getApexMutationTierLabel(level) {
+    return `PRED ${clamp(Math.round(level || 0), 1, MAX_APEX_MUTATION_LEVEL)}`;
+  }
+
+  function getApexSpineOffsets(level) {
+    if (level >= 3) {
+      return [-0.6, -0.34, -0.14, 0.14, 0.34, 0.6];
+    }
+    if (level === 2) {
+      return [-0.48, -0.18, 0.18, 0.48];
+    }
+    return [-0.32, 0.32];
   }
 
   function getGlassBroadsideOffsets(level) {
@@ -4546,6 +4582,7 @@
         illegalOverclockId: BASE_BUILD.illegalOverclockId,
         illegalOverclockOffered: BASE_BUILD.illegalOverclockOffered,
         illegalOverclockMutationLevel: BASE_BUILD.illegalOverclockMutationLevel,
+        apexMutationLevel: BASE_BUILD.apexMutationLevel,
         bastionPactDebtWaves: BASE_BUILD.bastionPactDebtWaves,
         wave6ChassisBreakpoint: BASE_BUILD.wave6ChassisBreakpoint,
         chassisId: BASE_BUILD.chassisId,
@@ -4932,6 +4969,11 @@
       illegalOverclockTraitLabel: null,
       illegalOverclockStatusNote: null,
       illegalOverclockFirePattern: null,
+      apexMutationLevel: 0,
+      apexMutationLabel: null,
+      apexMutationTraitLabel: null,
+      apexMutationStatusNote: null,
+      apexMutationFirePattern: null,
     };
     getAffixDefs(build).forEach((affix) => {
       if (typeof affix.applyWeapon === "function") {
@@ -4996,6 +5038,41 @@
           : illegalOverclock.statusNote;
       if (typeof illegalOverclock.applyWeapon === "function") {
         illegalOverclock.applyWeapon(stats, build);
+      }
+    }
+    const apexMutationLevel = getApexMutationLevel(build);
+    if (apexMutationLevel > 0) {
+      stats.apexMutationLevel = apexMutationLevel;
+      stats.apexMutationLabel = "Predator Molt";
+      stats.apexMutationTraitLabel = `Cinder Maw · ${getApexMutationTierLabel(apexMutationLevel)}`;
+      stats.apexMutationStatusNote = `Cinder Maw를 사냥해 주무장과 차체가 함께 변이했다. 현재 ${getApexMutationTierLabel(apexMutationLevel)}로 추가 배럴과 돌진 프레임이 열려 있다.`;
+      stats.apexMutationFirePattern = {
+        kind: "apex_spines",
+        offsets: getApexSpineOffsets(apexMutationLevel),
+        speedMultiplier: 1.06 + apexMutationLevel * 0.03,
+        radius: 4.8,
+        damageMultiplier: 0.3 + apexMutationLevel * 0.04,
+        life: 0.72 + apexMutationLevel * 0.06,
+        pierceBonus: core.id === "lance" && apexMutationLevel >= 2 ? 1 : 0,
+        bounceBonus: 0,
+        chainBonus: 0,
+        color: "#ffb36b",
+      };
+      stats.damage += apexMutationLevel * 2;
+      if (core.id === "ember") {
+        stats.cooldown = clamp(stats.cooldown * (1 - apexMutationLevel * 0.035), 0.08, 0.4);
+      } else if (core.id === "scatter") {
+        stats.pellets += apexMutationLevel;
+        stats.spread = round(stats.spread * (1 - apexMutationLevel * 0.05), 3);
+      } else if (core.id === "lance") {
+        stats.pierce += Math.ceil(apexMutationLevel / 2);
+        stats.projectileSpeed += apexMutationLevel * 22;
+      } else if (core.id === "ricochet") {
+        stats.chain += 1;
+        stats.chainRange = Math.max(stats.chainRange || 0, 182);
+        if (apexMutationLevel >= 2) {
+          stats.bounce += 1;
+        }
       }
     }
     stats.damage = round(stats.damage, 1);
@@ -7392,6 +7469,41 @@
     return null;
   }
 
+  function applyApexPredatorMutation(run) {
+    if (!run || !run.build) {
+      return null;
+    }
+    const currentLevel = getApexMutationLevel(run.build);
+    if (currentLevel >= MAX_APEX_MUTATION_LEVEL) {
+      return null;
+    }
+    const nextLevel = currentLevel + 1;
+    run.build.apexMutationLevel = nextLevel;
+    run.build.damageBonus += 3;
+    run.build.moveSpeedBonus += 12;
+    run.build.dashCooldownBonus += 0.14;
+    run.build.maxHpBonus -= 5;
+    run.build.coolRateBonus -= 2;
+    run.build.upgrades.push(`Predator Molt ${nextLevel}: Cinder Maw`);
+    let illegalMutationApplied = false;
+    if (run.build.illegalOverclockId) {
+      const illegalMutationChoice = createIllegalOverclockMutationChoice(run.build);
+      if (illegalMutationChoice) {
+        applyForgeChoice(run, illegalMutationChoice);
+        illegalMutationApplied = true;
+      }
+    }
+    if (run.player) {
+      run.player.hp = Math.min(
+        Math.max(1, run.player.hp),
+        Math.max(1, 100 + run.build.maxHpBonus)
+      );
+      run.player.heat = Math.max(0, run.player.heat - 10);
+      run.player.overheated = false;
+    }
+    return { nextLevel, illegalMutationApplied };
+  }
+
   function createParticle(x, y, color, scale) {
     const speed = 40 + Math.random() * 120;
     const angle = Math.random() * Math.PI * 2;
@@ -7421,6 +7533,7 @@
     SUPPORT_SYSTEM_DEFS,
     CHASSIS_BREAKPOINT_DEFS,
     ILLEGAL_OVERCLOCK_DEFS,
+    MAX_APEX_MUTATION_LEVEL,
     DOCTRINE_CAPSTONE_DEFS,
     SIGNATURE_DEFS,
     DEFAULT_SIGNATURE_ID,
@@ -7454,6 +7567,8 @@
     buildWave6ChassisBreakpointChoices,
     createIllegalOverclockChoices,
     createIllegalOverclockMutationChoice,
+    getApexMutationLevel,
+    applyApexPredatorMutation,
     buildCatalystDraftChoices,
     applyForgeChoice,
     applyChassisBreakpoint,
@@ -7669,6 +7784,7 @@
       weapon.chain > 0 ? `연쇄 ${weapon.chain}` : null,
       weapon.evolutionTraitLabel ? weapon.evolutionTraitLabel : null,
       weapon.illegalOverclockTraitLabel ? weapon.illegalOverclockTraitLabel : null,
+      weapon.apexMutationTraitLabel ? weapon.apexMutationTraitLabel : null,
       weapon.capstoneTraitLabel ? weapon.capstoneTraitLabel : null,
     ].filter(Boolean);
   }
@@ -8693,6 +8809,14 @@
     setBanner(choice.tag, 0.8);
   }
 
+  function shouldSpawnApexPredator(build, waveNumber) {
+    return (
+      !!build &&
+      waveNumber >= APEX_PREDATOR_START_WAVE &&
+      getApexMutationLevel(build) < MAX_APEX_MUTATION_LEVEL
+    );
+  }
+
   function beginWave(index) {
     const resolvedConfig = resolveWaveConfig(index, state.build);
     const config = {
@@ -8753,6 +8877,13 @@
             claimed: false,
             groupId: null,
             choices: getCombatCacheChoicesForWave(state.build, waveNumber + 1),
+          }
+        : null,
+      apexPredator: shouldSpawnApexPredator(state.build, waveNumber)
+        ? {
+            spawned: false,
+            defeated: false,
+            spawnTimer: Math.min(APEX_PREDATOR_SPAWN_DELAY, Math.max(8, config.duration * 0.24)),
           }
         : null,
     };
@@ -9017,6 +9148,13 @@
       postCapstoneStage: boundedStage + 1,
       postCapstoneTotal: POST_CAPSTONE_WAVE_COUNT,
       skipForgeOnClear: boundedStage < POST_CAPSTONE_WAVE_COUNT - 1,
+      apexPredator: shouldSpawnApexPredator(build, MAX_WAVES + boundedStage + 1)
+        ? {
+            spawned: false,
+            defeated: false,
+            spawnTimer: Math.min(APEX_PREDATOR_SPAWN_DELAY, Math.max(7, baseConfig.duration * 0.2)),
+          }
+        : null,
     };
   }
 
@@ -9373,6 +9511,13 @@
       overcommitTarget: false,
       doctrinePursuitTarget: false,
     };
+    if (typeId === "apex") {
+      enemy.hp = def.hp * (1 + state.waveIndex * 0.12);
+      enemy.attackCooldown = 0.75;
+      enemy.apexChargeCooldown = 1.6 + Math.random() * 0.6;
+      enemy.apexChargeTime = 0;
+      enemy.apexChargeVector = { x: 1, y: 0 };
+    }
     if (
       typeId === "elite" &&
       state.doctrinePursuit.active &&
@@ -9428,6 +9573,23 @@
           wave.baseSpawnInterval
         );
     const activeCap = wave.cleanupPhase ? wave.activeCap + 10 : wave.activeCap;
+
+    if (
+      wave.apexPredator &&
+      !wave.cleanupPhase &&
+      !wave.apexPredator.spawned
+    ) {
+      wave.apexPredator.spawnTimer -= dt;
+      if (wave.apexPredator.spawnTimer <= 0 && !state.enemies.some((enemy) => enemy.type === "apex")) {
+        spawnEnemy("apex");
+        wave.apexPredator.spawned = true;
+        pushCombatFeed(
+          "Cinder Maw 돌입. 구조물 대신 직접 옆구리를 파고들며 돌진한다. 한 lane을 오래 붙잡지 말고 먼저 회전해 charge를 흘려야 한다.",
+          "APEX"
+        );
+        setBanner("Cinder Maw", 0.9);
+      }
+    }
 
     while (
       wave.spawnTimer <= 0 &&
@@ -10894,6 +11056,7 @@
     fireWeaponPattern(weapon.evolutionFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.doctrineFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.illegalOverclockFirePattern, weapon, baseAngle, driveActive);
+    fireWeaponPattern(weapon.apexMutationFirePattern, weapon, baseAngle, driveActive);
     const chassisFireProfile = fireChassisWeaponPosture(weapon, baseAngle, driveActive);
 
     if (weapon.capstoneFire) {
@@ -11229,6 +11392,38 @@
       if (enemy.type === "shrike") {
         enemy.wobble += dt * 5;
         angle += Math.sin(enemy.wobble) * 0.6;
+      } else if (enemy.type === "apex") {
+        enemy.wobble += dt * 3.6;
+        enemy.apexChargeCooldown = Math.max(0, (enemy.apexChargeCooldown || 0) - dt);
+        enemy.apexChargeTime = Math.max(0, (enemy.apexChargeTime || 0) - dt);
+        const distanceToPlayer = Math.hypot(state.player.x - enemy.x, state.player.y - enemy.y);
+        if (enemy.apexChargeTime > 0) {
+          angle = Math.atan2(enemy.apexChargeVector.y, enemy.apexChargeVector.x);
+          speedMultiplier *= 2.7;
+        } else {
+          const preferredRange = 248;
+          if (distanceToPlayer < preferredRange * 0.72) {
+            angle += Math.PI * 0.92;
+            speedMultiplier *= 1.24;
+          } else if (distanceToPlayer <= preferredRange * 1.24) {
+            angle += enemy.orbitDirection * 1.34 + Math.sin(enemy.wobble) * 0.18;
+            speedMultiplier *= 1.08;
+          } else {
+            speedMultiplier *= 1.18;
+          }
+          if (enemy.apexChargeCooldown <= 0) {
+            enemy.apexChargeCooldown = 4.2;
+            enemy.apexChargeTime = 0.78;
+            enemy.apexChargeVector = normalizeVector(
+              state.player.x - enemy.x,
+              state.player.y - enemy.y,
+              1,
+              0
+            );
+            angle = Math.atan2(enemy.apexChargeVector.y, enemy.apexChargeVector.x);
+            speedMultiplier *= 2.2;
+          }
+        }
       } else if (enemy.type === "mortar") {
         enemy.wobble += dt * 2.4;
         const distanceToPlayer = Math.hypot(state.player.x - enemy.x, state.player.y - enemy.y);
@@ -11272,6 +11467,19 @@
         if (distance < projectileRange) {
           spawnEnemyShot(enemy, enemy.type === "elite");
           enemy.attackCooldown = enemy.type === "elite" ? 1.6 : 2.1;
+        }
+      } else if (enemy.type === "apex" && enemy.attackCooldown <= 0) {
+        if (distance < 430) {
+          spawnEnemyShot(enemy, {
+            speed: enemy.apexChargeTime > 0 ? 228 : 208,
+            radius: enemy.apexChargeTime > 0 ? 7 : 6,
+            damage: enemy.apexChargeTime > 0 ? 14 : 11,
+            life: 3.1,
+            color: "#ffbf72",
+            count: enemy.apexChargeTime > 0 ? 5 : 3,
+            spread: enemy.apexChargeTime > 0 ? 0.2 : 0.3,
+          });
+          enemy.attackCooldown = enemy.apexChargeTime > 0 ? 1.45 : 2.2;
         }
       } else if (enemy.type === "mortar" && enemy.attackCooldown <= 0) {
         if (distance < 460) {
@@ -11493,7 +11701,9 @@
     enemy.defeated = true;
     state.stats.kills += 1;
     gainDrive(
-      enemy.type === "elite"
+      enemy.type === "apex"
+        ? 34
+        : enemy.type === "elite"
         ? 24
         : enemy.type === "brute"
           ? 10
@@ -11517,7 +11727,24 @@
       life: 10,
     });
 
-    if (enemy.type === "elite") {
+    if (enemy.type === "apex") {
+      const apexReward = applyApexPredatorMutation(state);
+      if (state.wave && state.wave.apexPredator) {
+        state.wave.apexPredator.defeated = true;
+      }
+      if (apexReward) {
+        refreshDerivedStats(false);
+        pushCombatFeed(
+          apexReward.illegalMutationApplied
+            ? `Cinder Maw 격추. ${getApexMutationTierLabel(apexReward.nextLevel)} body splice와 금지 무장 변이가 함께 잠겨 남은 웨이브를 다시 상승 곡선으로 밀어 올린다.`
+            : `Cinder Maw 격추. ${getApexMutationTierLabel(apexReward.nextLevel)} body splice가 잠겨 주무장 보조 배럴과 돌진 차체가 즉시 열렸다.`,
+          "APEX"
+        );
+        setBanner(`Predator Molt ${apexReward.nextLevel}`, 0.9);
+      }
+    }
+
+    if (enemy.type === "elite" || enemy.type === "apex") {
       const nextCore =
         DROPPABLE_CORE_IDS[Math.floor(Math.random() * DROPPABLE_CORE_IDS.length)];
       state.drops.push({
@@ -11528,6 +11755,7 @@
         life: 12,
       });
       if (
+        enemy.type !== "apex" &&
         state.waveIndex >= LATE_BREAK_ARMORY_WAVE - 1 &&
         buildCanEarnFinisherCatalyst(state.build) &&
         !state.drops.some(
@@ -11546,7 +11774,9 @@
           "CAT"
         );
       }
-      deployCombatCache(enemy);
+      if (enemy.type === "elite") {
+        deployCombatCache(enemy);
+      }
       if (enemy.overcommitTarget && state.overcommit.active) {
         state.overcommit.targetDefeated = true;
         state.overcommit.status = "salvage";
@@ -11584,7 +11814,7 @@
       }
     }
 
-    state.shake = Math.max(state.shake, enemy.type === "elite" ? 10 : 4);
+    state.shake = Math.max(state.shake, enemy.type === "elite" || enemy.type === "apex" ? 10 : 4);
   }
 
   function updateDrops(dt) {
@@ -12000,6 +12230,9 @@
     const illegalOverclockSummary = weapon.illegalOverclockLabel
       ? `${weapon.illegalOverclockLabel} · ${weapon.illegalOverclockTraitLabel}`
       : null;
+    const apexMutationSummary = weapon.apexMutationLabel
+      ? `${weapon.apexMutationLabel} · ${weapon.apexMutationTraitLabel}`
+      : null;
     const capstoneSummary = weapon.capstoneLabel
       ? `${weapon.capstoneLabel} · ${weapon.capstoneTraitLabel}`
       : null;
@@ -12029,6 +12262,7 @@
           ${weapon.evolutionLabel ? createMiniPill("EVO", weapon.evolutionLabel, "accent") : ""}
           ${weapon.doctrineFormLabel ? createMiniPill("DOC", weapon.doctrineFormLabel, "hot") : ""}
           ${weapon.illegalOverclockLabel ? createMiniPill("ILLEGAL", weapon.illegalOverclockLabel, "hot") : ""}
+          ${weapon.apexMutationLabel ? createMiniPill("APEX", weapon.apexMutationLabel, "hot") : ""}
           ${capstoneSummary ? createMiniPill("CAP", weapon.capstoneLabel, "hot") : ""}
           ${state.supportSystem ? createMiniPill("SYS", state.supportSystem.label, "accent") : ""}
           ${weapon.affixLabels.map((label) => createMiniPill("속성", label, "cool")).join("")}
@@ -12038,6 +12272,7 @@
           evolutionSummary,
           doctrineSummary,
           illegalOverclockSummary,
+          apexMutationSummary,
           capstoneSummary,
           supportSystemSummary,
           getDoctrineForgePursuitDef(state.build) && state.build.doctrinePursuitCommitted
@@ -12082,12 +12317,14 @@
       const combatCacheRows = [];
       const pactRows = [];
       const illegalOverclockRows = [];
+      const apexRows = [];
       const catalystCrucibleRows = [];
       let overcommitNote = "";
       let pursuitNote = "";
       let combatCacheNote = "";
       let pactNote = "";
       let illegalOverclockNote = "";
+      let apexNote = "";
       let catalystCrucibleNote = "";
       if (state.wave && state.wave.bastionPactDebt) {
         pactRows.push(createStatusRow("Siege Debt", `${state.wave.bastionPactDebt.wavesRemaining} left`));
@@ -12177,6 +12414,27 @@
         illegalOverclockRows.push(createStatusRow("Greed", "1 pick"));
         illegalOverclockNote = "Wave 9 black-site uplink가 열렸다. 불법 과투입 3종 중 하나만 집을 수 있고, 남은 둘은 바로 닫힌다.";
       }
+      if (state.wave && state.wave.apexPredator && !state.wave.apexPredator.defeated) {
+        apexRows.push(
+          createStatusRow(
+            "Apex",
+            state.wave.apexPredator.spawned ? "Cinder Maw live" : "breach inbound"
+          )
+        );
+        apexRows.push(
+          createStatusRow(
+            "Predator Molt",
+            `${getApexMutationLevel(state.build)}/${MAX_APEX_MUTATION_LEVEL}`
+          )
+        );
+        apexNote = state.wave.apexPredator.spawned
+          ? "Cinder Maw는 구조물을 남기지 않고 옆구리를 파고들며 charge를 반복한다. 늦게 반응해 한 lane을 붙들면 곧바로 압박이 닫힌다."
+          : "이 웨이브 후반에 roaming apex가 난입한다. 구조물 정리 순서보다 먼저, 어디로 미리 rotate할지 읽어 둬야 한다.";
+      } else if (getApexMutationLevel(state.build) > 0) {
+        apexRows.push(createStatusRow("Apex", `Predator Molt ${getApexMutationLevel(state.build)}`));
+        apexRows.push(createStatusRow("Predator", "body splice live"));
+        apexNote = "Cinder Maw body splice가 살아 있어 주무장 측면 배럴과 차체 돌진 프레임이 유지 중이다.";
+      }
       if (state.catalystCrucible.active) {
         catalystCrucibleRows.push(
           createStatusRow(
@@ -12213,12 +12471,13 @@
           ${createStatusRow(hazardStatus.detailLabel, hazardStatus.detailValue)}
           ${combatCacheRows.join("")}
           ${illegalOverclockRows.join("")}
+          ${apexRows.join("")}
           ${catalystCrucibleRows.join("")}
           ${pactRows.join("")}
           ${overcommitRows.join("")}
           ${pursuitRows.join("")}
         </div>
-        <p class="summary-note">${catalystCrucibleNote || illegalOverclockNote || combatCacheNote || pactNote || pursuitNote || overcommitNote || hazardStatus.note}</p>
+        <p class="summary-note">${catalystCrucibleNote || apexNote || illegalOverclockNote || combatCacheNote || pactNote || pursuitNote || overcommitNote || hazardStatus.note}</p>
       `;
     }
 
@@ -12262,7 +12521,7 @@
         }">${
           state.player.overheated
             ? "사격 정지: 열을 비워야 한다."
-            : `${weapon.evolutionStatusNote ? `${weapon.evolutionStatusNote} ` : ""}${weapon.doctrineStatusNote ? `${weapon.doctrineStatusNote} ` : ""}${weapon.illegalOverclockStatusNote ? `${weapon.illegalOverclockStatusNote} ` : ""}${weapon.capstoneStatusNote ? `${weapon.capstoneStatusNote} ` : ""}${state.supportSystem ? `${state.supportSystem.statusNote} ` : ""}${hazardStatus.note} 자동 사격은 과열 전까지 유지된다.`
+            : `${weapon.evolutionStatusNote ? `${weapon.evolutionStatusNote} ` : ""}${weapon.doctrineStatusNote ? `${weapon.doctrineStatusNote} ` : ""}${weapon.illegalOverclockStatusNote ? `${weapon.illegalOverclockStatusNote} ` : ""}${weapon.apexMutationStatusNote ? `${weapon.apexMutationStatusNote} ` : ""}${weapon.capstoneStatusNote ? `${weapon.capstoneStatusNote} ` : ""}${state.supportSystem ? `${state.supportSystem.statusNote} ` : ""}${hazardStatus.note} 자동 사격은 과열 전까지 유지된다.`
         }</p>
       `;
     }
@@ -12294,6 +12553,9 @@
     const illegalOverclockSummary = state.weapon.illegalOverclockLabel
       ? `${state.weapon.illegalOverclockLabel} · ${state.weapon.illegalOverclockTraitLabel}`
       : "불법 과투입 없음";
+    const apexMutationSummary = state.weapon.apexMutationLabel
+      ? `${state.weapon.apexMutationLabel} · ${state.weapon.apexMutationTraitLabel}`
+      : "apex body splice 없음";
     const capstoneSummary = state.weapon.capstoneLabel
       ? `${state.weapon.capstoneLabel} · ${state.weapon.capstoneTraitLabel}`
       : "활성 촉매 재구성 없음";
@@ -12396,7 +12658,7 @@
       <article class="forge-context__card">
         <p class="panel__eyebrow">속성 / 진화 / 시스템</p>
         <strong>${affixSummary}</strong>
-        <p>${evolutionSummary} · ${doctrineSummary} · ${illegalOverclockSummary} · ${capstoneSummary} · ${chassisSummary} · ${forgeSystemSummary} · ${doctrinePursuitSummary} · ${supportBaySummary} · 보관 ${benchEntries.length}종 · ${catalystSummary} · 분해 예상 고철 ${getRecycleValue(state.build)}</p>
+        <p>${evolutionSummary} · ${doctrineSummary} · ${illegalOverclockSummary} · ${apexMutationSummary} · ${capstoneSummary} · ${chassisSummary} · ${forgeSystemSummary} · ${doctrinePursuitSummary} · ${supportBaySummary} · 보관 ${benchEntries.length}종 · ${catalystSummary} · 분해 예상 고철 ${getRecycleValue(state.build)}</p>
       </article>
     `;
     elements.forgeCards.innerHTML = state.forgeChoices
@@ -12960,6 +13222,18 @@
           context.arc(enemy.x, enemy.y, enemy.radius + 6, 0, Math.PI * 2);
           context.stroke();
         }
+      } else if (enemy.type === "apex") {
+        drawPolygon(context, enemy.x, enemy.y, enemy.radius, 8, Math.PI / 8 + enemy.wobble * 0.08);
+        context.fill();
+        context.strokeStyle = "rgba(255, 223, 186, 0.92)";
+        context.lineWidth = 3;
+        context.beginPath();
+        context.arc(enemy.x, enemy.y, enemy.radius + 7, 0, Math.PI * 2);
+        context.stroke();
+        context.lineWidth = 2;
+        context.beginPath();
+        context.arc(enemy.x, enemy.y, enemy.radius * 0.52, 0, Math.PI * 2);
+        context.stroke();
       } else if (enemy.type === "warden") {
         drawPolygon(context, enemy.x, enemy.y, enemy.radius, 4, Math.PI / 4 + enemy.wobble * 0.12);
         context.fill();
@@ -13063,6 +13337,7 @@
       context.fillStyle =
         state.player.invulnerableTime > 0 ? "#fff0c9" : state.weapon.color;
       drawPlayerChassisFrame(context);
+      drawPlayerApexFrame(context);
       drawPlayerIllegalOverclockFrame(context);
       context.beginPath();
       context.arc(state.player.x, state.player.y, state.player.radius, 0, Math.PI * 2);
@@ -13167,6 +13442,33 @@
         context.stroke();
       });
     }
+  }
+
+  function drawPlayerApexFrame(context) {
+    if (!state.player || getApexMutationLevel(state.build) <= 0) {
+      return;
+    }
+    const level = getApexMutationLevel(state.build);
+    const facing = state.player.facing || 0;
+    const laneOffsets =
+      level >= 3 ? [-1.4, -0.7, 0.7, 1.4] : level === 2 ? [-1.1, -0.5, 0.5, 1.1] : [-0.8, 0.8];
+    laneOffsets.forEach((lane) => {
+      const fin = getOffsetPoint(state.player.x, state.player.y, facing, -2, 15 * lane);
+      context.strokeStyle = "rgba(255, 191, 114, 0.86)";
+      context.lineWidth = 2.2;
+      context.beginPath();
+      context.moveTo(fin.x, fin.y);
+      context.lineTo(
+        fin.x - Math.cos(facing) * (8 + level * 1.5),
+        fin.y - Math.sin(facing) * (8 + level * 1.5)
+      );
+      context.stroke();
+    });
+    context.strokeStyle = "rgba(255, 223, 186, 0.7)";
+    context.lineWidth = 2;
+    context.beginPath();
+    context.arc(state.player.x, state.player.y, state.player.radius + 11 + level * 1.5, 0, Math.PI * 2);
+    context.stroke();
   }
 
   function drawPlayerIllegalOverclockFrame(context) {

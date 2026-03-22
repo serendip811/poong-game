@@ -201,6 +201,33 @@ assert.equal(broadsideRun.build.maxHpBonus, -26);
 const mutatedBroadsideWeapon = game.computeWeaponStats(broadsideRun.build);
 assert.match(mutatedBroadsideWeapon.illegalOverclockTraitLabel, /MOLT 1/);
 assert.equal(mutatedBroadsideWeapon.illegalOverclockFirePattern.offsets.length, 4);
+const apexRun = {
+  build: game.createInitialBuild("relay_oath"),
+  resources: { scrap: 0 },
+  stats: { scrapCollected: 0, scrapSpent: 0 },
+  player: { hp: 100, maxHp: 100, heat: 18, overheated: false },
+};
+const apexReward = game.applyApexPredatorMutation(apexRun);
+assert.equal(apexReward.nextLevel, 1);
+assert.equal(game.getApexMutationLevel(apexRun.build), 1);
+const apexWeapon = game.computeWeaponStats(apexRun.build);
+assert.equal(apexWeapon.apexMutationLabel, "Predator Molt");
+assert.match(apexWeapon.apexMutationTraitLabel, /PRED 1/);
+assert.equal(apexWeapon.apexMutationFirePattern.offsets.length, 2);
+const apexIllegalRun = {
+  build: game.createInitialBuild("relay_oath"),
+  resources: { scrap: 0 },
+  stats: { scrapCollected: 0, scrapSpent: 0 },
+  player: { hp: 100, maxHp: 100, heat: 18, overheated: false },
+};
+game.applyForgeChoice(
+  apexIllegalRun,
+  illegalOverclockChoices.find((choice) => choice.illegalOverclockId === "rupture_crown")
+);
+const apexIllegalReward = game.applyApexPredatorMutation(apexIllegalRun);
+assert.equal(apexIllegalReward.nextLevel, 1);
+assert.equal(apexIllegalReward.illegalMutationApplied, true);
+assert.equal(apexIllegalRun.build.illegalOverclockMutationLevel, 1);
 const baseRelayWeapon = game.computeWeaponStats(game.createInitialBuild("relay_oath"));
 const cyclerBuild = game.createInitialBuild("relay_oath");
 const cyclerRun = {
@@ -261,6 +288,8 @@ assert.equal(kilnBulwarkWeapon.doctrineFirePattern.count, 5);
 assert.equal(game.resolveWaveConfig(8, game.createInitialBuild("relay_oath")).label, game.WAVE_CONFIG[8].label);
 assert.ok(game.ENEMY_DEFS.warden.hp > game.ENEMY_DEFS.shrike.hp);
 assert.ok(game.ENEMY_DEFS.mortar);
+assert.ok(game.ENEMY_DEFS.apex);
+assert.ok(game.ENEMY_DEFS.apex.hp > game.ENEMY_DEFS.elite.hp);
 assert.ok(game.ENEMY_DEFS.mortar.scrap >= game.ENEMY_DEFS.shrike.scrap);
 assert.ok(game.ENEMY_DEFS.mortar.speed < game.ENEMY_DEFS.shrike.speed);
 assert.equal(game.createFinalCashoutWave().arena.width, 1440);
@@ -277,6 +306,7 @@ assert.equal(
   JSON.stringify(Object.keys(game.ILLEGAL_OVERCLOCK_DEFS).sort()),
   JSON.stringify(["glass_broadside", "meltdown_cycler", "rupture_crown"])
 );
+assert.equal(game.MAX_APEX_MUTATION_LEVEL, 3);
 
 const signatureBuild = game.createInitialBuild("scrap_pact");
 assert.equal(signatureBuild.signatureId, "scrap_pact");

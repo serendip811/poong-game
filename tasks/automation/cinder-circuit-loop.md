@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 14:00:32 KST
+  Findings:
+  - The run is longer and more legible now, but too many late waves still reduce to the same battlefield verb: break the hazard structure first, then clean up the rest. `bastion`, `relay`, and `drift` variants change presentation, yet the player is still mostly solving "which anchor/pylon do I kill first?" instead of facing enemy ecologies that demand different movement and weapon commitments.
+  - Build payoff is still too subsystem-forward. Orbitals, shields, sentries, missiles, and drones create spectacle, but they also keep stealing the emotional finish from the main gun and chassis. A release-feeling rerun game needs the player to crave the next visible body-weapon mutation, not just another helpful ring around it.
+  - The current escalation curve still looks emotionally finished too early for a game that wants `20-30` waves someday. By the time doctrine, chassis, support bays, overclock, and capstone are all online, `Afterburn` reads more like a short victory lap than the start of a dangerous second climb.
+  - The docs are still frozen at `5웨이브`, `7분 내외` while the implementation is already a `15`-wave, multi-act game. That mismatch keeps encouraging prototype closure beats where the project now needs a long-run model for recurring greed, failure, and re-ascension.
+  Top Priority: Add one roaming late-act apex encounter family that is neither bastion nor relay, forces a different movement rule than structure-breaking, and awards a main-weapon/chassis mutation stack on kill so the next waves feel like a new ascent instead of post-capstone cleanup.
+  Why Now: Until late combat creates new desire after the first "finished" build state, added waves will feel extended rather than addictive.
+  Do Not Repeat: Do not solve this with another support bay, another forge screen, or another static hazard core.
+
 - 2026-03-23 00:35:00 KST
   Findings:
   - The game now has enough build layers to look ambitious, but the run still behaves like a guided assembly line. `Architecture Draft`, `Bastion Draft`, `Act Break Armory`, `Late Break Armory`, `Catalyst Crucible`, and the final `Afterburn` hand out too many named completion beats, so replay desire gets replaced by schedule recognition.
@@ -771,6 +781,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 14:19 KST
+  Changed: added one late-act roaming apex family in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js): `Cinder Maw`. Starting in `Wave 11` and continuing into `Afterburn` until capped, one `Cinder Maw` can breach into the wave as a moving hunter instead of another bastion/relay structure. It flanks at mid-range, repeatedly charge-sweeps across the arena, and throws short fan bursts while moving, so the player now has to pre-rotate and survive a roaming kill threat rather than solve one more anchor/pylon priority test. Killing it immediately grants a stacked `Predator Molt` body-weapon mutation with no menu stop: the chassis gains speed/dash posture but loses max HP/cooling, the main gun grows visible side-spine fire, and if the run already took an illegal overclock the kill also forces the next illegal mutation tier at the same moment. I updated the HUD/readout, forge summary, player frame, and smoke coverage so this new second-ascent lane is readable.
+  Why: the latest critique’s Top Priority was to add one roaming late-act apex encounter family that is neither bastion nor relay, changes the movement rule, and rewards a main-weapon/chassis mutation stack on kill. The highest-value bounded interpretation was to make one predator-style breach enemy that directly converts a late-wave kill into immediate gun/body escalation, because that creates a fresh live-combat desire loop after the build already looked “finished” without reopening another forge screen.
+  Follow-up risk: `Cinder Maw` now creates a real late-act hunt target and a stronger second climb, but it is still only one apex ecology and its reward is deterministic. If later critique keeps pushing on long-run replay hunger, the next step should branch this family into multiple apex subtypes or rival mutation payoffs instead of just spawning the same hunter more often.
 
 - 2026-03-23 01:45 KST
   Changed: replaced the old mid/late `Catalyst Crucible` forge stop with a live `Wave 10` territory objective in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). If the run has earned a catalyst, clearing `Wave 9` now goes straight into `Wave 10` instead of opening another menu. That wave spawns a dangerous `Catalyst Crucible` bastion that has to be breached on the field; destroying its core drops an `ignite cache`, and collecting that cache immediately fuses the current catalyst capstone onto the main weapon for the rest of the run. To keep the mutation reckless instead of free, the live ignition also permanently tears the body with max-HP, movement, cooling, and hazard-buffer penalties. I updated the HUD/readout and arena-drop rendering so the breach-or-dive objective is readable while the fight is happening.
