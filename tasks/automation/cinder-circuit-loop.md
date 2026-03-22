@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-23 02:00:42 KST
+  Findings:
+  - `playables/cinder-circuit/game.js` now promises a real long-form climb with `Wave 9-12` plus `Afterburn I-VII`, but the late encounter grammar is still too binder-dominant to justify that ambition. `raid`, `pursuit`, `breach`, and `hold` keep resolving into the same practical task: cut the dragline, reopen space, then address the hazard objective.
+  - The combat space is larger, but late pressure still spends too much of that space on maintenance labor. `activeCap 41-46`, relay/territory/salvage obligations, and binder/lancer interference keep the player in constant sanitation mode instead of creating cleaner moments to dive, flank, greed, or deliberately overstay.
+  - The build surface is broad, but the visible payoff stack is still over-explained and under-felt. Around `playables/cinder-circuit/game.js:14926-15404`, the HUD and forge layer simultaneously expose `Forge Pursuit`, `Ascension`, `Act 4 Splice`, `Dominant Mutation`, `Catalyst Crucible`, support bays, chassis, and doctrine status, which reads more like operating a progression dashboard than chasing one terrifying next form.
+  - The weapon/body fantasy still is not equally hungry across doctrines. `Storm Artillery` has the clearest player-piloted escalation, while the rest of the structure still leans too much on support lanes, uplinks, bays, and helper infrastructure, so the rerun dream remains partially administrative instead of physical and immediate.
+  Top Priority: Build one new late enemy/problem family for Wave 10-Afterburn that does not rely on binder dragline control, then simplify the HUD/forge framing so one headline weapon/body mutation is the obvious thing the player wants and tracks.
+  Why Now: A 20-30 wave future will collapse into repetition if both late combat and late progression keep routing through the same management-heavy answer.
+  Do Not Repeat: Do not answer this with another named draft, another cache/splice label, or another binder remix disguised as a new pressure family.
+
 - 2026-03-23 13:18:00 KST
   Findings:
   - `playables/cinder-circuit/game.js` is aiming at a real long-form run now, but repeated-fun hunger is still weaker than the structure implies because too many of the biggest beats are delivered as named packages (`Architecture Draft`, `Bastion Draft`, `Late Break Armory`, `Catalyst Crucible`, `Act 4 Splice`) instead of as battlefield-earned transformation moments. The player is still reading progression more than craving it.
@@ -1020,6 +1030,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-23 02:11 KST
+  Changed: added a new late enemy family, `Brander`, in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and rewired `Wave 10-12` plus the first three `Afterburn` brackets so late pressure no longer leans almost entirely on `binder` draglines. `Brander` now holds mid-range pockets, telegraphs a bright ignition ring, then detonates an area pulse plus radial shrapnel that burns any pocket the player lingers in, so `raid`, `pursuit`, `breach`, and `hold` each ask a different question than "cut the tether first." I also updated the late shared-pool mixes and [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the new family is actually present across the relevant late brackets. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's Top Priority was still clearly open after the recent doctrine ascension work because late combat grammar remained too binder-dominant. The highest-value bounded interpretation was to add one non-binder pressure family that kills static safety pockets and makes late raid/pursuit/breach/hold ask for pocket rotation, dive timing, and target triage instead of another dragline remix.
+  Follow-up risk: `Brander` currently creates clean pocket-denial moments, but stacked ignition rings could become too punishing in the largest `Afterburn` mixes, especially alongside relay corridors. If live runs turn into constant mandatory displacement with no greed windows, the next pass should tune pulse radius/cooldown or reduce `Brander` weight before adding another late family.
 
 - 2026-03-23 14:05 KST
   Changed: rewired late doctrine completion in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so every doctrine now resolves its real Wave 9 power spike through a mandatory in-combat `Live Ascension` cache instead of leaving `Mirror Hunt` on an auto-complete path and `Storm Artillery` on a later `Afterburn` split. `Forge Pursuit` now arms a shared Wave 9 doctrine cache flow for `Mirror Hunt`, `Kiln Bastion`, and `Storm Artillery`; the first marked elite of that bracket drops the doctrine cache, the player must grab one live in combat, and that pick immediately locks the doctrine capstone plus a louder body label/text payoff. I also added doctrine-capstone chassis frames so `Relay Storm Lattice`, `Bulwark Foundry`, `Sky Lance Battery`, and `Stormspire Needle` visibly change the player silhouette the moment they are claimed, and updated the objective panel to call out the live doctrine cache in a more immediate "drop is live, pick one now" style. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

@@ -346,13 +346,14 @@
         shrike: 0.12,
         skimmer: 0.14,
         lancer: 0.14,
-        binder: 0.24,
+        brander: 0.18,
+        binder: 0.12,
         mortar: 0.04,
         warden: 0.06,
       },
-      note: "Act 3 중반은 이제 단순 후열 청소가 아니라 dragline heist다. contraband vault 주변을 맴도는 binder가 회수선을 묶고 skimmer/lancer가 빈 lane을 찢어, 강한 기체일수록 잡몹 정리보다 묶인 순간을 끊고 먼 금고를 직접 강탈해야 한다.",
+      note: "Act 3 중반은 이제 단순 후열 청소가 아니라 heat heist다. contraband vault 주변을 도는 brander가 ignition ring을 예고해 pocket을 불태우고, binder는 회수선만 살짝 비튼 채 skimmer/lancer가 빈 lane을 찢는다. 강한 기체일수록 안전 pocket에 눌러앉기보다 폭발 직전 pocket을 갈아타며 먼 금고를 직접 강탈해야 한다.",
       directive:
-        "scrapstorm dragline raid. contraband vault가 잠시 열릴 때 binder dragline이 회수선을 느리게 묶는다. binder를 먼저 찢어 금고 dive 각을 열지, 묶인 채로 욕심을 부릴지 매번 직접 정해야 한다.",
+        "scrapstorm heat raid. contraband vault가 잠시 열릴 때 brander가 ignition ring으로 금고 pocket을 태우고 binder가 회수선만 늦춘다. ring 폭발 전에 brander를 먼저 찢어 dive 각을 열지, 곧 닫힐 pocket 안에서 욕심을 부릴지 매번 직접 정해야 한다.",
       driveGainFactor: 1.42,
       arena: THIRD_ACT_ARENA,
       ascensionCarrierType: "binder",
@@ -390,13 +391,14 @@
         shrike: 0.18,
         skimmer: 0.1,
         lancer: 0.14,
-        binder: 0.22,
+        brander: 0.2,
+        binder: 0.1,
         mortar: 0.06,
         warden: 0.04,
       },
-      note: "세 번째 구간의 답을 다시 바꾼다. drifting furnace와 binder dragline이 함께 돌며 현재 경로를 붙잡고, 그 틈에 lancer 재진입이 빈 lane을 꿰뚫는다. 단순 포대 정리보다 묶인 선을 끊으며 이동 경로를 크게 갈아타야 한다.",
+      note: "세 번째 구간의 답을 다시 바꾼다. drifting furnace가 추격해도 late pursuit의 실제 시험은 brander ignition ring이 현재 pocket을 강제로 폐쇄하는 데 있다. 그 틈에 lancer 재진입과 가벼운 binder 견제가 겹쳐, 한 lane을 오래 점유하지 않고 폭발 직전 pocket을 버리며 이동 경로를 크게 갈아타야 한다.",
       directive:
-        "starforge dragline pursuit. drifting furnace가 쫓아오는 동안 binder가 현재 위치에 dragline을 꽂아 회전 반경을 줄인다. 묶인 채 오래 버티지 말고, dragline 축을 먼저 끊으며 pursuit 덩어리를 크게 꺾어야 한다.",
+        "starforge ignition pursuit. drifting furnace가 쫓아오는 동안 brander가 현재 pocket을 ignition ring으로 예고해 정지 사격 시간을 태운다. 묶인 선보다 곧 폭발할 pocket을 먼저 버리며 pursuit 덩어리를 크게 꺾어야 한다.",
       driveGainFactor: 1.46,
       arena: THIRD_ACT_ARENA,
       ascensionCarrierType: "binder",
@@ -430,13 +432,14 @@
         shrike: 0.14,
         skimmer: 0.1,
         lancer: 0.18,
-        binder: 0.24,
+        brander: 0.16,
+        binder: 0.12,
         mortar: 0.04,
         warden: 0.08,
       },
-      note: "최종 전장은 relay crown만의 시험이 아니다. binder dragline이 회랑 안쪽까지 파고들어 돌입 속도를 묶고 lancer가 빈 틈을 찌르므로, 완성된 기체가 직접 회랑과 생체 압박을 같은 박자로 절개하는지가 크게 드러난다.",
+      note: "최종 전장은 relay crown만의 시험이 아니다. brander ignition ring이 회랑 안쪽 safe pocket까지 태워 breach tempo를 강제로 끊고, lancer와 옅은 binder 견제가 빈 틈을 찌른다. 완성된 기체가 직접 회랑과 생체 압박을 같은 박자로 절개하는지가 크게 드러난다.",
       directive:
-        "cinder crown dragline breach. relay crown이 화염 회랑을 엮는 동안 binder가 진입선을 묶고 lancer가 빈 각을 찌른다. 먼 pylon만 보는 대신 dragline 축을 끊어 실제 breach window를 직접 만들어야 한다.",
+        "cinder crown ignition breach. relay crown이 화염 회랑을 엮는 동안 brander가 회랑 안 pocket을 ignition ring으로 닫고 lancer가 빈 각을 찌른다. 먼 pylon만 보는 대신 ring 폭발 전에 pocket owner를 지워 실제 breach window를 직접 만들어야 한다.",
       driveGainFactor: 1.52,
       arena: THIRD_ACT_ARENA,
       ascensionCarrierType: "binder",
@@ -498,8 +501,10 @@
         scuttler: 0.1,
         brute: 0.18,
         shrike: 0.18,
-        mortar: 0.22,
-        warden: 0.32,
+        brander: 0.34,
+        binder: 0.04,
+        mortar: 0.1,
+        warden: 0.14,
       },
       hazard: {
         label: "Shared Contraband Vault",
@@ -530,8 +535,10 @@
         scuttler: 0.1,
         brute: 0.2,
         shrike: 0.22,
-        mortar: 0.22,
-        warden: 0.26,
+        brander: 0.34,
+        binder: 0.04,
+        mortar: 0.12,
+        warden: 0.1,
       },
       hazard: {
         label: "Starforge Pursuit",
@@ -558,8 +565,10 @@
         scuttler: 0.08,
         brute: 0.16,
         shrike: 0.16,
-        mortar: 0.22,
-        warden: 0.38,
+        brander: 0.32,
+        binder: 0.04,
+        mortar: 0.12,
+        warden: 0.12,
       },
       hazard: {
         label: "Cinder Crown Relay",
@@ -601,16 +610,17 @@
     {
       waveIndex: 9,
       pressureFamily: "breach",
-      note: "첫 afterburn은 relay lattice를 다시 꺼내되, 이제는 회랑 절개만으로 끝나지 않는다. binder dragline이 불길 회랑 안쪽까지 꽂히고 lancer가 빈 틈을 찌르므로, 완성된 기체가 구조물 파괴와 생체 압박 절개를 같은 박자로 처리해야 한다.",
+      note: "첫 afterburn은 relay lattice를 다시 꺼내되, 이제는 회랑 절개만으로 끝나지 않는다. brander ignition ring이 불길 회랑 안 safe pocket까지 태우고 lancer가 빈 틈을 찌르므로, 완성된 기체가 구조물 파괴와 pocket 교체를 같은 박자로 처리해야 한다.",
       directive:
-        "afterburn dragline crown. relay pylon이 긴 화염 회랑을 엮는 동안 binder가 dragline으로 진입을 묶는다. 회랑 코어만 긁지 말고 dragline 축을 먼저 잘라 첫 forbidden-territory breach window를 직접 열어야 한다.",
+        "afterburn ignition crown. relay pylon이 긴 화염 회랑을 엮는 동안 brander가 회랑 안 pocket을 ignition ring으로 닫는다. 회랑 코어만 긁지 말고 ring 주인을 먼저 잘라 첫 forbidden-territory breach window를 직접 열어야 한다.",
       mix: {
         scuttler: 0.06,
         brute: 0.16,
         shrike: 0.14,
         skimmer: 0.08,
         lancer: 0.16,
-        binder: 0.24,
+        brander: 0.32,
+        binder: 0.04,
         mortar: 0.08,
         warden: 0.1,
       },
@@ -635,16 +645,17 @@
     {
       waveIndex: 10,
       pressureFamily: "raid",
-      note: "두 번째 afterburn은 greed window를 길게 강요하되, binder dragline이 그 창을 직접 흔든다. completed form이 dragline에 묶인 순간을 잘라내며 contraband vault를 연속 강탈할 수 있는지 묻고, 성공할수록 다음 금지 구간을 더 과감하게 살 자원을 번다.",
+      note: "두 번째 afterburn은 greed window를 길게 강요하되, brander ignition ring이 그 창을 직접 태운다. completed form이 pocket 폭발 직전 타이밍을 읽으며 contraband vault를 연속 강탈할 수 있는지 묻고, 성공할수록 다음 금지 구간을 더 과감하게 살 자원을 번다.",
       directive:
-        "afterburn dragline heist. contraband vault가 외곽에 순차적으로 떠오르고 binder가 회수선을 느리게 묶는다. dragline 축을 찢고 깊게 dive할지, 금고를 포기하고 생존만 택할지 계속 갈라진다.",
+        "afterburn ignition heist. contraband vault가 외곽에 순차적으로 떠오르고 brander가 금고 pocket을 ignition ring으로 닫는다. ring 주인을 찢고 깊게 dive할지, 금고를 포기하고 생존만 택할지 계속 갈라진다.",
       mix: {
         scuttler: 0.08,
         brute: 0.18,
         shrike: 0.18,
         skimmer: 0.1,
         lancer: 0.1,
-        binder: 0.22,
+        brander: 0.32,
+        binder: 0.04,
         mortar: 0.08,
         warden: 0.08,
       },
@@ -671,16 +682,17 @@
       waveIndex: 11,
       pressureFamily: "hold",
       arena: THIRD_ACT_ARENA,
-      note: "세 번째 afterburn은 territory grammar를 late arena에 다시 올리되, binder dragline까지 더해 hold-or-dive 결정을 더 날카롭게 만든다. 여러 bastion core와 dragline 축이 넓은 전장에서 같이 살아 있어, 어느 거점을 무시하고 어느 묶임부터 끊을지 빌드마다 답이 갈린다.",
+      note: "세 번째 afterburn은 territory grammar를 late arena에 다시 올리되, brander ignition ring까지 더해 hold-or-dive 결정을 더 날카롭게 만든다. 여러 bastion core와 불붙는 pocket이 넓은 전장에서 같이 살아 있어, 어느 거점을 무시하고 어느 pocket owner부터 끊을지 빌드마다 답이 갈린다.",
       directive:
-        "foundry dragline hold. 넓은 전장 세 곳에 bastion 코어가 겹쳐 깔리고 binder가 거점 사이를 dragline으로 묶는다. 모든 거점을 즉시 복구하려 들지 말고, 가장 위험한 묶임과 점거 코어를 선별적으로 끊어야 한다.",
+        "foundry ignition hold. 넓은 전장 세 곳에 bastion 코어가 겹쳐 깔리고 brander가 거점 pocket을 ignition ring으로 태운다. 모든 거점을 즉시 복구하려 들지 말고, 가장 위험한 pocket owner와 점거 코어를 선별적으로 끊어야 한다.",
       mix: {
         scuttler: 0.08,
         brute: 0.24,
         shrike: 0.14,
         skimmer: 0.08,
         lancer: 0.08,
-        binder: 0.22,
+        brander: 0.3,
+        binder: 0.04,
         mortar: 0.08,
         warden: 0.08,
       },
@@ -1306,6 +1318,16 @@
       damage: 11,
       scrap: 2,
       particleColor: "#baffeb",
+    },
+    brander: {
+      label: "Brander",
+      color: "#ffb347",
+      radius: 16,
+      hp: 70,
+      speed: 66,
+      damage: 13,
+      scrap: 4,
+      particleColor: "#ffe0ad",
     },
     binder: {
       label: "Binder",
@@ -11646,6 +11668,10 @@
       enemy.lancerChargeCooldown = 1.8 + Math.random() * 0.8;
       enemy.lancerChargeTime = 0;
       enemy.lancerChargeVector = { x: 1, y: 0 };
+    } else if (typeId === "brander") {
+      enemy.attackCooldown = 0.95;
+      enemy.branderPulseCooldown = 2.2 + Math.random() * 0.8;
+      enemy.branderPulseCharge = 0;
     } else if (typeId === "binder") {
       enemy.attackCooldown = 0.8;
       enemy.binderCastTime = 0;
@@ -13690,6 +13716,58 @@
         } else {
           speedMultiplier *= 1.24;
         }
+      } else if (enemy.type === "brander") {
+        enemy.wobble += dt * 3.4;
+        const previousChargeTime = enemy.branderPulseCharge || 0;
+        enemy.branderPulseCharge = Math.max(0, previousChargeTime - dt);
+        enemy.branderPulseCooldown = Math.max(0, (enemy.branderPulseCooldown || 0) - dt);
+        const distanceToPlayer = Math.hypot(state.player.x - enemy.x, state.player.y - enemy.y);
+        const preferredRange = 244;
+        if (previousChargeTime > 0 && enemy.branderPulseCharge <= 0) {
+          const pulseRadius = 136;
+          const pulseDamage = 14;
+          if (
+            distanceToPlayer < pulseRadius + state.player.radius &&
+            state.player.invulnerableTime <= 0
+          ) {
+            takePlayerDamage(pulseDamage, "hazard");
+          }
+          state.shake = Math.max(state.shake, 4);
+          for (let index = 0; index < 9; index += 1) {
+            const burstAngle = (Math.PI * 2 * index) / 9;
+            state.projectiles.push({
+              owner: "enemy",
+              x: enemy.x,
+              y: enemy.y,
+              vx: Math.cos(burstAngle) * 214,
+              vy: Math.sin(burstAngle) * 214,
+              radius: 4.8,
+              damage: 8,
+              life: 1.25,
+              color: "#ffe0ad",
+            });
+          }
+          for (let index = 0; index < 10; index += 1) {
+            state.particles.push(createParticle(enemy.x, enemy.y, "#ffd591", 0.95));
+          }
+        }
+        if (enemy.branderPulseCharge > 0) {
+          angle += enemy.orbitDirection * 0.18;
+          speedMultiplier *= 0.34;
+        } else if (distanceToPlayer < preferredRange * 0.74) {
+          angle += Math.PI * 0.96 + Math.sin(enemy.wobble) * 0.14;
+          speedMultiplier *= 1.08;
+        } else if (distanceToPlayer <= preferredRange * 1.2) {
+          angle += enemy.orbitDirection * 0.94 + Math.sin(enemy.wobble) * 0.18;
+          speedMultiplier *= 0.88;
+        } else {
+          speedMultiplier *= 1.04;
+        }
+        if (enemy.branderPulseCooldown <= 0 && enemy.branderPulseCharge <= 0 && distanceToPlayer < 360) {
+          enemy.branderPulseCharge = 0.82;
+          enemy.branderPulseCooldown = 4.8;
+          enemy.attackCooldown = Math.max(enemy.attackCooldown, 1.15);
+        }
       } else if (enemy.type === "binder") {
         enemy.wobble += dt * 4.2;
         const previousCastTime = enemy.binderCastTime || 0;
@@ -13856,6 +13934,19 @@
             spread: 0.12,
           });
           enemy.attackCooldown = 1.4;
+        }
+      } else if (enemy.type === "brander" && enemy.attackCooldown <= 0) {
+        if (distance < 380 && enemy.branderPulseCharge <= 0) {
+          spawnEnemyShot(enemy, {
+            speed: 224,
+            radius: 5.4,
+            damage: 9,
+            life: 2.9,
+            color: "#ffe0ad",
+            count: 3,
+            spread: 0.22,
+          });
+          enemy.attackCooldown = 2.4;
         }
       } else if (enemy.type === "lancer" && enemy.attackCooldown <= 0) {
         if (distance < 340 && enemy.lancerChargeTime <= 0) {
@@ -16050,6 +16141,23 @@
         context.moveTo(enemy.x - enemy.radius * 1.1, enemy.y);
         context.lineTo(enemy.x + enemy.radius * 1.1, enemy.y);
         context.stroke();
+      } else if (enemy.type === "brander") {
+        drawPolygon(context, enemy.x, enemy.y, enemy.radius, 4, Math.PI / 4 + enemy.wobble * 0.08);
+        context.fill();
+        context.strokeStyle =
+          enemy.branderPulseCharge > 0 ? "rgba(255, 246, 214, 0.96)" : "rgba(255, 223, 173, 0.86)";
+        context.lineWidth = enemy.branderPulseCharge > 0 ? 3 : 2;
+        context.beginPath();
+        context.arc(enemy.x, enemy.y, enemy.radius * 0.58, 0, Math.PI * 2);
+        context.stroke();
+        if (enemy.branderPulseCharge > 0) {
+          const chargeRatio = 1 - clamp(enemy.branderPulseCharge / 0.82, 0, 1);
+          context.strokeStyle = `rgba(255, 216, 142, ${0.35 + chargeRatio * 0.45})`;
+          context.lineWidth = 2.5;
+          context.beginPath();
+          context.arc(enemy.x, enemy.y, 46 + chargeRatio * 90, 0, Math.PI * 2);
+          context.stroke();
+        }
       } else if (enemy.type === "binder") {
         drawPolygon(context, enemy.x, enemy.y, enemy.radius, 6, Math.PI / 6 + enemy.wobble * 0.08);
         context.fill();
