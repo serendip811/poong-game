@@ -4017,6 +4017,8 @@
     crownsplitter_array: {
       id: "crownsplitter_array",
       tag: "CROWN",
+      strokeColor: "rgba(214, 246, 255, 0.98)",
+      fillColor: "rgba(159, 231, 255, 0.92)",
       label: "Crownsplitter Array",
       title: "Crownsplitter Array",
       traitLabel: "wing battery",
@@ -4064,6 +4066,8 @@
     slagburst_drive: {
       id: "slagburst_drive",
       tag: "SLAG",
+      strokeColor: "rgba(255, 229, 184, 0.98)",
+      fillColor: "rgba(255, 159, 89, 0.94)",
       label: "Slagburst Drive",
       title: "Slagburst Drive",
       traitLabel: "impact seed",
@@ -4101,6 +4105,99 @@
           poolDamageMultiplier: 0.12 + supportLevel * 0.02,
           poolColor: "#ff9f59",
           color: "#ffd6a8",
+        };
+      },
+    },
+    voltspine_lattice: {
+      id: "voltspine_lattice",
+      tag: "VOLT",
+      strokeColor: "rgba(213, 225, 255, 0.98)",
+      fillColor: "rgba(120, 170, 255, 0.94)",
+      label: "Voltspine Lattice",
+      title: "Voltspine Lattice",
+      traitLabel: "arc spine",
+      description:
+        "동체 위로 전극 spine을 영구 전개해 발사마다 전방 lattice arc를 덧댄다. support bay가 많을수록 spine 수와 연쇄 길이가 늘어 후열 전체를 전도성 그물로 묶는다.",
+      slotText: "arc lattice salvo · support가 chain spine 증폭",
+      bodyLabel: "Stormspine Hull",
+      bodyText: "등뼈형 전극 spine과 측면 방전 깃이 자라 후열을 직접 감전시키는 전도 섀시다.",
+      statusNote:
+        "주포가 voltspine lattice로 변해 전방 lattice arc를 흘리고 연쇄 범위가 크게 늘어난다. support uplink는 spine 수를 늘려 이 형태의 후열 절단력을 키운다.",
+      apply(build, run) {
+        build.damageBonus += 1;
+        build.moveSpeedBonus += 6;
+        build.chainBonus += 1;
+        build.dashCooldownBonus += 0.14;
+        build.maxHpBonus -= 2;
+        if (run && run.player) {
+          run.player.heat = Math.max(0, run.player.heat - 8);
+          run.player.overheated = false;
+        }
+      },
+      getFirePattern(supportLevel) {
+        const offsets =
+          supportLevel >= 3
+            ? [-0.4, -0.2, 0, 0.2, 0.4]
+            : supportLevel >= 2
+              ? [-0.28, 0, 0.28]
+              : [-0.18, 0.18];
+        return {
+          kind: "split_wing",
+          offsets,
+          speedMultiplier: 1.18,
+          radius: 4.7,
+          damageMultiplier: 0.31 + supportLevel * 0.025,
+          life: 0.88,
+          pierceBonus: 0,
+          bounceBonus: 0,
+          chainBonus: 1 + Math.floor(supportLevel / 2),
+          color: "#95b8ff",
+        };
+      },
+    },
+    anvil_prism: {
+      id: "anvil_prism",
+      tag: "ANVIL",
+      strokeColor: "rgba(255, 234, 206, 0.98)",
+      fillColor: "rgba(255, 122, 92, 0.94)",
+      label: "Anvil Prism",
+      title: "Anvil Prism",
+      traitLabel: "breach ram",
+      description:
+        "주포 하부에 삼중 breach ram을 박아 발사마다 두꺼운 prism salvo를 밀어 넣는다. support bay가 많을수록 ram이 늘어나 brute/warden 전열을 그대로 꿰뚫는 돌파 형태가 된다.",
+      slotText: "breach prism salvo · support가 ram 수 증폭",
+      bodyLabel: "Anvil-Ram Hull",
+      bodyText: "전면 ram prong과 복부 냉각 지느러미가 돌출된 정면 돌파 섀시다.",
+      statusNote:
+        "주포가 anvil prism으로 바뀌어 짧고 두꺼운 breach salvo를 겹쳐 밀어 넣는다. support uplink는 ram 포문을 더 열어 전면 파쇄력을 끌어올린다.",
+      apply(build, run) {
+        build.damageBonus += 5;
+        build.maxHpBonus += 4;
+        build.moveSpeedBonus += 2;
+        build.heatFactor *= 1.06;
+        if (run && run.player) {
+          run.player.heat = Math.max(0, run.player.heat - 12);
+          run.player.overheated = false;
+        }
+      },
+      getFirePattern(supportLevel) {
+        const offsets =
+          supportLevel >= 3
+            ? [-0.34, -0.17, 0, 0.17, 0.34]
+            : supportLevel >= 2
+              ? [-0.2, 0, 0.2]
+              : [-0.12, 0.12];
+        return {
+          kind: "split_wing",
+          offsets,
+          speedMultiplier: 0.94,
+          radius: 5.8,
+          damageMultiplier: 0.42 + supportLevel * 0.04,
+          life: 0.78,
+          pierceBonus: supportLevel >= 2 ? 1 : 0,
+          bounceBonus: 0,
+          chainBonus: 0,
+          color: "#ff8d73",
         };
       },
     },
@@ -6170,6 +6267,16 @@
       } else if (lateAscension.id === "slagburst_drive") {
         stats.damage += 4 + supportLevel * 2;
         stats.heatPerShot = round(stats.heatPerShot * (1.05 + supportLevel * 0.015), 1);
+      } else if (lateAscension.id === "voltspine_lattice") {
+        stats.cooldown = clamp(stats.cooldown * (1 - 0.018 * supportLevel), 0.08, 0.4);
+        stats.chain += 1 + Math.floor(supportLevel / 2);
+        stats.chainRange = Math.max(stats.chainRange || 0, 174 + supportLevel * 18);
+        stats.projectileSpeed += 10 + supportLevel * 6;
+      } else if (lateAscension.id === "anvil_prism") {
+        stats.damage += 3 + supportLevel * 2;
+        stats.pierce += supportLevel >= 2 ? 1 : 0;
+        stats.heatPerShot = round(stats.heatPerShot * (1.04 + supportLevel * 0.01), 1);
+        stats.projectileSpeed += 4 + supportLevel * 3;
       }
     }
     const illegalOverclock = getIllegalOverclockDef(build);
@@ -16912,16 +17019,11 @@
         context.fillText(choice.tag || "CACHE", drop.x, drop.y + 26);
       } else if (drop.kind === "late_ascension_cache") {
         const choice = drop.choice || {};
-        const palette =
-          choice.lateAscensionId === "slagburst_drive"
-            ? {
-                stroke: "rgba(255, 229, 184, 0.98)",
-                fill: "rgba(255, 159, 89, 0.94)",
-              }
-            : {
-                stroke: "rgba(214, 246, 255, 0.98)",
-                fill: "rgba(159, 231, 255, 0.92)",
-              };
+        const ascensionDef = getLateAscensionDef(choice.lateAscensionId);
+        const palette = {
+          stroke: (ascensionDef && ascensionDef.strokeColor) || "rgba(214, 246, 255, 0.98)",
+          fill: (ascensionDef && ascensionDef.fillColor) || "rgba(159, 231, 255, 0.92)",
+        };
         context.strokeStyle = palette.stroke;
         context.lineWidth = 2.7;
         context.beginPath();
@@ -17929,6 +18031,56 @@
         0,
         Math.PI * 2
       );
+      context.stroke();
+      return;
+    }
+    if (state.weapon.lateAscensionId === "voltspine_lattice") {
+      const spineCount = 2 + supportLevel;
+      for (let index = 0; index < spineCount; index += 1) {
+        const lateral = ((index / Math.max(1, spineCount - 1)) * 2 - 1) * 11;
+        const base = getOffsetPoint(state.player.x, state.player.y, facing + Math.PI / 2, 0, lateral);
+        const tip = getOffsetPoint(base.x, base.y, facing - 0.1 * Math.sign(lateral || 1), state.player.radius + 13 + supportLevel * 1.5, 0);
+        context.strokeStyle = `rgba(149, 184, 255, ${0.86 - index * 0.08})`;
+        context.lineWidth = 2.2;
+        context.beginPath();
+        context.moveTo(base.x, base.y);
+        context.lineTo(tip.x, tip.y);
+        context.stroke();
+      }
+      context.strokeStyle = "rgba(220, 229, 255, 0.72)";
+      context.lineWidth = 2;
+      context.beginPath();
+      context.arc(
+        state.player.x,
+        state.player.y,
+        state.player.radius + 10 + pulse,
+        facing - 0.42,
+        facing + 0.42
+      );
+      context.stroke();
+      return;
+    }
+    if (state.weapon.lateAscensionId === "anvil_prism") {
+      [-0.95, 0, 0.95].forEach((lane, index) => {
+        const ram = getOffsetPoint(state.player.x, state.player.y, facing, state.player.radius + 3, lane * 8);
+        context.fillStyle = `rgba(255, 141, 115, ${0.88 - index * 0.12})`;
+        context.beginPath();
+        context.moveTo(ram.x + Math.cos(facing) * (12 + pulse), ram.y + Math.sin(facing) * (12 + pulse));
+        context.lineTo(
+          ram.x - Math.cos(facing) * 3 - Math.sin(facing) * 4 * Math.sign(lane || 1),
+          ram.y - Math.sin(facing) * 3 + Math.cos(facing) * 4 * Math.sign(lane || 1)
+        );
+        context.lineTo(
+          ram.x - Math.cos(facing) * 7 + Math.sin(facing) * 4 * Math.sign(lane || 1),
+          ram.y - Math.sin(facing) * 7 - Math.cos(facing) * 4 * Math.sign(lane || 1)
+        );
+        context.closePath();
+        context.fill();
+      });
+      context.strokeStyle = "rgba(255, 228, 208, 0.68)";
+      context.lineWidth = 2.2;
+      context.beginPath();
+      context.arc(state.player.x, state.player.y, state.player.radius + 9 + pulse * 0.8, 0, Math.PI * 2);
       context.stroke();
     }
   }

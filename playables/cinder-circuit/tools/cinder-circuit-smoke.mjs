@@ -425,7 +425,7 @@ lateAscensionBuild.supportSystems = [
   { id: "volt_drones", tier: 1 },
 ];
 const lateAscensionChoices = game.createLateAscensionChoices(lateAscensionBuild);
-assert.equal(lateAscensionChoices.length, 2);
+assert.equal(lateAscensionChoices.length, 4);
 const crownsplitterChoice = lateAscensionChoices.find(
   (choice) => choice.lateAscensionId === "crownsplitter_array"
 );
@@ -463,6 +463,49 @@ const slagburstWeapon = game.computeWeaponStats(slagburstRun.build);
 assert.equal(slagburstWeapon.lateAscensionLabel, "Slagburst Drive");
 assert.equal(slagburstWeapon.lateAscensionFirePattern.kind, "slag_seed");
 assert.equal(slagburstWeapon.lateAscensionFirePattern.count, 2);
+const voltspineRun = {
+  build: game.createInitialBuild("relay_oath"),
+  resources: { scrap: 0 },
+  stats: { scrapCollected: 0, scrapSpent: 0 },
+  player: { hp: 100, maxHp: 100, heat: 12, overheated: false },
+};
+voltspineRun.build.supportBayCap = 4;
+voltspineRun.build.supportSystems = [
+  { id: "seeker_array", tier: 1 },
+  { id: "volt_drones", tier: 1 },
+  { id: "aegis_halo", tier: 0 },
+];
+const voltspineChoice = game
+  .createLateAscensionChoices(voltspineRun.build)
+  .find((choice) => choice.lateAscensionId === "voltspine_lattice");
+assert.ok(voltspineChoice);
+game.applyForgeChoice(voltspineRun, voltspineChoice);
+const voltspineWeapon = game.computeWeaponStats(voltspineRun.build);
+assert.equal(voltspineWeapon.lateAscensionLabel, "Voltspine Lattice");
+assert.equal(voltspineWeapon.lateAscensionFirePattern.kind, "split_wing");
+assert.equal(voltspineWeapon.lateAscensionFirePattern.offsets.length, 5);
+assert.ok(voltspineWeapon.chain >= 2);
+const anvilRun = {
+  build: game.createInitialBuild("scrap_pact"),
+  resources: { scrap: 0 },
+  stats: { scrapCollected: 0, scrapSpent: 0 },
+  player: { hp: 100, maxHp: 100, heat: 16, overheated: false },
+};
+anvilRun.build.supportBayCap = 4;
+anvilRun.build.supportSystems = [
+  { id: "kiln_sentry", tier: 1 },
+  { id: "volt_drones", tier: 1 },
+];
+const anvilChoice = game
+  .createLateAscensionChoices(anvilRun.build)
+  .find((choice) => choice.lateAscensionId === "anvil_prism");
+assert.ok(anvilChoice);
+game.applyForgeChoice(anvilRun, anvilChoice);
+const anvilWeapon = game.computeWeaponStats(anvilRun.build);
+assert.equal(anvilWeapon.lateAscensionLabel, "Anvil Prism");
+assert.equal(anvilWeapon.lateAscensionFirePattern.kind, "split_wing");
+assert.equal(anvilWeapon.lateAscensionFirePattern.offsets.length, 3);
+assert.ok(anvilWeapon.damage > slagburstWeapon.damage);
 const illegalOverclockBuild = game.createInitialBuild("relay_oath");
 const illegalOverclockChoices = game.createIllegalOverclockChoices(illegalOverclockBuild);
 assert.equal(illegalOverclockChoices.length, 3);
