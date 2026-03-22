@@ -7683,6 +7683,9 @@
     if (!choice) {
       return "Field Cache";
     }
+    if (choice.type === "system" && choice.fieldGrantHighlight === "autonomous_arsenal") {
+      return "Autonomous Arsenal";
+    }
     if (choice.type === "utility" && choice.action === "field_convergence") {
       return "Convergence Form";
     }
@@ -7749,6 +7752,53 @@
       return visibleDefenseChoices[0];
     }
     return fallbackPool.find((choice) => choice && isFieldGrantSurvivalChoice(choice)) || null;
+  }
+
+  function scoreLateFieldSystemChoice(choice) {
+    if (!choice || choice.type !== "system") {
+      return -1;
+    }
+    const installBonus = choice.bayAction === "install" ? 110 : 64;
+    const familyBonus =
+      choice.systemId === "seeker_array"
+        ? 96
+        : choice.systemId === "volt_drones"
+          ? 88
+          : choice.systemId === "ember_ring"
+            ? 74
+            : choice.systemId === "kiln_sentry"
+              ? 68
+              : 20;
+    return 780 + installBonus + familyBonus + (choice.systemTier || 1) * 12;
+  }
+
+  function createLateFieldSystemChoice(build, rng, nextWave) {
+    const random = typeof rng === "function" ? rng : Math.random;
+    return (
+      createSupportSystemChoices(build, random, {
+        nextWave,
+        finalForge: false,
+      })
+        .filter(
+          (choice) =>
+            choice &&
+            choice.type === "system" &&
+            choice.systemId !== "aegis_halo" &&
+            (choice.forgeLaneLabel === "공세 모듈" ||
+              choice.systemId === "ember_ring" ||
+              choice.systemId === "kiln_sentry")
+        )
+        .sort((left, right) => scoreLateFieldSystemChoice(right) - scoreLateFieldSystemChoice(left))
+        .map((choice) => ({
+          ...choice,
+          fieldGrantHighlight: "autonomous_arsenal",
+          description: `${choice.description} late cache에서는 주포/방호/탐욕과 같은 급의 autonomous branch payoff로 취급되어, 다음 bracket부터 미사일 랙·드론·오비탈·포탑 실루엣이 바로 붙는다.`,
+          slotText:
+            choice.bayAction === "install"
+              ? `late support branch · ${choice.slotText}`
+              : `late support overdrive · ${choice.slotText}`,
+        }))[0] || null
+    );
   }
 
   function createFieldGrantCard(choice) {
@@ -8680,8 +8730,10 @@
   function buildFieldGrantChoices(build, rng, nextWave) {
     if (shouldUseLateFieldCache(nextWave)) {
       const convergenceChoice = createLateFieldConvergenceChoice(build, nextWave);
+      const systemChoice = createLateFieldSystemChoice(build, rng, nextWave);
       return [
         createFieldGrantCard(convergenceChoice || createLateFieldMutationChoice(build, nextWave)),
+        createFieldGrantCard(systemChoice),
         createFieldGrantCard(createLateFieldAegisChoice(build, nextWave)),
         createFieldGrantCard(createLateFieldGreedContractChoice(build, nextWave)),
       ].filter(Boolean);
@@ -16462,9 +16514,9 @@
         ? isArsenalBreakpointWave(state.waveIndex + 2)
           ? `고철 ${Math.round(state.resources.scrap)} 보유. Arsenal Breakpoint다. 이번 Wave ${state.waveIndex + 2} 판돈은 세 욕구만 크게 읽히면 된다. Overdrive Arsenal 계열은 즉시 추가 배럴을 두 단계 당겨 오고, halo 계열은 재충전식 plate 층을 예열하며, Black Ledger raid 계열은 다음 전투 objective를 불법 금고 습격으로 비튼다.`
           : shouldUseLateFieldCache(state.waveIndex + 2)
-          ? `고철 ${Math.round(state.resources.scrap)} 보유. Arsenal Cache다. 이제 Wave 10 이후 짝수 late wave마다 대형 현장 패키지 1장을 바로 잠근다. 준비된 chassis/support/greed 묶음이 있다면 generic mutation 대신 branch-specific Convergence Form이 떠 지금까지 쌓은 회로를 한 번에 용접한다.`
+          ? `고철 ${Math.round(state.resources.scrap)} 보유. Arsenal Cache다. 이제 Wave 10 이후 짝수 late wave마다 대형 현장 패키지 1장을 바로 잠근다. 준비된 chassis/support/greed 묶음이 있다면 generic mutation 대신 branch-specific Convergence Form이 뜨고, 아니어도 미사일 랙·드론·오비탈·포탑 같은 autonomous branch가 주포/방호/탐욕과 같은 급으로 경쟁한다.`
           : state.waveIndex + 2 >= RISK_MUTATION_START_WAVE
-          ? `고철 ${Math.round(state.resources.scrap)} 보유. Field Cache다. 이제 late reward는 Main Weapon Mutation, Defense / Utility, Greed Contract 세 욕구로만 정리된다. Dominant Mutation은 주포/차체를 당겨 오고, 생존층은 다음 교차 압박을 버티게 하며, 탐욕 계약은 고철을 먼저 주는 대신 다음 웨이브 청구서를 즉시 붙인다.`
+          ? `고철 ${Math.round(state.resources.scrap)} 보유. Field Cache다. 이제 late reward는 Main Weapon Mutation, Autonomous Arsenal, Defense / Utility, Greed Contract 네 욕구로 정리된다. Dominant Mutation은 주포/차체를 당겨 오고, autonomous branch는 미사일·드론·오비탈을 바로 붙이며, 생존층은 다음 교차 압박을 버티게 하고, 탐욕 계약은 고철을 먼저 주는 대신 다음 웨이브 청구서를 즉시 붙인다.`
           : `고철 ${Math.round(state.resources.scrap)} 보유. Field Cache다. 이번 현장 선택은 주포 변이, 생존층, 탐욕 계약 세 장뿐이다. 지금 더 위험하게 당겨서 강해질지, 상태를 정리하고 다음 큰 포지까지 버틸지 직접 고른다.`
         : state.forgeDraftType === "bastion_draft"
         ? wave6AscensionDraft

@@ -75,6 +75,22 @@ assert.ok(game.WAVE_CONFIG[11].activeCap > game.WAVE_CONFIG[9].activeCap);
 assert.ok(game.WAVE_CONFIG[11].mix.brander > game.WAVE_CONFIG[11].mix.binder);
 assert.ok(game.WAVE_CONFIG[11].mix.lancer > game.WAVE_CONFIG[11].mix.mortar);
 assert.equal(game.WAVE_CONFIG[11].ascensionCarrierType, "binder");
+const lateCacheBuild = game.createInitialBuild("relay_oath");
+lateCacheBuild.chassisId = "vector_thrusters";
+lateCacheBuild.supportBayCap = 3;
+lateCacheBuild.supportSystems = [{ id: "volt_drones", tier: 1 }];
+lateCacheBuild.blackLedgerRaidWaves = 1;
+lateCacheBuild.lateFieldMutationLevel = 2;
+const lateCacheChoices = game.buildFieldGrantChoices(lateCacheBuild, Math.random, 10);
+assert.equal(lateCacheChoices.length, 4);
+assert.equal(lateCacheChoices[0].laneLabel, "Convergence Form");
+assert.ok(lateCacheChoices.some((choice) => choice.laneLabel === "Autonomous Arsenal"));
+assert.ok(
+  lateCacheChoices.some(
+    (choice) => choice.type === "system" && choice.fieldGrantHighlight === "autonomous_arsenal"
+  )
+);
+assert.ok(lateCacheChoices.some((choice) => choice.title.includes("Volt Drones") || choice.title.includes("Seeker Array")));
 const predatorBaitBuild = game.createInitialBuild("scrap_pact");
 const predatorBaitChoice = game.createPredatorBaitChoice(predatorBaitBuild, 9);
 assert.ok(predatorBaitChoice);
@@ -330,12 +346,18 @@ const predatorCacheChoices = game.buildFieldGrantChoices(predatorBaitRun.build, 
 assert.equal(game.isArsenalBreakpointWave(10), true);
 assert.ok(predatorCacheChoices.some((choice) => choice.action === "field_mutation"));
 assert.ok(predatorCacheChoices.some((choice) => choice.action === "field_aegis"));
-assert.equal(predatorCacheChoices.length, 3);
+assert.equal(predatorCacheChoices.length, 4);
 assert.equal(
   JSON.stringify(predatorCacheChoices.map((choice) => choice.laneLabel)),
-  JSON.stringify(["Main Weapon Mutation", "Defense / Utility", "Greed Contract"])
+  JSON.stringify([
+    "Main Weapon Mutation",
+    "Autonomous Arsenal",
+    "Defense / Utility",
+    "Greed Contract",
+  ])
 );
 assert.ok(predatorCacheChoices.some((choice) => choice.action === "field_greed"));
+assert.ok(predatorCacheChoices.some((choice) => choice.type === "system"));
 const fieldMutationChoice = predatorCacheChoices.find((choice) => choice.action === "field_mutation");
 const fieldAegisChoice = predatorCacheChoices.find((choice) => choice.action === "field_aegis");
 const greedContractChoice = predatorCacheChoices.find((choice) => choice.action === "field_greed");
