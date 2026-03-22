@@ -118,6 +118,23 @@ assert.equal(artilleryWaveTwelve.hazard.type, "relay");
 assert.ok(artilleryWaveTwelve.mix.mortar >= artilleryWaveTwelve.mix.warden);
 assert.equal(artilleryWaveTwelve.hazard.count, 4);
 const systemsForgeBuild = game.createInitialBuild("scrap_pact");
+const architectureChoices = game.buildArchitectureDraftChoices(systemsForgeBuild);
+assert.equal(architectureChoices.length, 3);
+assert.ok(architectureChoices.every((choice) => choice.action === "architecture_forecast"));
+const architecturePreviewRun = {
+  build: systemsForgeBuild,
+  resources: { scrap: 0 },
+  stats: { scrapCollected: 0, scrapSpent: 0 },
+  player: { hp: 100, maxHp: 100, heat: 0, overheated: false },
+};
+game.applyForgeChoice(architecturePreviewRun, architectureChoices[0]);
+assert.equal(architecturePreviewRun.build.bastionDoctrineId, null);
+assert.equal(architecturePreviewRun.build.architectureForecastId, architectureChoices[0].doctrineId);
+const wave6DoctrineChoices = game.buildBastionDraftChoices(architecturePreviewRun.build, () => 0, 6);
+assert.equal(wave6DoctrineChoices.length, 3);
+assert.ok(wave6DoctrineChoices.every((choice) => choice.action === "bastion_doctrine"));
+assert.equal(wave6DoctrineChoices[0].doctrineId, architecturePreviewRun.build.architectureForecastId);
+assert.ok(wave6DoctrineChoices[0].cost <= wave6DoctrineChoices[1].cost);
 systemsForgeBuild.bastionDoctrineId = "kiln_bastion";
 const systemsForgeChoices = game.buildBastionDraftChoices(systemsForgeBuild, () => 0, 6);
 const siegePactChoice = systemsForgeChoices.find((choice) => choice.action === "bastion_pact");
@@ -327,7 +344,7 @@ assert.ok(waveThreeForgeChoices.every((choice) => choice.laneLabel !== "생존/�
 assert.equal(game.shouldUseFieldGrant({ nextWave: 3, finalForge: false }), false);
 const architectureDraftChoices = game.buildArchitectureDraftChoices(game.createInitialBuild("relay_oath"));
 assert.equal(architectureDraftChoices.length, 3);
-assert.ok(architectureDraftChoices.every((choice) => choice.action === "architecture_doctrine"));
+assert.ok(architectureDraftChoices.every((choice) => choice.action === "architecture_forecast"));
 assert.ok(architectureDraftChoices.every((choice) => choice.cost === 0));
 assert.ok(architectureDraftChoices.every((choice) => choice.weaponChoice));
 assert.ok(architectureDraftChoices.every((choice) => choice.doctrineCapstoneLabel));
@@ -338,15 +355,15 @@ const architectureRun = {
   stats: {},
 };
 game.applyForgeChoice(architectureRun, architectureDraftChoices[0]);
-assert.ok(architectureRun.build.bastionDoctrineId);
+assert.equal(architectureRun.build.bastionDoctrineId, null);
+assert.equal(architectureRun.build.architectureForecastId, architectureDraftChoices[0].doctrineId);
 assert.equal(architectureRun.build.doctrineChaseClaimed, false);
 assert.ok(
-  architectureRun.build.upgrades.some((upgrade) => upgrade.startsWith("아키텍처 잠금: "))
+  architectureRun.build.upgrades.some((upgrade) => upgrade.startsWith("아키텍처 예고: "))
 );
 assert.equal(architectureRun.build.coreId, "ricochet");
 assert.equal(game.computeWeaponStats(architectureRun.build).evolutionTier, 1);
-assert.equal(architectureRun.build.supportSystems.length, 1);
-assert.equal(architectureRun.build.supportSystems[0].tier, 1);
+assert.equal(architectureRun.build.supportSystems.length, 0);
 const doctrineChaseChoices = game.buildForgeChoices(
   architectureRun.build,
   () => 0,
@@ -365,18 +382,11 @@ const bastionOvercommitChoices = game.buildBastionDraftChoices(
   6
 );
 assert.equal(bastionOvercommitChoices.length, 3);
-const wave6PrimarySpikeChoice = bastionOvercommitChoices.find(
-  (choice) => choice.type === "evolution"
-)
-  || bastionOvercommitChoices.find(
-    (choice) =>
-      choice.type !== "utility" || (
-        choice.action !== "doctrine_chase" &&
-        choice.action !== "bastion_pact"
-      )
-);
+assert.ok(bastionOvercommitChoices.every((choice) => choice.action === "bastion_doctrine"));
+const wave6PrimarySpikeChoice = bastionOvercommitChoices[0];
 assert.ok(wave6PrimarySpikeChoice);
 game.applyForgeChoice(architectureRun, wave6PrimarySpikeChoice);
+assert.equal(architectureRun.build.bastionDoctrineId, wave6PrimarySpikeChoice.doctrineId);
 const chassisBreakpointChoices = game.buildWave6ChassisBreakpointChoices(
   architectureRun.build,
   () => 0,
@@ -393,7 +403,7 @@ game.applyForgeChoice(architectureRun, systemsForgeChoice);
 assert.equal(game.getSupportBayCapacity(architectureRun.build), 3);
 assert.equal(architectureRun.build.auxiliaryJunctionLevel, 1);
 assert.equal(architectureRun.build.wave6ChassisBreakpoint, true);
-assert.equal(architectureRun.build.supportSystems.length, 2);
+assert.equal(architectureRun.build.supportSystems.length, 1);
 assert.ok(
   architectureRun.build.upgrades.includes("Chassis Breakpoint: flex bay +1 now, auto Wave 8 uplink")
 );
@@ -515,6 +525,11 @@ game.applyForgeChoice(
   { build: doctrineCapstoneBuild, player: null, resources: { scrap: 999 }, stats: {} },
   mirrorArchitectureChoice
 );
+doctrineCapstoneBuild.bastionDoctrineId = "mirror_hunt";
+game.applyForgeChoice(
+  { build: doctrineCapstoneBuild, player: null, resources: { scrap: 999 }, stats: {} },
+  { type: "system", systemId: "volt_drones", systemTier: 1, cost: 0 }
+);
 const mirrorWaveThreeWeapon = game.computeWeaponStats(doctrineCapstoneBuild);
 assert.equal(mirrorWaveThreeWeapon.doctrineFormLabel, "Hunt Frame");
 assert.equal(mirrorWaveThreeWeapon.doctrineStage, 1);
@@ -569,6 +584,7 @@ game.applyForgeChoice(
   { build: artilleryDoctrineBuild, player: null, resources: { scrap: 999 }, stats: {} },
   artilleryArchitectureChoice
 );
+artilleryDoctrineBuild.bastionDoctrineId = "storm_artillery";
 const artilleryWaveThreeWeapon = game.computeWeaponStats(artilleryDoctrineBuild);
 assert.equal(artilleryWaveThreeWeapon.evolutionLabel, "Twin Spine");
 assert.equal(artilleryWaveThreeWeapon.doctrineFormLabel, "Siege Frame");
@@ -667,7 +683,7 @@ const fortressDoctrineBuild = game.createInitialBuild("scrap_pact");
 fortressDoctrineBuild.pendingCores = [];
 const fortressDoctrineChoice = game
   .buildBastionDraftChoices(fortressDoctrineBuild, () => 0, 6)
-  .find((choice) => choice.action === "bastion_doctrine");
+  .find((choice) => choice.doctrineId === "kiln_bastion");
 assert.ok(fortressDoctrineChoice);
 game.applyForgeChoice(
   { build: fortressDoctrineBuild, player: null, resources: { scrap: 999 }, stats: {} },

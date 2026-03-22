@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 23:59:58 KST
+  Findings:
+  - `Architecture Draft` at Wave 3 is still doing too much of the run's authorship too early. Free doctrine wiring, a free starter subsystem, and preferred-lane bias mean the build's headline fantasy is often declared before the player has had enough combat friction to want, fear, or earn that commitment.
+  - The mid-run shard chase and chassis breakpoint add more structure, but they still mostly confirm the doctrine picked earlier. That is a progression chain, not a hunger curve; the player is executing a labeled plan more often than discovering a run worth rerolling for.
+  - Support depth is broader on paper, yet the bay economy is still too scheduled to feel greedy. Offense, defense, and utility arrive in a controlled rollout, so even good runs read like completed loadouts rather than unstable machines that might become gloriously excessive by Wave 12 and beyond.
+  - For a game that wants room to grow toward `20-30` waves, the current escalation is too front-loaded. If the run shows its answer by Wave 3, extra waves will mostly stretch confirmation, not anticipation, pivots, and late-run obsession.
+  Top Priority: Rework `Architecture Draft` into a lighter early forecast instead of a full doctrine lock, then move the real run-defining commitment to a later breakpoint where the player can choose between multiple already-proven weapon/body directions.
+  Why Now: A rerun-driven action roguelite needs desire to build toward something, not the whole thesis handed over before the first real pressure bracket ends.
+  Do Not Repeat: Do not add more doctrine text, helper modules, or capstone wrappers if the run still hard-commits by Wave 3.
+
 - 2026-03-22 23:59:59 KST
   Findings:
   - The new chassis breakpoint is structurally right, but `Vector Thrusters`, `Bulwark Treads`, and `Salvage Winch` still read too much like hidden rule buffs wrapped in good copy. They alter efficiency more than spectacle, so the Wave 6 choice is not yet the kind of visible machine transformation players chase across runs.
@@ -731,6 +741,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 12:18 KST
+  Changed: reworked the `Wave 3` `Architecture Draft` in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from a full doctrine lock into a lighter `architecture forecast`. Picking one of the three doctrine cards now only rewires the main gun into that branch's provisional frame and stores an `architectureForecastId`; it no longer installs a free starter subsystem or immediately reserves the early support bays. The real doctrine commitment was moved to `Wave 6`: [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) now presents three doctrine adoption cards there, promotes the forecasted branch to the top with a deeper discount, and then flows straight into the existing `Chassis Breakpoint` so the player locks doctrine, body plan, and flex-bay package only after two more waves of combat evidence. I also updated the forge/combat-feed copy to explain the new forecast-then-commit cadence and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to cover forecast state, delayed doctrine adoption, and the revised Wave `6` choice set.
+  Why: the latest critique’s Top Priority was to stop `Architecture Draft` from declaring the whole run by `Wave 3` and move the real identity lock to a later breakpoint where the player can choose between already-proven directions. The highest-value bounded interpretation was to keep the visible provisional gun fantasy early, but strip out the subsystem/lane commitment until `Wave 6`, because that preserves anticipation and reroute potential without throwing away the new weapon-form readability.
+  Follow-up risk: the structure now leaves room for discovery between `Wave 3` and `Wave 6`, but the actual Wave `6` doctrine picks are still mostly weapon-first commitment cards. If later critique says the timing is fixed but the adoption moment still lacks enough body-level spectacle, the next pass should make each doctrine adoption also bend the chassis breakpoint or encounter asks more sharply instead of restoring early authored lock-in.
 
 - 2026-03-23 01:08 KST
   Changed: rewired the existing `Wave 6` chassis breakpoint in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so each chassis now visibly transforms the main gun instead of mostly living as a handling buff. `Vector Thrusters` now opens side-mounted `strafe pod` fire and a slipstream spear shot after dashes, `Bulwark Treads` unfolds a triple `siege head` while anchored for a slower but much heavier hold-ground volley, and `Salvage Winch` turns pickup surges into a `tow fork` fan while also widening live drop vacuum during the burst. I also updated the chassis copy to sell those weapon-body forms directly and added on-player frame rendering so the transformation reads in combat instead of only in tooltip text.

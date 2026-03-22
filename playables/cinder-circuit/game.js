@@ -3327,6 +3327,7 @@
     cashoutSupportId: null,
     cashoutFailSoftId: null,
     act3CatalystDraftSeen: false,
+    architectureForecastId: null,
     bastionDoctrineId: null,
     doctrineCapstoneId: null,
     doctrineChaseClaimed: false,
@@ -4160,7 +4161,7 @@
         ...finaleRows,
       ];
     }
-    if (choice.type === "utility" && choice.action === "architecture_doctrine") {
+    if (choice.type === "utility" && choice.action === "architecture_forecast") {
       return [
         { label: "교리", value: choice.doctrineLabel || "아키텍처" },
         {
@@ -4168,8 +4169,8 @@
           value: choice.weaponChoice ? choice.weaponChoice.title : "주무장 재배선",
         },
         {
-          label: "지원",
-          value: choice.doctrineChoice ? choice.doctrineChoice.title : "starter subsystem 설치",
+          label: "상태",
+          value: "지원/차체 lock 보류",
         },
         {
           label: "종점",
@@ -4329,6 +4330,7 @@
         cashoutSupportId: BASE_BUILD.cashoutSupportId,
         cashoutFailSoftId: BASE_BUILD.cashoutFailSoftId,
         act3CatalystDraftSeen: BASE_BUILD.act3CatalystDraftSeen,
+        architectureForecastId: BASE_BUILD.architectureForecastId,
         bastionDoctrineId: BASE_BUILD.bastionDoctrineId,
         doctrineCapstoneId: BASE_BUILD.doctrineCapstoneId,
         doctrineChaseClaimed: BASE_BUILD.doctrineChaseClaimed,
@@ -4410,6 +4412,14 @@
       );
       if (adoptedDoctrine) {
         return adoptedDoctrine;
+      }
+    }
+    if (typeof buildOrSignatureId === "object" && buildOrSignatureId.architectureForecastId) {
+      const forecastDoctrine = Object.values(BASTION_DOCTRINE_DEFS).find(
+        (doctrine) => doctrine.id === buildOrSignatureId.architectureForecastId
+      );
+      if (forecastDoctrine) {
+        return forecastDoctrine;
       }
     }
     if (typeof buildOrSignatureId === "string") {
@@ -6013,6 +6023,9 @@
     if (!choice || !doctrine) {
       return 0;
     }
+    if (choice.type === "utility" && choice.action === "bastion_doctrine") {
+      return choice.doctrineId === doctrine.id ? 640 : 0;
+    }
     if (choice.type === "utility" && choice.action === "doctrine_chase") {
       return 520;
     }
@@ -6049,13 +6062,35 @@
     return candidates;
   }
 
-  function createBastionDoctrineChoice(build, rng, nextWave) {
-    const doctrine = getBastionDoctrineDef(build);
-    const spikeChoice = createBastionDraftSpikeChoice(build, rng, nextWave);
+  function createBastionDoctrineChoice(build, doctrineOrRng, nextWaveOrDoctrine, maybeNextWave) {
+    const doctrine =
+      typeof doctrineOrRng === "object" && doctrineOrRng && doctrineOrRng.id
+        ? doctrineOrRng
+        : typeof nextWaveOrDoctrine === "object" && nextWaveOrDoctrine && nextWaveOrDoctrine.id
+          ? nextWaveOrDoctrine
+          : getBastionDoctrineDef(build);
+    const rng =
+      typeof doctrineOrRng === "function"
+        ? doctrineOrRng
+        : typeof nextWaveOrDoctrine === "function"
+          ? nextWaveOrDoctrine
+          : Math.random;
+    const nextWave =
+      Number.isFinite(maybeNextWave)
+        ? maybeNextWave
+        : Number.isFinite(nextWaveOrDoctrine)
+          ? nextWaveOrDoctrine
+          : 0;
+    const weaponChoice = createDoctrineChaseWeaponChoice(build, doctrine, { nextWave, finalForge: false });
     const lateCapstoneLabel = getDoctrineLateCapstoneLabel(doctrine);
-    if (!doctrine || !spikeChoice) {
-      return spikeChoice;
+    if (!doctrine || !weaponChoice) {
+      return createBastionDraftSpikeChoice(build, rng, nextWave);
     }
+    const forecastConfirmed =
+      !!build &&
+      !!build.architectureForecastId &&
+      build.architectureForecastId === doctrine.id &&
+      !build.bastionDoctrineId;
     return {
       type: "utility",
       action: "bastion_doctrine",
@@ -6064,14 +6099,18 @@
       tag: "DOCTRINE",
       title: doctrine.label,
       description:
-        `${doctrine.description} 즉시 ${spikeChoice.title}을(를) 할인 장착하고, ${doctrine.reserveText} 이후 포지 후보도 ${doctrine.short} 방향을 먼저 민다.${lateCapstoneLabel ? ` Wave 6-8 marked elite shard를 모으는 장기 forge pursuit가 열리고, 완성 시 ${lateCapstoneLabel} 계열 교리 monster form이 즉시 잠긴다.` : ""}`,
-      slotText: `교리 채택 · ${spikeChoice.title} · ${doctrine.short} · ${doctrine.reservedLane}`,
-      cost: spikeChoice.cost,
+        `${doctrine.description} 즉시 ${weaponChoice.title}을(를) 할인 장착하고, ${doctrine.reserveText} 이어지는 Chassis Breakpoint가 flex bay를 열어 진짜 body plan까지 잠근다.${forecastConfirmed ? " Wave 3 forecast와 맞아 더 싸게 확정된다." : ""}${lateCapstoneLabel ? ` 이후 Wave 6-8 marked elite shard를 모으는 장기 forge pursuit가 열리고, 완성 시 ${lateCapstoneLabel} 계열 교리 monster form이 즉시 잠긴다.` : ""}`,
+      slotText: `교리 채택 · ${weaponChoice.title} · ${doctrine.short} · ${doctrine.reservedLane}`,
+      cost: Math.max(0, Math.round((weaponChoice.cost || 0) * (forecastConfirmed ? 0.45 : 0.72))),
       laneLabel: "교리 채택",
       forgeLaneLabel: "교리 채택",
       doctrineId: doctrine.id,
       doctrineLabel: doctrine.label,
-      doctrineChoice: spikeChoice,
+      doctrineChoice: {
+        ...weaponChoice,
+        cost: 0,
+      },
+      forecastConfirmed,
     };
   }
 
@@ -6098,44 +6137,31 @@
   }
 
   function createArchitectureDoctrineChoice(doctrine, build = null) {
-    if (!doctrine || !doctrine.starterSystemId || !SUPPORT_SYSTEM_DEFS[doctrine.starterSystemId]) {
+    if (!doctrine) {
       return null;
     }
-    const starterSystem = SUPPORT_SYSTEM_DEFS[doctrine.starterSystemId];
-    const starterTier = starterSystem.tiers[1];
     const weaponChoice = createArchitectureDoctrineWeaponChoice(build, doctrine);
     const lateCapstoneLabel = getDoctrineLateCapstoneLabel(doctrine);
-    if (!starterTier || !weaponChoice) {
+    if (!weaponChoice) {
       return null;
     }
     return {
       type: "utility",
-      action: "architecture_doctrine",
+      action: "architecture_forecast",
       id: `utility:architecture_doctrine:${doctrine.id}`,
-      verb: "잠금",
+      verb: "예고",
       tag: "ARCH",
       title: doctrine.label,
       description:
-        `${doctrine.description} 즉시 주무장을 ${weaponChoice.title} 형태로 재배선하고 ${starterTier.title}을(를) 무료 설치해 ${doctrine.branchFamilyLabel} 계통을 바로 켠다. ${doctrine.reserveText} 이후 포지 후보도 ${doctrine.short} 쪽을 먼저 민다.${lateCapstoneLabel ? ` Wave 5 overcommit를 통과하면 forge pursuit 계약이 열리고, 이후 Wave 6-8 marked elite shard를 모아 ${lateCapstoneLabel} 계열 조기 완성을 노릴 수 있다.` : ""}`,
-      slotText: `아키텍처 잠금 · ${weaponChoice.title} + ${starterTier.title} · ${doctrine.short}`,
+        `${doctrine.description} 지금은 주무장만 ${weaponChoice.title} 형태로 가볍게 재배선해 다음 전투에서 이 방향을 시험한다. support bay reserve와 starter subsystem lock은 아직 열지 않고, Wave 6 Bastion Draft에서 세 교리 중 실제 commitment를 다시 고른다.${lateCapstoneLabel ? ` 그때 확정하면 Wave 6-8 marked elite shard를 모아 ${lateCapstoneLabel} 계열 조기 완성을 노릴 수 있다.` : ""}`,
+      slotText: `아키텍처 예고 · ${weaponChoice.title} · ${doctrine.short}`,
       cost: 0,
-      laneLabel: "아키텍처",
-      forgeLaneLabel: "아키텍처",
+      laneLabel: "아키텍처 예고",
+      forgeLaneLabel: "아키텍처 예고",
       doctrineId: doctrine.id,
       doctrineLabel: doctrine.label,
       doctrineCapstoneLabel: lateCapstoneLabel,
       weaponChoice,
-      doctrineChoice: {
-        type: "system",
-        systemId: doctrine.starterSystemId,
-        systemTier: 1,
-        cost: 0,
-        tag: starterSystem.tag,
-        title: starterTier.title,
-        description: starterTier.description,
-        slotText: starterTier.slotText,
-        forgeLaneLabel: starterSystem.forgeLane,
-      },
     };
   }
 
@@ -6339,10 +6365,17 @@
     if (nextWave === 6 && build && build.bastionDoctrineId) {
       return buildWave6BreakpointPrimaryChoices(build, rng, nextWave);
     }
-    const spikeChoice = build && build.bastionDoctrineId
-      ? createDoctrineChaseChoice(build, { nextWave, finalForge: false }) ||
-        createBastionDraftSpikeChoice(build, rng, nextWave)
-      : createBastionDoctrineChoice(build, rng, nextWave);
+    if (build && !build.bastionDoctrineId) {
+      const doctrineChoices = Object.values(BASTION_DOCTRINE_DEFS)
+        .map((doctrine) => createBastionDoctrineChoice(build, doctrine, rng, nextWave))
+        .filter(Boolean);
+      const forecastDoctrine =
+        build.architectureForecastId ? getBastionDoctrineDef(build.architectureForecastId) : null;
+      sortChoicesForDoctrine(doctrineChoices, forecastDoctrine);
+      return doctrineChoices.slice(0, 3);
+    }
+    const spikeChoice = createDoctrineChaseChoice(build, { nextWave, finalForge: false }) ||
+      createBastionDraftSpikeChoice(build, rng, nextWave);
     const choices = [];
     if (spikeChoice) {
       choices.push(spikeChoice);
@@ -6499,7 +6532,7 @@
     state.forgeDraftType = "architecture_draft";
     state.forgeChoices = buildArchitectureDraftChoices(state.build);
     pushCombatFeed(
-      "Architecture Draft 개시. 세 개의 장기 교리 중 하나를 골라 주무장을 즉시 재배선하고 starter subsystem을 무료 설치한 채, 이후 포지 계통까지 함께 고정한다.",
+      "Architecture Draft 개시. 세 개의 장기 교리 중 하나를 예고해 주무장만 먼저 시험한다. 진짜 doctrine lock과 support lane commitment는 Wave 6 Bastion Draft로 미룬다.",
       "ARCH"
     );
     setBanner("Architecture Draft", 0.95);
@@ -6567,8 +6600,8 @@
     if (!build || !build.bastionDoctrineId) {
       const doctrine = getBastionDoctrineDef(build);
       return doctrine
-        ? `${doctrine.label} 교리 1장, 고통 계약 1장, 무료 안정화 1장 중 하나로 Act 2 운영을 직접 비튼다. 교리를 고르면 ${doctrine.reserveText}`
-        : "할인 spike 1장, 고통 계약 1장, 무료 안정화 1장 중 하나로 Act 2 운영을 직접 비튼다.";
+        ? `${doctrine.label} forecast를 포함한 세 장기 교리 중 하나를 이제 실제로 채택한다. Wave 3에 시험한 주포 프레임을 확인하거나 버리고, 바로 이어지는 Chassis Breakpoint에서 body plan까지 잠근다.`
+        : "세 장기 교리 중 하나를 실제로 채택한 뒤, 바로 이어지는 Chassis Breakpoint에서 body plan까지 잠근다.";
     }
     if (build.overcommitUnlocked && !build.doctrineChaseClaimed) {
       return "방금 회수한 contraband salvage가 열려 있다. 이번 Bastion Draft에서는 장기 Forge Pursuit 계약, 고통 계약, 무료 안정화 중 하나로 Act 2 greed를 직접 결정한다.";
@@ -6581,7 +6614,10 @@
 
   function enterBastionDraft() {
     const nextWave = state.waveIndex + 2;
-    const wave6ChassisDraft = nextWave === 6 && state.build && state.build.bastionDoctrineId;
+    const wave6ChassisDraft =
+      nextWave === 6 &&
+      state.build &&
+      (state.build.bastionDoctrineId || state.build.architectureForecastId);
     state.phase = "forge";
     state.pendingFinalForge = false;
     state.forgeStep = 1;
@@ -6590,7 +6626,9 @@
     state.forgeChoices = buildBastionDraftChoices(state.build, Math.random, nextWave);
     pushCombatFeed(
       wave6ChassisDraft
-        ? "Wave 6 Chassis Breakpoint 개시. 먼저 중반 spike 또는 greed를 1픽으로 잠근 뒤, 즉시 열린 flex bay에 넣을 subsystem 1픽을 추가로 강제한다. 이 선택이 끝나면 Late Break Armory를 건너뛰고 Wave 6-9 bracket을 연속 전투로 밀어붙인다."
+        ? state.build.bastionDoctrineId
+          ? "Wave 6 Chassis Breakpoint 개시. 먼저 중반 spike 또는 greed를 1픽으로 잠근 뒤, 즉시 열린 flex bay에 넣을 subsystem 1픽을 추가로 강제한다. 이 선택이 끝나면 Late Break Armory를 건너뛰고 Wave 6-9 bracket을 연속 전투로 밀어붙인다."
+          : "Wave 6 Bastion Draft 개시. 먼저 세 장기 교리 중 하나를 실제로 확정한 뒤, 즉시 이어지는 Chassis Breakpoint에서 flex bay와 utility chassis를 함께 잠근다. 이 두 픽이 끝나면 Late Break Armory를 건너뛰고 Wave 6-9 bracket을 연속 전투로 밀어붙인다."
         : `Bastion Draft 개시. ${getBastionDraftIntroText(state.build)}`,
       "DRAFT"
     );
@@ -6941,6 +6979,7 @@
       const doctrine = getBastionDoctrineDef(choice.doctrineId || run.build);
       if (doctrine && run.build.bastionDoctrineId !== doctrine.id) {
         run.build.bastionDoctrineId = doctrine.id;
+        run.build.architectureForecastId = doctrine.id;
         run.build.doctrineCapstoneId = null;
         run.build.doctrineChaseClaimed = false;
         doctrine.apply(run.build, run);
@@ -6952,24 +6991,21 @@
       return choice;
     }
 
-    if (choice.type === "utility" && choice.action === "architecture_doctrine") {
+    if (choice.type === "utility" && choice.action === "architecture_forecast") {
       const doctrine = getBastionDoctrineDef(choice.doctrineId || run.build);
-      if (!doctrine || run.build.bastionDoctrineId === doctrine.id) {
+      if (!doctrine) {
         return choice;
       }
-      run.build.bastionDoctrineId = doctrine.id;
+      run.build.architectureForecastId = doctrine.id;
+      run.build.bastionDoctrineId = null;
       run.build.doctrineCapstoneId = null;
       run.build.doctrineChaseClaimed = false;
       run.build.doctrinePursuitCommitted = false;
       run.build.doctrinePursuitProgress = 0;
       run.build.doctrinePursuitExpired = false;
-      doctrine.apply(run.build, run);
-      run.build.upgrades.push(`아키텍처 잠금: ${doctrine.label}`);
+      run.build.upgrades.push(`아키텍처 예고: ${doctrine.label}`);
       if (choice.weaponChoice) {
         applyForgeChoice(run, choice.weaponChoice);
-      }
-      if (choice.doctrineChoice) {
-        applyForgeChoice(run, choice.doctrineChoice);
       }
       return choice;
     }
@@ -8717,7 +8753,7 @@
     const wave6ChassisDraft =
       state.forgeDraftType === "bastion_draft" &&
       state.build &&
-      state.build.bastionDoctrineId &&
+      (state.build.bastionDoctrineId || state.build.architectureForecastId) &&
       state.waveIndex + 2 === 6;
     const instantDraft =
       state.forgeDraftType === "architecture_draft" ||
@@ -8755,8 +8791,8 @@
       const grantLabel = choice.forgeLaneLabel || choice.laneLabel || choice.tag || "CACHE";
       pushCombatFeed(
         state.forgeDraftType === "architecture_draft"
-          ? choice.action === "architecture_doctrine"
-            ? `${choice.doctrineLabel} 적용. ${choice.doctrineChoice ? choice.doctrineChoice.title : "starter subsystem"}를 즉시 설치하고 이후 포지를 해당 아키텍처 쪽으로 기울인 채 다음 웨이브를 연다.`
+          ? choice.action === "architecture_forecast"
+            ? `${choice.doctrineLabel} 예고 적용. ${choice.weaponChoice ? choice.weaponChoice.title : "주무장 프레임"}만 먼저 시험하고, 실제 doctrine lock은 Wave 6 Bastion Draft로 넘긴 채 다음 웨이브를 연다.`
             : `${grantLabel} 적용. 아키텍처 방향을 기울인 채 다음 웨이브를 연다.`
         : state.forgeDraftType === "bastion_draft"
           ? choice.type === "fallback"
@@ -11670,11 +11706,11 @@
     const wave6ChassisDraft =
       state.forgeDraftType === "bastion_draft" &&
       state.build &&
-      state.build.bastionDoctrineId &&
+      (state.build.bastionDoctrineId || state.build.architectureForecastId) &&
       state.waveIndex + 2 === 6;
     const packageSummary =
       state.forgeDraftType === "architecture_draft"
-        ? "Architecture Draft · 세 장기 교리 중 1픽, 주무장 재배선 + starter subsystem 무료 설치로 Wave 3부터 최종 교리 monster를 먼저 보여준다"
+        ? "Architecture Draft · 세 장기 교리 중 1픽, 주무장 프레임만 먼저 시험하고 진짜 doctrine/body commitment는 Wave 6으로 미룬다"
         : state.forgeDraftType === "field_grant"
         ? "Field Cache · 할인 장착 2장과 무료 회수 1장 중 1픽, 지금 고철을 태울지 아낄지 고른다"
         : state.forgeDraftType === "bastion_draft"
@@ -11684,7 +11720,7 @@
             : state.build.overcommitUnlocked && !state.build.doctrineChaseClaimed
               ? "Bastion Draft · 회수한 contraband salvage를 장기 Forge Pursuit 계약으로 바꾸거나, 계약/안정화로 greed를 접는다"
             : "Bastion Draft · 기존 교리 위에 추가 spike 또는 고통 계약을 더 얹어 Act 2 greed를 강제한다"
-          : "Bastion Draft · 시그니처 교리 1장, 고통 계약 1장, 무료 안정화 1장 중 1픽으로 Act 2 posture를 기울이고 late wildcard bay를 예고한다"
+          : "Bastion Draft · 세 장기 교리 중 1픽으로 실제 doctrine을 확정하고, 곧바로 chassis/body plan까지 이어서 잠근다"
         : state.forgeDraftType === "catalyst_draft"
         ? "Catalyst Crucible · 회수한 촉매를 지금 태워 Act 3 본편을 괴물 화력이나 운영형 안정화로 먼저 고정한다"
         : state.forgeDraftType === "armory"
@@ -11703,7 +11739,7 @@
         ? `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 세 장은 완성, 촉매 연소, 안정화로 고정되며 각 카드가 바로 이어질 3연속 post-capstone afterburn bracket의 시작 형태를 미리 보여준다.`
         : `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 촉매가 없어도 비상 점화와 안정화 fail-soft 카드가 열리며, 각 카드가 다른 3연속 post-capstone afterburn bracket으로 바로 이어진다.`
       : state.forgeDraftType === "architecture_draft"
-        ? `Wave 3 진입 직전 Architecture Draft다. 세 장기 교리 중 하나를 골라 주무장을 즉시 해당 교리 형태로 재배선하고 starter subsystem을 무료 설치하며, 초반 두 support bay와 이후 포지 후보를 그 계통 쪽으로 강하게 기울인다. Late Break Armory가 열리면 마지막 bay 1칸만 우회 조합용으로 풀린다. 지금부터 이번 런이 어떤 최종 병기로 자랄지 바로 드러난다.`
+        ? `Wave 3 진입 직전 Architecture Draft다. 세 장기 교리 중 하나를 예고해 주무장만 즉시 해당 프레임으로 재배선하고, support bay reserve나 starter subsystem lock은 아직 미룬다. Wave 6 Bastion Draft에서 세 교리 중 실제 commitment를 다시 골라 몸체와 지원층까지 확정한다.`
       : state.forgeDraftType === "field_grant"
         ? `고철 ${Math.round(state.resources.scrap)} 보유. Field Cache다. 할인된 즉시 장착 2장과 무료 Emergency Vent 중 하나를 고른다. 지금 스파이크를 사서 당길지, 고철을 쥐고 다음 큰 포지까지 버틸지 직접 판단해야 한다.`
         : state.forgeDraftType === "bastion_draft"
@@ -11715,7 +11751,7 @@
             : state.build.overcommitUnlocked && !state.build.doctrineChaseClaimed
               ? `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. Wave 5에서 회수한 contraband salvage가 살아 있어 장기 Forge Pursuit 계약이 열렸다. 지금 pursuit를 걸고 Wave 6-8 marked elite에서 shard를 모아 조기 monster form을 즉시 잠글지, Siege Salvage Pact나 무료 안정화로 greed를 접을지 정한다.`
             : `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 이미 채택한 교리 위에 추가 spike 1장과 Siege Salvage Pact, 무료 안정화가 다시 뜬다. 지금 더 깊게 묶일지, 체력을 태워 greed를 당길지 결정한다.`
-          : `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 한 장은 시그니처 전용 교리라 즉시 spike를 확보하면서 초반 support bay와 이후 포지 후보를 한 계통 쪽으로 강하게 기울이고, Late Break Armory에서는 마지막 bay 1칸만 우회 조합용으로 풀어 준다. 한 장은 최대 체력을 깎고 고철을 당겨오는 Siege Salvage Pact, 마지막 한 장은 무료 안정화다. Act 2 posture를 잠글지, 더 아프게 탐욕할지 직접 정한다.`
+          : `고철 ${Math.round(state.resources.scrap)} 보유. Wave 6 Bastion Draft다. 이제 세 장기 교리 중 하나를 실제로 채택한다. Wave 3에 예고한 프레임을 확정해 할인 잠금할 수도 있고, 전투 중 더 잘 맞았던 다른 weapon direction으로 갈아탈 수도 있다. 이 1픽 직후에는 Chassis Breakpoint가 바로 이어져 flex bay와 utility chassis까지 함께 잠긴다.`
         : state.forgeDraftType === "catalyst_draft"
         ? `고철 ${Math.round(state.resources.scrap)} 보유. Catalyst Crucible이다. 이제 막 회수한 촉매를 무료로 점화하거나 안정화해 남은 Act 3 웨이브를 완성형 회로로 직접 소모한다. 최종 포지까지 묵혀 두는 대신 지금부터 괴물 형태를 실제 전장에 투입한다.`
         : state.forgeDraftType === "armory"
