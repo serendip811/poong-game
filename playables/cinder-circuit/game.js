@@ -46,6 +46,10 @@
   const APEX_PREDATOR_SPAWN_DELAY = 12;
   const WAVE6_ASCENSION_SURGE_DURATION = 4.6;
   const WAVE6_ASCENSION_ONLINE_SURGE_DURATION = 7.4;
+  const LATE_FIELD_CACHE_START_WAVE = 10;
+  const LATE_FIELD_CACHE_INTERVAL = 2;
+  const MAX_LATE_FIELD_MUTATION_LEVEL = 5;
+  const MAX_LATE_FIELD_AEGIS_LEVEL = 4;
 
   const WAVE_CONFIG = [
     {
@@ -3969,6 +3973,8 @@
     riskMutationQueuedLevel: 0,
     apexMutationLevel: 0,
     predatorBaitCharges: 0,
+    lateFieldMutationLevel: 0,
+    lateFieldAegisLevel: 0,
     bastionPactDebtWaves: 0,
     wave6ChassisBreakpoint: false,
     chassisId: null,
@@ -4886,6 +4892,56 @@
     );
   }
 
+  function shouldUseLateFieldCache(nextWave) {
+    return (
+      Number.isFinite(nextWave) &&
+      nextWave >= LATE_FIELD_CACHE_START_WAVE &&
+      (nextWave - LATE_FIELD_CACHE_START_WAVE) % LATE_FIELD_CACHE_INTERVAL === 0
+    );
+  }
+
+  function getLateFieldMutationLevel(build) {
+    return clamp(
+      build && Number.isFinite(build.lateFieldMutationLevel) ? build.lateFieldMutationLevel : 0,
+      0,
+      MAX_LATE_FIELD_MUTATION_LEVEL
+    );
+  }
+
+  function getLateFieldAegisLevel(build) {
+    return clamp(
+      build && Number.isFinite(build.lateFieldAegisLevel) ? build.lateFieldAegisLevel : 0,
+      0,
+      MAX_LATE_FIELD_AEGIS_LEVEL
+    );
+  }
+
+  function getLateFieldMutationTierLabel(level) {
+    const labels = ["Twin Battery", "Broadside Rack", "Siege Bloom", "War Crown", "Endline Array"];
+    return labels[Math.max(0, Math.min(labels.length - 1, level - 1))] || "Twin Battery";
+  }
+
+  function getLateFieldAegisTierLabel(level) {
+    const labels = ["Aegis Ring", "Bastion Halo", "Intercept Halo", "Warplate Halo"];
+    return labels[Math.max(0, Math.min(labels.length - 1, level - 1))] || "Aegis Ring";
+  }
+
+  function getLateFieldAegisCooldown(level) {
+    return Math.max(2.6, 5.2 - level * 0.55);
+  }
+
+  function getLateFieldAegisReduction(level) {
+    return clamp(0.32 + level * 0.1, 0.32, 0.72);
+  }
+
+  function getLateFieldAegisMaxCharges(build) {
+    const level = getLateFieldAegisLevel(build);
+    if (level >= 4) {
+      return 2;
+    }
+    return level > 0 ? 1 : 0;
+  }
+
   function unlockLateSupportBay(build) {
     if (!build) {
       return false;
@@ -5312,6 +5368,8 @@
         illegalOverclockMutationLevel: BASE_BUILD.illegalOverclockMutationLevel,
         apexMutationLevel: BASE_BUILD.apexMutationLevel,
         predatorBaitCharges: BASE_BUILD.predatorBaitCharges,
+        lateFieldMutationLevel: BASE_BUILD.lateFieldMutationLevel,
+        lateFieldAegisLevel: BASE_BUILD.lateFieldAegisLevel,
         bastionPactDebtWaves: BASE_BUILD.bastionPactDebtWaves,
         wave6ChassisBreakpoint: BASE_BUILD.wave6ChassisBreakpoint,
         chassisId: BASE_BUILD.chassisId,
@@ -5703,6 +5761,13 @@
       overdriveDuration: 5.5 + build.overdriveDurationBonus,
       hazardMitigation: clamp(build.hazardMitigation, 0, 0.45),
     };
+    const lateFieldAegisLevel = getLateFieldAegisLevel(build);
+    if (lateFieldAegisLevel > 0) {
+      stats.maxHp += 6 + lateFieldAegisLevel * 4;
+      stats.moveSpeed += lateFieldAegisLevel * 4;
+      stats.dashCooldown = clamp(stats.dashCooldown - lateFieldAegisLevel * 0.08, 1.25, 3.2);
+      stats.hazardMitigation = clamp(stats.hazardMitigation + lateFieldAegisLevel * 0.04, 0, 0.45);
+    }
     const riskMutationLevel = getRiskMutationLevel(build);
     if (riskMutationLevel > 0) {
       stats.moveSpeed += 5 + riskMutationLevel * 2;
@@ -5814,6 +5879,11 @@
       lateAscensionTraitLabel: null,
       lateAscensionStatusNote: null,
       lateAscensionFirePattern: null,
+      lateFieldMutationLevel: 0,
+      lateFieldMutationLabel: null,
+      lateFieldMutationTraitLabel: null,
+      lateFieldMutationStatusNote: null,
+      lateFieldMutationFirePattern: null,
     };
     getAffixDefs(build).forEach((affix) => {
       if (typeof affix.applyWeapon === "function") {
@@ -5967,6 +6037,58 @@
         stats.chain += 1;
         stats.chainRange = Math.max(stats.chainRange || 0, 182);
         if (apexMutationLevel >= 2) {
+          stats.bounce += 1;
+        }
+      }
+    }
+    const lateFieldMutationLevel = getLateFieldMutationLevel(build);
+    if (lateFieldMutationLevel > 0) {
+      const offsetCount = Math.min(6, 2 + lateFieldMutationLevel);
+      const spacing =
+        core.id === "scatter"
+          ? 0.14
+          : core.id === "ricochet"
+            ? 0.18
+            : core.id === "lance"
+              ? 0.09
+              : 0.11;
+      const half = (offsetCount - 1) / 2;
+      const offsets = Array.from({ length: offsetCount }, (_, index) => (index - half) * spacing);
+      stats.lateFieldMutationLevel = lateFieldMutationLevel;
+      stats.lateFieldMutationLabel = getLateFieldMutationTierLabel(lateFieldMutationLevel);
+      stats.lateFieldMutationTraitLabel = `Field Arsenal · MK ${lateFieldMutationLevel}`;
+      stats.lateFieldMutationStatusNote =
+        `후반 현장 패키지가 주포를 ${stats.lateFieldMutationLabel} 형태로 밀어 올렸다. 추가 배럴이 실제로 열려 매 2웨이브마다 더 넓은 화망을 강요한다.`;
+      stats.lateFieldMutationFirePattern = {
+        kind: "late_field_mutation",
+        offsets,
+        speedMultiplier: core.id === "lance" ? 1.16 : core.id === "ricochet" ? 1.04 : 1.08,
+        radius:
+          core.id === "lance"
+            ? 5.7 + lateFieldMutationLevel * 0.18
+            : 4.9 + lateFieldMutationLevel * 0.12,
+        damageMultiplier: 0.22 + lateFieldMutationLevel * 0.03,
+        life: 0.84 + lateFieldMutationLevel * 0.04,
+        pierceBonus: core.id === "lance" ? Math.ceil(lateFieldMutationLevel / 2) : 0,
+        bounceBonus: core.id === "ricochet" && lateFieldMutationLevel >= 2 ? 1 : 0,
+        chainBonus: core.id === "ricochet" ? Math.floor((lateFieldMutationLevel + 1) / 2) : 0,
+        color: "#ffe1ac",
+      };
+      stats.damage += 2 + lateFieldMutationLevel * 2;
+      stats.cooldown = clamp(stats.cooldown * (1 - lateFieldMutationLevel * 0.022), 0.08, 0.4);
+      if (core.id === "ember") {
+        stats.projectileSpeed += lateFieldMutationLevel * 12;
+      } else if (core.id === "scatter") {
+        stats.pellets += lateFieldMutationLevel >= 2 ? 1 : 0;
+        stats.pellets += lateFieldMutationLevel >= 4 ? 1 : 0;
+        stats.spread = round(stats.spread * Math.max(0.72, 1 - lateFieldMutationLevel * 0.04), 3);
+      } else if (core.id === "lance") {
+        stats.pierce += Math.ceil(lateFieldMutationLevel / 2);
+        stats.projectileSpeed += lateFieldMutationLevel * 18;
+      } else if (core.id === "ricochet") {
+        stats.chain += Math.ceil(lateFieldMutationLevel / 2);
+        stats.chainRange = Math.max(stats.chainRange || 0, 172 + lateFieldMutationLevel * 10);
+        if (lateFieldMutationLevel >= 3) {
           stats.bounce += 1;
         }
       }
@@ -7424,6 +7546,66 @@
     };
   }
 
+  function createLateFieldMutationChoice(build, nextWave) {
+    const nextLevel = Math.min(MAX_LATE_FIELD_MUTATION_LEVEL, getLateFieldMutationLevel(build) + 1);
+    return {
+      type: "utility",
+      action: "field_mutation",
+      id: `utility:field_mutation:${build.coreId}:${nextWave}:${nextLevel}`,
+      verb: "변이",
+      tag: "MUTATE",
+      title: `Overdrive Arsenal ${nextLevel}`,
+      description:
+        `후반 전장용 주포 증설 패키지. ${CORE_DEFS[build.coreId].label}에 추가 배럴과 보조 포문을 바로 붙여 ${getLateFieldMutationTierLabel(nextLevel)} 화망으로 바꾼다.`,
+      slotText: `추가 배럴 +${Math.min(6, 2 + nextLevel)} · MK ${nextLevel} 화망`,
+      cost: 0,
+      laneLabel: "Main Weapon Mutation",
+      forgeLaneLabel: "Main Weapon Mutation",
+      lateFieldMutationLevel: nextLevel,
+    };
+  }
+
+  function createLateFieldAegisChoice(build, nextWave) {
+    const nextLevel = Math.min(MAX_LATE_FIELD_AEGIS_LEVEL, getLateFieldAegisLevel(build) + 1);
+    return {
+      type: "utility",
+      action: "field_aegis",
+      id: `utility:field_aegis:${nextWave}:${nextLevel}`,
+      verb: "장착",
+      tag: "AEGIS",
+      title: getLateFieldAegisTierLabel(nextLevel),
+      description:
+        "후반 생존층 패키지. 재충전식 guard plate를 달아 큰 한 방을 깎아내고, 발동 순간 근처 탄막까지 함께 털어낸다.",
+      slotText: `guard plate ${getLateFieldAegisMaxCharges({ lateFieldAegisLevel: nextLevel })}충전 · 피해 ${Math.round(getLateFieldAegisReduction(nextLevel) * 100)}% 완충`,
+      cost: 0,
+      laneLabel: "Defense / Utility",
+      forgeLaneLabel: "Defense / Utility",
+      lateFieldAegisLevel: nextLevel,
+    };
+  }
+
+  function createLateFieldGreedContractChoice(build, nextWave) {
+    const waveScale = Math.max(0, nextWave - LATE_FIELD_CACHE_START_WAVE);
+    return {
+      type: "utility",
+      action: "field_greed",
+      id: `utility:field_greed:late:${nextWave}`,
+      verb: "계약",
+      tag: "PACT",
+      title: "Black Ledger Contract",
+      description:
+        "후반용 탐욕 계약. 다음 대형 cache 전까지 쓸 고철과 회수율을 크게 당겨오지만, 즉시 체력 청구서를 받고 Siege Debt도 두 웨이브 분량으로 붙는다.",
+      slotText: `고철 +${46 + waveScale * 4} · 회수 +${14 + waveScale * 2}% · 2웨이브 Siege Debt`,
+      cost: 0,
+      scrapGain: 46 + waveScale * 4,
+      scrapMultiplierGain: 0.14 + waveScale * 0.01,
+      pickupBonus: 14 + waveScale * 2,
+      hpLoss: 14 + waveScale,
+      maxHpPenalty: 10 + Math.floor(waveScale / 2),
+      debtWaves: 2,
+    };
+  }
+
   function createBastionDraftSpikeChoice(build, rng, nextWave) {
     const random = typeof rng === "function" ? rng : Math.random;
     const spikePool = buildActBreakArmoryChoices(build, random, Number.POSITIVE_INFINITY, {
@@ -8011,6 +8193,13 @@
   }
 
   function buildFieldGrantChoices(build, rng, nextWave) {
+    if (shouldUseLateFieldCache(nextWave)) {
+      return [
+        createFieldGrantCard(createLateFieldMutationChoice(build, nextWave)),
+        createFieldGrantCard(createLateFieldAegisChoice(build, nextWave)),
+        createFieldGrantCard(createLateFieldGreedContractChoice(build, nextWave)),
+      ].filter(Boolean);
+    }
     const pool = buildForgeChoices(build, rng, FIELD_GRANT_MAX_COST, {
       nextWave,
       finalForge: false,
@@ -8155,12 +8344,14 @@
     state.forgeDraftType = "field_grant";
     state.forgeChoices = buildFieldGrantChoices(state.build, Math.random, nextWave);
     pushCombatFeed(
-      nextWave >= RISK_MUTATION_START_WAVE
+      shouldUseLateFieldCache(nextWave)
+        ? "Arsenal Cache 확보. Wave 10 이후 짝수 late wave마다 대형 현장 패키지가 열려 주포 변이, 재충전 방어층, 블랙마켓 계약 중 하나를 즉시 잠근다."
+        : nextWave >= RISK_MUTATION_START_WAVE
         ? "Field Cache 확보. 이제 현장 선택은 Main Weapon Mutation, Defense / Utility, Greed Contract 세 욕구만 남기고 바로 다음 웨이브로 밀어붙인다."
         : "Field Cache 확보. 이제 현장 선택은 주포 변이, 생존층, 탐욕 계약 세 장으로만 나와 즉시 판돈을 고르게 한다.",
       "CACHE"
     );
-    setBanner("Field Cache", 0.95);
+    setBanner(shouldUseLateFieldCache(nextWave) ? "Arsenal Cache" : "Field Cache", 0.95);
     renderForgeOverlay();
     updateHUD();
   }
@@ -8937,6 +9128,29 @@
       return choice;
     }
 
+    if (choice.type === "utility" && choice.action === "field_mutation") {
+      const nextLevel = Math.max(getLateFieldMutationLevel(run.build), choice.lateFieldMutationLevel || 1);
+      run.build.lateFieldMutationLevel = nextLevel;
+      run.build.upgrades.push(`Field Arsenal MK ${nextLevel}: ${getLateFieldMutationTierLabel(nextLevel)}`);
+      if (run.player) {
+        run.player.heat = Math.max(0, run.player.heat - 16);
+        run.player.overheated = false;
+      }
+      return choice;
+    }
+
+    if (choice.type === "utility" && choice.action === "field_aegis") {
+      const nextLevel = Math.max(getLateFieldAegisLevel(run.build), choice.lateFieldAegisLevel || 1);
+      run.build.lateFieldAegisLevel = nextLevel;
+      run.build.upgrades.push(`Field Aegis MK ${nextLevel}: ${getLateFieldAegisTierLabel(nextLevel)}`);
+      if (run.player) {
+        run.player.fieldAegisCharge = getLateFieldAegisMaxCharges(run.build);
+        run.player.fieldAegisCooldown = 0;
+        run.player.invulnerableTime = Math.max(run.player.invulnerableTime || 0, 0.18);
+      }
+      return choice;
+    }
+
     if (choice.type === "utility" && choice.action === "field_greed") {
       if (run.resources) {
         run.resources.scrap += Math.max(0, choice.scrapGain || 0);
@@ -8952,7 +9166,7 @@
         Math.max(0, choice.debtWaves || 0)
       );
       run.build.upgrades.push(
-        `Greed Contract: 고철 +${Math.max(0, choice.scrapGain || 0)} / 회수 +${Math.round((choice.scrapMultiplierGain || 0) * 100)}% / Siege Debt ${Math.max(0, choice.debtWaves || 0)}웨이브`
+        `${choice.title || "Greed Contract"}: 고철 +${Math.max(0, choice.scrapGain || 0)} / 회수 +${Math.round((choice.scrapMultiplierGain || 0) * 100)}% / Siege Debt ${Math.max(0, choice.debtWaves || 0)}웨이브`
       );
       if (run.player) {
         run.player.hp = Math.max(1, run.player.hp - Math.max(0, choice.hpLoss || 0));
@@ -10039,6 +10253,12 @@
     state.player.chassisAnchorPulseCooldown = Math.max(0, state.player.chassisAnchorPulseCooldown || 0);
     state.player.chassisAnchorActiveTime = Math.max(0, state.player.chassisAnchorActiveTime || 0);
     state.player.wave6AscensionSurgeTime = Math.max(0, state.player.wave6AscensionSurgeTime || 0);
+    state.player.fieldAegisCooldown = Math.max(0, state.player.fieldAegisCooldown || 0);
+    state.player.fieldAegisCharge = clamp(
+      state.player.fieldAegisCharge || 0,
+      0,
+      getLateFieldAegisMaxCharges(state.build)
+    );
     if (preserveRatio) {
       state.player.hp = Math.max(1, Math.round(state.player.maxHp * hpRatio));
     } else {
@@ -13514,6 +13734,7 @@
     fireWeaponPattern(weapon.evolutionFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.doctrineFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.lateAscensionFirePattern, weapon, baseAngle, driveActive);
+    fireWeaponPattern(weapon.lateFieldMutationFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.illegalOverclockFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.riskMutationFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.apexMutationFirePattern, weapon, baseAngle, driveActive);
@@ -13714,6 +13935,17 @@
           (state.player.overdriveActiveTime > 0 ? 1.5 : 1) *
           state.player.bastionHeatFactor
     );
+    if (getLateFieldAegisLevel(state.build) > 0) {
+      state.player.fieldAegisCooldown = Math.max(0, state.player.fieldAegisCooldown - dt);
+      if (
+        state.player.fieldAegisCharge < getLateFieldAegisMaxCharges(state.build) &&
+        state.player.fieldAegisCooldown <= 0
+      ) {
+        state.player.fieldAegisCharge += 1;
+        state.player.fieldAegisCooldown = getLateFieldAegisCooldown(getLateFieldAegisLevel(state.build));
+        state.particles.push(createParticle(state.player.x, state.player.y, "#8bf0ff", 0.9));
+      }
+    }
     if (state.player.overheated && state.player.heat < 45) {
       state.player.overheated = false;
     }
@@ -14212,10 +14444,22 @@
       state.player.chassisAnchorActiveTime > 0
         ? 0.24
         : 0;
-    const mitigated =
+    let mitigated =
       hazardMitigated *
       (1 - (state.player.bastionDamageMitigation || 0)) *
       (1 - chassisMitigation);
+    const lateFieldAegisLevel = getLateFieldAegisLevel(state.build);
+    if (lateFieldAegisLevel > 0 && (state.player.fieldAegisCharge || 0) > 0) {
+      state.player.fieldAegisCharge -= 1;
+      state.player.fieldAegisCooldown = getLateFieldAegisCooldown(lateFieldAegisLevel);
+      mitigated *= 1 - getLateFieldAegisReduction(lateFieldAegisLevel);
+      triggerChassisPulse(state.player.x, state.player.y, 82 + lateFieldAegisLevel * 10, 10 + lateFieldAegisLevel * 4, "#8bf0ff", {
+        hazardDamageFactor: 0.35,
+        clearEnemyShots: true,
+        shake: 3,
+      });
+      state.player.invulnerableTime = Math.max(state.player.invulnerableTime || 0, 0.5);
+    }
     state.player.hp = Math.max(0, state.player.hp - mitigated);
     state.player.invulnerableTime = 0.36;
     state.shake = Math.max(state.shake, 8);
@@ -15090,6 +15334,12 @@
     const apexMutationSummary = weapon.apexMutationLabel
       ? `${weapon.apexMutationLabel} · ${weapon.apexMutationTraitLabel}`
       : null;
+    const lateFieldMutationSummary = weapon.lateFieldMutationLabel
+      ? `${weapon.lateFieldMutationLabel} · ${weapon.lateFieldMutationTraitLabel}`
+      : null;
+    const lateFieldAegisSummary = getLateFieldAegisLevel(state.build) > 0
+      ? `${getLateFieldAegisTierLabel(getLateFieldAegisLevel(state.build))} · guard plate ${state.player ? state.player.fieldAegisCharge || 0 : 0}/${getLateFieldAegisMaxCharges(state.build)}`
+      : null;
     const capstoneSummary = weapon.capstoneLabel
       ? `${weapon.capstoneLabel} · ${weapon.capstoneTraitLabel}`
       : null;
@@ -15123,6 +15373,8 @@
           ${weapon.evolutionLabel ? createMiniPill("EVO", weapon.evolutionLabel, "accent") : ""}
           ${weapon.doctrineFormLabel ? createMiniPill("DOC", weapon.doctrineFormLabel, "hot") : ""}
           ${weapon.lateAscensionLabel ? createMiniPill("ASCEND", weapon.lateAscensionLabel, "hot") : ""}
+          ${weapon.lateFieldMutationLabel ? createMiniPill("FIELD", weapon.lateFieldMutationLabel, "hot") : ""}
+          ${getLateFieldAegisLevel(state.build) > 0 ? createMiniPill("AEGIS", `MK ${getLateFieldAegisLevel(state.build)}`, "cool") : ""}
           ${
             weapon.riskMutationLabel || weapon.illegalOverclockLabel || weapon.apexMutationLabel
               ? createMiniPill(
@@ -15143,6 +15395,8 @@
           evolutionSummary,
           doctrineSummary,
           lateAscensionSummary,
+          lateFieldMutationSummary,
+          lateFieldAegisSummary,
           illegalOverclockSummary,
           riskMutationSummary,
           apexMutationSummary,
@@ -15349,15 +15603,19 @@
         );
         combatCacheRows.push(
           createStatusRow(
-            "Forge Skip",
-            combatCache.claimed ? "다음 웨이브 직결" : "회수 시 직결"
+            shouldUseLateFieldCache(state.waveIndex + 2) ? "Arsenal" : "Forge Skip",
+            combatCache.claimed ? "다음 웨이브 직결" : shouldUseLateFieldCache(state.waveIndex + 2) ? "대형 패키지 1픽" : "회수 시 직결"
           )
         );
         combatCacheNote = combatCache.claimed
           ? "이번 웨이브의 live cache를 이미 잠갔다. 정리 후 Field Cache 정지 없이 다음 웨이브로 즉시 이어진다."
           : combatCache.deployed
-            ? "드롭된 Combat Cache 중 하나만 회수할 수 있다. 놓치면 이번 웨이브의 현장 spike는 사라진다."
-            : "이번 웨이브 첫 elite가 Combat Cache를 떨어뜨린다. 회수에 성공하면 Field Cache 정지 없이 다음 웨이브로 직결된다.";
+            ? shouldUseLateFieldCache(state.waveIndex + 2)
+              ? "드롭된 Arsenal Cache 중 하나만 회수할 수 있다. 이번 late cache는 주포 변이, guard plate, 블랙마켓 계약 중 하나를 즉시 잠가 후반 곡선을 다시 밀어 올린다."
+              : "드롭된 Combat Cache 중 하나만 회수할 수 있다. 놓치면 이번 웨이브의 현장 spike는 사라진다."
+            : shouldUseLateFieldCache(state.waveIndex + 2)
+              ? "이번 짝수 late wave 첫 elite가 Arsenal Cache를 떨어뜨린다. 회수에 성공하면 후반 대형 패키지 1장을 바로 잠근 채 다음 웨이브로 직결된다."
+              : "이번 웨이브 첫 elite가 Combat Cache를 떨어뜨린다. 회수에 성공하면 Field Cache 정지 없이 다음 웨이브로 직결된다.";
       }
       if (state.build.illegalOverclockId || getRiskMutationLevel(state.build) > 0) {
         const illegalOverclock = getIllegalOverclockDef(state.build);
@@ -15636,7 +15894,9 @@
       : state.forgeDraftType === "architecture_draft"
         ? `Wave 3 진입 직전 Architecture Draft다. 이제 세 장기 교리 중 하나를 바로 monster form으로 잠가 주포 stage-1 mutation, utility chassis, 세 번째 support bay flex lane까지 한 번에 연다. Wave 6 Bastion Draft는 재선택이 아니라 pursuit 계약이나 greed spike를 얹는 후속 분기다.`
       : state.forgeDraftType === "field_grant"
-        ? state.waveIndex + 2 >= RISK_MUTATION_START_WAVE
+        ? shouldUseLateFieldCache(state.waveIndex + 2)
+          ? `고철 ${Math.round(state.resources.scrap)} 보유. Arsenal Cache다. 이제 Wave 10 이후 짝수 late wave마다 대형 현장 패키지 1장을 바로 잠근다. 주포 변이는 배럴 수 자체를 늘리고, Aegis는 재충전식 guard plate를 열며, 블랙마켓 계약은 다음 대형 cache 전까지 쓸 고철을 앞당기는 대신 청구서를 두 웨이브 분량으로 붙인다.`
+          : state.waveIndex + 2 >= RISK_MUTATION_START_WAVE
           ? `고철 ${Math.round(state.resources.scrap)} 보유. Field Cache다. 이제 late reward는 Main Weapon Mutation, Defense / Utility, Greed Contract 세 욕구로만 정리된다. Dominant Mutation은 주포/차체를 당겨 오고, 생존층은 다음 교차 압박을 버티게 하며, 탐욕 계약은 고철을 먼저 주는 대신 다음 웨이브 청구서를 즉시 붙인다.`
           : `고철 ${Math.round(state.resources.scrap)} 보유. Field Cache다. 이번 현장 선택은 주포 변이, 생존층, 탐욕 계약 세 장뿐이다. 지금 더 위험하게 당겨서 강해질지, 상태를 정리하고 다음 큰 포지까지 버틸지 직접 고른다.`
         : state.forgeDraftType === "bastion_draft"
@@ -16517,6 +16777,8 @@
         state.player.invulnerableTime > 0 ? "#fff0c9" : state.weapon.color;
       drawPlayerWave6AscensionFrame(context);
       drawPlayerChassisFrame(context);
+      drawPlayerLateFieldMutationFrame(context);
+      drawPlayerLateFieldAegisFrame(context);
       drawPlayerDoctrineCapstoneFrame(context);
       drawPlayerLateAscensionFrame(context);
       drawPlayerRiskMutationFrame(context);
@@ -16866,6 +17128,56 @@
       Math.PI * 2
     );
     context.stroke();
+  }
+
+  function drawPlayerLateFieldMutationFrame(context) {
+    if (!state.player || !state.weapon || !state.weapon.lateFieldMutationLevel) {
+      return;
+    }
+    const facing = state.player.facing || 0;
+    const level = state.weapon.lateFieldMutationLevel;
+    const finCount = Math.min(6, 2 + level);
+    const half = (finCount - 1) / 2;
+    for (let index = 0; index < finCount; index += 1) {
+      const fin = getOffsetPoint(state.player.x, state.player.y, facing, 3, (index - half) * 11);
+      context.strokeStyle = `rgba(255, 225, 172, ${0.86 - index * 0.06})`;
+      context.lineWidth = 2.2;
+      context.beginPath();
+      context.moveTo(
+        fin.x - Math.cos(facing) * 4,
+        fin.y - Math.sin(facing) * 4
+      );
+      context.lineTo(
+        fin.x + Math.cos(facing) * (12 + level * 1.5),
+        fin.y + Math.sin(facing) * (12 + level * 1.5)
+      );
+      context.stroke();
+    }
+  }
+
+  function drawPlayerLateFieldAegisFrame(context) {
+    if (!state.player) {
+      return;
+    }
+    const level = getLateFieldAegisLevel(state.build);
+    if (level <= 0) {
+      return;
+    }
+    const charges = Math.max(0, state.player.fieldAegisCharge || 0);
+    const pulse = Math.sin(performance.now() * 0.014) * 1.5;
+    for (let index = 0; index < Math.max(1, charges); index += 1) {
+      context.strokeStyle = `rgba(139, 240, 255, ${charges > 0 ? 0.75 - index * 0.12 : 0.26})`;
+      context.lineWidth = 2.4;
+      context.beginPath();
+      context.arc(
+        state.player.x,
+        state.player.y,
+        state.player.radius + 14 + level * 2 + index * 6 + pulse,
+        index * 0.5,
+        index * 0.5 + Math.PI * 1.35
+      );
+      context.stroke();
+    }
   }
 
   function drawPlayerLateAscensionFrame(context) {

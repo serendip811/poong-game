@@ -14,6 +14,17 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-23 16:10:00 KST
+  Findings:
+  - `playables/cinder-circuit/game.js` now stretches the run numerically into `Wave 12 + Afterburn I-VII`, but it still does not earn true rerun hunger because the second half is mostly endurance after the build is already administratively "complete". A strong action roguelite uses that extra length to keep feeding new visible spikes, not just ask the same machine to survive longer.
+  - Acts 2-3 still spend too much combat energy on reclaiming usable space. `Wave 5-8` chains `territory` lockouts, `Wave 12` returns to `relay`, and even the improved mid/late pressure keeps the player proving they can reopen lanes more often than proving they can greed, dive, hold, or overextend differently by build.
+  - The forge is still below release-grade readability compared with references like `Hades` boon picks or `Nova Drift` evolution screens. `Architecture Draft`, `Ascension Draft`, `Bastion Draft`, `Catalyst Crucible`, pursuit contracts, chassis, bays, apex, and catalyst status still create a rules document where the player should be seeing three hungry options and instantly imagining the next battlefield silhouette.
+  - Visual growth is still too text-led. The code promises monster forms, flex lanes, and support systems, but the actual run structure still sounds more exciting than it looks; if weapons, orbitals, shields, helpers, and body frames do not mutate into clearly larger on-screen identities by the middle waves, players will not crave another run just to "see the build come online."
+  - `docs/games/cinder-circuit-design.md` and `docs/games/cinder-circuit-source-analysis.md` still preserve `7분 내외`, `짧은 러닝`, and `5웨이브` prototype language, so the project remains split between a short-run document and a long-run implementation. That split keeps encouraging patchwork extensions instead of a properly authored 20-30 wave-capable economy.
+  Top Priority: Rebuild the back half progression so that `Wave 10` onward keeps granting one big, immediately visible run-shaping choice every `2-3` waves across exactly three appetites: main-weapon mutation, defense/utility subsystem, or greed contract.
+  Why Now: Without a live second-half economy, a longer run only exposes how early the current build fantasy peaks.
+  Do Not Repeat: Do not answer this by adding another named draft, summary label, or final-form wrapper without adding new visible power decisions inside the run.
+
 - 2026-03-23 04:30:26 KST
   Findings:
   - `playables/cinder-circuit/game.js` still asks the player to internalize too many progression nouns before the run feels delicious. `Architecture Draft`, `Ascension Draft`, pursuit shards, `Late Break Armory`, `Catalyst Crucible`, `Act 4 splice`, and doctrine-specific endform text are still stacked where a strong rerun game should already have the player living inside one obvious machine fantasy.
@@ -1084,6 +1095,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-23 16:40 KST
+  Changed: upgraded the late `Field Cache` flow in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so every even late wave from `Wave 10` onward now promotes into an `Arsenal Cache` instead of another generic discount stop. Those caches now present exactly three big appetites: a free `Main Weapon Mutation` package that adds visible extra barrels and a wider auxiliary volley, a free `Defense / Utility` package that grants a rechargeable `Aegis` guard plate with damage shaving and a projectile-clearing pulse, or a larger `Black Ledger Contract` greed package that pays more scrap now but attaches a two-wave debt bill. I also pushed the new weapon mutation and aegis states into the live HUD/combat read so the back half looks and plays more visibly transformed once the player commits, and updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to cover the new `Arsenal Cache` actions. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's Top Priority was to make `Wave 10+` keep feeding one big, immediately visible run-shaping choice every `2-3` waves across weapon mutation, defense/utility, or greed. The highest-value bounded interpretation was to leave the existing cache spine in place but make every second half-step actually feel like a major package instead of a cheap forge reroll.
+  Follow-up risk: because the new `Arsenal Cache` packages are free and stackable, `Field Arsenal` damage growth or `Aegis` recharge cadence may over-stabilize long runs if the late encounter pool does not tax them hard enough. If that happens, the next pass should tune those package numbers or add smoke assertions around their stacking behavior, not add another reward layer.
 
 - 2026-03-23 04:42 KST
   Changed: tightened the `Field Cache` appetite read in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the `Defense / Utility` lane now preferentially surfaces immediately visible hardware, especially early defensive support systems like `Aegis Halo`, `Ember Ring`, or `Kiln Sentry`, instead of quietly falling through to passive sustain stats whenever a cheap mod happened to sort first. I also changed field-cache cards to keep their original transformation line in the slot text, so discounted picks still read as `요격 위성`, `위성 편대`, `전방 포탑`, and other concrete machine changes instead of collapsing into a generic `현장 장착 · 할인` label. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

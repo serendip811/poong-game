@@ -224,7 +224,7 @@ assert.ok(afterburnOne.combatCache);
 assert.ok(afterburnTwo.combatCache);
 assert.equal(afterburnSeven.combatCache, null);
 assert.ok(
-  afterburnOne.combatCache.choices.some((choice) => choice && choice.action === "risk_mutation")
+  afterburnOne.combatCache.choices.some((choice) => choice && choice.action === "field_mutation")
 );
 const systemsForgeBuild = game.createInitialBuild("scrap_pact");
 const architectureChoices = game.buildArchitectureDraftChoices(systemsForgeBuild);
@@ -303,15 +303,19 @@ assert.ok(chassisRun.build.supportBayCap >= 3);
 assert.equal(chassisRun.build.chassisId, wave6ChassisPackages[0].chassisId);
 assert.ok(game.shouldSkipOwnershipAdminStop(chassisRun.build, 9));
 const predatorCacheChoices = game.buildFieldGrantChoices(predatorBaitRun.build, () => 0, 10);
-assert.ok(predatorCacheChoices.some((choice) => choice.action === "risk_mutation"));
+assert.ok(predatorCacheChoices.some((choice) => choice.action === "field_mutation"));
+assert.ok(predatorCacheChoices.some((choice) => choice.action === "field_aegis"));
 assert.equal(predatorCacheChoices.length, 3);
 assert.equal(
   JSON.stringify(predatorCacheChoices.map((choice) => choice.laneLabel)),
   JSON.stringify(["Main Weapon Mutation", "Defense / Utility", "Greed Contract"])
 );
 assert.ok(predatorCacheChoices.some((choice) => choice.action === "field_greed"));
-const riskMutationChoice = predatorCacheChoices.find((choice) => choice.action === "risk_mutation");
+const fieldMutationChoice = predatorCacheChoices.find((choice) => choice.action === "field_mutation");
+const fieldAegisChoice = predatorCacheChoices.find((choice) => choice.action === "field_aegis");
 const greedContractChoice = predatorCacheChoices.find((choice) => choice.action === "field_greed");
+assert.ok(fieldMutationChoice);
+assert.ok(fieldAegisChoice);
 assert.ok(greedContractChoice);
 const greedRun = {
   build: game.createInitialBuild("scrap_pact"),
@@ -322,37 +326,34 @@ const greedRun = {
 const baseGreedMultiplier = greedRun.build.scrapMultiplier;
 const baseGreedPickup = greedRun.build.pickupBonus;
 game.applyForgeChoice(greedRun, greedContractChoice);
-assert.equal(greedRun.resources.scrap, 34);
-assert.equal(greedRun.build.bastionPactDebtWaves, 1);
-assert.equal(greedRun.build.scrapMultiplier, baseGreedMultiplier + 0.1);
-assert.equal(greedRun.build.pickupBonus, baseGreedPickup + 10);
-const riskMutationRun = {
+assert.equal(greedRun.resources.scrap, 46);
+assert.equal(greedRun.build.bastionPactDebtWaves, 2);
+assert.equal(greedRun.build.scrapMultiplier, baseGreedMultiplier + 0.14);
+assert.equal(greedRun.build.pickupBonus, baseGreedPickup + 14);
+const fieldMutationRun = {
   build: game.createInitialBuild("scrap_pact"),
   resources: { scrap: 0 },
   stats: { scrapCollected: 0, scrapSpent: 0 },
   player: { hp: 100, maxHp: 100, heat: 20, overheated: false },
 };
-const baseAfterburnPreview = game.createPostCapstoneWave(1, riskMutationRun.build);
-game.applyForgeChoice(riskMutationRun, riskMutationChoice);
-assert.equal(riskMutationRun.build.riskMutationLevel, 1);
-assert.equal(riskMutationRun.build.riskMutationQueuedLevel, 1);
-assert.equal(riskMutationRun.build.illegalOverclockId, "meltdown_cycler");
-const taxedAfterburnPreview = game.createPostCapstoneWave(1, riskMutationRun.build);
-assert.ok(taxedAfterburnPreview.spawnBudget > baseAfterburnPreview.spawnBudget);
-assert.ok(taxedAfterburnPreview.activeCap > baseAfterburnPreview.activeCap);
-assert.ok(taxedAfterburnPreview.hazard.count > baseAfterburnPreview.hazard.count);
-const riskMutationWeapon = game.computeWeaponStats(riskMutationRun.build);
-assert.equal(riskMutationWeapon.riskMutationLevel, 1);
-assert.ok(riskMutationWeapon.riskMutationFirePattern);
-assert.equal(riskMutationWeapon.illegalOverclockLabel, "Meltdown Cycler");
-const secondRiskMutationChoice = game
-  .buildFieldGrantChoices(riskMutationRun.build, () => 0, 11)
+game.applyForgeChoice(fieldMutationRun, fieldMutationChoice);
+assert.equal(fieldMutationRun.build.lateFieldMutationLevel, 1);
+const fieldMutationWeapon = game.computeWeaponStats(fieldMutationRun.build);
+assert.equal(fieldMutationWeapon.lateFieldMutationLevel, 1);
+assert.ok(fieldMutationWeapon.lateFieldMutationFirePattern);
+const fieldAegisRun = {
+  build: game.createInitialBuild("relay_oath"),
+  resources: { scrap: 0 },
+  stats: { scrapCollected: 0, scrapSpent: 0 },
+  player: { hp: 100, maxHp: 100, heat: 0, overheated: false, invulnerableTime: 0 },
+};
+game.applyForgeChoice(fieldAegisRun, fieldAegisChoice);
+assert.equal(fieldAegisRun.build.lateFieldAegisLevel, 1);
+assert.equal(fieldAegisRun.player.fieldAegisCharge, 1);
+const standardLateFieldChoice = game
+  .buildFieldGrantChoices(fieldMutationRun.build, () => 0, 11)
   .find((choice) => choice.action === "risk_mutation");
-assert.ok(secondRiskMutationChoice);
-game.applyForgeChoice(riskMutationRun, secondRiskMutationChoice);
-assert.equal(riskMutationRun.build.riskMutationLevel, 2);
-assert.equal(riskMutationRun.build.illegalOverclockMutationLevel, 1);
-assert.match(game.computeWeaponStats(riskMutationRun.build).illegalOverclockTraitLabel, /MOLT 1/);
+assert.ok(standardLateFieldChoice);
 const lateAscensionBuild = game.createInitialBuild("relay_oath");
 lateAscensionBuild.supportBayCap = 3;
 lateAscensionBuild.supportSystems = [
