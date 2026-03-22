@@ -50,6 +50,13 @@
   const LATE_FIELD_CACHE_INTERVAL = 2;
   const MAX_LATE_FIELD_MUTATION_LEVEL = 5;
   const MAX_LATE_FIELD_AEGIS_LEVEL = 4;
+  const BLACK_LEDGER_RAID_OVERLAY = {
+    brander: 0.34,
+    lancer: 0.24,
+    shrike: 0.24,
+    binder: 0.08,
+    mortar: 0.1,
+  };
 
   const WAVE_CONFIG = [
     {
@@ -3975,6 +3982,7 @@
     predatorBaitCharges: 0,
     lateFieldMutationLevel: 0,
     lateFieldAegisLevel: 0,
+    blackLedgerRaidWaves: 0,
     bastionPactDebtWaves: 0,
     wave6ChassisBreakpoint: false,
     chassisId: null,
@@ -4900,6 +4908,10 @@
     );
   }
 
+  function isArsenalBreakpointWave(nextWave) {
+    return Number.isFinite(nextWave) && nextWave === LATE_FIELD_CACHE_START_WAVE;
+  }
+
   function getLateFieldMutationLevel(build) {
     return clamp(
       build && Number.isFinite(build.lateFieldMutationLevel) ? build.lateFieldMutationLevel : 0,
@@ -5370,6 +5382,7 @@
         predatorBaitCharges: BASE_BUILD.predatorBaitCharges,
         lateFieldMutationLevel: BASE_BUILD.lateFieldMutationLevel,
         lateFieldAegisLevel: BASE_BUILD.lateFieldAegisLevel,
+        blackLedgerRaidWaves: BASE_BUILD.blackLedgerRaidWaves,
         bastionPactDebtWaves: BASE_BUILD.bastionPactDebtWaves,
         wave6ChassisBreakpoint: BASE_BUILD.wave6ChassisBreakpoint,
         chassisId: BASE_BUILD.chassisId,
@@ -7547,17 +7560,26 @@
   }
 
   function createLateFieldMutationChoice(build, nextWave) {
-    const nextLevel = Math.min(MAX_LATE_FIELD_MUTATION_LEVEL, getLateFieldMutationLevel(build) + 1);
+    const breakpointWave = isArsenalBreakpointWave(nextWave);
+    const nextLevel = Math.min(
+      MAX_LATE_FIELD_MUTATION_LEVEL,
+      getLateFieldMutationLevel(build) + (breakpointWave ? 2 : 1)
+    );
+    const barrelCount = Math.min(6, 2 + nextLevel);
     return {
       type: "utility",
       action: "field_mutation",
       id: `utility:field_mutation:${build.coreId}:${nextWave}:${nextLevel}`,
       verb: "변이",
       tag: "MUTATE",
-      title: `Overdrive Arsenal ${nextLevel}`,
+      title: breakpointWave ? "Overdrive Arsenal Prime" : `Overdrive Arsenal ${nextLevel}`,
       description:
-        `후반 전장용 주포 증설 패키지. ${CORE_DEFS[build.coreId].label}에 추가 배럴과 보조 포문을 바로 붙여 ${getLateFieldMutationTierLabel(nextLevel)} 화망으로 바꾼다.`,
-      slotText: `추가 배럴 +${Math.min(6, 2 + nextLevel)} · MK ${nextLevel} 화망`,
+        breakpointWave
+          ? `Wave 10 breakpoint용 주포 변이. ${CORE_DEFS[build.coreId].label}에 측면 배럴과 과열 포문을 한 번에 증설해 바로 ${getLateFieldMutationTierLabel(nextLevel)} 화망으로 점프한다.`
+          : `후반 전장용 주포 증설 패키지. ${CORE_DEFS[build.coreId].label}에 추가 배럴과 보조 포문을 바로 붙여 ${getLateFieldMutationTierLabel(nextLevel)} 화망으로 바꾼다.`,
+      slotText: breakpointWave
+        ? `추가 배럴 +${barrelCount} · flank volley live`
+        : `추가 배럴 +${barrelCount} · MK ${nextLevel} 화망`,
       cost: 0,
       laneLabel: "Main Weapon Mutation",
       forgeLaneLabel: "Main Weapon Mutation",
@@ -7566,17 +7588,25 @@
   }
 
   function createLateFieldAegisChoice(build, nextWave) {
-    const nextLevel = Math.min(MAX_LATE_FIELD_AEGIS_LEVEL, getLateFieldAegisLevel(build) + 1);
+    const breakpointWave = isArsenalBreakpointWave(nextWave);
+    const nextLevel = Math.min(
+      MAX_LATE_FIELD_AEGIS_LEVEL,
+      getLateFieldAegisLevel(build) + (breakpointWave ? 2 : 1)
+    );
     return {
       type: "utility",
       action: "field_aegis",
       id: `utility:field_aegis:${nextWave}:${nextLevel}`,
       verb: "장착",
-      tag: "AEGIS",
-      title: getLateFieldAegisTierLabel(nextLevel),
+      tag: breakpointWave ? "HALO" : "AEGIS",
+      title: breakpointWave ? "Warplate Halo" : getLateFieldAegisTierLabel(nextLevel),
       description:
-        "후반 생존층 패키지. 재충전식 guard plate를 달아 큰 한 방을 깎아내고, 발동 순간 근처 탄막까지 함께 털어낸다.",
-      slotText: `guard plate ${getLateFieldAegisMaxCharges({ lateFieldAegisLevel: nextLevel })}충전 · 피해 ${Math.round(getLateFieldAegisReduction(nextLevel) * 100)}% 완충`,
+        breakpointWave
+          ? "Wave 10 생존 브레이크포인트. 재충전식 warplate를 두 겹까지 예열해 큰 한 방을 지우고, 발동 순간 주변 탄막과 추격선까지 함께 뜯어낸다."
+          : "후반 생존층 패키지. 재충전식 guard plate를 달아 큰 한 방을 깎아내고, 발동 순간 근처 탄막까지 함께 털어낸다.",
+      slotText: breakpointWave
+        ? `warplate ${getLateFieldAegisMaxCharges({ lateFieldAegisLevel: nextLevel })}충전 · 피해 ${Math.round(getLateFieldAegisReduction(nextLevel) * 100)}% 완충`
+        : `guard plate ${getLateFieldAegisMaxCharges({ lateFieldAegisLevel: nextLevel })}충전 · 피해 ${Math.round(getLateFieldAegisReduction(nextLevel) * 100)}% 완충`,
       cost: 0,
       laneLabel: "Defense / Utility",
       forgeLaneLabel: "Defense / Utility",
@@ -7586,24 +7616,95 @@
 
   function createLateFieldGreedContractChoice(build, nextWave) {
     const waveScale = Math.max(0, nextWave - LATE_FIELD_CACHE_START_WAVE);
+    const breakpointWave = isArsenalBreakpointWave(nextWave);
     return {
       type: "utility",
       action: "field_greed",
       id: `utility:field_greed:late:${nextWave}`,
       verb: "계약",
       tag: "PACT",
-      title: "Black Ledger Contract",
+      title: breakpointWave ? "Black Ledger Raid" : "Black Ledger Contract",
       description:
-        "후반용 탐욕 계약. 다음 대형 cache 전까지 쓸 고철과 회수율을 크게 당겨오지만, 즉시 체력 청구서를 받고 Siege Debt도 두 웨이브 분량으로 붙는다.",
-      slotText: `고철 +${46 + waveScale * 4} · 회수 +${14 + waveScale * 2}% · 2웨이브 Siege Debt`,
+        breakpointWave
+          ? "Wave 10 greed breakpoint. 다음 Scrapstorm를 불법 금고 습격으로 바꿔 contraband vault를 더 크게 열고 고철 폭발을 키우지만, 전장 밀도와 청구서도 즉시 같이 끌어올린다."
+          : "후반용 탐욕 계약. 다음 대형 cache 전까지 쓸 고철과 회수율을 크게 당겨오지만, 즉시 체력 청구서를 받고 Siege Debt도 두 웨이브 분량으로 붙는다.",
+      slotText: breakpointWave
+        ? "고철 +58 · 회수 +18% · vault burst x2 · 2웨이브 Siege Debt"
+        : `고철 +${46 + waveScale * 4} · 회수 +${14 + waveScale * 2}% · 2웨이브 Siege Debt`,
       cost: 0,
-      scrapGain: 46 + waveScale * 4,
-      scrapMultiplierGain: 0.14 + waveScale * 0.01,
-      pickupBonus: 14 + waveScale * 2,
-      hpLoss: 14 + waveScale,
-      maxHpPenalty: 10 + Math.floor(waveScale / 2),
+      scrapGain: breakpointWave ? 58 : 46 + waveScale * 4,
+      scrapMultiplierGain: breakpointWave ? 0.18 : 0.14 + waveScale * 0.01,
+      pickupBonus: breakpointWave ? 18 : 14 + waveScale * 2,
+      hpLoss: breakpointWave ? 16 : 14 + waveScale,
+      maxHpPenalty: breakpointWave ? 12 : 10 + Math.floor(waveScale / 2),
       debtWaves: 2,
+      blackLedgerRaidWaves: breakpointWave ? 1 : 0,
     };
+  }
+
+  function applyBlackLedgerRaidConfig(config, build, waveNumber) {
+    if (
+      !config ||
+      !build ||
+      !Number.isFinite(build.blackLedgerRaidWaves) ||
+      build.blackLedgerRaidWaves <= 0
+    ) {
+      return config;
+    }
+    const salvageWave = config.hazard && config.hazard.type === "salvage";
+    const nextConfig = {
+      ...config,
+      hazard: config.hazard ? { ...config.hazard } : null,
+      mix: blendEnemyMix(config.mix, BLACK_LEDGER_RAID_OVERLAY, salvageWave ? 0.46 : 0.24),
+    };
+    nextConfig.spawnBudget += salvageWave ? 28 : 20;
+    nextConfig.activeCap += salvageWave ? 5 : 3;
+    nextConfig.baseSpawnInterval = Math.max(
+      nextConfig.spawnIntervalMin,
+      nextConfig.baseSpawnInterval * (salvageWave ? 0.84 : 0.9)
+    );
+    nextConfig.eliteEvery = Math.max(3, nextConfig.eliteEvery - 1);
+    nextConfig.driveGainFactor = Math.max(nextConfig.driveGainFactor || 1, 1.18);
+    if (nextConfig.hazard) {
+      nextConfig.hazard.interval = Math.max(
+        4.2,
+        nextConfig.hazard.interval * (salvageWave ? 0.74 : 0.86)
+      );
+      nextConfig.hazard.damage += salvageWave ? 4 : 2;
+      if (salvageWave) {
+        nextConfig.hazard.label = "Black Ledger Vaults";
+        nextConfig.hazard.salvageScrap = Math.max(
+          22,
+          (nextConfig.hazard.salvageScrap || 0) + 26
+        );
+        nextConfig.hazard.salvageBurstCount = Math.max(
+          4,
+          (nextConfig.hazard.salvageBurstCount || 0) + 2
+        );
+        nextConfig.hazard.salvageBurstRadius = Math.max(
+          76,
+          (nextConfig.hazard.salvageBurstRadius || 0) + 14
+        );
+        nextConfig.hazard.coreHp = Math.max(48, (nextConfig.hazard.coreHp || 0) + 22);
+      }
+    }
+    nextConfig.note = salvageWave
+      ? "black ledger raid. 금고 pocket이 더 자주 크게 열리고 고철 폭발도 커지지만, brander와 lancer가 바로 파고들어 오래 머무르면 greed payout보다 먼저 전장이 닫힌다."
+      : `${config.note} Black Ledger raid가 남아 있어 이번 웨이브는 payout을 미끼로 적 밀도와 hazard가 같이 빨라진다.`;
+    nextConfig.directive = salvageWave
+      ? "금고를 빨리 찢고 곧바로 이탈하는 cash-out window를 직접 골라야 한다. pocket 안 체류 시간이 길수록 청구서도 같이 커진다."
+      : `${config.directive} greed payout 때문에 전장 템포가 더 빨라져 pocket 유지보다 즉시 절개가 중요하다.`;
+    nextConfig.blackLedgerRaid = {
+      waveNumber,
+      salvageWave,
+      payoutScrap: salvageWave
+        ? nextConfig.hazard && nextConfig.hazard.salvageScrap
+        : Math.round(20 + (waveNumber - LATE_FIELD_CACHE_START_WAVE) * 4),
+      note: salvageWave
+        ? "Black Ledger Raid가 금고 objective를 jackpot 돌진으로 바꿨다. 금고를 찢어 payout을 캐낼수록 brander/lancer 압박도 같이 올라온다."
+        : "Black Ledger Raid 후유증으로 이번 웨이브 템포가 빨라졌다. payout을 노릴지 안전하게 lane을 비울지 계속 갈라진다.",
+    };
+    return nextConfig;
   }
 
   function createBastionDraftSpikeChoice(build, rng, nextWave) {
@@ -8345,13 +8446,22 @@
     state.forgeChoices = buildFieldGrantChoices(state.build, Math.random, nextWave);
     pushCombatFeed(
       shouldUseLateFieldCache(nextWave)
-        ? "Arsenal Cache 확보. Wave 10 이후 짝수 late wave마다 대형 현장 패키지가 열려 주포 변이, 재충전 방어층, 블랙마켓 계약 중 하나를 즉시 잠근다."
+        ? isArsenalBreakpointWave(nextWave)
+          ? "Arsenal Breakpoint 확보. 이번 Wave 10 직전 캐시는 후반부 첫 판돈으로 승격되어, 과격한 주포 변이, 생존형 warplate, 금고 습격 계약 중 하나를 즉시 잠근다."
+          : "Arsenal Cache 확보. Wave 10 이후 짝수 late wave마다 대형 현장 패키지가 열려 주포 변이, 재충전 방어층, 블랙마켓 계약 중 하나를 즉시 잠근다."
         : nextWave >= RISK_MUTATION_START_WAVE
         ? "Field Cache 확보. 이제 현장 선택은 Main Weapon Mutation, Defense / Utility, Greed Contract 세 욕구만 남기고 바로 다음 웨이브로 밀어붙인다."
         : "Field Cache 확보. 이제 현장 선택은 주포 변이, 생존층, 탐욕 계약 세 장으로만 나와 즉시 판돈을 고르게 한다.",
       "CACHE"
     );
-    setBanner(shouldUseLateFieldCache(nextWave) ? "Arsenal Cache" : "Field Cache", 0.95);
+    setBanner(
+      shouldUseLateFieldCache(nextWave)
+        ? isArsenalBreakpointWave(nextWave)
+          ? "Arsenal Breakpoint"
+          : "Arsenal Cache"
+        : "Field Cache",
+      0.95
+    );
     renderForgeOverlay();
     updateHUD();
   }
@@ -9160,13 +9270,17 @@
       }
       run.build.scrapMultiplier += choice.scrapMultiplierGain || 0;
       run.build.pickupBonus += choice.pickupBonus || 0;
+      run.build.blackLedgerRaidWaves = Math.max(
+        run.build.blackLedgerRaidWaves || 0,
+        Math.max(0, choice.blackLedgerRaidWaves || 0)
+      );
       run.build.maxHpBonus -= Math.max(0, choice.maxHpPenalty || 0);
       run.build.bastionPactDebtWaves = Math.max(
         run.build.bastionPactDebtWaves || 0,
         Math.max(0, choice.debtWaves || 0)
       );
       run.build.upgrades.push(
-        `${choice.title || "Greed Contract"}: 고철 +${Math.max(0, choice.scrapGain || 0)} / 회수 +${Math.round((choice.scrapMultiplierGain || 0) * 100)}% / Siege Debt ${Math.max(0, choice.debtWaves || 0)}웨이브`
+        `${choice.title || "Greed Contract"}: 고철 +${Math.max(0, choice.scrapGain || 0)} / 회수 +${Math.round((choice.scrapMultiplierGain || 0) * 100)}%${choice.blackLedgerRaidWaves ? " / Black Ledger Raid" : ""} / Siege Debt ${Math.max(0, choice.debtWaves || 0)}웨이브`
       );
       if (run.player) {
         run.player.hp = Math.max(1, run.player.hp - Math.max(0, choice.hpLoss || 0));
@@ -9299,7 +9413,9 @@
     unlockLateSupportBay,
     shouldSkipOwnershipAdminStop,
     shouldUseFieldGrant,
+    isArsenalBreakpointWave,
     shouldRunCatalystDraft,
+    applyBlackLedgerRaidConfig,
     getDoctrineWeaponForm,
     getDoctrineCapstoneDef,
     getLateAscensionDef,
@@ -11049,17 +11165,19 @@
 
   function beginWave(index) {
     const resolvedConfig = resolveWaveConfig(index, state.build);
-    const config = applyRiskMutationPressureTax(
+    let config = applyRiskMutationPressureTax(
       {
         ...resolvedConfig,
         hazard: resolvedConfig.hazard ? { ...resolvedConfig.hazard } : null,
       },
       state.build
     );
-    const arena = getArenaSize(config);
     const waveNumber = index + 1;
+    config = applyBlackLedgerRaidConfig(config, state.build, waveNumber);
+    const arena = getArenaSize(config);
     const pactDebtWavesBefore = Math.max(0, state.build.bastionPactDebtWaves || 0);
     const pactDebtActive = pactDebtWavesBefore > 0;
+    const blackLedgerRaidActive = Boolean(config.blackLedgerRaid);
     const predatorBaitArmed =
       (state.build.predatorBaitCharges || 0) > 0 &&
       getApexMutationLevel(state.build) < MAX_APEX_MUTATION_LEVEL;
@@ -11112,6 +11230,7 @@
       driveGainFactor: config.driveGainFactor || 1,
       hazard: config.hazard,
       hazardTimer: config.hazard ? config.hazard.interval * 0.8 : Number.POSITIVE_INFINITY,
+      blackLedgerRaid: config.blackLedgerRaid || null,
       bastionPactDebt: pactDebtActive
         ? {
             wavesRemaining: Math.max(0, pactDebtWavesBefore - 1),
@@ -11169,6 +11288,15 @@
       pushCombatFeed(
         `Siege Debt 활성화. 이번 웨이브는 적 예산 +18, active cap +4, incoming damage +24%로 열린다. 남은 debt ${state.build.bastionPactDebtWaves}웨이브.`,
         "PACT"
+      );
+    }
+    if (blackLedgerRaidActive) {
+      state.build.blackLedgerRaidWaves = Math.max(0, (state.build.blackLedgerRaidWaves || 0) - 1);
+      pushCombatFeed(
+        config.blackLedgerRaid && config.blackLedgerRaid.salvageWave
+          ? "Black Ledger Raid 활성화. Scrapstorm 금고가 더 크게 열리고 payout도 커졌지만, brander/lancer가 greed pocket을 곧바로 덮친다."
+          : "Black Ledger Raid 활성화. 이번 웨이브는 payout을 미끼로 적 밀도와 hazard 템포가 같이 올라간다.",
+        "LEDGER"
       );
     }
     if (predatorBaitArmed) {
@@ -11234,6 +11362,9 @@
     state.player.dashCharges = state.player.dashMax;
     state.player.dashCooldownTimer = 0;
     pushCombatFeed(`${config.label} 진입. ${config.note}`, `W${index + 1}`);
+    if (blackLedgerRaidActive) {
+      setBanner("Black Ledger Raid", 0.9);
+    }
     if (state.wave.combatCache) {
       pushCombatFeed(
         "첫 elite가 Combat Cache를 떨어뜨린다. 현장에서 하나를 회수하면 Field Cache 정지 없이 바로 다음 웨이브로 이어진다.",
@@ -11971,7 +12102,9 @@
           : choice.type === "fallback"
             ? `${grantLabel} 현장 보급 적용. 고철은 아낀 채 ${choice.title}로 상태만 정리하고 다음 웨이브를 즉시 연다.`
             : choice.action === "field_greed"
-              ? `${grantLabel} 적용. 고철과 회수 효율을 먼저 당기는 대신 다음 웨이브 하나에 Siege Debt를 붙여 greed 청구서를 바로 받는다.`
+              ? choice.blackLedgerRaidWaves > 0
+                ? `${grantLabel} 적용. 고철과 회수 효율을 먼저 당기고 다음 웨이브를 Black Ledger Raid로 비틀었다. contraband vault payout이 커지는 대신 pocket 체류 시간이 곧 청구서가 된다.`
+                : `${grantLabel} 적용. 고철과 회수 효율을 먼저 당기는 대신 다음 웨이브 하나에 Siege Debt를 붙여 greed 청구서를 바로 받는다.`
             : `${grantLabel} 현장 보급 적용. 고철 ${choice.cost}을 태워 ${choice.title}을 잠그고 다음 웨이브를 즉시 밀어붙인다.`,
         state.forgeDraftType === "architecture_draft"
           ? "ARCH"
@@ -15460,13 +15593,29 @@
       let apexNote = "";
       let catalystCrucibleNote = "";
       let ascensionNote = "";
+      if (state.wave && state.wave.blackLedgerRaid) {
+        pactRows.push(
+          createStatusRow(
+            "Ledger Raid",
+            state.wave.blackLedgerRaid.salvageWave ? "jackpot live" : "tempo live"
+          )
+        );
+        pactRows.push(
+          createStatusRow("Payout", `+${Math.round(state.wave.blackLedgerRaid.payoutScrap)} scrap`)
+        );
+        pactNote = state.wave.blackLedgerRaid.note;
+      }
       if (state.wave && state.wave.bastionPactDebt) {
         pactRows.push(createStatusRow("Siege Debt", `${state.wave.bastionPactDebt.wavesRemaining} left`));
         pactRows.push(createStatusRow("Debt Tax", "+24% damage / +4 cap"));
-        pactNote = "Siege Salvage Pact 후유증이 유지 중이다. 적 밀도와 위험이 같이 올라 scrap greed의 청구서를 지금 받는다.";
+        if (!pactNote) {
+          pactNote = "Siege Salvage Pact 후유증이 유지 중이다. 적 밀도와 위험이 같이 올라 scrap greed의 청구서를 지금 받는다.";
+        }
       } else if ((state.build.bastionPactDebtWaves || 0) > 0) {
         pactRows.push(createStatusRow("Siege Debt", `${state.build.bastionPactDebtWaves} queued`));
-        pactNote = "다음 웨이브에 Siege Debt가 다시 이어진다.";
+        if (!pactNote) {
+          pactNote = "다음 웨이브에 Siege Debt가 다시 이어진다.";
+        }
       }
       if (state.overcommit.active) {
         overcommitRows.push(
@@ -15863,7 +16012,9 @@
       state.forgeDraftType === "architecture_draft"
         ? "Architecture Draft · 세 장기 교리 중 1픽으로 Wave 3부터 monster form을 잠그고, Wave 6은 pursuit 또는 greed branch만 남긴다"
         : state.forgeDraftType === "field_grant"
-        ? state.waveIndex + 2 >= RISK_MUTATION_START_WAVE
+        ? isArsenalBreakpointWave(state.waveIndex + 2)
+          ? "Arsenal Breakpoint · outrageous main gun, warplate survival form, or a greed raid that twists the next fight"
+          : state.waveIndex + 2 >= RISK_MUTATION_START_WAVE
           ? "Field Cache · Main Weapon Mutation, Defense / Utility, Greed Contract 중 1픽으로 late form과 청구서를 함께 고른다"
           : "Field Cache · 주포 변이, 생존층, 탐욕 계약 세 장 중 1픽으로 지금 판돈을 고른다"
         : state.forgeDraftType === "bastion_draft"
@@ -15894,7 +16045,9 @@
       : state.forgeDraftType === "architecture_draft"
         ? `Wave 3 진입 직전 Architecture Draft다. 이제 세 장기 교리 중 하나를 바로 monster form으로 잠가 주포 stage-1 mutation, utility chassis, 세 번째 support bay flex lane까지 한 번에 연다. Wave 6 Bastion Draft는 재선택이 아니라 pursuit 계약이나 greed spike를 얹는 후속 분기다.`
       : state.forgeDraftType === "field_grant"
-        ? shouldUseLateFieldCache(state.waveIndex + 2)
+        ? isArsenalBreakpointWave(state.waveIndex + 2)
+          ? `고철 ${Math.round(state.resources.scrap)} 보유. Arsenal Breakpoint다. 이번 한 번은 세 욕구만 크게 읽히면 된다. Overdrive Arsenal Prime은 즉시 추가 배럴을 두 단계 당겨 오고, Warplate Halo는 run-saving guard plate를 예열하며, Black Ledger Raid는 다음 Scrapstorm objective를 jackpot 금고 습격으로 비튼다.`
+          : shouldUseLateFieldCache(state.waveIndex + 2)
           ? `고철 ${Math.round(state.resources.scrap)} 보유. Arsenal Cache다. 이제 Wave 10 이후 짝수 late wave마다 대형 현장 패키지 1장을 바로 잠근다. 주포 변이는 배럴 수 자체를 늘리고, Aegis는 재충전식 guard plate를 열며, 블랙마켓 계약은 다음 대형 cache 전까지 쓸 고철을 앞당기는 대신 청구서를 두 웨이브 분량으로 붙인다.`
           : state.waveIndex + 2 >= RISK_MUTATION_START_WAVE
           ? `고철 ${Math.round(state.resources.scrap)} 보유. Field Cache다. 이제 late reward는 Main Weapon Mutation, Defense / Utility, Greed Contract 세 욕구로만 정리된다. Dominant Mutation은 주포/차체를 당겨 오고, 생존층은 다음 교차 압박을 버티게 하며, 탐욕 계약은 고철을 먼저 주는 대신 다음 웨이브 청구서를 즉시 붙인다.`

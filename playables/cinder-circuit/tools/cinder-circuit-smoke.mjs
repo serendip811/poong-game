@@ -303,6 +303,7 @@ assert.ok(chassisRun.build.supportBayCap >= 3);
 assert.equal(chassisRun.build.chassisId, wave6ChassisPackages[0].chassisId);
 assert.ok(game.shouldSkipOwnershipAdminStop(chassisRun.build, 9));
 const predatorCacheChoices = game.buildFieldGrantChoices(predatorBaitRun.build, () => 0, 10);
+assert.equal(game.isArsenalBreakpointWave(10), true);
 assert.ok(predatorCacheChoices.some((choice) => choice.action === "field_mutation"));
 assert.ok(predatorCacheChoices.some((choice) => choice.action === "field_aegis"));
 assert.equal(predatorCacheChoices.length, 3);
@@ -317,6 +318,12 @@ const greedContractChoice = predatorCacheChoices.find((choice) => choice.action 
 assert.ok(fieldMutationChoice);
 assert.ok(fieldAegisChoice);
 assert.ok(greedContractChoice);
+assert.equal(fieldMutationChoice.title, "Overdrive Arsenal Prime");
+assert.equal(fieldMutationChoice.lateFieldMutationLevel, 2);
+assert.equal(fieldAegisChoice.title, "Warplate Halo");
+assert.equal(fieldAegisChoice.lateFieldAegisLevel, 2);
+assert.equal(greedContractChoice.title, "Black Ledger Raid");
+assert.equal(greedContractChoice.blackLedgerRaidWaves, 1);
 const greedRun = {
   build: game.createInitialBuild("scrap_pact"),
   resources: { scrap: 0 },
@@ -326,10 +333,21 @@ const greedRun = {
 const baseGreedMultiplier = greedRun.build.scrapMultiplier;
 const baseGreedPickup = greedRun.build.pickupBonus;
 game.applyForgeChoice(greedRun, greedContractChoice);
-assert.equal(greedRun.resources.scrap, 46);
+assert.equal(greedRun.resources.scrap, 58);
+assert.equal(greedRun.build.blackLedgerRaidWaves, 1);
 assert.equal(greedRun.build.bastionPactDebtWaves, 2);
-assert.equal(greedRun.build.scrapMultiplier, baseGreedMultiplier + 0.14);
-assert.equal(greedRun.build.pickupBonus, baseGreedPickup + 14);
+assert.equal(greedRun.build.scrapMultiplier, baseGreedMultiplier + 0.18);
+assert.equal(greedRun.build.pickupBonus, baseGreedPickup + 18);
+const blackLedgerWaveTen = game.applyBlackLedgerRaidConfig(
+  game.resolveWaveConfig(9, greedRun.build),
+  greedRun.build,
+  10
+);
+assert.ok(blackLedgerWaveTen.blackLedgerRaid);
+assert.equal(blackLedgerWaveTen.blackLedgerRaid.salvageWave, true);
+assert.equal(blackLedgerWaveTen.hazard.label, "Black Ledger Vaults");
+assert.ok(blackLedgerWaveTen.hazard.salvageScrap > game.WAVE_CONFIG[9].hazard.salvageScrap);
+assert.ok(blackLedgerWaveTen.spawnBudget > game.WAVE_CONFIG[9].spawnBudget);
 const fieldMutationRun = {
   build: game.createInitialBuild("scrap_pact"),
   resources: { scrap: 0 },
@@ -337,9 +355,9 @@ const fieldMutationRun = {
   player: { hp: 100, maxHp: 100, heat: 20, overheated: false },
 };
 game.applyForgeChoice(fieldMutationRun, fieldMutationChoice);
-assert.equal(fieldMutationRun.build.lateFieldMutationLevel, 1);
+assert.equal(fieldMutationRun.build.lateFieldMutationLevel, 2);
 const fieldMutationWeapon = game.computeWeaponStats(fieldMutationRun.build);
-assert.equal(fieldMutationWeapon.lateFieldMutationLevel, 1);
+assert.equal(fieldMutationWeapon.lateFieldMutationLevel, 2);
 assert.ok(fieldMutationWeapon.lateFieldMutationFirePattern);
 const fieldAegisRun = {
   build: game.createInitialBuild("relay_oath"),
@@ -348,7 +366,7 @@ const fieldAegisRun = {
   player: { hp: 100, maxHp: 100, heat: 0, overheated: false, invulnerableTime: 0 },
 };
 game.applyForgeChoice(fieldAegisRun, fieldAegisChoice);
-assert.equal(fieldAegisRun.build.lateFieldAegisLevel, 1);
+assert.equal(fieldAegisRun.build.lateFieldAegisLevel, 2);
 assert.equal(fieldAegisRun.player.fieldAegisCharge, 1);
 const standardLateFieldChoice = game
   .buildFieldGrantChoices(fieldMutationRun.build, () => 0, 11)
