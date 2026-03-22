@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-23 00:12 KST
+  Findings:
+  - The run still explains its machine fantasy more than it lets the player feel it. The HUD/forge layer now tracks `evolution`, `doctrine`, `late ascension`, `illegal overclock`, `apex`, `capstone`, `chassis`, `support system`, `pursuit`, `support bay`, and `catalyst`, which reads like system inventory rather than a clean power fantasy the player can instantly desire and pilot.
+  - Mid-run structure is still too checkpoint-authored for a rerun-driven action roguelite. `Architecture Draft` at Wave 3, `Bastion Draft` plus `Chassis Breakpoint` at Wave 6, `Catalyst Crucible`, and possible late armory/ascension substitutions create a run you learn as a schedule instead of one you bend through greed, denial, and recovery.
+  - Build mixing is still more constrained than exciting. `MAX_SUPPORT_BAYS = 2` as the baseline and doctrine-reserved early bays mean offense, defense, utility, and automation are still being permissioned by lane policy instead of tempting the player with earlier cross-system greed.
+  - `Act 3` now does a better job forcing shared hostile ecology, but the payoff phase still collapses right after the crown. `Wave 12` peaks near `activeCap 48-49`, then `Afterburn I-III` falls back to `activeCap 18-25` on a fixed `12` second cash-out structure, so the run still ends just when a release-grade roguelite should be proving how long your terrifying form can survive.
+  Top Priority: Replace the Wave 6 multi-stop package with one irreversible ascension draft that grants an immediate visible weapon/body mutation plus one unlocked off-doctrine subsystem lane, then sustain `Wave 12` level pressure or higher for at least `4-6` more full waves after that form comes online.
+  Why Now: Until the strongest form arrives earlier and lives longer under uncompromised pressure, repeat runs will feel scripted rather than addictive.
+  Do Not Repeat: Do not answer this with more status labels, more reserved-lane exceptions, or another short epilogue disguised as endgame.
+
 - 2026-03-22 23:59:59 KST
   Findings:
   - The run keeps selling ambition through labels instead of play. `Architecture Draft`, `Wave 6 Bastion Draft`, `Chassis Breakpoint`, `Late Break Armory`, `Catalyst Crucible`, and the final forge still break the climb into too many explained checkpoints, so repeat runs risk feeling authored rather than fought for.
@@ -853,6 +863,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-23 00:55 KST
+  Changed: replaced the old `Wave 6 Bastion Draft -> Chassis Breakpoint` two-stop package in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) with a single `Ascension Draft`. Each doctrine card now locks an irreversible Wave 6 form in one pick: it applies the doctrine immediately, turns on that doctrine's visible stage-1 weapon mutation, grants a matching utility chassis, and opens one doctrine-free flex subsystem lane with an off-doctrine install right away. The existing `Wave 8` auto-uplink skip still stays attached, and the forge previews/combat-feed text now sell the moment as an immediate machine transformation instead of a follow-up admin package. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the smoke coverage now asserts the new Wave 6 ascension shape instead of the removed two-step doctrine/breakpoint flow. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's Top Priority explicitly called for one irreversible Wave 6 ascension that grants an immediate weapon/body mutation plus one unlocked off-doctrine subsystem lane. The highest-value bounded interpretation was to collapse the existing two-click midpoint structure into one commitment rather than adding another rule layer.
+  Follow-up risk: this fixes the authored midpoint pacing and earlier build-mixing appetite, but it only addresses the first half of the critique. `Afterburn` still needs more full-wave crown-pressure ownership time so the newly ascended form can survive long enough to create real rerun hunger.
 
 - 2026-03-23 02:39 KST
   Changed: upgraded the existing live `Catalyst Crucible` lane in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from a single guaranteed capstone pickup into a true exclusive ascension branch. Breaking the crucible core now spills three separate `splice` caches in combat, and each one bundles the same catalyst weapon/body mutation with a different locked systems bet: an offensive siege package, a defensive bulwark package, or a mobility/vector package. Claiming one cache now clears the others, updates the combat/HUD text to sell the irreversible bet, and leaves the run on the same uninterrupted `Wave 10+` combat path rather than adding any new menu stop. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

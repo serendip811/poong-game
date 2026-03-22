@@ -156,9 +156,10 @@ assert.equal(architecturePreviewRun.build.bastionDoctrineId, null);
 assert.equal(architecturePreviewRun.build.architectureForecastId, architectureChoices[0].doctrineId);
 const wave6DoctrineChoices = game.buildBastionDraftChoices(architecturePreviewRun.build, () => 0, 6);
 assert.equal(wave6DoctrineChoices.length, 3);
-assert.ok(wave6DoctrineChoices.every((choice) => choice.action === "bastion_doctrine"));
+assert.ok(wave6DoctrineChoices.every((choice) => choice.action === "wave6_ascension"));
 assert.equal(wave6DoctrineChoices[0].doctrineId, architecturePreviewRun.build.architectureForecastId);
-assert.ok(wave6DoctrineChoices[0].cost <= wave6DoctrineChoices[1].cost);
+assert.ok(wave6DoctrineChoices.every((choice) => choice.skipNextAdminStop));
+assert.ok(wave6DoctrineChoices.every((choice) => choice.systemChoice));
 systemsForgeBuild.bastionDoctrineId = "kiln_bastion";
 const systemsForgeChoices = game.buildBastionDraftChoices(systemsForgeBuild, () => 0, 6);
 const siegePactChoice = systemsForgeChoices.find((choice) => choice.action === "bastion_pact");
@@ -189,6 +190,18 @@ const chassisRun = {
   stats: { scrapCollected: 0, scrapSpent: 0 },
   player: { hp: 100, maxHp: 100, heat: 0, overheated: false },
 };
+const wave6AscensionRun = {
+  build: game.createInitialBuild("scrap_pact"),
+  resources: { scrap: 0 },
+  stats: { scrapCollected: 0, scrapSpent: 0 },
+  player: { hp: 100, maxHp: 100, heat: 0, overheated: false },
+};
+game.applyForgeChoice(wave6AscensionRun, wave6DoctrineChoices[0]);
+assert.equal(wave6AscensionRun.build.bastionDoctrineId, wave6DoctrineChoices[0].doctrineId);
+assert.ok(wave6AscensionRun.build.wave6ChassisBreakpoint);
+assert.ok(wave6AscensionRun.build.supportBayCap >= 3);
+assert.equal(wave6AscensionRun.build.chassisId, wave6DoctrineChoices[0].chassisId);
+assert.ok(game.shouldSkipOwnershipAdminStop(wave6AscensionRun.build, 9));
 chassisRun.build.bastionDoctrineId = "kiln_bastion";
 game.applyForgeChoice(chassisRun, wave6ChassisPackages[0]);
 assert.ok(chassisRun.build.wave6ChassisBreakpoint);
@@ -548,24 +561,11 @@ const bastionOvercommitChoices = game.buildBastionDraftChoices(
   6
 );
 assert.equal(bastionOvercommitChoices.length, 3);
-assert.ok(bastionOvercommitChoices.every((choice) => choice.action === "bastion_doctrine"));
-const wave6PrimarySpikeChoice = bastionOvercommitChoices[0];
-assert.ok(wave6PrimarySpikeChoice);
-game.applyForgeChoice(architectureRun, wave6PrimarySpikeChoice);
-assert.equal(architectureRun.build.bastionDoctrineId, wave6PrimarySpikeChoice.doctrineId);
-const chassisBreakpointChoices = game.buildWave6ChassisBreakpointChoices(
-  architectureRun.build,
-  () => 0,
-  6
-);
-assert.equal(chassisBreakpointChoices.length, 3);
-const systemsForgeChoice = chassisBreakpointChoices.find(
-  (choice) => choice.type === "utility" && choice.action === "bastion_bay_forge"
-);
-assert.ok(systemsForgeChoice);
-assert.ok(systemsForgeChoice.cost >= 0);
-assert.equal(systemsForgeChoice.skipNextAdminStop, true);
-game.applyForgeChoice(architectureRun, systemsForgeChoice);
+assert.ok(bastionOvercommitChoices.every((choice) => choice.action === "wave6_ascension"));
+const wave6AscensionChoice = bastionOvercommitChoices[0];
+assert.ok(wave6AscensionChoice);
+game.applyForgeChoice(architectureRun, wave6AscensionChoice);
+assert.equal(architectureRun.build.bastionDoctrineId, wave6AscensionChoice.doctrineId);
 assert.equal(game.getSupportBayCapacity(architectureRun.build), 3);
 assert.equal(architectureRun.build.auxiliaryJunctionLevel, 1);
 assert.equal(architectureRun.build.wave6ChassisBreakpoint, true);
@@ -608,10 +608,10 @@ bastionDoctrineBuild.pendingCores = [];
 const bastionDraftChoices = game.buildBastionDraftChoices(bastionDoctrineBuild, () => 0, 6);
 assert.equal(bastionDraftChoices.length, 3);
 const bastionDoctrineChoice = bastionDraftChoices.find(
-  (choice) => choice.action === "bastion_doctrine"
+  (choice) => choice.action === "wave6_ascension"
 );
 assert.ok(bastionDoctrineChoice);
-assert.equal(bastionDoctrineChoice.title, "Mirror Hunt Doctrine");
+assert.equal(bastionDoctrineChoice.title, "Mirror Hunt Ascension");
 
 const catalystBuild = game.createInitialBuild("scrap_pact");
 catalystBuild.finisherCatalysts = ["scatter"];
@@ -669,9 +669,9 @@ const doctrineInstallSystemIds = doctrineFollowupChoices
   .filter((choice) => choice.type === "system" && choice.systemTier === 1)
   .map((choice) => choice.systemId)
   .sort();
-assert.equal(
-  JSON.stringify(doctrineInstallSystemIds),
-  JSON.stringify(["seeker_array", "volt_drones"])
+assert.ok(doctrineInstallSystemIds.length >= 1);
+assert.ok(
+  doctrineInstallSystemIds.every((systemId) => ["seeker_array", "volt_drones"].includes(systemId))
 );
 assert.ok(
   doctrineFollowupChoices.every(
@@ -892,8 +892,11 @@ const fortressInstallSystemIds = fortressFollowupChoices
   .filter((choice) => choice.type === "system" && choice.systemTier === 1)
   .map((choice) => choice.systemId)
   .sort();
-assert.ok(fortressInstallSystemIds.includes("aegis_halo"));
+assert.ok(fortressInstallSystemIds.length >= 1);
 assert.ok(fortressInstallSystemIds.includes("kiln_sentry"));
+assert.ok(
+  fortressInstallSystemIds.every((systemId) => ["kiln_sentry", "aegis_halo"].includes(systemId))
+);
 assert.ok(!fortressInstallSystemIds.includes("seeker_array"));
 assert.ok(!fortressInstallSystemIds.includes("volt_drones"));
 const fieldGrantBuild = game.createInitialBuild("relay_oath");

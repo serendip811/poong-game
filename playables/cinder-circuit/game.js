@@ -1571,6 +1571,39 @@
     },
   };
 
+  const WAVE6_ASCENSION_DEFS = {
+    mirror_hunt: {
+      id: "mirror_hunt",
+      tag: "ASCEND",
+      title: "Mirror Hunt Ascension",
+      chassisId: "vector_thrusters",
+      preferredSystemId: "aegis_halo",
+      laneLabel: "Ascension Draft",
+      summary:
+        "Hunt Frame을 즉시 켜 주포를 쌍익 추적 분광으로 바꾸고, Vector Thrusters와 off-doctrine 방호 lane까지 한 번에 접속한다.",
+    },
+    kiln_bastion: {
+      id: "kiln_bastion",
+      tag: "ASCEND",
+      title: "Kiln Bastion Ascension",
+      chassisId: "salvage_winch",
+      preferredSystemId: "volt_drones",
+      laneLabel: "Ascension Draft",
+      summary:
+        "Kiln Frame을 즉시 켜 산탄 사이에 용광 씨앗을 박고, Salvage Winch와 off-doctrine 추적 lane까지 한 번에 접속한다.",
+    },
+    storm_artillery: {
+      id: "storm_artillery",
+      tag: "ASCEND",
+      title: "Storm Artillery Ascension",
+      chassisId: "bulwark_treads",
+      preferredSystemId: "aegis_halo",
+      laneLabel: "Ascension Draft",
+      summary:
+        "Siege Frame을 즉시 켜 외곽 공성선을 붙이고, Bulwark Treads와 off-doctrine 방호 lane까지 한 번에 접속한다.",
+    },
+  };
+
   const AFFIX_DEFS = {
     hotshot: {
       id: "hotshot",
@@ -4369,6 +4402,27 @@
         ...finaleRows,
       ];
     }
+    if (choice.type === "utility" && choice.action === "wave6_ascension") {
+      return [
+        {
+          label: "교리",
+          value: choice.doctrineLabel || "Ascension",
+        },
+        {
+          label: "변형",
+          value: choice.doctrineFormTrait || choice.doctrineFormLabel || "주포 변이",
+        },
+        {
+          label: "flex lane",
+          value: choice.systemChoice ? choice.systemChoice.title : "off-doctrine unlock",
+        },
+        {
+          label: "섀시",
+          value: choice.chassisTitle || "utility chassis",
+        },
+        ...finaleRows,
+      ];
+    }
     if (choice.type === "system") {
       const systemDef = SUPPORT_SYSTEM_DEFS[choice.systemId];
       const tierDef = systemDef && systemDef.tiers[choice.systemTier];
@@ -6537,6 +6591,110 @@
     };
   }
 
+  function createWave6AscensionSystemChoice(build, doctrine, preferredSystemId, nextWave) {
+    if (!build || !doctrine) {
+      return null;
+    }
+    const expandedBuild = {
+      ...build,
+      bastionDoctrineId: doctrine.id,
+      supportBayCap: Math.min(MAX_SUPPORT_BAY_LIMIT, Math.max(getSupportBayCapacity(build), MAX_SUPPORT_BAYS + 1)),
+      auxiliaryJunctionLevel: Math.max(1, Math.round(build.auxiliaryJunctionLevel || 0)),
+    };
+    const preferredSystemIds = new Set(getDoctrinePreferredSystemIds(doctrine));
+    const offDoctrineChoices = createSupportSystemChoices(expandedBuild, Math.random, {
+      nextWave,
+      finalForge: false,
+    }).filter(
+      (choice) =>
+        choice &&
+        choice.bayAction === "install" &&
+        !preferredSystemIds.has(choice.systemId)
+    );
+    if (preferredSystemId) {
+      const preferredChoice = offDoctrineChoices.find((choice) => choice.systemId === preferredSystemId);
+      if (preferredChoice) {
+        return preferredChoice;
+      }
+    }
+    return offDoctrineChoices[0] || null;
+  }
+
+  function createWave6AscensionChoice(build, doctrine, nextWave) {
+    if (!build || !doctrine) {
+      return null;
+    }
+    const ascensionDef = WAVE6_ASCENSION_DEFS[doctrine.id];
+    const weaponChoice = createDoctrineChaseWeaponChoice(build, doctrine, {
+      nextWave,
+      finalForge: false,
+    });
+    if (!ascensionDef || !weaponChoice) {
+      return null;
+    }
+    const chassis = getChassisBreakpointDef(ascensionDef.chassisId);
+    const systemChoice = createWave6AscensionSystemChoice(
+      build,
+      doctrine,
+      ascensionDef.preferredSystemId,
+      nextWave
+    );
+    const doctrineForm = getDoctrineWeaponForm(
+      {
+        ...build,
+        bastionDoctrineId: doctrine.id,
+        doctrineChaseClaimed: false,
+        doctrineCapstoneId: null,
+      },
+      doctrine.favoredCoreId
+    );
+    return {
+      type: "utility",
+      action: "wave6_ascension",
+      id: `utility:wave6_ascension:${doctrine.id}`,
+      verb: "승천",
+      tag: ascensionDef.tag,
+      title: ascensionDef.title,
+      description: `${ascensionDef.summary} ${doctrine.description} ${weaponChoice.title}을(를) 즉시 무료 접속하고, 세 번째 support bay를 교리 reserve와 무관한 flex lane으로 열어 ${systemChoice ? `${systemChoice.title}을(를) 함께 박는다` : "off-doctrine lane을 즉시 확보한다"}. Wave 8 Late Break Armory는 건너뛰고 네 번째 bay가 전장 uplink로 이어진다.`,
+      slotText: `${doctrine.label} · ${weaponChoice.title} · flex lane ${systemChoice ? systemChoice.title : "개방"}`,
+      cost: Math.max(0, Math.round((weaponChoice.cost || 0) * 0.48)),
+      laneLabel: ascensionDef.laneLabel,
+      forgeLaneLabel: ascensionDef.laneLabel,
+      doctrineId: doctrine.id,
+      doctrineLabel: doctrine.label,
+      doctrineChoice: {
+        ...weaponChoice,
+        cost: 0,
+      },
+      doctrineFormLabel: doctrineForm ? doctrineForm.label : doctrine.label,
+      doctrineFormTrait: doctrineForm ? doctrineForm.traitLabel : null,
+      chassisId: ascensionDef.chassisId,
+      chassisTitle: chassis ? chassis.title : ascensionDef.chassisId,
+      bayUnlock: true,
+      skipNextAdminStop: true,
+      systemChoice,
+    };
+  }
+
+  function buildWave6AscensionChoices(build, nextWave) {
+    const choices = Object.values(BASTION_DOCTRINE_DEFS)
+      .map((doctrine) => createWave6AscensionChoice(build, doctrine, nextWave))
+      .filter(Boolean);
+    const forecastDoctrine =
+      build && build.architectureForecastId ? getBastionDoctrineDef(build.architectureForecastId) : null;
+    if (forecastDoctrine) {
+      choices.sort((left, right) => {
+        const leftForecast = left.doctrineId === forecastDoctrine.id ? 1 : 0;
+        const rightForecast = right.doctrineId === forecastDoctrine.id ? 1 : 0;
+        if (rightForecast !== leftForecast) {
+          return rightForecast - leftForecast;
+        }
+        return (left.cost || 0) - (right.cost || 0);
+      });
+    }
+    return choices;
+  }
+
   function createArchitectureDoctrineWeaponChoice(build, doctrine) {
     if (!build || !doctrine || !doctrine.favoredCoreId || !CORE_DEFS[doctrine.favoredCoreId]) {
       return null;
@@ -6785,6 +6943,9 @@
   }
 
   function buildBastionDraftChoices(build, rng, nextWave) {
+    if (nextWave === 6 && build && !build.bastionDoctrineId) {
+      return buildWave6AscensionChoices(build, nextWave);
+    }
     if (nextWave === 6 && build && build.bastionDoctrineId) {
       return buildWave6BreakpointPrimaryChoices(build, rng, nextWave);
     }
@@ -7123,8 +7284,8 @@
     if (!build || !build.bastionDoctrineId) {
       const doctrine = getBastionDoctrineDef(build);
       return doctrine
-        ? `${doctrine.label} forecast를 포함한 세 장기 교리 중 하나를 이제 실제로 채택한다. Wave 3에 시험한 주포 프레임을 확인하거나 버리고, 바로 이어지는 Chassis Breakpoint에서 body plan까지 잠근다.`
-        : "세 장기 교리 중 하나를 실제로 채택한 뒤, 바로 이어지는 Chassis Breakpoint에서 body plan까지 잠근다.";
+        ? `${doctrine.label} forecast를 포함한 세 장기 교리 중 하나를 이제 irreversible ascension으로 잠근다. Wave 3에 시험한 주포 프레임을 확인하거나 버리고, 한 번의 픽으로 weapon mutation, utility chassis, off-doctrine flex lane까지 전부 접속한다.`
+        : "세 장기 교리 중 하나를 irreversible ascension으로 잠가 weapon mutation, utility chassis, off-doctrine flex lane까지 한 번에 접속한다.";
     }
     if (build.overcommitUnlocked && !build.doctrineChaseClaimed) {
       return "방금 회수한 contraband salvage가 열려 있다. 이번 Bastion Draft에서는 장기 Forge Pursuit 계약, 고통 계약, 무료 안정화 중 하나로 Act 2 greed를 직접 결정한다.";
@@ -7137,25 +7298,23 @@
 
   function enterBastionDraft() {
     const nextWave = state.waveIndex + 2;
-    const wave6ChassisDraft =
+    const wave6AscensionDraft =
       nextWave === 6 &&
       state.build &&
-      (state.build.bastionDoctrineId || state.build.architectureForecastId);
+      !state.build.bastionDoctrineId;
     state.phase = "forge";
     state.pendingFinalForge = false;
     state.forgeStep = 1;
-    state.forgeMaxSteps = wave6ChassisDraft ? 2 : 1;
+    state.forgeMaxSteps = 1;
     state.forgeDraftType = "bastion_draft";
     state.forgeChoices = buildBastionDraftChoices(state.build, Math.random, nextWave);
     pushCombatFeed(
-      wave6ChassisDraft
-        ? state.build.bastionDoctrineId
-          ? "Wave 6 Chassis Breakpoint 개시. 먼저 중반 spike 또는 greed를 1픽으로 잠근 뒤, 즉시 열린 flex bay에 넣을 subsystem 1픽을 추가로 강제한다. 이 선택이 끝나면 Late Break Armory를 건너뛰고 Wave 6-9 bracket을 연속 전투로 밀어붙인다."
-          : "Wave 6 Bastion Draft 개시. 먼저 세 장기 교리 중 하나를 실제로 확정한 뒤, 즉시 이어지는 Chassis Breakpoint에서 flex bay와 utility chassis를 함께 잠근다. 이 두 픽이 끝나면 Late Break Armory를 건너뛰고 Wave 6-9 bracket을 연속 전투로 밀어붙인다."
+      wave6AscensionDraft
+        ? "Wave 6 Ascension Draft 개시. 세 장기 교리 중 하나를 irreversible form으로 잠그면 주포 mutation, utility chassis, doctrine-free flex lane이 한 번에 켜진다. Late Break Armory는 건너뛰고 Wave 6-9 bracket을 연속 전투로 밀어붙인다."
         : `Bastion Draft 개시. ${getBastionDraftIntroText(state.build)}`,
       "DRAFT"
     );
-    setBanner(wave6ChassisDraft ? "Chassis Breakpoint" : "Bastion Draft", 0.95);
+    setBanner(wave6AscensionDraft ? "Ascension Draft" : "Bastion Draft", 0.95);
     renderForgeOverlay();
     updateHUD();
   }
@@ -7518,6 +7677,26 @@
           cost: 0,
         });
       }
+      return choice;
+    }
+
+    if (choice.type === "utility" && choice.action === "wave6_ascension") {
+      applyForgeChoice(run, {
+        type: "utility",
+        action: "bastion_doctrine",
+        doctrineId: choice.doctrineId,
+        doctrineChoice: choice.doctrineChoice,
+      });
+      applyForgeChoice(run, {
+        type: "utility",
+        action: "bastion_bay_forge",
+        bayUnlock: true,
+        skipNextAdminStop: true,
+        chassisId: choice.chassisId,
+        chassisTitle: choice.chassisTitle,
+        systemChoice: choice.systemChoice,
+      });
+      run.build.upgrades.push(`Wave 6 Ascension: ${choice.title}`);
       return choice;
     }
 
@@ -9878,15 +10057,15 @@
     if (!choice) {
       return;
     }
-    const wave6ChassisDraft =
+    const wave6AscensionDraft =
       state.forgeDraftType === "bastion_draft" &&
       state.build &&
-      (state.build.bastionDoctrineId || state.build.architectureForecastId) &&
+      !state.build.bastionDoctrineId &&
       state.waveIndex + 2 === 6;
     const instantDraft =
       state.forgeDraftType === "architecture_draft" ||
       state.forgeDraftType === "field_grant" ||
-      (state.forgeDraftType === "bastion_draft" && (!wave6ChassisDraft || state.forgeStep > 1)) ||
+      state.forgeDraftType === "bastion_draft" ||
       state.forgeDraftType === "catalyst_draft";
     if (state.resources.scrap < choice.cost) {
       setBanner("고철 부족", 0.8);
@@ -9897,24 +10076,6 @@
       state.stats.scrapSpent += choice.cost;
     }
     applyForgeChoice(state, choice);
-    if (wave6ChassisDraft && state.forgeStep === 1) {
-      state.forgeStep = 2;
-      state.forgeMaxSteps = 2;
-      state.forgeChoices = buildWave6ChassisBreakpointChoices(
-        state.build,
-        Math.random,
-        state.waveIndex + 2,
-        [choice.systemChoice ? choice.systemChoice.id : null]
-      );
-      pushCombatFeed(
-        `${choice.tag} · ${choice.title} 잠금. 이제 즉시 열린 flex bay에 꽂을 subsystem과 영구 utility chassis 규칙이 묶인 패키지 1장을 더 골라야 한다. 이 선택이 끝나면 Wave 8 Late Break Armory는 자동 uplink로 대체된다.`,
-        "DRAFT"
-      );
-      refreshDerivedStats(false);
-      renderForgeOverlay();
-      updateHUD();
-      return;
-    }
     if (instantDraft) {
       const grantLabel = choice.forgeLaneLabel || choice.laneLabel || choice.tag || "CACHE";
       pushCombatFeed(
@@ -9927,8 +10088,10 @@
             ? `${grantLabel} 적용. Bastion Draft를 안정화로 넘기고 다음 웨이브를 바로 연다.`
             : choice.action === "bastion_pact"
               ? `${grantLabel} 적용. 최대 체력을 깎아 고철을 쥔 대신 3웨이브 Siege Debt를 떠안고 다음 웨이브를 연다.`
+              : choice.action === "wave6_ascension"
+                ? `${grantLabel} 적용. ${choice.doctrineLabel}를 irreversible form으로 잠가 ${choice.doctrineChoice ? choice.doctrineChoice.title : "주포 mutation"}과 ${choice.chassisTitle || "utility chassis"}, ${choice.systemChoice ? choice.systemChoice.title : "off-doctrine flex lane"}를 한 번에 켰다. Wave 8 Late Break Armory는 건너뛰고 ownership bracket을 즉시 이어 간다.`
               : choice.action === "bastion_bay_forge"
-                ? choice.skipNextAdminStop
+                ? wave6AscensionDraft || choice.skipNextAdminStop
                   ? `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}를 잠그고 세 번째 support bay를 flex lane으로 즉시 열어 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 장착했다. Wave 8에서는 정지 없이 네 번째 bay가 자동 uplink되어 Wave 6-9 bracket을 그대로 이어 간다.`
                   : `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}와 함께 세 번째 support bay를 즉시 열고 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 먼저 장착한 채, Wave 8 네 번째 bay까지 예약하고 다음 웨이브를 연다.`
                 : choice.action === "bastion_doctrine"
@@ -13342,10 +13505,10 @@
       build: state.build,
     };
     const armoryLabel = getArmoryLabel(forgeOptions);
-    const wave6ChassisDraft =
+    const wave6AscensionDraft =
       state.forgeDraftType === "bastion_draft" &&
       state.build &&
-      (state.build.bastionDoctrineId || state.build.architectureForecastId) &&
+      !state.build.bastionDoctrineId &&
       state.waveIndex + 2 === 6;
     const packageSummary =
       state.forgeDraftType === "architecture_draft"
@@ -13353,13 +13516,13 @@
         : state.forgeDraftType === "field_grant"
         ? "Field Cache · 할인 장착 2장과 무료 회수 1장 중 1픽, 지금 고철을 태울지 아낄지 고른다"
         : state.forgeDraftType === "bastion_draft"
-        ? state.build.bastionDoctrineId
-          ? wave6ChassisDraft
-            ? `Chassis Breakpoint ${state.forgeStep}/${state.forgeMaxSteps} · 1픽으로 중반 spike나 greed를 잠근 뒤, 2픽으로 utility chassis와 교리 free flex subsystem을 함께 접합하고 Wave 8 Late Break Armory를 건너뛴다`
-            : state.build.overcommitUnlocked && !state.build.doctrineChaseClaimed
+        ? wave6AscensionDraft
+          ? "Ascension Draft · 세 장기 교리 중 1픽으로 즉시 weapon mutation, utility chassis, doctrine-free flex lane을 함께 잠그고 Wave 8 Armory를 건너뛴다"
+          : state.build.bastionDoctrineId
+            ? state.build.overcommitUnlocked && !state.build.doctrineChaseClaimed
               ? "Bastion Draft · 회수한 contraband salvage를 장기 Forge Pursuit 계약으로 바꾸거나, 계약/안정화로 greed를 접는다"
-            : "Bastion Draft · 기존 교리 위에 추가 spike 또는 고통 계약을 더 얹어 Act 2 greed를 강제한다"
-          : "Bastion Draft · 세 장기 교리 중 1픽으로 실제 doctrine을 확정하고, 곧바로 chassis/body plan까지 이어서 잠근다"
+              : "Bastion Draft · 기존 교리 위에 추가 spike 또는 고통 계약을 더 얹어 Act 2 greed를 강제한다"
+            : "Bastion Draft · 세 장기 교리 중 1픽으로 실제 doctrine을 확정하고, 곧바로 chassis/body plan까지 이어서 잠근다"
         : state.forgeDraftType === "catalyst_draft"
         ? "Catalyst Crucible · 회수한 촉매를 지금 태워 Act 3 본편을 괴물 화력이나 운영형 안정화로 먼저 고정한다"
         : state.forgeDraftType === "armory"
@@ -13382,15 +13545,13 @@
       : state.forgeDraftType === "field_grant"
         ? `고철 ${Math.round(state.resources.scrap)} 보유. Field Cache다. 할인된 즉시 장착 2장과 무료 Emergency Vent 중 하나를 고른다. 지금 스파이크를 사서 당길지, 고철을 쥐고 다음 큰 포지까지 버틸지 직접 판단해야 한다.`
         : state.forgeDraftType === "bastion_draft"
-        ? state.build.bastionDoctrineId
-          ? wave6ChassisDraft
-            ? state.forgeStep === 1
-              ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 6 Chassis Breakpoint 1/2다. 먼저 주무장 spike, 교리 pursuit/spike, 또는 Siege Salvage Pact 중 하나를 잠근다. 이 픽 뒤에는 utility chassis 1장과 flex subsystem 1장을 묶은 패키지를 강제로 접합하고, Wave 8 Late Break Armory는 자동 uplink로 대체된다.`
-              : `고철 ${Math.round(state.resources.scrap)} 보유. Wave 6 Chassis Breakpoint 2/2다. 지금 고르는 패키지는 세 번째 support bay를 즉시 열면서 교리 reserve를 무시하는 flex subsystem 1장과 영구 utility chassis 규칙을 같이 장착한다. 이 선택이 끝나면 Wave 6-9 bracket은 추가 메뉴 정지 없이 이어진다.`
-            : state.build.overcommitUnlocked && !state.build.doctrineChaseClaimed
+        ? wave6AscensionDraft
+          ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 6 Ascension Draft다. 이제 세 장기 교리 중 하나를 irreversible form으로 잠근다. 이 한 번의 픽이 주무장 stage-1 mutation, utility chassis, 그리고 교리 reserve를 무시하는 off-doctrine flex lane을 동시에 켜고, Wave 8 Late Break Armory는 전장 uplink로 대체한다.`
+          : state.build.bastionDoctrineId
+            ? state.build.overcommitUnlocked && !state.build.doctrineChaseClaimed
               ? `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. Wave 5에서 회수한 contraband salvage가 살아 있어 장기 Forge Pursuit 계약이 열렸다. 지금 pursuit를 걸고 Wave 6-8 marked elite에서 shard를 모아 조기 monster form을 즉시 잠글지, Siege Salvage Pact나 무료 안정화로 greed를 접을지 정한다.`
-            : `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 이미 채택한 교리 위에 추가 spike 1장과 Siege Salvage Pact, 무료 안정화가 다시 뜬다. 지금 더 깊게 묶일지, 체력을 태워 greed를 당길지 결정한다.`
-          : `고철 ${Math.round(state.resources.scrap)} 보유. Wave 6 Bastion Draft다. 이제 세 장기 교리 중 하나를 실제로 채택한다. Wave 3에 예고한 프레임을 확정해 할인 잠금할 수도 있고, 전투 중 더 잘 맞았던 다른 weapon direction으로 갈아탈 수도 있다. 이 1픽 직후에는 Chassis Breakpoint가 바로 이어져 flex bay와 utility chassis까지 함께 잠긴다.`
+              : `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 이미 채택한 교리 위에 추가 spike 1장과 Siege Salvage Pact, 무료 안정화가 다시 뜬다. 지금 더 깊게 묶일지, 체력을 태워 greed를 당길지 결정한다.`
+            : `고철 ${Math.round(state.resources.scrap)} 보유. Wave 6 Bastion Draft다. 이제 세 장기 교리 중 하나를 실제로 채택한다. Wave 3에 예고한 프레임을 확정해 할인 잠금할 수도 있고, 전투 중 더 잘 맞았던 다른 weapon direction으로 갈아탈 수도 있다.`
         : state.forgeDraftType === "catalyst_draft"
         ? `고철 ${Math.round(state.resources.scrap)} 보유. Catalyst Crucible이다. 이제 막 회수한 촉매를 무료로 점화하거나 안정화해 남은 Act 3 웨이브를 완성형 회로로 직접 소모한다. 최종 포지까지 묵혀 두는 대신 지금부터 괴물 형태를 실제 전장에 투입한다.`
         : state.forgeDraftType === "armory"
@@ -13455,12 +13616,14 @@
                     ? `${index + 1}번 선택 · 고철 부족`
                     : choice.action === "bastion_pact"
                       ? `${index + 1}번 선택 · 체력 대가 계약`
+                      : choice.action === "wave6_ascension"
+                        ? `${index + 1}번 선택 · ascension 고철 ${choice.cost}`
                       : choice.action === "bastion_bay_forge"
-                        ? wave6ChassisDraft
+                        ? wave6AscensionDraft
                           ? `${index + 1}번 선택 · flex subsystem ${choice.cost}`
                           : `${index + 1}번 선택 · 시스템 + 베이 ${choice.cost}`
                       : choice.cost > 0
-                        ? wave6ChassisDraft
+                        ? wave6AscensionDraft
                           ? `${index + 1}번 선택 · breakpoint 고철 ${choice.cost}`
                           : `${index + 1}번 선택 · spike 고철 ${choice.cost}`
                         : `${index + 1}번 선택 · 무료 안정화`
