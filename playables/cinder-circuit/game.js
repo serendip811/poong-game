@@ -3291,6 +3291,7 @@
     overcommitUnlocked: false,
     overcommitResolved: false,
     bastionPactDebtWaves: 0,
+    wave6ChassisBreakpoint: false,
     supportBayCap: 2,
     auxiliaryJunctionLevel: 0,
     supportSystemId: null,
@@ -3914,6 +3915,15 @@
     return true;
   }
 
+  function shouldSkipOwnershipAdminStop(build, nextWave = 0) {
+    return Boolean(
+      build &&
+      build.wave6ChassisBreakpoint &&
+      Number.isFinite(nextWave) &&
+      nextWave === LATE_BREAK_ARMORY_WAVE
+    );
+  }
+
   function applyAuxiliaryJunction(build) {
     if (!build) {
       return false;
@@ -4240,6 +4250,7 @@
         overcommitUnlocked: BASE_BUILD.overcommitUnlocked,
         overcommitResolved: BASE_BUILD.overcommitResolved,
         bastionPactDebtWaves: BASE_BUILD.bastionPactDebtWaves,
+        wave6ChassisBreakpoint: BASE_BUILD.wave6ChassisBreakpoint,
         supportBayCap: BASE_BUILD.supportBayCap,
         auxiliaryJunctionLevel: BASE_BUILD.auxiliaryJunctionLevel,
         supportSystemId: BASE_BUILD.supportSystemId,
@@ -6114,13 +6125,121 @@
     };
   }
 
+  function buildWave6BreakpointPrimaryChoices(build, rng, nextWave) {
+    const random = typeof rng === "function" ? rng : Math.random;
+    const doctrine = getBastionDoctrineDef(build);
+    const choices = [];
+    const takenIds = new Set();
+    const pushUniqueChoice = (choice) => {
+      if (!choice || takenIds.has(choice.id)) {
+        return;
+      }
+      takenIds.add(choice.id);
+      choices.push(choice);
+    };
+
+    pushUniqueChoice(createDoctrineChaseChoice(build, { nextWave, finalForge: false }));
+    pushUniqueChoice(createWeaponEvolutionChoice(build, { nextWave, finalForge: false }));
+    pushUniqueChoice(createBastionDraftSpikeChoice(build, random, nextWave));
+    sortChoicesForDoctrine(choices, doctrine);
+    pushUniqueChoice(createBastionDraftPactChoice());
+    if (choices.length < 3) {
+      pushUniqueChoice({
+        type: "fallback",
+        id: "bastion:holdfire",
+        tag: "무료",
+        title: "Holdfire Purge",
+        description: "열을 크게 빼고 체력을 조금 회복한 뒤, 필수 섀시 breakpoint 두 번째 픽으로 넘어간다.",
+        slotText: "무료 안정화 · breakpoint 유지",
+        cost: 0,
+        laneLabel: "안정화",
+        forgeLaneLabel: "안정화",
+      });
+    }
+    return choices.slice(0, 3);
+  }
+
+  function buildWave6ChassisBreakpointChoices(build, rng, nextWave, excludedChoiceIds = null) {
+    if (!build) {
+      return [];
+    }
+    const random = typeof rng === "function" ? rng : Math.random;
+    const doctrine = getBastionDoctrineDef(build);
+    const preferredSystemIds = new Set(getDoctrinePreferredSystemIds(doctrine));
+    const expandedBuild = {
+      ...build,
+      supportBayCap: Math.min(MAX_SUPPORT_BAY_LIMIT, Math.max(getSupportBayCapacity(build), MAX_SUPPORT_BAYS + 1)),
+      auxiliaryJunctionLevel: Math.max(1, Math.round(build.auxiliaryJunctionLevel || 0)),
+    };
+    const excludedIds = new Set(
+      excludedChoiceIds instanceof Set
+        ? Array.from(excludedChoiceIds)
+        : Array.isArray(excludedChoiceIds)
+          ? excludedChoiceIds
+          : []
+    );
+    const installChoices = createSupportSystemChoices(expandedBuild, random, {
+      nextWave,
+      finalForge: false,
+    })
+      .filter((choice) => choice && choice.bayAction === "install" && !excludedIds.has(choice.id));
+    const wildcardChoices = installChoices.filter((choice) => !preferredSystemIds.has(choice.systemId));
+    const doctrineChoices = installChoices.filter((choice) => preferredSystemIds.has(choice.systemId));
+    sortChoicesForDoctrine(wildcardChoices, doctrine);
+    sortChoicesForDoctrine(doctrineChoices, doctrine);
+    const ordered = [];
+    const takenIds = new Set();
+    const pushChoice = (choice) => {
+      if (!choice || takenIds.has(choice.id)) {
+        return;
+      }
+      takenIds.add(choice.id);
+      ordered.push(choice);
+    };
+    pushChoice(wildcardChoices[0]);
+    pushChoice(doctrineChoices[0]);
+    [...wildcardChoices.slice(1), ...doctrineChoices.slice(1)].forEach(pushChoice);
+    const chassisChoices = ordered.slice(0, 3).map((choice) => ({
+      type: "utility",
+      action: "bastion_bay_forge",
+      id: `utility:bastion_chassis_break:${choice.systemId}`,
+      verb: "접합",
+      tag: "BAY",
+      title: choice.title,
+      description: `섀시 breakpoint로 세 번째 support bay를 즉시 열고 ${choice.title}을(를) 교리 reserve를 무시하는 flex lane에 직결한다. ${choice.description} Wave 8에서는 정지 없이 네 번째 bay까지 자동 uplink되어 Late Break Armory를 건너뛴다.`,
+      slotText: `섀시 breakpoint · flex lane · ${choice.slotText}`,
+      cost: Math.max(12, Math.round((choice.cost || 0) * 0.7)),
+      originalCost: choice.cost || 0,
+      laneLabel: "섀시 breakpoint",
+      forgeLaneLabel: "섀시 breakpoint",
+      bayUnlock: true,
+      systemChoice: choice,
+      skipNextAdminStop: true,
+    }));
+    if (chassisChoices.length > 0) {
+      return chassisChoices;
+    }
+    return [{
+      type: "utility",
+      action: "bastion_bay_forge",
+      id: "utility:bastion_chassis_break:flex_unlock",
+      verb: "접합",
+      tag: "BAY",
+      title: "Wildcard Relay",
+      description:
+        "세 번째 support bay를 즉시 열고 교리 reserve와 무관한 flex lane 1칸을 확보한다. Wave 8에서는 전장 정지 없이 네 번째 bay까지 자동 uplink되어 ownership bracket을 이어 간다.",
+      slotText: "섀시 breakpoint · flex bay 즉시 개방",
+      cost: 0,
+      laneLabel: "섀시 breakpoint",
+      forgeLaneLabel: "섀시 breakpoint",
+      bayUnlock: true,
+      skipNextAdminStop: true,
+    }];
+  }
+
   function buildBastionDraftChoices(build, rng, nextWave) {
     if (nextWave === 6 && build && build.bastionDoctrineId) {
-      const weaponMutationChoice =
-        createWeaponEvolutionChoice(build, { nextWave, finalForge: false }) ||
-        createBastionDraftSpikeChoice(build, rng, nextWave);
-      const systemsForgeChoice = createBastionSystemsForgeChoice(build, rng, nextWave);
-      return [weaponMutationChoice, systemsForgeChoice, createBastionDraftPactChoice()].filter(Boolean);
+      return buildWave6BreakpointPrimaryChoices(build, rng, nextWave);
     }
     const spikeChoice = build && build.bastionDoctrineId
       ? createDoctrineChaseChoice(build, { nextWave, finalForge: false }) ||
@@ -6364,17 +6483,20 @@
 
   function enterBastionDraft() {
     const nextWave = state.waveIndex + 2;
+    const wave6ChassisDraft = nextWave === 6 && state.build && state.build.bastionDoctrineId;
     state.phase = "forge";
     state.pendingFinalForge = false;
     state.forgeStep = 1;
-    state.forgeMaxSteps = 1;
+    state.forgeMaxSteps = wave6ChassisDraft ? 2 : 1;
     state.forgeDraftType = "bastion_draft";
     state.forgeChoices = buildBastionDraftChoices(state.build, Math.random, nextWave);
     pushCombatFeed(
-      `Bastion Draft 개시. ${getBastionDraftIntroText(state.build)}`,
+      wave6ChassisDraft
+        ? "Wave 6 Chassis Breakpoint 개시. 먼저 중반 spike 또는 greed를 1픽으로 잠근 뒤, 즉시 열린 flex bay에 넣을 subsystem 1픽을 추가로 강제한다. 이 선택이 끝나면 Late Break Armory를 건너뛰고 Wave 6-9 bracket을 연속 전투로 밀어붙인다."
+        : `Bastion Draft 개시. ${getBastionDraftIntroText(state.build)}`,
       "DRAFT"
     );
-    setBanner("Bastion Draft", 0.95);
+    setBanner(wave6ChassisDraft ? "Chassis Breakpoint" : "Bastion Draft", 0.95);
     renderForgeOverlay();
     updateHUD();
   }
@@ -6695,7 +6817,14 @@
     if (choice.type === "utility" && choice.action === "bastion_bay_forge") {
       if (choice.bayUnlock) {
         applyAuxiliaryJunction(run.build);
-        run.build.upgrades.push("Auxiliary Junction: support bay +1 now, reserve Wave 8 bay");
+        run.build.upgrades.push(
+          choice.skipNextAdminStop
+            ? "Chassis Breakpoint: flex bay +1 now, auto Wave 8 uplink"
+            : "Auxiliary Junction: support bay +1 now, reserve Wave 8 bay"
+        );
+        if (choice.skipNextAdminStop) {
+          run.build.wave6ChassisBreakpoint = true;
+        }
       }
       if (choice.systemChoice) {
         applyForgeChoice(run, {
@@ -6832,11 +6961,13 @@
     buildArchitectureDraftChoices,
     buildFieldGrantChoices,
     buildBastionDraftChoices,
+    buildWave6ChassisBreakpointChoices,
     buildCatalystDraftChoices,
     applyForgeChoice,
     getSupportBayCapacity,
     doctrineAllowsSystemInstall,
     unlockLateSupportBay,
+    shouldSkipOwnershipAdminStop,
     shouldUseFieldGrant,
     shouldRunCatalystDraft,
     getDoctrineWeaponForm,
@@ -8219,10 +8350,15 @@
     if (!choice) {
       return;
     }
+    const wave6ChassisDraft =
+      state.forgeDraftType === "bastion_draft" &&
+      state.build &&
+      state.build.bastionDoctrineId &&
+      state.waveIndex + 2 === 6;
     const instantDraft =
       state.forgeDraftType === "architecture_draft" ||
       state.forgeDraftType === "field_grant" ||
-      state.forgeDraftType === "bastion_draft" ||
+      (state.forgeDraftType === "bastion_draft" && (!wave6ChassisDraft || state.forgeStep > 1)) ||
       state.forgeDraftType === "catalyst_draft";
     if (state.resources.scrap < choice.cost) {
       setBanner("고철 부족", 0.8);
@@ -8233,6 +8369,24 @@
       state.stats.scrapSpent += choice.cost;
     }
     applyForgeChoice(state, choice);
+    if (wave6ChassisDraft && state.forgeStep === 1) {
+      state.forgeStep = 2;
+      state.forgeMaxSteps = 2;
+      state.forgeChoices = buildWave6ChassisBreakpointChoices(
+        state.build,
+        Math.random,
+        state.waveIndex + 2,
+        [choice.systemChoice ? choice.systemChoice.id : null]
+      );
+      pushCombatFeed(
+        `${choice.tag} · ${choice.title} 잠금. 이제 즉시 열린 flex bay에 꽂을 subsystem 1장을 더 골라야 한다. 이 선택이 끝나면 Wave 8 Late Break Armory는 자동 uplink로 대체된다.`,
+        "DRAFT"
+      );
+      refreshDerivedStats(false);
+      renderForgeOverlay();
+      updateHUD();
+      return;
+    }
     if (instantDraft) {
       const grantLabel = choice.forgeLaneLabel || choice.laneLabel || choice.tag || "CACHE";
       pushCombatFeed(
@@ -8246,7 +8400,9 @@
             : choice.action === "bastion_pact"
               ? `${grantLabel} 적용. 최대 체력을 깎아 고철을 쥔 대신 3웨이브 Siege Debt를 떠안고 다음 웨이브를 연다.`
               : choice.action === "bastion_bay_forge"
-                ? `${grantLabel} 적용. 세 번째 support bay를 즉시 열고 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 먼저 장착한 채, Wave 8 네 번째 bay까지 예약하고 다음 웨이브를 연다.`
+                ? choice.skipNextAdminStop
+                  ? `${grantLabel} 적용. 세 번째 support bay를 flex lane으로 즉시 열고 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 장착했다. Wave 8에서는 정지 없이 네 번째 bay가 자동 uplink되어 Wave 6-9 bracket을 그대로 이어 간다.`
+                  : `${grantLabel} 적용. 세 번째 support bay를 즉시 열고 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 먼저 장착한 채, Wave 8 네 번째 bay까지 예약하고 다음 웨이브를 연다.`
                 : choice.action === "bastion_doctrine"
                 ? `${choice.doctrineLabel} 적용. 즉시 ${choice.doctrineChoice ? choice.doctrineChoice.title : "spike"}를 확보하고 이후 포지를 해당 교리 쪽으로 기울인 채 다음 웨이브를 연다.`
               : `${grantLabel} 적용. 고철 ${choice.cost}을 태워 ${choice.title}을 일찍 확보하고 다음 웨이브를 강행한다.`
@@ -10674,6 +10830,8 @@
           ? "결과 패널"
           : state.wave.skipForgeOnClear
             ? `Wave ${nextWave}`
+          : shouldSkipOwnershipAdminStop(state.build, nextWave)
+            ? `Wave ${nextWave}`
           : shouldRunActBreakArmory({ nextWave, finalForge: false })
             ? getArmoryLabel({ nextWave })
             : shouldRunBastionDraft({ nextWave, finalForge: false })
@@ -10699,6 +10857,21 @@
           finishRun(true);
         } else if (state.wave.skipForgeOnClear) {
           beginNextPostCapstoneWave();
+        } else if (shouldSkipOwnershipAdminStop(state.build, state.waveIndex + 2)) {
+          const unlocked = unlockLateSupportBay(state.build);
+          if (unlocked) {
+            state.build.upgrades.push("Ownership Relay: Wave 8 bay uplink without armory stop");
+          }
+          pushCombatFeed(
+            unlocked
+              ? state.build.auxiliaryJunctionLevel > 0
+                ? "Wave 8 돌파. Ownership Relay가 네 번째 support bay와 두 번째 교리 우회 flex lane을 전장 정지 없이 연결한다. Late Break Armory는 건너뛰고 Wave 9로 바로 진입한다."
+                : "Wave 8 돌파. Ownership Relay가 세 번째 support bay와 교리 우회 flex lane을 전장 정지 없이 연결한다. Late Break Armory는 건너뛰고 Wave 9로 바로 진입한다."
+              : "Wave 8 돌파. Late Break Armory를 생략하고 ownership bracket을 유지한 채 Wave 9로 바로 진입한다.",
+            "ARMORY"
+          );
+          refreshDerivedStats(false);
+          beginWave(state.waveIndex + 1);
         } else if (shouldRunArchitectureDraft({ nextWave: state.waveIndex + 2, finalForge: false })) {
           enterArchitectureDraft();
         } else if (shouldRunBastionDraft({ nextWave: state.waveIndex + 2, finalForge: false })) {
@@ -11073,6 +11246,11 @@
       build: state.build,
     };
     const armoryLabel = getArmoryLabel(forgeOptions);
+    const wave6ChassisDraft =
+      state.forgeDraftType === "bastion_draft" &&
+      state.build &&
+      state.build.bastionDoctrineId &&
+      state.waveIndex + 2 === 6;
     const packageSummary =
       state.forgeDraftType === "architecture_draft"
         ? "Architecture Draft · 세 장기 교리 중 1픽, 주무장 재배선 + starter subsystem 무료 설치로 Wave 3부터 최종 교리 monster를 먼저 보여준다"
@@ -11080,10 +11258,10 @@
         ? "Field Cache · 할인 장착 2장과 무료 회수 1장 중 1픽, 지금 고철을 태울지 아낄지 고른다"
         : state.forgeDraftType === "bastion_draft"
         ? state.build.bastionDoctrineId
-          ? state.build.overcommitUnlocked && !state.build.doctrineChaseClaimed
-            ? "Bastion Draft · 회수한 contraband salvage를 장기 Forge Pursuit 계약으로 바꾸거나, 계약/안정화로 greed를 접는다"
-            : state.waveIndex + 2 === 6
-              ? "Systems Forge · 무기 변이, 영구 섀시 확장, 3웨이브 Siege Debt greed 계약 중 1픽으로 Act 2 중반의 빌드 폭을 직접 비튼다"
+          ? wave6ChassisDraft
+            ? `Chassis Breakpoint ${state.forgeStep}/${state.forgeMaxSteps} · 1픽으로 중반 spike나 greed를 잠근 뒤, 2픽으로 교리 free flex subsystem을 즉시 접합하고 Wave 8 Late Break Armory를 건너뛴다`
+            : state.build.overcommitUnlocked && !state.build.doctrineChaseClaimed
+              ? "Bastion Draft · 회수한 contraband salvage를 장기 Forge Pursuit 계약으로 바꾸거나, 계약/안정화로 greed를 접는다"
             : "Bastion Draft · 기존 교리 위에 추가 spike 또는 고통 계약을 더 얹어 Act 2 greed를 강제한다"
           : "Bastion Draft · 시그니처 교리 1장, 고통 계약 1장, 무료 안정화 1장 중 1픽으로 Act 2 posture를 기울이고 late wildcard bay를 예고한다"
         : state.forgeDraftType === "catalyst_draft"
@@ -11109,10 +11287,12 @@
         ? `고철 ${Math.round(state.resources.scrap)} 보유. Field Cache다. 할인된 즉시 장착 2장과 무료 Emergency Vent 중 하나를 고른다. 지금 스파이크를 사서 당길지, 고철을 쥐고 다음 큰 포지까지 버틸지 직접 판단해야 한다.`
         : state.forgeDraftType === "bastion_draft"
         ? state.build.bastionDoctrineId
-          ? state.build.overcommitUnlocked && !state.build.doctrineChaseClaimed
-            ? `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. Wave 5에서 회수한 contraband salvage가 살아 있어 장기 Forge Pursuit 계약이 열렸다. 지금 pursuit를 걸고 Wave 6-8 marked elite에서 shard를 모아 조기 monster form을 즉시 잠글지, Siege Salvage Pact나 무료 안정화로 greed를 접을지 정한다.`
-            : state.waveIndex + 2 === 6
-              ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 6 Systems Forge다. 한 장은 주무장 변이를 바로 당겨 중반 화력 실루엣을 바꾸고, 한 장은 보조 섀시를 영구 증설해 세 번째 support bay를 즉시 열면서 Wave 8까지 네 번째 bay와 최소 한 칸의 flex lane까지 보장하며, 마지막 한 장은 최대 체력과 현재 체력을 태워 고철을 훔쳐 온 뒤 3웨이브 동안 Siege Debt를 떠안는 계약이다. 지금 무기, 시스템, greed 중 무엇으로 Act 2를 비틀지 정한다.`
+          ? wave6ChassisDraft
+            ? state.forgeStep === 1
+              ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 6 Chassis Breakpoint 1/2다. 먼저 주무장 spike, 교리 pursuit/spike, 또는 Siege Salvage Pact 중 하나를 잠근다. 이 픽 뒤에는 즉시 flex subsystem 1장을 강제로 접합하고, Wave 8 Late Break Armory는 자동 uplink로 대체된다.`
+              : `고철 ${Math.round(state.resources.scrap)} 보유. Wave 6 Chassis Breakpoint 2/2다. 지금 고르는 subsystem은 세 번째 support bay를 즉시 열면서 교리 reserve를 무시하는 flex lane에 장착된다. 이 선택이 끝나면 Wave 6-9 bracket은 추가 메뉴 정지 없이 이어진다.`
+            : state.build.overcommitUnlocked && !state.build.doctrineChaseClaimed
+              ? `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. Wave 5에서 회수한 contraband salvage가 살아 있어 장기 Forge Pursuit 계약이 열렸다. 지금 pursuit를 걸고 Wave 6-8 marked elite에서 shard를 모아 조기 monster form을 즉시 잠글지, Siege Salvage Pact나 무료 안정화로 greed를 접을지 정한다.`
             : `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 이미 채택한 교리 위에 추가 spike 1장과 Siege Salvage Pact, 무료 안정화가 다시 뜬다. 지금 더 깊게 묶일지, 체력을 태워 greed를 당길지 결정한다.`
           : `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 한 장은 시그니처 전용 교리라 즉시 spike를 확보하면서 초반 support bay와 이후 포지 후보를 한 계통 쪽으로 강하게 기울이고, Late Break Armory에서는 마지막 bay 1칸만 우회 조합용으로 풀어 준다. 한 장은 최대 체력을 깎고 고철을 당겨오는 Siege Salvage Pact, 마지막 한 장은 무료 안정화다. Act 2 posture를 잠글지, 더 아프게 탐욕할지 직접 정한다.`
         : state.forgeDraftType === "catalyst_draft"
@@ -11180,9 +11360,13 @@
                     : choice.action === "bastion_pact"
                       ? `${index + 1}번 선택 · 체력 대가 계약`
                       : choice.action === "bastion_bay_forge"
-                        ? `${index + 1}번 선택 · 시스템 + 베이 ${choice.cost}`
+                        ? wave6ChassisDraft
+                          ? `${index + 1}번 선택 · flex subsystem ${choice.cost}`
+                          : `${index + 1}번 선택 · 시스템 + 베이 ${choice.cost}`
                       : choice.cost > 0
-                        ? `${index + 1}번 선택 · spike 고철 ${choice.cost}`
+                        ? wave6ChassisDraft
+                          ? `${index + 1}번 선택 · breakpoint 고철 ${choice.cost}`
+                          : `${index + 1}번 선택 · spike 고철 ${choice.cost}`
                         : `${index + 1}번 선택 · 무료 안정화`
                 : state.forgeDraftType === "catalyst_draft"
                   ? choice.type === "fallback"

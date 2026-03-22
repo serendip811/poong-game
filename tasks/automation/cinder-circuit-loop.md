@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 23:59 KST
+  Findings:
+  - The run now has real breadth on paper, but it is still over-administered in play. `Architecture Draft`, `Field Cache`, `Bastion Draft / Systems Forge`, `Catalyst Crucible`, `Late Break Armory`, and the final forge keep interrupting momentum, so the player spends too much of a supposedly escalating action run in authored build menus instead of sustained combat ownership.
+  - Build variety is still more approved than discovered. Doctrine reserve rules, starter subsystem bias, and late flex release mean satellites, shields, missiles, orbitals, and utility pieces often enter as sanctioned lane-fillers rather than exciting cross-system combinations that make players chase a specific machine on the next run.
+  - The combat space is larger, but the late-game ask still leans too hard on route repair. `activeCap 41-49` plus repeated `relay / bastion / mortar / warden` overlap keeps asking "how do I reopen movement?" when a strong rerun game needs longer windows of "how do I exploit the absurd thing I built?"
+  - Post-capstone ownership exists now, but it is still too samey across builds. Different doctrines get different labels and some different wave variants, yet Act 3 and the afterburn bracket still read more like alternate maintenance exams than distinct payoff fantasies with their own pressure patterns and movement incentives.
+  Top Priority: Replace the current `Wave 6 Systems Forge` with a mandatory two-pick chassis breakpoint that always grants one doctrine-free subsystem slot immediately, then skip the next admin stop so `Wave 6-9` become an uninterrupted ownership bracket for the newly layered build.
+  Why Now: Until the middle of the run creates both real build layering and several waves to exploit it, extra systems and extra waves will keep reading as prototype administration.
+  Do Not Repeat: Do not answer this with another forge wrapper, more reserve text, or one more late flex unlock that still delays the fun until the run is nearly over.
+
 - 2026-03-22 23:58 KST
   Findings:
   - The new `3`-wave post-capstone ownership bracket is the right structural correction, but `createPostCapstoneWave()` still remixes `Wave 10-12` and the same territory/mortar/warden grammar. Finished builds now get a longer exam, not a meaningfully different kind of dominance.
@@ -701,6 +711,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-23 00:20 KST
+  Changed: replaced the old one-pick `Wave 6 Systems Forge` path in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) with a forced two-step `Chassis Breakpoint`. Doctrine runs now take one mid-run spike/greed pick first, then must take a second chassis pick that immediately opens a third `support bay` and installs a subsystem into a doctrine-free flex lane. I also wired that breakpoint to auto-skip the next guaranteed admin stop: when `Wave 8` ends, the game now performs an `Ownership Relay` uplink that grants the next bay without opening `Late Break Armory`, so `Wave 6-9` plays as one uninterrupted ownership bracket. The forge/HUD copy was updated to explain the new breakpoint and skip, and [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts the new two-step flow, immediate subsystem layering, and armory-skip flag.
+  Why: the latest critique’s Top Priority explicitly called for replacing `Wave 6 Systems Forge` with a mandatory two-pick chassis breakpoint that grants an immediate doctrine-free subsystem slot and skips the next admin stop. The highest-value bounded interpretation was to make `Wave 6` the irreversible layering point and convert `Wave 8 -> 9` from another menu beat into an automatic chassis uplink, because that buys actual mid-run ownership time instead of adding another wrapper around the same choices.
+  Follow-up risk: this solves pacing and mid-run subsystem freedom, but skipping `Late Break Armory` also removes a chunky Act 3 authored decision beat for these runs. If later critique says the bracket is freer but too flat, the next pass should add in-combat or post-wave micro-decisions during `Wave 6-9` rather than simply restoring another full forge stop.
 
 - 2026-03-22 10:14 KST
   Changed: rebuilt the `Wave 6` `Auxiliary Junction` path in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from a one-slot early unlock into a permanent chassis expansion. Taking the systems-forge lane now immediately opens a third `support bay`, stores an `auxiliaryJunctionLevel` flag, and guarantees a fourth bay when `Late Break Armory` opens at `Wave 8`; because doctrine wildcard allowance still scales from bay count, that chassis route now yields two off-doctrine flex lanes by Act 3 instead of just one cramped escape slot. I also rewrote the `Systems Forge`, `Late Break Armory`, HUD, and combat-feed copy so the run clearly sells this as a real offense/defense/utility mixing route rather than a temporary bay coupon, and updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new `3 -> 4` bay progression plus the expanded doctrine-flex allowance.

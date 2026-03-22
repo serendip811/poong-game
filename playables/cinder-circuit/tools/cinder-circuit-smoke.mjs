@@ -342,23 +342,39 @@ const bastionOvercommitChoices = game.buildBastionDraftChoices(
   6
 );
 assert.equal(bastionOvercommitChoices.length, 3);
-const systemsForgeChoice = bastionOvercommitChoices.find(
+const wave6PrimarySpikeChoice = bastionOvercommitChoices.find(
+  (choice) => choice.type === "evolution"
+)
+  || bastionOvercommitChoices.find(
+    (choice) =>
+      choice.type !== "utility" || (
+        choice.action !== "doctrine_chase" &&
+        choice.action !== "bastion_pact"
+      )
+);
+assert.ok(wave6PrimarySpikeChoice);
+game.applyForgeChoice(architectureRun, wave6PrimarySpikeChoice);
+const chassisBreakpointChoices = game.buildWave6ChassisBreakpointChoices(
+  architectureRun.build,
+  () => 0,
+  6
+);
+assert.equal(chassisBreakpointChoices.length, 3);
+const systemsForgeChoice = chassisBreakpointChoices.find(
   (choice) => choice.type === "utility" && choice.action === "bastion_bay_forge"
 );
-const wave6MutationChoice = bastionOvercommitChoices.find(
-  (choice) => choice.type === "evolution"
-);
 assert.ok(systemsForgeChoice);
-assert.ok(wave6MutationChoice);
-assert.equal(systemsForgeChoice.title, "Auxiliary Junction");
-assert.ok(systemsForgeChoice.cost > 0);
+assert.ok(systemsForgeChoice.cost >= 0);
+assert.equal(systemsForgeChoice.skipNextAdminStop, true);
 game.applyForgeChoice(architectureRun, systemsForgeChoice);
 assert.equal(game.getSupportBayCapacity(architectureRun.build), 3);
 assert.equal(architectureRun.build.auxiliaryJunctionLevel, 1);
-assert.ok(game.doctrineAllowsSystemInstall(architectureRun.build, "kiln_sentry"));
+assert.equal(architectureRun.build.wave6ChassisBreakpoint, true);
+assert.equal(architectureRun.build.supportSystems.length, 2);
 assert.ok(
-  architectureRun.build.upgrades.includes("Auxiliary Junction: support bay +1 now, reserve Wave 8 bay")
+  architectureRun.build.upgrades.includes("Chassis Breakpoint: flex bay +1 now, auto Wave 8 uplink")
 );
+assert.equal(game.shouldSkipOwnershipAdminStop(architectureRun.build, 9), true);
 assert.equal(game.unlockLateSupportBay(architectureRun.build), true);
 assert.equal(game.getSupportBayCapacity(architectureRun.build), 4);
 assert.ok(game.doctrineAllowsSystemInstall(architectureRun.build, "aegis_halo"));
