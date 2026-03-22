@@ -7399,6 +7399,19 @@
       return choice;
     }
 
+    if (choice.type === "utility" && choice.action === "catalyst_crucible_ascension") {
+      if (choice.mutationChoice) {
+        applyForgeChoice(run, choice.mutationChoice);
+      }
+      if (choice.systemsBetChoice) {
+        applyForgeChoice(run, {
+          ...choice.systemsBetChoice,
+          cost: 0,
+        });
+      }
+      return choice;
+    }
+
     if (choice.type === "utility" && choice.action === "cashout_support") {
       const support = FINAL_CASHOUT_SUPPORT_DEFS[choice.supportCoreId || run.build.coreId];
       if (!support) {
@@ -8206,9 +8219,121 @@
     };
   }
 
+  function createCatalystCrucibleSystemsBetChoice(build, systemIds, fallbackModId) {
+    if (!build) {
+      return null;
+    }
+    const installedSystems = getInstalledSupportSystems(build);
+    const installedMap = new Map(installedSystems.map((entry) => [entry.id, entry]));
+    const supportBayCap = getSupportBayCapacity(build);
+    for (const systemId of systemIds) {
+      if (!systemId) {
+        continue;
+      }
+      const installed = installedMap.get(systemId);
+      if (installed && installed.tier < MAX_SUPPORT_SYSTEM_TIER) {
+        return createSupportSystemTierChoice(systemId, installed.tier + 1);
+      }
+      if (
+        !installed &&
+        installedSystems.length < supportBayCap &&
+        isSupportSystemUnlocked(systemId, ACT3_CATALYST_DRAFT_WAVE)
+      ) {
+        return createSupportSystemTierChoice(systemId, 1);
+      }
+    }
+    return fallbackModId ? createModChoice(fallbackModId) : null;
+  }
+
+  function createCatalystCrucibleAscensionChoices(build) {
+    const mutationChoice = createCatalystCrucibleLiveChoice(build);
+    if (!mutationChoice) {
+      return [];
+    }
+    const doctrine = getBastionDoctrineDef(build);
+    const offensiveBet = createCatalystCrucibleSystemsBetChoice(
+      build,
+      doctrine && doctrine.id === "mirror_hunt"
+        ? ["volt_drones", "seeker_array"]
+        : doctrine && doctrine.id === "kiln_bastion"
+          ? ["seeker_array", "volt_drones"]
+          : ["seeker_array", "volt_drones"],
+      "shock_lens"
+    );
+    const defensiveBet = createCatalystCrucibleSystemsBetChoice(
+      build,
+      doctrine && doctrine.id === "kiln_bastion"
+        ? ["kiln_sentry", "aegis_halo", "ember_ring"]
+        : ["aegis_halo", "ember_ring", "kiln_sentry"],
+      "armor_mesh"
+    );
+    const mobilityBet =
+      createModChoice(doctrine && doctrine.id === "storm_artillery" ? "drive_sync" : "reactor_cap") ||
+      createModChoice("step_servos");
+    return [
+      {
+        type: "utility",
+        action: "catalyst_crucible_ascension",
+        id: `utility:catalyst_crucible_ascension:offense:${build.coreId}`,
+        verb: "splice",
+        tag: "SIEGE",
+        title: "Siege Splice",
+        description: `${mutationChoice.title}를 즉시 점화하고 ${
+          offensiveBet ? offensiveBet.title : "Shock Lens"
+        } bet까지 함께 묶는다. 남은 Act 3를 공격형 압박으로 밀어붙이지만 다른 splice lane은 이번 웨이브에서 닫힌다.`,
+        slotText: `Live Ascension · ${mutationChoice.capstoneLabel || mutationChoice.title} + ${
+          offensiveBet ? offensiveBet.title : "Shock Lens"
+        }`,
+        cost: 0,
+        laneLabel: "Catalyst Siege",
+        forgeLaneLabel: "Catalyst Siege",
+        mutationChoice,
+        systemsBetChoice: offensiveBet,
+      },
+      {
+        type: "utility",
+        action: "catalyst_crucible_ascension",
+        id: `utility:catalyst_crucible_ascension:defense:${build.coreId}`,
+        verb: "splice",
+        tag: "AEGIS",
+        title: "Bulwark Splice",
+        description: `${mutationChoice.title}를 즉시 점화하고 ${
+          defensiveBet ? defensiveBet.title : "Armor Mesh"
+        } 안정화 bet를 함께 건다. 화력은 그대로 뜯어 올리되 남은 bracket을 방호/거점 회로 위에서 버티게 만든다.`,
+        slotText: `Live Ascension · ${mutationChoice.capstoneLabel || mutationChoice.title} + ${
+          defensiveBet ? defensiveBet.title : "Armor Mesh"
+        }`,
+        cost: 0,
+        laneLabel: "Catalyst Bulwark",
+        forgeLaneLabel: "Catalyst Bulwark",
+        mutationChoice,
+        systemsBetChoice: defensiveBet,
+      },
+      {
+        type: "utility",
+        action: "catalyst_crucible_ascension",
+        id: `utility:catalyst_crucible_ascension:mobility:${build.coreId}`,
+        verb: "splice",
+        tag: "VECTOR",
+        title: "Vector Splice",
+        description: `${mutationChoice.title}를 즉시 점화하고 ${
+          mobilityBet ? mobilityBet.title : "Reactor Cap"
+        } 기동 bet를 함께 잠근다. 몸체는 금이 가지만 대시/drive 쪽 여유를 벌려 위험 구간을 더 길게 소모하게 만든다.`,
+        slotText: `Live Ascension · ${mutationChoice.capstoneLabel || mutationChoice.title} + ${
+          mobilityBet ? mobilityBet.title : "Reactor Cap"
+        }`,
+        cost: 0,
+        laneLabel: "Catalyst Vector",
+        forgeLaneLabel: "Catalyst Vector",
+        mutationChoice,
+        systemsBetChoice: mobilityBet,
+      },
+    ];
+  }
+
   function deployCatalystCrucibleObjective() {
-    const liveChoice = createCatalystCrucibleLiveChoice(state.build);
-    if (!liveChoice) {
+    const choices = createCatalystCrucibleAscensionChoices(state.build).filter(Boolean);
+    if (choices.length === 0) {
       resetCatalystCrucibleState(state);
       return;
     }
@@ -8222,11 +8347,11 @@
     spawnHazard({
       ...CATALYST_CRUCIBLE_OBJECTIVE,
       type: "territory",
-      liveChoice,
+      liveChoices: choices,
       objectiveTag: "catalyst_crucible",
     });
     pushCombatFeed(
-      "Catalyst Crucible 활성화. Wave 10 forge 정지를 없애는 대신, 붉은 점거 코어를 직접 깨고 점화 cache를 회수해야 Act 3 주무장이 즉시 변이한다. 성공하면 강해지지만 몸체 안정성이 영구로 찢어진다.",
+      "Catalyst Crucible 활성화. 붉은 점거 코어를 직접 깨면 세 개의 ascension cache가 흩어진다. 하나만 집는 순간 촉매 변이와 systems bet가 같이 잠기고, 나머지 splice lane은 즉시 닫힌다.",
       "MOLT"
     );
     setBanner("Catalyst Crucible", 0.95);
@@ -10321,20 +10446,30 @@
     hazard.telegraphTime = 0;
     hazard.activeTime = 0;
     if (reason === "destroyed") {
-      if (hazard.objectiveTag === "catalyst_crucible" && hazard.liveChoice) {
-        state.drops.push({
-          kind: "catalyst_crucible_cache",
-          x: hazard.x,
-          y: hazard.y,
-          life: CATALYST_CRUCIBLE_DROP_LIFE,
-          choice: hazard.liveChoice,
+      if (
+        hazard.objectiveTag === "catalyst_crucible" &&
+        Array.isArray(hazard.liveChoices) &&
+        hazard.liveChoices.length > 0
+      ) {
+        const groupId = `catalyst-crucible-${state.waveIndex + 1}-${state.stats.kills}`;
+        const spreadRadius = hazard.liveChoices.length === 1 ? 0 : 42;
+        hazard.liveChoices.forEach((choice, index) => {
+          const angle = (index / hazard.liveChoices.length) * Math.PI * 2 - Math.PI / 2;
+          state.drops.push({
+            kind: "catalyst_crucible_cache",
+            x: hazard.x + Math.cos(angle) * spreadRadius,
+            y: hazard.y + Math.sin(angle) * spreadRadius,
+            life: CATALYST_CRUCIBLE_DROP_LIFE,
+            choice,
+            groupId,
+          });
         });
         if (state.catalystCrucible) {
           state.catalystCrucible.status = "ignite";
           state.catalystCrucible.cacheDropped = true;
         }
         pushCombatFeed(
-          `${hazard.label} 균열. 점화 cache를 직접 회수하면 ${hazard.liveChoice.title}가 즉시 접합된다.`,
+          `${hazard.label} 균열. 세 갈래 ascension cache가 흩어졌다. 하나만 회수하면 촉매 변이와 systems bet가 함께 잠기고 나머지 splice는 닫힌다.`,
           "MOLT"
         );
       }
@@ -10364,7 +10499,7 @@
       state.catalystCrucible.active = false;
       state.catalystCrucible.status = "failed";
       pushCombatFeed(
-        "Catalyst Crucible이 식었다. 이번 웨이브 변이는 놓쳤지만 촉매는 마지막 포지까지 보관된다.",
+        "Catalyst Crucible이 식었다. 이번 웨이브 splice 셋은 놓쳤지만 촉매는 마지막 포지까지 보관된다.",
         "MOLT"
       );
     }
@@ -12241,7 +12376,7 @@
           state.catalystCrucible.active = false;
           state.catalystCrucible.status = "failed";
           pushCombatFeed(
-            "Catalyst cache가 식었다. 변이는 놓쳤고 촉매는 마지막 포지까지 남는다.",
+            "Catalyst splice cache가 식었다. 이번 웨이브 변이와 systems bet는 놓쳤고 촉매는 마지막 포지까지 남는다.",
             "MOLT"
           );
         }
@@ -12354,8 +12489,17 @@
         state.catalystCrucible.status = "claimed";
         state.catalystCrucible.cacheCollected = true;
       }
+      state.drops.forEach((entry) => {
+        if (entry.kind === "catalyst_crucible_cache" && entry.groupId === drop.groupId) {
+          entry.life = 0;
+        }
+      });
       pushCombatFeed(
-        `${choice.title} 접합. 주무장이 즉시 Act 3 capstone form으로 바뀌었고, 몸체는 무리한 점화 대가를 영구로 감수한다.`,
+        `${choice.title} 접합. ${
+          choice.mutationChoice ? choice.mutationChoice.title : "촉매 변이"
+        }와 ${
+          choice.systemsBetChoice ? choice.systemsBetChoice.title : "systems bet"
+        }가 함께 잠겨 남은 Act 3를 이 방향으로만 밀어붙이게 된다.`,
         "MOLT"
       );
       setBanner(choice.title, 0.85);
@@ -13048,16 +13192,16 @@
           createStatusRow("Mutation", `${CATALYST_REFORGE_DEFS[state.build.coreId].label} live`)
         );
         catalystCrucibleNote = state.catalystCrucible.cacheDropped
-          ? "붕괴한 코어 자리의 점화 cache를 직접 주워야 즉시 변이가 잠긴다. 놓치면 이번 웨이브 보상은 사라진다."
-          : "Catalyst Crucible 코어를 먼저 찢어야 한다. 점거 구역 안으로 깊게 들어갈수록 즉시 변이와 실패 리스크가 같이 커진다.";
+          ? "붕괴한 코어 자리에서 세 개의 splice cache 중 하나를 직접 주워야 즉시 변이와 systems bet가 함께 잠긴다. 하나를 집는 순간 나머지 둘은 닫힌다."
+          : "Catalyst Crucible 코어를 먼저 찢어야 한다. 점거 구역 안으로 깊게 들어갈수록 세 갈래 ascension cache와 실패 리스크가 같이 커진다.";
       } else if (state.catalystCrucible.status === "claimed") {
         catalystCrucibleRows.push(createStatusRow("Crucible", "claimed"));
         catalystCrucibleRows.push(createStatusRow("Mutation", "live"));
-        catalystCrucibleNote = "전장 점화 성공. 남은 웨이브는 capstone form으로 싸우지만 몸체는 영구 손상을 안고 간다.";
+        catalystCrucibleNote = "전장 점화 성공. 남은 웨이브는 capstone form과 잠근 systems bet 위에서만 전개되며 몸체는 영구 손상을 안고 간다.";
       } else if (state.catalystCrucible.status === "failed") {
         catalystCrucibleRows.push(createStatusRow("Crucible", "failed"));
         catalystCrucibleRows.push(createStatusRow("Mutation", "held"));
-        catalystCrucibleNote = "이번 웨이브 live ignition은 놓쳤다. 촉매는 마지막 포지까지 들고 간다.";
+        catalystCrucibleNote = "이번 웨이브 live splice는 놓쳤다. 촉매는 마지막 포지까지 들고 가지만 Act 3의 독점 systems bet는 사라졌다.";
       }
       elements.waveObjective.innerHTML = `
         <div class="summary-head">

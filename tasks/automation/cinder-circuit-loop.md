@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 23:59:59 KST
+  Findings:
+  - The run keeps selling ambition through labels instead of play. `Architecture Draft`, `Wave 6 Bastion Draft`, `Chassis Breakpoint`, `Late Break Armory`, `Catalyst Crucible`, and the final forge still break the climb into too many explained checkpoints, so repeat runs risk feeling authored rather than fought for.
+  - The structure is still not honest about its endgame. `Act 3` peaks around `activeCap 41-49`, then `Act 4 · Afterburn` falls back onto `FINAL_CASHOUT_DURATION = 12` and `FINAL_CASHOUT_SPAWN_BUDGET = 26`, which makes the supposed payoff phase feel like a short epilogue instead of the start of dangerous late-run territory.
+  - Build variety exists, but too much of the visible power still lives in support hardware timing and bay unlocks. When `MAX_SUPPORT_BAYS = 2` until late and major excitement comes from satellites, missiles, drones, shields, and sentries, the player is still too often finishing a helper stack rather than becoming a terrifying machine to pilot.
+  - The design doc is still dragging the implementation backward. A live game now built around multi-act escalation and late-form mutations is still documented as a `7분 내외`, `5웨이브` short run, and that prototype contract is still visible in how often the loop chooses closure over extension.
+  Top Priority: Cut one full mid/late forge interruption and replace it with an in-combat ascension layer that unlocks a major weapon/body mutation plus one mutually exclusive systems bet, then let the run continue for several waves at `Wave 12` pressure or higher.
+  Why Now: Until the strongest form arrives earlier and survives longer under real pressure, the game cannot build rerun hunger.
+  Do Not Repeat: Do not answer this with another named draft, another guaranteed bay unlock, or another support-only capstone disguised as depth.
+
 - 2026-03-22 23:59 KST
   Findings:
   - The run is no longer just too short; it is too accommodating. `Wave 9-12` doctrine variants increasingly tailor the battlefield to the chosen doctrine, so the player is often taking a curated exam their build was already designed to pass instead of forcing that build to survive a shared hostile ecology.
@@ -843,6 +853,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-23 02:39 KST
+  Changed: upgraded the existing live `Catalyst Crucible` lane in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from a single guaranteed capstone pickup into a true exclusive ascension branch. Breaking the crucible core now spills three separate `splice` caches in combat, and each one bundles the same catalyst weapon/body mutation with a different locked systems bet: an offensive siege package, a defensive bulwark package, or a mobility/vector package. Claiming one cache now clears the others, updates the combat/HUD text to sell the irreversible bet, and leaves the run on the same uninterrupted `Wave 10+` combat path rather than adding any new menu stop. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique’s Top Priority asked for one mid/late interruption to become an in-combat ascension that grants a major mutation plus a mutually exclusive systems commitment. The highest-value bounded interpretation was to deepen the already-live `Catalyst Crucible` objective instead of inventing another screen, because the combat lane already replaced the stop structurally but still lacked the branch appetite and denial pressure the critique was pushing for.
+  Follow-up risk: this makes the Act 3 live mutation more rerunnable, but the three crucible bets still piggyback on existing support/mod packages rather than bespoke body rules, so one option may emerge as the obvious default after repetition. If critique keeps pressing on late-run identity, the next bounded step should make each crucible splice bend post-claim combat behavior more sharply instead of only attaching a stronger package.
 
 - 2026-03-23 02:24 KST
   Changed: removed the doctrine-specific `Wave 9-12` battlefield swaps in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and replaced them with one shared late-act encounter pool that every doctrine now resolves through the same `resolveWaveConfig()` path. `Mirror Hunt`, `Kiln Bastion`, and `Storm Artillery` no longer receive bespoke late-wave labels, hazard families, or enemy mixes tailored to their strengths; instead they all face the same reinforced `Lockgrid -> Ember Lattice -> Starforge -> Cinder Crown` bracket, with slightly harsher mixed-threat tuning so the player’s weapon/body form has to solve a common hostile ecology rather than a curated doctrine exam. I also rewrote [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert cross-doctrine equality for `Wave 9-12` configs and the preserved/shared hazard progression. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
