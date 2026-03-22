@@ -2131,6 +2131,32 @@ const waveSummary = game.WAVE_CONFIG.map((wave) => ({
   hazard: wave.hazard ? wave.hazard.label : "none",
 }));
 
+const lateBreakBuild = game.createInitialBuild("scrap_pact");
+lateBreakBuild.bastionDoctrineId = "kiln_bastion";
+const lateBreakChoices = game.buildForgeChoices(lateBreakBuild, () => 0, 999, {
+  nextWave: 9,
+  finalForge: false,
+  packageStep: 1,
+});
+assert.equal(lateBreakChoices.length, 6);
+assert.ok(lateBreakChoices.some((choice) => choice.title === "Breakline Arsenal"));
+assert.ok(lateBreakChoices.some((choice) => choice.title === "Warplate Halo"));
+assert.ok(lateBreakChoices.some((choice) => choice.title === "Black Ledger Promissory"));
+const lateBreakMutation = lateBreakChoices.find((choice) => choice.title === "Breakline Arsenal");
+const lateBreakDefense = lateBreakChoices.find((choice) => choice.title === "Warplate Halo");
+const lateBreakGreed = lateBreakChoices.find((choice) => choice.title === "Black Ledger Promissory");
+assert.equal(lateBreakMutation.laneLabel, "Main Weapon Mutation");
+assert.equal(lateBreakDefense.laneLabel, "Defense / Utility");
+assert.equal(lateBreakGreed.laneLabel, "Greed Contract");
+const lateBreakRun = {
+  build: lateBreakBuild,
+  resources: { scrap: 0 },
+  stats: { scrapCollected: 0, scrapSpent: 0 },
+  player: { hp: 100, maxHp: 100, heat: 0, overheated: false },
+};
+game.applyForgeChoice(lateBreakRun, lateBreakGreed);
+assert.equal(lateBreakRun.build.blackLedgerRaidWaves, 2);
+
 console.log("cinder-circuit smoke ok");
 console.table(waveSummary);
 console.log({

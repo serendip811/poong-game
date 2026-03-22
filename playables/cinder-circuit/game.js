@@ -6896,6 +6896,13 @@
     const supportSystemChoices = shouldOfferSupportSystem(build, options)
       ? createSupportSystemChoices(build, random, options)
       : [];
+    const lateBreakTriadChoices = isLateBreakArmory(options)
+      ? [
+          createLateBreakMutationChoice(build, options && options.nextWave),
+          createLateBreakAegisChoice(build, options && options.nextWave),
+          createLateBreakGreedContractChoice(build, options && options.nextWave),
+        ].filter(Boolean)
+      : [];
     const currentAffixIds = sanitizeAffixIds(build.affixes, getAffixCapacity(build));
     const offensiveModChoices = shuffle(
       ["shock_lens", "pulse_gate", "arc_array", "rail_sleeve"]
@@ -6956,6 +6963,20 @@
     const primarySpikePool = [...evolutionCandidates, ...offensiveModuleCandidates, ...offensiveSpikeCandidates];
     const hedgePool = [...subsystemCandidates, ...chassisCandidates];
     const flexPool = [...primarySpikePool, ...hedgePool];
+    lateBreakTriadChoices.forEach((choice) => {
+      if (!choice || takenIds.has(choice.id)) {
+        return;
+      }
+      takenIds.add(choice.id);
+      choices.push(choice);
+    });
+    if (isLateBreakArmory(options) && doctrineCapstoneChoices.length > 0) {
+      const apexChoice = doctrineCapstoneChoices[0];
+      if (apexChoice && !takenIds.has(apexChoice.id)) {
+        takenIds.add(apexChoice.id);
+        choices.push(markForgeLane(apexChoice, apexChoice.laneLabel || "Doctrine Apex"));
+      }
+    }
     [
       takeArmoryChoice(evolutionCandidates, takenIds, "주무장 진화"),
       takeArmoryChoice(offensiveModuleCandidates, takenIds, "공세 모듈"),
@@ -7639,6 +7660,83 @@
       maxHpPenalty: breakpointWave ? 12 : 10 + Math.floor(waveScale / 2),
       debtWaves: 2,
       blackLedgerRaidWaves: breakpointWave ? 1 : 0,
+    };
+  }
+
+  function createLateBreakMutationChoice(build, nextWave) {
+    if (!build || !Number.isFinite(nextWave) || nextWave < LATE_BREAK_ARMORY_WAVE) {
+      return null;
+    }
+    const nextLevel = Math.min(
+      MAX_LATE_FIELD_MUTATION_LEVEL,
+      Math.max(2, getLateFieldMutationLevel(build) + 2)
+    );
+    const barrelCount = Math.min(6, 2 + nextLevel);
+    return {
+      type: "utility",
+      action: "field_mutation",
+      id: `utility:latebreak_mutation:${build.coreId}:${nextWave}:${nextLevel}`,
+      verb: "변이",
+      tag: "ARSENAL",
+      title: "Breakline Arsenal",
+      description: `${CORE_DEFS[build.coreId].label}에 측면 배럴과 과열 보조 포문을 한 번에 증설해 Act 3 입장부터 ${getLateFieldMutationTierLabel(nextLevel)} 화망으로 뛰어오른다. 이후 Wave 10 cache는 이 변이 위에 추가 증설만 남는다.`,
+      slotText: `추가 배럴 +${barrelCount} · Act 3 opening spike`,
+      cost: 34,
+      laneLabel: "Main Weapon Mutation",
+      forgeLaneLabel: "Main Weapon Mutation",
+      lateFieldMutationLevel: nextLevel,
+    };
+  }
+
+  function createLateBreakAegisChoice(build, nextWave) {
+    if (!build || !Number.isFinite(nextWave) || nextWave < LATE_BREAK_ARMORY_WAVE) {
+      return null;
+    }
+    const nextLevel = Math.min(
+      MAX_LATE_FIELD_AEGIS_LEVEL,
+      Math.max(2, getLateFieldAegisLevel(build) + 2)
+    );
+    return {
+      type: "utility",
+      action: "field_aegis",
+      id: `utility:latebreak_aegis:${nextWave}:${nextLevel}`,
+      verb: "장착",
+      tag: "HALO",
+      title: "Warplate Halo",
+      description:
+        "Act 3 진입 전에 재충전식 warplate를 두 겹까지 예열해 큰 한 방을 지우고, plate가 터질 때마다 주변 탄막과 추격선을 같이 뜯어낸다. 이후 late cache는 방호층을 더 넓히는 보강 단계만 남긴다.",
+      slotText: `warplate ${getLateFieldAegisMaxCharges({ lateFieldAegisLevel: nextLevel })}충전 · 피해 ${Math.round(getLateFieldAegisReduction(nextLevel) * 100)}% 완충`,
+      cost: 26,
+      laneLabel: "Defense / Utility",
+      forgeLaneLabel: "Defense / Utility",
+      lateFieldAegisLevel: nextLevel,
+    };
+  }
+
+  function createLateBreakGreedContractChoice(build, nextWave) {
+    if (!build || !Number.isFinite(nextWave) || nextWave < LATE_BREAK_ARMORY_WAVE) {
+      return null;
+    }
+    return {
+      type: "utility",
+      action: "field_greed",
+      id: `utility:latebreak_greed:${nextWave}`,
+      verb: "계약",
+      tag: "LEDGER",
+      title: "Black Ledger Promissory",
+      description:
+        "Act 3 개막 자금을 먼저 당겨 고철과 회수 효율을 크게 올린다. 대신 Wave 9부터 2웨이브 동안 Siege Debt를 짊어지고, 이어지는 Scrapstorm는 contraband vault raid로 바뀌어 더 큰 payout과 더 거친 청구서를 같이 연다.",
+      slotText: "고철 +52 · 회수 +16% · 2웨이브 Siege Debt · 다음 Scrapstorm raid",
+      cost: 0,
+      scrapGain: 52,
+      scrapMultiplierGain: 0.16,
+      pickupBonus: 16,
+      hpLoss: 14,
+      maxHpPenalty: 10,
+      debtWaves: 2,
+      blackLedgerRaidWaves: 2,
+      laneLabel: "Greed Contract",
+      forgeLaneLabel: "Greed Contract",
     };
   }
 
@@ -11439,8 +11537,8 @@
         ? "최종 웨이브 정리 완료. 마지막 포지에서 최종 각인과 7연속 afterburn survival ladder의 시작 형태를 마감한다."
         : isLateBreakArmory(forgeOptions)
           ? state.build.auxiliaryJunctionLevel > 0
-            ? "Wave 8 돌파. Late Break Armory에서 6장 중 대형 카드 두 장을 골라 네 번째 베이와 이중 교리 flex lane까지 포함한 Act 3 운영 틀을 monster form 위에 덧씌운다."
-            : "Wave 8 돌파. Late Break Armory에서 6장 중 대형 카드 두 장을 골라 세 번째 베이와 교리 wildcard까지 포함한 Act 3 운영 틀을 monster form 위에 덧씌운다."
+            ? "Wave 8 돌파. Late Break Armory에서 주무장 변이, warplate 생존층, Black Ledger 계약이 먼저 떠 Act 3 첫 판돈을 고르게 하고, 남은 대형 카드로 네 번째 베이와 이중 교리 flex lane까지 덧씌운다."
+            : "Wave 8 돌파. Late Break Armory에서 주무장 변이, warplate 생존층, Black Ledger 계약이 먼저 떠 Act 3 첫 판돈을 고르게 하고, 남은 대형 카드로 세 번째 베이와 교리 wildcard까지 덧씌운다."
           : draftType === "armory"
           ? "Wave 4 돌파. Act Break Armory에서 6장 중 대형 카드 두 장을 골라 4웨이브짜리 Act 2 빌드 정체성을 일찍 고정한다."
           : "웨이브 종료. 포지 카드로 다음 화력 축을 고른다.",
@@ -16030,8 +16128,8 @@
         : state.forgeDraftType === "armory"
         ? isLateBreakArmory(forgeOptions)
           ? state.build.auxiliaryJunctionLevel > 0
-            ? `${armoryLabel} ${state.forgeStep}/${state.forgeMaxSteps} · 6장 중 2픽, 네 번째 베이와 이중 교리 flex lane이 열려 이미 잠근 monster form에 우회 시스템을 얹는다`
-            : `${armoryLabel} ${state.forgeStep}/${state.forgeMaxSteps} · 6장 중 2픽, 세 번째 베이와 교리 wildcard가 열려 이미 잠근 monster form에 우회 시스템을 얹는다`
+            ? `${armoryLabel} ${state.forgeStep}/${state.forgeMaxSteps} · 6장 중 2픽, triad breakpoint가 먼저 떠 네 번째 베이와 이중 교리 flex lane 위에 Act 3 판돈을 고른다`
+            : `${armoryLabel} ${state.forgeStep}/${state.forgeMaxSteps} · 6장 중 2픽, triad breakpoint가 먼저 떠 세 번째 베이와 교리 wildcard 위에 Act 3 판돈을 고른다`
           : `${armoryLabel} ${state.forgeStep}/${state.forgeMaxSteps} · 6장 중 2픽, 대형 화력이 과투입되어 안전한 lane 보장이 없다`
         : state.forgeMaxSteps > 1
         ? `패키지 ${state.forgeStep}/${state.forgeMaxSteps} · 1슬롯 화력/전환, 2슬롯 시스템/안정화`
@@ -16065,8 +16163,8 @@
         : state.forgeDraftType === "armory"
         ? isLateBreakArmory(forgeOptions)
           ? state.build.auxiliaryJunctionLevel > 0
-            ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 8을 넘기며 ${armoryLabel}가 열린다. Auxiliary Junction 덕분에 네 번째 support bay까지 완성됐고, 교리를 택한 런이라면 두 칸의 bay가 우회 조합용 flex lane으로 풀려 이미 잠긴 monster form 위에 공격, 방호, 유틸리티를 함께 덧댄다.`
-            : `고철 ${Math.round(state.resources.scrap)} 보유. Wave 8을 넘기며 ${armoryLabel}가 열린다. 세 번째 support bay가 해금됐고, 교리를 택한 런이라면 마지막 bay 1칸이 우회 조합용 wildcard로 풀려 이미 잠긴 monster form 위에 부족한 시스템을 덧댄다.`
+            ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 8을 넘기며 ${armoryLabel}가 열린다. 여기서는 Hades식 즉시 욕구 판독에 맞춰 Act 3 triad breakpoint가 먼저 보장된다. Breakline Arsenal은 추가 배럴을 곧바로 붙이고, Warplate Halo는 run-saving 완충층을 예열하며, Black Ledger Promissory는 다음 Scrapstorm를 금고 습격으로 비튼다. 그 뒤 남은 대형 카드로 네 번째 support bay와 이중 flex lane까지 묶는다.`
+            : `고철 ${Math.round(state.resources.scrap)} 보유. Wave 8을 넘기며 ${armoryLabel}가 열린다. 여기서는 Hades식 즉시 욕구 판독에 맞춰 Act 3 triad breakpoint가 먼저 보장된다. Breakline Arsenal은 추가 배럴을 곧바로 붙이고, Warplate Halo는 run-saving 완충층을 예열하며, Black Ledger Promissory는 다음 Scrapstorm를 금고 습격으로 비튼다. 그 뒤 세 번째 support bay와 교리 wildcard에 부족한 시스템을 덧댄다.`
           : `고철 ${Math.round(state.resources.scrap)} 보유. Wave 4를 넘기면 일반 패키지 대신 ${armoryLabel}가 열린다. 이번 포지는 6장 중 2장을 고르며, 주무장 진화와 공세 카드가 여러 장 겹쳐 떠 4웨이브짜리 Act 2 운영을 일찍 잠근다.`
       : `고철 ${Math.round(state.resources.scrap)} 보유. 장착은 무기 등급을 올리거나 바꾸고, 각인은 속성을 붙이며, 재구성/분해는 보관 코어를 정리한다. ${packageSummary}.`;
     elements.forgeContext.innerHTML = `
