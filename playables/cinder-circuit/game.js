@@ -335,23 +335,27 @@
       pressureFamily: "raid",
       duration: 94,
       spawnBudget: 198,
-      activeCap: 43,
+      activeCap: 41,
       baseSpawnInterval: 0.35,
       spawnIntervalMin: 0.105,
       spawnAcceleration: 0.35,
       eliteEvery: 5,
       mix: {
-        scuttler: 0.1,
-        brute: 0.2,
-        shrike: 0.18,
-        mortar: 0.18,
-        warden: 0.34,
+        scuttler: 0.08,
+        brute: 0.18,
+        shrike: 0.12,
+        skimmer: 0.14,
+        lancer: 0.14,
+        binder: 0.24,
+        mortar: 0.04,
+        warden: 0.06,
       },
-      note: "Act 3 중반은 회랑 복구보다 greed assault에 가깝다. contraband vault가 넓은 전장 외곽에 솟아오르고 warden과 mortar가 접근선을 세금처럼 지키므로, 강한 기체일수록 전열 정리 대신 먼 금고를 직접 찢어 고철 폭발을 강탈할 수 있다.",
+      note: "Act 3 중반은 이제 단순 후열 청소가 아니라 dragline heist다. contraband vault 주변을 맴도는 binder가 회수선을 묶고 skimmer/lancer가 빈 lane을 찢어, 강한 기체일수록 잡몹 정리보다 묶인 순간을 끊고 먼 금고를 직접 강탈해야 한다.",
       directive:
-        "scrapstorm raid. contraband vault가 잠시 열렸다 닫히며 큰 scrap burst를 품고 있다. 가까운 적 무리와 오래 싸우기보다 먼 금고를 급습해 보상을 강탈할지, 안전을 택하고 웨이브만 넘길지 매번 결정해야 한다.",
+        "scrapstorm dragline raid. contraband vault가 잠시 열릴 때 binder dragline이 회수선을 느리게 묶는다. binder를 먼저 찢어 금고 dive 각을 열지, 묶인 채로 욕심을 부릴지 매번 직접 정해야 한다.",
       driveGainFactor: 1.42,
       arena: THIRD_ACT_ARENA,
+      ascensionCarrierType: "binder",
       hazard: {
         label: "Contraband Vault",
         type: "salvage",
@@ -375,23 +379,27 @@
       pressureFamily: "pursuit",
       duration: 98,
       spawnBudget: 216,
-      activeCap: 46,
+      activeCap: 44,
       baseSpawnInterval: 0.32,
       spawnIntervalMin: 0.095,
       spawnAcceleration: 0.36,
       eliteEvery: 5,
       mix: {
-        scuttler: 0.12,
-        brute: 0.22,
-        shrike: 0.24,
-        mortar: 0.2,
-        warden: 0.22,
+        scuttler: 0.08,
+        brute: 0.18,
+        shrike: 0.18,
+        skimmer: 0.1,
+        lancer: 0.14,
+        binder: 0.22,
+        mortar: 0.06,
+        warden: 0.04,
       },
-      note: "세 번째 구간의 답을 다시 바꾼다. 움직이는 제련 폭주에 mortar 포격이 겹쳐, 단순 포대 정리보다 이동 경로를 갈아타며 느린 탄막과 추격조를 함께 찢어야 한다.",
+      note: "세 번째 구간의 답을 다시 바꾼다. drifting furnace와 binder dragline이 함께 돌며 현재 경로를 붙잡고, 그 틈에 lancer 재진입이 빈 lane을 꿰뚫는다. 단순 포대 정리보다 묶인 선을 끊으며 이동 경로를 크게 갈아타야 한다.",
       directive:
-        "starforge pursuit. 추적 화구가 현재 위치를 따라붙는 동안 mortar 포격이 탈출 루트에 늦게 도착한다. 한 lane에 오래 머물 수 없고, 이동 경로를 계속 갈아타며 압박 덩어리를 찢어야 한다.",
+        "starforge dragline pursuit. drifting furnace가 쫓아오는 동안 binder가 현재 위치에 dragline을 꽂아 회전 반경을 줄인다. 묶인 채 오래 버티지 말고, dragline 축을 먼저 끊으며 pursuit 덩어리를 크게 꺾어야 한다.",
       driveGainFactor: 1.46,
       arena: THIRD_ACT_ARENA,
+      ascensionCarrierType: "binder",
       hazard: {
         label: "Starforge Pursuit",
         type: "drift",
@@ -411,23 +419,27 @@
       pressureFamily: "breach",
       duration: 104,
       spawnBudget: 232,
-      activeCap: 48,
+      activeCap: 46,
       baseSpawnInterval: 0.295,
       spawnIntervalMin: 0.09,
       spawnAcceleration: 0.37,
       eliteEvery: 4,
       mix: {
-        scuttler: 0.08,
+        scuttler: 0.06,
         brute: 0.16,
-        shrike: 0.16,
-        mortar: 0.18,
-        warden: 0.42,
+        shrike: 0.14,
+        skimmer: 0.1,
+        lancer: 0.18,
+        binder: 0.24,
+        mortar: 0.04,
+        warden: 0.08,
       },
-      note: "최종 전장은 relay crown을 먼저 찢지 못하면 화면 전체가 불길 회랑으로 갈라진다. support clutter보다 직접 후열을 끊는 주무장 형태가 얼마나 빨리 회랑을 무너뜨리는지가 더 크게 드러난다.",
+      note: "최종 전장은 relay crown만의 시험이 아니다. binder dragline이 회랑 안쪽까지 파고들어 돌입 속도를 묶고 lancer가 빈 틈을 찌르므로, 완성된 기체가 직접 회랑과 생체 압박을 같은 박자로 절개하는지가 크게 드러난다.",
       directive:
-        "cinder crown relay. 사중 relay crown과 warden 차폐선, mortar 포격이 함께 전장을 얇게 찢는다. 중앙 난전을 오래 붙들기보다 먼 pylon과 포격원을 먼저 지워 회랑 자체를 무너뜨려야 한다.",
+        "cinder crown dragline breach. relay crown이 화염 회랑을 엮는 동안 binder가 진입선을 묶고 lancer가 빈 각을 찌른다. 먼 pylon만 보는 대신 dragline 축을 끊어 실제 breach window를 직접 만들어야 한다.",
       driveGainFactor: 1.52,
       arena: THIRD_ACT_ARENA,
+      ascensionCarrierType: "binder",
       hazard: {
         label: "Cinder Crown Relay",
         type: "relay",
@@ -589,17 +601,21 @@
     {
       waveIndex: 9,
       pressureFamily: "breach",
-      note: "첫 afterburn은 relay lattice를 다시 꺼내되, 이제는 회랑 절개만으로 끝나지 않는다. 완성된 기체가 long-run survival ladder에 진입했는지 증명하듯 먼 코어 절개와 근거리 추격 정리를 같은 박자로 처리해야 한다.",
+      note: "첫 afterburn은 relay lattice를 다시 꺼내되, 이제는 회랑 절개만으로 끝나지 않는다. binder dragline이 불길 회랑 안쪽까지 꽂히고 lancer가 빈 틈을 찌르므로, 완성된 기체가 구조물 파괴와 생체 압박 절개를 같은 박자로 처리해야 한다.",
       directive:
-        "afterburn breach crown. relay pylon이 긴 화염 회랑을 다시 엮고 mortar 후열이 늦게 덮친다. 회랑 절개와 후열 사냥을 번갈아 이어 가며 첫 forbidden-territory bracket을 열어야 한다.",
+        "afterburn dragline crown. relay pylon이 긴 화염 회랑을 엮는 동안 binder가 dragline으로 진입을 묶는다. 회랑 코어만 긁지 말고 dragline 축을 먼저 잘라 첫 forbidden-territory breach window를 직접 열어야 한다.",
       mix: {
-        scuttler: 0.08,
+        scuttler: 0.06,
         brute: 0.16,
-        shrike: 0.18,
-        mortar: 0.24,
-        warden: 0.34,
+        shrike: 0.14,
+        skimmer: 0.08,
+        lancer: 0.16,
+        binder: 0.24,
+        mortar: 0.08,
+        warden: 0.1,
       },
       mixWeight: 0.42,
+      ascensionCarrierType: "binder",
       hazard: {
         label: "Afterburn Breach Crown",
         type: "relay",
@@ -619,17 +635,21 @@
     {
       waveIndex: 10,
       pressureFamily: "raid",
-      note: "두 번째 afterburn은 greed window를 길게 강요한다. completed form이 안전 lane 없이도 contraband vault를 연속 강탈할 수 있는지 묻고, 강탈에 성공할수록 다음 폭주 구간을 더 과감하게 살 자원을 벌어 준다.",
+      note: "두 번째 afterburn은 greed window를 길게 강요하되, binder dragline이 그 창을 직접 흔든다. completed form이 dragline에 묶인 순간을 잘라내며 contraband vault를 연속 강탈할 수 있는지 묻고, 성공할수록 다음 금지 구간을 더 과감하게 살 자원을 번다.",
       directive:
-        "afterburn heist. contraband vault가 외곽에 순차적으로 떠오르고 shrike 재진입과 mortar 포격이 회수선을 자른다. 강한 순간에 깊게 dive해 vault를 부순 뒤 scrap을 주워 빠져나올지, 생존만 택할지 계속 갈라진다.",
+        "afterburn dragline heist. contraband vault가 외곽에 순차적으로 떠오르고 binder가 회수선을 느리게 묶는다. dragline 축을 찢고 깊게 dive할지, 금고를 포기하고 생존만 택할지 계속 갈라진다.",
       mix: {
         scuttler: 0.08,
         brute: 0.18,
-        shrike: 0.28,
-        mortar: 0.22,
-        warden: 0.24,
+        shrike: 0.18,
+        skimmer: 0.1,
+        lancer: 0.1,
+        binder: 0.22,
+        mortar: 0.08,
+        warden: 0.08,
       },
       mixWeight: 0.44,
+      ascensionCarrierType: "binder",
       hazard: {
         label: "Afterburn Heist Vault",
         type: "salvage",
@@ -651,17 +671,21 @@
       waveIndex: 11,
       pressureFamily: "hold",
       arena: THIRD_ACT_ARENA,
-      note: "세 번째 afterburn은 territory grammar를 late arena에 다시 올려 lockout repair가 아니라 hold-or-dive 결정을 요구한다. 여러 bastion core가 넓은 전장에서 동시에 살아 있어, 어느 거점을 무시하고 어느 드랍을 greed할지 빌드마다 답이 갈린다.",
+      note: "세 번째 afterburn은 territory grammar를 late arena에 다시 올리되, binder dragline까지 더해 hold-or-dive 결정을 더 날카롭게 만든다. 여러 bastion core와 dragline 축이 넓은 전장에서 같이 살아 있어, 어느 거점을 무시하고 어느 묶임부터 끊을지 빌드마다 답이 갈린다.",
       directive:
-        "foundry collapse. 넓은 전장 세 곳에 bastion 코어가 겹쳐 깔린다. 모든 거점을 즉시 복구하려 들지 말고, 지금 가장 위험한 점거 코어를 찢으며 고철과 elite 경로를 선별적으로 열어야 한다.",
+        "foundry dragline hold. 넓은 전장 세 곳에 bastion 코어가 겹쳐 깔리고 binder가 거점 사이를 dragline으로 묶는다. 모든 거점을 즉시 복구하려 들지 말고, 가장 위험한 묶임과 점거 코어를 선별적으로 끊어야 한다.",
       mix: {
         scuttler: 0.08,
         brute: 0.24,
         shrike: 0.14,
-        mortar: 0.18,
-        warden: 0.36,
+        skimmer: 0.08,
+        lancer: 0.08,
+        binder: 0.22,
+        mortar: 0.08,
+        warden: 0.08,
       },
       mixWeight: 0.48,
+      ascensionCarrierType: "binder",
       hazard: {
         label: "Foundry Collapse Grid",
         type: "territory",
@@ -908,11 +932,14 @@
     },
     raid: {
       mix: {
-        scuttler: 0.12,
+        scuttler: 0.08,
         brute: 0.14,
-        shrike: 0.34,
-        mortar: 0.12,
-        warden: 0.28,
+        shrike: 0.18,
+        skimmer: 0.12,
+        lancer: 0.12,
+        binder: 0.24,
+        mortar: 0.04,
+        warden: 0.08,
       },
       mixWeight: 0.56,
       hazard: {
@@ -928,11 +955,14 @@
     },
     pursuit: {
       mix: {
-        scuttler: 0.14,
+        scuttler: 0.08,
         brute: 0.16,
-        shrike: 0.38,
-        mortar: 0.16,
-        warden: 0.16,
+        shrike: 0.2,
+        skimmer: 0.1,
+        lancer: 0.14,
+        binder: 0.22,
+        mortar: 0.06,
+        warden: 0.04,
       },
       mixWeight: 0.58,
       hazard: {
@@ -948,10 +978,13 @@
     breach: {
       mix: {
         scuttler: 0.04,
-        brute: 0.22,
+        brute: 0.18,
         shrike: 0.12,
-        mortar: 0.18,
-        warden: 0.44,
+        skimmer: 0.08,
+        lancer: 0.18,
+        binder: 0.24,
+        mortar: 0.06,
+        warden: 0.1,
       },
       mixWeight: 0.6,
       hazard: {
@@ -968,10 +1001,13 @@
     hold: {
       mix: {
         scuttler: 0.04,
-        brute: 0.28,
+        brute: 0.24,
         shrike: 0.1,
-        mortar: 0.18,
-        warden: 0.4,
+        skimmer: 0.08,
+        lancer: 0.08,
+        binder: 0.22,
+        mortar: 0.08,
+        warden: 0.16,
       },
       mixWeight: 0.62,
       hazard: {
@@ -1243,6 +1279,16 @@
       damage: 11,
       scrap: 2,
       particleColor: "#baffeb",
+    },
+    binder: {
+      label: "Binder",
+      color: "#d8ff7d",
+      radius: 15,
+      hp: 58,
+      speed: 72,
+      damage: 12,
+      scrap: 3,
+      particleColor: "#f1ffc8",
     },
     lancer: {
       label: "Lancer",
@@ -10631,6 +10677,8 @@
             choices: createLateAscensionChoices(state.build),
           }
         : null,
+      lateAscensionCarrierType: config.ascensionCarrierType || null,
+      lateAscensionCarrierSpawned: false,
       kilnAscension: shouldRunKilnBastionAscension(state.build, waveNumber)
         ? {
             deployed: false,
@@ -11107,6 +11155,8 @@
             choices: createLateAscensionChoices(build),
           }
         : null,
+      lateAscensionCarrierType: encounterConfig.ascensionCarrierType || null,
+      lateAscensionCarrierSpawned: false,
       afterburnAscension: shouldOfferStormArtilleryAfterburnAscension(build)
         ? {
             deployed: false,
@@ -11546,6 +11596,28 @@
       enemy.lancerChargeCooldown = 1.8 + Math.random() * 0.8;
       enemy.lancerChargeTime = 0;
       enemy.lancerChargeVector = { x: 1, y: 0 };
+    } else if (typeId === "binder") {
+      enemy.attackCooldown = 0.8;
+      enemy.binderCastTime = 0;
+      enemy.binderTetherTime = 0;
+      enemy.binderPulseCooldown = 0;
+    }
+    if (
+      state.wave &&
+      typeId === state.wave.lateAscensionCarrierType &&
+      state.wave.lateAscension &&
+      !state.wave.lateAscension.deployed &&
+      !state.wave.lateAscension.claimed &&
+      !state.wave.lateAscensionCarrierSpawned
+    ) {
+      enemy.lateAscensionCarrier = true;
+      enemy.hp *= 1.22;
+      state.wave.lateAscensionCarrierSpawned = true;
+      pushCombatFeed(
+        "Ascension Carrier 감지. Binder 핵심 개체가 dragline 아래에 Ascension Core를 싣고 들어왔다. 먼저 잘라내면 주포/차체 변이를 즉시 잠글 수 있다.",
+        "ASCEND"
+      );
+      setBanner("Ascension Carrier", 0.85);
     }
     if (
       typeId === "elite" &&
@@ -13307,6 +13379,22 @@
     updatePlayerChassisState(dt, Math.hypot(move.x, move.y));
     let speed =
       state.player.moveSpeed + getChassisMoveSpeedBonus() + (state.player.overdriveActiveTime > 0 ? 34 : 0);
+    let binderSlow = 0;
+    let binderDashSlow = 0;
+    for (const enemy of state.enemies) {
+      if (enemy.type !== "binder" || enemy.defeated || enemy.hp <= 0 || (enemy.binderTetherTime || 0) <= 0) {
+        continue;
+      }
+      const distanceToBinder = Math.hypot(state.player.x - enemy.x, state.player.y - enemy.y);
+      if (distanceToBinder > 520) {
+        continue;
+      }
+      binderSlow += enemy.lateAscensionCarrier ? 0.22 : 0.16;
+      binderDashSlow += enemy.lateAscensionCarrier ? 0.26 : 0.18;
+    }
+    if (binderSlow > 0) {
+      speed *= clamp(1 - binderSlow, 0.46, 1);
+    }
     const chassis = getChassisBreakpointDef(state.build);
     const ascensionProfile = getWave6AscensionProfile();
     const stormAscensionSurging =
@@ -13355,7 +13443,7 @@
     );
 
     if (state.player.dashCharges < state.player.dashMax) {
-      state.player.dashCooldownTimer += dt;
+      state.player.dashCooldownTimer += dt * clamp(1 - binderDashSlow, 0.42, 1);
       if (state.player.dashCooldownTimer >= state.player.dashCooldown) {
         state.player.dashCharges += 1;
         state.player.dashCooldownTimer = 0;
@@ -13509,6 +13597,52 @@
         } else {
           speedMultiplier *= 1.24;
         }
+      } else if (enemy.type === "binder") {
+        enemy.wobble += dt * 4.2;
+        const previousCastTime = enemy.binderCastTime || 0;
+        enemy.binderCastTime = Math.max(0, previousCastTime - dt);
+        enemy.binderTetherTime = Math.max(0, (enemy.binderTetherTime || 0) - dt);
+        enemy.binderPulseCooldown = Math.max(0, (enemy.binderPulseCooldown || 0) - dt);
+        const distanceToPlayer = Math.hypot(state.player.x - enemy.x, state.player.y - enemy.y);
+        const tetherActive = enemy.binderTetherTime > 0 && distanceToPlayer < 520;
+        if (previousCastTime > 0 && enemy.binderCastTime <= 0 && distanceToPlayer < 440) {
+          enemy.binderTetherTime = 2.8;
+          enemy.binderPulseCooldown = 0.55;
+          state.particles.push(createParticle(enemy.x, enemy.y, "#f6ffb5", 0.95));
+          state.particles.push(createParticle(state.player.x, state.player.y, "#f6ffb5", 0.85));
+        }
+        const preferredRange = tetherActive ? 248 : 286;
+        if (enemy.binderCastTime > 0) {
+          angle += enemy.orbitDirection * 0.28;
+          speedMultiplier *= 0.58;
+        } else if (tetherActive) {
+          if (distanceToPlayer < preferredRange * 0.82) {
+            angle += Math.PI * 0.96;
+            speedMultiplier *= 1.06;
+          } else if (distanceToPlayer <= preferredRange * 1.18) {
+            angle += enemy.orbitDirection * 1.22 + Math.sin(enemy.wobble) * 0.18;
+            speedMultiplier *= 0.92;
+          } else {
+            speedMultiplier *= 1.14;
+          }
+        } else if (distanceToPlayer < preferredRange * 0.78) {
+          angle += Math.PI * 0.92;
+          speedMultiplier *= 1.12;
+        } else if (distanceToPlayer <= preferredRange * 1.18) {
+          angle += enemy.orbitDirection * 1.06 + Math.sin(enemy.wobble) * 0.24;
+          speedMultiplier *= 0.96;
+        } else {
+          speedMultiplier *= 1.08;
+        }
+        if (
+          enemy.attackCooldown <= 0 &&
+          enemy.binderCastTime <= 0 &&
+          enemy.binderTetherTime <= 0 &&
+          distanceToPlayer < 430
+        ) {
+          enemy.binderCastTime = 0.68;
+          enemy.attackCooldown = 4.1;
+        }
       } else if (enemy.type === "lancer") {
         enemy.wobble += dt * 3.8;
         enemy.lancerChargeCooldown = Math.max(0, (enemy.lancerChargeCooldown || 0) - dt);
@@ -13642,6 +13776,19 @@
             spread: 0.08,
           });
           enemy.attackCooldown = 2.05;
+        }
+      } else if (enemy.type === "binder" && enemy.attackCooldown <= 0) {
+        if (distance < 360 && enemy.binderCastTime <= 0) {
+          spawnEnemyShot(enemy, {
+            speed: 236,
+            radius: 5,
+            damage: 9,
+            life: 2.6,
+            color: "#f1ffc8",
+            count: 3,
+            spread: 0.18,
+          });
+          enemy.attackCooldown = 2.8;
         }
       } else if (enemy.type === "apex" && enemy.attackCooldown <= 0) {
         if (distance < 430) {
@@ -13883,6 +14030,8 @@
         ? 24
         : enemy.type === "lancer"
           ? 13
+        : enemy.type === "binder"
+          ? 12
         : enemy.type === "skimmer"
           ? 9
         : enemy.type === "brute"
@@ -13922,6 +14071,10 @@
         );
         setBanner(`Predator Molt ${apexReward.nextLevel}`, 0.9);
       }
+    }
+
+    if (enemy.lateAscensionCarrier) {
+      deployLateAscension(enemy);
     }
 
     if (enemy.type === "elite" || enemy.type === "apex") {
@@ -15771,6 +15924,34 @@
         context.moveTo(enemy.x - enemy.radius * 1.1, enemy.y);
         context.lineTo(enemy.x + enemy.radius * 1.1, enemy.y);
         context.stroke();
+      } else if (enemy.type === "binder") {
+        drawPolygon(context, enemy.x, enemy.y, enemy.radius, 6, Math.PI / 6 + enemy.wobble * 0.08);
+        context.fill();
+        context.strokeStyle =
+          enemy.binderTetherTime > 0 ? "rgba(247, 255, 205, 0.96)" : "rgba(238, 255, 172, 0.86)";
+        context.lineWidth = enemy.binderTetherTime > 0 ? 3 : 2;
+        context.beginPath();
+        context.moveTo(enemy.x - enemy.radius * 0.9, enemy.y);
+        context.lineTo(enemy.x + enemy.radius * 0.9, enemy.y);
+        context.moveTo(enemy.x, enemy.y - enemy.radius * 0.9);
+        context.lineTo(enemy.x, enemy.y + enemy.radius * 0.9);
+        context.stroke();
+        if (enemy.binderCastTime > 0 || enemy.binderTetherTime > 0) {
+          context.strokeStyle =
+            enemy.binderTetherTime > 0 ? "rgba(245, 255, 181, 0.82)" : "rgba(245, 255, 181, 0.48)";
+          context.lineWidth = enemy.binderTetherTime > 0 ? 3 : 1.5;
+          context.beginPath();
+          context.moveTo(enemy.x, enemy.y);
+          context.lineTo(state.player.x, state.player.y);
+          context.stroke();
+        }
+        if (enemy.lateAscensionCarrier) {
+          context.strokeStyle = "rgba(255, 245, 194, 0.92)";
+          context.lineWidth = 3;
+          context.beginPath();
+          context.arc(enemy.x, enemy.y, enemy.radius + 6, 0, Math.PI * 2);
+          context.stroke();
+        }
       } else if (enemy.type === "lancer") {
         drawPolygon(context, enemy.x, enemy.y, enemy.radius, 3, Math.PI / 2 + enemy.wobble * 0.06);
         context.fill();
