@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 23:59 KST
+  Findings:
+  - The run is no longer just too short; it is too accommodating. `Wave 9-12` doctrine variants increasingly tailor the battlefield to the chosen doctrine, so the player is often taking a curated exam their build was already designed to pass instead of forcing that build to survive a shared hostile ecology.
+  - `Act 4` is better than the old final-forge stop because the last splice now happens in combat, but the surrounding structure is still a three-wave appendix built from `FINAL_CASHOUT_DURATION = 12` and `FINAL_CASHOUT_SPAWN_BUDGET = 26`. That is still a sharp comedown from a game that wants players to dream about much longer climbs.
+  - Build depth is wider on paper than it is in appetite. Extra `support bay`, `flex lane`, satellites, shields, missiles, drones, and sentries give the player many knobs, but too many of them are granted on schedule, which blunts the greed, denial, and sacrifice a rerun-hungry roguelite needs.
+  - Weapon payoff remains uneven where it matters most. `Storm Artillery` still owns the clearest body/weapon endform, while `Mirror Hunt` and `Kiln Bastion` still read too often as "the arena fills with my helpers" instead of "my machine became terrifying to pilot."
+  Top Priority: Replace doctrine-specific late-wave tailoring with a shared late-act encounter pool that every doctrine must solve, then make one mid-run system draft force real mutually exclusive bets between raw weapon evolution, defense, mobility, and support automation.
+  Why Now: Until the world pressures builds harder than the script protects them, longer runs will feel curated instead of addictive.
+  Do Not Repeat: Do not solve this with another guaranteed bay unlock, another doctrine-only wave script, or more helper clutter posing as build depth.
+
 - 2026-03-22 23:55 KST
   Findings:
   - The run has outgrown prototype scale, but the decisive beats are still over-scripted by menu structure. `Architecture Draft`, `Wave 6 Bastion Draft`, `Chassis Breakpoint`, `Late Break Armory`, `Catalyst Crucible`, and the final forge keep interrupting combat to explain the build instead of letting pressure and denial create the build.
@@ -833,6 +843,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-23 02:24 KST
+  Changed: removed the doctrine-specific `Wave 9-12` battlefield swaps in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and replaced them with one shared late-act encounter pool that every doctrine now resolves through the same `resolveWaveConfig()` path. `Mirror Hunt`, `Kiln Bastion`, and `Storm Artillery` no longer receive bespoke late-wave labels, hazard families, or enemy mixes tailored to their strengths; instead they all face the same reinforced `Lockgrid -> Ember Lattice -> Starforge -> Cinder Crown` bracket, with slightly harsher mixed-threat tuning so the player’s weapon/body form has to solve a common hostile ecology rather than a curated doctrine exam. I also rewrote [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert cross-doctrine equality for `Wave 9-12` configs and the preserved/shared hazard progression. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique’s Top Priority had two asks, and the first one was both clearer and more urgent in code because `resolveWaveConfig()` was still explicitly swapping in doctrine-only late-act encounters. The highest-value bounded interpretation was to make the world stop protecting chosen builds in Act 3 immediately, without trying to redesign both late encounters and a mid-run draft in one pass.
+  Follow-up risk: the shared ecology now pressures builds more honestly, but `Wave 6` draft appetite is still too scheduled and not yet forcing a hard mutually exclusive bet between weapon evolution, defense, mobility, and automation. The next bounded step should make one existing mid-run draft present those tradeoffs cleanly without reintroducing doctrine-authored encounter scripts.
 
 - 2026-03-23 02:10 KST
   Changed: tightened the existing no-pause `Act 4` splice lane in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the last build-defining mutation no longer disappears after a single miss. `createPostCapstoneWave()` now keeps arming `finaleMutation` in any `Afterburn` stage until a finale variant is actually claimed, and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) now re-announces that live splice chase when `Afterburn II` or `III` begins. I also updated the failure/HUD text so a dropped `Act 4 mutation cache` clearly promises a retry on the next `Afterburn` wave instead of reading like the chase is over, and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert that unclaimed splice caches recur on later `Afterburn` stages and disappear once a finale variant is locked. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
