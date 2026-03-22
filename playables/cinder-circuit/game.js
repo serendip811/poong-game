@@ -1197,7 +1197,7 @@
 
   const MAX_SUPPORT_SYSTEM_TIER = 3;
   const MAX_SUPPORT_BAYS = 2;
-  const MAX_SUPPORT_BAY_LIMIT = 3;
+  const MAX_SUPPORT_BAY_LIMIT = 4;
   const SUPPORT_SYSTEM_DEFS = {
     ember_ring: {
       id: "ember_ring",
@@ -3292,6 +3292,7 @@
     overcommitResolved: false,
     bastionPactDebtWaves: 0,
     supportBayCap: 2,
+    auxiliaryJunctionLevel: 0,
     supportSystemId: null,
     supportSystemTier: 0,
     supportSystems: [],
@@ -3901,10 +3902,26 @@
   }
 
   function unlockLateSupportBay(build) {
-    if (!build || getSupportBayCapacity(build) >= MAX_SUPPORT_BAY_LIMIT) {
+    if (!build) {
       return false;
     }
-    build.supportBayCap = MAX_SUPPORT_BAY_LIMIT;
+    const targetCap =
+      build.auxiliaryJunctionLevel > 0 ? MAX_SUPPORT_BAY_LIMIT : MAX_SUPPORT_BAYS + 1;
+    if (getSupportBayCapacity(build) >= targetCap) {
+      return false;
+    }
+    build.supportBayCap = targetCap;
+    return true;
+  }
+
+  function applyAuxiliaryJunction(build) {
+    if (!build) {
+      return false;
+    }
+    build.auxiliaryJunctionLevel = Math.max(1, Math.round(build.auxiliaryJunctionLevel || 0));
+    if (getSupportBayCapacity(build) < MAX_SUPPORT_BAYS + 1) {
+      build.supportBayCap = MAX_SUPPORT_BAYS + 1;
+    }
     return true;
   }
 
@@ -4224,6 +4241,7 @@
         overcommitResolved: BASE_BUILD.overcommitResolved,
         bastionPactDebtWaves: BASE_BUILD.bastionPactDebtWaves,
         supportBayCap: BASE_BUILD.supportBayCap,
+        auxiliaryJunctionLevel: BASE_BUILD.auxiliaryJunctionLevel,
         supportSystemId: BASE_BUILD.supportSystemId,
         supportSystemTier: BASE_BUILD.supportSystemTier,
         supportSystems: BASE_BUILD.supportSystems.slice(),
@@ -6070,8 +6088,8 @@
         tag: "BAY",
         title: "Auxiliary Junction",
         description:
-          "세 번째 support bay를 지금 바로 열어 Wave 7-8 포지에서 더 넓은 시스템 조합을 먼저 받는다.",
-        slotText: "조기 베이 확장 · support bay +1",
+          "보조 섀시를 영구 증설해 세 번째 support bay를 지금 바로 열고, Wave 8 Late Break Armory에서 네 번째 bay까지 보장한다. 추가로 열린 bay 중 최소 1칸은 교리 reserve와 무관한 flex lane으로 유지된다.",
+        slotText: "섀시 증설 · support bay +1 now, +1 at Wave 8",
         cost: 0,
         laneLabel: "시스템 포지",
         forgeLaneLabel: "시스템 포지",
@@ -6085,8 +6103,8 @@
       verb: "주조",
       tag: "BAY",
       title: "Auxiliary Junction",
-      description: `세 번째 support bay를 Wave 6부터 조기 개방하고 ${systemChoice.title}을(를) 즉시 끼워 넣는다. ${systemChoice.description} Late Break Armory까지 기다리지 않고 중반부터 시스템 조합 폭을 넓힌다.`,
-      slotText: `조기 베이 확장 · ${systemChoice.title}`,
+      description: `보조 섀시를 영구 증설해 세 번째 support bay를 Wave 6부터 즉시 열고 ${systemChoice.title}을(를) 꽂아 넣는다. ${systemChoice.description} 이후 Wave 8 Late Break Armory에서 네 번째 bay가 추가로 열려 교리 reserve에 묶이지 않는 flex lane까지 확보한다.`,
+      slotText: `섀시 증설 · ${systemChoice.title} + Wave 8 bay`,
       cost: Math.max(16, Math.round((systemChoice.cost || 0) * 0.7)),
       originalCost: systemChoice.cost || 0,
       laneLabel: "시스템 포지",
@@ -6676,8 +6694,8 @@
 
     if (choice.type === "utility" && choice.action === "bastion_bay_forge") {
       if (choice.bayUnlock) {
-        unlockLateSupportBay(run.build);
-        run.build.upgrades.push("Auxiliary Junction: support bay +1");
+        applyAuxiliaryJunction(run.build);
+        run.build.upgrades.push("Auxiliary Junction: support bay +1 now, reserve Wave 8 bay");
       }
       if (choice.systemChoice) {
         applyForgeChoice(run, {
@@ -6816,6 +6834,9 @@
     buildBastionDraftChoices,
     buildCatalystDraftChoices,
     applyForgeChoice,
+    getSupportBayCapacity,
+    doctrineAllowsSystemInstall,
+    unlockLateSupportBay,
     shouldUseFieldGrant,
     shouldRunCatalystDraft,
     getDoctrineWeaponForm,
@@ -7809,11 +7830,17 @@
     state.forgeMaxSteps = startsPackage ? 2 : 1;
     state.forgeDraftType = draftType;
     if (!isFinalForge && isLateBreakArmory(forgeOptions) && unlockLateSupportBay(state.build)) {
-      state.build.upgrades.push("Aux Bay Uplink");
+      state.build.upgrades.push(
+        state.build.auxiliaryJunctionLevel > 0 ? "Aux Bay Uplink: support bay +1" : "Aux Bay Uplink"
+      );
       pushCombatFeed(
         state.build.bastionDoctrineId
-          ? "Wave 8 돌파. Late Break Armory가 열리며 세 번째 support bay와 교리 우회 베이 1칸이 함께 해금된다."
-          : "Wave 8 돌파. Late Break Armory가 열리며 세 번째 support bay가 해금된다.",
+          ? state.build.auxiliaryJunctionLevel > 0
+            ? "Wave 8 돌파. Late Break Armory가 열리며 네 번째 support bay와 추가 교리 우회 flex bay가 함께 해금된다."
+            : "Wave 8 돌파. Late Break Armory가 열리며 세 번째 support bay와 교리 우회 베이 1칸이 함께 해금된다."
+          : state.build.auxiliaryJunctionLevel > 0
+            ? "Wave 8 돌파. Late Break Armory가 열리며 네 번째 support bay가 해금된다."
+            : "Wave 8 돌파. Late Break Armory가 열리며 세 번째 support bay가 해금된다.",
         "ARMORY"
       );
     }
@@ -7834,7 +7861,9 @@
       isFinalForge
         ? "최종 웨이브 정리 완료. 마지막 포지에서 최종 각인과 3연속 afterburn 압박 배치를 마감한다."
         : isLateBreakArmory(forgeOptions)
-          ? "Wave 8 돌파. Late Break Armory에서 6장 중 대형 카드 두 장을 골라 세 번째 베이와 교리 wildcard까지 포함한 Act 3 운영 틀을 monster form 위에 덧씌운다."
+          ? state.build.auxiliaryJunctionLevel > 0
+            ? "Wave 8 돌파. Late Break Armory에서 6장 중 대형 카드 두 장을 골라 네 번째 베이와 이중 교리 flex lane까지 포함한 Act 3 운영 틀을 monster form 위에 덧씌운다."
+            : "Wave 8 돌파. Late Break Armory에서 6장 중 대형 카드 두 장을 골라 세 번째 베이와 교리 wildcard까지 포함한 Act 3 운영 틀을 monster form 위에 덧씌운다."
           : draftType === "armory"
           ? "Wave 4 돌파. Act Break Armory에서 6장 중 대형 카드 두 장을 골라 4웨이브짜리 Act 2 빌드 정체성을 일찍 고정한다."
           : "웨이브 종료. 포지 카드로 다음 화력 축을 고른다.",
@@ -8217,8 +8246,8 @@
             : choice.action === "bastion_pact"
               ? `${grantLabel} 적용. 최대 체력을 깎아 고철을 쥔 대신 3웨이브 Siege Debt를 떠안고 다음 웨이브를 연다.`
               : choice.action === "bastion_bay_forge"
-                ? `${grantLabel} 적용. 세 번째 support bay를 조기 개방하고 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 먼저 장착한 채 다음 웨이브를 연다.`
-              : choice.action === "bastion_doctrine"
+                ? `${grantLabel} 적용. 세 번째 support bay를 즉시 열고 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 먼저 장착한 채, Wave 8 네 번째 bay까지 예약하고 다음 웨이브를 연다.`
+                : choice.action === "bastion_doctrine"
                 ? `${choice.doctrineLabel} 적용. 즉시 ${choice.doctrineChoice ? choice.doctrineChoice.title : "spike"}를 확보하고 이후 포지를 해당 교리 쪽으로 기울인 채 다음 웨이브를 연다.`
               : `${grantLabel} 적용. 고철 ${choice.cost}을 태워 ${choice.title}을 일찍 확보하고 다음 웨이브를 강행한다.`
           : state.forgeDraftType === "catalyst_draft"
@@ -11054,14 +11083,16 @@
           ? state.build.overcommitUnlocked && !state.build.doctrineChaseClaimed
             ? "Bastion Draft · 회수한 contraband salvage를 장기 Forge Pursuit 계약으로 바꾸거나, 계약/안정화로 greed를 접는다"
             : state.waveIndex + 2 === 6
-              ? "Systems Forge · 무기 변이, 조기 support bay 확장, 3웨이브 Siege Debt greed 계약 중 1픽으로 Act 2 중반의 빌드 폭을 직접 비튼다"
+              ? "Systems Forge · 무기 변이, 영구 섀시 확장, 3웨이브 Siege Debt greed 계약 중 1픽으로 Act 2 중반의 빌드 폭을 직접 비튼다"
             : "Bastion Draft · 기존 교리 위에 추가 spike 또는 고통 계약을 더 얹어 Act 2 greed를 강제한다"
           : "Bastion Draft · 시그니처 교리 1장, 고통 계약 1장, 무료 안정화 1장 중 1픽으로 Act 2 posture를 기울이고 late wildcard bay를 예고한다"
         : state.forgeDraftType === "catalyst_draft"
         ? "Catalyst Crucible · 회수한 촉매를 지금 태워 Act 3 본편을 괴물 화력이나 운영형 안정화로 먼저 고정한다"
         : state.forgeDraftType === "armory"
         ? isLateBreakArmory(forgeOptions)
-          ? `${armoryLabel} ${state.forgeStep}/${state.forgeMaxSteps} · 6장 중 2픽, 세 번째 베이와 교리 wildcard가 열려 이미 잠근 monster form에 우회 시스템을 얹는다`
+          ? state.build.auxiliaryJunctionLevel > 0
+            ? `${armoryLabel} ${state.forgeStep}/${state.forgeMaxSteps} · 6장 중 2픽, 네 번째 베이와 이중 교리 flex lane이 열려 이미 잠근 monster form에 우회 시스템을 얹는다`
+            : `${armoryLabel} ${state.forgeStep}/${state.forgeMaxSteps} · 6장 중 2픽, 세 번째 베이와 교리 wildcard가 열려 이미 잠근 monster form에 우회 시스템을 얹는다`
           : `${armoryLabel} ${state.forgeStep}/${state.forgeMaxSteps} · 6장 중 2픽, 대형 화력이 과투입되어 안전한 lane 보장이 없다`
         : state.forgeMaxSteps > 1
         ? `패키지 ${state.forgeStep}/${state.forgeMaxSteps} · 1슬롯 화력/전환, 2슬롯 시스템/안정화`
@@ -11081,14 +11112,16 @@
           ? state.build.overcommitUnlocked && !state.build.doctrineChaseClaimed
             ? `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. Wave 5에서 회수한 contraband salvage가 살아 있어 장기 Forge Pursuit 계약이 열렸다. 지금 pursuit를 걸고 Wave 6-8 marked elite에서 shard를 모아 조기 monster form을 즉시 잠글지, Siege Salvage Pact나 무료 안정화로 greed를 접을지 정한다.`
             : state.waveIndex + 2 === 6
-              ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 6 Systems Forge다. 한 장은 주무장 변이를 바로 당겨 중반 화력 실루엣을 바꾸고, 한 장은 세 번째 support bay를 조기 개방하면서 시스템을 즉시 꽂아 Wave 7-8 조합 폭을 넓히며, 마지막 한 장은 최대 체력과 현재 체력을 태워 고철을 훔쳐 온 뒤 3웨이브 동안 Siege Debt를 떠안는 계약이다. 지금 무기, 시스템, greed 중 무엇으로 Act 2를 비틀지 정한다.`
+              ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 6 Systems Forge다. 한 장은 주무장 변이를 바로 당겨 중반 화력 실루엣을 바꾸고, 한 장은 보조 섀시를 영구 증설해 세 번째 support bay를 즉시 열면서 Wave 8까지 네 번째 bay와 최소 한 칸의 flex lane까지 보장하며, 마지막 한 장은 최대 체력과 현재 체력을 태워 고철을 훔쳐 온 뒤 3웨이브 동안 Siege Debt를 떠안는 계약이다. 지금 무기, 시스템, greed 중 무엇으로 Act 2를 비틀지 정한다.`
             : `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 이미 채택한 교리 위에 추가 spike 1장과 Siege Salvage Pact, 무료 안정화가 다시 뜬다. 지금 더 깊게 묶일지, 체력을 태워 greed를 당길지 결정한다.`
           : `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 한 장은 시그니처 전용 교리라 즉시 spike를 확보하면서 초반 support bay와 이후 포지 후보를 한 계통 쪽으로 강하게 기울이고, Late Break Armory에서는 마지막 bay 1칸만 우회 조합용으로 풀어 준다. 한 장은 최대 체력을 깎고 고철을 당겨오는 Siege Salvage Pact, 마지막 한 장은 무료 안정화다. Act 2 posture를 잠글지, 더 아프게 탐욕할지 직접 정한다.`
         : state.forgeDraftType === "catalyst_draft"
         ? `고철 ${Math.round(state.resources.scrap)} 보유. Catalyst Crucible이다. 이제 막 회수한 촉매를 무료로 점화하거나 안정화해 남은 Act 3 웨이브를 완성형 회로로 직접 소모한다. 최종 포지까지 묵혀 두는 대신 지금부터 괴물 형태를 실제 전장에 투입한다.`
         : state.forgeDraftType === "armory"
         ? isLateBreakArmory(forgeOptions)
-          ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 8을 넘기며 ${armoryLabel}가 열린다. 세 번째 support bay가 해금됐고, 교리를 택한 런이라면 마지막 bay 1칸이 우회 조합용 wildcard로 풀려 이미 잠긴 monster form 위에 부족한 시스템을 덧댄다.`
+          ? state.build.auxiliaryJunctionLevel > 0
+            ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 8을 넘기며 ${armoryLabel}가 열린다. Auxiliary Junction 덕분에 네 번째 support bay까지 완성됐고, 교리를 택한 런이라면 두 칸의 bay가 우회 조합용 flex lane으로 풀려 이미 잠긴 monster form 위에 공격, 방호, 유틸리티를 함께 덧댄다.`
+            : `고철 ${Math.round(state.resources.scrap)} 보유. Wave 8을 넘기며 ${armoryLabel}가 열린다. 세 번째 support bay가 해금됐고, 교리를 택한 런이라면 마지막 bay 1칸이 우회 조합용 wildcard로 풀려 이미 잠긴 monster form 위에 부족한 시스템을 덧댄다.`
           : `고철 ${Math.round(state.resources.scrap)} 보유. Wave 4를 넘기면 일반 패키지 대신 ${armoryLabel}가 열린다. 이번 포지는 6장 중 2장을 고르며, 주무장 진화와 공세 카드가 여러 장 겹쳐 떠 4웨이브짜리 Act 2 운영을 일찍 잠근다.`
       : `고철 ${Math.round(state.resources.scrap)} 보유. 장착은 무기 등급을 올리거나 바꾸고, 각인은 속성을 붙이며, 재구성/분해는 보관 코어를 정리한다. ${packageSummary}.`;
     elements.forgeContext.innerHTML = `

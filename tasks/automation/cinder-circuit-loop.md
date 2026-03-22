@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 23:58 KST
+  Findings:
+  - The new `3`-wave post-capstone ownership bracket is the right structural correction, but `createPostCapstoneWave()` still remixes `Wave 10-12` and the same territory/mortar/warden grammar. Finished builds now get a longer exam, not a meaningfully different kind of dominance.
+  - Build layering is still too cramped for a rerun-driven action roguelite ceiling. `MAX_SUPPORT_BAYS = 2` and `MAX_SUPPORT_BAY_LIMIT = 3`, while doctrine reserve rules still hard-bias the first bays, so missiles, shields, satellites, orbitals, and utility modules mostly fight over one flex slot instead of combining into a real machine.
+  - `Architecture Draft` looks bold, but it commits the run through free weapon rewrite + starter subsystem before the forge economy has created enough tension. The player is often choosing a labeled future first and discovering actual build friction second.
+  - The final forge still converges too hard on `완성 / 촉매 연소 / 안정화 / 비상 점화` around the same core. That is cleaner than before, but it still does not create enough anticipation for radically different end-state chassis that players would chase on repeat runs.
+  Top Priority: Turn `Wave 6` into a permanent chassis expansion that guarantees two additional subsystem slots by `Wave 8`, with at least one slot freed from doctrine reserve rules so mid-run builds can actually mix offense, defense, and utility before Act 3.
+  Why Now: Until the run can hold multiple interacting subsystems at once, extra waves will mostly stretch the same gun-plus-helper solution.
+  Do Not Repeat: Do not answer this with another capstone label, another doctrine wrapper, or another single helper that still lives inside the same `2-3` slot cage.
+
 - 2026-03-22 09:30 KST
   Findings:
   - The implementation now has real doctrine ladders, catalyst branches, support bays, and distinct late-wave variants, but the run still ends before those systems earn their cost. A game selling `monster form`, `Catalyst Crucible`, and capstone recipes cannot cash out primarily through `Wave 10-12` plus a `12초 cash-out 시험`.
@@ -691,6 +701,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 10:14 KST
+  Changed: rebuilt the `Wave 6` `Auxiliary Junction` path in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from a one-slot early unlock into a permanent chassis expansion. Taking the systems-forge lane now immediately opens a third `support bay`, stores an `auxiliaryJunctionLevel` flag, and guarantees a fourth bay when `Late Break Armory` opens at `Wave 8`; because doctrine wildcard allowance still scales from bay count, that chassis route now yields two off-doctrine flex lanes by Act 3 instead of just one cramped escape slot. I also rewrote the `Systems Forge`, `Late Break Armory`, HUD, and combat-feed copy so the run clearly sells this as a real offense/defense/utility mixing route rather than a temporary bay coupon, and updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new `3 -> 4` bay progression plus the expanded doctrine-flex allowance.
+  Why: the latest critique’s Top Priority was to turn `Wave 6` into a permanent chassis expansion that guarantees two additional subsystem slots by `Wave 8`, with at least one slot freed from doctrine reserve rules. The highest-value bounded interpretation was to harden the existing `Auxiliary Junction` branch instead of inventing another draft wrapper, because that path already sat at the right timing point and only needed real long-run payload.
+  Follow-up risk: this fixes the slot cage structurally, but the support roster still has only five subsystem families, so four-bay runs may start converging on similar "best mix" packages unless later passes add more subsystem archetypes or sharper anti-synergies between offense, defense, and utility.
 
 - 2026-03-22 23:59 KST
   Changed: replaced the old final `12초 cash-out` in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) with a true three-wave post-capstone `Afterburn` bracket. The final forge now transitions straight into `Wave 13-15`, each wave reusing full late-run budgets, arena scale, and hazard rules while blending in the selected finisher/support/fail-soft trial profile so the chosen ending shape still matters. I also extended the HUD wave track to show the new `Act 4` bracket, updated final-forge preview/copy so it advertises a `3연전` ownership phase instead of a short exam, and refreshed [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new afterburn previews, transition state, and exported wave generator.

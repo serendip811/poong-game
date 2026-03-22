@@ -353,8 +353,15 @@ assert.ok(wave6MutationChoice);
 assert.equal(systemsForgeChoice.title, "Auxiliary Junction");
 assert.ok(systemsForgeChoice.cost > 0);
 game.applyForgeChoice(architectureRun, systemsForgeChoice);
-assert.equal(architectureRun.build.supportBayCap, 3);
-assert.ok(architectureRun.build.upgrades.includes("Auxiliary Junction: support bay +1"));
+assert.equal(game.getSupportBayCapacity(architectureRun.build), 3);
+assert.equal(architectureRun.build.auxiliaryJunctionLevel, 1);
+assert.ok(game.doctrineAllowsSystemInstall(architectureRun.build, "kiln_sentry"));
+assert.ok(
+  architectureRun.build.upgrades.includes("Auxiliary Junction: support bay +1 now, reserve Wave 8 bay")
+);
+assert.equal(game.unlockLateSupportBay(architectureRun.build), true);
+assert.equal(game.getSupportBayCapacity(architectureRun.build), 4);
+assert.ok(game.doctrineAllowsSystemInstall(architectureRun.build, "aegis_halo"));
 const wave8DoctrineChaseChoices = game.buildBastionDraftChoices(
   architectureRun.build,
   () => 0,
