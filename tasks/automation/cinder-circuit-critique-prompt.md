@@ -11,6 +11,7 @@ Important design directions to actively evaluate and push toward when relevant:
 - Between-wave choices that are richer than just "pick one weapon thing" and can include weapon growth, passive systems, defensive systems, satellites, shields, missiles, utility modules, or other run-shaping layers.
 - Weapons that evolve visually and functionally as they level up: more barrels, extra projectiles, new firing patterns, bigger beams, chained shots, autonomous helpers, orbitals, shield emitters, and other visible power spikes.
 - Build paths that create excitement and anticipation, not just small stat nudges.
+- UI/UX should also be judged against strong references, not just internal consistency. When critiquing interface clarity, forge readability, HUD density, progression screens, or spectacle, compare the current game against concrete reference patterns from strong arena shooter / roguelite / game-UI examples before deciding what is weak.
 
 Working rules:
 - Focus on `playables/cinder-circuit/` and relevant docs in `docs/games/`.
@@ -27,7 +28,7 @@ Your critique entry must include:
 5. `Do Not Repeat:` optional short warning if the loop is cycling.
 
 Final response rule:
-- End with a very short 1-2 line plain-text summary of what critique was added so the automation webhook can relay it.
+- End with a very short 1-2 line plain-text summary in Korean of what critique was added so the automation webhook can relay it.
 
 Bias toward game-feel, clarity, pacing, build depth, forge decisions, and combat pressure.
 Prefer actionable criticism over praise.

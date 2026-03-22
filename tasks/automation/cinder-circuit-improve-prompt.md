@@ -11,6 +11,7 @@ Important design directions to actively use when relevant:
 - Add richer between-wave choices than a single obvious weapon pick when possible: passives, defensive tech, satellites, shield systems, autonomous missiles, orbitals, utility modules, rerolls, branching power packages.
 - Make weapon growth visible and exciting. Prefer upgrades that change how the weapon looks or behaves, such as extra barrels, projectile count increases, split shots, wider volleys, chained fire, helper drones, or periodic autonomous attacks.
 - Favor upgrades that create "I want to see what this becomes next" momentum.
+- When touching UI/UX, HUDs, forge screens, reward screens, readability, or interaction flow, first look at concrete references from strong game UI examples and use them deliberately. Do not do generic cleanup in a vacuum; anchor the change in at least one identifiable reference direction.
 
 Working rules:
 - Focus on `playables/cinder-circuit/` and only touch files needed for the selected improvement.
@@ -19,6 +20,7 @@ Working rules:
 - Include what changed, why, and any new follow-up risk in that entry.
 - Run the existing smoke test if your change touches gameplay or UI logic.
 - Do not run `git add`, `git commit`, or `git push` yourself; the wrapper script handles the commit after you finish.
+- If the work includes UI/UX changes, explicitly mention which reference direction or comparable game UI pattern informed the change in the loop entry.
 
 Constraints:
 - Keep the improvement bounded. One coherent change per run.
@@ -32,6 +34,6 @@ After code and loop-file changes are done:
 - End with a single-line `Commit message:` field containing a concise commit message the wrapper can reuse.
 
 Final response rule:
-- End with a very short 1-2 line plain-text summary of what was improved, what files changed, whether validation passed, and include the `Commit message:` line so the automation wrapper can relay and reuse it.
+- End with a very short 1-2 line plain-text summary in Korean of what was improved, what files changed, whether validation passed, and include the `Commit message:` line so the automation wrapper can relay and reuse it.
 
 If the critique is too vague, choose the highest-value concrete interpretation and note it in the loop file.
