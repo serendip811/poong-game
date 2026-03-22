@@ -5109,12 +5109,16 @@
           value: choice.weaponChoice ? choice.weaponChoice.title : "주무장 재배선",
         },
         {
-          label: "상태",
-          value: "지원/차체 lock 보류",
+          label: "형태",
+          value: choice.doctrineFormTrait || choice.doctrineFormLabel || "monster form",
         },
         {
-          label: "종점",
-          value: choice.doctrineCapstoneLabel || choice.doctrineLabel || "Doctrine Apex",
+          label: "섀시",
+          value: choice.chassisTitle || "utility chassis",
+        },
+        {
+          label: "flex lane",
+          value: choice.systemChoice ? choice.systemChoice.title : "off-doctrine unlock",
         },
         ...finaleRows,
       ];
@@ -7610,27 +7614,50 @@
       return null;
     }
     const weaponChoice = createArchitectureDoctrineWeaponChoice(build, doctrine);
+    const ascensionDef = WAVE6_ASCENSION_DEFS[doctrine.id];
+    const chassis = ascensionDef ? getChassisBreakpointDef(ascensionDef.chassisId) : null;
+    const systemChoice = ascensionDef
+      ? createWave6AscensionSystemChoice(build, doctrine, ascensionDef.preferredSystemId, ARCHITECTURE_DRAFT_WAVE)
+      : null;
+    const doctrineForm = build
+      ? getDoctrineWeaponForm(
+          {
+            ...build,
+            bastionDoctrineId: doctrine.id,
+            doctrineChaseClaimed: false,
+            doctrineCapstoneId: null,
+          },
+          doctrine.favoredCoreId
+        )
+      : null;
     const lateCapstoneLabel = getDoctrineLateCapstoneLabel(doctrine);
-    if (!weaponChoice) {
+    if (!weaponChoice || !ascensionDef) {
       return null;
     }
     return {
       type: "utility",
       action: "architecture_forecast",
       id: `utility:architecture_doctrine:${doctrine.id}`,
-      verb: "예고",
+      verb: "잠금",
       tag: "ARCH",
       title: doctrine.label,
       description:
-        `${doctrine.description} 지금은 주무장만 ${weaponChoice.title} 형태로 가볍게 재배선해 다음 전투에서 이 방향을 시험한다. support bay reserve와 starter subsystem lock은 아직 열지 않고, Wave 6 Bastion Draft에서 세 교리 중 실제 commitment를 다시 고른다.${lateCapstoneLabel ? ` 그때 확정하면 Wave 6-8 marked elite shard를 모아 ${lateCapstoneLabel} 계열 조기 완성을 노릴 수 있다.` : ""}`,
-      slotText: `아키텍처 예고 · ${weaponChoice.title} · ${doctrine.short}`,
+        `${doctrine.description} Wave 3에서 바로 ${weaponChoice.title}을(를) 무료 접속하고, ${chassis ? chassis.title : "utility chassis"}와 세 번째 support bay flex lane을 함께 잠근다.${systemChoice ? ` ${systemChoice.title}을(를) off-doctrine으로 즉시 박아 monster form이 지금부터 열린다.` : " off-doctrine flex lane도 즉시 열린다."} Wave 6 Bastion Draft는 더는 교리 재선택이 아니라 이미 잠근 형태 위에 pursuit 계약, spike, 고통 계약 중 하나를 얹는 branch payoff로 바뀐다.${lateCapstoneLabel ? ` 이후 Wave 6-8 marked elite shard를 모아 ${lateCapstoneLabel} 계열 후반 분기를 밀 수 있다.` : ""}`,
+      slotText: `monster form lock · ${weaponChoice.title} · ${chassis ? chassis.title : "utility chassis"}`,
       cost: 0,
-      laneLabel: "아키텍처 예고",
-      forgeLaneLabel: "아키텍처 예고",
+      laneLabel: "Monster Form Lock",
+      forgeLaneLabel: "Monster Form Lock",
       doctrineId: doctrine.id,
       doctrineLabel: doctrine.label,
       doctrineCapstoneLabel: lateCapstoneLabel,
       weaponChoice,
+      doctrineFormLabel: doctrineForm ? doctrineForm.label : doctrine.label,
+      doctrineFormTrait: doctrineForm ? doctrineForm.traitLabel : null,
+      chassisId: ascensionDef.chassisId,
+      chassisTitle: chassis ? chassis.title : ascensionDef.chassisId,
+      bayUnlock: true,
+      skipNextAdminStop: true,
+      systemChoice,
     };
   }
 
@@ -8008,7 +8035,7 @@
     state.forgeDraftType = "architecture_draft";
     state.forgeChoices = buildArchitectureDraftChoices(state.build);
     pushCombatFeed(
-      "Architecture Draft 개시. 세 개의 장기 교리 중 하나를 예고해 주무장만 먼저 시험한다. 진짜 doctrine lock과 support lane commitment는 Wave 6 Bastion Draft로 미룬다.",
+      "Architecture Draft 개시. 이제 Wave 3에서 세 장기 교리 중 하나를 바로 monster form으로 잠가 주포 mutation, utility chassis, flex lane을 한 번에 연다. Wave 6 Bastion Draft는 재선택이 아니라 pursuit나 greed branch를 더 얹는 후속 분기다.",
       "ARCH"
     );
     setBanner("Architecture Draft", 0.95);
@@ -8181,18 +8208,15 @@
 
   function getBastionDraftIntroText(build) {
     if (!build || !build.bastionDoctrineId) {
-      const doctrine = getBastionDoctrineDef(build);
-      return doctrine
-        ? `${doctrine.label} forecast를 포함한 세 장기 교리 중 하나를 이제 irreversible ascension으로 잠근다. Wave 3에 시험한 주포 프레임을 확인하거나 버리고, 한 번의 픽으로 weapon mutation, utility chassis, off-doctrine flex lane까지 전부 접속한다.`
-        : "세 장기 교리 중 하나를 irreversible ascension으로 잠가 weapon mutation, utility chassis, off-doctrine flex lane까지 한 번에 접속한다.";
+      return "아직 doctrine lock이 비어 있다. 이번 Bastion Draft는 fallback 상태지만 원래는 Wave 3에서 monster form이 먼저 잠겨야 한다.";
     }
     if (build.overcommitUnlocked && !build.doctrineChaseClaimed) {
-      return "방금 회수한 contraband salvage가 열려 있다. 이번 Bastion Draft에서는 장기 Forge Pursuit 계약, 고통 계약, 무료 안정화 중 하나로 Act 2 greed를 직접 결정한다.";
+      return "방금 회수한 contraband salvage가 열려 있다. 이번 Bastion Draft에서는 이미 잠근 monster form 위에 장기 Forge Pursuit 계약, 고통 계약, 무료 안정화 중 하나를 얹어 Act 2 greed를 직접 결정한다.";
     }
     if (!build.overcommitResolved) {
-      return "아직 overcommit salvage를 못 챙겼다. 이번 초반 교전에서 marked elite를 부숴 contraband salvage를 전부 회수해야만 장기 Forge Pursuit 계약이 열린다.";
+      return "아직 overcommit salvage를 못 챙겼다. 이번 초반 교전에서 marked elite를 부숴 contraband salvage를 전부 회수해야만 이미 잠긴 monster form의 pursuit branch가 열린다.";
     }
-    return "이미 채택한 교리 위에 추가 spike 1장, 고통 계약 1장, 무료 안정화 1장 중 하나로 Act 2 greed를 더 밀어붙인다.";
+    return "이미 잠긴 monster form 위에 추가 spike 1장, 고통 계약 1장, 무료 안정화 1장 중 하나로 Act 2 greed를 더 밀어붙인다.";
   }
 
   function enterBastionDraft() {
@@ -8676,17 +8700,27 @@
         return choice;
       }
       run.build.architectureForecastId = doctrine.id;
-      run.build.bastionDoctrineId = null;
+      run.build.bastionDoctrineId = doctrine.id;
       run.build.doctrineCapstoneId = null;
       run.build.afterburnAscensionOffered = false;
       run.build.doctrineChaseClaimed = false;
       run.build.doctrinePursuitCommitted = false;
       run.build.doctrinePursuitProgress = 0;
       run.build.doctrinePursuitExpired = false;
-      run.build.upgrades.push(`아키텍처 예고: ${doctrine.label}`);
+      doctrine.apply(run.build, run);
+      run.build.upgrades.push(`Monster Form Lock: ${doctrine.label}`);
       if (choice.weaponChoice) {
         applyForgeChoice(run, choice.weaponChoice);
       }
+      applyForgeChoice(run, {
+        type: "utility",
+        action: "bastion_bay_forge",
+        bayUnlock: true,
+        skipNextAdminStop: true,
+        chassisId: choice.chassisId,
+        chassisTitle: choice.chassisTitle,
+        systemChoice: choice.systemChoice,
+      });
       return choice;
     }
 
@@ -11564,7 +11598,7 @@
       pushCombatFeed(
         state.forgeDraftType === "architecture_draft"
           ? choice.action === "architecture_forecast"
-            ? `${choice.doctrineLabel} 예고 적용. ${choice.weaponChoice ? choice.weaponChoice.title : "주무장 프레임"}만 먼저 시험하고, 실제 doctrine lock은 Wave 6 Bastion Draft로 넘긴 채 다음 웨이브를 연다.`
+            ? `${choice.doctrineLabel} 잠금 적용. ${choice.weaponChoice ? choice.weaponChoice.title : "주포 mutation"}, ${choice.chassisTitle || "utility chassis"}, ${choice.systemChoice ? choice.systemChoice.title : "flex lane"}를 한 번에 열고 다음 웨이브부터 그 monster form으로 싸운다. Wave 6은 재선택이 아니라 pursuit나 greed 분기만 남는다.`
             : `${grantLabel} 적용. 아키텍처 방향을 기울인 채 다음 웨이브를 연다.`
         : state.forgeDraftType === "bastion_draft"
           ? choice.type === "fallback"
@@ -15439,7 +15473,7 @@
       state.waveIndex + 2 === 6;
     const packageSummary =
       state.forgeDraftType === "architecture_draft"
-        ? "Architecture Draft · 세 장기 교리 중 1픽, 주무장 프레임만 먼저 시험하고 진짜 doctrine/body commitment는 Wave 6으로 미룬다"
+        ? "Architecture Draft · 세 장기 교리 중 1픽으로 Wave 3부터 monster form을 잠그고, Wave 6은 pursuit 또는 greed branch만 남긴다"
         : state.forgeDraftType === "field_grant"
         ? state.waveIndex + 2 >= RISK_MUTATION_START_WAVE
           ? "Field Cache · 한 장의 Dominant Mutation이 late monster form을 먼저 끌고 가고, 나머지 현장 장착은 그 옆의 보조 bet로만 붙는다"
@@ -15470,7 +15504,7 @@
         ? `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 세 장은 완성, 촉매 연소, 안정화로 고정되며 각 카드가 바로 이어질 7연속 post-capstone afterburn ladder의 시작 형태를 미리 보여준다.`
         : `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 촉매가 없어도 비상 점화와 안정화 fail-soft 카드가 열리며, 각 카드가 다른 7연속 post-capstone afterburn ladder로 바로 이어진다.`
       : state.forgeDraftType === "architecture_draft"
-        ? `Wave 3 진입 직전 Architecture Draft다. 세 장기 교리 중 하나를 예고해 주무장만 즉시 해당 프레임으로 재배선하고, support bay reserve나 starter subsystem lock은 아직 미룬다. Wave 6 Bastion Draft에서 세 교리 중 실제 commitment를 다시 골라 몸체와 지원층까지 확정한다.`
+        ? `Wave 3 진입 직전 Architecture Draft다. 이제 세 장기 교리 중 하나를 바로 monster form으로 잠가 주포 stage-1 mutation, utility chassis, 세 번째 support bay flex lane까지 한 번에 연다. Wave 6 Bastion Draft는 재선택이 아니라 pursuit 계약이나 greed spike를 얹는 후속 분기다.`
       : state.forgeDraftType === "field_grant"
         ? state.waveIndex + 2 >= RISK_MUTATION_START_WAVE
           ? `고철 ${Math.round(state.resources.scrap)} 보유. Field Cache다. late reward는 이제 여러 관리 트랙이 아니라 Dominant Mutation 한 장이 먼저 잡는다. 그 카드를 집으면 주무장/차체 변이가 즉시 전진하고, 다음 웨이브 압박세와 묶인 채 나머지 즉시 장착은 옆의 보조 선택으로만 남는다.`
@@ -15480,9 +15514,9 @@
           ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 6 Ascension Draft다. 이제 세 장기 교리 중 하나를 irreversible form으로 잠근다. 이 한 번의 픽이 주무장 stage-1 mutation, utility chassis, 그리고 교리 reserve를 무시하는 off-doctrine flex lane을 동시에 켜고, Wave 8 Late Break Armory는 전장 uplink로 대체한다.`
           : state.build.bastionDoctrineId
             ? state.build.overcommitUnlocked && !state.build.doctrineChaseClaimed
-              ? `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. Wave 5에서 회수한 contraband salvage가 살아 있어 장기 Forge Pursuit 계약이 열렸다. 지금 pursuit를 걸고 Wave 6-8 marked elite에서 shard를 모아 조기 monster form을 즉시 잠글지, Siege Salvage Pact나 무료 안정화로 greed를 접을지 정한다.`
-              : `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 이미 채택한 교리 위에 추가 spike 1장과 Siege Salvage Pact, 무료 안정화가 다시 뜬다. 지금 더 깊게 묶일지, 체력을 태워 greed를 당길지 결정한다.`
-            : `고철 ${Math.round(state.resources.scrap)} 보유. Wave 6 Bastion Draft다. 이제 세 장기 교리 중 하나를 실제로 채택한다. Wave 3에 예고한 프레임을 확정해 할인 잠금할 수도 있고, 전투 중 더 잘 맞았던 다른 weapon direction으로 갈아탈 수도 있다.`
+              ? `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. Wave 5에서 회수한 contraband salvage가 살아 있어 장기 Forge Pursuit 계약이 열렸다. 지금 pursuit를 걸고 Wave 6-8 marked elite에서 shard를 모아 이미 잠긴 monster form의 다음 분기를 당길지, Siege Salvage Pact나 무료 안정화로 greed를 접을지 정한다.`
+              : `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 이미 잠긴 monster form 위에 추가 spike 1장과 Siege Salvage Pact, 무료 안정화가 다시 뜬다. 지금 더 깊게 묶일지, 체력을 태워 greed를 당길지 결정한다.`
+            : `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. doctrine lock이 비어 있는 fallback 상태다. 정상 흐름이라면 Wave 3에서 이미 monster form이 확정되어 있어야 한다.`
         : state.forgeDraftType === "catalyst_draft"
         ? `고철 ${Math.round(state.resources.scrap)} 보유. Catalyst Crucible이다. 이제 막 회수한 촉매를 무료로 점화하거나 안정화해 남은 Act 3 웨이브를 완성형 회로로 직접 소모한다. 최종 포지까지 묵혀 두는 대신 지금부터 괴물 형태를 실제 전장에 투입한다.`
         : state.forgeDraftType === "armory"

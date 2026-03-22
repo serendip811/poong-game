@@ -14,6 +14,17 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-23 15:32:00 KST
+  Findings:
+  - `playables/cinder-circuit/game.js` finally stops `Afterburn VII` from collapsing into another hold-objective exam, but the run still spends too much of Acts 1-3 teaching packages and permissions before it lets the player simply inhabit a terrifying form. `Architecture Draft -> Wave 6 Ascension Draft -> Pursuit shards -> Catalyst Crucible -> Act 4 Splice` is still more scheduling than hunger.
+  - The combat space breathes better in the new afterburn band, yet the main run still leans too hard on `territory`, `relay`, vault, and upkeep-style asks through the middle. A release-feeling arena roguelite needs more stretches where movement is about aggression timing, flank cuts, and greed lines, not repeatedly restoring workable space.
+  - Build variety is broad, but rerun desire is still uneven because doctrine identity is not equally player-driven. `Storm Artillery` sells a form you personally pilot; `Mirror Hunt` and especially `Kiln Bastion` still read too much like helper ecosystems and reserved-bay policy, so part of the roster still feels administered rather than possessed.
+  - UI/forge readability is still below strong references. Where games like `Hades`, `Nova Drift`, or top survivor-lites make the next spike readable in one glance, the current HUD/forge stack in `playables/cinder-circuit/game.js` is still asking the player to parse `Ascension`, `Act 4 Splice`, `Dominant Mutation`, `Catalyst Crucible`, chassis, pursuit, support bays, and capstone state at once.
+  - `docs/games/cinder-circuit-design.md` and `docs/games/cinder-circuit-source-analysis.md` still describe a short `5웨이브`, `6-7분` product. As long as the docs preserve prototype scope, implementation will keep sneaking short-run closure and over-explained progression back into the game.
+  Top Priority: Collapse the mid-run progression stack into one earlier irreversible monster-form commitment plus one later branch payoff, then rewrite the docs to match that longer-form target so combat and UI can revolve around a single dominant transformation track instead of five concurrent systems.
+  Why Now: The finale is finally closer to the right shape, so the main ceiling is no longer the ending, it is how late and how noisily the run delivers the power fantasy.
+  Do Not Repeat: Do not spend the next pass inventing another named draft/cache/splice layer that still delays the form players actually want to drive.
+
 - 2026-03-23 15:07:00 KST
   Findings:
   - `playables/cinder-circuit/game.js` finally creates a better endurance band in `Afterburn I-V`, but `Afterburn VII` collapses back into dense `territory hold` structure with bastion cores, turret crossfire, and route repair labor. That is exactly the prototype reflex this game needs to outgrow if it wants a real `20-30` wave future.
@@ -1051,6 +1062,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-23 03:44 KST
+  Changed: collapsed the first doctrine commitment into `Wave 3` in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) instead of making the run wait until `Wave 6` to become real. `Architecture Draft` now immediately locks one doctrine as a `monster form`, granting the stage-1 weapon mutation, a utility chassis, and an off-doctrine flex bay/system package on the spot. With that earlier lock in place, `Wave 6 Bastion Draft` now resolves as a later branch payoff on top of the existing form instead of another doctrine-selection layer, and the forge/HUD copy was tightened to explain that simpler spine. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new flow: `Wave 3` now sets the doctrine/body package immediately, while `Wave 6` offers pursuit/greed branching rather than fresh ascension picks in the normal path. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's Top Priority was still open because the run kept spending Acts 1-2 on forecast/admin staging before the player could inhabit a real form. The highest-value bounded interpretation was to remove one whole mid-run re-commitment step without inventing another layer: make the first pick irreversible and visible at `Wave 3`, then keep only one later branch payoff for pursuit/greed pressure.
+  Follow-up risk: this makes doctrine identity arrive much earlier, but it also frontloads a flex bay and chassis spike that may compress early-run build tension if one doctrine now stabilizes too cheaply. If that happens, the next pass should tune the power of the immediate system package or the Wave 3 economy around it, not reintroduce another delayed commitment layer.
 
 - 2026-03-23 03:10 KST
   Changed: replaced the old `Afterburn VII` hold-style regression in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) with a final combat-first endurance bracket. The last post-capstone wave now stays in the larger `1560x900` afterburn arena, swaps the `territory` core/turret upkeep out for a faster `drift` pressure field, and reweights the finale mix toward `shrike`/`skimmer`/`lancer`/`brander` reentry pressure instead of a `warden`-heavy bastion ownership exam. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the automation now asserts that `Afterburn VII` remains open-space combat with no hazard core. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
