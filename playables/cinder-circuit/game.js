@@ -15,6 +15,26 @@
   const ILLEGAL_MUTATION_START_WAVE = 10;
   const ILLEGAL_OVERCLOCK_DROP_LIFE = 12;
   const MAX_ILLEGAL_OVERCLOCK_MUTATIONS = 3;
+  const CATALYST_CRUCIBLE_DROP_LIFE = 12;
+  const CATALYST_CRUCIBLE_OBJECTIVE = {
+    label: "Catalyst Crucible",
+    radius: 132,
+    telegraph: 0.95,
+    duration: 18,
+    damage: 14,
+    coreHp: 110,
+    coreRadius: 21,
+    turretInterval: 0.88,
+    turretDamage: 11,
+    turretSpeed: 238,
+    enemyPullRadius: 188,
+  };
+  const CATALYST_CRUCIBLE_STRESS = {
+    maxHpPenalty: 12,
+    moveSpeedPenalty: 10,
+    coolRatePenalty: 6,
+    hazardPenalty: 0.05,
+  };
 
   const WAVE_CONFIG = [
     {
@@ -7129,6 +7149,16 @@
         )
       );
       run.build.upgrades.push(`재구성: ${capstone.label}`);
+      if (choice.liveCrucible && choice.crucibleStress) {
+        const stress = choice.crucibleStress;
+        run.build.maxHpBonus -= Math.max(0, stress.maxHpPenalty || 0);
+        run.build.moveSpeedBonus -= Math.max(0, stress.moveSpeedPenalty || 0);
+        run.build.coolRateBonus -= Math.max(0, stress.coolRatePenalty || 0);
+        run.build.hazardMitigation -= Math.max(0, stress.hazardPenalty || 0);
+        run.build.upgrades.push(
+          `Catalyst Molt: 최대 체력 -${Math.max(0, stress.maxHpPenalty || 0)} / 이동 -${Math.max(0, stress.moveSpeedPenalty || 0)} / 냉각 -${Math.max(0, stress.coolRatePenalty || 0)} / hazard 완충 -${Math.round(Math.max(0, stress.hazardPenalty || 0) * 100)}%`
+        );
+      }
       return choice;
     }
 
@@ -7758,6 +7788,12 @@
         active: false,
         targetSpawned: false,
       },
+      catalystCrucible: {
+        active: false,
+        status: "idle",
+        cacheDropped: false,
+        cacheCollected: false,
+      },
       weapon: computeWeaponStats(build),
       playerStats: computePlayerStats(build),
       supportSystem: computeSupportSystemStats(build),
@@ -7796,6 +7832,64 @@
       active: false,
       targetSpawned: false,
     };
+  }
+
+  function resetCatalystCrucibleState(run) {
+    if (!run) {
+      return;
+    }
+    run.catalystCrucible = {
+      active: false,
+      status: "idle",
+      cacheDropped: false,
+      cacheCollected: false,
+    };
+  }
+
+  function shouldRunCatalystCrucibleObjective(build, waveNumber) {
+    return shouldRunCatalystDraft({ nextWave: waveNumber, finalForge: false }, build);
+  }
+
+  function createCatalystCrucibleLiveChoice(build) {
+    const capstoneChoice = createCatalystReforgeChoice(build);
+    if (!capstoneChoice) {
+      return null;
+    }
+    return {
+      ...capstoneChoice,
+      cost: 0,
+      liveCrucible: true,
+      tag: "MOLT",
+      slotText: `전장 점화 · ${capstoneChoice.slotText}`,
+      description: `${capstoneChoice.description} 대신 몸체가 금이 가 최대 체력, 냉각, 기동, hazard 여유를 영구로 잃는다.`,
+      crucibleStress: { ...CATALYST_CRUCIBLE_STRESS },
+    };
+  }
+
+  function deployCatalystCrucibleObjective() {
+    const liveChoice = createCatalystCrucibleLiveChoice(state.build);
+    if (!liveChoice) {
+      resetCatalystCrucibleState(state);
+      return;
+    }
+    state.build.act3CatalystDraftSeen = true;
+    state.catalystCrucible = {
+      active: true,
+      status: "breach",
+      cacheDropped: false,
+      cacheCollected: false,
+    };
+    spawnHazard({
+      ...CATALYST_CRUCIBLE_OBJECTIVE,
+      type: "territory",
+      liveChoice,
+      objectiveTag: "catalyst_crucible",
+    });
+    pushCombatFeed(
+      "Catalyst Crucible 활성화. Wave 10 forge 정지를 없애는 대신, 붉은 점거 코어를 직접 깨고 점화 cache를 회수해야 Act 3 주무장이 즉시 변이한다. 성공하면 강해지지만 몸체 안정성이 영구로 찢어진다.",
+      "MOLT"
+    );
+    setBanner("Catalyst Crucible", 0.95);
   }
 
   function armOvercommitTrial(run) {
@@ -8678,6 +8772,7 @@
       );
     }
     resetDoctrinePursuitState(state);
+    resetCatalystCrucibleState(state);
     if (shouldRunOvercommitTrial(state.build, waveNumber)) {
       armOvercommitTrial(state);
       pushCombatFeed(
@@ -8701,6 +8796,9 @@
       );
     } else if (waveNumber > 8 && state.build.doctrinePursuitCommitted && !state.build.doctrineChaseClaimed) {
       failDoctrinePursuit();
+    }
+    if (shouldRunCatalystCrucibleObjective(state.build, waveNumber)) {
+      deployCatalystCrucibleObjective();
     }
     syncArenaCanvas();
     state.player.x = arena.width / 2;
@@ -9629,6 +9727,8 @@
       driftSpeed: Number.isFinite(config.driftSpeed) ? config.driftSpeed : 0,
       driftOrbit: Number.isFinite(config.driftOrbit) ? config.driftOrbit : 0.34,
       orbitDirection: Math.random() < 0.5 ? -1 : 1,
+      liveChoice: config.liveChoice || null,
+      objectiveTag: config.objectiveTag || null,
     });
   }
 
@@ -9675,6 +9775,23 @@
     hazard.telegraphTime = 0;
     hazard.activeTime = 0;
     if (reason === "destroyed") {
+      if (hazard.objectiveTag === "catalyst_crucible" && hazard.liveChoice) {
+        state.drops.push({
+          kind: "catalyst_crucible_cache",
+          x: hazard.x,
+          y: hazard.y,
+          life: CATALYST_CRUCIBLE_DROP_LIFE,
+          choice: hazard.liveChoice,
+        });
+        if (state.catalystCrucible) {
+          state.catalystCrucible.status = "ignite";
+          state.catalystCrucible.cacheDropped = true;
+        }
+        pushCombatFeed(
+          `${hazard.label} 균열. 점화 cache를 직접 회수하면 ${hazard.liveChoice.title}가 즉시 접합된다.`,
+          "MOLT"
+        );
+      }
       if (!hazard.salvageReleased && hazard.salvageScrap > 0) {
         spawnScrapBurst(
           hazard.x,
@@ -9696,6 +9813,13 @@
           ? `${hazard.label} 절단. 화염 회랑이 붕괴했다.`
           : `${hazard.label} 코어 파괴. 점거 구역이 붕괴했다.`,
         "CORE"
+      );
+    } else if (hazard.objectiveTag === "catalyst_crucible" && state.catalystCrucible.active) {
+      state.catalystCrucible.active = false;
+      state.catalystCrucible.status = "failed";
+      pushCombatFeed(
+        "Catalyst Crucible이 식었다. 이번 웨이브 변이는 놓쳤지만 촉매는 마지막 포지까지 보관된다.",
+        "MOLT"
       );
     }
   }
@@ -11493,6 +11617,15 @@
         );
       } else if (drop.life <= 0 && drop.kind === "doctrine_pursuit_shard") {
         pushCombatFeed("Frame shard가 식었다. 이번 웨이브 pursuit 진전이 사라졌다.", "FRAME");
+      } else if (drop.life <= 0 && drop.kind === "catalyst_crucible_cache") {
+        if (state.catalystCrucible.active && !state.catalystCrucible.cacheCollected) {
+          state.catalystCrucible.active = false;
+          state.catalystCrucible.status = "failed";
+          pushCombatFeed(
+            "Catalyst cache가 식었다. 변이는 놓쳤고 촉매는 마지막 포지까지 남는다.",
+            "MOLT"
+          );
+        }
       } else if (drop.life > 0) {
         nextDrops.push(drop);
       }
@@ -11552,6 +11685,29 @@
       }
       if (chassis && chassis.id === "salvage_winch") {
         triggerSalvageWinchSurge(1.6, 0);
+      }
+      return true;
+    }
+
+    if (drop.kind === "catalyst_crucible_cache") {
+      const choice = drop.choice;
+      if (!choice || state.build.catalystCapstoneId) {
+        return true;
+      }
+      applyForgeChoice(state, choice);
+      refreshDerivedStats(false);
+      if (state.catalystCrucible) {
+        state.catalystCrucible.active = false;
+        state.catalystCrucible.status = "claimed";
+        state.catalystCrucible.cacheCollected = true;
+      }
+      pushCombatFeed(
+        `${choice.title} 접합. 주무장이 즉시 Act 3 capstone form으로 바뀌었고, 몸체는 무리한 점화 대가를 영구로 감수한다.`,
+        "MOLT"
+      );
+      setBanner(choice.title, 0.85);
+      if (chassis && chassis.id === "salvage_winch") {
+        triggerSalvageWinchSurge(1.65, 0);
       }
       return true;
     }
@@ -11703,16 +11859,16 @@
           ? "결과 패널"
           : state.wave.skipForgeOnClear
             ? `Wave ${nextWave}`
+          : shouldRunCatalystCrucibleObjective(state.build, nextWave)
+            ? `Wave ${nextWave}`
           : shouldSkipOwnershipAdminStop(state.build, nextWave)
             ? `Wave ${nextWave}`
           : shouldRunActBreakArmory({ nextWave, finalForge: false })
             ? getArmoryLabel({ nextWave })
-            : shouldRunBastionDraft({ nextWave, finalForge: false })
+          : shouldRunBastionDraft({ nextWave, finalForge: false })
               ? "Bastion Draft"
             : shouldRunArchitectureDraft({ nextWave, finalForge: false })
               ? "Architecture Draft"
-            : shouldRunCatalystDraft({ nextWave, finalForge: false }, state.build)
-              ? "Catalyst Crucible"
             : shouldUseFieldGrant({ nextWave, finalForge: false })
               ? "다음 웨이브"
               : "포지";
@@ -11730,6 +11886,8 @@
           finishRun(true);
         } else if (state.wave.skipForgeOnClear) {
           beginNextPostCapstoneWave();
+        } else if (shouldRunCatalystCrucibleObjective(state.build, state.waveIndex + 2)) {
+          beginWave(state.waveIndex + 1);
         } else if (shouldSkipOwnershipAdminStop(state.build, state.waveIndex + 2)) {
           const unlocked = unlockLateSupportBay(state.build);
           if (unlocked) {
@@ -11749,10 +11907,6 @@
           enterArchitectureDraft();
         } else if (shouldRunBastionDraft({ nextWave: state.waveIndex + 2, finalForge: false })) {
           enterBastionDraft();
-        } else if (
-          shouldRunCatalystDraft({ nextWave: state.waveIndex + 2, finalForge: false }, state.build)
-        ) {
-          enterCatalystDraft();
         } else if (shouldUseFieldGrant({ nextWave: state.waveIndex + 2, finalForge: false })) {
           beginWave(state.waveIndex + 1);
         } else {
@@ -11928,11 +12082,13 @@
       const combatCacheRows = [];
       const pactRows = [];
       const illegalOverclockRows = [];
+      const catalystCrucibleRows = [];
       let overcommitNote = "";
       let pursuitNote = "";
       let combatCacheNote = "";
       let pactNote = "";
       let illegalOverclockNote = "";
+      let catalystCrucibleNote = "";
       if (state.wave && state.wave.bastionPactDebt) {
         pactRows.push(createStatusRow("Siege Debt", `${state.wave.bastionPactDebt.wavesRemaining} left`));
         pactRows.push(createStatusRow("Debt Tax", "+24% damage / +4 cap"));
@@ -12021,6 +12177,28 @@
         illegalOverclockRows.push(createStatusRow("Greed", "1 pick"));
         illegalOverclockNote = "Wave 9 black-site uplink가 열렸다. 불법 과투입 3종 중 하나만 집을 수 있고, 남은 둘은 바로 닫힌다.";
       }
+      if (state.catalystCrucible.active) {
+        catalystCrucibleRows.push(
+          createStatusRow(
+            "Crucible",
+            state.catalystCrucible.cacheDropped ? "ignite cache" : "core breach"
+          )
+        );
+        catalystCrucibleRows.push(
+          createStatusRow("Mutation", `${CATALYST_REFORGE_DEFS[state.build.coreId].label} live`)
+        );
+        catalystCrucibleNote = state.catalystCrucible.cacheDropped
+          ? "붕괴한 코어 자리의 점화 cache를 직접 주워야 즉시 변이가 잠긴다. 놓치면 이번 웨이브 보상은 사라진다."
+          : "Catalyst Crucible 코어를 먼저 찢어야 한다. 점거 구역 안으로 깊게 들어갈수록 즉시 변이와 실패 리스크가 같이 커진다.";
+      } else if (state.catalystCrucible.status === "claimed") {
+        catalystCrucibleRows.push(createStatusRow("Crucible", "claimed"));
+        catalystCrucibleRows.push(createStatusRow("Mutation", "live"));
+        catalystCrucibleNote = "전장 점화 성공. 남은 웨이브는 capstone form으로 싸우지만 몸체는 영구 손상을 안고 간다.";
+      } else if (state.catalystCrucible.status === "failed") {
+        catalystCrucibleRows.push(createStatusRow("Crucible", "failed"));
+        catalystCrucibleRows.push(createStatusRow("Mutation", "held"));
+        catalystCrucibleNote = "이번 웨이브 live ignition은 놓쳤다. 촉매는 마지막 포지까지 들고 간다.";
+      }
       elements.waveObjective.innerHTML = `
         <div class="summary-head">
           <strong>${waveConfig.label}</strong>
@@ -12035,11 +12213,12 @@
           ${createStatusRow(hazardStatus.detailLabel, hazardStatus.detailValue)}
           ${combatCacheRows.join("")}
           ${illegalOverclockRows.join("")}
+          ${catalystCrucibleRows.join("")}
           ${pactRows.join("")}
           ${overcommitRows.join("")}
           ${pursuitRows.join("")}
         </div>
-        <p class="summary-note">${illegalOverclockNote || combatCacheNote || pactNote || pursuitNote || overcommitNote || hazardStatus.note}</p>
+        <p class="summary-note">${catalystCrucibleNote || illegalOverclockNote || combatCacheNote || pactNote || pursuitNote || overcommitNote || hazardStatus.note}</p>
       `;
     }
 
@@ -12473,6 +12652,8 @@
       const maxLife =
         drop.kind === "core" || drop.kind === "catalyst"
           ? 12
+          : drop.kind === "catalyst_crucible_cache"
+            ? CATALYST_CRUCIBLE_DROP_LIFE
           : drop.kind === "overcommit_salvage" || drop.kind === "doctrine_pursuit_shard"
             ? OVERCOMMIT_SALVAGE_LIFE
             : drop.kind === "illegal_overclock_cache"
@@ -12502,6 +12683,26 @@
         context.font = "bold 10px monospace";
         context.textAlign = "center";
         context.fillText(choice.tag || "ILLEGAL", drop.x, drop.y + 28);
+      } else if (drop.kind === "catalyst_crucible_cache") {
+        const choice = drop.choice || {};
+        context.strokeStyle = "rgba(255, 244, 179, 0.98)";
+        context.lineWidth = 2.8;
+        context.beginPath();
+        context.arc(drop.x, drop.y, 15, 0, Math.PI * 2);
+        context.stroke();
+        context.fillStyle = "rgba(255, 138, 68, 0.94)";
+        context.beginPath();
+        drawPolygon(context, drop.x, drop.y, 10, 4, Math.PI / 4 + performance.now() * 0.002);
+        context.fill();
+        context.strokeStyle = "rgba(255, 214, 138, 0.88)";
+        context.lineWidth = 2;
+        context.beginPath();
+        context.arc(drop.x, drop.y, 7, 0, Math.PI * 2);
+        context.stroke();
+        context.fillStyle = "rgba(22, 10, 4, 0.92)";
+        context.font = "bold 10px monospace";
+        context.textAlign = "center";
+        context.fillText(choice.tag || "MOLT", drop.x, drop.y + 28);
       } else if (drop.kind === "combat_cache") {
         const choice = drop.choice || {};
         context.strokeStyle = choice.type === "fallback" ? "rgba(136, 229, 198, 0.95)" : "rgba(255, 212, 122, 0.95)";

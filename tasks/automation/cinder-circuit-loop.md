@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-23 00:35:00 KST
+  Findings:
+  - The game now has enough build layers to look ambitious, but the run still behaves like a guided assembly line. `Architecture Draft`, `Bastion Draft`, `Act Break Armory`, `Late Break Armory`, `Catalyst Crucible`, and the final `Afterburn` hand out too many named completion beats, so replay desire gets replaced by schedule recognition.
+  - Combat space still is not carrying enough of the run. Bigger arenas help, but the build game keeps resolving in forge menus while the battlefield mostly asks the player to clear pressure and collect payouts, not make repeated hold-or-dive territorial decisions that would stay interesting across a future `20-30` wave curve.
+  - The visible power fantasy is still too support-heavy. Satellites, drones, sentries, missile racks, halo defense, and flex bays add breadth, but they also keep the run reading like subsystem management instead of escalating obsession with a main weapon/body form the player personally pilots.
+  - The docs are still anchored to a `5웨이브`, `7분 내외` prototype while the implementation already spans `15` waves and multiple acts. That split is actively lowering the design ceiling: the game keeps polishing short-run closure inside a structure that now needs long-run hunger, instability, and repeatable greed.
+  Top Priority: Replace one full mid/late forge beat with an in-combat escalation lane where surviving a dangerous territory objective permanently mutates the main weapon/body for the rest of the run, with clear downside pressure instead of another menu-authored package.
+  Why Now: Until combat itself creates the next transformation, extra waves will feel like extended upkeep after the fun part is already decided.
+  Do Not Repeat: Do not answer this with another draft screen, bay unlock, or support module layer.
+
 - 2026-03-23 00:24:00 KST
   Findings:
   - The run is longer, but its escalation is still mostly a fixed itinerary: `Architecture Draft` at Wave 3, `Act Break Armory` at Wave 5, `Bastion Draft / Chassis Breakpoint` at Wave 6, `Late Break Armory` at Wave 9, `Catalyst Crucible` at Wave 10, then final forge into a 3-wave `Afterburn`. That is a guided build tour, not a hunger loop that could naturally sustain `20-30` waves.
@@ -761,6 +771,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-23 01:45 KST
+  Changed: replaced the old mid/late `Catalyst Crucible` forge stop with a live `Wave 10` territory objective in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). If the run has earned a catalyst, clearing `Wave 9` now goes straight into `Wave 10` instead of opening another menu. That wave spawns a dangerous `Catalyst Crucible` bastion that has to be breached on the field; destroying its core drops an `ignite cache`, and collecting that cache immediately fuses the current catalyst capstone onto the main weapon for the rest of the run. To keep the mutation reckless instead of free, the live ignition also permanently tears the body with max-HP, movement, cooling, and hazard-buffer penalties. I updated the HUD/readout and arena-drop rendering so the breach-or-dive objective is readable while the fight is happening.
+  Why: the latest critique’s Top Priority was to replace one full mid/late forge beat with an in-combat escalation lane where surviving a dangerous territory objective permanently mutates the main weapon/body with a clear downside. The highest-value bounded interpretation was to remove `Catalyst Crucible` as a menu-authored beat and turn that same timing window into a combat-earned ignition moment, because it creates an actual hold-or-dive decision inside the arena while pushing visible late power back onto the player’s own gun.
+  Follow-up risk: this solves one scheduled forge interruption, but it currently converts `Catalyst Crucible` into a single live mutation path rather than a broader family of late-wave territorial gambles. If later critique wants even more replay hunger past `Wave 10`, the next step should add alternate crucible outcomes or recurring post-capstone battlefield objectives instead of restoring more forge UI.
 
 - 2026-03-23 01:25 KST
   Changed: extended the `Wave 9` illegal-overclock lane in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) into a repeatable `Contraband Molt` greed loop instead of a one-shot late-run finish. Once a run has chosen `Glass Broadside`, `Meltdown Cycler`, or `Rupture Crown`, Waves `10+` now drop one optional live-combat `MOLT` cache per wave until three stacks are reached. Picking the cache permanently mutates the current illegal form again, making the main gun visibly more monstrous instead of just finished: `Glass Broadside` grows extra side batteries, `Meltdown Cycler` starts spitting vent-spur side shots on top of its illegal fire-rate loop, and `Rupture Crown` widens into larger crown fans. Each extra mutation also tears more out of the body through permanent max-HP, cooling, movement, or dash-control penalties. I updated the HUD/status text and player-frame rendering so those mutation tiers remain legible in combat, and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to cover the new mutation choice generation and stacked weapon growth.
