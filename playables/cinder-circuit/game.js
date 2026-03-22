@@ -1676,9 +1676,9 @@
       title: "Vector Thrusters",
       tag: "VECTOR",
       description:
-        "대시 착지 때 충격파를 내며 탄막을 걷어내고, 잠깐 동안 가속과 연사 리듬이 함께 오른다. 위험한 lane을 직접 찢고 반대편으로 다시 파고드는 섀시다.",
-      slotText: "대시 충격파 + 짧은 slipstream",
-      statusNote: "대시 착지 충격파와 slipstream 가속으로 빈 lane을 직접 연다.",
+        "대시 착지 때 충격파를 내며 탄막을 걷어내고, slipstream 동안 양옆 strafe pod가 열려 주포가 쐐기형 돌격 사격으로 변한다. 위험한 lane을 직접 찢고 반대편으로 다시 파고드는 돌격 섀시다.",
+      slotText: "대시 충격파 + strafe pod wedge",
+      statusNote: "대시 뒤 slipstream 동안 주포가 양옆 strafe pod까지 켜져 빈 lane을 쐐기 돌격으로 연다.",
       apply(build) {
         build.moveSpeedBonus += 12;
         build.dashCooldownBonus += 0.22;
@@ -1690,9 +1690,9 @@
       title: "Bulwark Treads",
       tag: "BULWARK",
       description:
-        "한 지점을 잠시 붙잡으면 섀시가 자동으로 anchor 상태에 들어가 방호가 두꺼워지고, 주기적으로 근접 압박을 밀어내는 pulse를 발산한다. 뛰기보다 버티며 전선을 세우는 섀시다.",
-      slotText: "정지 anchor + 방호 pulse",
-      statusNote: "한 지점을 지키면 방호 pulse가 돌아 hold-ground 운영이 가능해진다.",
+        "한 지점을 잠시 붙잡으면 섀시가 자동으로 anchor 상태에 들어가 방호가 두꺼워지고, 주포가 삼연장 siege head로 재배열된다. 느리게 밀리더라도 정면 화력으로 전선을 고정하는 공성 섀시다.",
+      slotText: "정지 anchor + 삼연장 siege head",
+      statusNote: "한 지점을 지키면 siege head가 펼쳐져 hold-ground 운영이 주포 자체로 보인다.",
       apply(build) {
         build.maxHpBonus += 14;
         build.hazardMitigation += 0.08;
@@ -1704,9 +1704,9 @@
       title: "Salvage Winch",
       tag: "WINCH",
       description:
-        "고철이나 특수 회수를 물면 바로 chassis surge가 걸려 이동과 사격 템포가 치솟고, 회수 지점 주변 압박을 짧게 밀어낸다. drop route를 전투 루트로 바꾸는 회수 섀시다.",
-      slotText: "pickup surge + 회수 pulse",
-      statusNote: "drop route를 밟을수록 chassis surge가 이어져 회수 자체가 공격 리듬이 된다.",
+        "고철이나 특수 회수를 물면 바로 chassis surge가 걸려 이동과 사격 템포가 치솟고, 주포가 tow fork fan으로 갈라져 전방을 갈퀴처럼 훑는다. drop route를 전투 루트로 바꾸는 회수 섀시다.",
+      slotText: "pickup surge + tow fork fan",
+      statusNote: "drop route를 밟을수록 tow fork fan이 이어져 회수 자체가 공격 리듬이 된다.",
       apply(build) {
         build.pickupBonus += 20;
         build.driveGainBonus += 0.14;
@@ -7692,6 +7692,7 @@
       chassisAnchorCharge: 0,
       chassisAnchorPulseCooldown: 0,
       chassisAnchorActiveTime: 0,
+      moveIntentMagnitude: 0,
       dashTrail: 0,
       facing: 0,
     };
@@ -7781,6 +7782,151 @@
       return 1.14;
     }
     return 1;
+  }
+
+  function getOffsetPoint(originX, originY, angle, forward = 0, lateral = 0) {
+    return {
+      x: originX + Math.cos(angle) * forward - Math.sin(angle) * lateral,
+      y: originY + Math.sin(angle) * forward + Math.cos(angle) * lateral,
+    };
+  }
+
+  function createOffsetPlayerProjectile(angle, weapon, driveActive, config = {}) {
+    const spawnAngle = Number.isFinite(config.spawnAngle) ? config.spawnAngle : angle;
+    const origin = getOffsetPoint(
+      state.player.x,
+      state.player.y,
+      spawnAngle,
+      config.forward ?? 16,
+      config.lateral ?? 0
+    );
+    return createPlayerProjectile(angle, weapon, driveActive, {
+      x: origin.x,
+      y: origin.y,
+      ...config.overrides,
+    });
+  }
+
+  function getPlayerMoveIntentMagnitude() {
+    return clamp(state.player?.moveIntentMagnitude || 0, 0, 1);
+  }
+
+  function fireChassisWeaponPosture(weapon, baseAngle, driveActive) {
+    const chassis = getChassisBreakpointDef(state.build);
+    if (!state.player || !chassis) {
+      return { cooldownMultiplier: 1, heatMultiplier: 1 };
+    }
+
+    if (chassis.id === "vector_thrusters") {
+      const moveIntent = getPlayerMoveIntentMagnitude();
+      if (moveIntent < 0.2 && state.player.chassisVectorTime <= 0) {
+        return { cooldownMultiplier: 1, heatMultiplier: 1 };
+      }
+      const wedgeSpread = state.player.chassisVectorTime > 0 ? 0.11 : 0.07;
+      const wingDamage = state.player.chassisVectorTime > 0 ? 0.54 : 0.42;
+      [-1, 1].forEach((direction) => {
+        state.projectiles.push(
+          createOffsetPlayerProjectile(
+            baseAngle + wedgeSpread * direction,
+            weapon,
+            driveActive,
+            {
+              lateral: 15 * direction,
+              forward: 15,
+              overrides: {
+                damage: round((weapon.damage + (driveActive ? 8 : 0)) * wingDamage, 1),
+                radius: Math.max(3.8, weapon.core.id === "lance" ? 5 : 4),
+                life: weapon.core.id === "lance" ? 0.92 : 1.05,
+                color: "#8ae7ff",
+              },
+            }
+          )
+        );
+      });
+      if (state.player.chassisVectorTime > 0) {
+        state.projectiles.push(
+          createOffsetPlayerProjectile(baseAngle, weapon, driveActive, {
+            forward: 26,
+            overrides: {
+              vx: Math.cos(baseAngle) * weapon.projectileSpeed * 1.3 * (driveActive ? 1.12 : 1),
+              vy: Math.sin(baseAngle) * weapon.projectileSpeed * 1.3 * (driveActive ? 1.12 : 1),
+              damage: round((weapon.damage + (driveActive ? 8 : 0)) * 0.78, 1),
+              radius: weapon.core.id === "lance" ? 5.4 : 4.6,
+              life: 0.92,
+              pierce: weapon.pierce + 1,
+              color: "#d5fbff",
+            },
+          })
+        );
+        return { cooldownMultiplier: 0.88, heatMultiplier: 1.08 };
+      }
+      return { cooldownMultiplier: 0.96, heatMultiplier: 1.04 };
+    }
+
+    if (chassis.id === "bulwark_treads") {
+      if (state.player.chassisAnchorActiveTime <= 0) {
+        return { cooldownMultiplier: 1, heatMultiplier: 1 };
+      }
+      [-1, 1].forEach((direction) => {
+        state.projectiles.push(
+          createOffsetPlayerProjectile(baseAngle + 0.045 * direction, weapon, driveActive, {
+            lateral: 18 * direction,
+            forward: 18,
+            overrides: {
+              vx: Math.cos(baseAngle + 0.045 * direction) * weapon.projectileSpeed * 0.9,
+              vy: Math.sin(baseAngle + 0.045 * direction) * weapon.projectileSpeed * 0.9,
+              damage: round((weapon.damage + (driveActive ? 8 : 0)) * 0.86, 1),
+              radius: (weapon.core.id === "lance" ? 6.1 : 5.2) + 0.4,
+              life: weapon.core.id === "lance" ? 1.18 : 1.24,
+              pierce: weapon.pierce + 1,
+              color: "#ffd59f",
+            },
+          })
+        );
+      });
+      state.projectiles.push(
+        createOffsetPlayerProjectile(baseAngle, weapon, driveActive, {
+          forward: 24,
+          overrides: {
+            vx: Math.cos(baseAngle) * weapon.projectileSpeed * 0.82,
+            vy: Math.sin(baseAngle) * weapon.projectileSpeed * 0.82,
+            damage: round((weapon.damage + (driveActive ? 8 : 0)) * 1.18, 1),
+            radius: (weapon.core.id === "lance" ? 6.4 : 5.4) + 0.6,
+            life: weapon.core.id === "lance" ? 1.28 : 1.34,
+            pierce: weapon.pierce + 2,
+            color: "#fff0c9",
+          },
+        })
+      );
+      return { cooldownMultiplier: 1.08, heatMultiplier: 1.12 };
+    }
+
+    if (chassis.id === "salvage_winch") {
+      if (state.player.chassisSalvageBurstTime <= 0) {
+        return { cooldownMultiplier: 1, heatMultiplier: 1 };
+      }
+      [-1, 1].forEach((direction) => {
+        state.projectiles.push(
+          createOffsetPlayerProjectile(baseAngle + 0.16 * direction, weapon, driveActive, {
+            lateral: 14 * direction,
+            forward: 14,
+            overrides: {
+              vx: Math.cos(baseAngle + 0.16 * direction) * weapon.projectileSpeed * 1.06,
+              vy: Math.sin(baseAngle + 0.16 * direction) * weapon.projectileSpeed * 1.06,
+              damage: round((weapon.damage + (driveActive ? 8 : 0)) * 0.56, 1),
+              radius: Math.max(3.9, weapon.core.id === "lance" ? 5 : 4.1),
+              life: 1,
+              chain: weapon.chain + 1,
+              chainRange: Math.max(weapon.chainRange || 0, 124),
+              color: "#9fffcf",
+            },
+          })
+        );
+      });
+      return { cooldownMultiplier: 0.9, heatMultiplier: 1.06 };
+    }
+
+    return { cooldownMultiplier: 1, heatMultiplier: 1 };
   }
 
   function triggerChassisPulse(x, y, radius, damage, color, options = {}) {
@@ -10204,6 +10350,7 @@
 
     fireWeaponPattern(weapon.evolutionFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.doctrineFirePattern, weapon, baseAngle, driveActive);
+    const chassisFireProfile = fireChassisWeaponPosture(weapon, baseAngle, driveActive);
 
     if (weapon.capstoneFire) {
       if (weapon.capstoneFire.kind === "temper_slug") {
@@ -10272,11 +10419,15 @@
     }
 
     state.player.heat = clamp(
-      state.player.heat + weapon.heatPerShot * (driveActive ? 0.58 : 1),
+      state.player.heat +
+        weapon.heatPerShot *
+          (driveActive ? 0.58 : 1) *
+          (chassisFireProfile.heatMultiplier || 1),
       0,
       100
     );
-    state.player.fireCooldown = weapon.cooldown * (driveActive ? 0.6 : 1);
+    state.player.fireCooldown =
+      weapon.cooldown * (driveActive ? 0.6 : 1) * (chassisFireProfile.cooldownMultiplier || 1);
     if (state.player.heat >= 100) {
       state.player.overheated = true;
       pushCombatFeed("과열 발생. 사격 회복 전까지 회피와 냉각이 우선이다.", "HEAT");
@@ -10343,9 +10494,19 @@
     }
 
     const magnitude = Math.hypot(move.x, move.y) || 1;
+    const moveIntentMagnitude = clamp(Math.hypot(move.x, move.y), 0, 1);
+    state.player.moveIntentMagnitude = moveIntentMagnitude;
     updatePlayerChassisState(dt, Math.hypot(move.x, move.y));
-    const speed =
+    let speed =
       state.player.moveSpeed + getChassisMoveSpeedBonus() + (state.player.overdriveActiveTime > 0 ? 34 : 0);
+    const chassis = getChassisBreakpointDef(state.build);
+    if (chassis && chassis.id === "bulwark_treads") {
+      if (state.player.chassisAnchorActiveTime > 0) {
+        speed *= 0.52;
+      } else if (state.player.chassisAnchorCharge > 0.45) {
+        speed *= 0.78;
+      }
+    }
     state.player.x += (move.x / magnitude) * speed * dt;
     state.player.y += (move.y / magnitude) * speed * dt;
 
@@ -10884,11 +11045,18 @@
 
   function updateDrops(dt) {
     const nextDrops = [];
+    const chassis = getChassisBreakpointDef(state.build);
+    const winchBurstActive =
+      chassis &&
+      chassis.id === "salvage_winch" &&
+      state.player &&
+      state.player.chassisSalvageBurstTime > 0;
     for (const drop of state.drops) {
       drop.life -= dt;
       const distance = Math.hypot(state.player.x - drop.x, state.player.y - drop.y);
-      if (distance < state.player.pickupRadius) {
-        const pull = clamp(280 * dt, 0, distance || 0);
+      const pullRadius = winchBurstActive ? state.player.pickupRadius + 84 : state.player.pickupRadius;
+      if (distance < pullRadius) {
+        const pull = clamp((winchBurstActive ? 460 : 280) * dt, 0, distance || 0);
         if (distance > 0) {
           drop.x += ((state.player.x - drop.x) / distance) * pull;
           drop.y += ((state.player.y - drop.y) / distance) * pull;
@@ -12192,6 +12360,7 @@
 
       context.fillStyle =
         state.player.invulnerableTime > 0 ? "#fff0c9" : state.weapon.color;
+      drawPlayerChassisFrame(context);
       context.beginPath();
       context.arc(state.player.x, state.player.y, state.player.radius, 0, Math.PI * 2);
       context.fill();
@@ -12235,6 +12404,66 @@
     }
 
     context.restore();
+  }
+
+  function drawPlayerChassisFrame(context) {
+    const chassis = getChassisBreakpointDef(state.build);
+    if (!state.player || !chassis) {
+      return;
+    }
+    const facing = state.player.facing || 0;
+    if (chassis.id === "vector_thrusters") {
+      [-1, 1].forEach((direction) => {
+        const pod = getOffsetPoint(state.player.x, state.player.y, facing, 4, 15 * direction);
+        context.fillStyle =
+          state.player.chassisVectorTime > 0 ? "rgba(138, 231, 255, 0.92)" : "rgba(79, 155, 176, 0.82)";
+        context.beginPath();
+        context.moveTo(pod.x + Math.cos(facing) * 8, pod.y + Math.sin(facing) * 8);
+        context.lineTo(
+          pod.x - Math.cos(facing) * 5 - Math.sin(facing) * 4 * direction,
+          pod.y - Math.sin(facing) * 5 + Math.cos(facing) * 4 * direction
+        );
+        context.lineTo(
+          pod.x - Math.cos(facing) * 5 + Math.sin(facing) * 4 * direction,
+          pod.y - Math.sin(facing) * 5 - Math.cos(facing) * 4 * direction
+        );
+        context.closePath();
+        context.fill();
+      });
+      return;
+    }
+
+    if (chassis.id === "bulwark_treads") {
+      [-1, 0, 1].forEach((lane) => {
+        const barrel = getOffsetPoint(state.player.x, state.player.y, facing, 10, lane * 8);
+        context.fillStyle =
+          state.player.chassisAnchorActiveTime > 0 ? "rgba(255, 240, 201, 0.96)" : "rgba(176, 144, 99, 0.86)";
+        context.fillRect(
+          barrel.x - 3 - Math.sin(facing) * 2,
+          barrel.y - 3 + Math.cos(facing) * 2,
+          6,
+          6
+        );
+      });
+      return;
+    }
+
+    if (chassis.id === "salvage_winch") {
+      [-1, 1].forEach((direction) => {
+        const fork = getOffsetPoint(state.player.x, state.player.y, facing, 8, 13 * direction);
+        context.strokeStyle =
+          state.player.chassisSalvageBurstTime > 0 ? "rgba(159, 255, 207, 0.95)" : "rgba(90, 176, 138, 0.84)";
+        context.lineWidth = 2.5;
+        context.beginPath();
+        context.moveTo(state.player.x + Math.cos(facing) * 4, state.player.y + Math.sin(facing) * 4);
+        context.lineTo(fork.x, fork.y);
+        context.lineTo(
+          fork.x + Math.cos(facing + 0.18 * direction) * 8,
+          fork.y + Math.sin(facing + 0.18 * direction) * 8
+        );
+        context.stroke();
+      });
+    }
   }
 
   function tick(dt) {

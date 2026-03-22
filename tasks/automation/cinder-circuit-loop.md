@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 23:59:59 KST
+  Findings:
+  - The new chassis breakpoint is structurally right, but `Vector Thrusters`, `Bulwark Treads`, and `Salvage Winch` still read too much like hidden rule buffs wrapped in good copy. They alter efficiency more than spectacle, so the Wave 6 choice is not yet the kind of visible machine transformation players chase across runs.
+  - Support depth is broader, yet too much late power still resolves as orbitals, interceptors, turrets, and autonomous cleanup. When `Aegis Halo`, `Seeker Array`, `Volt Drones`, and `Kiln Sentry` do the most legible work, the main gun and chassis stop feeling like the true payoff.
+  - The combat arena breathes more than before, but late-wave asks still over-index on maintenance targets and backline chores. A strong build spends too much time restoring safe space and not enough time exploiting a doctrine-specific dominance window.
+  - The project now has enough structure for a longer-form roguelite, but the design docs still frame success as a short `5웨이브`, `7분 내외` prototype. That scope language is still dragging the ambition floor down right when the game needs clearer commitment to a bigger rerun arc.
+  Top Priority: Turn the Wave 6 chassis breakpoint into a visibly transformative weapon-body event, where each chassis rewires the main gun's firing posture and movement pattern for the next uninterrupted combat bracket instead of mainly granting passive handling bonuses.
+  Why Now: Until the mid-run pivot creates an unmistakable "this run became a different war machine" moment, players will respect the systems more than crave another run.
+  Do Not Repeat: Do not solve this with another helper module or stat package if the Wave 6 pick still looks subtler than a support-system upgrade.
+
 - 2026-03-22 11:00 KST
   Findings:
   - The run now has more mid-run layering, but repeat-run hunger is still weak because most late power expresses as ambient automation. `Volt Drones`, `Seeker Array`, `Kiln Sentry`, `Aegis Halo`, and even doctrine apex states mostly clean lanes for the player instead of forcing a new piloting style that makes `Wave 9-12` feel different in the hands.
@@ -721,6 +731,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-23 01:08 KST
+  Changed: rewired the existing `Wave 6` chassis breakpoint in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so each chassis now visibly transforms the main gun instead of mostly living as a handling buff. `Vector Thrusters` now opens side-mounted `strafe pod` fire and a slipstream spear shot after dashes, `Bulwark Treads` unfolds a triple `siege head` while anchored for a slower but much heavier hold-ground volley, and `Salvage Winch` turns pickup surges into a `tow fork` fan while also widening live drop vacuum during the burst. I also updated the chassis copy to sell those weapon-body forms directly and added on-player frame rendering so the transformation reads in combat instead of only in tooltip text.
+  Why: the latest critique’s Top Priority was to make the `Wave 6` chassis breakpoint a visibly transformative weapon-body event whose firing posture and movement pattern own the next combat bracket. The highest-value bounded interpretation was to keep the newly-correct breakpoint structure and make the chosen chassis directly alter the player’s core fire loop, because that buys a real "this run became a different machine" moment without adding another helper layer or another admin stop.
+  Follow-up risk: the chassis breakpoint now looks and shoots differently, but the three forms still share the same underlying weapon core and numbers could converge on one obvious winner after repeated play. If later critique says the midpoint is finally legible but not yet equally desirable, the next pass should tune Wave `6-9` encounters or add one chassis-specific follow-up unlock so each form gets its own dominance window instead of just more raw damage.
 
 - 2026-03-23 00:48 KST
   Changed: upgraded the second half of the `Wave 6` `Chassis Breakpoint` in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from "pick one more flex subsystem" into a true utility-chassis layer. The forced breakpoint pick now offers three permanent chassis packages, each still opening the doctrine-free flex `support bay` immediately but also attaching a new piloting rule for the rest of the run: `Vector Thrusters` turns dashes into impact clears plus a short slipstream window, `Bulwark Treads` rewards holding ground with anchor pulses and mitigation, and `Salvage Winch` converts scrap/salvage routes into movement-and-combat surges. I also updated the forge preview/HUD copy so the new layer reads as `utility chassis + subsystem`, added on-screen player tells for active chassis states, and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new chassis packages, chassis persistence, and admin-skip behavior.
