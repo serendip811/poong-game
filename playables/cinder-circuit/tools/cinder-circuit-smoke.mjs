@@ -239,9 +239,32 @@ assert.equal(afterburnThree.lateAscensionCarrierType, "binder");
 assert.ok(afterburnOne.combatCache);
 assert.ok(afterburnTwo.combatCache);
 assert.equal(afterburnSeven.combatCache, null);
+assert.equal(afterburnOne.afterburnOverdrive, null);
+assert.equal(afterburnThree.afterburnOverdrive, null);
 assert.ok(
   afterburnOne.combatCache.choices.some((choice) => choice && choice.action === "field_mutation")
 );
+const overdriveBuild = game.createInitialBuild("rail_zeal");
+overdriveBuild.catalystCapstoneId = "storm_rail";
+const overdriveChoices = game.getAfterburnOverdriveChoices(overdriveBuild);
+const overdriveWave = game.createPostCapstoneWave(3, overdriveBuild);
+assert.equal(overdriveChoices.length, 3);
+assert.ok(overdriveWave.afterburnOverdrive);
+assert.equal(overdriveWave.afterburnOverdrive.choices.length, 3);
+assert.equal(overdriveWave.afterburnOverdrive.choices[0].action, "afterburn_overdrive");
+const overdriveRun = {
+  build: overdriveBuild,
+  resources: { scrap: 0 },
+  stats: { scrapCollected: 0, scrapSpent: 0 },
+  player: { hp: 84, maxHp: 100, heat: 36, overheated: true },
+};
+game.applyForgeChoice(overdriveRun, overdriveChoices[0]);
+const overdriveWeapon = game.computeWeaponStats(overdriveRun.build);
+const overdrivePlayer = game.computePlayerStats(overdriveRun.build);
+assert.equal(overdriveRun.build.afterburnOverdriveId, overdriveChoices[0].afterburnOverdriveId);
+assert.equal(overdriveWeapon.afterburnOverdriveLabel, "Cataclysm Crown");
+assert.ok(overdriveWeapon.afterburnOverdriveFirePattern.offsets.length >= 2);
+assert.ok(overdrivePlayer.moveSpeed > 248);
 const convergenceBuild = game.createInitialBuild("relay_oath");
 convergenceBuild.chassisId = "vector_thrusters";
 convergenceBuild.supportBayCap = 3;

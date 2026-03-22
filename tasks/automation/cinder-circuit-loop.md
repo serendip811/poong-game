@@ -14,6 +14,17 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-23 21:18:00 KST
+  Findings:
+  - `playables/cinder-circuit/game.js` now supports `Wave 1-12` plus `Afterburn I-VII`, but the back third still plays too much like a solved endurance appendix. Once the final forge lands, the player is mostly asked to survive seven more pressure brackets with only a thin `Act 4 splice` wrinkle, which kills the feeling that a long run is still becoming something.
+  - The late reward economy is still front-loaded into named checkpoints instead of sustained appetite. `Architecture Draft`, `Ascension Draft`, `Late Break Armory`, `Catalyst Crucible`, and final forge do most of the real build authorship before the long Afterburn band, so the extended curve adds duration faster than it adds hunger.
+  - Combat variety is broader than before, but `Wave 9-19` still leans on the same practical exam: break pressure clumps, reopen route, repeat. `crossfire`, `raid`, `pursuit`, `breach`, and the Afterburn pool remix enemy weights and hazard wrappers, yet too few waves create a distinctly different dominance rhythm, hold test, greed heist, or assassination problem.
+  - The forge overlay is still selling taxonomy over desire. The summary block around `playables/cinder-circuit/game.js:16515-16657` reads like build accounting across evolution, doctrine, ascension, convergence, chassis, systems, pursuit, catalyst, and recycle value; strong references surface the one exciting transformation first and let the bookkeeping sit behind it.
+  - `docs/games/cinder-circuit-design.md` and `docs/games/cinder-circuit-source-analysis.md` still describe a short `5웨이브`, `6-7분` prototype, so the project is still philosophically tuned to “finish the run cleanly” instead of “keep the player greedy for the next dangerous form over 20-30 waves.”
+  Top Priority: Rebuild the `Afterburn` band around at least one additional combat-earned transformation breakpoint that offers a visible endform jump or major system fusion mid-endurance, instead of treating post-capstone waves as a mostly fixed survival epilogue.
+  Why Now: If the build feels finished before the longest stretch starts, a longer run only exposes repetition sooner.
+  Do Not Repeat: Do not answer this with more Afterburn wave labels or hazard scaling if the late game still has no new reason to gamble on becoming stronger.
+
 - 2026-03-23 20:55:00 KST
   Findings:
   - `playables/cinder-circuit/game.js` now has the length and labels of a bigger roguelite, but the actual late-run branch count is still too small for that ambition: `LATE_ASCENSION_DEFS` only exposes two major weapon/body endforms and `LATE_FIELD_CONVERGENCE_DEFS` only exposes three chassis/support/greed fusions, so repeated runs will learn the catalog faster than they develop obsession.
@@ -1159,6 +1170,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-23 21:35 KST
+  Changed: added a new combat-earned mid-`Afterburn` transformation breakpoint, `Endform Overdrive`, in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). Starting in `Afterburn IV`, the first elite can now drop a three-way overdrive cache once the run already has a real late form online; one pickup permanently locks a second endform jump for the rest of the endurance band instead of leaving post-splice waves as fixed survival. The three authored outcomes, `Cataclysm Crown`, `Bastion Lattice`, and `Reaver Wake`, each add their own stat package, visible chassis silhouette, and live firing pattern so the run can still become something larger after the original `Act 4 Splice`. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new `Afterburn IV` gate and overdrive application, and the minimal HUD lock-state wording follows the one-glance reward-state read of `Hades` boon/status framing rather than adding another subsystem ledger. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to rebuild `Afterburn` around at least one additional combat-earned transformation breakpoint. The highest-value bounded interpretation was to add exactly one new mid-endurance elite-drop jump, because that creates fresh greed and a visible second endform payoff without reopening the whole late economy or padding the wave list again.
+  Follow-up risk: `Endform Overdrive` currently offers the same three authored jumps to every qualifying late build, so if one option proves dominant the system can still collapse into a learned default. The next pass should branch or weight these overdrives by current doctrine/chassis/finale state instead of adding still more generic post-capstone widgets.
 
 - 2026-03-23 21:20 KST
   Changed: expanded the late-run `Ascension Core` library in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from two endforms to four by adding `Voltspine Lattice` and `Anvil Prism` alongside the existing `Crownsplitter Array` and `Slagburst Drive`. The new forms each ship with their own permanent stat package, support-scaled firing pattern, cache palette, and live player silhouette so late ascension is no longer just "split wings or slag seeds": `Voltspine Lattice` turns the hull into a chain-heavy arc-spine harrier, while `Anvil Prism` becomes a slower breach-ram body that punches dense frontal lanes. I also extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the larger ascension pool and both new weapon states. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

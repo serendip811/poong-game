@@ -1133,6 +1133,8 @@
     stormspire_needle: 1.55,
   };
   const AFTERBURN_ASCENSION_DROP_LIFE = 14;
+  const AFTERBURN_OVERDRIVE_START_STAGE = 3;
+  const AFTERBURN_OVERDRIVE_DROP_LIFE = 14;
   const STORM_ARTILLERY_AFTERBURN_ENDFORM_DEFS = {
     sky_lance_battery: {
       bodyLabel: "Vector Battery Frame",
@@ -3966,6 +3968,7 @@
     bastionDoctrineId: null,
     doctrineCapstoneId: null,
     afterburnAscensionOffered: false,
+    afterburnOverdriveId: null,
     lateAscensionId: null,
     lateAscensionOffered: false,
     doctrineChaseClaimed: false,
@@ -4320,6 +4323,158 @@
         if (core.id === "ricochet") {
           stats.bounce += 1;
         }
+      },
+    },
+  };
+  const AFTERBURN_OVERDRIVE_DEFS = {
+    cataclysm_crown: {
+      id: "cataclysm_crown",
+      tag: "CROWN",
+      color: "#ffd4a3",
+      label: "Cataclysm Crown",
+      title: "Cataclysm Crown",
+      traitLabel: "crown barrage",
+      description:
+        "완성된 endform 위에 crown battery를 다시 덧씌워 주포 주변에 왕관형 보조 포문을 영구 전개한다. support uplink가 많을수록 crown lane이 더 벌어져 후열과 측면 pocket을 동시에 긁는다.",
+      slotText: "왕관 보조 포문 증설 · support가 crown lane 증폭",
+      bodyLabel: "Cataclysm Crown Frame",
+      bodyText:
+        "주포 둘레에 금속 왕관 포문이 솟아 정면 교전과 측면 갈라치기를 동시에 거는 afterburn endform이다.",
+      statusNote:
+        "Afterburn overdrive가 crown battery를 얹어 남은 endurance를 더 넓은 왕관 화망으로 밀어붙인다.",
+      applyPlayer(stats) {
+        stats.moveSpeed += 10;
+        stats.dashCooldown = clamp(stats.dashCooldown - 0.14, 1.15, 3.2);
+      },
+      applyWeapon(stats, build, core) {
+        const supportLevel = Math.max(1, getInstalledSupportSystems(build).length);
+        stats.damage += 4 + supportLevel;
+        stats.cooldown = clamp(stats.cooldown * 0.92, 0.08, 0.4);
+        stats.projectileSpeed += 8 + supportLevel * 5;
+        if (core.id === "lance") {
+          stats.pierce += 1;
+        }
+      },
+      getFirePattern(build, core) {
+        const supportLevel = Math.max(1, getInstalledSupportSystems(build).length);
+        const greedLevel = getLateFieldGreedPressure(build);
+        const offsets =
+          supportLevel >= 3
+            ? [-0.54, -0.27, 0, 0.27, 0.54]
+            : supportLevel >= 2
+              ? [-0.36, 0, 0.36]
+              : [-0.24, 0.24];
+        return {
+          kind: "afterburn_overdrive",
+          offsets,
+          speedMultiplier: core.id === "lance" ? 1.2 : 1.1,
+          radius: core.id === "lance" ? 5.4 : 4.9,
+          damageMultiplier: 0.28 + supportLevel * 0.03 + greedLevel * 0.015,
+          life: 0.92,
+          pierceBonus: core.id === "lance" ? 1 : 0,
+          bounceBonus: core.id === "ricochet" && supportLevel >= 2 ? 1 : 0,
+          chainBonus: core.id === "ricochet" ? 1 : 0,
+          color: this.color,
+        };
+      },
+    },
+    bastion_lattice: {
+      id: "bastion_lattice",
+      tag: "HALO",
+      color: "#dff7ff",
+      label: "Bastion Lattice",
+      title: "Bastion Lattice",
+      traitLabel: "aegis lance halo",
+      description:
+        "warplate, shield halo, body splice를 한 층 더 엮어 전방 lattice lance와 방어 고리를 함께 굳힌다. hazard-heavy afterburn에서도 멈춰 서서 살수각을 잡을 근거를 다시 만들어 준다.",
+      slotText: "전방 lattice lance · aegis halo 강화",
+      bodyLabel: "Lattice Bastion Hull",
+      bodyText:
+        "전면 lance prong과 둘레 보호 고리가 함께 잠겨 위험 구간에서 짧은 지배 창을 만드는 방벽형 endform이다.",
+      statusNote:
+        "Afterburn overdrive가 halo lattice를 잠가 남은 bracket을 더 두껍고 느린 dominance window로 바꾼다.",
+      applyPlayer(stats) {
+        stats.maxHp += 18;
+        stats.dashMax += 1;
+        stats.hazardMitigation = clamp(stats.hazardMitigation + 0.08, 0, 0.45);
+      },
+      applyWeapon(stats, build, core) {
+        const supportLevel = Math.max(1, getInstalledSupportSystems(build).length);
+        stats.damage += 3 + supportLevel;
+        stats.heatPerShot = round(Math.max(6, stats.heatPerShot - 0.6 - supportLevel * 0.3), 1);
+        stats.projectileSpeed += 6 + supportLevel * 4;
+        if (core.id === "lance") {
+          stats.pierce += 1;
+        }
+      },
+      getFirePattern(build, core) {
+        const supportLevel = Math.max(1, getInstalledSupportSystems(build).length);
+        const offsets = supportLevel >= 3 ? [-0.16, 0, 0.16] : [-0.1, 0.1];
+        return {
+          kind: "afterburn_overdrive",
+          offsets: core.id === "lance" ? offsets.map((offset) => offset * 0.7) : offsets,
+          speedMultiplier: 1.02 + supportLevel * 0.04,
+          radius: core.id === "lance" ? 6.1 : 5.2,
+          damageMultiplier: 0.34 + supportLevel * 0.035,
+          life: 1.02,
+          pierceBonus: core.id === "lance" ? 1 : 0,
+          bounceBonus: 0,
+          chainBonus: 0,
+          color: this.color,
+        };
+      },
+    },
+    reaver_wake: {
+      id: "reaver_wake",
+      tag: "REAVER",
+      color: "#9fffd2",
+      label: "Reaver Wake",
+      title: "Reaver Wake",
+      traitLabel: "thruster scythes",
+      description:
+        "thruster wake와 greed-routing 잔향을 몸체에 다시 접합해 측면 scythe wake를 남긴다. 빠르게 각을 바꿔 같은 웨이브 안에서 두 번 전장을 찢는 추격형 overdrive다.",
+      slotText: "측면 wake scythe · greed가 추격 화망 증폭",
+      bodyLabel: "Wake-Reaver Frame",
+      bodyText:
+        "후미 wake fin과 측면 절개날이 자라나 회전하며 lanes를 갈라먹는 추격 endform이다.",
+      statusNote:
+        "Afterburn overdrive가 wake scythe를 잠가 남은 escalation 전체를 더 빠른 절개 각도로 뒤튼다.",
+      applyPlayer(stats, build) {
+        const greedLevel = getLateFieldGreedPressure(build);
+        stats.moveSpeed += 14 + greedLevel * 4;
+        stats.pickupRadius += 12 + greedLevel * 4;
+        stats.dashCooldown = clamp(stats.dashCooldown - 0.22, 1.05, 3.2);
+      },
+      applyWeapon(stats, build, core) {
+        const greedLevel = Math.max(1, getLateFieldGreedPressure(build) || 1);
+        stats.damage += 2 + greedLevel * 2;
+        stats.cooldown = clamp(stats.cooldown * 0.94, 0.08, 0.4);
+        stats.projectileSpeed += 12 + greedLevel * 6;
+        if (core.id === "ricochet") {
+          stats.chain += 1;
+          stats.bounce += 1;
+          stats.chainRange = Math.max(stats.chainRange || 0, 188 + greedLevel * 8);
+        }
+      },
+      getFirePattern(build, core) {
+        const greedLevel = Math.max(1, getLateFieldGreedPressure(build) || 1);
+        const supportLevel = Math.max(1, getInstalledSupportSystems(build).length);
+        const offsets =
+          greedLevel >= 2
+            ? [-0.46, -0.18, 0.18, 0.46]
+            : [-0.34, 0.34];
+        return {
+          kind: "afterburn_overdrive",
+          offsets,
+          speedMultiplier: 1.16 + greedLevel * 0.03,
+          radius: core.id === "lance" ? 5.6 : 4.8,
+          damageMultiplier: 0.24 + greedLevel * 0.03 + supportLevel * 0.02,
+          life: 0.86,
+          pierceBonus: core.id === "lance" && greedLevel >= 2 ? 1 : 0,
+          bounceBonus: core.id === "ricochet" ? 1 : 0,
+          chainBonus: core.id === "ricochet" ? 1 : 0,
+          color: this.color,
+        };
       },
     },
   };
@@ -5910,6 +6065,57 @@
     return ascensionId ? LATE_ASCENSION_DEFS[ascensionId] || null : null;
   }
 
+  function getAfterburnOverdriveDef(buildOrId) {
+    if (!buildOrId) {
+      return null;
+    }
+    const overdriveId =
+      typeof buildOrId === "object" ? buildOrId.afterburnOverdriveId : buildOrId;
+    return overdriveId ? AFTERBURN_OVERDRIVE_DEFS[overdriveId] || null : null;
+  }
+
+  function shouldOfferAfterburnOverdrive(build, stageIndex) {
+    if (
+      !build ||
+      build.afterburnOverdriveId ||
+      !Number.isFinite(stageIndex) ||
+      stageIndex < AFTERBURN_OVERDRIVE_START_STAGE
+    ) {
+      return false;
+    }
+    return Boolean(
+      getSelectedFinaleVariant(build) ||
+      build.lateAscensionId ||
+      build.doctrineCapstoneId ||
+      build.lateFieldConvergenceId
+    );
+  }
+
+  function getAfterburnOverdriveChoices(build) {
+    if (!shouldOfferAfterburnOverdrive(build, AFTERBURN_OVERDRIVE_START_STAGE)) {
+      return [];
+    }
+    const finaleVariant = getSelectedFinaleVariant(build);
+    return Object.values(AFTERBURN_OVERDRIVE_DEFS).map((overdrive) => ({
+      type: "utility",
+      action: "afterburn_overdrive",
+      id: `utility:afterburn_overdrive:${overdrive.id}`,
+      verb: "과승천",
+      tag: overdrive.tag,
+      title: overdrive.title,
+      description: `${overdrive.description}${
+        finaleVariant ? ` 현재 ${finaleVariant.title || finaleVariant.label} 위에 다시 접합된다.` : ""
+      }`,
+      slotText: `Afterburn Overdrive · ${overdrive.slotText}`,
+      cost: 0,
+      laneLabel: "Endform Overdrive",
+      forgeLaneLabel: "Endform Overdrive",
+      afterburnOverdriveId: overdrive.id,
+      bodyLabel: overdrive.bodyLabel,
+      bodyText: overdrive.bodyText,
+    }));
+  }
+
   function getLateAscensionSupportLevel(build) {
     return clamp(getInstalledSupportSystems(build).length, 0, MAX_SUPPORT_BAY_LIMIT);
   }
@@ -6089,6 +6295,10 @@
     if (stormArtilleryEndform && typeof stormArtilleryEndform.applyPlayer === "function") {
       stormArtilleryEndform.applyPlayer(stats, build);
     }
+    const afterburnOverdrive = getAfterburnOverdriveDef(build);
+    if (afterburnOverdrive && typeof afterburnOverdrive.applyPlayer === "function") {
+      afterburnOverdrive.applyPlayer(stats, build);
+    }
     getAffixDefs(build).forEach((affix) => {
       if (typeof affix.applyPlayer === "function") {
         affix.applyPlayer(stats, build);
@@ -6200,6 +6410,11 @@
       lateFieldConvergenceTraitLabel: null,
       lateFieldConvergenceStatusNote: null,
       lateFieldConvergenceFirePattern: null,
+      afterburnOverdriveId: null,
+      afterburnOverdriveLabel: null,
+      afterburnOverdriveTraitLabel: null,
+      afterburnOverdriveStatusNote: null,
+      afterburnOverdriveFirePattern: null,
     };
     getAffixDefs(build).forEach((affix) => {
       if (typeof affix.applyWeapon === "function") {
@@ -6429,6 +6644,20 @@
       stats.lateFieldConvergenceFirePattern = lateFieldConvergence.getFirePattern(build, core);
       if (typeof lateFieldConvergence.applyWeapon === "function") {
         lateFieldConvergence.applyWeapon(stats, build, core);
+      }
+    }
+    const afterburnOverdrive = getAfterburnOverdriveDef(build);
+    if (afterburnOverdrive) {
+      stats.afterburnOverdriveId = afterburnOverdrive.id;
+      stats.afterburnOverdriveLabel = afterburnOverdrive.title;
+      stats.afterburnOverdriveTraitLabel = afterburnOverdrive.traitLabel;
+      stats.afterburnOverdriveStatusNote = afterburnOverdrive.statusNote;
+      stats.afterburnOverdriveFirePattern =
+        typeof afterburnOverdrive.getFirePattern === "function"
+          ? afterburnOverdrive.getFirePattern(build, core)
+          : null;
+      if (typeof afterburnOverdrive.applyWeapon === "function") {
+        afterburnOverdrive.applyWeapon(stats, build, core);
       }
     }
     stats.damage = round(stats.damage, 1);
@@ -9121,6 +9350,38 @@
     setBanner("Act 4 Splice", 0.95);
   }
 
+  function deployAfterburnOverdrive(enemy) {
+    const overdrive = state.wave && state.wave.afterburnOverdrive;
+    if (!overdrive || overdrive.deployed || overdrive.claimed) {
+      return;
+    }
+    const choices = Array.isArray(overdrive.choices) ? overdrive.choices.filter(Boolean) : [];
+    if (choices.length === 0) {
+      overdrive.deployed = true;
+      overdrive.claimed = true;
+      return;
+    }
+    overdrive.deployed = true;
+    overdrive.groupId = `afterburn-overdrive-${state.waveIndex + 1}-${state.stats.kills}`;
+    const spreadRadius = choices.length === 1 ? 0 : 54;
+    choices.forEach((choice, index) => {
+      const angle = (index / choices.length) * Math.PI * 2 - Math.PI / 2;
+      state.drops.push({
+        kind: "afterburn_overdrive_cache",
+        x: enemy.x + Math.cos(angle) * spreadRadius,
+        y: enemy.y + Math.sin(angle) * spreadRadius,
+        life: AFTERBURN_OVERDRIVE_DROP_LIFE,
+        choice,
+        groupId: overdrive.groupId,
+      });
+    });
+    pushCombatFeed(
+      "Endform Overdrive 노출. Afterburn 중반 elite가 세 개의 최종 body splice를 떨궜다. 하나만 회수하면 남은 endurance가 새 endform jump로 다시 굳는다.",
+      "OVR"
+    );
+    setBanner("Endform Overdrive", 0.95);
+  }
+
   function deployLateAscension(enemy) {
     const ascension = state.wave && state.wave.lateAscension;
     if (!ascension || ascension.deployed || ascension.claimed) {
@@ -9782,6 +10043,24 @@
       return choice;
     }
 
+    if (choice.type === "utility" && choice.action === "afterburn_overdrive") {
+      const overdrive = getAfterburnOverdriveDef(choice.afterburnOverdriveId || run.build);
+      if (!overdrive || run.build.afterburnOverdriveId) {
+        return null;
+      }
+      run.build.afterburnOverdriveId = overdrive.id;
+      run.build.upgrades.push(`Endform Overdrive: ${overdrive.label}`);
+      if (run.player) {
+        run.player.heat = Math.max(0, run.player.heat - 18);
+        run.player.overheated = false;
+        run.player.hp = Math.min(
+          Math.max(1, run.player.hp + 8),
+          Math.max(1, 100 + run.build.maxHpBonus)
+        );
+      }
+      return choice;
+    }
+
     if (choice.type === "utility" && choice.action === "field_mutation") {
       const nextLevel = Math.max(getLateFieldMutationLevel(run.build), choice.lateFieldMutationLevel || 1);
       run.build.lateFieldMutationLevel = nextLevel;
@@ -9960,6 +10239,8 @@
     buildBastionDraftChoices,
     buildWave6ChassisBreakpointChoices,
     createLateAscensionChoices,
+    getAfterburnOverdriveDef,
+    getAfterburnOverdriveChoices,
     createIllegalOverclockChoices,
     createIllegalOverclockMutationChoice,
     createPredatorBaitChoice,
@@ -10199,6 +10480,7 @@
       weapon.chain > 0 ? `연쇄 ${weapon.chain}` : null,
       weapon.evolutionTraitLabel ? weapon.evolutionTraitLabel : null,
       weapon.lateAscensionTraitLabel ? weapon.lateAscensionTraitLabel : null,
+      weapon.afterburnOverdriveTraitLabel ? weapon.afterburnOverdriveTraitLabel : null,
       weapon.illegalOverclockTraitLabel ? weapon.illegalOverclockTraitLabel : null,
       weapon.riskMutationTraitLabel ? weapon.riskMutationTraitLabel : null,
       weapon.apexMutationTraitLabel ? weapon.apexMutationTraitLabel : null,
@@ -12341,6 +12623,14 @@
             choices: buildFinaleMutationChoices(build),
           }
         : null,
+      afterburnOverdrive: shouldOfferAfterburnOverdrive(build, boundedStage)
+        ? {
+            deployed: false,
+            claimed: false,
+            groupId: null,
+            choices: getAfterburnOverdriveChoices(build),
+          }
+        : null,
       apexPredator: shouldSpawnApexPredator(build, MAX_WAVES + boundedStage + 1)
         ? {
             spawned: false,
@@ -14431,6 +14721,7 @@
     fireWeaponPattern(weapon.evolutionFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.doctrineFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.lateAscensionFirePattern, weapon, baseAngle, driveActive);
+    fireWeaponPattern(weapon.afterburnOverdriveFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.lateFieldMutationFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.lateFieldConvergenceFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.illegalOverclockFirePattern, weapon, baseAngle, driveActive);
@@ -15409,6 +15700,7 @@
       }
       if (enemy.type === "elite") {
         deployFinaleMutation(enemy);
+        deployAfterburnOverdrive(enemy);
         deployCombatCache(enemy);
         deployLateAscension(enemy);
         deployDoctrineLiveAscension(enemy);
@@ -15526,6 +15818,14 @@
             "LAST"
           );
           state.wave.finaleMutation.claimed = true;
+        }
+      } else if (drop.life <= 0 && drop.kind === "afterburn_overdrive_cache") {
+        if (state.wave && state.wave.afterburnOverdrive && !state.wave.afterburnOverdrive.claimed) {
+          pushCombatFeed(
+            "Endform Overdrive가 식었다. 이번 웨이브 jump는 놓쳤지만 다음 Afterburn elite에서 다시 찢어낼 수 있다.",
+            "OVR"
+          );
+          state.wave.afterburnOverdrive.claimed = true;
         }
       } else if (drop.life > 0) {
         nextDrops.push(drop);
@@ -15770,6 +16070,28 @@
       pushCombatFeed(
         `${choice.title} 접합. 마지막 포지 없이 전장 한복판에서 splice를 잠가 남은 Afterburn bracket을 이 형태로 다시 비튼다.`,
         "LAST"
+      );
+      setBanner(choice.title, 0.9);
+      return true;
+    }
+
+    if (drop.kind === "afterburn_overdrive_cache") {
+      const overdrive = state.wave && state.wave.afterburnOverdrive;
+      const choice = drop.choice;
+      if (!overdrive || overdrive.claimed || !choice || state.build.afterburnOverdriveId) {
+        return true;
+      }
+      applyForgeChoice(state, choice);
+      refreshDerivedStats(false);
+      overdrive.claimed = true;
+      state.drops.forEach((entry) => {
+        if (entry.kind === "afterburn_overdrive_cache" && entry.groupId === drop.groupId) {
+          entry.life = 0;
+        }
+      });
+      pushCombatFeed(
+        `${choice.title} 접합. ${choice.bodyLabel || "새 endform"}가 함께 잠겨 남은 Afterburn 전체가 이 overdrive silhouette 위에서 다시 가속된다.`,
+        "OVR"
       );
       setBanner(choice.title, 0.9);
       return true;
@@ -16312,6 +16634,25 @@
         combatCacheRows.push(createStatusRow("Finale", "locked"));
         combatCacheNote = "Act 4 splice가 이미 잠겨 남은 Afterburn escalation 전체가 이 최종 각인 위에서 가속 중이다.";
       }
+      if (state.phase === "wave" && state.wave && state.wave.afterburnOverdrive) {
+        const overdrive = state.wave.afterburnOverdrive;
+        combatCacheRows.push(
+          createStatusRow(
+            "Endform Overdrive",
+            overdrive.claimed ? "회수 완료" : overdrive.deployed ? "cache live" : "첫 elite 대기"
+          )
+        );
+        combatCacheRows.push(createStatusRow("Jump", "1 pick"));
+        combatCacheNote = overdrive.claimed
+          ? "이번 웨이브의 Endform Overdrive 창구는 닫혔다. 아직 jump를 못 집었다면 다음 Afterburn elite에서 다시 찢어낼 수 있다."
+          : overdrive.deployed
+            ? "드롭된 overdrive cache 중 하나만 회수할 수 있다. 어떤 jump를 집느냐에 따라 남은 Afterburn의 차체와 보조 포문 규칙이 다시 바뀐다."
+            : "Afterburn 중반부터 첫 elite가 Endform Overdrive cache를 떨어뜨린다. 살아남으려면 중반 endurance 한복판에서 마지막 jump를 직접 회수해야 한다.";
+      } else if (state.postCapstone && state.postCapstone.active && state.weapon.afterburnOverdriveLabel) {
+        combatCacheRows.push(createStatusRow("Endform Overdrive", state.weapon.afterburnOverdriveLabel));
+        combatCacheRows.push(createStatusRow("Jump", "locked"));
+        combatCacheNote = state.weapon.afterburnOverdriveStatusNote || "Afterburn overdrive가 이미 잠겨 남은 연전 전체를 새 실루엣으로 밀어붙인다.";
+      }
       if (state.phase === "wave" && state.wave && state.wave.combatCache) {
         const combatCache = state.wave.combatCache;
         combatCacheRows.push(
@@ -16500,7 +16841,7 @@
         }">${
           state.player.overheated
             ? "사격 정지: 열을 비워야 한다."
-            : `${weapon.evolutionStatusNote ? `${weapon.evolutionStatusNote} ` : ""}${weapon.doctrineStatusNote ? `${weapon.doctrineStatusNote} ` : ""}${weapon.lateAscensionStatusNote ? `${weapon.lateAscensionStatusNote} ` : ""}${weapon.illegalOverclockStatusNote ? `${weapon.illegalOverclockStatusNote} ` : ""}${weapon.apexMutationStatusNote ? `${weapon.apexMutationStatusNote} ` : ""}${weapon.capstoneStatusNote ? `${weapon.capstoneStatusNote} ` : ""}${state.supportSystem ? `${state.supportSystem.statusNote} ` : ""}${hazardStatus.note} 자동 사격은 과열 전까지 유지된다.`
+            : `${weapon.evolutionStatusNote ? `${weapon.evolutionStatusNote} ` : ""}${weapon.doctrineStatusNote ? `${weapon.doctrineStatusNote} ` : ""}${weapon.lateAscensionStatusNote ? `${weapon.lateAscensionStatusNote} ` : ""}${weapon.afterburnOverdriveStatusNote ? `${weapon.afterburnOverdriveStatusNote} ` : ""}${weapon.illegalOverclockStatusNote ? `${weapon.illegalOverclockStatusNote} ` : ""}${weapon.apexMutationStatusNote ? `${weapon.apexMutationStatusNote} ` : ""}${weapon.capstoneStatusNote ? `${weapon.capstoneStatusNote} ` : ""}${state.supportSystem ? `${state.supportSystem.statusNote} ` : ""}${hazardStatus.note} 자동 사격은 과열 전까지 유지된다.`
         }</p>
       `;
     }
@@ -16953,6 +17294,8 @@
               ? ILLEGAL_OVERCLOCK_DROP_LIFE
             : drop.kind === "afterburn_ascension_cache"
               ? AFTERBURN_ASCENSION_DROP_LIFE
+            : drop.kind === "afterburn_overdrive_cache"
+              ? AFTERBURN_OVERDRIVE_DROP_LIFE
             : drop.kind === "combat_cache"
               ? COMBAT_CACHE_DROP_LIFE
             : 10;
@@ -17037,6 +17380,27 @@
         context.font = "bold 10px monospace";
         context.textAlign = "center";
         context.fillText(choice.tag || "ASCEND", drop.x, drop.y + 28);
+      } else if (drop.kind === "afterburn_overdrive_cache") {
+        const choice = drop.choice || {};
+        const overdrive = getAfterburnOverdriveDef(choice.afterburnOverdriveId);
+        context.strokeStyle = overdrive ? overdrive.color : "rgba(255, 212, 163, 0.96)";
+        context.lineWidth = 2.8;
+        context.beginPath();
+        context.arc(drop.x, drop.y, 16, 0, Math.PI * 2);
+        context.stroke();
+        context.fillStyle = overdrive ? overdrive.color : "rgba(255, 212, 163, 0.92)";
+        context.beginPath();
+        drawPolygon(context, drop.x, drop.y, 11, 8, performance.now() * 0.0028);
+        context.fill();
+        context.strokeStyle = "rgba(255, 246, 232, 0.88)";
+        context.lineWidth = 2;
+        context.beginPath();
+        context.arc(drop.x, drop.y, 7, 0, Math.PI * 2);
+        context.stroke();
+        context.fillStyle = "rgba(22, 10, 4, 0.92)";
+        context.font = "bold 10px monospace";
+        context.textAlign = "center";
+        context.fillText(choice.tag || "OVR", drop.x, drop.y + 29);
       } else if (drop.kind === "afterburn_ascension_cache") {
         const choice = drop.choice || {};
         const ascensionPalette =
@@ -17503,6 +17867,7 @@
       drawPlayerLateFieldAegisFrame(context);
       drawPlayerDoctrineCapstoneFrame(context);
       drawPlayerLateAscensionFrame(context);
+      drawPlayerAfterburnOverdriveFrame(context);
       drawPlayerRiskMutationFrame(context);
       drawPlayerApexFrame(context);
       drawPlayerIllegalOverclockFrame(context);
@@ -18081,6 +18446,88 @@
       context.lineWidth = 2.2;
       context.beginPath();
       context.arc(state.player.x, state.player.y, state.player.radius + 9 + pulse * 0.8, 0, Math.PI * 2);
+      context.stroke();
+    }
+  }
+
+  function drawPlayerAfterburnOverdriveFrame(context) {
+    if (!state.player || !state.weapon || !state.weapon.afterburnOverdriveId) {
+      return;
+    }
+    const overdrive = getAfterburnOverdriveDef(state.weapon.afterburnOverdriveId);
+    if (!overdrive) {
+      return;
+    }
+    const facing = state.player.facing || 0;
+    const pulse = Math.sin(performance.now() * 0.016) * 1.5;
+    if (overdrive.id === "cataclysm_crown") {
+      [-1.3, -0.65, 0, 0.65, 1.3].forEach((lane, index) => {
+        const crown = getOffsetPoint(state.player.x, state.player.y, facing, 6, lane * 12);
+        context.strokeStyle = `rgba(255, 212, 163, ${0.82 - index * 0.08})`;
+        context.lineWidth = 2.1;
+        context.beginPath();
+        context.moveTo(crown.x, crown.y);
+        context.lineTo(
+          crown.x + Math.cos(facing) * (10 + pulse),
+          crown.y + Math.sin(facing) * (10 + pulse)
+        );
+        context.stroke();
+      });
+      context.strokeStyle = "rgba(255, 233, 206, 0.68)";
+      context.lineWidth = 2.2;
+      context.beginPath();
+      context.arc(state.player.x, state.player.y, state.player.radius + 15 + pulse, 0, Math.PI * 2);
+      context.stroke();
+      return;
+    }
+    if (overdrive.id === "bastion_lattice") {
+      context.strokeStyle = "rgba(223, 247, 255, 0.78)";
+      context.lineWidth = 2.5;
+      context.beginPath();
+      context.arc(
+        state.player.x,
+        state.player.y,
+        state.player.radius + 16 + pulse,
+        facing - 0.7,
+        facing + 0.7
+      );
+      context.stroke();
+      [-0.28, 0, 0.28].forEach((lane) => {
+        const prong = getOffsetPoint(state.player.x, state.player.y, facing, state.player.radius + 4, lane * 10);
+        context.fillStyle = "rgba(199, 242, 255, 0.86)";
+        context.beginPath();
+        context.moveTo(prong.x + Math.cos(facing) * (11 + pulse), prong.y + Math.sin(facing) * (11 + pulse));
+        context.lineTo(
+          prong.x - Math.cos(facing) * 4 - Math.sin(facing) * 4 * Math.sign(lane || 1),
+          prong.y - Math.sin(facing) * 4 + Math.cos(facing) * 4 * Math.sign(lane || 1)
+        );
+        context.lineTo(
+          prong.x - Math.cos(facing) * 7 + Math.sin(facing) * 4 * Math.sign(lane || 1),
+          prong.y - Math.sin(facing) * 7 - Math.cos(facing) * 4 * Math.sign(lane || 1)
+        );
+        context.closePath();
+        context.fill();
+      });
+      return;
+    }
+    if (overdrive.id === "reaver_wake") {
+      [-1, 1].forEach((direction, index) => {
+        const wake = getOffsetPoint(state.player.x, state.player.y, facing + Math.PI, 5, direction * 12);
+        context.strokeStyle = `rgba(159, 255, 210, ${0.82 - index * 0.1})`;
+        context.lineWidth = 2.3;
+        context.beginPath();
+        context.moveTo(state.player.x, state.player.y);
+        context.lineTo(wake.x, wake.y);
+        context.lineTo(
+          wake.x + Math.cos(facing + direction * 0.34) * (12 + pulse),
+          wake.y + Math.sin(facing + direction * 0.34) * (12 + pulse)
+        );
+        context.stroke();
+      });
+      context.strokeStyle = "rgba(215, 255, 234, 0.62)";
+      context.lineWidth = 2;
+      context.beginPath();
+      context.arc(state.player.x, state.player.y, state.player.radius + 11 + pulse * 0.6, 0, Math.PI * 2);
       context.stroke();
     }
   }
