@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-23 15:07:00 KST
+  Findings:
+  - `playables/cinder-circuit/game.js` finally creates a better endurance band in `Afterburn I-V`, but `Afterburn VII` collapses back into dense `territory hold` structure with bastion cores, turret crossfire, and route repair labor. That is exactly the prototype reflex this game needs to outgrow if it wants a real `20-30` wave future.
+  - The late ladder is still too scripted around named progression beats instead of letting one terrifying form simply live on the field. `Ascension`, `Act 4 Splice`, `Dominant Mutation`, `Catalyst Crucible`, `Forge Pursuit`, doctrine state, chassis, and support bays are all still competing for headline status, so the run reads as operating a build stack, not chasing an endform.
+  - Build breadth exists, but build appetite still lags because too much payoff is framed as lane unlocks and system permissions. Strong replayable arena roguelites make the player obsess over the next visible body/gun jump; here the fantasy is still partially "which management layer unlocked" instead of "what monster did I just become."
+  - `docs/games/cinder-circuit-design.md` still promises a `7분 내외`, `5웨이브` short run. As long as the core design doc preserves that contract, the implementation will keep drifting back toward tidy closure and late-run compression rather than honest endurance escalation.
+  Top Priority: Replace the final `Afterburn VII` hold-style regression with another full-screen combat-first endurance bracket that sustains open-space pressure and lets completed doctrines survive several more minutes without objective upkeep, then cut the HUD/forge framing down to one dominant transformation track the player can crave.
+  Why Now: The game is closest it has been to a real long-form loop, and this is the point where prototype closure habits will either be removed or become permanent.
+  Do Not Repeat: Do not solve this with another named cache, another support-lane unlock, or another "final exam" structure remix.
+
 - 2026-03-23 02:30:42 KST
   Findings:
   - The run is longer on paper, but repeated-fun intensity still softens too often into the same late solve. `Wave 10-12` and large parts of `Afterburn` keep rephrasing pressure as "a pocket is closing, cut the owner, then resume the objective," so the supposed escalation ladder still lacks enough distinct combat tests to justify a future `20-30` wave climb.
@@ -1041,6 +1051,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-23 03:10 KST
+  Changed: replaced the old `Afterburn VII` hold-style regression in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) with a final combat-first endurance bracket. The last post-capstone wave now stays in the larger `1560x900` afterburn arena, swaps the `territory` core/turret upkeep out for a faster `drift` pressure field, and reweights the finale mix toward `shrike`/`skimmer`/`lancer`/`brander` reentry pressure instead of a `warden`-heavy bastion ownership exam. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the automation now asserts that `Afterburn VII` remains open-space combat with no hazard core. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's Top Priority was still directly open at the very end of the run. The highest-value bounded interpretation was to solve the most obvious regression first: stop cashing the finale out as another route-repair hold and instead let completed doctrines spend the last bracket surviving a louder, shared full-screen pressure soup that can scale toward a longer `20-30` wave future.
+  Follow-up risk: the final afterburn is now much more honest about open-space endurance, but the added `brander` + reentry mix could over-favor the most mobile endforms if the ignition/drift overlap leaves slower doctrines without enough counterplay windows. If live runs show that bias, the next pass should tune the finale hazard cadence or doctrine-side survivability rather than reintroducing structure upkeep.
 
 - 2026-03-23 15:05 KST
   Changed: rebuilt the first five `Afterburn` encounters in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) into a combat-first endurance band that starts immediately after the doctrine mutation instead of dropping straight back into relay/territory upkeep. `Afterburn I-V` now use a larger `1560x900` forbidden-territory arena, lean on `pulse`/`drift` survival pressure plus `skimmer`/`lancer`/`shrike` pursuit mixes, and hold objective-core interruptions to a single greed-focused `salvage` wave before the heavier relay/territory asks return in the last two brackets. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the new early-Afterburn hazard grammar and no-core endurance opening are covered. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
