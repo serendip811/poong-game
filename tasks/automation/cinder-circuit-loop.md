@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-23 00:20 KST
+  Findings:
+  - The combat space is larger on paper, but the live ask is still too often route repair instead of expressive movement. `Wave 5-12` keeps stacking `territory`, `mortar`, `warden`, and `relay` denial, so the player spends too much time reopening corridors and too little time choosing when to dive, flank, overstay, or greed for drops.
+  - The build game still peaks as scheduled assembly, not hunger. `Wave 3` forecast, `Wave 6 Ascension Draft`, `Wave 6-8` pursuit shards, `Wave 8` armory uplink, `Wave 10` catalyst, and `Wave 13-15` afterburn splice keep distributing the fantasy across checkpoints instead of letting one outrageous form arrive early enough to dominate several waves.
+  - Too much endgame identity still lives in autonomous support layers. `Mirror Hunt` and `Kiln Bastion` continue to read as drones, sentries, shields, and helper logic becoming complete, while `Storm Artillery` more clearly turns the player’s own gun and body into the spectacle. That imbalance hurts rerun desire because only some paths promise a form you want to personally pilot.
+  - The late curve is still structurally timid for a game gesturing at `20-30` wave ambition. Even with `Afterburn I-III`, the run remains a fixed short ladder whose final bracket is another authored trial set, not the beginning of a longer survival climb where a completed machine has to keep scaling under shared pressure.
+  Top Priority: Rebuild the post-`Wave 6` run around one earlier irreversible monster-form spike per doctrine that is mostly player-driven, then extend the live combat ladder so that form has to survive at least `6-8` more escalating waves in a shared encounter pool instead of a short tailored afterburn exam.
+  Why Now: Until the player gets a terrifying form early enough to actually inhabit it, the run will read as clever scaffolding rather than something worth rerunning for mastery and greed.
+  Do Not Repeat: Do not answer this with another checkpoint wrapper, another helper-only capstone, or more lane-permission text that still delays the real payoff.
+
 - 2026-03-23 00:12 KST
   Findings:
   - The run still explains its machine fantasy more than it lets the player feel it. The HUD/forge layer now tracks `evolution`, `doctrine`, `late ascension`, `illegal overclock`, `apex`, `capstone`, `chassis`, `support system`, `pursuit`, `support bay`, and `catalyst`, which reads like system inventory rather than a clean power fantasy the player can instantly desire and pilot.
@@ -863,6 +873,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-23 03:05 KST
+  Changed: rewired `Mirror Hunt`'s completed pursuit payoff in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) away from an autonomous support-layer capstone and into a true player-driven monster gun. `Relay Storm Lattice` now defines a real stage-3 doctrine weapon form for `Ricochet`: seven-lane relay fire, stronger bounce/chain pressure, and a new hit-splitting `mirror_reave` branch that lets aimed shots keep carving through outer lines after the first impact. I also removed the old automatic relay-storm support trigger so the capstone's headline power now lives in the player's own weapon, then updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new stage-3 Mirror Hunt form. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's Top Priority asked for one earlier irreversible monster-form spike per doctrine that is mostly player-driven, and explicitly warned against another helper-only capstone. The highest-value bounded interpretation was to keep Mirror Hunt's already-early pursuit completion timing but move its payoff out of automated drone logic and into a form the player can actually pilot for several waves.
+  Follow-up risk: Mirror Hunt now has a real early monster gun, but `Kiln Bastion` and the overall post-ascension survival ladder still lag behind. If the next critique keeps pressing on doctrine parity or long-run ceiling, the next bounded step should either give Kiln the same player-first treatment or extend the shared late-wave bracket so this earlier form gets more uncompromised ownership time.
 
 - 2026-03-23 00:55 KST
   Changed: replaced the old `Wave 6 Bastion Draft -> Chassis Breakpoint` two-stop package in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) with a single `Ascension Draft`. Each doctrine card now locks an irreversible Wave 6 form in one pick: it applies the doctrine immediately, turns on that doctrine's visible stage-1 weapon mutation, grants a matching utility chassis, and opens one doctrine-free flex subsystem lane with an off-doctrine install right away. The existing `Wave 8` auto-uplink skip still stays attached, and the forge previews/combat-feed text now sell the moment as an immediate machine transformation instead of a follow-up admin package. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the smoke coverage now asserts the new Wave 6 ascension shape instead of the removed two-step doctrine/breakpoint flow. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

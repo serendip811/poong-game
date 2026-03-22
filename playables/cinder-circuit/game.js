@@ -1961,10 +1961,10 @@
       slotText: "교리 완성 · 추적 릴레이 폭풍",
       cost: 78,
       laneLabel: "Doctrine Apex",
-      summary: "드론과 미사일이 멀어진 적을 번개 릴레이로 엮어 외곽 전체를 자동 사냥한다.",
-      statusNote: "Relay Storm Lattice가 외곽 적을 번개 릴레이로 엮어 추적선이 따로 사냥을 계속한다.",
+      summary: "Ricochet 주포가 칠익 릴레이 벽으로 완성되어, 플레이어가 직접 쓸 때 적열과 외곽 추적선을 한 번에 찢는다.",
+      statusNote: "Relay Storm Lattice가 Ricochet를 칠익 릴레이 벽으로 완성해, 직접 각을 잡을수록 외곽 적열이 연쇄 절단된다.",
       description:
-        "Mirror Hunt 전용 최종 교리 카드. Volt Drones와 Seeker Array가 멀어진 적 셋까지 자동 릴레이 폭풍으로 엮어 외곽 추적선을 플레이어와 분리된 사냥 기계로 바꾼다.",
+        "Mirror Hunt 전용 최종 교리 카드. Ricochet를 칠익 릴레이 벽으로 완성해 첫 적중점에서 추적 분광이 옆 열까지 갈라지고, 벽 반사와 직접 조준이 같은 순간 외곽 추적선을 같이 찢는 플레이어 주도 monster form으로 바꾼다.",
     },
     kiln_bastion: {
       id: "bulwark_foundry",
@@ -2084,6 +2084,39 @@
             bounceBonus: 1,
             chainBonus: 1,
             color: "#fff0ff",
+          },
+        },
+        3: {
+          variants: {
+            relay_storm_lattice: {
+              label: "Relay Storm Lattice",
+              traitLabel: "칠익 릴레이 벽",
+              statusNote:
+                "Relay Storm Lattice가 일곱 갈래 릴레이 벽을 펼치고 첫 적중점마다 추적 분광 둘을 더 갈라, 플레이어가 직접 외곽 적열을 연쇄 절단하는 monster form이 된다.",
+              damageBonus: 11,
+              cooldownMultiplier: 0.86,
+              chainBonus: 1,
+              chainRangeBonus: 40,
+              firePattern: {
+                offsets: [-0.42, -0.28, -0.14, 0, 0.14, 0.28, 0.42],
+                damageMultiplier: 0.5,
+                speedMultiplier: 1.14,
+                radius: 4.2,
+                life: 1.28,
+                pierceBonus: 0,
+                bounceBonus: 1,
+                chainBonus: 1,
+                color: "#ffffff",
+              },
+              onHit: {
+                kind: "mirror_reave",
+                burstCount: 2,
+                range: 176,
+                damageMultiplier: 0.58,
+                speedMultiplier: 1.06,
+                color: "#c7fbff",
+              },
+            },
           },
         },
       },
@@ -11266,6 +11299,9 @@
     if (!capstone || !state.supportSystem) {
       return;
     }
+    if (capstone.id === "relay_storm_lattice") {
+      return;
+    }
     state.supportSystemRuntime.doctrineCapstoneCooldown = Math.max(
       0,
       state.supportSystemRuntime.doctrineCapstoneCooldown - dt
@@ -11484,6 +11520,50 @@
           chainRange: 0,
           color: onHit.color,
           doctrineOnHit: null,
+          capstoneOnHit: null,
+          capstoneOnBounce: null,
+        })
+      );
+      emitted += 1;
+    }
+    onHit.remainingBursts = 0;
+  }
+
+  function emitMirrorReaveBursts(projectile, sourceEnemy) {
+    const onHit = projectile && projectile.doctrineOnHit;
+    if (!onHit || onHit.kind !== "mirror_reave" || onHit.remainingBursts <= 0) {
+      return;
+    }
+    let emitted = 0;
+    for (const enemy of state.enemies) {
+      if (
+        enemy === sourceEnemy ||
+        enemy.defeated ||
+        enemy.hp <= 0 ||
+        emitted >= onHit.remainingBursts
+      ) {
+        continue;
+      }
+      const distance = Math.hypot(enemy.x - sourceEnemy.x, enemy.y - sourceEnemy.y);
+      if (distance > onHit.range) {
+        continue;
+      }
+      const angle = Math.atan2(enemy.y - sourceEnemy.y, enemy.x - sourceEnemy.x);
+      state.projectiles.push(
+        createDerivedProjectile(projectile, angle, {
+          x: sourceEnemy.x,
+          y: sourceEnemy.y,
+          speed: (Math.hypot(projectile.vx, projectile.vy) || 1) * onHit.speedMultiplier,
+          radius: Math.max(projectile.radius - 0.2, 4.2),
+          damage: round(projectile.damage * onHit.damageMultiplier, 1),
+          life: 0.34,
+          pierce: 0,
+          bounce: 1,
+          chain: 1,
+          chainRange: Math.max(projectile.chainRange || 0, 152),
+          color: onHit.color,
+          doctrineOnHit: null,
+          doctrineOnHazardHit: null,
           capstoneOnHit: null,
           capstoneOnBounce: null,
         })
@@ -12286,6 +12366,7 @@
             if (enemy.hp <= 0) {
               destroyEnemy(enemy);
             }
+            emitMirrorReaveBursts(projectile, enemy);
             emitStormspireNeedleBursts(projectile, enemy);
             emitStormRailBursts(projectile, enemy);
             const chained = tryChainProjectile(projectile, enemy);

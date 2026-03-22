@@ -731,8 +731,14 @@ game.applyForgeChoice(
 );
 assert.equal(doctrineCapstoneBuild.doctrineCapstoneId, "relay_storm_lattice");
 const mirrorCapstoneWeapon = game.computeWeaponStats(doctrineCapstoneBuild);
-assert.equal(mirrorCapstoneWeapon.doctrineFormLabel, "Relay Storm Frame");
-assert.equal(mirrorCapstoneWeapon.doctrineStage, 2);
+assert.equal(mirrorCapstoneWeapon.doctrineFormLabel, "Relay Storm Lattice");
+assert.equal(mirrorCapstoneWeapon.doctrineStage, 3);
+assert.equal(mirrorCapstoneWeapon.doctrineTraitLabel, "칠익 릴레이 벽");
+assert.equal(mirrorCapstoneWeapon.doctrineOnHit.kind, "mirror_reave");
+assert.equal(
+  JSON.stringify(mirrorCapstoneWeapon.doctrineFirePattern.offsets),
+  JSON.stringify([-0.42, -0.28, -0.14, 0, 0.14, 0.28, 0.42])
+);
 const doctrineCapstoneSystemStats = game.computeSupportSystemStats(doctrineCapstoneBuild);
 assert.equal(doctrineCapstoneSystemStats.doctrineCapstoneLabel, "Relay Storm Lattice");
 assert.ok(doctrineCapstoneSystemStats.statusNote.includes("Relay Storm Lattice"));
