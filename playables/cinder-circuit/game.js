@@ -297,6 +297,7 @@
     {
       id: "lockgrid",
       label: "Wave 9 · Lockgrid",
+      pressureFamily: "crossfire",
       duration: 90,
       spawnBudget: 186,
       activeCap: 41,
@@ -329,6 +330,7 @@
     {
       id: "scrapstorm",
       label: "Wave 10 · Scrapstorm",
+      pressureFamily: "raid",
       duration: 94,
       spawnBudget: 198,
       activeCap: 43,
@@ -368,6 +370,7 @@
     {
       id: "starforge",
       label: "Wave 11 · Starforge",
+      pressureFamily: "pursuit",
       duration: 98,
       spawnBudget: 216,
       activeCap: 46,
@@ -403,6 +406,7 @@
     {
       id: "cindercrown",
       label: "Wave 12 · Cinder Crown",
+      pressureFamily: "breach",
       duration: 104,
       spawnBudget: 232,
       activeCap: 48,
@@ -442,6 +446,7 @@
 
   const SHARED_LATE_ACT_ENCOUNTER_POOL = {
     8: {
+      pressureFamily: "crossfire",
       note: "Act 3 시작점부터 더는 doctrine별 맞춤 시험지가 아니다. 모든 빌드는 혼합 추격선, 후열 포격, 봉쇄 사선을 한 전장에서 함께 처리해야 하며, 자기 무기/차체가 무엇을 빨리 지울 수 있는지 직접 증명해야 한다.",
       directive:
         "shared lockgrid. 빠른 측면 추격조와 warden 봉쇄선, 느린 mortar 포격이 같은 외곽 회전 루트를 동시에 무너뜨린다. 자기 doctrine에 맞춘 안전 lane은 없으니, 지금 강한 각으로 후열과 입구를 직접 찢어야 한다.",
@@ -466,6 +471,7 @@
       },
     },
     9: {
+      pressureFamily: "raid",
       note: "shared late-act 중 하나는 이제 공용 greed bracket이다. contraband vault가 외곽에 잠깐 열리고 warden 봉쇄선과 mortar 포격이 그 접근을 세금처럼 막아, 어떤 빌드든 안전 운영과 고철 강탈 사이를 직접 저울질해야 한다.",
       directive:
         "shared scrapstorm. contraband vault를 부수면 큰 scrap burst가 흩어지지만, 시간을 쓰는 동안 warden 사선과 mortar가 퇴로를 묶는다. 눈앞 적을 닦는 대신 먼 금고를 찢을지 바로 정해야 한다.",
@@ -497,6 +503,7 @@
       },
     },
     10: {
+      pressureFamily: "pursuit",
       note: "후반 pursuit는 한 doctrine이 편한 속도로 굴러가지 않는다. 떠도는 화구, 재진입하는 추격선, 뒤늦게 도착하는 mortar 포격이 동시에 겹쳐 모든 빌드의 회전 능력과 주포 폭발력을 같이 시험한다.",
       directive:
         "starforge pursuit. drifting furnace가 현재 위치를 따라붙고, shrike 재진입과 mortar 탄막이 탈출 루트를 늦게 덮는다. 한 lane에 눌러앉지 말고 전장을 크게 꺾으며 위험 덩어리를 직접 찢어야 한다.",
@@ -524,6 +531,7 @@
       },
     },
     11: {
+      pressureFamily: "breach",
       note: "최종 late-act crown은 모든 doctrine가 같은 hostile ecology를 통과해야 한다. 사중 relay, warden 차폐선, mortar 후열이 동시에 전장을 찢기 때문에 helper 정리보다 플레이어가 직접 먼 코어와 포격원을 지우는 속도가 더 크게 드러난다.",
       directive:
         "cinder crown relay. 사중 relay crown과 warden 차폐선, mortar 포격이 함께 전장을 얇게 찢는다. 어느 doctrine이든 중앙 난전을 오래 붙들기보다 먼 pylon과 포격원을 먼저 지워 shared ecology 자체를 무너뜨려야 한다.",
@@ -576,6 +584,7 @@
   const POST_CAPSTONE_ENCOUNTER_POOL = [
     {
       waveIndex: 9,
+      pressureFamily: "breach",
       note: "첫 afterburn은 relay lattice를 다시 꺼내되, 이제는 회랑 절개만으로 끝나지 않는다. 완성된 기체가 long-run survival ladder에 진입했는지 증명하듯 먼 코어 절개와 근거리 추격 정리를 같은 박자로 처리해야 한다.",
       directive:
         "afterburn breach crown. relay pylon이 긴 화염 회랑을 다시 엮고 mortar 후열이 늦게 덮친다. 회랑 절개와 후열 사냥을 번갈아 이어 가며 첫 forbidden-territory bracket을 열어야 한다.",
@@ -605,6 +614,7 @@
     },
     {
       waveIndex: 10,
+      pressureFamily: "raid",
       note: "두 번째 afterburn은 greed window를 길게 강요한다. completed form이 안전 lane 없이도 contraband vault를 연속 강탈할 수 있는지 묻고, 강탈에 성공할수록 다음 폭주 구간을 더 과감하게 살 자원을 벌어 준다.",
       directive:
         "afterburn heist. contraband vault가 외곽에 순차적으로 떠오르고 shrike 재진입과 mortar 포격이 회수선을 자른다. 강한 순간에 깊게 dive해 vault를 부순 뒤 scrap을 주워 빠져나올지, 생존만 택할지 계속 갈라진다.",
@@ -635,6 +645,7 @@
     },
     {
       waveIndex: 11,
+      pressureFamily: "hold",
       arena: THIRD_ACT_ARENA,
       note: "세 번째 afterburn은 territory grammar를 late arena에 다시 올려 lockout repair가 아니라 hold-or-dive 결정을 요구한다. 여러 bastion core가 넓은 전장에서 동시에 살아 있어, 어느 거점을 무시하고 어느 드랍을 greed할지 빌드마다 답이 갈린다.",
       directive:
@@ -666,6 +677,7 @@
     },
     {
       waveIndex: 8,
+      pressureFamily: "crossfire",
       note: "중반 afterburn은 구조물보다 lane collapse 자체를 앞세운다. pulse surge가 현재 회전 루트와 드랍 선을 자주 건드려, completed build가 살기 위해 후퇴할지 greed를 위해 진입할지 즉석에서 갈라진다.",
       directive:
         "slag surge. 다중 surge가 외곽 회전선과 scrap 회수선을 연속으로 절단한다. route repair보다 다음 폭주가 닿기 전에 어떤 묶음을 먼저 지우고 무엇을 버릴지 바로 정해야 한다.",
@@ -689,6 +701,7 @@
     },
     {
       waveIndex: 11,
+      pressureFamily: "breach",
       note: "다섯 번째 afterburn부터는 crown pressure가 돌아오지만, 이제는 finale가 아니라 ladder의 중후반이다. 사중 relay와 후열 포격을 다시 겹쳐 finished machine이 얼마나 오래 회랑을 직접 찢을 수 있는지 묻는다.",
       directive:
         "cinder crown relay. 사중 relay crown, warden 차폐선, mortar 후열이 동시에 전장을 얇게 가른다. helper 정리보다 플레이어가 먼 코어와 포격원을 먼저 지우는 속도가 생존 시간을 결정한다.",
@@ -703,6 +716,7 @@
     },
     {
       waveIndex: 10,
+      pressureFamily: "pursuit",
       note: "여섯 번째 afterburn은 pursuit grammar를 다시 끌어올리되 더 공격적으로 뒤섞는다. pressure clump가 빠르게 다시 생기므로, 한 번 강한 dive로 길을 열 수 있는 build일수록 오래 산다.",
       directive:
         "starforge reentry. drifting furnace가 더 자주 갈아 끼워지고 shrike 재진입과 mortar 탄막이 퇴로를 겹쳐 닫는다. overextend를 감수해도 압박 덩어리를 먼저 찢는 편이 살아남기 쉽다.",
@@ -729,6 +743,7 @@
     },
     {
       waveIndex: 11,
+      pressureFamily: "hold",
       arena: THIRD_ACT_ARENA,
       note: "마지막 afterburn은 territory hold를 다시 가장 높은 밀도로 되돌린다. core와 포대가 넓은 공방을 다층으로 막아 finished build가 route repair를 넘어 실제 거점 ownership을 얼마나 오래 버티는지 드러낸다.",
       directive:
@@ -866,6 +881,104 @@
       apexSpawnTimer: 4.4,
     },
   ];
+  const ENCOUNTER_PRESSURE_FAMILIES = {
+    crossfire: {
+      mix: {
+        scuttler: 0.08,
+        brute: 0.12,
+        shrike: 0.3,
+        mortar: 0.14,
+        warden: 0.36,
+      },
+      mixWeight: 0.58,
+      hazard: {
+        countBonus: 1,
+        telegraphScale: 0.92,
+        intervalScale: 0.94,
+        radiusBonus: 4,
+      },
+    },
+    raid: {
+      mix: {
+        scuttler: 0.12,
+        brute: 0.14,
+        shrike: 0.34,
+        mortar: 0.12,
+        warden: 0.28,
+      },
+      mixWeight: 0.56,
+      hazard: {
+        countBonus: 1,
+        telegraphScale: 0.9,
+        intervalScale: 0.92,
+        durationBonus: 0.8,
+        coreHpBonus: -6,
+        salvageScrapBonus: 4,
+        salvageBurstCountBonus: 1,
+        salvageBurstRadiusBonus: 8,
+      },
+    },
+    pursuit: {
+      mix: {
+        scuttler: 0.14,
+        brute: 0.16,
+        shrike: 0.38,
+        mortar: 0.16,
+        warden: 0.16,
+      },
+      mixWeight: 0.58,
+      hazard: {
+        countBonus: 1,
+        telegraphScale: 0.88,
+        intervalScale: 0.9,
+        radiusBonus: 6,
+        durationBonus: 0.6,
+        driftSpeedBonus: 14,
+        driftOrbitBonus: 0.08,
+      },
+    },
+    breach: {
+      mix: {
+        scuttler: 0.04,
+        brute: 0.22,
+        shrike: 0.12,
+        mortar: 0.18,
+        warden: 0.44,
+      },
+      mixWeight: 0.6,
+      hazard: {
+        countBonus: 1,
+        telegraphScale: 0.94,
+        intervalScale: 0.93,
+        coreHpBonus: 8,
+        radiusBonus: 6,
+        relayRangeBonus: 24,
+        relayWidthBonus: 4,
+        relayDamageBonus: 1,
+      },
+    },
+    hold: {
+      mix: {
+        scuttler: 0.04,
+        brute: 0.28,
+        shrike: 0.1,
+        mortar: 0.18,
+        warden: 0.4,
+      },
+      mixWeight: 0.62,
+      hazard: {
+        countBonus: 1,
+        telegraphScale: 0.94,
+        intervalScale: 0.92,
+        durationBonus: 0.8,
+        radiusBonus: 6,
+        coreHpBonus: 12,
+        turretIntervalBonus: -0.08,
+        turretDamageBonus: 1,
+        enemyPullRadiusBonus: 16,
+      },
+    },
+  };
   const RISK_MUTATION_CORE_DEFS = {
     ember: {
       title: "Ember Talon Molt",
@@ -984,13 +1097,13 @@
   function resolveWaveConfig(index, build = null) {
     const baseConfig = WAVE_CONFIG[clamp(index, 0, MAX_WAVES - 1)];
     if (!baseConfig || index < LATE_BREAK_ARMORY_WAVE - 1 || !build) {
-      return baseConfig;
+      return applyEncounterPressureFamily(baseConfig);
     }
     const override = SHARED_LATE_ACT_ENCOUNTER_POOL[index] || null;
     if (!override) {
-      return baseConfig;
+      return applyEncounterPressureFamily(baseConfig);
     }
-    return {
+    return applyEncounterPressureFamily({
       ...baseConfig,
       ...override,
       mix: override.mix ? { ...override.mix } : { ...baseConfig.mix },
@@ -1002,7 +1115,7 @@
         : baseConfig.hazard
           ? { ...baseConfig.hazard }
           : null,
-    };
+    });
   }
 
   function getActLabelForWave(waveNumber) {
@@ -10739,6 +10852,112 @@
     return blended;
   }
 
+  function applyEncounterPressureFamily(config) {
+    if (!config || !config.pressureFamily) {
+      return config;
+    }
+    const family = ENCOUNTER_PRESSURE_FAMILIES[config.pressureFamily];
+    if (!family) {
+      return config;
+    }
+    const nextConfig = {
+      ...config,
+      mix: blendEnemyMix(config.mix || {}, family.mix || {}, family.mixWeight || 0.5),
+    };
+    if (config.hazard && family.hazard) {
+      nextConfig.hazard = { ...config.hazard };
+      const adjustments = family.hazard;
+      if (Number.isFinite(nextConfig.hazard.count)) {
+        nextConfig.hazard.count = Math.max(1, nextConfig.hazard.count + (adjustments.countBonus || 0));
+      }
+      if (Number.isFinite(nextConfig.hazard.interval)) {
+        nextConfig.hazard.interval = Math.max(
+          4.4,
+          nextConfig.hazard.interval * (adjustments.intervalScale || 1)
+        );
+      }
+      if (Number.isFinite(nextConfig.hazard.telegraph)) {
+        nextConfig.hazard.telegraph = Math.max(
+          0.58,
+          nextConfig.hazard.telegraph * (adjustments.telegraphScale || 1)
+        );
+      }
+      if (Number.isFinite(nextConfig.hazard.duration)) {
+        nextConfig.hazard.duration = Math.max(
+          2.8,
+          nextConfig.hazard.duration + (adjustments.durationBonus || 0)
+        );
+      }
+      if (Number.isFinite(nextConfig.hazard.radius)) {
+        nextConfig.hazard.radius = Math.max(
+          52,
+          nextConfig.hazard.radius + (adjustments.radiusBonus || 0)
+        );
+      }
+      if (Number.isFinite(nextConfig.hazard.coreHp)) {
+        nextConfig.hazard.coreHp = Math.max(
+          24,
+          nextConfig.hazard.coreHp + (adjustments.coreHpBonus || 0)
+        );
+      }
+      if (Number.isFinite(nextConfig.hazard.salvageScrap)) {
+        nextConfig.hazard.salvageScrap = Math.max(
+          8,
+          nextConfig.hazard.salvageScrap + (adjustments.salvageScrapBonus || 0)
+        );
+      }
+      if (Number.isFinite(nextConfig.hazard.salvageBurstCount)) {
+        nextConfig.hazard.salvageBurstCount = Math.max(
+          1,
+          nextConfig.hazard.salvageBurstCount + (adjustments.salvageBurstCountBonus || 0)
+        );
+      }
+      if (Number.isFinite(nextConfig.hazard.salvageBurstRadius)) {
+        nextConfig.hazard.salvageBurstRadius = Math.max(
+          32,
+          nextConfig.hazard.salvageBurstRadius + (adjustments.salvageBurstRadiusBonus || 0)
+        );
+      }
+      if (Number.isFinite(nextConfig.hazard.driftSpeed)) {
+        nextConfig.hazard.driftSpeed = Math.max(
+          90,
+          nextConfig.hazard.driftSpeed + (adjustments.driftSpeedBonus || 0)
+        );
+      }
+      if (Number.isFinite(nextConfig.hazard.driftOrbit)) {
+        nextConfig.hazard.driftOrbit += adjustments.driftOrbitBonus || 0;
+      }
+      if (Number.isFinite(nextConfig.hazard.relayRange)) {
+        nextConfig.hazard.relayRange = Math.max(
+          320,
+          nextConfig.hazard.relayRange + (adjustments.relayRangeBonus || 0)
+        );
+      }
+      if (Number.isFinite(nextConfig.hazard.relayWidth)) {
+        nextConfig.hazard.relayWidth = Math.max(
+          24,
+          nextConfig.hazard.relayWidth + (adjustments.relayWidthBonus || 0)
+        );
+      }
+      if (Number.isFinite(nextConfig.hazard.relayDamage)) {
+        nextConfig.hazard.relayDamage += adjustments.relayDamageBonus || 0;
+      }
+      if (Number.isFinite(nextConfig.hazard.turretInterval)) {
+        nextConfig.hazard.turretInterval = Math.max(
+          0.55,
+          nextConfig.hazard.turretInterval + (adjustments.turretIntervalBonus || 0)
+        );
+      }
+      if (Number.isFinite(nextConfig.hazard.turretDamage)) {
+        nextConfig.hazard.turretDamage += adjustments.turretDamageBonus || 0;
+      }
+      if (Number.isFinite(nextConfig.hazard.enemyPullRadius)) {
+        nextConfig.hazard.enemyPullRadius += adjustments.enemyPullRadiusBonus || 0;
+      }
+    }
+    return nextConfig;
+  }
+
   function createPostCapstoneWave(stageIndex = 0, build = null) {
     const boundedStage = clamp(stageIndex, 0, POST_CAPSTONE_WAVE_COUNT - 1);
     const encounter =
@@ -10750,7 +10969,7 @@
       MAX_WAVES - 1
     );
     const baseConfig = resolveWaveConfig(baseWaveIndex, build);
-    const encounterConfig = {
+    const encounterConfig = applyEncounterPressureFamily({
       ...baseConfig,
       ...(encounter || {}),
       arena: encounter && encounter.arena ? encounter.arena : baseConfig.arena,
@@ -10766,7 +10985,7 @@
         : baseConfig.hazard
           ? { ...baseConfig.hazard }
           : null,
-    };
+    });
     const escalation =
       POST_CAPSTONE_ASCENSION_PROFILE[boundedStage] ||
       POST_CAPSTONE_ASCENSION_PROFILE[POST_CAPSTONE_ASCENSION_PROFILE.length - 1];
