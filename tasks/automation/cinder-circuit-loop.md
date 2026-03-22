@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-23 00:24:00 KST
+  Findings:
+  - The run is longer, but its escalation is still mostly a fixed itinerary: `Architecture Draft` at Wave 3, `Act Break Armory` at Wave 5, `Bastion Draft / Chassis Breakpoint` at Wave 6, `Late Break Armory` at Wave 9, `Catalyst Crucible` at Wave 10, then final forge into a 3-wave `Afterburn`. That is a guided build tour, not a hunger loop that could naturally sustain `20-30` waves.
+  - The new illegal overclock and pursuit hooks are the right instinct, but they are still one-time authored contracts rather than a renewable greed economy. Once a run clears its scheduled doctrine frame, capstone, and support bays, there is little left to chase except surviving the remaining script.
+  - Build expression is broader, yet too much visible late power still lives in support infrastructure: drones, sentries, orbitals, missile racks, halo interceptors, and reserved bay logic. The main gun and chassis evolve more than before, but the run still reads like "finish the module stack" instead of "push one war machine into a dangerous new form."
+  - The docs are still framing success as a short `5웨이브`, `7분 내외` prototype while the implementation is already pretending to be a much larger action roguelite. That mismatch is now a design liability: it encourages tidy completion beats and capped systems exactly where the game needs open-ended ambition.
+  Top Priority: Replace one-shot late-run completion with a renewable overheat/contraband escalation lane that repeatedly offers dangerous body-weapon mutations in exchange for real survivability or control loss, so strong runs still have something reckless to chase after their first capstone.
+  Why Now: Without a reusable greed engine, extra waves will only lengthen the script after the build is already emotionally finished.
+  Do Not Repeat: Do not add more fixed forge stops, extra support bays, or another named capstone if the run still has no recurring reason to gamble after Wave 10.
+
 - 2026-03-23 00:10:00 KST
   Findings:
   - The run now has more systems than the original prototype, but its power economy still tops out too neatly. `MAX_SUPPORT_BAYS = 2` with controlled late unlocks, fixed chassis commitment, and scheduled capstone beats make most end states look like finished kits, not unstable machines the player is desperate to overfeed for another 10-15 waves.
@@ -751,6 +761,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-23 01:25 KST
+  Changed: extended the `Wave 9` illegal-overclock lane in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) into a repeatable `Contraband Molt` greed loop instead of a one-shot late-run finish. Once a run has chosen `Glass Broadside`, `Meltdown Cycler`, or `Rupture Crown`, Waves `10+` now drop one optional live-combat `MOLT` cache per wave until three stacks are reached. Picking the cache permanently mutates the current illegal form again, making the main gun visibly more monstrous instead of just finished: `Glass Broadside` grows extra side batteries, `Meltdown Cycler` starts spitting vent-spur side shots on top of its illegal fire-rate loop, and `Rupture Crown` widens into larger crown fans. Each extra mutation also tears more out of the body through permanent max-HP, cooling, movement, or dash-control penalties. I updated the HUD/status text and player-frame rendering so those mutation tiers remain legible in combat, and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to cover the new mutation choice generation and stacked weapon growth.
+  Why: the latest critique’s Top Priority was to replace one-shot late completion with a renewable overheat/contraband escalation lane that keeps offering dangerous body-weapon mutations after the first capstone. The highest-value bounded interpretation was to deepen the existing illegal-overclock system in combat rather than add another forge stop, because that creates a reusable greed pickup the player can chase or ignore while keeping the excitement centered on the main gun becoming less stable and more absurd.
+  Follow-up risk: the greed lane is now renewable, but each post-`Wave 10` offer is still a single optional mutation pickup rather than a broader two- or three-way contraband menu. If later critique wants even more decision weight, the next pass should branch those caches into alternate illegal body trades or stabilization counteroffers instead of only pushing one mutation line upward.
 
 - 2026-03-23 00:35 KST
   Changed: added a post-`Wave 8` greed layer in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) that appears as a live `Wave 9` `black-site uplink` instead of another forge stop. When `Wave 9` begins, the player now gets one-time on-field access to three `illegal overclock` pickups: `Glass Broadside`, `Meltdown Cycler`, and `Rupture Crown`. Each one permanently sacrifices survivability or cooling stability, but pushes the main weapon past its normal finished state with visible new fire behavior for the rest of the run: twin side batteries, a meltdown fire-rate surge, or an added crown fan volley. I also added HUD/readout/render support so the chosen overclock reads as an active late-run identity layer, and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to cover the new overclock definitions, choice generation, and resulting weapon-state mutations.

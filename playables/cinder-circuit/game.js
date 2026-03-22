@@ -12,7 +12,9 @@
     height: 820,
   };
   const ILLEGAL_OVERCLOCK_WAVE = 9;
+  const ILLEGAL_MUTATION_START_WAVE = 10;
   const ILLEGAL_OVERCLOCK_DROP_LIFE = 12;
+  const MAX_ILLEGAL_OVERCLOCK_MUTATIONS = 3;
 
   const WAVE_CONFIG = [
     {
@@ -1818,19 +1820,25 @@
         build.maxHpBonus -= 18;
         build.hazardMitigation -= 0.06;
       },
-      applyWeapon(stats) {
+      applyWeapon(stats, build) {
+        const mutationLevel = getIllegalOverclockMutationLevel(build);
         stats.illegalOverclockFirePattern = {
           kind: "broadside",
-          offsets: [-0.34, 0.34],
-          speedMultiplier: 1.08,
-          radius: 5.2,
-          damageMultiplier: 0.62,
-          life: 0.9,
+          offsets: getGlassBroadsideOffsets(mutationLevel),
+          speedMultiplier: 1.08 + mutationLevel * 0.03,
+          radius: 5.2 + mutationLevel * 0.18,
+          damageMultiplier: Math.max(0.42, 0.62 - mutationLevel * 0.03),
+          life: 0.9 + mutationLevel * 0.06,
           pierceBonus: 0,
           bounceBonus: 0,
           chainBonus: 0,
           color: "#8fe4ff",
         };
+      },
+      applyMutation(build) {
+        build.maxHpBonus -= 8;
+        build.hazardMitigation -= 0.025;
+        build.moveSpeedBonus -= 4;
       },
     },
     meltdown_cycler: {
@@ -1848,15 +1856,43 @@
         build.coolRateBonus -= 10;
         build.heatFactor *= 1.22;
       },
-      applyWeapon(stats) {
+      applyWeapon(stats, build) {
+        const mutationLevel = getIllegalOverclockMutationLevel(build);
         stats.cooldown = clamp(stats.cooldown * 0.8, 0.08, 0.4);
         stats.damage = round(stats.damage * 1.08, 1);
+        if (mutationLevel > 0) {
+          stats.cooldown = clamp(stats.cooldown * (1 - mutationLevel * 0.05), 0.08, 0.4);
+          stats.damage = round(stats.damage * (1 + mutationLevel * 0.04), 1);
+          stats.heatPerShot = round(stats.heatPerShot * (1 + mutationLevel * 0.1), 1);
+          stats.illegalOverclockFirePattern = {
+            kind: "crown",
+            offsets:
+              mutationLevel >= 3
+                ? [-0.34, -0.18, 0.18, 0.34]
+                : mutationLevel === 2
+                  ? [-0.24, -0.08, 0.08, 0.24]
+                  : [-0.18, 0.18],
+            speedMultiplier: 1.18,
+            radius: 4.3,
+            damageMultiplier: 0.34 + mutationLevel * 0.03,
+            life: 0.6,
+            pierceBonus: 0,
+            bounceBonus: 0,
+            chainBonus: 0,
+            color: "#ffb277",
+          };
+        }
         if (stats.core.id === "scatter") {
           stats.pellets += 1;
         }
         if (stats.core.id === "ricochet") {
           stats.bounce += 1;
         }
+      },
+      applyMutation(build) {
+        build.coolRateBonus -= 6;
+        build.heatFactor *= 1.1;
+        build.moveSpeedBonus -= 6;
       },
     },
     rupture_crown: {
@@ -1874,19 +1910,25 @@
         build.maxHpBonus -= 14;
         build.coolRateBonus -= 6;
       },
-      applyWeapon(stats) {
+      applyWeapon(stats, build) {
+        const mutationLevel = getIllegalOverclockMutationLevel(build);
         stats.illegalOverclockFirePattern = {
           kind: "crown",
-          offsets: [-0.52, -0.18, 0.18, 0.52],
-          speedMultiplier: 0.96,
-          radius: 4.8,
-          damageMultiplier: 0.4,
-          life: 0.74,
+          offsets: getRuptureCrownOffsets(mutationLevel),
+          speedMultiplier: 0.96 + mutationLevel * 0.03,
+          radius: 4.8 + mutationLevel * 0.14,
+          damageMultiplier: Math.max(0.28, 0.4 - mutationLevel * 0.02),
+          life: 0.74 + mutationLevel * 0.04,
           pierceBonus: 0,
           bounceBonus: 0,
           chainBonus: 0,
           color: "#ffd7a6",
         };
+      },
+      applyMutation(build) {
+        build.maxHpBonus -= 6;
+        build.coolRateBonus -= 4;
+        build.dashCooldownBonus -= 0.08;
       },
     },
   };
@@ -3429,6 +3471,7 @@
     overcommitResolved: false,
     illegalOverclockId: null,
     illegalOverclockOffered: false,
+    illegalOverclockMutationLevel: 0,
     bastionPactDebtWaves: 0,
     wave6ChassisBreakpoint: false,
     chassisId: null,
@@ -3479,6 +3522,44 @@
           ? buildOrId.illegalOverclockId
           : null;
     return overclockId ? ILLEGAL_OVERCLOCK_DEFS[overclockId] || null : null;
+  }
+
+  function getIllegalOverclockMutationLevel(build) {
+    return clamp(
+      Math.round((build && build.illegalOverclockMutationLevel) || 0),
+      0,
+      MAX_ILLEGAL_OVERCLOCK_MUTATIONS
+    );
+  }
+
+  function getIllegalMutationTierLabel(level) {
+    return `MOLT ${clamp(Math.round(level || 0), 1, MAX_ILLEGAL_OVERCLOCK_MUTATIONS)}`;
+  }
+
+  function getGlassBroadsideOffsets(level) {
+    if (level >= 3) {
+      return [-0.76, -0.5, -0.24, -0.08, 0.08, 0.24, 0.5, 0.76];
+    }
+    if (level === 2) {
+      return [-0.66, -0.38, -0.14, 0.14, 0.38, 0.66];
+    }
+    if (level === 1) {
+      return [-0.54, -0.18, 0.18, 0.54];
+    }
+    return [-0.34, 0.34];
+  }
+
+  function getRuptureCrownOffsets(level) {
+    if (level >= 3) {
+      return [-0.78, -0.52, -0.28, -0.1, 0.1, 0.28, 0.52, 0.78];
+    }
+    if (level === 2) {
+      return [-0.68, -0.4, -0.14, 0.14, 0.4, 0.68];
+    }
+    if (level === 1) {
+      return [-0.58, -0.22, 0, 0.22, 0.58];
+    }
+    return [-0.52, -0.18, 0.18, 0.52];
   }
 
   function getChassisSummary(build) {
@@ -4444,6 +4525,7 @@
         overcommitResolved: BASE_BUILD.overcommitResolved,
         illegalOverclockId: BASE_BUILD.illegalOverclockId,
         illegalOverclockOffered: BASE_BUILD.illegalOverclockOffered,
+        illegalOverclockMutationLevel: BASE_BUILD.illegalOverclockMutationLevel,
         bastionPactDebtWaves: BASE_BUILD.bastionPactDebtWaves,
         wave6ChassisBreakpoint: BASE_BUILD.wave6ChassisBreakpoint,
         chassisId: BASE_BUILD.chassisId,
@@ -4881,10 +4963,17 @@
     }
     const illegalOverclock = getIllegalOverclockDef(build);
     if (illegalOverclock) {
+      const mutationLevel = getIllegalOverclockMutationLevel(build);
       stats.illegalOverclockId = illegalOverclock.id;
       stats.illegalOverclockLabel = illegalOverclock.label;
-      stats.illegalOverclockTraitLabel = illegalOverclock.traitLabel;
-      stats.illegalOverclockStatusNote = illegalOverclock.statusNote;
+      stats.illegalOverclockTraitLabel =
+        mutationLevel > 0
+          ? `${illegalOverclock.traitLabel} · ${getIllegalMutationTierLabel(mutationLevel)}`
+          : illegalOverclock.traitLabel;
+      stats.illegalOverclockStatusNote =
+        mutationLevel > 0
+          ? `${illegalOverclock.statusNote} 현재 ${getIllegalMutationTierLabel(mutationLevel)}로 금지 무장이 한 단계 더 넓어졌다.`
+          : illegalOverclock.statusNote;
       if (typeof illegalOverclock.applyWeapon === "function") {
         illegalOverclock.applyWeapon(stats, build);
       }
@@ -5368,6 +5457,43 @@
       laneLabel: "불법 과투입",
       forgeLaneLabel: "불법 과투입",
     }));
+  }
+
+  function createIllegalOverclockMutationChoice(build) {
+    if (!build || !build.illegalOverclockId) {
+      return null;
+    }
+    const overclock = getIllegalOverclockDef(build);
+    const currentLevel = getIllegalOverclockMutationLevel(build);
+    if (!overclock || currentLevel >= MAX_ILLEGAL_OVERCLOCK_MUTATIONS) {
+      return null;
+    }
+    const nextLevel = currentLevel + 1;
+    return {
+      type: "utility",
+      action: "illegal_overclock_mutation",
+      id: `utility:illegal_overclock_mutation:${overclock.id}:${nextLevel}`,
+      verb: "변이",
+      tag: getIllegalMutationTierLabel(nextLevel),
+      title: `${overclock.title} ${getIllegalMutationTierLabel(nextLevel)}`,
+      description:
+        overclock.id === "glass_broadside"
+          ? "측면 금지 포대를 더 증설해 broadside를 여러 줄로 벌린다. 대신 외피와 기동 여유를 더 찢어 hazard와 맞교환이 훨씬 위험해진다."
+          : overclock.id === "meltdown_cycler"
+            ? "찢어진 냉각 코일 사이에 추가 vent spur를 박아 발사 사이마다 불법 보조 사선을 뿜는다. 대신 냉각과 이동 제어가 더 무너진다."
+            : "파열 crown을 다시 벌려 fan burst를 한 단계 더 넓힌다. 대신 냉각과 회피 여유를 더 뜯어내 오래 버티는 운영이 급격히 약해진다.",
+      slotText:
+        overclock.id === "glass_broadside"
+          ? "추가 broadside 열 · 외피/기동 손실"
+          : overclock.id === "meltdown_cycler"
+            ? "vent spur 증설 · 냉각/기동 손실"
+            : "확장 crown fan · 냉각/회피 손실",
+      cost: 0,
+      illegalOverclockId: overclock.id,
+      mutationLevel: nextLevel,
+      laneLabel: "Contraband Molt",
+      forgeLaneLabel: "Contraband Molt",
+    };
   }
 
   function createCatalystReforgeChoice(build) {
@@ -7196,6 +7322,35 @@
       return choice;
     }
 
+    if (choice.type === "utility" && choice.action === "illegal_overclock_mutation") {
+      const overclock = getIllegalOverclockDef(run.build);
+      const nextLevel = Number.isFinite(choice.mutationLevel)
+        ? choice.mutationLevel
+        : getIllegalOverclockMutationLevel(run.build) + 1;
+      if (
+        !overclock ||
+        run.build.illegalOverclockId !== choice.illegalOverclockId ||
+        nextLevel <= getIllegalOverclockMutationLevel(run.build) ||
+        nextLevel > MAX_ILLEGAL_OVERCLOCK_MUTATIONS
+      ) {
+        return null;
+      }
+      run.build.illegalOverclockMutationLevel = nextLevel;
+      if (typeof overclock.applyMutation === "function") {
+        overclock.applyMutation(run.build, run, nextLevel);
+      }
+      run.build.upgrades.push(`금지 변이 ${nextLevel}: ${overclock.label}`);
+      if (run.player) {
+        run.player.hp = Math.min(
+          Math.max(1, run.player.hp),
+          Math.max(1, 100 + run.build.maxHpBonus)
+        );
+        run.player.heat = Math.max(0, run.player.heat - 8);
+        run.player.overheated = false;
+      }
+      return choice;
+    }
+
     if (choice.type === "fallback" && run.player) {
       run.player.hp = Math.min(run.player.maxHp, run.player.hp + 16);
       run.player.heat = Math.max(0, run.player.heat - 60);
@@ -7268,6 +7423,7 @@
     buildBastionDraftChoices,
     buildWave6ChassisBreakpointChoices,
     createIllegalOverclockChoices,
+    createIllegalOverclockMutationChoice,
     buildCatalystDraftChoices,
     applyForgeChoice,
     applyChassisBreakpoint,
@@ -8419,6 +8575,30 @@
     setBanner("Black-Site Uplink", 0.9);
   }
 
+  function deployIllegalMutationCache() {
+    if (!state.build || !state.build.illegalOverclockId) {
+      return;
+    }
+    const choice = createIllegalOverclockMutationChoice(state.build);
+    if (!choice) {
+      return;
+    }
+    const angle = -Math.PI / 2;
+    state.drops.push({
+      kind: "illegal_overclock_cache",
+      x: state.player.x + Math.cos(angle) * 60,
+      y: state.player.y + Math.sin(angle) * 60,
+      life: ILLEGAL_OVERCLOCK_DROP_LIFE,
+      choice,
+      groupId: `illegal-molt-${state.waveIndex + 1}-${choice.mutationLevel}`,
+    });
+    pushCombatFeed(
+      `${choice.title} 투하. 집으면 ${choice.slotText}를 영구로 감수하고 금지 무장을 한 단계 더 괴물 형태로 밀어 올린다. 무시하면 이번 웨이브는 안전하게 넘길 수 있다.`,
+      "MOLT"
+    );
+    setBanner(choice.tag, 0.8);
+  }
+
   function beginWave(index) {
     const resolvedConfig = resolveWaveConfig(index, state.build);
     const config = {
@@ -8539,6 +8719,8 @@
     }
     if (waveNumber === ILLEGAL_OVERCLOCK_WAVE) {
       deployIllegalOverclockChoices();
+    } else if (waveNumber >= ILLEGAL_MUTATION_START_WAVE) {
+      deployIllegalMutationCache();
     }
     setBanner(config.label, 1.4);
     renderForgeOverlay();
@@ -11448,7 +11630,12 @@
 
     if (drop.kind === "illegal_overclock_cache") {
       const choice = drop.choice;
-      if (!choice || state.build.illegalOverclockId) {
+      if (
+        !choice ||
+        (choice.action === "illegal_overclock" && state.build.illegalOverclockId) ||
+        (choice.action === "illegal_overclock_mutation" &&
+          getIllegalOverclockMutationLevel(state.build) >= (choice.mutationLevel || 0))
+      ) {
         return true;
       }
       applyForgeChoice(state, choice);
@@ -11460,10 +11647,17 @@
       });
       const overclock = getIllegalOverclockDef(state.build);
       pushCombatFeed(
-        `${(overclock && overclock.label) || choice.title} 접속. ${(overclock && overclock.statusNote) || "불법 과투입이 남은 런 전체를 덮는다."}`,
+        choice.action === "illegal_overclock_mutation"
+          ? `${choice.title} 접합. ${(overclock && overclock.statusNote) || "금지 변이가 무장을 더 넓히는 대신 몸체를 더 거칠게 찢는다."}`
+          : `${(overclock && overclock.label) || choice.title} 접속. ${(overclock && overclock.statusNote) || "불법 과투입이 남은 런 전체를 덮는다."}`,
         "ILLEGAL"
       );
-      setBanner((overclock && overclock.label) || "ILLEGAL", 0.8);
+      setBanner(
+        choice.action === "illegal_overclock_mutation"
+          ? choice.tag || "MOLT"
+          : (overclock && overclock.label) || "ILLEGAL",
+        0.8
+      );
       return true;
     }
 
@@ -12779,19 +12973,28 @@
       return;
     }
     const facing = state.player.facing || 0;
+    const mutationLevel = getIllegalOverclockMutationLevel(state.build);
     if (state.weapon.illegalOverclockId === "glass_broadside") {
-      [-1, 1].forEach((direction) => {
-        const wing = getOffsetPoint(state.player.x, state.player.y, facing, 2, 19 * direction);
+      const wingLanes =
+        mutationLevel >= 3
+          ? [-1.6, -1, -0.45, 0.45, 1, 1.6]
+          : mutationLevel === 2
+            ? [-1.3, -0.6, 0.6, 1.3]
+            : mutationLevel === 1
+              ? [-1, -0.45, 0.45, 1]
+              : [-1, 1];
+      wingLanes.forEach((lane) => {
+        const wing = getOffsetPoint(state.player.x, state.player.y, facing, 2, 19 * lane);
         context.fillStyle = "rgba(143, 228, 255, 0.86)";
         context.beginPath();
         context.moveTo(wing.x + Math.cos(facing) * 10, wing.y + Math.sin(facing) * 10);
         context.lineTo(
-          wing.x - Math.cos(facing) * 4 - Math.sin(facing) * 5 * direction,
-          wing.y - Math.sin(facing) * 4 + Math.cos(facing) * 5 * direction
+          wing.x - Math.cos(facing) * 4 - Math.sin(facing) * 5 * Math.sign(lane || 1),
+          wing.y - Math.sin(facing) * 4 + Math.cos(facing) * 5 * Math.sign(lane || 1)
         );
         context.lineTo(
-          wing.x - Math.cos(facing) * 8 + Math.sin(facing) * 5 * direction,
-          wing.y - Math.sin(facing) * 8 - Math.cos(facing) * 5 * direction
+          wing.x - Math.cos(facing) * 8 + Math.sin(facing) * 5 * Math.sign(lane || 1),
+          wing.y - Math.sin(facing) * 8 - Math.cos(facing) * 5 * Math.sign(lane || 1)
         );
         context.closePath();
         context.fill();
@@ -12799,21 +13002,24 @@
       return;
     }
     if (state.weapon.illegalOverclockId === "meltdown_cycler") {
-      context.strokeStyle = "rgba(255, 159, 89, 0.78)";
-      context.lineWidth = 2.5;
-      context.beginPath();
-      context.arc(
-        state.player.x,
-        state.player.y,
-        state.player.radius + 13 + Math.sin(performance.now() * 0.026) * 1.2,
-        0,
-        Math.PI * 2
-      );
-      context.stroke();
+      const ringCount = 1 + mutationLevel;
+      for (let ringIndex = 0; ringIndex < ringCount; ringIndex += 1) {
+        context.strokeStyle = `rgba(255, 159, 89, ${0.78 - ringIndex * 0.12})`;
+        context.lineWidth = Math.max(1.3, 2.5 - ringIndex * 0.35);
+        context.beginPath();
+        context.arc(
+          state.player.x,
+          state.player.y,
+          state.player.radius + 13 + ringIndex * 5 + Math.sin(performance.now() * 0.026 + ringIndex) * 1.2,
+          0,
+          Math.PI * 2
+        );
+        context.stroke();
+      }
       return;
     }
     if (state.weapon.illegalOverclockId === "rupture_crown") {
-      [-0.52, -0.18, 0.18, 0.52].forEach((offset) => {
+      getRuptureCrownOffsets(mutationLevel).forEach((offset) => {
         const angle = facing + offset;
         context.strokeStyle = "rgba(255, 215, 166, 0.84)";
         context.lineWidth = 2.2;

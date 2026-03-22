@@ -192,6 +192,15 @@ const broadsideWeapon = game.computeWeaponStats(broadsideRun.build);
 assert.equal(broadsideWeapon.illegalOverclockLabel, "Glass Broadside");
 assert.equal(broadsideWeapon.illegalOverclockFirePattern.kind, "broadside");
 assert.equal(broadsideWeapon.illegalOverclockFirePattern.offsets.length, 2);
+const broadsideMutationChoice = game.createIllegalOverclockMutationChoice(broadsideRun.build);
+assert.ok(broadsideMutationChoice);
+assert.equal(broadsideMutationChoice.mutationLevel, 1);
+game.applyForgeChoice(broadsideRun, broadsideMutationChoice);
+assert.equal(broadsideRun.build.illegalOverclockMutationLevel, 1);
+assert.equal(broadsideRun.build.maxHpBonus, -26);
+const mutatedBroadsideWeapon = game.computeWeaponStats(broadsideRun.build);
+assert.match(mutatedBroadsideWeapon.illegalOverclockTraitLabel, /MOLT 1/);
+assert.equal(mutatedBroadsideWeapon.illegalOverclockFirePattern.offsets.length, 4);
 const baseRelayWeapon = game.computeWeaponStats(game.createInitialBuild("relay_oath"));
 const cyclerBuild = game.createInitialBuild("relay_oath");
 const cyclerRun = {
@@ -207,6 +216,12 @@ game.applyForgeChoice(
 const cyclerWeapon = game.computeWeaponStats(cyclerBuild);
 assert.equal(cyclerWeapon.illegalOverclockLabel, "Meltdown Cycler");
 assert.ok(cyclerWeapon.cooldown < baseRelayWeapon.cooldown);
+const cyclerMutationChoice = game.createIllegalOverclockMutationChoice(cyclerBuild);
+assert.ok(cyclerMutationChoice);
+game.applyForgeChoice(cyclerRun, cyclerMutationChoice);
+const mutatedCyclerWeapon = game.computeWeaponStats(cyclerBuild);
+assert.ok(mutatedCyclerWeapon.cooldown < cyclerWeapon.cooldown);
+assert.equal(mutatedCyclerWeapon.illegalOverclockFirePattern.offsets.length, 2);
 const artilleryFrameBuild = game.createInitialBuild("rail_zeal");
 artilleryFrameBuild.bastionDoctrineId = "storm_artillery";
 artilleryFrameBuild.coreId = "lance";
