@@ -4393,7 +4393,13 @@
       return false;
     }
     const nextWave = options.nextWave || 0;
-    return nextWave === 6 || nextWave === 8;
+    if (nextWave === 6) {
+      return true;
+    }
+    if (nextWave === 8) {
+      return !(options.build && options.build.wave6ChassisBreakpoint);
+    }
+    return false;
   }
 
   function shouldRunCatalystDraft(options, build) {
@@ -4478,6 +4484,24 @@
       run.player.chassisAnchorActiveTime = 0;
     }
     return true;
+  }
+
+  function autoCommitDoctrinePursuit(build) {
+    const pursuit = getDoctrineForgePursuitDef(build);
+    if (
+      !build ||
+      !build.overcommitUnlocked ||
+      build.doctrinePursuitCommitted ||
+      build.doctrineChaseClaimed ||
+      !pursuit
+    ) {
+      return null;
+    }
+    build.doctrinePursuitCommitted = true;
+    build.doctrinePursuitProgress = 0;
+    build.doctrinePursuitExpired = false;
+    build.upgrades.push(`교리 추격 자동 점화: ${pursuit.label}`);
+    return pursuit;
   }
 
   function getForgeDraftType(options) {
@@ -6919,6 +6943,7 @@
       },
       doctrine.favoredCoreId
     );
+    const autoPursuitReady = Boolean(build.overcommitUnlocked);
     return {
       type: "utility",
       action: "wave6_ascension",
@@ -6926,7 +6951,7 @@
       verb: "승천",
       tag: ascensionDef.tag,
       title: ascensionDef.title,
-      description: `${ascensionDef.summary} ${doctrine.description} ${weaponChoice.title}을(를) 즉시 무료 접속하고, 세 번째 support bay를 교리 reserve와 무관한 flex lane으로 열어 ${systemChoice ? `${systemChoice.title}을(를) 함께 박는다` : "off-doctrine lane을 즉시 확보한다"}. Wave 8 Late Break Armory는 건너뛰고 네 번째 bay가 전장 uplink로 이어진다.`,
+      description: `${ascensionDef.summary} ${doctrine.description} ${weaponChoice.title}을(를) 즉시 무료 접속하고, 세 번째 support bay를 교리 reserve와 무관한 flex lane으로 열어 ${systemChoice ? `${systemChoice.title}을(를) 함께 박는다` : "off-doctrine lane을 즉시 확보한다"}. Wave 8 Late Break Armory는 더 이상 열리지 않고 네 번째 bay가 전장 uplink로 이어진다.${autoPursuitReady ? " Wave 5 contraband salvage를 챙겼다면 Forge Pursuit도 여기서 즉시 점화된다." : ""}`,
       slotText: `${doctrine.label} · ${weaponChoice.title} · flex lane ${systemChoice ? systemChoice.title : "개방"}`,
       cost: Math.max(0, Math.round((weaponChoice.cost || 0) * 0.48)),
       laneLabel: ascensionDef.laneLabel,
@@ -6939,6 +6964,7 @@
       },
       doctrineFormLabel: doctrineForm ? doctrineForm.label : doctrine.label,
       doctrineFormTrait: doctrineForm ? doctrineForm.traitLabel : null,
+      autoPursuitReady,
       chassisId: ascensionDef.chassisId,
       chassisTitle: chassis ? chassis.title : ascensionDef.chassisId,
       bayUnlock: true,
@@ -7581,7 +7607,7 @@
     state.forgeChoices = buildBastionDraftChoices(state.build, Math.random, nextWave);
     pushCombatFeed(
       wave6AscensionDraft
-        ? "Wave 6 Ascension Draft 개시. 세 장기 교리 중 하나를 irreversible form으로 잠그면 주포 mutation, utility chassis, doctrine-free flex lane이 한 번에 켜진다. Late Break Armory는 건너뛰고 Wave 6-9 bracket을 연속 전투로 밀어붙인다."
+        ? "Wave 6 Ascension Draft 개시. 세 장기 교리 중 하나를 irreversible form으로 잠그면 주포 mutation, utility chassis, doctrine-free flex lane이 한 번에 켜진다. 이 선택으로 mid-run admin stack을 끊고 Late Break Armory 없이 Wave 6-9 bracket을 연속 전투로 밀어붙인다."
         : `Bastion Draft 개시. ${getBastionDraftIntroText(state.build)}`,
       "DRAFT"
     );
@@ -7967,7 +7993,11 @@
         chassisTitle: choice.chassisTitle,
         systemChoice: choice.systemChoice,
       });
+      const pursuit = autoCommitDoctrinePursuit(run.build);
       run.build.upgrades.push(`Wave 6 Ascension: ${choice.title}`);
+      if (pursuit) {
+        run.build.upgrades.push(`Ascension Relay: ${pursuit.shortLabel} 즉시 활성화`);
+      }
       return choice;
     }
 
@@ -10391,8 +10421,8 @@
             : choice.action === "bastion_pact"
               ? `${grantLabel} 적용. 최대 체력을 깎아 고철을 쥔 대신 3웨이브 Siege Debt를 떠안고 다음 웨이브를 연다.`
               : choice.action === "wave6_ascension"
-                ? `${grantLabel} 적용. ${choice.doctrineLabel}를 irreversible form으로 잠가 ${choice.doctrineChoice ? choice.doctrineChoice.title : "주포 mutation"}과 ${choice.chassisTitle || "utility chassis"}, ${choice.systemChoice ? choice.systemChoice.title : "off-doctrine flex lane"}를 한 번에 켰다. Wave 8 Late Break Armory는 건너뛰고 ownership bracket을 즉시 이어 간다.`
-              : choice.action === "bastion_bay_forge"
+                ? `${grantLabel} 적용. ${choice.doctrineLabel}를 irreversible form으로 잠가 ${choice.doctrineChoice ? choice.doctrineChoice.title : "주포 mutation"}과 ${choice.chassisTitle || "utility chassis"}, ${choice.systemChoice ? choice.systemChoice.title : "off-doctrine flex lane"}를 한 번에 켰다.${choice.autoPursuitReady ? " 준비된 contraband salvage도 즉시 pursuit로 점화된다." : ""} Wave 8 Late Break Armory는 건너뛰고 ownership bracket을 즉시 이어 간다.`
+                : choice.action === "bastion_bay_forge"
                 ? wave6AscensionDraft || choice.skipNextAdminStop
                   ? `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}를 잠그고 세 번째 support bay를 flex lane으로 즉시 열어 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 장착했다. Wave 8에서는 정지 없이 네 번째 bay가 자동 uplink되어 Wave 6-9 bracket을 그대로 이어 간다.`
                   : `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}와 함께 세 번째 support bay를 즉시 열고 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 먼저 장착한 채, Wave 8 네 번째 bay까지 예약하고 다음 웨이브를 연다.`

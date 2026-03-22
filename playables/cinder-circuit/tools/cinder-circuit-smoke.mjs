@@ -595,6 +595,14 @@ assert.equal(game.getSupportBayCapacity(architectureRun.build), 3);
 assert.equal(architectureRun.build.auxiliaryJunctionLevel, 1);
 assert.equal(architectureRun.build.wave6ChassisBreakpoint, true);
 assert.equal(architectureRun.build.supportSystems.length, 1);
+assert.equal(architectureRun.build.doctrinePursuitCommitted, true);
+assert.equal(architectureRun.build.doctrinePursuitProgress, 0);
+assert.equal(architectureRun.build.doctrineChaseClaimed, false);
+assert.ok(
+  architectureRun.build.upgrades.some((upgrade) =>
+    upgrade.startsWith("교리 추격 자동 점화:")
+  )
+);
 assert.ok(
   architectureRun.build.upgrades.includes("Chassis Breakpoint: flex bay +1 now, auto Wave 8 uplink")
 );
@@ -602,22 +610,6 @@ assert.equal(game.shouldSkipOwnershipAdminStop(architectureRun.build, 9), true);
 assert.equal(game.unlockLateSupportBay(architectureRun.build), true);
 assert.equal(game.getSupportBayCapacity(architectureRun.build), 4);
 assert.ok(game.doctrineAllowsSystemInstall(architectureRun.build, "aegis_halo"));
-const wave8DoctrineChaseChoices = game.buildBastionDraftChoices(
-  architectureRun.build,
-  () => 0,
-  8
-);
-const doctrineChaseChoice = wave8DoctrineChaseChoices.find(
-  (choice) => choice.type === "utility" && choice.action === "doctrine_chase"
-);
-assert.ok(doctrineChaseChoice);
-assert.equal(doctrineChaseChoice.title, "Relay Storm Frame");
-assert.equal(doctrineChaseChoice.pursuitGoal, 2);
-assert.equal(doctrineChaseChoice.cost, 0);
-game.applyForgeChoice(architectureRun, doctrineChaseChoice);
-assert.equal(architectureRun.build.doctrinePursuitCommitted, true);
-assert.equal(architectureRun.build.doctrinePursuitProgress, 0);
-assert.equal(architectureRun.build.doctrineChaseClaimed, false);
 const postChaseChoices = game.buildForgeChoices(
   architectureRun.build,
   () => 0,
