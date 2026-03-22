@@ -171,6 +171,51 @@ assert.ok(chassisRun.build.wave6ChassisBreakpoint);
 assert.ok(chassisRun.build.supportBayCap >= 3);
 assert.equal(chassisRun.build.chassisId, wave6ChassisPackages[0].chassisId);
 assert.ok(game.shouldSkipOwnershipAdminStop(chassisRun.build, 9));
+const lateAscensionBuild = game.createInitialBuild("relay_oath");
+lateAscensionBuild.supportBayCap = 3;
+lateAscensionBuild.supportSystems = [
+  { id: "seeker_array", tier: 1 },
+  { id: "volt_drones", tier: 1 },
+];
+const lateAscensionChoices = game.createLateAscensionChoices(lateAscensionBuild);
+assert.equal(lateAscensionChoices.length, 2);
+const crownsplitterChoice = lateAscensionChoices.find(
+  (choice) => choice.lateAscensionId === "crownsplitter_array"
+);
+assert.ok(crownsplitterChoice);
+const crownsplitterRun = {
+  build: lateAscensionBuild,
+  resources: { scrap: 0 },
+  stats: { scrapCollected: 0, scrapSpent: 0 },
+  player: { hp: 100, maxHp: 100, heat: 14, overheated: false },
+};
+game.applyForgeChoice(crownsplitterRun, crownsplitterChoice);
+assert.equal(crownsplitterRun.build.lateAscensionId, "crownsplitter_array");
+const crownsplitterWeapon = game.computeWeaponStats(crownsplitterRun.build);
+assert.equal(crownsplitterWeapon.lateAscensionLabel, "Crownsplitter Array");
+assert.equal(crownsplitterWeapon.lateAscensionFirePattern.kind, "split_wing");
+assert.equal(crownsplitterWeapon.lateAscensionFirePattern.offsets.length, 4);
+const slagburstBuild = game.createInitialBuild("scrap_pact");
+slagburstBuild.supportBayCap = 3;
+slagburstBuild.supportSystems = [
+  { id: "seeker_array", tier: 1 },
+  { id: "volt_drones", tier: 1 },
+];
+const slagburstChoice = game
+  .createLateAscensionChoices(slagburstBuild)
+  .find((choice) => choice.lateAscensionId === "slagburst_drive");
+assert.ok(slagburstChoice);
+const slagburstRun = {
+  build: slagburstBuild,
+  resources: { scrap: 0 },
+  stats: { scrapCollected: 0, scrapSpent: 0 },
+  player: { hp: 100, maxHp: 100, heat: 8, overheated: false },
+};
+game.applyForgeChoice(slagburstRun, slagburstChoice);
+const slagburstWeapon = game.computeWeaponStats(slagburstRun.build);
+assert.equal(slagburstWeapon.lateAscensionLabel, "Slagburst Drive");
+assert.equal(slagburstWeapon.lateAscensionFirePattern.kind, "slag_seed");
+assert.equal(slagburstWeapon.lateAscensionFirePattern.count, 2);
 const illegalOverclockBuild = game.createInitialBuild("relay_oath");
 const illegalOverclockChoices = game.createIllegalOverclockChoices(illegalOverclockBuild);
 assert.equal(illegalOverclockChoices.length, 3);

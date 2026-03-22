@@ -13,7 +13,9 @@
   };
   const ILLEGAL_OVERCLOCK_WAVE = 9;
   const ILLEGAL_MUTATION_START_WAVE = 10;
+  const LATE_ASCENSION_START_WAVE = 10;
   const ILLEGAL_OVERCLOCK_DROP_LIFE = 12;
+  const LATE_ASCENSION_DROP_LIFE = 13;
   const MAX_ILLEGAL_OVERCLOCK_MUTATIONS = 3;
   const CATALYST_CRUCIBLE_DROP_LIFE = 12;
   const CATALYST_CRUCIBLE_OBJECTIVE = {
@@ -3569,6 +3571,8 @@
     bastionDoctrineId: null,
     doctrineCapstoneId: null,
     afterburnAscensionOffered: false,
+    lateAscensionId: null,
+    lateAscensionOffered: false,
     doctrineChaseClaimed: false,
     doctrinePursuitCommitted: false,
     doctrinePursuitProgress: 0,
@@ -3605,6 +3609,99 @@
     driveGainBonus: 0,
     overdriveDurationBonus: 0,
     hazardMitigation: 0,
+  };
+
+  const LATE_ASCENSION_DEFS = {
+    crownsplitter_array: {
+      id: "crownsplitter_array",
+      tag: "CROWN",
+      label: "Crownsplitter Array",
+      title: "Crownsplitter Array",
+      traitLabel: "wing battery",
+      description:
+        "주포 양옆에 분할 포대를 영구 증설해 발사마다 wing volley를 덧댄다. support bay가 많을수록 양날개 포문이 더 벌어지고 relay/warden 후열을 직접 찢기 쉬워진다.",
+      slotText: "주포 split volley · support가 wing lane 증폭",
+      bodyLabel: "Split-Wing Chassis",
+      bodyText: "측면 포대와 전방 가늠자가 붙어 주포가 직접 회랑을 찢는 추격 섀시다.",
+      statusNote:
+        "주포가 split wing battery로 변해 정면 라인을 직접 찢는다. support 시스템은 자동 처리 대신 wing lane을 더 벌려 이 형태를 증폭한다.",
+      apply(build, run) {
+        build.damageBonus += 4;
+        build.pierceBonus += 1;
+        build.moveSpeedBonus += 8;
+        build.maxHpBonus -= 4;
+        if (run && run.player) {
+          run.player.heat = Math.max(0, run.player.heat - 10);
+          run.player.overheated = false;
+        }
+      },
+      getFirePattern(supportLevel) {
+        const offsets = [-0.22, 0.22];
+        if (supportLevel >= 2) {
+          offsets.unshift(-0.42);
+          offsets.push(0.42);
+        }
+        if (supportLevel >= 3) {
+          offsets.unshift(-0.62);
+          offsets.push(0.62);
+        }
+        return {
+          kind: "split_wing",
+          offsets,
+          speedMultiplier: 1.08,
+          radius: 4.6,
+          damageMultiplier: 0.42 + supportLevel * 0.03,
+          life: 0.96,
+          pierceBonus: supportLevel >= 2 ? 1 : 0,
+          bounceBonus: 0,
+          chainBonus: 0,
+          color: "#9fe7ff",
+        };
+      },
+    },
+    slagburst_drive: {
+      id: "slagburst_drive",
+      tag: "SLAG",
+      label: "Slagburst Drive",
+      title: "Slagburst Drive",
+      traitLabel: "impact seed",
+      description:
+        "주포에 slag seed를 박아 발사마다 폭압성 충격탄을 흘린다. support bay가 많을수록 추가 seed가 붙어 늦은 웨이브의 교전 지점을 직접 재단한다.",
+      slotText: "slag seed 장착 · support가 seed 수 증폭",
+      bodyLabel: "Kiln-Drive Hull",
+      bodyText: "복부 용광 코일이 달린 돌입 섀시로, 교전 지점에 직접 잔불 구획을 남긴다.",
+      statusNote:
+        "주포가 slagburst drive로 바뀌어 발사 궤적 끝에 폭발과 잔불 구획을 남긴다. support 시스템은 seed 수를 늘려 이 몸체의 교전 장악력을 키운다.",
+      apply(build, run) {
+        build.damageBonus += 2;
+        build.maxHpBonus += 6;
+        build.moveSpeedBonus += 4;
+        build.heatFactor *= 1.05;
+        if (run && run.player) {
+          run.player.heat = Math.max(0, run.player.heat - 6);
+          run.player.overheated = false;
+        }
+      },
+      getFirePattern(supportLevel) {
+        return {
+          kind: "slag_seed",
+          count: 1 + Math.floor((supportLevel + 1) / 2),
+          spread: 0.18,
+          speedMultiplier: 0.84,
+          radius: 5.4,
+          damageMultiplier: 0.34 + supportLevel * 0.03,
+          life: 0.92,
+          blastRadius: 42 + supportLevel * 4,
+          blastDamageMultiplier: 0.32 + supportLevel * 0.03,
+          poolRadius: 38 + supportLevel * 3,
+          poolDuration: 2.8 + supportLevel * 0.28,
+          poolTickInterval: 0.34,
+          poolDamageMultiplier: 0.12 + supportLevel * 0.02,
+          poolColor: "#ff9f59",
+          color: "#ffd6a8",
+        };
+      },
+    },
   };
 
   function clamp(value, min, max) {
@@ -4647,6 +4744,8 @@
         bastionDoctrineId: BASE_BUILD.bastionDoctrineId,
         doctrineCapstoneId: BASE_BUILD.doctrineCapstoneId,
         afterburnAscensionOffered: BASE_BUILD.afterburnAscensionOffered,
+        lateAscensionId: BASE_BUILD.lateAscensionId,
+        lateAscensionOffered: BASE_BUILD.lateAscensionOffered,
         doctrineChaseClaimed: BASE_BUILD.doctrineChaseClaimed,
         doctrinePursuitCommitted: BASE_BUILD.doctrinePursuitCommitted,
         doctrinePursuitProgress: BASE_BUILD.doctrinePursuitProgress,
@@ -4877,6 +4976,51 @@
     });
   }
 
+  function getLateAscensionDef(buildOrAscensionId) {
+    if (!buildOrAscensionId) {
+      return null;
+    }
+    const ascensionId =
+      typeof buildOrAscensionId === "object" ? buildOrAscensionId.lateAscensionId : buildOrAscensionId;
+    return ascensionId ? LATE_ASCENSION_DEFS[ascensionId] || null : null;
+  }
+
+  function getLateAscensionSupportLevel(build) {
+    return clamp(getInstalledSupportSystems(build).length, 0, MAX_SUPPORT_BAY_LIMIT);
+  }
+
+  function shouldOfferLateAscension(build, waveNumber) {
+    return Boolean(
+      build &&
+      !build.lateAscensionId &&
+      Number.isFinite(waveNumber) &&
+      waveNumber >= LATE_ASCENSION_START_WAVE
+    );
+  }
+
+  function createLateAscensionChoices(build) {
+    if (!shouldOfferLateAscension(build, LATE_ASCENSION_START_WAVE)) {
+      return [];
+    }
+    return Object.values(LATE_ASCENSION_DEFS).map((ascension) => ({
+      type: "utility",
+      action: "late_ascension",
+      id: `utility:late_ascension:${ascension.id}`,
+      verb: "상승",
+      tag: ascension.tag,
+      title: ascension.title,
+      description: ascension.description,
+      slotText: ascension.slotText,
+      cost: 0,
+      lateAscensionId: ascension.id,
+      lateAscensionLabel: ascension.label,
+      bodyLabel: ascension.bodyLabel,
+      bodyText: ascension.bodyText,
+      laneLabel: "Ascension Core",
+      forgeLaneLabel: "Ascension Core",
+    }));
+  }
+
   function getDoctrineWeaponStage(build, doctrine = null) {
     if (!build) {
       return 0;
@@ -5098,6 +5242,11 @@
       apexMutationTraitLabel: null,
       apexMutationStatusNote: null,
       apexMutationFirePattern: null,
+      lateAscensionId: null,
+      lateAscensionLabel: null,
+      lateAscensionTraitLabel: null,
+      lateAscensionStatusNote: null,
+      lateAscensionFirePattern: null,
     };
     getAffixDefs(build).forEach((affix) => {
       if (typeof affix.applyWeapon === "function") {
@@ -5145,6 +5294,26 @@
           stats.chainRange || 0,
           baseChainRange + (doctrineWeaponForm.chainRangeBonus || 0)
         );
+      }
+    }
+    const lateAscension = getLateAscensionDef(build);
+    if (lateAscension) {
+      const supportLevel = getLateAscensionSupportLevel(build);
+      stats.lateAscensionId = lateAscension.id;
+      stats.lateAscensionLabel = lateAscension.label;
+      stats.lateAscensionTraitLabel =
+        `${lateAscension.traitLabel} · SUPPORT ${supportLevel}`;
+      stats.lateAscensionStatusNote =
+        `${lateAscension.statusNote} 현재 support uplink ${supportLevel}칸이 ascension form을 밀어 올리고 있다.`;
+      stats.lateAscensionFirePattern =
+        typeof lateAscension.getFirePattern === "function"
+          ? lateAscension.getFirePattern(supportLevel, build, core)
+          : null;
+      if (lateAscension.id === "crownsplitter_array") {
+        stats.projectileSpeed += 18 + supportLevel * 8;
+      } else if (lateAscension.id === "slagburst_drive") {
+        stats.damage += 4 + supportLevel * 2;
+        stats.heatPerShot = round(stats.heatPerShot * (1.05 + supportLevel * 0.015), 1);
       }
     }
     const illegalOverclock = getIllegalOverclockDef(build);
@@ -7119,6 +7288,39 @@
     setBanner("Afterburn Ascension", 0.95);
   }
 
+  function deployLateAscension(enemy) {
+    const ascension = state.wave && state.wave.lateAscension;
+    if (!ascension || ascension.deployed || ascension.claimed) {
+      return;
+    }
+    const choices = Array.isArray(ascension.choices) ? ascension.choices.filter(Boolean) : [];
+    if (choices.length === 0) {
+      ascension.deployed = true;
+      ascension.claimed = true;
+      return;
+    }
+    ascension.deployed = true;
+    ascension.groupId = `late-ascension-${state.waveIndex + 1}-${state.stats.kills}`;
+    state.build.lateAscensionOffered = true;
+    const spreadRadius = choices.length === 1 ? 0 : 42;
+    choices.forEach((choice, index) => {
+      const angle = (index / choices.length) * Math.PI - Math.PI / 2;
+      state.drops.push({
+        kind: "late_ascension_cache",
+        x: enemy.x + Math.cos(angle) * spreadRadius,
+        y: enemy.y + Math.sin(angle) * spreadRadius,
+        life: LATE_ASCENSION_DROP_LIFE,
+        choice,
+        groupId: ascension.groupId,
+      });
+    });
+    pushCombatFeed(
+      "Ascension Core 노출. 주포/차체가 두 금지 형태로 갈라졌다. 하나만 회수하면 이후 late waves 전체가 그 몸으로 굳는다.",
+      "ASCEND"
+    );
+    setBanner("Ascension Core", 0.95);
+  }
+
   function getBastionDraftIntroText(build) {
     if (!build || !build.bastionDoctrineId) {
       const doctrine = getBastionDoctrineDef(build);
@@ -7566,6 +7768,26 @@
       return choice;
     }
 
+    if (choice.type === "utility" && choice.action === "late_ascension") {
+      const ascension = getLateAscensionDef(choice.lateAscensionId || run.build);
+      if (!ascension || run.build.lateAscensionId) {
+        return null;
+      }
+      run.build.lateAscensionId = ascension.id;
+      run.build.lateAscensionOffered = true;
+      if (typeof ascension.apply === "function") {
+        ascension.apply(run.build, run);
+      }
+      run.build.upgrades.push(`Ascension Core: ${ascension.label}`);
+      if (run.player) {
+        run.player.hp = Math.min(
+          Math.max(1, run.player.hp),
+          Math.max(1, 100 + run.build.maxHpBonus)
+        );
+      }
+      return choice;
+    }
+
     if (choice.type === "utility" && choice.action === "illegal_overclock") {
       if (run.build.illegalOverclockId) {
         return null;
@@ -7727,6 +7949,7 @@
     buildFieldGrantChoices,
     buildBastionDraftChoices,
     buildWave6ChassisBreakpointChoices,
+    createLateAscensionChoices,
     createIllegalOverclockChoices,
     createIllegalOverclockMutationChoice,
     getApexMutationLevel,
@@ -7744,6 +7967,7 @@
     shouldRunCatalystDraft,
     getDoctrineWeaponForm,
     getDoctrineCapstoneDef,
+    getLateAscensionDef,
     getDoctrinePursuitCapstoneDef,
     getCatalystCapstone,
     shouldOpenForgePackage,
@@ -7945,6 +8169,7 @@
       weapon.bounce > 0 ? `반사 ${weapon.bounce}` : null,
       weapon.chain > 0 ? `연쇄 ${weapon.chain}` : null,
       weapon.evolutionTraitLabel ? weapon.evolutionTraitLabel : null,
+      weapon.lateAscensionTraitLabel ? weapon.lateAscensionTraitLabel : null,
       weapon.illegalOverclockTraitLabel ? weapon.illegalOverclockTraitLabel : null,
       weapon.apexMutationTraitLabel ? weapon.apexMutationTraitLabel : null,
       weapon.capstoneTraitLabel ? weapon.capstoneTraitLabel : null,
@@ -9127,6 +9352,14 @@
             choices: getCombatCacheChoicesForWave(state.build, waveNumber + 1),
           }
         : null,
+      lateAscension: shouldOfferLateAscension(state.build, waveNumber)
+        ? {
+            deployed: false,
+            claimed: false,
+            groupId: null,
+            choices: createLateAscensionChoices(state.build),
+          }
+        : null,
       kilnAscension: shouldRunKilnBastionAscension(state.build, waveNumber)
         ? {
             deployed: false,
@@ -9200,6 +9433,12 @@
       pushCombatFeed(
         "첫 elite가 Combat Cache를 떨어뜨린다. 현장에서 하나를 회수하면 Field Cache 정지 없이 바로 다음 웨이브로 이어진다.",
         "CACHE"
+      );
+    }
+    if (state.wave.lateAscension) {
+      pushCombatFeed(
+        "Ascension Core 활성화. 이번 late wave 첫 elite가 split core를 떨어뜨리며, 회수하면 남은 run이 새 주포/차체 형태로 잠긴다.",
+        "ASCEND"
       );
     }
     if (state.wave.kilnAscension) {
@@ -9435,6 +9674,14 @@
       postCapstoneStage: boundedStage + 1,
       postCapstoneTotal: POST_CAPSTONE_WAVE_COUNT,
       skipForgeOnClear: boundedStage < POST_CAPSTONE_WAVE_COUNT - 1,
+      lateAscension: shouldOfferLateAscension(build, MAX_WAVES + boundedStage + 1)
+        ? {
+            deployed: false,
+            claimed: false,
+            groupId: null,
+            choices: createLateAscensionChoices(build),
+          }
+        : null,
       afterburnAscension: shouldOfferStormArtilleryAfterburnAscension(build)
         ? {
             deployed: false,
@@ -9531,6 +9778,12 @@
         "ASCEND"
       );
     }
+    if (state.wave.lateAscension) {
+      pushCombatFeed(
+        "Ascension Core 재개방. 이번 forbidden-territory bracket 첫 elite를 잡아 아직 미완성인 주포/차체 형태 하나를 직접 잠가야 한다.",
+        "ASCEND"
+      );
+    }
     setBanner(
       transition && transition.preserveArenaState
         ? `${state.wave.bannerLabel || "Afterburn"} · 압박 유지`
@@ -9577,6 +9830,12 @@
     if (state.wave.afterburnAscension) {
       pushCombatFeed(
         "Storm Artillery endform lane 재개방. 이번 웨이브 첫 elite를 잡아 남은 Afterburn body split 중 하나를 뜯어내야 한다.",
+        "ASCEND"
+      );
+    }
+    if (state.wave.lateAscension) {
+      pushCombatFeed(
+        "Ascension Core 재가동. 이번 웨이브 첫 elite가 split core를 떨어뜨리며, 회수하면 남은 late waves의 주포/차체가 확정된다.",
         "ASCEND"
       );
     }
@@ -11362,6 +11621,7 @@
 
     fireWeaponPattern(weapon.evolutionFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.doctrineFirePattern, weapon, baseAngle, driveActive);
+    fireWeaponPattern(weapon.lateAscensionFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.illegalOverclockFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.apexMutationFirePattern, weapon, baseAngle, driveActive);
     const chassisFireProfile = fireChassisWeaponPosture(weapon, baseAngle, driveActive);
@@ -12083,6 +12343,7 @@
       }
       if (enemy.type === "elite") {
         deployCombatCache(enemy);
+        deployLateAscension(enemy);
         deployKilnBastionAscension(enemy);
         deployStormArtilleryAfterburnAscension(enemy);
       }
@@ -12164,6 +12425,14 @@
             "Catalyst cache가 식었다. 변이는 놓쳤고 촉매는 마지막 포지까지 남는다.",
             "MOLT"
           );
+        }
+      } else if (drop.life <= 0 && drop.kind === "late_ascension_cache") {
+        if (state.wave && state.wave.lateAscension && !state.wave.lateAscension.claimed) {
+          pushCombatFeed(
+            "Ascension Core가 식었다. 이번 웨이브 변형은 놓쳤지만 다음 late wave에서 다시 찢어낼 수 있다.",
+            "ASCEND"
+          );
+          state.wave.lateAscension.claimed = true;
         }
       } else if (drop.life <= 0 && drop.kind === "afterburn_ascension_cache") {
         if (state.wave && state.wave.kilnAscension && !state.wave.kilnAscension.claimed) {
@@ -12338,6 +12607,28 @@
         "CACHE"
       );
       setBanner(`${choice.tag} 확보`, 0.8);
+      return true;
+    }
+
+    if (drop.kind === "late_ascension_cache") {
+      const ascension = state.wave && state.wave.lateAscension;
+      const choice = drop.choice;
+      if (!ascension || ascension.claimed || !choice || state.build.lateAscensionId) {
+        return true;
+      }
+      applyForgeChoice(state, choice);
+      refreshDerivedStats(false);
+      ascension.claimed = true;
+      state.drops.forEach((entry) => {
+        if (entry.kind === "late_ascension_cache" && entry.groupId === drop.groupId) {
+          entry.life = 0;
+        }
+      });
+      pushCombatFeed(
+        `${choice.title} 접합. ${choice.bodyLabel || "새 차체"}가 함께 잠겨 ${choice.bodyText || "남은 late waves가 새 weapon/body rule로 고정된다."}`,
+        "ASCEND"
+      );
+      setBanner(choice.title, 0.9);
       return true;
     }
 
@@ -12608,6 +12899,9 @@
     const doctrineSummary = weapon.doctrineFormLabel
       ? `${weapon.doctrineFormLabel} · ${weapon.doctrineTraitLabel}`
       : null;
+    const lateAscensionSummary = weapon.lateAscensionLabel
+      ? `${weapon.lateAscensionLabel} · ${weapon.lateAscensionTraitLabel}`
+      : null;
     const illegalOverclockSummary = weapon.illegalOverclockLabel
       ? `${weapon.illegalOverclockLabel} · ${weapon.illegalOverclockTraitLabel}`
       : null;
@@ -12635,6 +12929,7 @@
           ${createStatusRow("위력", String(weapon.damage))}
           ${createStatusRow("연사", `${weapon.cooldown}s`)}
           ${createStatusRow("발열", String(weapon.heatPerShot))}
+          ${weapon.lateAscensionLabel ? createStatusRow("Ascension", weapon.lateAscensionLabel) : ""}
           ${createStatusRow("등급", `${weapon.tierLabel} / ${weapon.benchSyncLabel}`)}
         </div>
         <div class="mini-pill-row">
@@ -12645,6 +12940,7 @@
           }
           ${weapon.evolutionLabel ? createMiniPill("EVO", weapon.evolutionLabel, "accent") : ""}
           ${weapon.doctrineFormLabel ? createMiniPill("DOC", weapon.doctrineFormLabel, "hot") : ""}
+          ${weapon.lateAscensionLabel ? createMiniPill("ASCEND", weapon.lateAscensionLabel, "hot") : ""}
           ${weapon.illegalOverclockLabel ? createMiniPill("ILLEGAL", weapon.illegalOverclockLabel, "hot") : ""}
           ${weapon.apexMutationLabel ? createMiniPill("APEX", weapon.apexMutationLabel, "hot") : ""}
           ${capstoneSummary ? createMiniPill("CAP", weapon.capstoneLabel, "hot") : ""}
@@ -12655,6 +12951,7 @@
           affixSummary,
           evolutionSummary,
           doctrineSummary,
+          lateAscensionSummary,
           illegalOverclockSummary,
           apexMutationSummary,
           capstoneSummary,
@@ -12700,6 +12997,7 @@
       const overcommitRows = [];
       const pursuitRows = [];
       const combatCacheRows = [];
+      const lateAscensionRows = [];
       const pactRows = [];
       const illegalOverclockRows = [];
       const apexRows = [];
@@ -12708,6 +13006,7 @@
       let overcommitNote = "";
       let pursuitNote = "";
       let combatCacheNote = "";
+      let lateAscensionNote = "";
       let pactNote = "";
       let illegalOverclockNote = "";
       let apexNote = "";
@@ -12784,6 +13083,25 @@
           ascensionRows.push(createStatusRow("Doctrine", capstone.title));
           ascensionNote = endform.statusNote;
         }
+      }
+      if (state.phase === "wave" && state.wave && state.wave.lateAscension) {
+        const lateAscension = state.wave.lateAscension;
+        lateAscensionRows.push(
+          createStatusRow(
+            "Ascension Core",
+            lateAscension.claimed ? "회수 완료" : lateAscension.deployed ? "split live" : "첫 elite 대기"
+          )
+        );
+        lateAscensionRows.push(createStatusRow("Form", "2-way split"));
+        lateAscensionNote = lateAscension.claimed
+          ? "이번 웨이브의 Ascension Core split은 닫혔다. 아직 못 집었다면 다음 late wave에서 다시 찢어낼 수 있다."
+          : lateAscension.deployed
+            ? "두 split core 중 하나만 회수할 수 있다. 어떤 형태를 집느냐에 따라 남은 late waves의 주포와 차체 규칙이 갈라진다."
+            : "이번 late wave 첫 elite가 Ascension Core split을 떨어뜨린다. 전장 한복판에서 하나를 직접 회수해야 남은 run의 주포/차체가 완성된다.";
+      } else if (state.weapon.lateAscensionLabel) {
+        lateAscensionRows.push(createStatusRow("Ascension Core", state.weapon.lateAscensionLabel));
+        lateAscensionRows.push(createStatusRow("Support Sync", `${getLateAscensionSupportLevel(state.build)} uplink`));
+        lateAscensionNote = state.weapon.lateAscensionStatusNote;
       }
       if (state.phase === "wave" && state.wave && state.wave.combatCache) {
         const combatCache = state.wave.combatCache;
@@ -12880,6 +13198,7 @@
           ${createStatusRow("드랍", String(state.drops.length))}
           ${createStatusRow(hazardStatus.detailLabel, hazardStatus.detailValue)}
           ${combatCacheRows.join("")}
+          ${lateAscensionRows.join("")}
           ${illegalOverclockRows.join("")}
           ${apexRows.join("")}
           ${catalystCrucibleRows.join("")}
@@ -12888,7 +13207,7 @@
           ${overcommitRows.join("")}
           ${pursuitRows.join("")}
         </div>
-        <p class="summary-note">${catalystCrucibleNote || ascensionNote || apexNote || illegalOverclockNote || combatCacheNote || pactNote || pursuitNote || overcommitNote || hazardStatus.note}</p>
+        <p class="summary-note">${catalystCrucibleNote || ascensionNote || lateAscensionNote || apexNote || illegalOverclockNote || combatCacheNote || pactNote || pursuitNote || overcommitNote || hazardStatus.note}</p>
       `;
     }
 
@@ -12932,7 +13251,7 @@
         }">${
           state.player.overheated
             ? "사격 정지: 열을 비워야 한다."
-            : `${weapon.evolutionStatusNote ? `${weapon.evolutionStatusNote} ` : ""}${weapon.doctrineStatusNote ? `${weapon.doctrineStatusNote} ` : ""}${weapon.illegalOverclockStatusNote ? `${weapon.illegalOverclockStatusNote} ` : ""}${weapon.apexMutationStatusNote ? `${weapon.apexMutationStatusNote} ` : ""}${weapon.capstoneStatusNote ? `${weapon.capstoneStatusNote} ` : ""}${state.supportSystem ? `${state.supportSystem.statusNote} ` : ""}${hazardStatus.note} 자동 사격은 과열 전까지 유지된다.`
+            : `${weapon.evolutionStatusNote ? `${weapon.evolutionStatusNote} ` : ""}${weapon.doctrineStatusNote ? `${weapon.doctrineStatusNote} ` : ""}${weapon.lateAscensionStatusNote ? `${weapon.lateAscensionStatusNote} ` : ""}${weapon.illegalOverclockStatusNote ? `${weapon.illegalOverclockStatusNote} ` : ""}${weapon.apexMutationStatusNote ? `${weapon.apexMutationStatusNote} ` : ""}${weapon.capstoneStatusNote ? `${weapon.capstoneStatusNote} ` : ""}${state.supportSystem ? `${state.supportSystem.statusNote} ` : ""}${hazardStatus.note} 자동 사격은 과열 전까지 유지된다.`
         }</p>
       `;
     }
@@ -12961,6 +13280,9 @@
     const doctrineSummary = state.weapon.doctrineFormLabel
       ? `${state.weapon.doctrineFormLabel} · ${state.weapon.doctrineTraitLabel}`
       : "교리 전용 주무장 없음";
+    const lateAscensionSummary = state.weapon.lateAscensionLabel
+      ? `${state.weapon.lateAscensionLabel} · ${state.weapon.lateAscensionTraitLabel}`
+      : "late ascension 없음";
     const illegalOverclockSummary = state.weapon.illegalOverclockLabel
       ? `${state.weapon.illegalOverclockLabel} · ${state.weapon.illegalOverclockTraitLabel}`
       : "불법 과투입 없음";
@@ -13069,7 +13391,7 @@
       <article class="forge-context__card">
         <p class="panel__eyebrow">속성 / 진화 / 시스템</p>
         <strong>${affixSummary}</strong>
-        <p>${evolutionSummary} · ${doctrineSummary} · ${illegalOverclockSummary} · ${apexMutationSummary} · ${capstoneSummary} · ${chassisSummary} · ${forgeSystemSummary} · ${doctrinePursuitSummary} · ${supportBaySummary} · 보관 ${benchEntries.length}종 · ${catalystSummary} · 분해 예상 고철 ${getRecycleValue(state.build)}</p>
+        <p>${evolutionSummary} · ${doctrineSummary} · ${lateAscensionSummary} · ${illegalOverclockSummary} · ${apexMutationSummary} · ${capstoneSummary} · ${chassisSummary} · ${forgeSystemSummary} · ${doctrinePursuitSummary} · ${supportBaySummary} · 보관 ${benchEntries.length}종 · ${catalystSummary} · 분해 예상 고철 ${getRecycleValue(state.build)}</p>
       </article>
     `;
     elements.forgeCards.innerHTML = state.forgeChoices
@@ -13329,6 +13651,8 @@
             ? CATALYST_CRUCIBLE_DROP_LIFE
           : drop.kind === "overcommit_salvage" || drop.kind === "doctrine_pursuit_shard"
             ? OVERCOMMIT_SALVAGE_LIFE
+          : drop.kind === "late_ascension_cache"
+            ? LATE_ASCENSION_DROP_LIFE
           : drop.kind === "illegal_overclock_cache"
               ? ILLEGAL_OVERCLOCK_DROP_LIFE
             : drop.kind === "afterburn_ascension_cache"
@@ -13397,6 +13721,31 @@
         context.font = "bold 10px monospace";
         context.textAlign = "center";
         context.fillText(choice.tag || "CACHE", drop.x, drop.y + 26);
+      } else if (drop.kind === "late_ascension_cache") {
+        const choice = drop.choice || {};
+        const palette =
+          choice.lateAscensionId === "slagburst_drive"
+            ? {
+                stroke: "rgba(255, 229, 184, 0.98)",
+                fill: "rgba(255, 159, 89, 0.94)",
+              }
+            : {
+                stroke: "rgba(214, 246, 255, 0.98)",
+                fill: "rgba(159, 231, 255, 0.92)",
+              };
+        context.strokeStyle = palette.stroke;
+        context.lineWidth = 2.7;
+        context.beginPath();
+        context.arc(drop.x, drop.y, 15, 0, Math.PI * 2);
+        context.stroke();
+        context.fillStyle = palette.fill;
+        context.beginPath();
+        drawPolygon(context, drop.x, drop.y, 10, 5, -Math.PI / 2 + performance.now() * 0.002);
+        context.fill();
+        context.fillStyle = "rgba(22, 10, 4, 0.92)";
+        context.font = "bold 10px monospace";
+        context.textAlign = "center";
+        context.fillText(choice.tag || "ASCEND", drop.x, drop.y + 28);
       } else if (drop.kind === "afterburn_ascension_cache") {
         const choice = drop.choice || {};
         const ascensionPalette =
@@ -13780,6 +14129,7 @@
       context.fillStyle =
         state.player.invulnerableTime > 0 ? "#fff0c9" : state.weapon.color;
       drawPlayerChassisFrame(context);
+      drawPlayerLateAscensionFrame(context);
       drawPlayerApexFrame(context);
       drawPlayerIllegalOverclockFrame(context);
       context.beginPath();
@@ -13912,6 +14262,73 @@
     context.beginPath();
     context.arc(state.player.x, state.player.y, state.player.radius + 11 + level * 1.5, 0, Math.PI * 2);
     context.stroke();
+  }
+
+  function drawPlayerLateAscensionFrame(context) {
+    if (!state.player || !state.weapon || !state.weapon.lateAscensionId) {
+      return;
+    }
+    const facing = state.player.facing || 0;
+    const supportLevel = getLateAscensionSupportLevel(state.build);
+    if (state.weapon.lateAscensionId === "crownsplitter_array") {
+      const wingLanes =
+        supportLevel >= 3
+          ? [-1.6, -1.05, -0.5, 0.5, 1.05, 1.6]
+          : supportLevel >= 2
+            ? [-1.25, -0.55, 0.55, 1.25]
+            : [-0.95, 0.95];
+      wingLanes.forEach((lane) => {
+        const wing = getOffsetPoint(state.player.x, state.player.y, facing, 5, 17 * lane);
+        context.fillStyle = "rgba(159, 231, 255, 0.9)";
+        context.beginPath();
+        context.moveTo(wing.x + Math.cos(facing) * 9, wing.y + Math.sin(facing) * 9);
+        context.lineTo(
+          wing.x - Math.cos(facing) * 5 - Math.sin(facing) * 5 * Math.sign(lane || 1),
+          wing.y - Math.sin(facing) * 5 + Math.cos(facing) * 5 * Math.sign(lane || 1)
+        );
+        context.lineTo(
+          wing.x - Math.cos(facing) * 8 + Math.sin(facing) * 5 * Math.sign(lane || 1),
+          wing.y - Math.sin(facing) * 8 - Math.cos(facing) * 5 * Math.sign(lane || 1)
+        );
+        context.closePath();
+        context.fill();
+      });
+      context.strokeStyle = "rgba(214, 246, 255, 0.72)";
+      context.lineWidth = 2;
+      context.beginPath();
+      context.arc(state.player.x, state.player.y, state.player.radius + 12 + supportLevel, 0, Math.PI * 2);
+      context.stroke();
+      return;
+    }
+    if (state.weapon.lateAscensionId === "slagburst_drive") {
+      const coilCount = 2 + Math.max(0, supportLevel - 1);
+      for (let index = 0; index < coilCount; index += 1) {
+        const angle = facing + Math.PI + ((index / Math.max(1, coilCount - 1)) * 2 - 1) * 0.45;
+        context.strokeStyle = `rgba(255, 180, 116, ${0.8 - index * 0.08})`;
+        context.lineWidth = 2.4;
+        context.beginPath();
+        context.moveTo(
+          state.player.x + Math.cos(angle) * (state.player.radius + 2),
+          state.player.y + Math.sin(angle) * (state.player.radius + 2)
+        );
+        context.lineTo(
+          state.player.x + Math.cos(angle) * (state.player.radius + 14 + supportLevel * 1.8),
+          state.player.y + Math.sin(angle) * (state.player.radius + 14 + supportLevel * 1.8)
+        );
+        context.stroke();
+      }
+      context.strokeStyle = "rgba(255, 214, 156, 0.68)";
+      context.lineWidth = 2.4;
+      context.beginPath();
+      context.arc(
+        state.player.x,
+        state.player.y,
+        state.player.radius + 11 + Math.sin(performance.now() * 0.018) * 1.4,
+        0,
+        Math.PI * 2
+      );
+      context.stroke();
+    }
   }
 
   function drawPlayerIllegalOverclockFrame(context) {

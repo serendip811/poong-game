@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 19:30 KST
+  Findings:
+  - The game now has enough waves and named phases to imply a real roguelite climb, but the actual build chase is still too pre-solved by doctrine rails, reserved support lanes, starter systems, and scripted forge stops. Players are still being told what their run is instead of discovering it under pressure.
+  - Late build expression is over-invested in support hardware. Satellites, drones, sentries, shields, and missile racks create screen activity, but two of the three doctrines still culminate more as perimeter automation than as a player-piloted weapon/body mutation worth rerunning for.
+  - The combat space is bigger, yet late waves still lean on ownership tax and route sanitation. Rising `activeCap` plus relay/drift/bastion pressure produces a lot of reclaim labor, but not enough high-value movement decisions that would stay interesting across a future `20-30` wave structure.
+  - The project is still design-split between a documented `5웨이브`, `7분 내외` prototype and an implemented multi-act run. That split is visibly capping ambition: the game keeps adding closure beats and managed package moments where it should be opening another escalation layer.
+  Top Priority: Add a doctrine-agnostic late-run evolution tier after `Wave 9` that upgrades the main weapon/chassis in combat with a visible form change and new firing rule, then make support systems amplify that form instead of serving as the headline payoff.
+  Why Now: Until the player is still chasing a dangerous unfinished form deep into the run, longer structure will read as administration instead of addiction.
+  Do Not Repeat: Do not answer this with another armory screen, another support subsystem, or another helper-only capstone.
+
 - 2026-03-22 16:20:00 KST
   Findings:
   - The run is long enough to feel ambitious, but its strongest decisions are still being settled by scheduled admin beats instead of combat. `Architecture Draft`, `Wave 6 Bastion Draft`, `Chassis Breakpoint`, `Late Break Armory`, `Catalyst Crucible`, and the final forge keep telling the player what phase the build is in.
@@ -812,6 +822,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 20:05 KST
+  Changed: added a doctrine-agnostic live `Ascension Core` lane in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) that starts after `Wave 9`. On `Wave 10+` runs without an existing late form, the first elite now drops a two-way split cache in combat instead of handing out another authored stop. The player can permanently lock either `Crownsplitter Array` or `Slagburst Drive`, and each choice visibly mutates both the main gun and chassis frame. `Crownsplitter Array` adds a support-scaled wing volley that widens with installed systems, while `Slagburst Drive` turns shots into support-scaled slag-seed impacts that leave burning zones. I surfaced the form in the HUD/objective readouts, added on-player silhouette changes so the mutation is legible in motion, and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new choices and support amplification. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique’s Top Priority was to add a doctrine-agnostic late-run evolution tier after `Wave 9` that upgrades the main weapon/chassis in combat, with a visible form change and a new firing rule, and to make support systems amplify that form instead of serving as the headline payoff. The highest-value bounded interpretation was a reusable elite-drop split lane that any build can enter, because it creates a late "I still need to finish my body" chase without adding another forge screen or another helper-only capstone.
+  Follow-up risk: the late run now has a real cross-doctrine weapon/body chase, but both ascension forms currently hinge on the same first-elite cache trigger and do not yet create different encounter incentives beyond their firing rules. If critique keeps pressing on long-run replay hunger, the next bounded step should either tie each ascension to distinct late-wave spatial asks or let later waves deepen the chosen form again instead of adding more support hardware.
 
 - 2026-03-22 15:43 KST
   Changed: rerouted `Kiln Bastion`'s late payoff in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) out of the `Wave 9` `Late Break Armory` stop and into a live `Bulwark Foundry` ascension lane. Finishing the doctrine pursuit no longer auto-awards the final `Bulwark Foundry` capstone; instead it now arms a post-`Wave 8` battlefield mutation. On eligible `Wave 9-12` kiln runs, the armory stop is skipped, the missing support bay uplink is granted automatically, and the first elite drops a `Bulwark Foundry` cache that must be collected in combat. Picking it immediately locks the stage-3 `Bulwark Furnace` scatter form and the stronger foundry body state, so `Afterburn` starts from that mutated weapon/body instead of waiting for another late admin beat. I kept the implementation bounded by reusing the existing live-cache/ascension path rather than adding another forge screen, and validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
