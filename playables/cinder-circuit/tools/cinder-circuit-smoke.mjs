@@ -117,6 +117,41 @@ assert.equal(artilleryWaveTwelve.label, "Wave 12 · Lance Crown");
 assert.equal(artilleryWaveTwelve.hazard.type, "relay");
 assert.ok(artilleryWaveTwelve.mix.mortar >= artilleryWaveTwelve.mix.warden);
 assert.equal(artilleryWaveTwelve.hazard.count, 4);
+const afterburnTransitionRun = {
+  build: game.createInitialBuild("scrap_pact"),
+  phase: "forge",
+  pendingFinalForge: true,
+  postCapstone: { active: false, stageIndex: 0, total: 0 },
+  waveIndex: game.MAX_WAVES - 1,
+  wave: null,
+  arena: { width: 1440, height: 820 },
+  waveClearTimer: 0,
+  enemies: [{ type: "elite" }],
+  drops: [{ kind: "scrap" }],
+  hazards: [{ type: "relay" }],
+  projectiles: [{ owner: "enemy" }],
+  particles: [{ color: "#fff" }],
+  player: {
+    x: 240,
+    y: 180,
+    heat: 32,
+    overheated: true,
+    fireCooldown: 1,
+    dashMax: 2,
+    dashCharges: 0,
+    dashCooldownTimer: 2,
+  },
+};
+const afterburnTransition = game.applyFinalCashoutTransition(afterburnTransitionRun);
+assert.equal(afterburnTransitionRun.phase, "wave");
+assert.equal(afterburnTransitionRun.pendingFinalForge, false);
+assert.equal(afterburnTransitionRun.waveIndex, game.MAX_WAVES);
+assert.equal(afterburnTransitionRun.postCapstone.active, true);
+assert.ok(afterburnTransitionRun.wave.finaleMutation);
+assert.equal(afterburnTransitionRun.wave.finaleMutation.deployed, false);
+assert.ok(afterburnTransitionRun.wave.finaleMutation.choices.length >= 1);
+assert.ok(afterburnTransitionRun.wave.activeCap > artilleryWaveTwelve.activeCap);
+assert.ok(afterburnTransition.clearProjectiles);
 const systemsForgeBuild = game.createInitialBuild("scrap_pact");
 const architectureChoices = game.buildArchitectureDraftChoices(systemsForgeBuild);
 assert.equal(architectureChoices.length, 3);
@@ -778,6 +813,7 @@ assert.equal(artilleryCapstoneChoices.length, 0);
 const artilleryAfterburnWave = game.createPostCapstoneWave(0, artilleryDoctrineBuild);
 assert.ok(artilleryAfterburnWave.afterburnAscension);
 assert.equal(artilleryAfterburnWave.afterburnAscension.choices.length, 2);
+assert.ok(artilleryAfterburnWave.finaleMutation);
 const batteryCapstoneChoice = artilleryAfterburnWave.afterburnAscension.choices.find(
   (choice) => choice.doctrineCapstoneId === "sky_lance_battery"
 );
@@ -827,6 +863,25 @@ assert.equal(
   JSON.stringify(artilleryNeedleWeapon.doctrineFirePattern.offsets),
   JSON.stringify([-0.08, 0.08])
 );
+const recurringFinaleBuild = game.createInitialBuild("relay_oath");
+const afterburnStageOne = game.createPostCapstoneWave(0, recurringFinaleBuild);
+const afterburnStageTwo = game.createPostCapstoneWave(1, recurringFinaleBuild);
+assert.ok(afterburnStageOne.finaleMutation);
+assert.ok(afterburnStageTwo.finaleMutation);
+assert.equal(
+  afterburnStageOne.finaleMutation.choices.length,
+  afterburnStageTwo.finaleMutation.choices.length
+);
+const recurringFinaleChoice = afterburnStageOne.finaleMutation.choices.find(
+  (choice) => choice.action === "cashout_support" || choice.action === "cashout_failsoft"
+);
+assert.ok(recurringFinaleChoice);
+game.applyForgeChoice(
+  { build: recurringFinaleBuild, player: null, resources: { scrap: 999 }, stats: {} },
+  recurringFinaleChoice
+);
+const lockedAfterburnStage = game.createPostCapstoneWave(1, recurringFinaleBuild);
+assert.equal(lockedAfterburnStage.finaleMutation, null);
 const fortressDoctrineBuild = game.createInitialBuild("scrap_pact");
 fortressDoctrineBuild.pendingCores = [];
 const fortressDoctrineChoice = game

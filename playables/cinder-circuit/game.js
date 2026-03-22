@@ -6049,6 +6049,24 @@
     return choices;
   }
 
+  function shouldOfferFinaleMutation(build) {
+    return Boolean(build && !getSelectedFinaleVariant(build));
+  }
+
+  function buildFinaleMutationChoices(build) {
+    if (!shouldOfferFinaleMutation(build)) {
+      return [];
+    }
+    return (buildFinalForgeChoices(build) || []).map((choice) => ({
+      ...choice,
+      cost: 0,
+      slotText: `Act 4 live splice · ${choice.slotText}`,
+      description: `${
+        choice.description
+      } 마지막 포지 정지 대신 Afterburn elite breach에서 회수해야 남은 escalation이 이 splice로 굳는다.`,
+    }));
+  }
+
   function buildActBreakArmoryChoices(build, rng, scrapBank, options = null, excludedChoiceIds = null) {
     if (!build) {
       return [];
@@ -7286,6 +7304,40 @@
       "ASCEND"
     );
     setBanner("Afterburn Ascension", 0.95);
+  }
+
+  function deployFinaleMutation(enemy) {
+    const finaleMutation = state.wave && state.wave.finaleMutation;
+    if (!finaleMutation || finaleMutation.deployed || finaleMutation.claimed) {
+      return;
+    }
+    const choices = Array.isArray(finaleMutation.choices)
+      ? finaleMutation.choices.filter(Boolean)
+      : [];
+    if (choices.length === 0) {
+      finaleMutation.deployed = true;
+      finaleMutation.claimed = true;
+      return;
+    }
+    finaleMutation.deployed = true;
+    finaleMutation.groupId = `finale-mutation-${state.waveIndex + 1}-${state.stats.kills}`;
+    const spreadRadius = choices.length === 1 ? 0 : 46;
+    choices.forEach((choice, index) => {
+      const angle = (index / choices.length) * Math.PI * 2 - Math.PI / 2;
+      state.drops.push({
+        kind: "finale_mutation_cache",
+        x: enemy.x + Math.cos(angle) * spreadRadius,
+        y: enemy.y + Math.sin(angle) * spreadRadius,
+        life: COMBAT_CACHE_DROP_LIFE,
+        choice,
+        groupId: finaleMutation.groupId,
+      });
+    });
+    pushCombatFeed(
+      "Act 4 mutation cache 노출. 마지막 포지 없이 하나의 splice만 전장에서 집어 남은 Afterburn escalation을 고정한다.",
+      "LAST"
+    );
+    setBanner("Act 4 Splice", 0.95);
   }
 
   function deployLateAscension(enemy) {
@@ -9690,6 +9742,14 @@
             choices: getStormArtilleryAfterburnAscensionChoices(build),
           }
         : null,
+      finaleMutation: shouldOfferFinaleMutation(build)
+        ? {
+            deployed: false,
+            claimed: false,
+            groupId: null,
+            choices: buildFinaleMutationChoices(build),
+          }
+        : null,
       apexPredator: shouldSpawnApexPredator(build, MAX_WAVES + boundedStage + 1)
         ? {
             spawned: false,
@@ -9771,7 +9831,13 @@
   function beginFinalCashout() {
     const transition = applyFinalCashoutTransition(state);
     syncArenaCanvas();
-    pushCombatFeed(`최종 포지 완료. ${state.wave.note}`, "LAST");
+    pushCombatFeed(`Wave 12 crown 붕괴. 포지 정지 없이 ${state.wave.note}`, "LAST");
+    if (state.wave.finaleMutation) {
+      pushCombatFeed(
+        "Final splice live. 이번 Afterburn 첫 elite가 Act 4 mutation cache를 떨어뜨리며, 회수한 각인이 남은 escalation 전체를 다시 꺾는다.",
+        "LAST"
+      );
+    }
     if (state.wave.afterburnAscension) {
       pushCombatFeed(
         "Storm Artillery endform lane 개방. 이번 afterburn 첫 elite가 Sky Lance / Stormspire split cache를 뱉는다.",
@@ -9827,6 +9893,12 @@
     state.player.dashCharges = state.player.dashMax;
     state.player.dashCooldownTimer = 0;
     pushCombatFeed(`${state.wave.label} 진입. ${state.wave.note}`, `W${state.waveIndex + 1}`);
+    if (state.wave.finaleMutation) {
+      pushCombatFeed(
+        "Act 4 splice 재개방. 아직 마지막 변이를 못 골랐다면 이번 Afterburn 첫 elite를 다시 잘라 mutation cache를 직접 회수해야 한다.",
+        "LAST"
+      );
+    }
     if (state.wave.afterburnAscension) {
       pushCombatFeed(
         "Storm Artillery endform lane 재개방. 이번 웨이브 첫 elite를 잡아 남은 Afterburn body split 중 하나를 뜯어내야 한다.",
@@ -12342,6 +12414,7 @@
         );
       }
       if (enemy.type === "elite") {
+        deployFinaleMutation(enemy);
         deployCombatCache(enemy);
         deployLateAscension(enemy);
         deployKilnBastionAscension(enemy);
@@ -12451,6 +12524,14 @@
             "ASCEND"
           );
           state.wave.afterburnAscension.claimed = true;
+        }
+      } else if (drop.life <= 0 && drop.kind === "finale_mutation_cache") {
+        if (state.wave && state.wave.finaleMutation && !state.wave.finaleMutation.claimed) {
+          pushCombatFeed(
+            "Act 4 mutation cache가 식었다. 이번 웨이브 splice는 놓쳤지만 다음 Afterburn escalation에서 다시 찢어낼 수 있다.",
+            "LAST"
+          );
+          state.wave.finaleMutation.claimed = true;
         }
       } else if (drop.life > 0) {
         nextDrops.push(drop);
@@ -12669,6 +12750,28 @@
       return true;
     }
 
+    if (drop.kind === "finale_mutation_cache") {
+      const finaleMutation = state.wave && state.wave.finaleMutation;
+      const choice = drop.choice;
+      if (!finaleMutation || finaleMutation.claimed || !choice || getSelectedFinaleVariant(state.build)) {
+        return true;
+      }
+      applyForgeChoice(state, choice);
+      refreshDerivedStats(false);
+      finaleMutation.claimed = true;
+      state.drops.forEach((entry) => {
+        if (entry.kind === "finale_mutation_cache" && entry.groupId === drop.groupId) {
+          entry.life = 0;
+        }
+      });
+      pushCombatFeed(
+        `${choice.title} 접합. 마지막 포지 없이 전장 한복판에서 splice를 잠가 남은 Afterburn bracket을 이 형태로 다시 비튼다.`,
+        "LAST"
+      );
+      setBanner(choice.title, 0.9);
+      return true;
+    }
+
     if (drop.kind === "illegal_overclock_cache") {
       const choice = drop.choice;
       if (
@@ -12740,8 +12843,11 @@
         state.hazards = [];
         state.stats.wavesCleared = state.waveIndex + 1;
         const nextWave = state.waveIndex + 2;
+        const enteringAfterburn = state.waveIndex >= MAX_WAVES - 1;
         const nextPhaseLabel = state.wave.completesRun
           ? "결과 패널"
+          : enteringAfterburn
+            ? "Act 4 · Afterburn"
           : state.wave.skipForgeOnClear
             ? `Wave ${nextWave}`
           : shouldRunCatalystCrucibleObjective(state.build, nextWave)
@@ -12771,6 +12877,8 @@
       if (state.waveClearTimer <= 0) {
         if (state.wave.completesRun) {
           finishRun(true);
+        } else if (state.waveIndex >= MAX_WAVES - 1) {
+          beginFinalCashout();
         } else if (state.wave.skipForgeOnClear) {
           beginNextPostCapstoneWave();
         } else if (shouldRunCatalystCrucibleObjective(state.build, state.waveIndex + 2)) {
@@ -13102,6 +13210,26 @@
         lateAscensionRows.push(createStatusRow("Ascension Core", state.weapon.lateAscensionLabel));
         lateAscensionRows.push(createStatusRow("Support Sync", `${getLateAscensionSupportLevel(state.build)} uplink`));
         lateAscensionNote = state.weapon.lateAscensionStatusNote;
+      }
+      if (state.phase === "wave" && state.wave && state.wave.finaleMutation) {
+        const finaleMutation = state.wave.finaleMutation;
+        combatCacheRows.push(
+          createStatusRow(
+            "Act 4 Splice",
+            finaleMutation.claimed ? "회수 완료" : finaleMutation.deployed ? "cache live" : "첫 elite 대기"
+          )
+        );
+        combatCacheRows.push(createStatusRow("Finale", "1 pick"));
+        combatCacheNote = finaleMutation.claimed
+          ? "이번 웨이브의 Act 4 splice는 이미 닫혔다. 아직 최종 각인을 못 골랐다면 다음 Afterburn에서 다시 찢어낼 수 있다."
+          : finaleMutation.deployed
+            ? "드롭된 mutation cache 중 하나만 회수할 수 있다. 무엇을 집느냐에 따라 남은 Afterburn bracket의 최종 각인이 달라진다."
+            : "이번 Afterburn 첫 elite가 Act 4 mutation cache를 떨어뜨린다. 마지막 포지 없이 하나의 splice를 전장에서 직접 잠가야 하며, 놓치면 다음 Afterburn에서 다시 뜬다.";
+      } else if (state.postCapstone && state.postCapstone.active && getSelectedFinaleVariant(state.build)) {
+        const finaleVariant = getSelectedFinaleVariant(state.build);
+        combatCacheRows.push(createStatusRow("Act 4 Splice", finaleVariant.title || finaleVariant.label));
+        combatCacheRows.push(createStatusRow("Finale", "locked"));
+        combatCacheNote = "Act 4 splice가 이미 잠겨 남은 Afterburn escalation 전체가 이 최종 각인 위에서 가속 중이다.";
       }
       if (state.phase === "wave" && state.wave && state.wave.combatCache) {
         const combatCache = state.wave.combatCache;
