@@ -40,6 +40,8 @@
   const APEX_PREDATOR_START_WAVE = 11;
   const MAX_APEX_MUTATION_LEVEL = 3;
   const APEX_PREDATOR_SPAWN_DELAY = 12;
+  const WAVE6_ASCENSION_SURGE_DURATION = 4.6;
+  const WAVE6_ASCENSION_ONLINE_SURGE_DURATION = 7.4;
 
   const WAVE_CONFIG = [
     {
@@ -7994,7 +7996,11 @@
         systemChoice: choice.systemChoice,
       });
       const pursuit = autoCommitDoctrinePursuit(run.build);
+      const surgeProfile = activateWave6AscensionSurge(run, WAVE6_ASCENSION_ONLINE_SURGE_DURATION);
       run.build.upgrades.push(`Wave 6 Ascension: ${choice.title}`);
+      if (surgeProfile) {
+        run.build.upgrades.push(`Ascension Surge: ${choice.doctrineLabel || surgeProfile.id}`);
+      }
       if (pursuit) {
         run.build.upgrades.push(`Ascension Relay: ${pursuit.shortLabel} 즉시 활성화`);
       }
@@ -9139,6 +9145,7 @@
       chassisAnchorCharge: 0,
       chassisAnchorPulseCooldown: 0,
       chassisAnchorActiveTime: 0,
+      wave6AscensionSurgeTime: 0,
       moveIntentMagnitude: 0,
       dashTrail: 0,
       facing: 0,
@@ -9188,6 +9195,7 @@
     state.player.chassisAnchorCharge = clamp(state.player.chassisAnchorCharge || 0, 0, 1);
     state.player.chassisAnchorPulseCooldown = Math.max(0, state.player.chassisAnchorPulseCooldown || 0);
     state.player.chassisAnchorActiveTime = Math.max(0, state.player.chassisAnchorActiveTime || 0);
+    state.player.wave6AscensionSurgeTime = Math.max(0, state.player.wave6AscensionSurgeTime || 0);
     if (preserveRatio) {
       state.player.hp = Math.max(1, Math.round(state.player.maxHp * hpRatio));
     } else {
@@ -9205,6 +9213,14 @@
     if (!state.player || !chassis) {
       return 0;
     }
+    const ascensionProfile = getWave6AscensionProfile();
+    const ascensionSurging = state.player.wave6AscensionSurgeTime > 0;
+    if (ascensionSurging && ascensionProfile?.id === "mirror_hunt") {
+      return 74;
+    }
+    if (ascensionSurging && ascensionProfile?.id === "kiln_bastion") {
+      return 54;
+    }
     if (chassis.id === "vector_thrusters" && state.player.chassisVectorTime > 0) {
       return 54;
     }
@@ -9218,6 +9234,17 @@
     const chassis = getChassisBreakpointDef(state.build);
     if (!state.player || !chassis) {
       return 1;
+    }
+    const ascensionProfile = getWave6AscensionProfile();
+    const ascensionSurging = state.player.wave6AscensionSurgeTime > 0;
+    if (ascensionSurging && ascensionProfile?.id === "mirror_hunt") {
+      return 1.28;
+    }
+    if (ascensionSurging && ascensionProfile?.id === "kiln_bastion") {
+      return 1.18;
+    }
+    if (ascensionSurging && ascensionProfile?.id === "storm_artillery") {
+      return 1.16;
     }
     if (chassis.id === "vector_thrusters" && state.player.chassisVectorTime > 0) {
       return 1.18;
@@ -9288,11 +9315,48 @@
     return null;
   }
 
+  function activateWave6AscensionSurge(run = state, duration = WAVE6_ASCENSION_SURGE_DURATION) {
+    if (!run || !run.player || duration <= 0) {
+      return null;
+    }
+    const profile = getWave6AscensionProfile(run.build);
+    if (!profile) {
+      return null;
+    }
+    run.player.wave6AscensionSurgeTime = Math.max(run.player.wave6AscensionSurgeTime || 0, duration);
+
+    if (profile.id === "mirror_hunt") {
+      run.player.dashCharges = Math.min(run.player.dashMax, (run.player.dashCharges || 0) + 1);
+      run.player.chassisVectorTime = Math.max(run.player.chassisVectorTime || 0, duration * 0.8);
+      run.player.invulnerableTime = Math.max(run.player.invulnerableTime || 0, 0.16);
+    } else if (profile.id === "kiln_bastion") {
+      run.player.bastionFieldTime = Math.max(run.player.bastionFieldTime || 0, duration);
+      run.player.bastionDamageMitigation = Math.max(run.player.bastionDamageMitigation || 0, 0.18);
+      run.player.bastionHeatFactor = Math.max(run.player.bastionHeatFactor || 1, 1.24);
+      run.player.chassisSalvageBurstTime = Math.max(run.player.chassisSalvageBurstTime || 0, duration);
+      run.player.chassisPickupPulseCooldown = 0;
+    } else if (profile.id === "storm_artillery") {
+      run.player.chassisAnchorCharge = 1;
+      run.player.chassisAnchorActiveTime = Math.max(run.player.chassisAnchorActiveTime || 0, duration);
+      run.player.invulnerableTime = Math.max(run.player.invulnerableTime || 0, 0.2);
+    }
+
+    if (Array.isArray(run.particles)) {
+      for (let index = 0; index < 10; index += 1) {
+        run.particles.push(createParticle(run.player.x, run.player.y, profile.color, 0.95));
+      }
+    }
+
+    run.shake = Math.max(run.shake || 0, 6);
+    return profile;
+  }
+
   function fireWave6AscensionVolley(weapon, baseAngle, driveActive) {
     const profile = getWave6AscensionProfile();
     if (!state.player || !profile) {
       return { cooldownMultiplier: 1, heatMultiplier: 1 };
     }
+    const surging = state.player.wave6AscensionSurgeTime > 0;
 
     if (profile.id === "mirror_hunt") {
       [-1, 1].forEach((direction) => {
@@ -9311,23 +9375,52 @@
           })
         );
       });
+      if (surging) {
+        [-1, 1].forEach((direction) => {
+          state.projectiles.push(
+            createOffsetPlayerProjectile(baseAngle + 0.22 * direction, weapon, driveActive, {
+              lateral: 28 * direction,
+              forward: 20,
+              overrides: {
+                vx: Math.cos(baseAngle + 0.22 * direction) * weapon.projectileSpeed * 1.18,
+                vy: Math.sin(baseAngle + 0.22 * direction) * weapon.projectileSpeed * 1.18,
+                damage: round((weapon.damage + (driveActive ? 8 : 0)) * 0.42, 1),
+                radius: weapon.core.id === "lance" ? 5.6 : 4.7,
+                life: 1.08,
+                bounce: weapon.bounce + 1,
+                color: "#f2fbff",
+              },
+            })
+          );
+        });
+      }
       if (getPlayerMoveIntentMagnitude() > 0.55 || state.player.chassisVectorTime > 0) {
         state.projectiles.push(
           createOffsetPlayerProjectile(baseAngle, weapon, driveActive, {
             forward: 28,
             overrides: {
-              vx: Math.cos(baseAngle) * weapon.projectileSpeed * 1.22 * (driveActive ? 1.08 : 1),
-              vy: Math.sin(baseAngle) * weapon.projectileSpeed * 1.22 * (driveActive ? 1.08 : 1),
-              damage: round((weapon.damage + (driveActive ? 8 : 0)) * 0.64, 1),
-              radius: weapon.core.id === "lance" ? 5.6 : 4.8,
-              life: 0.94,
-              pierce: weapon.pierce + 1,
+              vx:
+                Math.cos(baseAngle) *
+                weapon.projectileSpeed *
+                (surging ? 1.34 : 1.22) *
+                (driveActive ? 1.08 : 1),
+              vy:
+                Math.sin(baseAngle) *
+                weapon.projectileSpeed *
+                (surging ? 1.34 : 1.22) *
+                (driveActive ? 1.08 : 1),
+              damage: round((weapon.damage + (driveActive ? 8 : 0)) * (surging ? 0.82 : 0.64), 1),
+              radius: weapon.core.id === "lance" ? (surging ? 6 : 5.6) : surging ? 5.2 : 4.8,
+              life: surging ? 1.04 : 0.94,
+              pierce: weapon.pierce + (surging ? 2 : 1),
               color: "#d8fbff",
             },
           })
         );
       }
-      return { cooldownMultiplier: 0.96, heatMultiplier: 1.05 };
+      return surging
+        ? { cooldownMultiplier: 0.9, heatMultiplier: 1.08 }
+        : { cooldownMultiplier: 0.96, heatMultiplier: 1.05 };
     }
 
     if (profile.id === "kiln_bastion") {
@@ -9347,21 +9440,42 @@
           })
         );
       });
+      if (surging) {
+        [-1, 1].forEach((direction) => {
+          state.projectiles.push(
+            createOffsetPlayerProjectile(baseAngle + 0.24 * direction, weapon, driveActive, {
+              lateral: 22 * direction,
+              forward: 18,
+              overrides: {
+                vx: Math.cos(baseAngle + 0.24 * direction) * weapon.projectileSpeed * 0.8,
+                vy: Math.sin(baseAngle + 0.24 * direction) * weapon.projectileSpeed * 0.8,
+                damage: round((weapon.damage + (driveActive ? 8 : 0)) * 0.52, 1),
+                radius: 6.2,
+                life: 1.18,
+                pierce: weapon.pierce + 1,
+                color: "#fff0c2",
+              },
+            })
+          );
+        });
+      }
       state.projectiles.push(
         createOffsetPlayerProjectile(baseAngle, weapon, driveActive, {
           forward: 24,
           overrides: {
-            vx: Math.cos(baseAngle) * weapon.projectileSpeed * 0.86,
-            vy: Math.sin(baseAngle) * weapon.projectileSpeed * 0.86,
-            damage: round((weapon.damage + (driveActive ? 8 : 0)) * 0.7, 1),
-            radius: 6,
-            life: 1.08,
-            pierce: weapon.pierce + 1,
+            vx: Math.cos(baseAngle) * weapon.projectileSpeed * (surging ? 0.94 : 0.86),
+            vy: Math.sin(baseAngle) * weapon.projectileSpeed * (surging ? 0.94 : 0.86),
+            damage: round((weapon.damage + (driveActive ? 8 : 0)) * (surging ? 0.9 : 0.7), 1),
+            radius: surging ? 6.8 : 6,
+            life: surging ? 1.2 : 1.08,
+            pierce: weapon.pierce + (surging ? 2 : 1),
             color: "#ffd6a8",
           },
         })
       );
-      return { cooldownMultiplier: 1.04, heatMultiplier: 1.08 };
+      return surging
+        ? { cooldownMultiplier: 0.96, heatMultiplier: 1.12 }
+        : { cooldownMultiplier: 1.04, heatMultiplier: 1.08 };
     }
 
     if (profile.id === "storm_artillery") {
@@ -9382,21 +9496,42 @@
           })
         );
       });
+      if (surging) {
+        [-1, 1].forEach((direction) => {
+          state.projectiles.push(
+            createOffsetPlayerProjectile(baseAngle + 0.14 * direction, weapon, driveActive, {
+              lateral: 24 * direction,
+              forward: 28,
+              overrides: {
+                vx: Math.cos(baseAngle + 0.14 * direction) * weapon.projectileSpeed * 1.08,
+                vy: Math.sin(baseAngle + 0.14 * direction) * weapon.projectileSpeed * 1.08,
+                damage: round((weapon.damage + (driveActive ? 8 : 0)) * 0.58, 1),
+                radius: weapon.core.id === "lance" ? 6.2 : 5.4,
+                life: 1.22,
+                pierce: weapon.pierce + 2,
+                color: "#ffffff",
+              },
+            })
+          );
+        });
+      }
       state.projectiles.push(
         createOffsetPlayerProjectile(baseAngle, weapon, driveActive, {
           forward: 30,
           overrides: {
-            vx: Math.cos(baseAngle) * weapon.projectileSpeed * 1.06,
-            vy: Math.sin(baseAngle) * weapon.projectileSpeed * 1.06,
-            damage: round((weapon.damage + (driveActive ? 8 : 0)) * 0.82, 1),
-            radius: weapon.core.id === "lance" ? 6.6 : 5.8,
-            life: 1.2,
-            pierce: weapon.pierce + 2,
+            vx: Math.cos(baseAngle) * weapon.projectileSpeed * (surging ? 1.16 : 1.06),
+            vy: Math.sin(baseAngle) * weapon.projectileSpeed * (surging ? 1.16 : 1.06),
+            damage: round((weapon.damage + (driveActive ? 8 : 0)) * (surging ? 1.02 : 0.82), 1),
+            radius: weapon.core.id === "lance" ? (surging ? 7.1 : 6.6) : surging ? 6.2 : 5.8,
+            life: surging ? 1.3 : 1.2,
+            pierce: weapon.pierce + (surging ? 3 : 2),
             color: "#fff0c9",
           },
         })
       );
-      return { cooldownMultiplier: 1.06, heatMultiplier: 1.1 };
+      return surging
+        ? { cooldownMultiplier: 0.98, heatMultiplier: 1.14 }
+        : { cooldownMultiplier: 1.06, heatMultiplier: 1.1 };
     }
 
     return { cooldownMultiplier: 1, heatMultiplier: 1 };
@@ -9563,11 +9698,23 @@
     if (!state.player || !chassis) {
       return;
     }
+    const ascensionProfile = getWave6AscensionProfile();
+    state.player.wave6AscensionSurgeTime = Math.max(0, (state.player.wave6AscensionSurgeTime || 0) - dt);
     state.player.chassisVectorTime = Math.max(0, state.player.chassisVectorTime - dt);
     state.player.chassisSalvageBurstTime = Math.max(0, state.player.chassisSalvageBurstTime - dt);
     state.player.chassisPickupPulseCooldown = Math.max(0, state.player.chassisPickupPulseCooldown - dt);
     state.player.chassisAnchorPulseCooldown = Math.max(0, state.player.chassisAnchorPulseCooldown - dt);
     state.player.chassisAnchorActiveTime = Math.max(0, state.player.chassisAnchorActiveTime - dt);
+    if (state.player.wave6AscensionSurgeTime > 0 && ascensionProfile) {
+      if (ascensionProfile.id === "mirror_hunt") {
+        state.player.chassisVectorTime = Math.max(state.player.chassisVectorTime, 0.14);
+      } else if (ascensionProfile.id === "kiln_bastion") {
+        state.player.chassisSalvageBurstTime = Math.max(state.player.chassisSalvageBurstTime, 0.18);
+      } else if (ascensionProfile.id === "storm_artillery") {
+        state.player.chassisAnchorCharge = 1;
+        state.player.chassisAnchorActiveTime = Math.max(state.player.chassisAnchorActiveTime, 0.22);
+      }
+    }
     if (chassis.id !== "bulwark_treads") {
       state.player.chassisAnchorCharge = 0;
       return;
@@ -11264,7 +11411,13 @@
     state.player.heat = Math.max(0, state.player.heat - 28);
     state.player.overheated = false;
     state.stats.overdrivesUsed += 1;
-    pushCombatFeed("오버드라이브 점화. 짧은 화력 창을 최대한 밀어붙인다.", "DRIVE");
+    const ascensionProfile = activateWave6AscensionSurge(state);
+    pushCombatFeed(
+      ascensionProfile
+        ? `${getBastionDoctrineDef(state.build)?.label || "Ascension"} 재점화. 오버드라이브 동안 승천 차체와 주포가 다시 한 번 fully opened 상태로 폭주한다.`
+        : "오버드라이브 점화. 짧은 화력 창을 최대한 밀어붙인다.",
+      "DRIVE"
+    );
     setBanner("OVERDRIVE", 1);
     state.shake = Math.max(state.shake, 7);
   }
@@ -12418,9 +12571,12 @@
     let speed =
       state.player.moveSpeed + getChassisMoveSpeedBonus() + (state.player.overdriveActiveTime > 0 ? 34 : 0);
     const chassis = getChassisBreakpointDef(state.build);
+    const ascensionProfile = getWave6AscensionProfile();
+    const stormAscensionSurging =
+      ascensionProfile?.id === "storm_artillery" && state.player.wave6AscensionSurgeTime > 0;
     if (chassis && chassis.id === "bulwark_treads") {
       if (state.player.chassisAnchorActiveTime > 0) {
-        speed *= 0.52;
+        speed *= stormAscensionSurging ? 0.72 : 0.52;
       } else if (state.player.chassisAnchorCharge > 0.45) {
         speed *= 0.78;
       }
@@ -14771,6 +14927,20 @@
         context.beginPath();
         context.arc(state.player.x, state.player.y, 18, 0, Math.PI * 2);
         context.fill();
+        context.globalAlpha = 1;
+      }
+
+      const ascensionProfile =
+        state.player.wave6AscensionSurgeTime > 0 ? getWave6AscensionProfile() : null;
+      if (ascensionProfile) {
+        const surgeRadius =
+          state.player.radius + 20 + Math.sin(performance.now() * 0.024) * 2 + state.player.wave6AscensionSurgeTime;
+        context.globalAlpha = 0.68;
+        context.strokeStyle = ascensionProfile.color;
+        context.lineWidth = 4;
+        context.beginPath();
+        context.arc(state.player.x, state.player.y, surgeRadius, 0, Math.PI * 2);
+        context.stroke();
         context.globalAlpha = 1;
       }
 

@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-22 21:00:35 KST
+  Findings:
+  - The run has enough content to stop pretending it is a small prototype, but the underlying rhythm still is. [docs/games/cinder-circuit-design.md] keeps defining a `5웨이브`, `7분 내외` game while [playables/cinder-circuit/game.js] layers `Afterburn I-VII` on top, so escalation still feels bolted onto a short-run skeleton rather than authored as a true long-form rerun ladder.
+  - Between-wave choice quality is still weaker than the number of systems suggests. `Architecture Draft`, `Bastion Draft`, `Catalyst Crucible`, armory steps, pursuit contracts, and bay rules create many labels, but they do not hit like the clean high-value choice framing strong roguelites use; compared with `Hades` boon screens or `Brotato` shops, the player is still parsing process instead of instantly wanting one outrageous direction.
+  - Too much visible payoff still lives in support automation. `Ember Ring`, `Aegis Halo`, `Seeker Array`, `Volt Drones`, and `Kiln Sentry` escalate clearly on-screen, while many core-gun/chassis gains remain explanation-heavy, so the fantasy keeps drifting toward "assemble efficient helpers" instead of "become a terrifying war machine."
+  - The combat ladder is longer, but its pressure families are still too same-shaped. Late waves and the post-capstone pool mostly rotate `relay`, `territory`, and `drift` setups with `mortar`/`warden` backline chores, so even bigger arenas rarely create sharply different asks like aggressive dive windows, greed-heavy collection races, panic survival bursts, or brief domination phases where a finished build gets to feel unfair.
+  Top Priority: Replace the Wave 8 `Late Break Armory` administration with a simpler mid-run forge rule that always presents one huge main-weapon mutation, one defense/utility anchor, and one risky greed option, then spend the recovered complexity budget on at least two genuinely different late-wave pressure archetypes beyond relay/territory/drift lockout repair.
+  Why Now: Until the run creates cleaner hunger at the forge and clearer contrast in the back half, extra waves will read as longer maintenance rather than stronger replayable fun.
+  Do Not Repeat: Do not answer this with more named draft stages or more autonomous helper tiers if the core gun still is not the loudest reason to rerun.
+
 - 2026-03-23 00:48 KST
   Findings:
   - The run is longer now, but it still is not built like a `20-30` wave-capable spine. `POST_CAPSTONE_WAVE_COUNT = 7` helps, yet the late ladder mostly keeps remixing `relay`, `territory`, and `drift` pressure with `mortar`/`warden` denial, so the player is still proving they can reopen space rather than mastering several different endgame survival grammars.
@@ -917,6 +927,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-22 21:17 KST
+  Changed: turned the existing `Wave 6` monster form in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) into a reusable combat power window instead of a one-time midpoint explanation. Choosing a `Wave 6 Ascension` now immediately triggers a doctrine-specific `Ascension Surge`, and every later `Overdrive` re-opens that form for a few seconds: `Mirror Hunt` refills a dash and widens into faster hunt wings, `Kiln Bastion` re-ignites its reclaim furnace with hotter close-range bursts, and `Storm Artillery` re-enters a mobile siege state with heavier piercing lanes. I also added a clear on-player surge ring so the body/gun reactivation is readable in motion. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest actionable critique (`2026-03-23 00:48 KST`) asked for a clearer early monster form that the player can actually inhabit for a long bracket, not another admin stop. The highest-value bounded interpretation was to make the already-existing `Wave 6` transformation keep paying out across the rest of the run, so `Overdrive` becomes a recurring "my war machine just opened again" moment and the main gun/body stay louder than support automation.
+  Follow-up risk: this makes the mid-run form more repeatably exciting, but it still spends that excitement inside mostly existing late-wave pressure families. If the next critique keeps pushing on long-run sameness, the next bounded step should make one late encounter family explicitly reward `dive`, `hold`, or `greed-route` play during these new ascension surge windows.
 
 - 2026-03-23 04:22 KST
   Changed: strengthened the `Wave 6` monster-form read in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) by binding each ascension doctrine/chassis pair to a persistent live-combat profile instead of leaving most of the payoff in forge text. `Mirror Hunt + Vector Thrusters`, `Kiln Bastion + Salvage Winch`, and `Storm Artillery + Bulwark Treads` now each add a doctrine-specific bonus volley on every primary shot and draw a larger body/gun silhouette directly on the player frame, so the midpoint lock visibly mutates both firing posture and chassis outline for the rest of the run. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
