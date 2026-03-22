@@ -306,15 +306,17 @@
       spawnAcceleration: 0.34,
       eliteEvery: 5,
       mix: {
-        scuttler: 0.12,
-        brute: 0.18,
-        shrike: 0.2,
-        mortar: 0.18,
-        warden: 0.32,
+        scuttler: 0.08,
+        brute: 0.14,
+        shrike: 0.14,
+        skimmer: 0.28,
+        lancer: 0.2,
+        mortar: 0.06,
+        warden: 0.1,
       },
-      note: "세 번째 전투 구간의 시작. 바깥 봉쇄선만 자르면 끝나지 않는다. 뒤쪽 mortar가 느린 포격을 쌓아 회수선과 방어 시스템의 가치를 함께 시험한다.",
+      note: "세 번째 전투 구간의 시작. 이제 crossfire는 warden 포대 정리 시험이 아니라, 빠른 측면 skimmer와 돌진 lancer가 동시에 회전선을 찢는 추격 교차전이다.",
       directive:
-        "lockgrid crossfire. warden 사선으로 길을 열면서도, 살아남은 mortar 포격이 안전 루트에 느린 탄벽을 쌓기 전에 포격원을 잘라야 한다.",
+        "lockgrid crossfire. skimmer가 외곽 회전선에 쐐기를 박고 lancer가 직선 돌진으로 중앙을 꿰뚫는다. 후열 청소보다 먼저 측면 군집을 얇게 만들고 돌진 각을 흘려야 한다.",
       driveGainFactor: 1.38,
       arena: THIRD_ACT_ARENA,
       hazard: {
@@ -447,18 +449,20 @@
   const SHARED_LATE_ACT_ENCOUNTER_POOL = {
     8: {
       pressureFamily: "crossfire",
-      note: "Act 3 시작점부터 더는 doctrine별 맞춤 시험지가 아니다. 모든 빌드는 혼합 추격선, 후열 포격, 봉쇄 사선을 한 전장에서 함께 처리해야 하며, 자기 무기/차체가 무엇을 빨리 지울 수 있는지 직접 증명해야 한다.",
+      note: "Act 3 시작점부터 더는 doctrine별 맞춤 시험지가 아니다. 모든 빌드는 측면 skimmer 떼와 직선 lancer 돌입을 같은 전장에서 풀어야 하며, 자기 무기/차체가 무엇을 먼저 끊어야 사는지 직접 증명해야 한다.",
       directive:
-        "shared lockgrid. 빠른 측면 추격조와 warden 봉쇄선, 느린 mortar 포격이 같은 외곽 회전 루트를 동시에 무너뜨린다. 자기 doctrine에 맞춘 안전 lane은 없으니, 지금 강한 각으로 후열과 입구를 직접 찢어야 한다.",
+        "shared lockgrid. skimmer가 외곽 회전선을 긁고 lancer가 직선 charge로 비어 있는 중앙을 찌른다. doctrine별 안전 lane 없이 flank sweep와 charge bait를 동시에 해내야 한다.",
       driveGainFactor: 1.4,
       activeCap: 42,
       spawnBudget: 190,
       mix: {
-        scuttler: 0.12,
-        brute: 0.18,
-        shrike: 0.24,
-        mortar: 0.18,
-        warden: 0.28,
+        scuttler: 0.08,
+        brute: 0.14,
+        shrike: 0.14,
+        skimmer: 0.3,
+        lancer: 0.22,
+        mortar: 0.04,
+        warden: 0.08,
       },
       hazard: {
         label: "Lockgrid Breach",
@@ -678,15 +682,17 @@
     {
       waveIndex: 8,
       pressureFamily: "crossfire",
-      note: "중반 afterburn은 구조물보다 lane collapse 자체를 앞세운다. pulse surge가 현재 회전 루트와 드랍 선을 자주 건드려, completed build가 살기 위해 후퇴할지 greed를 위해 진입할지 즉석에서 갈라진다.",
+      note: "중반 afterburn은 구조물보다 살아 있는 교차 압박 자체를 앞세운다. pulse surge 사이로 skimmer 떼와 lancer 돌입이 겹쳐, completed build가 flank sweep를 먼저 할지 charge bait를 감수하고 greed dive할지 즉석에서 갈라진다.",
       directive:
-        "slag surge. 다중 surge가 외곽 회전선과 scrap 회수선을 연속으로 절단한다. route repair보다 다음 폭주가 닿기 전에 어떤 묶음을 먼저 지우고 무엇을 버릴지 바로 정해야 한다.",
+        "slag surge. 다중 surge가 회전선과 scrap 회수선을 절단하는 동안 skimmer가 바깥을 훑고 lancer가 빈 lane을 꿰뚫는다. route repair보다 flank sweep와 charge dodge 순서를 먼저 정해야 한다.",
       mix: {
-        scuttler: 0.1,
-        brute: 0.18,
-        shrike: 0.24,
-        mortar: 0.16,
-        warden: 0.32,
+        scuttler: 0.08,
+        brute: 0.16,
+        shrike: 0.12,
+        skimmer: 0.28,
+        lancer: 0.2,
+        mortar: 0.04,
+        warden: 0.12,
       },
       mixWeight: 0.42,
       hazard: {
@@ -884,11 +890,13 @@
   const ENCOUNTER_PRESSURE_FAMILIES = {
     crossfire: {
       mix: {
-        scuttler: 0.08,
+        scuttler: 0.06,
         brute: 0.12,
-        shrike: 0.3,
-        mortar: 0.14,
-        warden: 0.36,
+        shrike: 0.12,
+        skimmer: 0.34,
+        lancer: 0.24,
+        mortar: 0.04,
+        warden: 0.08,
       },
       mixWeight: 0.58,
       hazard: {
@@ -1225,6 +1233,26 @@
       damage: 11,
       scrap: 3,
       particleColor: "#d7ebff",
+    },
+    skimmer: {
+      label: "Skimmer",
+      color: "#6ff3c8",
+      radius: 13,
+      hp: 46,
+      speed: 98,
+      damage: 11,
+      scrap: 2,
+      particleColor: "#baffeb",
+    },
+    lancer: {
+      label: "Lancer",
+      color: "#ff9d6b",
+      radius: 17,
+      hp: 76,
+      speed: 74,
+      damage: 16,
+      scrap: 4,
+      particleColor: "#ffd3ae",
     },
     warden: {
       label: "Warden",
@@ -11513,6 +11541,11 @@
       enemy.apexChargeCooldown = 1.6 + Math.random() * 0.6;
       enemy.apexChargeTime = 0;
       enemy.apexChargeVector = { x: 1, y: 0 };
+    } else if (typeId === "lancer") {
+      enemy.attackCooldown = 0.55;
+      enemy.lancerChargeCooldown = 1.8 + Math.random() * 0.8;
+      enemy.lancerChargeTime = 0;
+      enemy.lancerChargeVector = { x: 1, y: 0 };
     }
     if (
       typeId === "elite" &&
@@ -13463,6 +13496,51 @@
       if (enemy.type === "shrike") {
         enemy.wobble += dt * 5;
         angle += Math.sin(enemy.wobble) * 0.6;
+      } else if (enemy.type === "skimmer") {
+        enemy.wobble += dt * 6.2;
+        const distanceToPlayer = Math.hypot(state.player.x - enemy.x, state.player.y - enemy.y);
+        const preferredRange = 176;
+        if (distanceToPlayer < preferredRange * 0.76) {
+          angle += Math.PI * 0.94 + Math.sin(enemy.wobble) * 0.28;
+          speedMultiplier *= 1.28;
+        } else if (distanceToPlayer <= preferredRange * 1.22) {
+          angle += enemy.orbitDirection * 1.38 + Math.sin(enemy.wobble) * 0.26;
+          speedMultiplier *= 1.18;
+        } else {
+          speedMultiplier *= 1.24;
+        }
+      } else if (enemy.type === "lancer") {
+        enemy.wobble += dt * 3.8;
+        enemy.lancerChargeCooldown = Math.max(0, (enemy.lancerChargeCooldown || 0) - dt);
+        enemy.lancerChargeTime = Math.max(0, (enemy.lancerChargeTime || 0) - dt);
+        const distanceToPlayer = Math.hypot(state.player.x - enemy.x, state.player.y - enemy.y);
+        if (enemy.lancerChargeTime > 0) {
+          angle = Math.atan2(enemy.lancerChargeVector.y, enemy.lancerChargeVector.x);
+          speedMultiplier *= 3.15;
+        } else {
+          const preferredRange = 220;
+          if (distanceToPlayer < preferredRange * 0.72) {
+            angle += Math.PI * 0.9;
+            speedMultiplier *= 1.18;
+          } else if (distanceToPlayer <= preferredRange * 1.18) {
+            angle += enemy.orbitDirection * 1.1 + Math.sin(enemy.wobble) * 0.18;
+            speedMultiplier *= 1.04;
+          } else {
+            speedMultiplier *= 1.2;
+          }
+          if (enemy.lancerChargeCooldown <= 0 && distanceToPlayer < 380) {
+            enemy.lancerChargeCooldown = 4.4;
+            enemy.lancerChargeTime = 0.56;
+            enemy.lancerChargeVector = normalizeVector(
+              state.player.x - enemy.x,
+              state.player.y - enemy.y,
+              1,
+              0
+            );
+            angle = Math.atan2(enemy.lancerChargeVector.y, enemy.lancerChargeVector.x);
+            speedMultiplier *= 2.2;
+          }
+        }
       } else if (enemy.type === "apex") {
         enemy.wobble += dt * 3.6;
         enemy.apexChargeCooldown = Math.max(0, (enemy.apexChargeCooldown || 0) - dt);
@@ -13538,6 +13616,32 @@
         if (distance < projectileRange) {
           spawnEnemyShot(enemy, enemy.type === "elite");
           enemy.attackCooldown = enemy.type === "elite" ? 1.6 : 2.1;
+        }
+      } else if (enemy.type === "skimmer" && enemy.attackCooldown <= 0) {
+        if (distance < 320) {
+          spawnEnemyShot(enemy, {
+            speed: 252,
+            radius: 4.5,
+            damage: 8,
+            life: 2.4,
+            color: "#baffeb",
+            count: 2,
+            spread: 0.12,
+          });
+          enemy.attackCooldown = 1.4;
+        }
+      } else if (enemy.type === "lancer" && enemy.attackCooldown <= 0) {
+        if (distance < 340 && enemy.lancerChargeTime <= 0) {
+          spawnEnemyShot(enemy, {
+            speed: 276,
+            radius: 5.5,
+            damage: 10,
+            life: 2.8,
+            color: "#ffd3ae",
+            count: 2,
+            spread: 0.08,
+          });
+          enemy.attackCooldown = 2.05;
         }
       } else if (enemy.type === "apex" && enemy.attackCooldown <= 0) {
         if (distance < 430) {
@@ -13777,6 +13881,10 @@
         ? 34
         : enemy.type === "elite"
         ? 24
+        : enemy.type === "lancer"
+          ? 13
+        : enemy.type === "skimmer"
+          ? 9
         : enemy.type === "brute"
           ? 10
           : enemy.type === "mortar"
@@ -15653,6 +15761,24 @@
         context.lineWidth = 2;
         context.beginPath();
         context.arc(enemy.x, enemy.y, enemy.radius * 0.48, 0, Math.PI * 2);
+        context.stroke();
+      } else if (enemy.type === "skimmer") {
+        drawPolygon(context, enemy.x, enemy.y, enemy.radius, 5, Math.PI / 5 + enemy.wobble * 0.16);
+        context.fill();
+        context.strokeStyle = "rgba(219, 255, 241, 0.88)";
+        context.lineWidth = 2;
+        context.beginPath();
+        context.moveTo(enemy.x - enemy.radius * 1.1, enemy.y);
+        context.lineTo(enemy.x + enemy.radius * 1.1, enemy.y);
+        context.stroke();
+      } else if (enemy.type === "lancer") {
+        drawPolygon(context, enemy.x, enemy.y, enemy.radius, 3, Math.PI / 2 + enemy.wobble * 0.06);
+        context.fill();
+        context.strokeStyle =
+          enemy.lancerChargeTime > 0 ? "rgba(255, 242, 214, 0.96)" : "rgba(255, 216, 188, 0.86)";
+        context.lineWidth = enemy.lancerChargeTime > 0 ? 3 : 2;
+        context.beginPath();
+        context.arc(enemy.x, enemy.y, enemy.radius * 0.72, 0, Math.PI * 2);
         context.stroke();
       } else if (enemy.type === "shrike") {
         drawPolygon(context, enemy.x, enemy.y, enemy.radius, 3, enemy.wobble);

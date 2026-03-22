@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-23 00:00:39 KST
+  Findings:
+  - `playables/cinder-circuit/game.js` now has a longer ladder and larger arenas, but the actual enemy ecology is still too small for the ambition it is signaling. Late combat is mostly remixing `scuttler` / `brute` / `shrike` / `mortar` / `warden` under different hazard wrappers, which is not enough behavioral range to sustain a genuinely hungry `20-30` wave future.
+  - Wave 9-12 and the `Afterburn` pool talk about `crossfire`, `raid`, `pursuit`, `breach`, and `hold`, yet many of those families still cash out into the same practical exam: cut `warden` lines, reach `mortar` backline, reopen route, repeat. Strong repeat-run arena roguelites make those moods feel different in the hands, not just in the briefing text.
+  - The combat space is bigger on paper (`1280x720`, `1440x820`), but late density is still too sanitation-heavy: `activeCap` climbs into the `41-49` range while hazards keep adding cores, pylons, turrets, or drift zones. That keeps movement decision-making closer to constant lane repair than to the readable dive/hold/greed choices the game needs.
+  - The forge presentation is still below strong reference standards because the run-defining reward is buried in taxonomy. `Dominant Mutation`, doctrines, bays, chassis, pursuit, catalyst, and armory language still read like system administration around `playables/cinder-circuit/game.js:14952-15019` instead of the instant appetite and silhouette-first payoff that games like `Hades`, `Brotato`, or `20 Minutes Till Dawn` surface immediately.
+  Top Priority: Add 2-3 new late enemy archetypes with distinct battlefield obligations and rebuild at least one Wave 9+ pressure family around those enemies instead of `warden + mortar` plus hazard dressing.
+  Why Now: Without a broader enemy ecology, longer runs will keep stretching the same test instead of creating rerun-worthy escalation.
+  Do Not Repeat: Do not answer this with another hazard variant, another forge subsystem, or more late-wave prose if the player is still taking the same backline-cleanup exam.
+
 - 2026-03-22 23:30:35 KST
   Findings:
   - `playables/cinder-circuit/game.js` now supports bigger arenas (`960x540` -> `1280x720` -> `1440x820`) and a much longer ladder, but the combat language still collapses too often into the same late ask: crack `warden` coverage, kill `mortar` backline, reopen route, repeat. That is pressure, not enough encounter identity to carry `20-30` waves.
@@ -980,6 +990,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-23 06:10 KST
+  Changed: added two new late enemy archetypes in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), `Skimmer` and `Lancer`, then rebuilt the `crossfire` family around them instead of letting `Wave 9+` keep defaulting back to `warden + mortar` cleanup. `Lockgrid`, the shared late-act `crossfire` override, and the `Afterburn` `slag surge` bracket now spawn flank-sweeping `Skimmer` packs plus telegraphed `Lancer` charges, with `warden`/`mortar` pushed down to secondary roles; I also gave both enemies their own movement, attack, reward, and silhouette rules so they create distinct obligations in play rather than just new mix labels. Updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert that late `crossfire` waves and the corresponding `Afterburn` bracket now really carry the new ecology. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's Top Priority explicitly called for new late enemy archetypes and at least one Wave 9+ pressure family rebuilt around them. The highest-value bounded interpretation was to spend one pass on `crossfire`, because it was still reading like the clearest example of renamed pressure that played like the same backline-cleanup exam.
+  Follow-up risk: `crossfire` now asks for flank control and charge bait instead of mainly backline cleanup, but the other late families still lean on the older roster. If repetition remains in `raid`, `pursuit`, or `hold`, the next bounded step should give one of those families its own new enemy pair or elite rule rather than more hazard dressing.
 
 - 2026-03-23 05:45 KST
   Changed: rebuilt the late `Wave 9+` combat roster in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) around explicit pressure families instead of letting every shared/post-capstone bracket drift back toward the same `warden + mortar` exam. `crossfire`, `raid`, `pursuit`, `breach`, and `hold` profiles now auto-tune enemy mix and hazard tax differently, then get applied across the shared late-act resolver and the `Afterburn` pool: `Lockgrid/slag surge` lean harder into shrike-driven panic lanes, `Scrapstorm/heist` now open greedier salvage dives with lighter backline tax and richer vault bursts, `Starforge/reentry` pushes faster drift-chase pursuit, and `Cinder Crown` plus the territory ladders now emphasize heavier warden/brute hold-or-breach ownership pressure. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so validation checks the new late-wave ecology split instead of the old assumption that pursuit waves stay mortar-led. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
