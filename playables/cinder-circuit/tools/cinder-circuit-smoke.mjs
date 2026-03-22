@@ -100,6 +100,12 @@ artilleryLateBuild.bastionDoctrineId = "storm_artillery";
 const artilleryWaveTen = game.resolveWaveConfig(9, artilleryLateBuild);
 const artilleryWaveEleven = game.resolveWaveConfig(10, artilleryLateBuild);
 const artilleryWaveTwelve = game.resolveWaveConfig(11, artilleryLateBuild);
+const kilnCapstoneBuild = game.createInitialBuild("scrap_pact");
+kilnCapstoneBuild.coreId = "scatter";
+kilnCapstoneBuild.bastionDoctrineId = "kiln_bastion";
+kilnCapstoneBuild.doctrineChaseClaimed = true;
+kilnCapstoneBuild.doctrineCapstoneId = "bulwark_foundry";
+const kilnCapstoneForm = game.getDoctrineWeaponForm(kilnCapstoneBuild, "scatter");
 const mirrorWaveTen = game.resolveWaveConfig(9, mirrorLateBuild);
 const mirrorWaveEleven = game.resolveWaveConfig(10, mirrorLateBuild);
 const mirrorWaveTwelve = game.resolveWaveConfig(11, mirrorLateBuild);
@@ -129,6 +135,9 @@ assert.ok(mirrorWaveEleven.hazard.driftSpeed > game.WAVE_CONFIG[10].hazard.drift
 assert.ok(mirrorWaveTwelve.mix.binder > mirrorWaveTwelve.mix.mortar);
 assert.ok(mirrorWaveTwelve.activeCap >= game.WAVE_CONFIG[11].activeCap);
 assert.ok(mirrorWaveTwelve.hazard.count >= game.WAVE_CONFIG[11].hazard.count);
+assert.equal(kilnCapstoneForm.label, "Bulwark Furnace");
+assert.equal(kilnCapstoneForm.onHit.kind, "foundry_shatter");
+assert.equal(kilnCapstoneForm.onHit.burstCount, 3);
 const afterburnTransitionRun = {
   build: game.createInitialBuild("scrap_pact"),
   phase: "forge",

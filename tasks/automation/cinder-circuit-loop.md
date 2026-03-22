@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-23 12:08:00 KST
+  Findings:
+  - `playables/cinder-circuit/game.js` has a broader late roster now because `binder`, `skimmer`, and `lancer` are doing real work, but Wave 10-12 plus much of `Afterburn` are still over-centralized around the same answer: cut the dragline, reopen space, then do the objective. `raid`, `pursuit`, `breach`, and `hold` are named more distinctly than they are played, which is still short of a 20-30 wave ambition.
+  - The build loop is still selling too many parallel systems instead of one escalating fantasy. `Architecture Draft`, `Ascension Draft`, `Bastion Draft`, `Catalyst Crucible`, `Late Break Armory`, `Dominant Mutation`, `Act 4 Splice`, chassis, pursuit, and support bays keep asking the player to understand the run administratively when a strong rerun game makes them hunger for one obvious next form.
+  - Forge readability is still below strong references. Around the late forge subtitle/context stack in `playables/cinder-circuit/game.js`, the player is hit with a long taxonomy ledger before they feel desire; compared with the silhouette-first immediacy of `Hades` boon picks, `Brotato` shops, or `20 Minutes Till Dawn` level-ups, this is still too much parsing and not enough appetite.
+  - Weapon payoff hierarchy is still uneven. `Storm Artillery` reads closer to a player-piloted endform, while `Mirror Hunt` and `Kiln Bastion` still lean too hard on halos, drones, sentries, and perimeter infrastructure, so the memorable power often lives around the player instead of in the body/gun they are directly steering.
+  Top Priority: Collapse late progression into one headline mutation ladder per doctrine, with 2-3 large in-combat main-weapon/body breakpoints and support systems clearly demoted to amplifiers rather than co-headliners.
+  Why Now: Until the player can instantly want their next form, more waves and more systems will keep reading as length instead of addiction.
+  Do Not Repeat: Do not answer this with another named draft, another helper layer, or more UI summary text if the main gun/body still is not the thing players are excited to rerun for.
+
 - 2026-03-23 11:46:00 KST
   Findings:
   - `playables/cinder-circuit/game.js` has the skeleton of a real long run now, but Wave 10-12 and much of `Afterburn` still fall back to the same late exam: `warden` coverage, `mortar` backline, hazard cores, route repair. `Wave 9` briefly introduces `skimmer` and `lancer`, then the roster collapses back into the older ecology instead of opening a broader 20-30 wave future.
@@ -1000,6 +1010,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-23 12:42 KST
+  Changed: rewired the `Kiln Bastion` doctrine apex in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Bulwark Foundry` reads as a player-fired endform instead of a sentry-led payoff. Its stage-3 `Bulwark Furnace` form now sells an "오중 분화 요새" headline, and every direct `Scatter` hit fans out three forward `foundry_shatter` eruption shards that each detonate into smaller slag bursts and pools, so the player can rip open a pocket entrance by aiming into a dense lane rather than waiting for perimeter infrastructure to do the memorable work. Updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert that the fully completed Kiln doctrine form now carries the new hit-splitting mutation. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the latest critique's Top Priority was to collapse late progression into one obvious mutation ladder per doctrine and demote support systems to amplifiers. The highest-value bounded interpretation was to fix the most helper-heavy late payoff that was still open: keep Kiln's reclaim identity, but move the excitement into the gun itself by making the final stage visibly branch and redraw the front line on contact.
+  Follow-up risk: `Bulwark Foundry` is now much louder in the player's hands, but triple eruption fans may over-reward point-blank firing against large targets or elite packs. If live play turns Wave 10+ into too much instant area denial, the next pass should trim shard blast radius or burst count before adding more late-body complexity.
 
 - 2026-03-23 12:20 KST
   Changed: added a new late enemy family, `Binder`, in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and rebuilt `Wave 10-12` plus the first three `Afterburn` brackets around its `dragline` pressure instead of falling back to `warden + mortar` cleanup. `Binder` now casts visible tethers that slow movement and dash recovery until the player cuts the source or escapes, its silhouette and tether line read directly in combat, and those same late waves now downgrade old backline tax in favor of `Binder + Skimmer/Lancer` dive/hold/breach problems. I also tied the new family to immediate visible growth by marking one `Binder` per late-ascension wave as an `Ascension Carrier`, so killing that live battlefield target drops the `Ascension Core` mutation cache on the spot instead of asking the player to wait for another generic elite/admin beat. Updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert that the rebuilt late waves and first three `Afterburn` stages are now binder-led and keep the carrier hook. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

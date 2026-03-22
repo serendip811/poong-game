@@ -2468,10 +2468,10 @@
       slotText: "교리 완성 · 회수 요새 주조",
       cost: 80,
       laneLabel: "Doctrine Apex",
-      summary: "Scatter가 전방 용광 화구를 직조하고 Kiln Sentry 거점장이 그 pocket를 굳혀, 되찾은 구역이 곧 전열 복구선이 된다.",
-      statusNote: "Bulwark Foundry가 Scatter를 용광 pocket 설계 무기로 완성하고, sentry 거점장이 그 뒤를 수리·살상 구역으로 잠근다.",
+      summary: "Scatter가 적중 지점마다 전방 용광 분화를 다시 토해 pocket 입구를 직접 찢고, sentry는 그 뒤를 잠그는 증폭기로만 남는다.",
+      statusNote: "Bulwark Foundry가 Scatter를 전방 연쇄 분화 주포로 완성해 플레이어가 직접 pocket 입구를 갈라 낸다.",
       description:
-        "Kiln Bastion 전용 최종 교리 카드. Scatter가 전방에 용광 화구 salvo를 깔아 pocket 입구 자체를 직접 설계하고, Kiln Sentry 거점은 그 뒤를 넓은 용광 거점장으로 굳혀 플레이어가 같은 구역을 반복 reclaim하는 운영을 완성한다.",
+        "Kiln Bastion 전용 최종 교리 카드. Scatter가 적중 지점마다 전방 용광 분화 파편을 다시 토해 pocket 입구 자체를 직접 절단하고, Kiln Sentry 거점은 그 뒤를 고정하는 증폭층으로만 남겨 플레이어가 자기 몸과 주포로 전열을 다시 그리게 만든다.",
     },
     storm_artillery: {
       id: "sky_lance_battery",
@@ -2672,9 +2672,9 @@
           variants: {
             bulwark_foundry: {
               label: "Bulwark Furnace",
-              traitLabel: "오중 요새 화구",
+              traitLabel: "오중 분화 요새",
               statusNote:
-                "Bulwark Furnace가 전방에 오중 용광 화구를 깔아 pocket 입구를 직접 봉쇄하고, sentry 거점장은 그 뒤를 굳히는 보조층으로 남는다.",
+                "Bulwark Furnace가 오중 용광 화구에 적중 분화까지 덧대 pocket 입구를 직접 갈라 버리고, sentry 거점장은 그 뒤를 굳히는 증폭층으로만 남는다.",
               damageBonus: 10,
               cooldownMultiplier: 0.9,
               pierceBonus: 1,
@@ -2694,6 +2694,25 @@
                 poolDamageMultiplier: 0.2,
                 color: "#fff0c2",
                 poolColor: "rgba(255, 188, 104, 0.34)",
+              },
+              onHit: {
+                kind: "foundry_shatter",
+                burstCount: 3,
+                spread: 0.24,
+                speedMultiplier: 0.88,
+                damageMultiplier: 0.46,
+                radius: 5.4,
+                life: 0.2,
+                color: "#ffe1b0",
+                slagSeed: {
+                  blastRadius: 42,
+                  blastDamageMultiplier: 0.36,
+                  poolRadius: 36,
+                  poolDuration: 1.15,
+                  poolTickInterval: 0.26,
+                  poolDamageMultiplier: 0.12,
+                  poolColor: "rgba(255, 176, 92, 0.3)",
+                },
               },
             },
           },
@@ -12977,6 +12996,49 @@
     onHit.remainingBursts = 0;
   }
 
+  function emitBulwarkFoundryBursts(projectile, sourceEnemy) {
+    const onHit = projectile && projectile.doctrineOnHit;
+    if (!onHit || onHit.kind !== "foundry_shatter" || onHit.remainingBursts <= 0) {
+      return;
+    }
+    const baseAngle = Math.atan2(projectile.vy, projectile.vx);
+    const half = (onHit.remainingBursts - 1) / 2;
+    for (let index = 0; index < onHit.remainingBursts; index += 1) {
+      const offset = (index - half) * onHit.spread;
+      const angle = baseAngle + offset;
+      state.projectiles.push(
+        createDerivedProjectile(projectile, angle, {
+          x: sourceEnemy.x + Math.cos(angle) * (sourceEnemy.radius + 8),
+          y: sourceEnemy.y + Math.sin(angle) * (sourceEnemy.radius + 8),
+          speed: (Math.hypot(projectile.vx, projectile.vy) || 1) * onHit.speedMultiplier,
+          radius: onHit.radius,
+          damage: round(projectile.damage * onHit.damageMultiplier, 1),
+          life: onHit.life,
+          pierce: 0,
+          bounce: 0,
+          chain: 0,
+          chainRange: 0,
+          color: onHit.color,
+          doctrineOnHit: null,
+          doctrineOnHazardHit: null,
+          capstoneOnHit: null,
+          capstoneOnBounce: null,
+          slagSeed: {
+            blastRadius: onHit.slagSeed.blastRadius,
+            blastDamage: round(projectile.damage * onHit.slagSeed.blastDamageMultiplier, 1),
+            poolRadius: onHit.slagSeed.poolRadius,
+            poolDuration: onHit.slagSeed.poolDuration,
+            poolTickInterval: onHit.slagSeed.poolTickInterval,
+            poolDamage: round(projectile.damage * onHit.slagSeed.poolDamageMultiplier, 1),
+            poolColor: onHit.slagSeed.poolColor,
+            particleColor: onHit.color,
+          },
+        })
+      );
+    }
+    onHit.remainingBursts = 0;
+  }
+
   function emitRelaySeverBursts(projectile, sourceHazard) {
     const onHazardHit = projectile && projectile.doctrineOnHazardHit;
     if (
@@ -13926,6 +13988,7 @@
               destroyEnemy(enemy);
             }
             emitMirrorReaveBursts(projectile, enemy);
+            emitBulwarkFoundryBursts(projectile, enemy);
             emitStormspireNeedleBursts(projectile, enemy);
             emitStormRailBursts(projectile, enemy);
             const chained = tryChainProjectile(projectile, enemy);
