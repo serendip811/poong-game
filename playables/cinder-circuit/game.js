@@ -560,6 +560,8 @@
   const COMBAT_CACHE_DROP_LIFE = 14;
   const PREDATOR_BAIT_START_WAVE = 9;
   const POST_CAPSTONE_WAVE_COUNT = 7;
+  const RISK_MUTATION_START_WAVE = 9;
+  const MAX_RISK_MUTATION_LEVEL = 6;
   const FINAL_CASHOUT_DURATION = 12;
   const FINAL_CASHOUT_SPAWN_BUDGET = 26;
   const POST_CAPSTONE_WAVE_LABELS = [
@@ -864,6 +866,52 @@
       apexSpawnTimer: 4.4,
     },
   ];
+  const RISK_MUTATION_CORE_DEFS = {
+    ember: {
+      title: "Ember Talon Molt",
+      tag: "TALON",
+      traitLabel: "talon rack",
+      description:
+        "주포 위에 발화 갈퀴 포대를 덧대 정면 사선에 split talon volley를 얹는다. 고를수록 다음 웨이브 spawn 압박과 hazard 세금도 함께 뛰어오른다.",
+      slotText: "split talon 증설 · 다음 웨이브 압박 과세",
+      bodyLabel: "Talon Rack Hull",
+      bodyText: "상부 갈퀴 포문과 측면 배기관이 열려 직선 교전을 더 공격적으로 밀어붙이는 과열 선체다.",
+      color: "#ffb56b",
+    },
+    scatter: {
+      title: "Shrapnel Bloom Molt",
+      tag: "BLOOM",
+      traitLabel: "bloom rack",
+      description:
+        "산탄 코어 바깥에 추가 bloom rack을 벌려 측면 파편 salvo를 덧댄다. 대신 다음 웨이브는 더 많은 적과 거친 hazard로 판돈을 청구한다.",
+      slotText: "bloom rack 증설 · 다음 웨이브 압박 과세",
+      bodyLabel: "Bloom Rack Hull",
+      bodyText: "옆구리에 파편 꽃잎 포문이 열린 근접 압박 선체다.",
+      color: "#ffd38a",
+    },
+    lance: {
+      title: "Vector Fork Molt",
+      tag: "FORK",
+      traitLabel: "fork lattice",
+      description:
+        "주포 앞에 vector fork 격자를 덧대 주빔 양옆으로 보조 lance를 흘린다. 더 깊게 고를수록 다음 웨이브가 더 빨리 닫힌다.",
+      slotText: "fork lattice 증설 · 다음 웨이브 압박 과세",
+      bodyLabel: "Fork Lattice Frame",
+      bodyText: "전면 fork 레일이 자라 먼 코어와 후열을 동시에 찢는 추격 프레임이다.",
+      color: "#9fe7ff",
+    },
+    ricochet: {
+      title: "Mirror Lash Molt",
+      tag: "LASH",
+      traitLabel: "mirror lash",
+      description:
+        "반사 코어 옆에 mirror lash 송신기를 붙여 갈라지는 보조 탄을 추가한다. 대신 다음 웨이브는 봉쇄선과 폭주가 함께 더 난폭해진다.",
+      slotText: "mirror lash 증설 · 다음 웨이브 압박 과세",
+      bodyLabel: "Mirror Lash Frame",
+      bodyText: "후미 안테나가 뻗어 반사각을 더 공격적으로 벌리는 교란 프레임이다.",
+      color: "#7dd0c5",
+    },
+  };
   const KILN_BASTION_FIELD_BASE = {
     radiusFactor: 0.24,
     enemyDamage: 7,
@@ -3653,6 +3701,8 @@
     illegalOverclockId: null,
     illegalOverclockOffered: false,
     illegalOverclockMutationLevel: 0,
+    riskMutationLevel: 0,
+    riskMutationQueuedLevel: 0,
     apexMutationLevel: 0,
     predatorBaitCharges: 0,
     bastionPactDebtWaves: 0,
@@ -3810,6 +3860,115 @@
 
   function getIllegalMutationTierLabel(level) {
     return `MOLT ${clamp(Math.round(level || 0), 1, MAX_ILLEGAL_OVERCLOCK_MUTATIONS)}`;
+  }
+
+  function getRiskMutationCoreDef(buildOrId) {
+    const coreId =
+      typeof buildOrId === "string"
+        ? buildOrId
+        : buildOrId && typeof buildOrId === "object"
+          ? buildOrId.coreId
+          : null;
+    return coreId ? RISK_MUTATION_CORE_DEFS[coreId] || RISK_MUTATION_CORE_DEFS.ember : RISK_MUTATION_CORE_DEFS.ember;
+  }
+
+  function getRiskMutationLevel(build) {
+    return clamp(
+      Math.round((build && build.riskMutationLevel) || 0),
+      0,
+      MAX_RISK_MUTATION_LEVEL
+    );
+  }
+
+  function getRiskMutationTierLabel(level) {
+    return `RISK ${clamp(Math.round(level || 0), 1, MAX_RISK_MUTATION_LEVEL)}`;
+  }
+
+  function getRiskMutationQueuedLevel(build) {
+    return clamp(
+      Math.round((build && build.riskMutationQueuedLevel) || 0),
+      0,
+      MAX_RISK_MUTATION_LEVEL
+    );
+  }
+
+  function getRiskMutationOffsets(level) {
+    const boundedLevel = clamp(level, 1, MAX_RISK_MUTATION_LEVEL);
+    const offsets = [-0.22, 0.22];
+    if (boundedLevel >= 2) {
+      offsets.unshift(-0.46);
+      offsets.push(0.46);
+    }
+    if (boundedLevel >= 4) {
+      offsets.unshift(-0.72);
+      offsets.push(0.72);
+    }
+    if (boundedLevel >= 6) {
+      offsets.unshift(-0.96);
+      offsets.push(0.96);
+    }
+    return offsets;
+  }
+
+  function applyRiskTaxMix(baseMix, queuedLevel) {
+    const mix = { ...(baseMix || {}) };
+    if (queuedLevel <= 0) {
+      return mix;
+    }
+    mix.warden = (mix.warden || 0) + 0.04 + queuedLevel * 0.01;
+    mix.mortar = (mix.mortar || 0) + 0.03 + queuedLevel * 0.008;
+    mix.scuttler = Math.max(0.02, (mix.scuttler || 0) - 0.02);
+    let total = 0;
+    Object.keys(mix).forEach((key) => {
+      total += mix[key];
+    });
+    if (total <= 0) {
+      return baseMix || {};
+    }
+    Object.keys(mix).forEach((key) => {
+      mix[key] = mix[key] / total;
+    });
+    return mix;
+  }
+
+  function applyRiskMutationPressureTax(config, build) {
+    if (!config) {
+      return config;
+    }
+    const queuedLevel = getRiskMutationQueuedLevel(build);
+    if (queuedLevel <= 0) {
+      return config;
+    }
+    const taxed = {
+      ...config,
+      spawnBudget: Math.max(0, (config.spawnBudget || 0) + 12 + queuedLevel * 4),
+      activeCap: Math.max(1, (config.activeCap || 0) + 2 + Math.ceil(queuedLevel / 2)),
+      baseSpawnInterval: Math.max(
+        config.spawnIntervalMin || 0.08,
+        (config.baseSpawnInterval || 0.2) * Math.max(0.78, 0.94 - queuedLevel * 0.03)
+      ),
+      mix: applyRiskTaxMix(config.mix, queuedLevel),
+      note: `${config.note} Risk Mutation ${getRiskMutationTierLabel(queuedLevel)}가 다음 웨이브 압박세를 열어 적 밀도와 봉쇄 사선이 한 단계 더 거칠게 들어온다.`,
+      directive: `${config.directive} Risk tax active: 적 예산과 hazard count가 함께 올라 greed로 받은 청구서를 바로 치러야 한다.`,
+    };
+    if (config.hazard) {
+      taxed.hazard = {
+        ...config.hazard,
+        interval: Math.max(4.4, (config.hazard.interval || 6) * Math.max(0.78, 0.92 - queuedLevel * 0.025)),
+        count: Math.max(1, (config.hazard.count || 1) + Math.floor((queuedLevel + 1) / 2)),
+        damage: (config.hazard.damage || 0) + 1 + queuedLevel,
+        coreHp: Number.isFinite(config.hazard.coreHp)
+          ? config.hazard.coreHp + queuedLevel * 8
+          : config.hazard.coreHp,
+        relayDamage: Number.isFinite(config.hazard.relayDamage)
+          ? config.hazard.relayDamage + Math.ceil(queuedLevel / 2)
+          : config.hazard.relayDamage,
+        salvageScrap: Number.isFinite(config.hazard.salvageScrap)
+          ? config.hazard.salvageScrap + queuedLevel * 2
+          : config.hazard.salvageScrap,
+      };
+    }
+    return taxed;
   }
 
   function getApexMutationLevel(build) {
@@ -5265,6 +5424,12 @@
       overdriveDuration: 5.5 + build.overdriveDurationBonus,
       hazardMitigation: clamp(build.hazardMitigation, 0, 0.45),
     };
+    const riskMutationLevel = getRiskMutationLevel(build);
+    if (riskMutationLevel > 0) {
+      stats.moveSpeed += 5 + riskMutationLevel * 2;
+      stats.pickupRadius += 4 + riskMutationLevel * 2;
+      stats.maxHp -= Math.max(0, Math.ceil(riskMutationLevel / 2) * 2);
+    }
     const stormArtilleryEndform = getStormArtilleryAfterburnEndform(build);
     if (stormArtilleryEndform && typeof stormArtilleryEndform.applyPlayer === "function") {
       stormArtilleryEndform.applyPlayer(stats, build);
@@ -5355,6 +5520,11 @@
       illegalOverclockTraitLabel: null,
       illegalOverclockStatusNote: null,
       illegalOverclockFirePattern: null,
+      riskMutationLevel: 0,
+      riskMutationLabel: null,
+      riskMutationTraitLabel: null,
+      riskMutationStatusNote: null,
+      riskMutationFirePattern: null,
       apexMutationLevel: 0,
       apexMutationLabel: null,
       apexMutationTraitLabel: null,
@@ -5449,6 +5619,42 @@
           : illegalOverclock.statusNote;
       if (typeof illegalOverclock.applyWeapon === "function") {
         illegalOverclock.applyWeapon(stats, build);
+      }
+    }
+    const riskMutationLevel = getRiskMutationLevel(build);
+    if (riskMutationLevel > 0) {
+      const mutation = getRiskMutationCoreDef(build);
+      stats.riskMutationLevel = riskMutationLevel;
+      stats.riskMutationLabel = mutation.title;
+      stats.riskMutationTraitLabel = `${mutation.traitLabel} · ${getRiskMutationTierLabel(riskMutationLevel)}`;
+      stats.riskMutationStatusNote =
+        `${mutation.bodyText} 현재 ${getRiskMutationTierLabel(riskMutationLevel)}로 보조 포문이 열려 다음 greed pick을 계속 부른다.`;
+      stats.riskMutationFirePattern = {
+        kind: "risk_mutation",
+        offsets: getRiskMutationOffsets(riskMutationLevel),
+        speedMultiplier: 1.04 + riskMutationLevel * 0.015,
+        radius: 4.6 + riskMutationLevel * 0.08,
+        damageMultiplier: 0.24 + riskMutationLevel * 0.025,
+        life: 0.82 + riskMutationLevel * 0.03,
+        pierceBonus: build.coreId === "lance" && riskMutationLevel >= 3 ? 1 : 0,
+        bounceBonus: build.coreId === "ricochet" && riskMutationLevel >= 4 ? 1 : 0,
+        chainBonus: build.coreId === "ricochet" && riskMutationLevel >= 2 ? 1 : 0,
+        color: mutation.color,
+      };
+      if (build.coreId === "ember") {
+        stats.cooldown = clamp(stats.cooldown * (1 - riskMutationLevel * 0.03), 0.08, 0.4);
+        stats.damage += riskMutationLevel * 1.5;
+      } else if (build.coreId === "scatter") {
+        stats.pellets += Math.floor((riskMutationLevel + 1) / 2);
+        stats.spread = round(stats.spread * Math.max(0.7, 1 - riskMutationLevel * 0.04), 3);
+      } else if (build.coreId === "lance") {
+        stats.projectileSpeed += riskMutationLevel * 18;
+        stats.pierce += Math.floor((riskMutationLevel + 1) / 2);
+      } else if (build.coreId === "ricochet") {
+        stats.damage += riskMutationLevel;
+        stats.chain += Math.floor((riskMutationLevel + 1) / 3);
+        stats.bounce += riskMutationLevel >= 3 ? 1 : 0;
+        stats.chainRange = Math.max(stats.chainRange || 0, 176 + riskMutationLevel * 6);
       }
     }
     const apexMutationLevel = getApexMutationLevel(build);
@@ -6029,6 +6235,33 @@
       forgeLaneLabel: "Predator Bait",
       nextApexLevel: nextLevel,
       nextWave,
+    };
+  }
+
+  function createRiskMutationChoice(build, nextWave) {
+    if (!build || !Number.isFinite(nextWave) || nextWave < RISK_MUTATION_START_WAVE) {
+      return null;
+    }
+    const currentLevel = getRiskMutationLevel(build);
+    if (currentLevel >= MAX_RISK_MUTATION_LEVEL) {
+      return null;
+    }
+    const nextLevel = currentLevel + 1;
+    const mutation = getRiskMutationCoreDef(build);
+    return {
+      type: "utility",
+      action: "risk_mutation",
+      id: `utility:risk_mutation:${build.coreId}:${nextLevel}:${nextWave}`,
+      verb: "변이",
+      tag: mutation.tag,
+      title: `${mutation.title} ${getRiskMutationTierLabel(nextLevel)}`,
+      description: `${mutation.description} 다음 Wave ${nextWave}는 spawn budget, active cap, hazard count가 함께 오른다.`,
+      slotText: `${mutation.slotText} · Wave ${nextWave} 압박세`,
+      cost: 0,
+      laneLabel: "Risk Mutation",
+      forgeLaneLabel: "Risk Mutation",
+      riskMutationLevel: nextLevel,
+      riskMutationWave: nextWave,
     };
   }
 
@@ -6685,6 +6918,9 @@
     if (!choice) {
       return false;
     }
+    if (choice.type === "utility" && choice.action === "risk_mutation") {
+      return true;
+    }
     if (choice.type === "fallback") {
       return true;
     }
@@ -6700,6 +6936,9 @@
   function scoreFieldGrantChoice(choice) {
     if (!choice) {
       return -1;
+    }
+    if (choice.type === "utility" && choice.action === "risk_mutation") {
+      return 560 + ((choice.riskMutationLevel || 1) * 14);
     }
     if (choice.type === "evolution") {
       return 500 + (choice.evolutionTier || 0) * 10;
@@ -6729,6 +6968,9 @@
   function getFieldGrantChoiceBucket(choice) {
     if (!choice) {
       return "fallback";
+    }
+    if (choice.type === "utility" && choice.action === "risk_mutation") {
+      return "risk_mutation";
     }
     if (choice.type === "system") {
       return choice.forgeLaneLabel || "system";
@@ -7350,6 +7592,10 @@
         return (right.cost || 0) - (left.cost || 0);
       });
     const predatorBaitChoice = createPredatorBaitChoice(build, nextWave);
+    const riskMutationChoice = createRiskMutationChoice(build, nextWave);
+    if (riskMutationChoice) {
+      pool.unshift(riskMutationChoice);
+    }
     if (predatorBaitChoice) {
       pool.unshift(predatorBaitChoice);
     }
@@ -7974,6 +8220,22 @@
       return choice;
     }
 
+    if (choice.type === "utility" && choice.action === "risk_mutation") {
+      const nextLevel = Number.isFinite(choice.riskMutationLevel)
+        ? choice.riskMutationLevel
+        : getRiskMutationLevel(run.build) + 1;
+      run.build.riskMutationLevel = Math.max(getRiskMutationLevel(run.build), nextLevel);
+      run.build.riskMutationQueuedLevel = Math.max(getRiskMutationQueuedLevel(run.build), nextLevel);
+      run.build.upgrades.push(
+        `Risk Mutation: ${choice.title} / 다음 Wave ${choice.riskMutationWave || "?"} 압박세`
+      );
+      if (run.player) {
+        run.player.heat = Math.max(0, run.player.heat - 12);
+        run.player.overheated = false;
+      }
+      return choice;
+    }
+
     if (choice.type === "utility" && choice.action === "recycle") {
       const scrapValue = Math.max(0, choice.scrapValue || 0);
       run.build.pendingCores = [];
@@ -8562,6 +8824,7 @@
       weapon.evolutionTraitLabel ? weapon.evolutionTraitLabel : null,
       weapon.lateAscensionTraitLabel ? weapon.lateAscensionTraitLabel : null,
       weapon.illegalOverclockTraitLabel ? weapon.illegalOverclockTraitLabel : null,
+      weapon.riskMutationTraitLabel ? weapon.riskMutationTraitLabel : null,
       weapon.apexMutationTraitLabel ? weapon.apexMutationTraitLabel : null,
       weapon.capstoneTraitLabel ? weapon.capstoneTraitLabel : null,
     ].filter(Boolean);
@@ -10080,10 +10343,13 @@
 
   function beginWave(index) {
     const resolvedConfig = resolveWaveConfig(index, state.build);
-    const config = {
-      ...resolvedConfig,
-      hazard: resolvedConfig.hazard ? { ...resolvedConfig.hazard } : null,
-    };
+    const config = applyRiskMutationPressureTax(
+      {
+        ...resolvedConfig,
+        hazard: resolvedConfig.hazard ? { ...resolvedConfig.hazard } : null,
+      },
+      state.build
+    );
     const arena = getArenaSize(config);
     const waveNumber = index + 1;
     const pactDebtWavesBefore = Math.max(0, state.build.bastionPactDebtWaves || 0);
@@ -10214,6 +10480,13 @@
         "Predator Bait 점화. 이번 웨이브는 적 밀도와 hazard가 더 거칠게 열리고, 조기 Cinder Maw를 잘라내면 Predator Molt가 즉시 한 단계 더 잠긴다.",
         "MAW"
       );
+    }
+    if (getRiskMutationQueuedLevel(state.build) > 0) {
+      pushCombatFeed(
+        `${getRiskMutationTierLabel(getRiskMutationQueuedLevel(state.build))} 압박세 활성화. 이번 웨이브는 greed 변이 대가로 적 밀도와 hazard가 함께 증폭된다.`,
+        "RISK"
+      );
+      state.build.riskMutationQueuedLevel = 0;
     }
     resetDoctrinePursuitState(state);
     resetCatalystCrucibleState(state);
@@ -10489,7 +10762,7 @@
             : encounterConfig.hazard.relayDamage,
         }
       : null;
-    return {
+    return applyRiskMutationPressureTax({
       index: MAX_WAVES + boundedStage,
       timeLeft: encounterConfig.duration + escalation.durationBonus,
       spawnBudget: Math.max(
@@ -10572,7 +10845,7 @@
             ),
           }
         : null,
-    };
+    }, build);
   }
 
   function createFinalCashoutWave(index = MAX_WAVES - 1, build = null) {
@@ -10616,6 +10889,7 @@
     run.wave = createFinalCashoutWave(run.waveIndex, run.build);
     run.arena = getArenaSize(run.wave);
     run.waveClearTimer = 0;
+    run.build.riskMutationQueuedLevel = 0;
     if (!profile.preserveArenaState) {
       run.enemies = [];
       run.drops = [];
@@ -10696,6 +10970,7 @@
     state.wave = createPostCapstoneWave(nextStage, state.build);
     state.arena = getArenaSize(state.wave);
     state.waveClearTimer = 0;
+    state.build.riskMutationQueuedLevel = 0;
     state.enemies = [];
     state.projectiles = [];
     state.drops = [];
@@ -12571,6 +12846,7 @@
     fireWeaponPattern(weapon.doctrineFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.lateAscensionFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.illegalOverclockFirePattern, weapon, baseAngle, driveActive);
+    fireWeaponPattern(weapon.riskMutationFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.apexMutationFirePattern, weapon, baseAngle, driveActive);
     const ascensionFireProfile = fireWave6AscensionVolley(weapon, baseAngle, driveActive);
     const chassisFireProfile = fireChassisWeaponPosture(weapon, baseAngle, driveActive);
@@ -13907,6 +14183,9 @@
     const illegalOverclockSummary = weapon.illegalOverclockLabel
       ? `${weapon.illegalOverclockLabel} · ${weapon.illegalOverclockTraitLabel}`
       : null;
+    const riskMutationSummary = weapon.riskMutationLabel
+      ? `${weapon.riskMutationLabel} · ${weapon.riskMutationTraitLabel}`
+      : null;
     const apexMutationSummary = weapon.apexMutationLabel
       ? `${weapon.apexMutationLabel} · ${weapon.apexMutationTraitLabel}`
       : null;
@@ -13944,6 +14223,7 @@
           ${weapon.doctrineFormLabel ? createMiniPill("DOC", weapon.doctrineFormLabel, "hot") : ""}
           ${weapon.lateAscensionLabel ? createMiniPill("ASCEND", weapon.lateAscensionLabel, "hot") : ""}
           ${weapon.illegalOverclockLabel ? createMiniPill("ILLEGAL", weapon.illegalOverclockLabel, "hot") : ""}
+          ${weapon.riskMutationLabel ? createMiniPill("RISK", getRiskMutationTierLabel(weapon.riskMutationLevel), "hot") : ""}
           ${weapon.apexMutationLabel ? createMiniPill("APEX", weapon.apexMutationLabel, "hot") : ""}
           ${capstoneSummary ? createMiniPill("CAP", weapon.capstoneLabel, "hot") : ""}
           ${state.supportSystem ? createMiniPill("SYS", state.supportSystem.label, "accent") : ""}
@@ -13955,6 +14235,7 @@
           doctrineSummary,
           lateAscensionSummary,
           illegalOverclockSummary,
+          riskMutationSummary,
           apexMutationSummary,
           capstoneSummary,
           stormArtilleryEndformSummary,
@@ -14002,6 +14283,7 @@
       const lateAscensionRows = [];
       const pactRows = [];
       const illegalOverclockRows = [];
+      const riskMutationRows = [];
       const apexRows = [];
       const catalystCrucibleRows = [];
       const ascensionRows = [];
@@ -14011,6 +14293,7 @@
       let lateAscensionNote = "";
       let pactNote = "";
       let illegalOverclockNote = "";
+      let riskMutationNote = "";
       let apexNote = "";
       let catalystCrucibleNote = "";
       let ascensionNote = "";
@@ -14164,6 +14447,23 @@
         illegalOverclockRows.push(createStatusRow("Greed", "1 pick"));
         illegalOverclockNote = "Wave 9 black-site uplink가 열렸다. 불법 과투입 3종 중 하나만 집을 수 있고, 남은 둘은 바로 닫힌다.";
       }
+      if (getRiskMutationLevel(state.build) > 0) {
+        riskMutationRows.push(
+          createStatusRow("Risk Mutation", getRiskMutationTierLabel(getRiskMutationLevel(state.build)))
+        );
+        riskMutationRows.push(
+          createStatusRow(
+            "Tax",
+            getRiskMutationQueuedLevel(state.build) > 0
+              ? `Wave tax armed`
+              : "paid"
+          )
+        );
+        riskMutationNote =
+          getRiskMutationQueuedLevel(state.build) > 0
+            ? `${getRiskMutationTierLabel(getRiskMutationQueuedLevel(state.build))} 압박세가 다음 웨이브에 걸려 있다. 적 예산, active cap, hazard count가 함께 뛴다.`
+            : state.weapon.riskMutationStatusNote || "Risk mutation이 주무장 보조 포문과 기동 프레임을 유지 중이다.";
+      }
       if (state.wave && state.wave.apexPredator && !state.wave.apexPredator.defeated) {
         apexRows.push(
           createStatusRow(
@@ -14226,6 +14526,7 @@
           ${combatCacheRows.join("")}
           ${lateAscensionRows.join("")}
           ${illegalOverclockRows.join("")}
+          ${riskMutationRows.join("")}
           ${apexRows.join("")}
           ${catalystCrucibleRows.join("")}
           ${ascensionRows.join("")}
@@ -14233,7 +14534,7 @@
           ${overcommitRows.join("")}
           ${pursuitRows.join("")}
         </div>
-        <p class="summary-note">${catalystCrucibleNote || ascensionNote || lateAscensionNote || apexNote || illegalOverclockNote || combatCacheNote || pactNote || pursuitNote || overcommitNote || hazardStatus.note}</p>
+        <p class="summary-note">${catalystCrucibleNote || ascensionNote || lateAscensionNote || riskMutationNote || apexNote || illegalOverclockNote || combatCacheNote || pactNote || pursuitNote || overcommitNote || hazardStatus.note}</p>
       `;
     }
 
@@ -15205,6 +15506,7 @@
       drawPlayerWave6AscensionFrame(context);
       drawPlayerChassisFrame(context);
       drawPlayerLateAscensionFrame(context);
+      drawPlayerRiskMutationFrame(context);
       drawPlayerApexFrame(context);
       drawPlayerIllegalOverclockFrame(context);
       context.beginPath();
@@ -15414,6 +15716,48 @@
     context.lineWidth = 2;
     context.beginPath();
     context.arc(state.player.x, state.player.y, state.player.radius + 11 + level * 1.5, 0, Math.PI * 2);
+    context.stroke();
+  }
+
+  function drawPlayerRiskMutationFrame(context) {
+    if (!state.player || !state.weapon || !state.weapon.riskMutationLevel) {
+      return;
+    }
+    const mutation = getRiskMutationCoreDef(state.build);
+    const facing = state.player.facing || 0;
+    const shardLanes = getRiskMutationOffsets(state.weapon.riskMutationLevel);
+    shardLanes.forEach((offset, index) => {
+      const fin = getOffsetPoint(
+        state.player.x,
+        state.player.y,
+        facing,
+        -2,
+        offset * 28
+      );
+      const length = 10 + state.weapon.riskMutationLevel * 1.4 - index * 0.35;
+      context.strokeStyle = mutation.color;
+      context.lineWidth = 1.8;
+      context.beginPath();
+      context.moveTo(
+        fin.x - Math.cos(facing) * 4,
+        fin.y - Math.sin(facing) * 4
+      );
+      context.lineTo(
+        fin.x + Math.cos(facing) * length,
+        fin.y + Math.sin(facing) * length
+      );
+      context.stroke();
+    });
+    context.strokeStyle = "rgba(255, 226, 166, 0.78)";
+    context.lineWidth = 2;
+    context.beginPath();
+    context.arc(
+      state.player.x,
+      state.player.y,
+      state.player.radius + 10 + Math.sin(performance.now() * 0.02) * 1.4,
+      0,
+      Math.PI * 2
+    );
     context.stroke();
   }
 

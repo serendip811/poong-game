@@ -253,6 +253,25 @@ assert.equal(chassisRun.build.chassisId, wave6ChassisPackages[0].chassisId);
 assert.ok(game.shouldSkipOwnershipAdminStop(chassisRun.build, 9));
 const predatorCacheChoices = game.buildFieldGrantChoices(predatorBaitRun.build, () => 0, 10);
 assert.ok(predatorCacheChoices.some((choice) => choice.action === "predator_bait"));
+assert.ok(predatorCacheChoices.some((choice) => choice.action === "risk_mutation"));
+const riskMutationChoice = predatorCacheChoices.find((choice) => choice.action === "risk_mutation");
+const riskMutationRun = {
+  build: game.createInitialBuild("scrap_pact"),
+  resources: { scrap: 0 },
+  stats: { scrapCollected: 0, scrapSpent: 0 },
+  player: { hp: 100, maxHp: 100, heat: 20, overheated: false },
+};
+const baseAfterburnPreview = game.createPostCapstoneWave(1, riskMutationRun.build);
+game.applyForgeChoice(riskMutationRun, riskMutationChoice);
+assert.equal(riskMutationRun.build.riskMutationLevel, 1);
+assert.equal(riskMutationRun.build.riskMutationQueuedLevel, 1);
+const taxedAfterburnPreview = game.createPostCapstoneWave(1, riskMutationRun.build);
+assert.ok(taxedAfterburnPreview.spawnBudget > baseAfterburnPreview.spawnBudget);
+assert.ok(taxedAfterburnPreview.activeCap > baseAfterburnPreview.activeCap);
+assert.ok(taxedAfterburnPreview.hazard.count > baseAfterburnPreview.hazard.count);
+const riskMutationWeapon = game.computeWeaponStats(riskMutationRun.build);
+assert.equal(riskMutationWeapon.riskMutationLevel, 1);
+assert.ok(riskMutationWeapon.riskMutationFirePattern);
 const lateAscensionBuild = game.createInitialBuild("relay_oath");
 lateAscensionBuild.supportBayCap = 3;
 lateAscensionBuild.supportSystems = [
