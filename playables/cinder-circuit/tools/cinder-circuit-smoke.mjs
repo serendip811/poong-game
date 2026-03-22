@@ -226,6 +226,30 @@ assert.equal(afterburnSeven.combatCache, null);
 assert.ok(
   afterburnOne.combatCache.choices.some((choice) => choice && choice.action === "field_mutation")
 );
+const convergenceBuild = game.createInitialBuild("relay_oath");
+convergenceBuild.chassisId = "vector_thrusters";
+convergenceBuild.supportBayCap = 3;
+convergenceBuild.supportSystems = [{ id: "ember_ring", tier: 1 }];
+convergenceBuild.blackLedgerRaidWaves = 1;
+const convergenceChoices = game.buildFieldGrantChoices(convergenceBuild, () => 0, 10);
+const convergenceChoice = convergenceChoices.find(
+  (choice) => choice && choice.action === "field_convergence"
+);
+assert.ok(convergenceChoice);
+assert.equal(convergenceChoice.title, "Slipstream Talons");
+const convergenceRun = {
+  build: convergenceBuild,
+  resources: { scrap: 0 },
+  stats: { scrapCollected: 0, scrapSpent: 0 },
+  player: { hp: 100, maxHp: 100, heat: 44, overheated: true, invulnerableTime: 0 },
+};
+game.applyForgeChoice(convergenceRun, convergenceChoice);
+assert.equal(convergenceRun.build.lateFieldConvergenceId, "slipstream_talons");
+const convergenceWeapon = game.computeWeaponStats(convergenceRun.build);
+assert.equal(convergenceWeapon.lateFieldConvergenceLabel, "Slipstream Talons");
+assert.ok(convergenceWeapon.lateFieldConvergenceFirePattern);
+assert.ok(convergenceWeapon.lateFieldConvergenceFirePattern.offsets.length >= 4);
+assert.equal(convergenceRun.player.overheated, false);
 const systemsForgeBuild = game.createInitialBuild("scrap_pact");
 const architectureChoices = game.buildArchitectureDraftChoices(systemsForgeBuild);
 assert.equal(architectureChoices.length, 3);

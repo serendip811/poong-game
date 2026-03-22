@@ -3983,6 +3983,7 @@
     predatorBaitCharges: 0,
     lateFieldMutationLevel: 0,
     lateFieldAegisLevel: 0,
+    lateFieldConvergenceId: null,
     blackLedgerRaidWaves: 0,
     bastionPactDebtWaves: 0,
     wave6ChassisBreakpoint: false,
@@ -4101,6 +4102,127 @@
           poolColor: "#ff9f59",
           color: "#ffd6a8",
         };
+      },
+    },
+  };
+
+  const LATE_FIELD_CONVERGENCE_DEFS = {
+    vector_thrusters: {
+      id: "slipstream_talons",
+      chassisId: "vector_thrusters",
+      tag: "SYNC",
+      title: "Slipstream Talons",
+      traitLabel: "thruster wing battery",
+      color: "#9fe7ff",
+      description:
+        "Vector Thrusters, flex support bay, greed route가 한 회로로 묶여 사격마다 측면 talon volley를 뿜는다. support uplink가 많을수록 날개가 벌어지고, 빚이 남아 있으면 raid pressure를 화력으로 되받아친다.",
+      bodyText:
+        "추진 포드와 support uplink가 붙어 slipstream 날개가 벌어진 추격형 convergence다.",
+      getFirePattern(build, core) {
+        const supportLevel = Math.max(1, getSupportBayCapacity(build) - 1);
+        const greedLevel = getLateFieldGreedPressure(build);
+        const count = Math.min(6, 2 + supportLevel + Math.min(1, greedLevel));
+        const spacing =
+          core.id === "scatter" ? 0.18 : core.id === "lance" ? 0.1 : core.id === "ricochet" ? 0.2 : 0.14;
+        const half = (count - 1) / 2;
+        return {
+          kind: "late_field_convergence",
+          offsets: Array.from({ length: count }, (_, index) => (index - half) * spacing),
+          speedMultiplier: core.id === "lance" ? 1.18 : 1.12,
+          radius: core.id === "lance" ? 5.9 : 4.8,
+          damageMultiplier: 0.26 + supportLevel * 0.025 + greedLevel * 0.02,
+          life: 0.8 + supportLevel * 0.04,
+          pierceBonus: core.id === "lance" ? 1 : 0,
+          bounceBonus: 0,
+          chainBonus: core.id === "ricochet" ? 1 : 0,
+          color: this.color,
+        };
+      },
+      applyWeapon(stats, build, core) {
+        const supportLevel = Math.max(1, getSupportBayCapacity(build) - 1);
+        const greedLevel = getLateFieldGreedPressure(build);
+        stats.damage += 2 + supportLevel + greedLevel;
+        stats.cooldown = clamp(stats.cooldown * (1 - 0.02 * supportLevel), 0.08, 0.4);
+        if (core.id !== "scatter") {
+          stats.projectileSpeed += 12 + supportLevel * 6;
+        }
+      },
+    },
+    bulwark_treads: {
+      id: "citadel_spindle",
+      chassisId: "bulwark_treads",
+      tag: "SYNC",
+      title: "Citadel Spindle",
+      traitLabel: "halo siege spindle",
+      color: "#fff0c9",
+      description:
+        "Bulwark Treads, guard plate, support brace가 한 몸처럼 엮여 전방 siege spindle salvo를 발사한다. 남은 빚이나 raid pressure가 있으면 살수 밀도가 더 올라가 전면 장악 시간이 선명해진다.",
+      bodyText:
+        "warplate 고리와 전면 spindle 포문이 붙어 짧은 dominance window를 강제하는 거점형 convergence다.",
+      getFirePattern(build, core) {
+        const supportLevel = Math.max(1, getInstalledSupportSystems(build).length || getSupportBayCapacity(build) - 1);
+        const greedLevel = getLateFieldGreedPressure(build);
+        const offsets = greedLevel > 0 ? [-0.14, 0, 0.14] : [-0.1, 0.1];
+        return {
+          kind: "late_field_convergence",
+          offsets: core.id === "lance" ? offsets.map((offset) => offset * 0.72) : offsets,
+          speedMultiplier: 0.98 + supportLevel * 0.03,
+          radius: core.id === "lance" ? 6.2 : 5.1,
+          damageMultiplier: 0.42 + supportLevel * 0.03,
+          life: 0.9 + greedLevel * 0.08,
+          pierceBonus: core.id === "lance" ? 1 : 0,
+          bounceBonus: 0,
+          chainBonus: 0,
+          color: this.color,
+        };
+      },
+      applyWeapon(stats, build, core) {
+        const aegisLevel = Math.max(1, getLateFieldAegisLevel(build));
+        const supportLevel = Math.max(1, getInstalledSupportSystems(build).length || getSupportBayCapacity(build) - 1);
+        stats.damage += 3 + aegisLevel * 2;
+        stats.heatPerShot = round(Math.max(6, stats.heatPerShot - supportLevel * 0.3), 1);
+        if (core.id === "lance") {
+          stats.pierce += 1;
+        }
+      },
+    },
+    salvage_winch: {
+      id: "towchain_reaver",
+      chassisId: "salvage_winch",
+      tag: "SYNC",
+      title: "Towchain Reaver",
+      traitLabel: "reaver fork spread",
+      color: "#9fffcf",
+      description:
+        "Salvage Winch가 support bay hardpoint와 greed 회수 루트를 씹어 먹어 양갈래 tow fork salvo로 바뀐다. raid debt가 붙은 상태일수록 발사 갈퀴가 더 넓어져 회수선 자체가 전투선이 된다.",
+      bodyText:
+        "견인 포크와 bay hardpoint가 엮여 회수선을 직접 절개하는 약탈형 convergence다.",
+      getFirePattern(build, core) {
+        const supportLevel = Math.max(1, getInstalledSupportSystems(build).length || getSupportBayCapacity(build) - 1);
+        const greedLevel = Math.max(1, getLateFieldGreedPressure(build));
+        const laneCount = Math.min(5, 2 + greedLevel + (supportLevel >= 3 ? 1 : 0));
+        const spacing = core.id === "lance" ? 0.13 : core.id === "scatter" ? 0.2 : 0.18;
+        const half = (laneCount - 1) / 2;
+        return {
+          kind: "late_field_convergence",
+          offsets: Array.from({ length: laneCount }, (_, index) => (index - half) * spacing),
+          speedMultiplier: 1.04 + greedLevel * 0.03,
+          radius: core.id === "lance" ? 5.7 : 4.9,
+          damageMultiplier: 0.28 + supportLevel * 0.02 + greedLevel * 0.03,
+          life: 0.82 + greedLevel * 0.06,
+          pierceBonus: core.id === "lance" ? 1 : 0,
+          bounceBonus: core.id === "ricochet" ? 1 : 0,
+          chainBonus: 0,
+          color: this.color,
+        };
+      },
+      applyWeapon(stats, build, core) {
+        const greedLevel = getLateFieldGreedPressure(build);
+        stats.damage += 2 + greedLevel * 2;
+        stats.cooldown = clamp(stats.cooldown * (1 - greedLevel * 0.015), 0.08, 0.4);
+        if (core.id === "ricochet") {
+          stats.bounce += 1;
+        }
       },
     },
   };
@@ -4980,6 +5102,44 @@
     return level > 0 ? 1 : 0;
   }
 
+  function getLateFieldGreedPressure(build) {
+    if (!build) {
+      return 0;
+    }
+    return Math.max(
+      Number.isFinite(build.blackLedgerRaidWaves) ? build.blackLedgerRaidWaves : 0,
+      Number.isFinite(build.bastionPactDebtWaves) ? build.bastionPactDebtWaves : 0
+    );
+  }
+
+  function getLateFieldConvergenceDef(buildOrId) {
+    const convergenceId =
+      typeof buildOrId === "string"
+        ? buildOrId
+        : buildOrId && buildOrId.lateFieldConvergenceId
+          ? buildOrId.lateFieldConvergenceId
+          : null;
+    return convergenceId
+      ? Object.values(LATE_FIELD_CONVERGENCE_DEFS).find((def) => def.id === convergenceId) || null
+      : null;
+  }
+
+  function canOfferLateFieldConvergence(build) {
+    if (!build || build.lateFieldConvergenceId || !build.chassisId) {
+      return false;
+    }
+    const supportCount = getInstalledSupportSystems(build).length;
+    if (getSupportBayCapacity(build) < 3 || supportCount <= 0) {
+      return false;
+    }
+    return Boolean(
+      getLateFieldGreedPressure(build) > 0 ||
+      getLateFieldMutationLevel(build) > 0 ||
+      getLateFieldAegisLevel(build) > 0 ||
+      getLateAscensionDef(build)
+    );
+  }
+
   function unlockLateSupportBay(build) {
     if (!build) {
       return false;
@@ -5272,6 +5432,20 @@
         ...finaleRows,
       ];
     }
+    if (choice.type === "utility" && choice.action === "field_convergence") {
+      return [
+        { label: "형태", value: choice.title || "Convergence" },
+        { label: "섀시", value: choice.chassisTitle || "late chassis" },
+        {
+          label: "연료",
+          value:
+            choice.greedPressure > 0
+              ? `greed pressure ${choice.greedPressure}`
+              : `support ${choice.supportCount || 0}`,
+        },
+        ...finaleRows,
+      ];
+    }
     if (choice.type === "system") {
       const systemDef = SUPPORT_SYSTEM_DEFS[choice.systemId];
       const tierDef = systemDef && systemDef.tiers[choice.systemTier];
@@ -5408,6 +5582,7 @@
         predatorBaitCharges: BASE_BUILD.predatorBaitCharges,
         lateFieldMutationLevel: BASE_BUILD.lateFieldMutationLevel,
         lateFieldAegisLevel: BASE_BUILD.lateFieldAegisLevel,
+        lateFieldConvergenceId: BASE_BUILD.lateFieldConvergenceId,
         blackLedgerRaidWaves: BASE_BUILD.blackLedgerRaidWaves,
         bastionPactDebtWaves: BASE_BUILD.bastionPactDebtWaves,
         wave6ChassisBreakpoint: BASE_BUILD.wave6ChassisBreakpoint,
@@ -5923,6 +6098,11 @@
       lateFieldMutationTraitLabel: null,
       lateFieldMutationStatusNote: null,
       lateFieldMutationFirePattern: null,
+      lateFieldConvergenceId: null,
+      lateFieldConvergenceLabel: null,
+      lateFieldConvergenceTraitLabel: null,
+      lateFieldConvergenceStatusNote: null,
+      lateFieldConvergenceFirePattern: null,
     };
     getAffixDefs(build).forEach((affix) => {
       if (typeof affix.applyWeapon === "function") {
@@ -6130,6 +6310,18 @@
         if (lateFieldMutationLevel >= 3) {
           stats.bounce += 1;
         }
+      }
+    }
+    const lateFieldConvergence = getLateFieldConvergenceDef(build);
+    if (lateFieldConvergence) {
+      stats.lateFieldConvergenceId = lateFieldConvergence.id;
+      stats.lateFieldConvergenceLabel = lateFieldConvergence.title;
+      stats.lateFieldConvergenceTraitLabel = lateFieldConvergence.traitLabel;
+      stats.lateFieldConvergenceStatusNote =
+        `${lateFieldConvergence.bodyText} support bay ${getInstalledSupportSystems(build).length}/${getSupportBayCapacity(build)}와 greed pressure ${getLateFieldGreedPressure(build)}가 이 convergence를 밀고 있다.`;
+      stats.lateFieldConvergenceFirePattern = lateFieldConvergence.getFirePattern(build, core);
+      if (typeof lateFieldConvergence.applyWeapon === "function") {
+        lateFieldConvergence.applyWeapon(stats, build, core);
       }
     }
     stats.damage = round(stats.damage, 1);
@@ -7444,6 +7636,9 @@
     if (!choice) {
       return "fallback";
     }
+    if (choice.type === "utility" && choice.action === "field_convergence") {
+      return "field_convergence";
+    }
     if (choice.type === "utility" && choice.action === "risk_mutation") {
       return "risk_mutation";
     }
@@ -7487,6 +7682,9 @@
   function getFieldGrantLaneLabel(choice) {
     if (!choice) {
       return "Field Cache";
+    }
+    if (choice.type === "utility" && choice.action === "field_convergence") {
+      return "Convergence Form";
     }
     if (
       choice.type === "evolution" ||
@@ -7638,6 +7836,47 @@
       laneLabel: "Main Weapon Mutation",
       forgeLaneLabel: "Main Weapon Mutation",
       lateFieldMutationLevel: nextLevel,
+    };
+  }
+
+  function createLateFieldConvergenceChoice(build, nextWave) {
+    if (
+      !build ||
+      !Number.isFinite(nextWave) ||
+      nextWave < LATE_FIELD_CACHE_START_WAVE ||
+      !canOfferLateFieldConvergence(build)
+    ) {
+      return null;
+    }
+    const def = LATE_FIELD_CONVERGENCE_DEFS[build.chassisId];
+    if (!def) {
+      return null;
+    }
+    const supportCount = getInstalledSupportSystems(build).length;
+    const supportCap = getSupportBayCapacity(build);
+    const greedPressure = getLateFieldGreedPressure(build);
+    const fuelLabel =
+      greedPressure > 0
+        ? `raid/debt ${greedPressure}웨이브`
+        : getLateFieldMutationLevel(build) > 0
+          ? `arsenal MK ${getLateFieldMutationLevel(build)}`
+          : `guard plate MK ${getLateFieldAegisLevel(build)}`;
+    return {
+      type: "utility",
+      action: "field_convergence",
+      id: `utility:field_convergence:${def.id}:${nextWave}`,
+      verb: "융합",
+      tag: def.tag,
+      title: def.title,
+      description: `${def.description} 이번 pick은 새 카테고리가 아니라 이미 쌓은 chassis, support, greed, field layer를 하나의 branch form으로 용접한다.`,
+      slotText: `support ${supportCount}/${supportCap} · ${fuelLabel} · ${CORE_DEFS[build.coreId].label} 융합`,
+      cost: 0,
+      laneLabel: "Convergence Form",
+      forgeLaneLabel: "Convergence Form",
+      lateFieldConvergenceId: def.id,
+      chassisTitle: getChassisBreakpointDef(build)?.title || def.chassisId,
+      supportCount,
+      greedPressure,
     };
   }
 
@@ -8440,8 +8679,9 @@
 
   function buildFieldGrantChoices(build, rng, nextWave) {
     if (shouldUseLateFieldCache(nextWave)) {
+      const convergenceChoice = createLateFieldConvergenceChoice(build, nextWave);
       return [
-        createFieldGrantCard(createLateFieldMutationChoice(build, nextWave)),
+        createFieldGrantCard(convergenceChoice || createLateFieldMutationChoice(build, nextWave)),
         createFieldGrantCard(createLateFieldAegisChoice(build, nextWave)),
         createFieldGrantCard(createLateFieldGreedContractChoice(build, nextWave)),
       ].filter(Boolean);
@@ -9406,6 +9646,23 @@
       return choice;
     }
 
+    if (choice.type === "utility" && choice.action === "field_convergence") {
+      if (run.build.lateFieldConvergenceId === choice.lateFieldConvergenceId) {
+        return null;
+      }
+      const convergence = getLateFieldConvergenceDef(choice.lateFieldConvergenceId);
+      run.build.lateFieldConvergenceId = choice.lateFieldConvergenceId;
+      run.build.upgrades.push(
+        `${choice.title || "Convergence Form"}: ${convergence ? convergence.traitLabel : "late branch form"}`
+      );
+      if (run.player) {
+        run.player.heat = Math.max(0, run.player.heat - 20);
+        run.player.overheated = false;
+        run.player.invulnerableTime = Math.max(run.player.invulnerableTime || 0, 0.2);
+      }
+      return choice;
+    }
+
     if (choice.type === "utility" && choice.action === "field_greed") {
       if (run.resources) {
         run.resources.scrap += Math.max(0, choice.scrapGain || 0);
@@ -9540,6 +9797,7 @@
     buildForgeFollowupChoices,
     buildArchitectureDraftChoices,
     buildFieldGrantChoices,
+    createLateFieldConvergenceChoice,
     buildBastionDraftChoices,
     buildWave6ChassisBreakpointChoices,
     createLateAscensionChoices,
@@ -12246,6 +12504,8 @@
                 : `${choice.supportLabel || choice.title} 안정화. 남은 Act 3 웨이브를 이 회로 운영으로 먼저 시험한다.`
           : choice.type === "fallback"
             ? `${grantLabel} 현장 보급 적용. 고철은 아낀 채 ${choice.title}로 상태만 정리하고 다음 웨이브를 즉시 연다.`
+            : choice.action === "field_convergence"
+              ? `${grantLabel} 적용. ${choice.chassisTitle || "chassis"}와 support bay, 누적 greed pressure가 ${choice.title}로 융합됐다. 이제 generic late mutation 대신 이 branch form이 사격 실루엣과 압박 처리 방식을 바꾼다.`
             : choice.action === "field_greed"
               ? choice.blackLedgerRaidWaves > 0
                 ? `${grantLabel} 적용. 고철과 회수 효율을 먼저 당기고 다음 웨이브를 Black Ledger Raid로 비틀었다. contraband vault payout이 커지는 대신 pocket 체류 시간이 곧 청구서가 된다.`
@@ -14013,6 +14273,7 @@
     fireWeaponPattern(weapon.doctrineFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.lateAscensionFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.lateFieldMutationFirePattern, weapon, baseAngle, driveActive);
+    fireWeaponPattern(weapon.lateFieldConvergenceFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.illegalOverclockFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.riskMutationFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.apexMutationFirePattern, weapon, baseAngle, driveActive);
@@ -15615,6 +15876,9 @@
     const lateFieldMutationSummary = weapon.lateFieldMutationLabel
       ? `${weapon.lateFieldMutationLabel} · ${weapon.lateFieldMutationTraitLabel}`
       : null;
+    const lateFieldConvergenceSummary = weapon.lateFieldConvergenceLabel
+      ? `${weapon.lateFieldConvergenceLabel} · ${weapon.lateFieldConvergenceTraitLabel}`
+      : null;
     const lateFieldAegisSummary = getLateFieldAegisLevel(state.build) > 0
       ? `${getLateFieldAegisTierLabel(getLateFieldAegisLevel(state.build))} · guard plate ${state.player ? state.player.fieldAegisCharge || 0 : 0}/${getLateFieldAegisMaxCharges(state.build)}`
       : null;
@@ -15652,6 +15916,7 @@
           ${weapon.doctrineFormLabel ? createMiniPill("DOC", weapon.doctrineFormLabel, "hot") : ""}
           ${weapon.lateAscensionLabel ? createMiniPill("ASCEND", weapon.lateAscensionLabel, "hot") : ""}
           ${weapon.lateFieldMutationLabel ? createMiniPill("FIELD", weapon.lateFieldMutationLabel, "hot") : ""}
+          ${weapon.lateFieldConvergenceLabel ? createMiniPill("SYNC", weapon.lateFieldConvergenceLabel, "accent") : ""}
           ${getLateFieldAegisLevel(state.build) > 0 ? createMiniPill("AEGIS", `MK ${getLateFieldAegisLevel(state.build)}`, "cool") : ""}
           ${
             weapon.riskMutationLabel || weapon.illegalOverclockLabel || weapon.apexMutationLabel
@@ -15674,6 +15939,7 @@
           doctrineSummary,
           lateAscensionSummary,
           lateFieldMutationSummary,
+          lateFieldConvergenceSummary,
           lateFieldAegisSummary,
           illegalOverclockSummary,
           riskMutationSummary,
@@ -16107,6 +16373,9 @@
     const lateAscensionSummary = state.weapon.lateAscensionLabel
       ? `${state.weapon.lateAscensionLabel} · ${state.weapon.lateAscensionTraitLabel}`
       : "late ascension 없음";
+    const lateFieldConvergenceSummary = state.weapon.lateFieldConvergenceLabel
+      ? `${state.weapon.lateFieldConvergenceLabel} · ${state.weapon.lateFieldConvergenceTraitLabel}`
+      : "late convergence 없음";
     const illegalOverclockSummary = state.weapon.illegalOverclockLabel
       ? `${state.weapon.illegalOverclockLabel} · ${state.weapon.illegalOverclockTraitLabel}`
       : "불법 과투입 없음";
@@ -16160,7 +16429,7 @@
         ? isArsenalBreakpointWave(state.waveIndex + 2)
           ? "Arsenal Breakpoint · outrageous main gun, warplate survival form, or a greed raid that twists the next fight"
           : state.waveIndex + 2 >= RISK_MUTATION_START_WAVE
-          ? "Field Cache · Main Weapon Mutation, Defense / Utility, Greed Contract 중 1픽으로 late form과 다음 raid 청구서를 함께 고른다"
+          ? "Field Cache · Main Weapon Mutation 대신 준비된 chassis/support/greed 조합이면 branch-specific Convergence Form이 떠 late form을 합성한다"
           : "Field Cache · 주포 변이, 생존층, 탐욕 계약 세 장 중 1픽으로 지금 판돈을 고른다"
         : state.forgeDraftType === "bastion_draft"
         ? wave6AscensionDraft
@@ -16193,7 +16462,7 @@
         ? isArsenalBreakpointWave(state.waveIndex + 2)
           ? `고철 ${Math.round(state.resources.scrap)} 보유. Arsenal Breakpoint다. 이번 Wave ${state.waveIndex + 2} 판돈은 세 욕구만 크게 읽히면 된다. Overdrive Arsenal 계열은 즉시 추가 배럴을 두 단계 당겨 오고, halo 계열은 재충전식 plate 층을 예열하며, Black Ledger raid 계열은 다음 전투 objective를 불법 금고 습격으로 비튼다.`
           : shouldUseLateFieldCache(state.waveIndex + 2)
-          ? `고철 ${Math.round(state.resources.scrap)} 보유. Arsenal Cache다. 이제 Wave 10 이후 짝수 late wave마다 대형 현장 패키지 1장을 바로 잠근다. 주포 변이는 배럴 수 자체를 늘리고, Aegis는 재충전식 guard plate를 열며, 블랙마켓 계약은 다음 웨이브를 즉시 raid로 비틀어 payout과 청구서를 함께 키운다.`
+          ? `고철 ${Math.round(state.resources.scrap)} 보유. Arsenal Cache다. 이제 Wave 10 이후 짝수 late wave마다 대형 현장 패키지 1장을 바로 잠근다. 준비된 chassis/support/greed 묶음이 있다면 generic mutation 대신 branch-specific Convergence Form이 떠 지금까지 쌓은 회로를 한 번에 용접한다.`
           : state.waveIndex + 2 >= RISK_MUTATION_START_WAVE
           ? `고철 ${Math.round(state.resources.scrap)} 보유. Field Cache다. 이제 late reward는 Main Weapon Mutation, Defense / Utility, Greed Contract 세 욕구로만 정리된다. Dominant Mutation은 주포/차체를 당겨 오고, 생존층은 다음 교차 압박을 버티게 하며, 탐욕 계약은 고철을 먼저 주는 대신 다음 웨이브 청구서를 즉시 붙인다.`
           : `고철 ${Math.round(state.resources.scrap)} 보유. Field Cache다. 이번 현장 선택은 주포 변이, 생존층, 탐욕 계약 세 장뿐이다. 지금 더 위험하게 당겨서 강해질지, 상태를 정리하고 다음 큰 포지까지 버틸지 직접 고른다.`
@@ -16223,7 +16492,7 @@
       <article class="forge-context__card">
         <p class="panel__eyebrow">속성 / 진화 / 시스템</p>
         <strong>${affixSummary}</strong>
-        <p>${evolutionSummary} · ${doctrineSummary} · ${lateAscensionSummary} · ${illegalOverclockSummary} · ${apexMutationSummary} · ${capstoneSummary} · ${chassisSummary} · ${forgeSystemSummary} · ${doctrinePursuitSummary} · ${supportBaySummary} · 보관 ${benchEntries.length}종 · ${catalystSummary} · 분해 예상 고철 ${getRecycleValue(state.build)}</p>
+        <p>${evolutionSummary} · ${doctrineSummary} · ${lateAscensionSummary} · ${lateFieldConvergenceSummary} · ${illegalOverclockSummary} · ${apexMutationSummary} · ${capstoneSummary} · ${chassisSummary} · ${forgeSystemSummary} · ${doctrinePursuitSummary} · ${supportBaySummary} · 보관 ${benchEntries.length}종 · ${catalystSummary} · 분해 예상 고철 ${getRecycleValue(state.build)}</p>
       </article>
     `;
     elements.forgeCards.innerHTML = state.forgeChoices
@@ -17076,6 +17345,7 @@
       drawPlayerWave6AscensionFrame(context);
       drawPlayerChassisFrame(context);
       drawPlayerLateFieldMutationFrame(context);
+      drawPlayerLateFieldConvergenceFrame(context);
       drawPlayerLateFieldAegisFrame(context);
       drawPlayerDoctrineCapstoneFrame(context);
       drawPlayerLateAscensionFrame(context);
@@ -17450,6 +17720,72 @@
         fin.y + Math.sin(facing) * (12 + level * 1.5)
       );
       context.stroke();
+    }
+  }
+
+  function drawPlayerLateFieldConvergenceFrame(context) {
+    if (!state.player || !state.weapon || !state.weapon.lateFieldConvergenceId) {
+      return;
+    }
+    const convergence = getLateFieldConvergenceDef(state.weapon.lateFieldConvergenceId);
+    if (!convergence) {
+      return;
+    }
+    const facing = state.player.facing || 0;
+    const pulse = Math.sin(performance.now() * 0.018) * 1.3;
+    if (convergence.id === "slipstream_talons") {
+      [-1.25, -0.65, 0.65, 1.25].forEach((lane) => {
+        const wing = getOffsetPoint(state.player.x, state.player.y, facing, 1, 16 * lane);
+        context.strokeStyle = "rgba(159, 231, 255, 0.82)";
+        context.lineWidth = 2.1;
+        context.beginPath();
+        context.moveTo(wing.x - Math.cos(facing) * 3, wing.y - Math.sin(facing) * 3);
+        context.lineTo(
+          wing.x + Math.cos(facing) * (12 + pulse),
+          wing.y + Math.sin(facing) * (12 + pulse)
+        );
+        context.stroke();
+      });
+      return;
+    }
+    if (convergence.id === "citadel_spindle") {
+      context.strokeStyle = "rgba(255, 240, 201, 0.74)";
+      context.lineWidth = 2.4;
+      context.beginPath();
+      context.arc(
+        state.player.x,
+        state.player.y,
+        state.player.radius + 16 + pulse,
+        facing - 0.62,
+        facing + 0.62
+      );
+      context.stroke();
+      [-0.4, 0, 0.4].forEach((lane) => {
+        const barrel = getOffsetPoint(state.player.x, state.player.y, facing, 14, lane * 16);
+        context.fillStyle = "rgba(255, 224, 175, 0.82)";
+        context.fillRect(
+          barrel.x - 2.8 - Math.sin(facing) * 3,
+          barrel.y - 2.8 + Math.cos(facing) * 3,
+          5.6,
+          10
+        );
+      });
+      return;
+    }
+    if (convergence.id === "towchain_reaver") {
+      [-1, 1].forEach((direction) => {
+        const fork = getOffsetPoint(state.player.x, state.player.y, facing, 10, 15 * direction);
+        context.strokeStyle = "rgba(159, 255, 207, 0.84)";
+        context.lineWidth = 2.4;
+        context.beginPath();
+        context.moveTo(state.player.x, state.player.y);
+        context.lineTo(fork.x, fork.y);
+        context.lineTo(
+          fork.x + Math.cos(facing + direction * 0.22) * (9 + pulse),
+          fork.y + Math.sin(facing + direction * 0.22) * (9 + pulse)
+        );
+        context.stroke();
+      });
     }
   }
 
