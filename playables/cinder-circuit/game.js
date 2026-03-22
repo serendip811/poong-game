@@ -554,7 +554,7 @@
   const MAX_WAVES = WAVE_CONFIG.length;
   const POST_WAVE_LOOT_GRACE = 2.4;
   const COMBAT_CACHE_DROP_LIFE = 14;
-  const POST_CAPSTONE_WAVE_COUNT = 5;
+  const POST_CAPSTONE_WAVE_COUNT = 7;
   const FINAL_CASHOUT_DURATION = 12;
   const FINAL_CASHOUT_SPAWN_BUDGET = 26;
   const POST_CAPSTONE_WAVE_LABELS = [
@@ -563,8 +563,179 @@
     "Afterburn III",
     "Afterburn IV",
     "Afterburn V",
+    "Afterburn VI",
+    "Afterburn VII",
   ];
-  const POST_CAPSTONE_SHARED_WAVE_PLAN = [9, 10, 11, 10, 11];
+  const POST_CAPSTONE_ENCOUNTER_POOL = [
+    {
+      waveIndex: 9,
+      note: "첫 afterburn은 relay lattice를 다시 꺼내되, 이제는 회랑 절개만으로 끝나지 않는다. 완성된 기체가 long-run survival ladder에 진입했는지 증명하듯 먼 코어 절개와 근거리 추격 정리를 같은 박자로 처리해야 한다.",
+      directive:
+        "afterburn breach crown. relay pylon이 긴 화염 회랑을 다시 엮고 mortar 후열이 늦게 덮친다. 회랑 절개와 후열 사냥을 번갈아 이어 가며 첫 forbidden-territory bracket을 열어야 한다.",
+      mix: {
+        scuttler: 0.08,
+        brute: 0.16,
+        shrike: 0.18,
+        mortar: 0.24,
+        warden: 0.34,
+      },
+      mixWeight: 0.42,
+      hazard: {
+        label: "Afterburn Breach Crown",
+        type: "relay",
+        interval: 8,
+        count: 3,
+        radius: 92,
+        telegraph: 0.8,
+        duration: 9.8,
+        damage: 14,
+        coreHp: 72,
+        coreRadius: 18,
+        relayRange: 468,
+        relayWidth: 36,
+        relayDamage: 14,
+      },
+    },
+    {
+      waveIndex: 10,
+      note: "두 번째 afterburn은 drift chase를 길게 늘여 completed form이 안전 lane 없이 버티는지 본다. 떠도는 화구와 재진입 추격선이 넓은 맵을 가로질러 build의 회전력과 burst 창을 동시에 압박한다.",
+      directive:
+        "afterburn pursuit. drifting furnace가 현재 위치를 집요하게 따라붙고 shrike 재진입이 외곽 회전을 끊는다. 오래 머무는 대신 lane 전체를 갈아타며 추격 덩어리를 직접 찢어야 한다.",
+      mix: {
+        scuttler: 0.08,
+        brute: 0.18,
+        shrike: 0.28,
+        mortar: 0.22,
+        warden: 0.24,
+      },
+      mixWeight: 0.44,
+    },
+    {
+      waveIndex: 11,
+      arena: THIRD_ACT_ARENA,
+      note: "세 번째 afterburn은 territory grammar를 late arena에 다시 올려 lockout repair가 아니라 hold-or-dive 결정을 요구한다. 여러 bastion core가 넓은 전장에서 동시에 살아 있어, 어느 거점을 무시하고 어느 드랍을 greed할지 빌드마다 답이 갈린다.",
+      directive:
+        "foundry collapse. 넓은 전장 세 곳에 bastion 코어가 겹쳐 깔린다. 모든 거점을 즉시 복구하려 들지 말고, 지금 가장 위험한 점거 코어를 찢으며 고철과 elite 경로를 선별적으로 열어야 한다.",
+      mix: {
+        scuttler: 0.08,
+        brute: 0.24,
+        shrike: 0.14,
+        mortar: 0.18,
+        warden: 0.36,
+      },
+      mixWeight: 0.48,
+      hazard: {
+        label: "Foundry Collapse Grid",
+        type: "territory",
+        interval: 7.4,
+        count: 3,
+        radius: 108,
+        telegraph: 0.78,
+        duration: 9.4,
+        damage: 14,
+        coreHp: 70,
+        coreRadius: 18,
+        turretInterval: 0.86,
+        turretDamage: 11,
+        turretSpeed: 242,
+        enemyPullRadius: 176,
+      },
+    },
+    {
+      waveIndex: 8,
+      note: "중반 afterburn은 구조물보다 lane collapse 자체를 앞세운다. pulse surge가 현재 회전 루트와 드랍 선을 자주 건드려, completed build가 살기 위해 후퇴할지 greed를 위해 진입할지 즉석에서 갈라진다.",
+      directive:
+        "slag surge. 다중 surge가 외곽 회전선과 scrap 회수선을 연속으로 절단한다. route repair보다 다음 폭주가 닿기 전에 어떤 묶음을 먼저 지우고 무엇을 버릴지 바로 정해야 한다.",
+      mix: {
+        scuttler: 0.1,
+        brute: 0.18,
+        shrike: 0.24,
+        mortar: 0.16,
+        warden: 0.32,
+      },
+      mixWeight: 0.42,
+      hazard: {
+        label: "Slag Surge Array",
+        interval: 7.8,
+        count: 4,
+        radius: 82,
+        telegraph: 0.74,
+        duration: 4.7,
+        damage: 15,
+      },
+    },
+    {
+      waveIndex: 11,
+      note: "다섯 번째 afterburn부터는 crown pressure가 돌아오지만, 이제는 finale가 아니라 ladder의 중후반이다. 사중 relay와 후열 포격을 다시 겹쳐 finished machine이 얼마나 오래 회랑을 직접 찢을 수 있는지 묻는다.",
+      directive:
+        "cinder crown relay. 사중 relay crown, warden 차폐선, mortar 후열이 동시에 전장을 얇게 가른다. helper 정리보다 플레이어가 먼 코어와 포격원을 먼저 지우는 속도가 생존 시간을 결정한다.",
+      mix: {
+        scuttler: 0.06,
+        brute: 0.14,
+        shrike: 0.16,
+        mortar: 0.24,
+        warden: 0.4,
+      },
+      mixWeight: 0.46,
+    },
+    {
+      waveIndex: 10,
+      note: "여섯 번째 afterburn은 pursuit grammar를 다시 끌어올리되 더 공격적으로 뒤섞는다. pressure clump가 빠르게 다시 생기므로, 한 번 강한 dive로 길을 열 수 있는 build일수록 오래 산다.",
+      directive:
+        "starforge reentry. drifting furnace가 더 자주 갈아 끼워지고 shrike 재진입과 mortar 탄막이 퇴로를 겹쳐 닫는다. overextend를 감수해도 압박 덩어리를 먼저 찢는 편이 살아남기 쉽다.",
+      mix: {
+        scuttler: 0.06,
+        brute: 0.18,
+        shrike: 0.3,
+        mortar: 0.22,
+        warden: 0.24,
+      },
+      mixWeight: 0.5,
+      hazard: {
+        label: "Starforge Reentry",
+        type: "drift",
+        interval: 7.8,
+        count: 3,
+        radius: 92,
+        telegraph: 0.66,
+        duration: 6.2,
+        damage: 16,
+        driftSpeed: 126,
+        driftOrbit: 0.45,
+      },
+    },
+    {
+      waveIndex: 11,
+      arena: THIRD_ACT_ARENA,
+      note: "마지막 afterburn은 territory hold를 다시 가장 높은 밀도로 되돌린다. core와 포대가 넓은 공방을 다층으로 막아 finished build가 route repair를 넘어 실제 거점 ownership을 얼마나 오래 버티는지 드러낸다.",
+      directive:
+        "bulwark collapse. 강화 bastion 코어가 넓은 전장을 다층으로 닫고 turret crossfire가 퇴로를 얇게 자른다. 남은 생존력을 믿고 가장 먼 거점을 먼저 찢을지, 가까운 안전 루트를 붙잡을지 끝까지 선택해야 한다.",
+      mix: {
+        scuttler: 0.04,
+        brute: 0.24,
+        shrike: 0.12,
+        mortar: 0.2,
+        warden: 0.4,
+      },
+      mixWeight: 0.54,
+      hazard: {
+        label: "Bulwark Collapse",
+        type: "territory",
+        interval: 6.8,
+        count: 4,
+        radius: 112,
+        telegraph: 0.72,
+        duration: 9.8,
+        damage: 15,
+        coreHp: 78,
+        coreRadius: 19,
+        turretInterval: 0.8,
+        turretDamage: 12,
+        turretSpeed: 252,
+        enemyPullRadius: 184,
+      },
+    },
+  ];
   const POST_CAPSTONE_ASCENSION_PROFILE = [
     {
       durationBonus: 6,
@@ -640,6 +811,36 @@
       hazardRelayDamageBonus: 5,
       driveGainFloor: 2,
       apexSpawnTimer: 5.1,
+    },
+    {
+      durationBonus: 26,
+      spawnBudgetBonus: 118,
+      activeCapBonus: 16,
+      baseSpawnScale: 0.68,
+      minSpawnScale: 0.78,
+      hazardIntervalScale: 0.62,
+      hazardTelegraphScale: 0.76,
+      hazardCountBonus: 2,
+      hazardDamageBonus: 7,
+      hazardCoreHpBonus: 56,
+      hazardRelayDamageBonus: 6,
+      driveGainFloor: 2.08,
+      apexSpawnTimer: 4.7,
+    },
+    {
+      durationBonus: 30,
+      spawnBudgetBonus: 138,
+      activeCapBonus: 18,
+      baseSpawnScale: 0.64,
+      minSpawnScale: 0.76,
+      hazardIntervalScale: 0.58,
+      hazardTelegraphScale: 0.72,
+      hazardCountBonus: 2,
+      hazardDamageBonus: 8,
+      hazardCoreHpBonus: 68,
+      hazardRelayDamageBonus: 7,
+      driveGainFloor: 2.16,
+      apexSpawnTimer: 4.4,
     },
   ];
   const KILN_BASTION_FIELD_BASE = {
@@ -2383,7 +2584,7 @@
     { start: 1, end: 4, label: "Act 1 · Ignition", shortLabel: "Act 1" },
     { start: 5, end: 8, label: "Act 2 · Bastion Run", shortLabel: "Act 2" },
     { start: 9, end: 12, label: "Act 3 · Crown Siege", shortLabel: "Act 3" },
-    { start: 13, end: 15, label: "Act 4 · Afterburn", shortLabel: "Act 4" },
+    { start: 13, end: 19, label: "Act 4 · Afterburn", shortLabel: "Act 4" },
   ];
   const FIELD_GRANT_MAX_COST = 48;
   const FIELD_GRANT_DISCOUNT_MULTIPLIER = 0.65;
@@ -8826,7 +9027,7 @@
         waveNumber,
         act: getActLabelForWave(waveNumber),
         id: POST_CAPSTONE_WAVE_LABELS[index].toUpperCase(),
-        note: "최종 포지 이후 late-act shared pool이 다시 섞이며 완성형 빌드가 실제 전장을 더 오래 점유하는 post-capstone afterburn bracket.",
+        note: "최종 포지 이후 relay, pursuit, bastion, surge grammar가 다시 섞이며 완성형 빌드가 실제 전장을 더 오래 점유하는 post-capstone afterburn ladder.",
       });
     }
     elements.waveTrack.innerHTML = trackEntries.map((entry, index) => {
@@ -9675,7 +9876,7 @@
     state.player.overheated = false;
     pushCombatFeed(
       isFinalForge
-        ? "최종 웨이브 정리 완료. 마지막 포지에서 최종 각인과 5연속 afterburn 압박 배치를 마감한다."
+        ? "최종 웨이브 정리 완료. 마지막 포지에서 최종 각인과 7연속 afterburn survival ladder의 시작 형태를 마감한다."
         : isLateBreakArmory(forgeOptions)
           ? state.build.auxiliaryJunctionLevel > 0
             ? "Wave 8 돌파. Late Break Armory에서 6장 중 대형 카드 두 장을 골라 네 번째 베이와 이중 교리 flex lane까지 포함한 Act 3 운영 틀을 monster form 위에 덧씌운다."
@@ -9763,12 +9964,32 @@
 
   function createPostCapstoneWave(stageIndex = 0, build = null) {
     const boundedStage = clamp(stageIndex, 0, POST_CAPSTONE_WAVE_COUNT - 1);
+    const encounter =
+      POST_CAPSTONE_ENCOUNTER_POOL[boundedStage] ||
+      POST_CAPSTONE_ENCOUNTER_POOL[POST_CAPSTONE_ENCOUNTER_POOL.length - 1];
     const baseWaveIndex = clamp(
-      POST_CAPSTONE_SHARED_WAVE_PLAN[boundedStage] || (MAX_WAVES - 1),
+      encounter && Number.isFinite(encounter.waveIndex) ? encounter.waveIndex : MAX_WAVES - 1,
       0,
       MAX_WAVES - 1
     );
     const baseConfig = resolveWaveConfig(baseWaveIndex, build);
+    const encounterConfig = {
+      ...baseConfig,
+      ...(encounter || {}),
+      arena: encounter && encounter.arena ? encounter.arena : baseConfig.arena,
+      mix:
+        encounter && encounter.mix
+          ? blendEnemyMix(baseConfig.mix, encounter.mix, encounter.mixWeight || 0.45)
+          : { ...baseConfig.mix },
+      hazard: encounter && encounter.hazard
+        ? {
+            ...(baseConfig.hazard || {}),
+            ...encounter.hazard,
+          }
+        : baseConfig.hazard
+          ? { ...baseConfig.hazard }
+          : null,
+    };
     const escalation =
       POST_CAPSTONE_ASCENSION_PROFILE[boundedStage] ||
       POST_CAPSTONE_ASCENSION_PROFILE[POST_CAPSTONE_ASCENSION_PROFILE.length - 1];
@@ -9779,50 +10000,50 @@
     const capBias = variant
       ? clamp(Math.round((variant.activeCap - 18) * 0.7), -2, 6)
       : 0;
-    const hazard = baseConfig.hazard
+    const hazard = encounterConfig.hazard
       ? {
-          ...baseConfig.hazard,
+          ...encounterConfig.hazard,
           ...(variant && variant.hazard ? variant.hazard : {}),
           interval: Math.max(
             4.8,
             (variant && variant.hazard && Number.isFinite(variant.hazard.interval)
               ? variant.hazard.interval
-              : baseConfig.hazard.interval) * escalation.hazardIntervalScale
+              : encounterConfig.hazard.interval) * escalation.hazardIntervalScale
           ),
           telegraph: Math.max(
             0.56,
             (variant && variant.hazard && Number.isFinite(variant.hazard.telegraph)
               ? variant.hazard.telegraph
-              : baseConfig.hazard.telegraph) * escalation.hazardTelegraphScale
+              : encounterConfig.hazard.telegraph) * escalation.hazardTelegraphScale
           ),
           count: Math.max(
             1,
             (variant && variant.hazard && Number.isFinite(variant.hazard.count)
               ? variant.hazard.count
-              : baseConfig.hazard.count || 1) + escalation.hazardCountBonus
+              : encounterConfig.hazard.count || 1) + escalation.hazardCountBonus
           ),
           damage:
             (variant && variant.hazard && Number.isFinite(variant.hazard.damage)
               ? variant.hazard.damage
-              : baseConfig.hazard.damage || 0) + escalation.hazardDamageBonus,
-          coreHp: Number.isFinite(baseConfig.hazard.coreHp)
+              : encounterConfig.hazard.damage || 0) + escalation.hazardDamageBonus,
+          coreHp: Number.isFinite(encounterConfig.hazard.coreHp)
             ? (variant && variant.hazard && Number.isFinite(variant.hazard.coreHp)
                 ? variant.hazard.coreHp
-                : baseConfig.hazard.coreHp) + escalation.hazardCoreHpBonus
-            : baseConfig.hazard.coreHp,
-          relayDamage: Number.isFinite(baseConfig.hazard.relayDamage)
+                : encounterConfig.hazard.coreHp) + escalation.hazardCoreHpBonus
+            : encounterConfig.hazard.coreHp,
+          relayDamage: Number.isFinite(encounterConfig.hazard.relayDamage)
             ? (variant && variant.hazard && Number.isFinite(variant.hazard.relayDamage)
                 ? variant.hazard.relayDamage
-                : baseConfig.hazard.relayDamage) + escalation.hazardRelayDamageBonus
-            : baseConfig.hazard.relayDamage,
+                : encounterConfig.hazard.relayDamage) + escalation.hazardRelayDamageBonus
+            : encounterConfig.hazard.relayDamage,
         }
       : null;
     return {
       index: MAX_WAVES + boundedStage,
-      timeLeft: baseConfig.duration + escalation.durationBonus,
+      timeLeft: encounterConfig.duration + escalation.durationBonus,
       spawnBudget: Math.max(
-        baseConfig.spawnBudget + 16,
-        baseConfig.spawnBudget + escalation.spawnBudgetBonus + spawnBias
+        encounterConfig.spawnBudget + 16,
+        encounterConfig.spawnBudget + escalation.spawnBudgetBonus + spawnBias
       ),
       spawned: 0,
       spawnTimer: 0.35,
@@ -9830,22 +10051,25 @@
       bannerLabel: `${variant ? variant.bannerLabel || variant.cashoutLabel : "Afterburn"} · ${POST_CAPSTONE_WAVE_LABELS[boundedStage]}`,
       note: variant
         ? `${variant.note} 이제는 짧은 시험이 아니라 late-act shared pool이 계속 뒤섞이는 forbidden-territory bracket이며, roaming apex를 잡아 마지막 body splice를 뜯어내는 post-capstone ascent다.`
-        : "완성된 무기가 late-act shared pool 전체를 더 높은 압박으로 다시 통과하며 roaming apex breach와 마지막 변이를 연속으로 뜯어내는 post-capstone ascent.",
-      directive: `${variant ? variant.directive : baseConfig.directive} Afterburn에서는 구조물만 정리하고 끝나지 않는다. late-act shared pool이 계속 섞여 돌아오므로 lockgrid, pursuit, crown 압박 모두를 더 빠른 속도로 다시 견뎌야 한다.`,
-      activeCap: Math.max(baseConfig.activeCap + 2, baseConfig.activeCap + escalation.activeCapBonus + capBias),
+        : encounterConfig.note,
+      directive: `${variant ? variant.directive : encounterConfig.directive} Afterburn에서는 relay, pursuit, bastion, surge grammar가 다시 섞여 돌아오므로 한 가지 route repair 답으로는 끝까지 버틸 수 없다.`,
+      activeCap: Math.max(
+        encounterConfig.activeCap + 2,
+        encounterConfig.activeCap + escalation.activeCapBonus + capBias
+      ),
       baseSpawnInterval: Math.max(
         0.074,
-        baseConfig.baseSpawnInterval * escalation.baseSpawnScale
+        encounterConfig.baseSpawnInterval * escalation.baseSpawnScale
       ),
-      spawnIntervalMin: Math.max(0.076, baseConfig.spawnIntervalMin * escalation.minSpawnScale),
-      spawnAcceleration: baseConfig.spawnAcceleration,
-      eliteEvery: Math.max(3, baseConfig.eliteEvery - 1 - (boundedStage > 0 ? 1 : 0)),
-      mix: blendEnemyMix(baseConfig.mix, variant ? variant.mix : null, 0.3 + boundedStage * 0.04),
+      spawnIntervalMin: Math.max(0.076, encounterConfig.spawnIntervalMin * escalation.minSpawnScale),
+      spawnAcceleration: encounterConfig.spawnAcceleration,
+      eliteEvery: Math.max(3, encounterConfig.eliteEvery - 1 - (boundedStage > 0 ? 1 : 0)),
+      mix: blendEnemyMix(encounterConfig.mix, variant ? variant.mix : null, 0.3 + boundedStage * 0.04),
       cleanupPhase: false,
       awaitingForge: false,
       completesRun: boundedStage >= POST_CAPSTONE_WAVE_COUNT - 1,
-      driveGainFactor: Math.max(baseConfig.driveGainFactor || 1, escalation.driveGainFloor),
-      arena: getArenaSize(baseConfig),
+      driveGainFactor: Math.max(encounterConfig.driveGainFactor || 1, escalation.driveGainFloor),
+      arena: getArenaSize(encounterConfig),
       hazard,
       hazardTimer: hazard ? hazard.interval * 0.72 : Number.POSITIVE_INFINITY,
       postCapstoneStage: boundedStage + 1,
@@ -9879,7 +10103,10 @@
         ? {
             spawned: false,
             defeated: false,
-            spawnTimer: Math.min(escalation.apexSpawnTimer, Math.max(5.6, baseConfig.duration * 0.16)),
+            spawnTimer: Math.min(
+              escalation.apexSpawnTimer,
+              Math.max(5.6, encounterConfig.duration * 0.16)
+            ),
           }
         : null,
     };
@@ -13661,8 +13888,8 @@
           : "단일 포지 선택";
     elements.forgeSubtitle.textContent = state.pendingFinalForge
       ? catalystReady
-        ? `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 세 장은 완성, 촉매 연소, 안정화로 고정되며 각 카드가 바로 이어질 5연속 post-capstone afterburn bracket의 시작 형태를 미리 보여준다.`
-        : `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 촉매가 없어도 비상 점화와 안정화 fail-soft 카드가 열리며, 각 카드가 다른 5연속 post-capstone afterburn bracket으로 바로 이어진다.`
+        ? `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 세 장은 완성, 촉매 연소, 안정화로 고정되며 각 카드가 바로 이어질 7연속 post-capstone afterburn ladder의 시작 형태를 미리 보여준다.`
+        : `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 촉매가 없어도 비상 점화와 안정화 fail-soft 카드가 열리며, 각 카드가 다른 7연속 post-capstone afterburn ladder로 바로 이어진다.`
       : state.forgeDraftType === "architecture_draft"
         ? `Wave 3 진입 직전 Architecture Draft다. 세 장기 교리 중 하나를 예고해 주무장만 즉시 해당 프레임으로 재배선하고, support bay reserve나 starter subsystem lock은 아직 미룬다. Wave 6 Bastion Draft에서 세 교리 중 실제 commitment를 다시 골라 몸체와 지원층까지 확정한다.`
       : state.forgeDraftType === "field_grant"
