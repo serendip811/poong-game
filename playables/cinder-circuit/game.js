@@ -327,8 +327,8 @@
       },
     },
     {
-      id: "emberward",
-      label: "Wave 10 · Ember Lattice",
+      id: "scrapstorm",
+      label: "Wave 10 · Scrapstorm",
       duration: 94,
       spawnBudget: 198,
       activeCap: 43,
@@ -343,25 +343,26 @@
         mortar: 0.18,
         warden: 0.34,
       },
-      note: "Act 3 중반은 bastion 소유권이 아니라 relay lattice 절개다. wardens가 입구를 세우고 mortar가 후열을 덮는 동안, 멀리 깔린 pylon을 먼저 끊어 회랑 자체를 찢어야 다시 회전이 열린다.",
+      note: "Act 3 중반은 회랑 복구보다 greed assault에 가깝다. contraband vault가 넓은 전장 외곽에 솟아오르고 warden과 mortar가 접근선을 세금처럼 지키므로, 강한 기체일수록 전열 정리 대신 먼 금고를 직접 찢어 고철 폭발을 강탈할 수 있다.",
       directive:
-        "ember lattice. relay pylon이 화염 회랑을 길게 엮고 warden 사선이 입구를 잠근다. 가까운 전열과 오래 싸우기보다 먼 pylon부터 절개해 회랑 밀도를 먼저 무너뜨려야 한다.",
+        "scrapstorm raid. contraband vault가 잠시 열렸다 닫히며 큰 scrap burst를 품고 있다. 가까운 적 무리와 오래 싸우기보다 먼 금고를 급습해 보상을 강탈할지, 안전을 택하고 웨이브만 넘길지 매번 결정해야 한다.",
       driveGainFactor: 1.42,
       arena: THIRD_ACT_ARENA,
       hazard: {
-        label: "Ember Lattice Relay",
-        type: "relay",
-        interval: 8.6,
-        count: 3,
-        radius: 86,
-        telegraph: 0.84,
-        duration: 9.4,
-        damage: 13,
-        coreHp: 66,
+        label: "Contraband Vault",
+        type: "salvage",
+        interval: 8.4,
+        count: 2,
+        radius: 72,
+        telegraph: 0.82,
+        duration: 7.2,
+        damage: 12,
+        coreHp: 68,
         coreRadius: 18,
-        relayRange: 432,
-        relayWidth: 34,
-        relayDamage: 13,
+        salvageScrap: 18,
+        salvageBurstCount: 4,
+        salvageBurstRadius: 54,
+        salvageDropLife: 9,
       },
     },
     {
@@ -465,9 +466,9 @@
       },
     },
     9: {
-      note: "중반 lattice는 특정 doctrine의 특기 과목이 아니라 shared ecology 절개다. relay pylon, 후열 포격, 추격조가 같은 회랑을 겹쳐 닫기 때문에 어떤 빌드든 먼 코어와 가까운 전열 우선순위를 동시에 읽어야 한다.",
+      note: "shared late-act 중 하나는 이제 공용 greed bracket이다. contraband vault가 외곽에 잠깐 열리고 warden 봉쇄선과 mortar 포격이 그 접근을 세금처럼 막아, 어떤 빌드든 안전 운영과 고철 강탈 사이를 직접 저울질해야 한다.",
       directive:
-        "ember lattice. relay pylon이 화염 회랑을 길게 엮고 warden이 입구를 세우는 동안 mortar가 뒤에서 시간을 번다. 한쪽만 잘라서는 안 되고, 먼 pylon과 가까운 봉쇄선을 번갈아 찢어 공용 전장을 다시 열어야 한다.",
+        "shared scrapstorm. contraband vault를 부수면 큰 scrap burst가 흩어지지만, 시간을 쓰는 동안 warden 사선과 mortar가 퇴로를 묶는다. 눈앞 적을 닦는 대신 먼 금고를 찢을지 바로 정해야 한다.",
       driveGainFactor: 1.44,
       activeCap: 44,
       spawnBudget: 202,
@@ -479,19 +480,20 @@
         warden: 0.32,
       },
       hazard: {
-        label: "Ember Lattice Relay",
-        type: "relay",
-        interval: 8.2,
-        count: 3,
-        radius: 86,
-        telegraph: 0.8,
-        duration: 9.6,
-        damage: 14,
-        coreHp: 70,
+        label: "Shared Contraband Vault",
+        type: "salvage",
+        interval: 8,
+        count: 2,
+        radius: 74,
+        telegraph: 0.78,
+        duration: 7.4,
+        damage: 13,
+        coreHp: 72,
         coreRadius: 18,
-        relayRange: 448,
-        relayWidth: 36,
-        relayDamage: 14,
+        salvageScrap: 20,
+        salvageBurstCount: 4,
+        salvageBurstRadius: 56,
+        salvageDropLife: 9,
       },
     },
     10: {
@@ -600,9 +602,9 @@
     },
     {
       waveIndex: 10,
-      note: "두 번째 afterburn은 drift chase를 길게 늘여 completed form이 안전 lane 없이 버티는지 본다. 떠도는 화구와 재진입 추격선이 넓은 맵을 가로질러 build의 회전력과 burst 창을 동시에 압박한다.",
+      note: "두 번째 afterburn은 greed window를 길게 강요한다. completed form이 안전 lane 없이도 contraband vault를 연속 강탈할 수 있는지 묻고, 강탈에 성공할수록 다음 폭주 구간을 더 과감하게 살 자원을 벌어 준다.",
       directive:
-        "afterburn pursuit. drifting furnace가 현재 위치를 집요하게 따라붙고 shrike 재진입이 외곽 회전을 끊는다. 오래 머무는 대신 lane 전체를 갈아타며 추격 덩어리를 직접 찢어야 한다.",
+        "afterburn heist. contraband vault가 외곽에 순차적으로 떠오르고 shrike 재진입과 mortar 포격이 회수선을 자른다. 강한 순간에 깊게 dive해 vault를 부순 뒤 scrap을 주워 빠져나올지, 생존만 택할지 계속 갈라진다.",
       mix: {
         scuttler: 0.08,
         brute: 0.18,
@@ -611,6 +613,22 @@
         warden: 0.24,
       },
       mixWeight: 0.44,
+      hazard: {
+        label: "Afterburn Heist Vault",
+        type: "salvage",
+        interval: 7.7,
+        count: 2,
+        radius: 76,
+        telegraph: 0.72,
+        duration: 7,
+        damage: 13,
+        coreHp: 76,
+        coreRadius: 19,
+        salvageScrap: 22,
+        salvageBurstCount: 5,
+        salvageBurstRadius: 60,
+        salvageDropLife: 8.5,
+      },
     },
     {
       waveIndex: 11,
@@ -946,7 +964,7 @@
   function isHazardCoreTarget(hazard) {
     return Boolean(
       hazard &&
-        (hazard.type === "territory" || hazard.type === "relay") &&
+        (hazard.type === "territory" || hazard.type === "relay" || hazard.type === "salvage") &&
         hazard.telegraphTime <= 0 &&
         hazard.activeTime > 0 &&
         hazard.coreHp > 0 &&
@@ -8425,6 +8443,18 @@
           tone: "summary-chip--hot",
         };
       }
+      const salvageHazards = currentState.hazards.filter(
+        (hazard) => hazard.type === "salvage" && hazard.telegraphTime <= 0 && hazard.activeTime > 0
+      );
+      if (salvageHazards.length > 0) {
+        return {
+          chipLabel: `${wave.hazard.label} LIVE`,
+          detailLabel: "contraband vault",
+          detailValue: `${salvageHazards.length}개 노출`,
+          note: `${salvageHazards.length}개 contraband vault가 열려 있다. 부수면 큰 scrap burst가 나오지만, 시간을 끌면 보상 없이 닫힌다.`,
+          tone: "summary-chip--hot",
+        };
+      }
       return {
         chipLabel: `${wave.hazard.label} LIVE`,
         detailLabel: "폭주",
@@ -8442,6 +8472,8 @@
           ? "다음 relay"
         : wave.hazard.type === "drift"
           ? "다음 추적"
+        : wave.hazard.type === "salvage"
+          ? "다음 금고"
           : "다음 폭주";
     const note =
       wave.hazard.type === "territory"
@@ -8450,6 +8482,8 @@
           ? `${wave.hazard.count}개 relay pylon이 ${wave.hazard.telegraph.toFixed(1)}초 예고 후 화염 회랑을 엮는다. 긴 사선으로 먼 pylon을 먼저 끊어야 한다.`
         : wave.hazard.type === "drift"
           ? `${wave.hazard.count}개 추적 화구가 ${wave.hazard.telegraph.toFixed(1)}초 예고 후 플레이어 동선을 따라붙는다.`
+          : wave.hazard.type === "salvage"
+            ? `${wave.hazard.count}개 contraband vault가 ${wave.hazard.telegraph.toFixed(1)}초 예고 후 잠시 열린다. 부수면 큰 scrap burst가 나오지만, 욕심내다 퇴로를 잃을 수 있다.`
           : `${wave.hazard.count}개 구역이 ${wave.hazard.telegraph.toFixed(1)}초 예고 후 폭주한다.`;
     return {
       chipLabel: wave.hazard.label,
@@ -11278,6 +11312,8 @@
       pushCombatFeed(
         hazard.type === "relay"
           ? `${hazard.label} 절단. 화염 회랑이 붕괴했다.`
+          : hazard.type === "salvage"
+            ? `${hazard.label} 탈취 성공. contraband burst가 흩어진다.`
           : `${hazard.label} 코어 파괴. 점거 구역이 붕괴했다.`,
         "CORE"
       );
@@ -14410,6 +14446,8 @@
               ? `rgba(255, 185, 92, ${clamp(activeAlpha + 0.08, 0.2, 0.48)})`
             : hazard.type === "drift"
               ? `rgba(255, 151, 79, ${clamp(activeAlpha + 0.1, 0.22, 0.5)})`
+            : hazard.type === "salvage"
+              ? `rgba(255, 208, 104, ${clamp(activeAlpha + 0.1, 0.24, 0.52)})`
             : `rgba(255, 104, 61, ${activeAlpha})`;
         context.beginPath();
         context.arc(hazard.x, hazard.y, hazard.radius, 0, Math.PI * 2);
@@ -14505,6 +14543,38 @@
           context.arc(hazard.radius * 0.18, -hazard.radius * 0.18, 7, 0, Math.PI * 2);
           context.fill();
           context.restore();
+        } else if (hazard.type === "salvage") {
+          const hpRatio =
+            hazard.coreMaxHp > 0 ? clamp(hazard.coreHp / hazard.coreMaxHp, 0, 1) : 0;
+          context.save();
+          context.translate(hazard.x, hazard.y);
+          context.rotate(performance.now() * 0.0015);
+          context.fillStyle = "rgba(255, 246, 210, 0.94)";
+          context.strokeStyle = "rgba(255, 194, 84, 0.98)";
+          context.lineWidth = 2.2;
+          drawPolygon(context, 0, 0, hazard.coreRadius + 2, 8, Math.PI / 8);
+          context.fill();
+          context.stroke();
+          context.strokeStyle = "rgba(255, 164, 72, 0.85)";
+          context.lineWidth = 2;
+          context.beginPath();
+          context.moveTo(-hazard.coreRadius * 0.46, 0);
+          context.lineTo(hazard.coreRadius * 0.46, 0);
+          context.moveTo(0, -hazard.coreRadius * 0.46);
+          context.lineTo(0, hazard.coreRadius * 0.46);
+          context.stroke();
+          context.restore();
+          context.strokeStyle = "rgba(255, 246, 224, 0.92)";
+          context.lineWidth = 3;
+          context.beginPath();
+          context.arc(
+            hazard.x,
+            hazard.y,
+            hazard.coreRadius + 9,
+            -Math.PI / 2,
+            -Math.PI / 2 + Math.PI * 2 * hpRatio
+          );
+          context.stroke();
         }
       }
     }
