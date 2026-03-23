@@ -5,14 +5,15 @@
 - Working title: `Cinder Circuit`
 - Genre: 탑다운 아레나 슈터 + 웨이브 로그라이트
 - Platform: Desktop-first Canvas browser game
-- Session length: 7분 내외
-- Core promise: 불타는 회로 아레나를 돌며 괴물 떼와 폭주 지형을 함께 버티고, 웨이브 사이 포지에서 스크랩을 태워 무기 코어와 보강을 선택해 빌드를 터뜨린다.
+- Session length: `12웨이브`, `12~15분` 내외
+- Core promise: 세 시대 `12웨이브` 러닝 동안 포지에서 `Headline Form` 하나와 `Survival Rider` 하나를 반복해서 잠그고, 직후 전투의 `Proof Window`에서 그 변신이 정말 전장을 먹는지 바로 증명한다.
 
 ## Pillars
 
 - 읽히는 회피: 플레이어는 항상 무엇을 피해야 하고 어디로 빠져야 하는지 즉시 알아야 한다.
-- 드랍의 가치: 웨이브 중 얻은 코어가 다음 포지 선택을 바꾸며, 빌드 방향을 흔들어야 한다.
-- 짧은 러닝: 시작부터 결과까지 한 번에 완주 가능한 길이로 압축한다.
+- 변신의 갈증: 다음 세 웨이브 안에 기계가 얼마나 달라질지 기대하게 만들어야 한다.
+- 드랍의 가치: 웨이브 중 얻은 코어와 스크랩이 다음 포지의 headline/rider 선택을 흔들어야 한다.
+- 세 시대 계약: `Wave 1-4`, `Wave 5-8`, `Wave 9-12`가 각각 다른 지배 감각과 증명 창을 가져야 한다.
 
 ## Core Fantasy
 
@@ -22,15 +23,19 @@
 
 1. 런 시작 전에 `시동 회로(Signature)`를 골라 초기 벤치 2장과 패시브를 정한다.
 2. 아레나를 돌며 적을 피하고 자동 사격으로 잡는다.
-3. 스크랩과 코어 드랍을 주워 다음 강화 선택지를 넓힌다.
-4. 포지 구간에서 스크랩을 써 코어 장착 또는 안정화 업그레이드 중 하나를 고른다.
-5. 드라이브를 채워 필요한 순간 `Overdrive`를 켜고, 최종 5웨이브를 넘기면 승리한다.
+3. 스크랩과 코어 드랍을 주워 다음 시대의 `Headline Leap`과 `Survival Rider` 선택지를 넓힌다.
+4. 포지 구간에서 스크랩을 써 다음 전투를 바꿀 `Headline Form` 한 장과 필요 시 이를 받칠 `Rider` 한 장을 고른다.
+5. 직후 웨이브의 `Proof Window`에서 새 형태가 실제로 lane, pocket, greed route를 얼마나 넓히는지 확인한다.
+6. `Wave 12`를 버티면 한 번의 완성된 세 시대 런을 닫고, 다른 form/rider 조합으로 다시 돈다.
 
 ## Match Structure
 
-- 총 `Wave 1 -> Forge -> Wave 2 -> Forge -> Wave 3 -> Forge -> Wave 4 -> Forge -> Wave 5 -> Result`
-- 각 웨이브는 `55~72초` 내외, 고정 아레나에서 진행
-- Wave 5 종료 후 생존 시 승리
+- 총 `Wave 1-12`와 웨이브 사이 포지로 이루어진 세 시대 계약
+- `Era I · Wave 1-4`: 기본 코어와 초반 chassis를 정하고 첫 domination window를 만든다.
+- `Era II · Wave 5-8`: 주무장/차체 break를 잠그고 support/defense rider를 붙여 중반 ownership을 증명한다.
+- `Era III · Wave 9-12`: late-form promise를 고르고 `payoff band -> spike band`로 런을 마감한다.
+- 각 웨이브는 대체로 `50~75초` 내외, 밴드에 따라 아레나 크기와 압박 리듬이 달라진다.
+- Wave 12 종료 후 생존 시 승리
 - HP가 0이 되면 즉시 패배
 
 ## Controls
@@ -76,15 +81,12 @@
 
 ### 3. Forge Intermission
 
-- Wave 종료 후 시간이 잠시 멈추고 카드 3장이 열린다.
-- 카드에는 `Infuse`, `Improve`, `Reforge`, `Recycle` 행동 계열을 명시한다.
-- `Infuse`는 무기 벤치에 저장한 코어를 주무기에 접속한다.
-- 같은 코어를 여러 개 쌓아 두면 `SYNC`가 올라가 같은 `Infuse`라도 더 강하게 읽힌다.
-- `Improve`는 화력, 냉각, 기동성 같은 직접 성능을 올린다.
-- `Reforge`는 무기 벤치 구성을 다시 조합해 빌드 방향을 틀게 한다.
-- `Recycle`은 벤치 전체를 즉시 스크랩으로 환전해 경제 판단을 만든다.
-- 매 포지에서 카드 1장만 선택한다.
-- 코어 장착은 무기 패턴을 크게 바꾸고, 보강 카드는 수치를 안정적으로 밀어준다.
+- Wave 종료 후 시간이 잠시 멈추고 다음 전투를 바꿀 카드가 열린다.
+- 기본 계약은 세 가지다: `Headline Leap`, `Survival Rider`, `Greed/Utility Gamble`.
+- 대부분의 정지에서는 `Headline Leap` 한 장을 먼저 고르고, 필요한 경우 그 뒤에 소형 `Rider` 한 장만 얹는다.
+- `Headline Leap`은 주무장/차체의 실루엣과 발사 규칙을 크게 바꾸는 선택이다.
+- `Survival Rider`는 방호, support, 회수, 기동성처럼 headline leap의 약점을 받쳐 proof window를 길게 즐기게 만든다.
+- `Greed/Utility`는 현장 경제나 위험 계약으로 런 노선을 비트는 예외적 선택이다.
 - 정규화된 스크랩 경제 기준으로 카드 비용은 대체로 `0~52 Scrap` 안에서 읽히게 유지한다.
 
 ### 4. Reactor Pressure
@@ -96,10 +98,10 @@
 ### 5. Threat Curve
 
 - 초반은 `Scuttler` 위주로 회피를 익힌다.
-- 중반부터 느리지만 버티는 `Brute`와 흔들리는 진입선을 만드는 `Shrike`가 섞인다.
+- 중반부터 느리지만 버티는 `Brute`와 흔들리는 진입선을 만드는 `Shrike`가 섞이며 첫 ownership window를 시험한다.
 - 각 웨이브마다 엘리트가 끼어들어 코어 드랍 기회를 만든다.
-- `Wave 4`는 브루트 전열과 이중 폭주로 sustain과 mobility를 같이 검사한다.
-- `Wave 5`는 엘리트 돌파와 짧은 드라이브 창을 맞추는 최종 타이밍 체크로 끝난다.
+- 각 시대의 첫 밴드는 새 form을 즐기는 `payoff/proof` 창, 다음 밴드는 같은 생태에서 압박을 올리는 `escalation` 창으로 읽혀야 한다.
+- `Wave 9-12`는 새 late form을 고른 뒤 `payoff band -> spike band`로 닫히며, 장기적으로 `20-30웨이브` 구조로 늘릴 수 있는 기본 골격이 된다.
 
 ## Content Scope
 
@@ -159,11 +161,12 @@
 - 장비 인벤토리/드래그 UI 없음
 - 보스전과 스토리 컷신 없음
 
-## MVP Acceptance Criteria
+## Alpha Slice Acceptance Criteria
 
 - [ ] 시작, 플레이, 결과 흐름이 끊기지 않는다.
-- [ ] `5웨이브 + 4포지` 루프가 완주된다.
-- [ ] 최소 3가지 이상 다른 무기 감각이 실제로 체감된다.
+- [ ] `12웨이브 + 세 시대 포지` 루프가 완주된다.
+- [ ] 각 시대가 `Headline Form`, `Survival Rider`, `Proof Window`로 구분되어 읽힌다.
+- [ ] 최소 3가지 이상 다른 주무장/차체 변신 감각이 실제로 체감된다.
 - [ ] 과열과 대시가 단순 장식이 아니라 생존 판단에 영향을 준다.
 - [ ] 스크랩 소비와 오버드라이브가 실제 선택 압박을 만든다.
 - [ ] 승리와 패배 상태, 재시작 흐름이 있다.
@@ -189,9 +192,9 @@
 
 ## Next Build Target
 
-현재 구현 목표는 `확장된 캔버스 기반 단일 러닝 프로토타입`이다.
+현재 구현 목표는 `반복 플레이 가능한 세 시대 12웨이브 알파 슬라이스`다.
 
-- 필수: 타이틀, 5웨이브, 4종 적, 4종 코어, 4번의 포지 선택, 드라이브, 폭주 지형, 결과 화면
-- 선택: 화면 흔들림, 파편 파티클, 최소한의 합성 사운드
+- 필수: 타이틀, `Wave 1-12`, 세 시대 포지 계약, 4종 이상 적, 코어/차체/지원 계열 빌드 변화, 드라이브, 폭주 지형, 결과 화면
+- 선택: 화면 흔들림, 파편 파티클, 최소한의 합성 사운드, 이후 `Afterburn` 확장 검증
 
 세부 적용 원칙과 밸런스 계획은 [cinder-circuit-source-application.md](/Users/seren.kim/work_personal/poong_game/docs/games/cinder-circuit-source-application.md#L1)에 정리한다.

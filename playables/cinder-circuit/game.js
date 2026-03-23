@@ -8000,9 +8000,19 @@
         <strong>12-Wave Contract</strong>
         <span class="summary-chip ${currentEra.state === "live" ? "summary-chip--hot" : ""}">${act.shortLabel}</span>
       </div>
-      <p class="summary-copy roadmap-card__path">세 시대 모두 한 가지 headline form, 한 가지 survival rider, 한 가지 breathing proof band만 먼저 약속한다.</p>
-      <div class="forge-era-list">${createForgeEraMarkup(eras)}</div>
-      <p class="summary-note">${currentEra.label} ${currentEra.title}: ${currentEra.primaryLabel}을(를) 전면에 세우고 ${currentEra.secondaryLabel}로 약점을 받친 뒤 ${currentEra.proofLabel}에서 즉시 증명한다.</p>
+      <p class="summary-copy roadmap-card__path">세 시대 모두 form 하나, rider 하나, proof 하나만 먼저 판다.</p>
+      <div class="status-list">
+        ${eras
+          .map(
+            (era) =>
+              createStatusRow(
+                `${era.label} ${era.waveLabel}`,
+                `${era.primaryLabel} -> ${era.proofLabel}`
+              )
+          )
+          .join("")}
+      </div>
+      <p class="summary-note">${currentEra.label} ${currentEra.title}: ${currentEra.primaryLabel}을(를) 전면에 세우고 ${currentEra.secondaryLabel}로 버틴 뒤 ${currentEra.proofLabel}에서 바로 증명한다.</p>
     `;
   }
 
@@ -19453,7 +19463,6 @@
     const dominantForm = getDominantFormSummary(state.build, weapon, state.waveIndex + 1);
     const nextBreakpoint = getNextBreakpointSummary(state.build, weapon, state.waveIndex + 1);
     const proofWindow = getImmediateProofWindowSummary(state.build, state.waveIndex + 1);
-    const liveSideBet = getLiveSideBetSummary(state);
     const supportTrack = getForgeSupportTrackSnapshot(state.build, state.supportSystem);
     const headlineLabel =
       weapon.afterburnDominionLabel ||
@@ -19475,18 +19484,14 @@
           }">${weapon.tierLabel}</span>
         </div>
         <div class="status-list">
-          ${createStatusRow("Headline Form", dominantForm.label)}
           ${createStatusRow("Headline Leap", nextBreakpoint.label)}
           ${createStatusRow("Survival Rider", supportTrack.label)}
           ${createStatusRow("Proof Window", proofWindow.label)}
         </div>
         <div class="mini-pill-row">
           ${createMiniPill(getHeadlineFormTierLabel(getHeadlineFormTier(state.build)), headlineLabel, "hot")}
-          ${state.supportSystem ? createMiniPill("SYS", state.supportSystem.label, "accent") : ""}
-          ${liveSideBet ? createMiniPill("BET", `${liveSideBet.label} · ${liveSideBet.status}`, "cool") : ""}
-          ${weapon.affixLabels.slice(0, 2).map((label) => createMiniPill("속성", label, "cool")).join("")}
         </div>
-        <p class="summary-note">${dominantForm.detail} 다음 도약은 ${nextBreakpoint.label}, 보조 생존축은 ${supportTrack.label}, 즉시 증명 무대는 ${proofWindow.label}다.</p>
+        <p class="summary-note">${nextBreakpoint.label} 도약 뒤 ${supportTrack.label}로 버티고 ${proofWindow.label}에서 즉시 증명한다.</p>
       `;
     }
 
@@ -19528,9 +19533,7 @@
     const enemiesLeft = Math.max(0, state.wave ? state.wave.spawnBudget - state.wave.spawned : 0);
     if (elements.waveObjective) {
       const combatBand = getCombatBandState(state.build, state.weapon, state.waveIndex + 1);
-      const objectiveNote = liveSideBet
-        ? liveSideBet.note
-        : hazardStatus.note || (combatBand ? combatBand.detail : nextBreakpoint.detail);
+      const objectiveNote = hazardStatus.note || (combatBand ? combatBand.detail : nextBreakpoint.detail);
       elements.waveObjective.innerHTML = `
         <div class="summary-head">
           <strong>${waveConfig.label}</strong>
@@ -19540,12 +19543,10 @@
         </div>
         <div class="status-list">
           ${createStatusRow("Immediate Threat", `${hazardStatus.detailLabel} ${hazardStatus.detailValue}`)}
-          ${createStatusRow("Current Form", dominantForm.label)}
           ${createStatusRow("Headline Leap", nextBreakpoint.label)}
           ${createStatusRow("Survival Rider", supportTrack.label)}
-          ${createStatusRow("Proof Window", combatBand ? `${combatBand.label} · ${combatBand.headline}` : proofWindow.label)}
         </div>
-        <p class="summary-note">${proofWindow.detail} ${liveSideBet ? `${liveSideBet.label}: ${liveSideBet.note}` : objectiveNote}</p>
+        <p class="summary-note">${combatBand ? `${combatBand.label} · ${combatBand.headline}` : proofWindow.label}. ${objectiveNote}</p>
       `;
     }
 
@@ -19589,7 +19590,7 @@
         }">${
           state.player.overheated
             ? "사격 정지: 열을 비워야 한다."
-            : `${dominantForm.detail} ${liveSideBet ? `${liveSideBet.label}: ${liveSideBet.note} ` : ""}${hazardStatus.note} 자동 사격은 과열 전까지 유지된다.`
+            : `${dominantForm.detail} ${hazardStatus.note} 자동 사격은 과열 전까지 유지된다.`
         }</p>
       `;
     }
@@ -19608,24 +19609,6 @@
       return;
     }
     const activeCore = CORE_DEFS[state.build.coreId];
-    const traitSummary = getWeaponTraitLabels(state.weapon).join(" · ") || "직선 탄도";
-    const forgeSystemSummary = getSupportSystemSummary(state.supportSystem);
-    const supportBaySummary = `${getInstalledSupportSystems(state.build).length}/${getSupportBayCapacity(state.build)} 베이`;
-    const benchEntries = getBenchEntries(state.build);
-    const catalystReady = hasFinisherCatalyst(state.build, state.build.coreId);
-    const catalystEligible = buildCanEarnFinisherCatalyst(state.build) || catalystReady;
-    const catalystSummary = catalystEligible
-      ? catalystReady
-        ? `${FINISHER_RECIPE_DEFS[state.build.coreId].label} 촉매 확보`
-        : `${FINISHER_RECIPE_DEFS[state.build.coreId].label} 촉매 필요`
-      : "촉매 조건 미도달";
-    const doctrinePursuit = getDoctrineForgePursuitDef(state.build);
-    const doctrinePursuitSummary =
-      doctrinePursuit && state.build.doctrinePursuitCommitted
-        ? `${doctrinePursuit.shortLabel} ${state.build.doctrinePursuitProgress}/${doctrinePursuit.goal}${state.build.doctrineChaseClaimed ? " · 완성" : state.build.doctrinePursuitExpired ? " · 실패" : ""}`
-        : doctrinePursuit
-          ? `${doctrinePursuit.shortLabel} 미계약`
-          : "교리 pursuit 없음";
     const forgeOptions = {
       finalForge: state.pendingFinalForge,
       nextWave: state.waveIndex + 2,
@@ -19656,15 +19639,9 @@
                     ? "Headline Forge"
                     : "Rider Slot"
                   : "Forge";
-    const lateBreakArmoryActive =
-      !riderStep &&
-      state.forgeDraftType === "armory" &&
-      state.waveIndex + 2 === LATE_BREAK_ARMORY_WAVE;
-    elements.forgeSubtitle.textContent = lateBreakArmoryActive
-      ? `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. 이번 정지는 support 설명보다 먼저 Act 3의 4웨이브 계약을 고른다. Wave 9-10 payoff band를 즐기고, Wave 11-12 spike band를 어떻게 닫을지만 정하면 된다.`
-      : riderStep
-        ? `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. headline leap은 잠겼다. 이제 survival rider 1장만 얹고 ${proofWindow.label}에서 바로 증명한다.`
-        : `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. ${nextFormStep.label}로 뛰는 headline leap 하나와 ${activeSupportTrack.label} rider를 정리한 뒤 ${proofWindow.label}에서 즉시 증명한다.`;
+    elements.forgeSubtitle.textContent = riderStep
+      ? `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. headline leap은 잠겼다. 이제 rider 1장만 얹고 ${proofWindow.label}에서 바로 버티는 시간을 증명한다.`
+      : `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. 이 12-wave run은 headline leap 하나, survival rider 하나, 즉시 proof window 하나만 먼저 보여 준다.`;
     elements.forgeContext.innerHTML = `
       <article class="forge-focus forge-focus--${riderStep ? "rider" : "headline"} forge-context__card forge-context__card--span-two">
         <div class="forge-focus__header">
@@ -19700,14 +19677,10 @@
         </div>
         <p class="summary-note forge-focus__note">${
           riderStep
-            ? `${dominantFormSummary.label} · ${forgeSystemSummary} · ${supportBaySummary}`
-            : `${dominantFormSummary.label} · ${activeCore.label} · ${state.weapon.tierLabel} · ${traitSummary}`
+            ? `${dominantFormSummary.label} 위에 ${activeSupportTrack.label} rider를 얹고 ${proofWindow.label}에서 버틸 시간을 늘린다.`
+            : `${dominantFormSummary.label}에서 ${nextFormStep.label}(으)로 뛰고, ${activeSupportTrack.label}로 약점을 받친 뒤 ${proofWindow.label}에서 즉시 증명한다.`
         }</p>
-        ${
-          riderStep
-            ? `<p class="summary-note forge-focus__note">${doctrinePursuitSummary} · ${catalystSummary} · 보관 ${benchEntries.length}종 · 분해 예상 고철 ${getRecycleValue(state.build)}</p>`
-            : createForgeSpotlightMarkup(state.forgeChoices)
-        }
+        ${!riderStep ? createForgeSpotlightMarkup(state.forgeChoices) : ""}
       </article>
       <article class="forge-context__card forge-context__card--span-two">
         ${createEraContractPanelMarkup(
