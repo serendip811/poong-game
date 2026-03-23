@@ -126,16 +126,74 @@ lateCacheBuild.supportSystems = [{ id: "volt_drones", tier: 1 }];
 lateCacheBuild.blackLedgerRaidWaves = 1;
 lateCacheBuild.lateFieldMutationLevel = 2;
 const lateCacheChoices = game.buildFieldGrantChoices(lateCacheBuild, Math.random, 10);
-assert.equal(lateCacheChoices.length, 5);
-assert.equal(lateCacheChoices[0].laneLabel, "Convergence Form");
-assert.ok(lateCacheChoices.some((choice) => choice.laneLabel === "Wildcard Protocol"));
-assert.ok(lateCacheChoices.some((choice) => choice.laneLabel === "Autonomous Arsenal"));
-assert.ok(
-  lateCacheChoices.some(
-    (choice) => choice.type === "system" && choice.fieldGrantHighlight === "autonomous_arsenal"
-  )
+assert.equal(lateCacheChoices.length, 3);
+assert.equal(
+  JSON.stringify(lateCacheChoices.map((choice) => choice.laneLabel)),
+  JSON.stringify(["Main Weapon Mutation", "Defense / Utility", "Greed Contract"])
 );
-assert.ok(lateCacheChoices.some((choice) => choice.title.includes("Volt Drones") || choice.title.includes("Seeker Array")));
+assert.ok(lateCacheChoices.some((choice) => choice.arsenalBreakpointProfileId === "mutation"));
+assert.ok(lateCacheChoices.some((choice) => choice.arsenalBreakpointProfileId === "aegis"));
+assert.ok(lateCacheChoices.some((choice) => choice.arsenalBreakpointProfileId === "ledger"));
+const afterburnBreakpointChoices = game.getCombatCacheChoicesForWave(lateCacheBuild, 14);
+assert.equal(afterburnBreakpointChoices.length, 3);
+assert.equal(
+  JSON.stringify(afterburnBreakpointChoices.map((choice) => choice.laneLabel)),
+  JSON.stringify(["Main Weapon Mutation", "Defense / Utility", "Greed Contract"])
+);
+const afterburnMutationChoice = afterburnBreakpointChoices.find(
+  (choice) => choice.laneLabel === "Main Weapon Mutation"
+);
+const afterburnAegisChoice = afterburnBreakpointChoices.find(
+  (choice) => choice.laneLabel === "Defense / Utility"
+);
+const afterburnGreedChoice = afterburnBreakpointChoices.find(
+  (choice) => choice.laneLabel === "Greed Contract"
+);
+const afterburnMutationBuild = game.createInitialBuild("relay_oath");
+afterburnMutationBuild.chassisId = "vector_thrusters";
+game.applyForgeChoice(
+  {
+    build: afterburnMutationBuild,
+    resources: { scrap: 999 },
+    stats: { scrapCollected: 0, scrapSpent: 0 },
+    player: { hp: 100, maxHp: 100, heat: 24, overheated: false, fieldAegisCharge: 0, fieldAegisCooldown: 0, invulnerableTime: 0 },
+  },
+  afterburnMutationChoice
+);
+assert.equal(afterburnMutationBuild.arsenalBreakpointProfileId, "mutation");
+const afterburnWaveFourteenMutation = game.createPostCapstoneWave(1, afterburnMutationBuild);
+assert.equal(afterburnWaveFourteenMutation.hazard.type, "drift");
+assert.equal(afterburnWaveFourteenMutation.hazard.label, "Arsenal Crossfire");
+assert.ok(afterburnWaveFourteenMutation.arena.width >= 1800);
+const afterburnAegisBuild = game.createInitialBuild("scrap_pact");
+afterburnAegisBuild.chassisId = "bulwark_treads";
+game.applyForgeChoice(
+  {
+    build: afterburnAegisBuild,
+    resources: { scrap: 999 },
+    stats: { scrapCollected: 0, scrapSpent: 0 },
+    player: { hp: 100, maxHp: 100, heat: 24, overheated: false, fieldAegisCharge: 0, fieldAegisCooldown: 0, invulnerableTime: 0 },
+  },
+  afterburnAegisChoice
+);
+assert.equal(afterburnAegisBuild.arsenalBreakpointProfileId, "aegis");
+const afterburnWaveFourteenAegis = game.createPostCapstoneWave(1, afterburnAegisBuild);
+assert.equal(afterburnWaveFourteenAegis.hazard.type, "drift");
+const afterburnGreedBuild = game.createInitialBuild("rail_zeal");
+afterburnGreedBuild.chassisId = "vector_thrusters";
+game.applyForgeChoice(
+  {
+    build: afterburnGreedBuild,
+    resources: { scrap: 999 },
+    stats: { scrapCollected: 0, scrapSpent: 0 },
+    player: { hp: 100, maxHp: 100, heat: 24, overheated: false, invulnerableTime: 0 },
+  },
+  afterburnGreedChoice
+);
+assert.equal(afterburnGreedBuild.arsenalBreakpointProfileId, "ledger");
+const afterburnWaveFourteenGreed = game.createPostCapstoneWave(1, afterburnGreedBuild);
+assert.equal(afterburnWaveFourteenGreed.hazard.type, "salvage");
+assert.ok(afterburnWaveFourteenGreed.hazard.salvageScrap >= 30);
 const predatorBaitBuild = game.createInitialBuild("scrap_pact");
 const predatorBaitChoice = game.createPredatorBaitChoice(predatorBaitBuild, 9);
 assert.ok(predatorBaitChoice);
@@ -436,7 +494,7 @@ convergenceBuild.chassisId = "vector_thrusters";
 convergenceBuild.supportBayCap = 3;
 convergenceBuild.supportSystems = [{ id: "ember_ring", tier: 1 }];
 convergenceBuild.blackLedgerRaidWaves = 1;
-const convergenceChoices = game.buildFieldGrantChoices(convergenceBuild, () => 0, 10);
+const convergenceChoices = game.buildFieldGrantChoices(convergenceBuild, () => 0, 12);
 const convergenceChoice = convergenceChoices.find(
   (choice) => choice && choice.action === "field_convergence"
 );
@@ -545,19 +603,16 @@ const predatorCacheChoices = game.buildFieldGrantChoices(predatorBaitRun.build, 
 assert.equal(game.isArsenalBreakpointWave(10), true);
 assert.ok(predatorCacheChoices.some((choice) => choice.action === "field_mutation"));
 assert.ok(predatorCacheChoices.some((choice) => choice.action === "field_aegis"));
-assert.equal(predatorCacheChoices.length, 5);
+assert.equal(predatorCacheChoices.length, 3);
 assert.equal(
   JSON.stringify(predatorCacheChoices.map((choice) => choice.laneLabel)),
   JSON.stringify([
     "Main Weapon Mutation",
-    "Wildcard Protocol",
-    "Autonomous Arsenal",
     "Defense / Utility",
     "Greed Contract",
   ])
 );
 assert.ok(predatorCacheChoices.some((choice) => choice.action === "field_greed"));
-assert.ok(predatorCacheChoices.some((choice) => choice.type === "system"));
 const fieldMutationChoice = predatorCacheChoices.find((choice) => choice.action === "field_mutation");
 const fieldAegisChoice = predatorCacheChoices.find((choice) => choice.action === "field_aegis");
 const greedContractChoice = predatorCacheChoices.find((choice) => choice.action === "field_greed");
@@ -590,8 +645,8 @@ const blackLedgerWaveTen = game.applyBlackLedgerRaidConfig(
   10
 );
 assert.ok(blackLedgerWaveTen.blackLedgerRaid);
-assert.equal(blackLedgerWaveTen.blackLedgerRaid.salvageWave, false);
-assert.equal(blackLedgerWaveTen.hazard.label, "Lockgrid Hunt Surge");
+assert.equal(blackLedgerWaveTen.blackLedgerRaid.salvageWave, true);
+assert.equal(blackLedgerWaveTen.hazard.label, "Black Ledger Vaults");
 assert.ok(blackLedgerWaveTen.hazard.interval < game.resolveWaveConfig(9, greedRun.build).hazard.interval);
 assert.ok(blackLedgerWaveTen.spawnBudget > game.WAVE_CONFIG[9].spawnBudget);
 const fieldMutationRun = {

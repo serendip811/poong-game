@@ -313,6 +313,128 @@
       },
     },
   };
+  const ARSENAL_BREAKPOINT_ENCOUNTER_PROFILES = {
+    mutation: {
+      bandLabel: "Arsenal Overdrive",
+      note:
+        "Arsenal Breakpoint에서 화력 변이를 골랐다면 다음 전투는 upkeep 검사가 아니라 open-lane firing test로 접혀야 한다. arena를 더 벌리고 구조물 세금을 줄여, 방금 늘어난 배럴과 split volley가 lane 둘 이상을 동시에 먹는지 즉시 드러나게 만든다.",
+      directive:
+        "arsenal overdrive. pocket 유지보다 긴 사선과 mortar perch 절개가 먼저다. 새 화망으로 flank 둘을 같이 긁으며 marked elite까지 같은 각도에서 녹여야 한다.",
+      arena: {
+        width: 1800,
+        height: 990,
+      },
+      activeCap: 30,
+      spawnBudget: 198,
+      baseSpawnInterval: 0.348,
+      spawnIntervalMin: 0.102,
+      eliteEvery: 4,
+      mix: {
+        scuttler: 0.04,
+        brute: 0.1,
+        shrike: 0.14,
+        skimmer: 0.24,
+        lancer: 0.24,
+        mortar: 0.12,
+        warden: 0.08,
+        brander: 0.04,
+      },
+      mixWeight: 0.54,
+      hazard: {
+        label: "Arsenal Crossfire",
+        interval: 9.2,
+        count: 1,
+        radius: 74,
+        telegraph: 0.72,
+        duration: 4,
+        damage: 15,
+      },
+    },
+    aegis: {
+      bandLabel: "Citadel Reset",
+      note:
+        "Arsenal Breakpoint에서 방호층을 골랐다면 다음 전투는 회복 pocket을 캐는 reset 시험이어야 한다. drift wake는 더 굵게 닫히지만 적 점유는 잠시 낮춰, plate를 믿고 깊게 들어갔다 빠지는 cadence를 바로 요구한다.",
+      directive:
+        "citadel reset. drift wake가 닫히기 전에 plate를 태워 전열 한 줄을 비우고 즉시 refuge pocket으로 빠져야 한다. 오래 버티기보다 진입-이탈 타이밍이 핵심이다.",
+      arena: {
+        width: 1680,
+        height: 980,
+      },
+      activeCap: 27,
+      spawnBudget: 188,
+      baseSpawnInterval: 0.372,
+      spawnIntervalMin: 0.11,
+      eliteEvery: 4,
+      mix: {
+        scuttler: 0.04,
+        brute: 0.18,
+        shrike: 0.16,
+        skimmer: 0.08,
+        lancer: 0.1,
+        binder: 0.14,
+        mortar: 0.06,
+        warden: 0.14,
+        brander: 0.1,
+      },
+      mixWeight: 0.52,
+      hazard: {
+        label: "Citadel Drift",
+        type: "drift",
+        interval: 8.6,
+        count: 2,
+        radius: 102,
+        telegraph: 0.8,
+        duration: 6.6,
+        damage: 15,
+        driftSpeed: 126,
+        driftOrbit: 0.36,
+      },
+    },
+    ledger: {
+      bandLabel: "Jackpot Vaultline",
+      note:
+        "Arsenal Breakpoint에서 탐욕 계약을 골랐다면 다음 전투는 바로 cash-out routing으로 비틀려야 한다. 점거 대신 금고 pocket이 크게 열리고 외곽 chase lane이 넓어져, payout을 뜯을지 안전한 회전을 택할지 다시 갈라진다.",
+      directive:
+        "jackpot vaultline. 열린 vault를 빠르게 찢고 곧바로 이탈할 cash-out window를 직접 정해야 한다. pocket 안 체류 시간이 길수록 brander와 lancer가 퇴로를 먼저 닫는다.",
+      arena: {
+        width: 1780,
+        height: 980,
+      },
+      activeCap: 29,
+      spawnBudget: 202,
+      baseSpawnInterval: 0.356,
+      spawnIntervalMin: 0.104,
+      eliteEvery: 4,
+      mix: {
+        scuttler: 0.04,
+        brute: 0.1,
+        shrike: 0.14,
+        skimmer: 0.12,
+        lancer: 0.16,
+        brander: 0.22,
+        binder: 0.1,
+        mortar: 0.06,
+        warden: 0.06,
+      },
+      mixWeight: 0.56,
+      hazard: {
+        label: "Jackpot Vaults",
+        type: "salvage",
+        interval: 8.2,
+        count: 2,
+        radius: 88,
+        telegraph: 0.76,
+        duration: 6.8,
+        damage: 15,
+        coreHp: 98,
+        coreRadius: 19,
+        salvageScrap: 30,
+        salvageBurstCount: 6,
+        salvageBurstRadius: 72,
+        salvageDropLife: 9.6,
+      },
+    },
+  };
   const LATE_BREAK_CROWN_PROFILES = {
     mutation: {
       10: {
@@ -2018,6 +2140,40 @@
     return branchProfiles[index] || null;
   }
 
+  function getArsenalBreakpointEncounterProfile(build, waveNumber) {
+    if (
+      !build ||
+      !build.arsenalBreakpointProfileId ||
+      !Number.isFinite(waveNumber) ||
+      !isArsenalBreakpointWave(waveNumber)
+    ) {
+      return null;
+    }
+    return ARSENAL_BREAKPOINT_ENCOUNTER_PROFILES[build.arsenalBreakpointProfileId] || null;
+  }
+
+  function applyEncounterOverride(config, override) {
+    if (!config || !override) {
+      return config;
+    }
+    return {
+      ...config,
+      ...override,
+      arena: override.arena || config.arena,
+      mix: override.mix ? { ...override.mix } : { ...config.mix },
+      hazard: sanitizeHazardForType(
+        override.hazard
+          ? {
+              ...(config.hazard || {}),
+              ...override.hazard,
+            }
+          : config.hazard
+            ? { ...config.hazard }
+            : null
+      ),
+    };
+  }
+
   function resolveWaveConfig(index, build = null) {
     const baseConfig = WAVE_CONFIG[clamp(index, 0, MAX_WAVES - 1)];
     if (!baseConfig || index < LATE_BREAK_ARMORY_WAVE - 1 || !build) {
@@ -2087,23 +2243,12 @@
     } else if (index > LATE_BREAK_ARMORY_WAVE) {
       const lateBreakCrownProfile = getLateBreakCrownProfile(build, index);
       if (lateBreakCrownProfile) {
-        config = {
-          ...config,
-          ...lateBreakCrownProfile,
-          arena: lateBreakCrownProfile.arena || config.arena,
-          mix: lateBreakCrownProfile.mix ? { ...lateBreakCrownProfile.mix } : { ...config.mix },
-          hazard: sanitizeHazardForType(
-            lateBreakCrownProfile.hazard
-              ? {
-                  ...(config.hazard || {}),
-                  ...lateBreakCrownProfile.hazard,
-                }
-              : config.hazard
-                ? { ...config.hazard }
-                : null
-          ),
-        };
+        config = applyEncounterOverride(config, lateBreakCrownProfile);
       }
+    }
+    const arsenalBreakpointProfile = getArsenalBreakpointEncounterProfile(build, index + 1);
+    if (arsenalBreakpointProfile) {
+      config = applyEncounterOverride(config, arsenalBreakpointProfile);
     }
     return applyEncounterPressureFamily(config);
   }
@@ -4984,6 +5129,7 @@
     lateFieldAegisLevel: 0,
     lateFieldConvergenceId: null,
     lateBreakProfileId: null,
+    arsenalBreakpointProfileId: null,
     blackLedgerRaidWaves: 0,
     bastionPactDebtWaves: 0,
     wave6ChassisBreakpoint: false,
@@ -6840,6 +6986,7 @@
         lateFieldAegisLevel: BASE_BUILD.lateFieldAegisLevel,
         lateFieldConvergenceId: BASE_BUILD.lateFieldConvergenceId,
         lateBreakProfileId: BASE_BUILD.lateBreakProfileId,
+        arsenalBreakpointProfileId: BASE_BUILD.arsenalBreakpointProfileId,
         blackLedgerRaidWaves: BASE_BUILD.blackLedgerRaidWaves,
         bastionPactDebtWaves: BASE_BUILD.bastionPactDebtWaves,
         wave6ChassisBreakpoint: BASE_BUILD.wave6ChassisBreakpoint,
@@ -9826,6 +9973,7 @@
       laneLabel: "Main Weapon Mutation",
       forgeLaneLabel: "Main Weapon Mutation",
       lateFieldMutationLevel: nextLevel,
+      arsenalBreakpointProfileId: breakpointWave ? "mutation" : null,
     };
   }
 
@@ -9901,6 +10049,7 @@
       laneLabel: "Defense / Utility",
       forgeLaneLabel: "Defense / Utility",
       lateFieldAegisLevel: nextLevel,
+      arsenalBreakpointProfileId: breakpointWave ? "aegis" : null,
     };
   }
 
@@ -9936,6 +10085,7 @@
       maxHpPenalty: breakpointWave ? 12 : 10 + Math.floor(waveScale / 2),
       debtWaves: 2,
       blackLedgerRaidWaves: breakpointWave ? (breakpointRank >= 2 ? 2 : 1) : 1,
+      arsenalBreakpointProfileId: breakpointWave ? "ledger" : null,
     };
   }
 
@@ -10674,6 +10824,13 @@
   function buildFieldGrantChoices(build, rng, nextWave) {
     const wildcardChoice = createWildcardProtocolChoice(build, nextWave);
     if (shouldUseLateFieldCache(nextWave)) {
+      if (isArsenalBreakpointWave(nextWave)) {
+        return [
+          createFieldGrantCard(createLateFieldMutationChoice(build, nextWave)),
+          createFieldGrantCard(createLateFieldAegisChoice(build, nextWave)),
+          createFieldGrantCard(createLateFieldGreedContractChoice(build, nextWave)),
+        ].filter(Boolean);
+      }
       const convergenceChoice = createLateFieldConvergenceChoice(build, nextWave);
       const systemChoice = createLateFieldSystemChoice(build, rng, nextWave);
       return [
@@ -11741,6 +11898,9 @@
     if (choice.type === "utility" && choice.action === "field_mutation") {
       const nextLevel = Math.max(getLateFieldMutationLevel(run.build), choice.lateFieldMutationLevel || 1);
       run.build.lateFieldMutationLevel = nextLevel;
+      if (choice.arsenalBreakpointProfileId) {
+        run.build.arsenalBreakpointProfileId = choice.arsenalBreakpointProfileId;
+      }
       if (choice.lateBreakProfileId) {
         run.build.lateBreakProfileId = choice.lateBreakProfileId;
       }
@@ -11755,6 +11915,9 @@
     if (choice.type === "utility" && choice.action === "field_aegis") {
       const nextLevel = Math.max(getLateFieldAegisLevel(run.build), choice.lateFieldAegisLevel || 1);
       run.build.lateFieldAegisLevel = nextLevel;
+      if (choice.arsenalBreakpointProfileId) {
+        run.build.arsenalBreakpointProfileId = choice.arsenalBreakpointProfileId;
+      }
       if (choice.lateBreakProfileId) {
         run.build.lateBreakProfileId = choice.lateBreakProfileId;
       }
@@ -11828,6 +11991,9 @@
         run.build.bastionPactDebtWaves || 0,
         Math.max(0, choice.debtWaves || 0)
       );
+      if (choice.arsenalBreakpointProfileId) {
+        run.build.arsenalBreakpointProfileId = choice.arsenalBreakpointProfileId;
+      }
       if (choice.lateBreakProfileId) {
         run.build.lateBreakProfileId = choice.lateBreakProfileId;
       }
@@ -14221,6 +14387,7 @@
 
   function createPostCapstoneWave(stageIndex = 0, build = null) {
     const boundedStage = clamp(stageIndex, 0, POST_CAPSTONE_WAVE_COUNT - 1);
+    const waveNumber = MAX_WAVES + boundedStage + 1;
     const dominionVictoryLapActive = Boolean(
       build && build.afterburnDominionId && (build.afterburnDominionVictoryLapWaves || 0) > 0
     );
@@ -14233,7 +14400,7 @@
       MAX_WAVES - 1
     );
     const baseConfig = resolveWaveConfig(baseWaveIndex, build);
-    const encounterConfig = applyEncounterPressureFamily({
+    let encounterConfig = applyEncounterPressureFamily({
       ...baseConfig,
       ...(encounter || {}),
       arena: encounter && encounter.arena ? encounter.arena : baseConfig.arena,
@@ -14250,6 +14417,10 @@
           ? { ...baseConfig.hazard }
           : null,
     });
+    const arsenalBreakpointProfile = getArsenalBreakpointEncounterProfile(build, waveNumber);
+    if (arsenalBreakpointProfile) {
+      encounterConfig = applyEncounterOverride(encounterConfig, arsenalBreakpointProfile);
+    }
     const escalation =
       POST_CAPSTONE_ASCENSION_PROFILE[boundedStage] ||
       POST_CAPSTONE_ASCENSION_PROFILE[POST_CAPSTONE_ASCENSION_PROFILE.length - 1];
@@ -14310,7 +14481,7 @@
       ) + (dominionVictoryLapActive ? -34 : 0),
       spawned: 0,
       spawnTimer: 0.35,
-      label: `Wave ${MAX_WAVES + boundedStage + 1} · ${POST_CAPSTONE_WAVE_LABELS[boundedStage]}${variant ? ` · ${variant.cashoutLabel}` : ""}${dominionVictoryLapActive ? " · Dominion Run" : ""}`,
+      label: `Wave ${waveNumber} · ${POST_CAPSTONE_WAVE_LABELS[boundedStage]}${variant ? ` · ${variant.cashoutLabel}` : ""}${dominionVictoryLapActive ? " · Dominion Run" : ""}`,
       bannerLabel: dominionVictoryLapActive
         ? "Dominion Run"
         : `${variant ? variant.bannerLabel || variant.cashoutLabel : "Afterburn"} · ${POST_CAPSTONE_WAVE_LABELS[boundedStage]}`,
@@ -14379,7 +14550,7 @@
               deployed: false,
               claimed: false,
               groupId: null,
-              choices: getCombatCacheChoicesForWave(build, MAX_WAVES + boundedStage + 2),
+              choices: getCombatCacheChoicesForWave(build, waveNumber + 1),
             }
           : null,
       finaleMutation: shouldOfferFinaleMutation(build)
@@ -17820,6 +17991,8 @@
       });
       const grantLabel = choice.forgeLaneLabel || choice.laneLabel || choice.tag || "CACHE";
       const compactActBreak = combatCache.variant === "act_break_cache";
+      const nextWave = state.waveIndex + 2;
+      const arsenalBreakpointProfile = getArsenalBreakpointEncounterProfile(state.build, nextWave);
       pushCombatFeed(
         compactActBreak
           ? choice.type === "fallback"
@@ -17827,7 +18000,9 @@
             : `${grantLabel} 현장 회수. ${choice.title}${choice.cost > 0 ? `(${choice.cost})` : ""}을(를) 전장 한복판에서 잠그고 Act Break Armory를 생략한 채 Wave 5 압박으로 곧장 이어 간다.`
           : choice.type === "fallback"
             ? `${grantLabel} 현장 회수. 상태만 정리하고 Field Cache 정지 없이 다음 웨이브로 밀어붙인다.`
-            : `${grantLabel} 현장 회수. ${choice.title}${choice.cost > 0 ? `(${choice.cost})` : ""}을(를) 전장 한복판에서 잠그고 다음 웨이브까지 압박을 이어 간다.`,
+            : arsenalBreakpointProfile
+              ? `${grantLabel} 현장 회수. ${choice.title}${choice.cost > 0 ? `(${choice.cost})` : ""}을(를) 전장 한복판에서 잠그고 다음 Arsenal Breakpoint를 ${arsenalBreakpointProfile.bandLabel} 규칙으로 바로 꺾는다.`
+              : `${grantLabel} 현장 회수. ${choice.title}${choice.cost > 0 ? `(${choice.cost})` : ""}을(를) 전장 한복판에서 잠그고 다음 웨이브까지 압박을 이어 간다.`,
         "CACHE"
       );
       setBanner(compactActBreak ? `Act Break · ${choice.tag}` : `${choice.tag} 확보`, 0.8);
