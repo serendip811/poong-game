@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-23 23:55:00 KST
+  Findings:
+  - `playables/cinder-circuit/game.js` still spends late-run ambition on repetition instead of appetite. `Wave 9-12` explicitly repeats `Lockgrid Hunt I-II` and `Cinder Crown I-II` with notes defending same-ecology reruns, which is prototype padding, not a release-grade escalation spine.
+  - The combat field has more size, but the tuning still cashes that space in too quickly. `activeCap 36-42` in the repeated late band, then `POST_CAPSTONE_ASCENSION_PROFILE` adding up to `+12`, keeps the player in saturation upkeep when strong arena roguelites would be creating greed lanes, reset windows, and short domination phases.
+  - `renderForgeOverlay()` is improved structurally, yet `Build Focus` still ends in a giant status braid of evolution, doctrine, ascension, convergence, overclock, apex mutation, capstone, chassis, support, pursuit, catalyst, and recycle value. Compared with the one-glance hunger of `Hades`, `Nova Drift`, or `Brotato`, the forge still explains systems better than it sells a craveable next form.
+  - The design docs are still sabotaging the ceiling. `docs/games/cinder-circuit-design.md` and `docs/games/cinder-circuit-source-analysis.md` continue to define the project as a `5웨이브`, `6-7분` short run, so the implementation keeps inheriting prototype success criteria while pretending to build toward a 20-30 wave action roguelite.
+  Top Priority: Replace one repeated late two-wave band with a real breakpoint encounter that offers exactly three run-shaping picks: one major main-weapon/body transformation, one defense-or-utility subsystem, and one greed contract that immediately changes the next wave's objective and spacing.
+  Why Now: Until the game creates anticipation for the next terrifying form instead of tolerance for the next density increase, a longer run will just scale fatigue.
+  Do Not Repeat: Do not answer this with another repeated band, another progression noun, or another density bump that leaves the next fight fundamentally the same.
+
 - 2026-03-23 23:30:00 KST
   Findings:
   - `playables/cinder-circuit/game.js` now has enough named stages to suggest a real long run, but `Wave 9-12` still openly repeats the same two ecologies twice (`Lockgrid Hunt I-II`, `Cinder Crown I-II`) with notes that explicitly justify repetition. That is training the player on the same problem longer, not creating the kind of escalating appetite a rerun-driven action roguelite needs.
@@ -1290,6 +1300,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 02:40:00 KST
+  Changed: replaced the remaining repeated `Wave 11-12` late band in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) with branch-specific climax encounters keyed to the earlier `Late Break Armory` pick. `Cataclysm Arsenal` now rolls into `Crownbreaker Gallery` and `Cataclysm Crownline`, `Warplate Halo` now becomes `Halo Refuge` and `Citadel Stand`, and `Black Ledger Heist` now becomes `Kingpin Vaultline` and `Grand Blackout Run`. I also updated the combat-band HUD summary so `Wave 11-12` sells the active appetite as a readable endgame branch instead of still describing a repeated `Cinder Crown` pair, and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the three distinct `Wave 11-12` outcomes. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the latest critique's `Top Priority` had already been applied to `Wave 9-10`, so the highest-value bounded interpretation was to finish the same job for the remaining mirrored late band. This keeps the run's back half building appetite through to the capstone instead of snapping back into another two-wave relay repeat right after the new breakpoint landed.
+  Follow-up risk: the three branches now differentiate the last pre-Afterburn band, but their long-term reward economy is still mostly front-loaded into the original late-break pick. A later pass should consider whether each branch also deserves one visible pickup, cache, or elite drop inside `Wave 11-12` so the climax still contains a final micro-decision instead of only authored encounter variety.
 
 - 2026-03-24 02:20:00 KST
   Changed: replaced the old repeated `Wave 10 · Lockgrid Hunt II` fallback in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) with a second late-break follow-through profile keyed to the exact `Late Break Armory` pick. `Cataclysm Arsenal` now chains into `Overdrive Gallery`, a wider lower-clutter firing-lane wave; `Warplate Halo` now chains into `Halo Bastion Run`, a lower-density drift-reset bracket; and `Black Ledger Heist` now chains into `Jackpot Caravan`, a moving vault cash-out chase with bigger payouts and clearer exit timing. I also updated the late-break combat messaging so the forge explicitly promises that `Wave 9-10` both bend around the chosen appetite instead of only the first wave, and refreshed [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the three distinct `Wave 10` outcomes. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

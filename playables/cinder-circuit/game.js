@@ -313,6 +313,276 @@
       },
     },
   };
+  const LATE_BREAK_CROWN_PROFILES = {
+    mutation: {
+      10: {
+        label: "Wave 11 · Crownbreaker Gallery",
+        bandId: "crownbreaker_gallery",
+        bandLabel: "Crownbreaker Gallery",
+        pressureFamily: "crossfire",
+        note: "Cataclysm Arsenal branch는 Cinder Crown 반복으로 닫히지 않는다. Wave 11은 relay upkeep를 걷어내고 긴 kill lane과 mortar perch만 남겨, 커진 배럴이 corridor 하나가 아니라 전장 폭 전체를 찢는지 먼저 보여 준다.",
+        directive:
+          "crownbreaker gallery. relay pylon보다 mortar perch와 marked elite 절개가 먼저다. 열린 사선 둘을 동시에 비우며 새 split volley가 어느 lane까지 덮는지 증명해야 한다.",
+        arena: {
+          width: 1820,
+          height: 1010,
+        },
+        activeCap: 35,
+        spawnBudget: 214,
+        baseSpawnInterval: 0.332,
+        spawnIntervalMin: 0.096,
+        eliteEvery: 4,
+        mix: {
+          scuttler: 0.04,
+          brute: 0.12,
+          shrike: 0.14,
+          skimmer: 0.18,
+          lancer: 0.22,
+          mortar: 0.12,
+          warden: 0.1,
+          brander: 0.08,
+        },
+        mixWeight: 0.56,
+        hazard: {
+          label: "Gallery Breakers",
+          type: null,
+          interval: 8.1,
+          count: 2,
+          radius: 78,
+          telegraph: 0.72,
+          duration: 4.3,
+          damage: 15,
+        },
+      },
+      11: {
+        label: "Wave 12 · Cataclysm Crownline",
+        bandId: "cataclysm_crownline",
+        bandLabel: "Cataclysm Crownline",
+        pressureFamily: "breach",
+        note: "무장 branch의 마지막 판은 relay corridor를 한 번만 다시 꺼내되, 반복 crown이 아니라 열린 crownline breach로 바꾼다. corridor 수를 줄이고 arena를 더 넓혀, 막 완성한 화망으로 직접 돌파 창을 찢게 만든다.",
+        directive:
+          "cataclysm crownline. relay crown이 드문 대신 더 길게 열린다. 가장 얇은 corridor를 먼저 찢어 split fire로 양측 flank를 같이 억누르며 직접 breach window를 연장해야 한다.",
+        arena: {
+          width: 1840,
+          height: 1030,
+        },
+        activeCap: 36,
+        spawnBudget: 228,
+        baseSpawnInterval: 0.31,
+        spawnIntervalMin: 0.092,
+        eliteEvery: 4,
+        mix: {
+          scuttler: 0.04,
+          brute: 0.14,
+          shrike: 0.12,
+          skimmer: 0.12,
+          lancer: 0.22,
+          brander: 0.12,
+          mortar: 0.08,
+          warden: 0.08,
+        },
+        mixWeight: 0.54,
+        hazard: {
+          label: "Cataclysm Crownline",
+          type: "relay",
+          interval: 7.4,
+          count: 3,
+          radius: 90,
+          telegraph: 0.68,
+          duration: 5.1,
+          damage: 16,
+          coreHp: 84,
+          coreRadius: 19,
+          relayRange: 560,
+          relayWidth: 32,
+          relayDamage: 15,
+        },
+      },
+    },
+    aegis: {
+      10: {
+        label: "Wave 11 · Halo Refuge",
+        bandId: "halo_refuge",
+        bandLabel: "Halo Refuge",
+        pressureFamily: "pursuit",
+        note: "Warplate Halo branch는 같은 relay crown을 반복하지 않고 recovery pocket 시험으로 꺾는다. drift wake가 전장을 접지만 active cap을 낮춰, plate를 믿고 깊게 들어갔다 reset할 방을 남긴다.",
+        directive:
+          "halo refuge. drift wake가 닫히기 전에 한 lane을 비우고 오래 욕심내지 말고 reset pocket으로 빠져야 한다. 버티기보다 plate timing과 retreat cadence가 중요하다.",
+        arena: {
+          width: 1700,
+          height: 990,
+        },
+        activeCap: 30,
+        spawnBudget: 206,
+        baseSpawnInterval: 0.346,
+        spawnIntervalMin: 0.1,
+        eliteEvery: 4,
+        mix: {
+          scuttler: 0.04,
+          brute: 0.18,
+          shrike: 0.18,
+          skimmer: 0.06,
+          lancer: 0.12,
+          binder: 0.12,
+          mortar: 0.06,
+          warden: 0.12,
+          brander: 0.12,
+        },
+        mixWeight: 0.52,
+        hazard: {
+          label: "Halo Refuge Drift",
+          type: "drift",
+          interval: 8.2,
+          count: 2,
+          radius: 98,
+          telegraph: 0.74,
+          duration: 6.2,
+          damage: 15,
+          driftSpeed: 126,
+          driftOrbit: 0.3,
+        },
+      },
+      11: {
+        label: "Wave 12 · Citadel Stand",
+        bandId: "citadel_stand",
+        bandLabel: "Citadel Stand",
+        pressureFamily: "territory",
+        note: "방호 branch의 마지막 판은 반복 crown 대신 버틸 거점과 버릴 거점을 직접 고르는 stand-off다. 작은 bastion 코어가 회복 pocket을 잠깐 열어 주므로, plate와 복구를 어디에 쓸지 build 판단이 크게 드러난다.",
+        directive:
+          "citadel stand. 모든 거점을 지키려 하지 말고 한 pocket만 짧게 열어 체력과 dash를 회수한 뒤 바로 다른 flank로 갈아타야 한다. halo가 없는 정면 교환은 오래 버티지 못한다.",
+        arena: {
+          width: 1720,
+          height: 1000,
+        },
+        activeCap: 32,
+        spawnBudget: 220,
+        baseSpawnInterval: 0.326,
+        spawnIntervalMin: 0.096,
+        eliteEvery: 4,
+        mix: {
+          scuttler: 0.04,
+          brute: 0.2,
+          shrike: 0.16,
+          lancer: 0.12,
+          binder: 0.12,
+          mortar: 0.06,
+          warden: 0.12,
+          brander: 0.1,
+        },
+        mixWeight: 0.5,
+        hazard: {
+          label: "Citadel Pocket",
+          type: "territory",
+          interval: 7.8,
+          count: 2,
+          radius: 96,
+          telegraph: 0.78,
+          duration: 8.6,
+          damage: 14,
+          coreHp: 76,
+          coreRadius: 18,
+          turretInterval: 0.94,
+          turretDamage: 11,
+          turretSpeed: 240,
+          enemyPullRadius: 162,
+        },
+      },
+    },
+    ledger: {
+      10: {
+        label: "Wave 11 · Kingpin Vaultline",
+        bandId: "kingpin_vaultline",
+        bandLabel: "Kingpin Vaultline",
+        pressureFamily: "raid",
+        note: "Black Ledger branch는 crown 반복 대신 multi-vault raid로 escalates한다. 고정 corridor 대신 흩어진 contraband vault를 던져, 어디까지 chase하고 언제 payout을 확정할지 다시 묻는다.",
+        directive:
+          "kingpin vaultline. 외곽과 중앙에 흩어진 vault 중 하나만 오래 쫓을 수 있다. jackpot을 노리면 brander와 binder가 회수선을 찢으니, payout line을 정하고 빨리 이탈해야 한다.",
+        arena: {
+          width: 1780,
+          height: 1000,
+        },
+        activeCap: 34,
+        spawnBudget: 220,
+        baseSpawnInterval: 0.328,
+        spawnIntervalMin: 0.096,
+        eliteEvery: 4,
+        mix: {
+          scuttler: 0.04,
+          brute: 0.14,
+          shrike: 0.14,
+          skimmer: 0.12,
+          lancer: 0.16,
+          brander: 0.18,
+          binder: 0.12,
+          mortar: 0.1,
+        },
+        mixWeight: 0.54,
+        hazard: {
+          label: "Kingpin Vaultline",
+          type: "salvage",
+          interval: 7.9,
+          count: 3,
+          radius: 82,
+          telegraph: 0.74,
+          duration: 7.6,
+          damage: 14,
+          coreHp: 88,
+          coreRadius: 19,
+          salvageScrap: 26,
+          salvageBurstCount: 6,
+          salvageBurstRadius: 66,
+          salvageDropLife: 9.2,
+        },
+      },
+      11: {
+        label: "Wave 12 · Grand Blackout Run",
+        bandId: "grand_blackout_run",
+        bandLabel: "Grand Blackout Run",
+        pressureFamily: "raid",
+        note: "탐욕 branch의 마지막 판은 crown corridor가 아니라 마지막 대형 caravan chase다. 거대한 contraband train이 lane 전체를 가로질러 도망치므로, cash-out을 끝까지 밀지 안전하게 털고 나올지 스스로 종결 타이밍을 정해야 한다.",
+        directive:
+          "grand blackout run. caravan이 더 크고 더 오래 열린다. 끝까지 쫓으면 payout이 폭증하지만 escape lane도 함께 닫히므로, 언제 jackpot을 확정하고 언제 버릴지 마지막까지 직접 계산해야 한다.",
+        arena: {
+          width: 1820,
+          height: 1020,
+        },
+        activeCap: 36,
+        spawnBudget: 236,
+        baseSpawnInterval: 0.308,
+        spawnIntervalMin: 0.092,
+        eliteEvery: 4,
+        mix: {
+          scuttler: 0.04,
+          brute: 0.14,
+          shrike: 0.16,
+          skimmer: 0.1,
+          lancer: 0.18,
+          brander: 0.18,
+          binder: 0.1,
+          mortar: 0.1,
+        },
+        mixWeight: 0.56,
+        hazard: {
+          label: "Grand Blackout Caravan",
+          type: "caravan",
+          interval: 7.2,
+          count: 3,
+          radius: 86,
+          telegraph: 0.7,
+          duration: 8.4,
+          damage: 16,
+          coreHp: 104,
+          coreRadius: 20,
+          salvageScrap: 34,
+          salvageBurstCount: 7,
+          salvageBurstRadius: 74,
+          salvageDropLife: 9.6,
+          driftSpeed: 142,
+          driftOrbit: 0.26,
+        },
+      },
+    },
+  };
 
   const WAVE_CONFIG = [
     {
@@ -1737,6 +2007,17 @@
     return LATE_BREAK_FOLLOWTHROUGH_PROFILES[build.lateBreakProfileId] || null;
   }
 
+  function getLateBreakCrownProfile(build, index) {
+    if (!build || !build.lateBreakProfileId) {
+      return null;
+    }
+    const branchProfiles = LATE_BREAK_CROWN_PROFILES[build.lateBreakProfileId];
+    if (!branchProfiles) {
+      return null;
+    }
+    return branchProfiles[index] || null;
+  }
+
   function resolveWaveConfig(index, build = null) {
     const baseConfig = WAVE_CONFIG[clamp(index, 0, MAX_WAVES - 1)];
     if (!baseConfig || index < LATE_BREAK_ARMORY_WAVE - 1 || !build) {
@@ -1796,6 +2077,26 @@
               ? {
                   ...(config.hazard || {}),
                   ...lateBreakFollowthrough.hazard,
+                }
+              : config.hazard
+                ? { ...config.hazard }
+            : null
+          ),
+        };
+      }
+    } else if (index > LATE_BREAK_ARMORY_WAVE) {
+      const lateBreakCrownProfile = getLateBreakCrownProfile(build, index);
+      if (lateBreakCrownProfile) {
+        config = {
+          ...config,
+          ...lateBreakCrownProfile,
+          arena: lateBreakCrownProfile.arena || config.arena,
+          mix: lateBreakCrownProfile.mix ? { ...lateBreakCrownProfile.mix } : { ...config.mix },
+          hazard: sanitizeHazardForType(
+            lateBreakCrownProfile.hazard
+              ? {
+                  ...(config.hazard || {}),
+                  ...lateBreakCrownProfile.hazard,
                 }
               : config.hazard
                 ? { ...config.hazard }
@@ -7029,6 +7330,35 @@
             detail:
               "Wave 9-10은 같은 open-lane crossfire를 유지한다. 새 계약을 읽기보다 같은 pressure 안에서 marked elite cache를 깊게 찢어 doctrine capstone을 당기는 데 집중하는 밴드다.",
           };
+    }
+    if (build && build.lateBreakProfileId) {
+      if (build.lateBreakProfileId === "mutation") {
+        return {
+          label: "Crownbreaker Gallery",
+          headline:
+            (currentWeapon && currentWeapon.headlineFormLabel) ||
+            (currentWeapon && currentWeapon.capstoneLabel) ||
+            "Cataclysm Arsenal",
+          detail:
+            "Wave 11-12는 반복 crown corridor 대신 weapon-branch killbox로 이어진다. 먼저 열린 gallery에서 lane 폭을 먹고, 마지막 crownline breach에서 그 화망으로 직접 돌파 창을 늘리는 구간이다.",
+        };
+      }
+      if (build.lateBreakProfileId === "aegis") {
+        return {
+          label: "Halo Refuge",
+          headline: "Warplate Halo",
+          detail:
+            "Wave 11-12는 crown 반복 대신 reset-heavy survival climax로 바뀐다. drift pocket에서 회복 창을 캐고, 마지막 citadel stand에서 어느 거점을 잠깐 열고 버릴지 직접 고르게 만든다.",
+        };
+      }
+      if (build.lateBreakProfileId === "ledger") {
+        return {
+          label: "Kingpin Vaultline",
+          headline: "Black Ledger",
+          detail:
+            "Wave 11-12는 relay corridor 대신 연속 greed climax다. 분산 vault와 대형 caravan이 payout을 던지므로, 언제 chase를 걸고 언제 cash-out할지 계속 다시 정하는 구간이다.",
+        };
+      }
     }
     if (build && !build.doctrineCapstoneId) {
       return {
