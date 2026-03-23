@@ -1135,6 +1135,8 @@
   const AFTERBURN_ASCENSION_DROP_LIFE = 14;
   const AFTERBURN_OVERDRIVE_START_STAGE = 3;
   const AFTERBURN_OVERDRIVE_DROP_LIFE = 14;
+  const AFTERBURN_DOMINION_START_STAGE = 4;
+  const AFTERBURN_DOMINION_DROP_LIFE = 14;
   const STORM_ARTILLERY_AFTERBURN_ENDFORM_DEFS = {
     sky_lance_battery: {
       bodyLabel: "Vector Battery Frame",
@@ -1159,6 +1161,113 @@
       },
     },
   };
+  const AFTERBURN_DOMINION_DEFS = {
+    ember: {
+      id: "ember",
+      tag: "DOMINION",
+      title: "Cinder Dominion",
+      label: "Cinder Dominion",
+      traitLabel: "sovereign crown",
+      description:
+        "Afterburn 후반 전투에서만 뜯어낼 수 있는 최종 차체 각인이다. Ember 코어 위에 왕관 포문과 측면 열배기관을 붙여 주포가 넓은 지배 화망으로 한 번 더 점프한다.",
+      slotText: "왕관 포문 +4 · 다음 웨이브 Dominion Run",
+      bodyLabel: "Sovereign Crown Frame",
+      bodyText: "전방 왕관 포문과 측면 열배기관이 동시에 열려 정면 압박을 밀어붙이는 endform 차체다.",
+      color: "#ffb56b",
+    },
+    scatter: {
+      id: "scatter",
+      tag: "DOMINION",
+      title: "Shrapnel Dominion",
+      label: "Shrapnel Dominion",
+      traitLabel: "bloom throne",
+      description:
+        "Afterburn 후반 전투에서만 뜯어낼 수 있는 최종 차체 각인이다. Scatter 코어 바깥에 bloom throne 포문을 더 붙여 근중거리 전체를 파편 왕관으로 덮는다.",
+      slotText: "왕관 파편열 +5 · 다음 웨이브 Dominion Run",
+      bodyLabel: "Bloom Throne Hull",
+      bodyText: "양옆 bloom rack과 상부 파편 포문이 같이 벌어져 근접 지배 구간을 만들어 내는 endform 차체다.",
+      color: "#ffd38a",
+    },
+    lance: {
+      id: "lance",
+      tag: "DOMINION",
+      title: "Vector Dominion",
+      label: "Vector Dominion",
+      traitLabel: "fork throne",
+      description:
+        "Afterburn 후반 전투에서만 뜯어낼 수 있는 최종 차체 각인이다. Lance 코어 앞에 fork throne 레일을 세워 직선 천공이 세 줄 dominance cut으로 바뀐다.",
+      slotText: "fork beam +2 · 다음 웨이브 Dominion Run",
+      bodyLabel: "Fork Throne Frame",
+      bodyText: "전방 삼중 레일과 측면 stabilizer spine이 자라 lane 하나를 통째로 지워 버리는 endform 차체다.",
+      color: "#9fe7ff",
+    },
+    ricochet: {
+      id: "ricochet",
+      tag: "DOMINION",
+      title: "Mirror Dominion",
+      label: "Mirror Dominion",
+      traitLabel: "lash throne",
+      description:
+        "Afterburn 후반 전투에서만 뜯어낼 수 있는 최종 차체 각인이다. Ricochet 코어에 lash throne 송신기를 붙여 갈라진 탄들이 더 깊게 튀며 추적을 지배한다.",
+      slotText: "lash volley +3 · 다음 웨이브 Dominion Run",
+      bodyLabel: "Lash Throne Frame",
+      bodyText: "후미 송신기와 측면 거울판이 길게 뻗어 반사 탄막을 주인공 화력으로 끌어올리는 endform 차체다.",
+      color: "#7dd0c5",
+    },
+  };
+
+  function getAfterburnDominionDef(buildOrId) {
+    if (!buildOrId) {
+      return null;
+    }
+    const dominionId =
+      typeof buildOrId === "object" ? buildOrId.afterburnDominionId || null : buildOrId;
+    return dominionId ? AFTERBURN_DOMINION_DEFS[dominionId] || null : null;
+  }
+
+  function shouldOfferAfterburnDominion(build, stageIndex) {
+    if (
+      !build ||
+      build.afterburnDominionId ||
+      !Number.isFinite(stageIndex) ||
+      stageIndex < AFTERBURN_DOMINION_START_STAGE ||
+      stageIndex >= POST_CAPSTONE_WAVE_COUNT - 1
+    ) {
+      return false;
+    }
+    return Boolean(
+      build.afterburnOverdriveId ||
+      getSelectedFinaleVariant(build) ||
+      build.lateAscensionId ||
+      build.doctrineCapstoneId ||
+      build.lateFieldConvergenceId
+    );
+  }
+
+  function getAfterburnDominionChoices(build) {
+    const dominion = build ? AFTERBURN_DOMINION_DEFS[build.coreId] || null : null;
+    if (!build || !dominion || !shouldOfferAfterburnDominion(build, AFTERBURN_DOMINION_START_STAGE)) {
+      return [];
+    }
+    return [
+      {
+        type: "utility",
+        action: "afterburn_dominion",
+        id: `utility:afterburn_dominion:${dominion.id}`,
+        verb: "강림",
+        tag: dominion.tag,
+        title: dominion.title,
+        description: dominion.description,
+        slotText: dominion.slotText,
+        cost: 0,
+        afterburnDominionId: dominion.id,
+        bodyLabel: dominion.bodyLabel,
+        bodyText: dominion.bodyText,
+        laneLabel: "Dominion Break",
+        forgeLaneLabel: "Dominion Break",
+      },
+    ];
+  }
 
   function getDoctrineLiveAscensionBody(capstoneOrId) {
     const capstone =
@@ -3969,6 +4078,8 @@
     doctrineCapstoneId: null,
     afterburnAscensionOffered: false,
     afterburnOverdriveId: null,
+    afterburnDominionId: null,
+    afterburnDominionVictoryLapWaves: 0,
     lateAscensionId: null,
     lateAscensionOffered: false,
     doctrineChaseClaimed: false,
@@ -5819,6 +5930,9 @@
         bastionDoctrineId: BASE_BUILD.bastionDoctrineId,
         doctrineCapstoneId: BASE_BUILD.doctrineCapstoneId,
         afterburnAscensionOffered: BASE_BUILD.afterburnAscensionOffered,
+        afterburnOverdriveId: BASE_BUILD.afterburnOverdriveId,
+        afterburnDominionId: BASE_BUILD.afterburnDominionId,
+        afterburnDominionVictoryLapWaves: BASE_BUILD.afterburnDominionVictoryLapWaves,
         lateAscensionId: BASE_BUILD.lateAscensionId,
         lateAscensionOffered: BASE_BUILD.lateAscensionOffered,
         doctrineChaseClaimed: BASE_BUILD.doctrineChaseClaimed,
@@ -5830,6 +5944,8 @@
         illegalOverclockId: BASE_BUILD.illegalOverclockId,
         illegalOverclockOffered: BASE_BUILD.illegalOverclockOffered,
         illegalOverclockMutationLevel: BASE_BUILD.illegalOverclockMutationLevel,
+        riskMutationLevel: BASE_BUILD.riskMutationLevel,
+        riskMutationQueuedLevel: BASE_BUILD.riskMutationQueuedLevel,
         apexMutationLevel: BASE_BUILD.apexMutationLevel,
         predatorBaitCharges: BASE_BUILD.predatorBaitCharges,
         lateFieldMutationLevel: BASE_BUILD.lateFieldMutationLevel,
@@ -6299,6 +6415,13 @@
     if (afterburnOverdrive && typeof afterburnOverdrive.applyPlayer === "function") {
       afterburnOverdrive.applyPlayer(stats, build);
     }
+    const afterburnDominion = getAfterburnDominionDef(build);
+    if (afterburnDominion) {
+      stats.moveSpeed += 10;
+      stats.pickupRadius += 12;
+      stats.maxHp += 14;
+      stats.dashCooldown = clamp(stats.dashCooldown - 0.18, 1.15, 3.2);
+    }
     getAffixDefs(build).forEach((affix) => {
       if (typeof affix.applyPlayer === "function") {
         affix.applyPlayer(stats, build);
@@ -6415,6 +6538,11 @@
       afterburnOverdriveTraitLabel: null,
       afterburnOverdriveStatusNote: null,
       afterburnOverdriveFirePattern: null,
+      afterburnDominionId: null,
+      afterburnDominionLabel: null,
+      afterburnDominionTraitLabel: null,
+      afterburnDominionStatusNote: null,
+      afterburnDominionFirePattern: null,
     };
     getAffixDefs(build).forEach((affix) => {
       if (typeof affix.applyWeapon === "function") {
@@ -6658,6 +6786,50 @@
           : null;
       if (typeof afterburnOverdrive.applyWeapon === "function") {
         afterburnOverdrive.applyWeapon(stats, build, core);
+      }
+    }
+    const afterburnDominion = getAfterburnDominionDef(build);
+    if (afterburnDominion) {
+      const offsets =
+        core.id === "scatter"
+          ? [-0.38, -0.19, 0, 0.19, 0.38]
+          : core.id === "lance"
+            ? [-0.14, 0.14]
+            : core.id === "ricochet"
+              ? [-0.26, 0, 0.26]
+              : [-0.32, -0.12, 0.12, 0.32];
+      stats.afterburnDominionId = afterburnDominion.id;
+      stats.afterburnDominionLabel = afterburnDominion.title;
+      stats.afterburnDominionTraitLabel = afterburnDominion.traitLabel;
+      stats.afterburnDominionStatusNote =
+        `${afterburnDominion.bodyText} Afterburn 지배 구간이 열려 다음 한 웨이브는 목적지 세금보다 압도감이 먼저 온다.`;
+      stats.afterburnDominionFirePattern = {
+        kind: "afterburn_dominion",
+        offsets,
+        speedMultiplier: core.id === "lance" ? 1.24 : 1.1,
+        radius: core.id === "lance" ? 5.8 : 5.1,
+        damageMultiplier: core.id === "scatter" ? 0.26 : 0.34,
+        life: 0.9,
+        pierceBonus: core.id === "lance" ? 2 : 0,
+        bounceBonus: core.id === "ricochet" ? 1 : 0,
+        chainBonus: core.id === "ricochet" ? 1 : 0,
+        color: afterburnDominion.color,
+      };
+      stats.damage += 7;
+      stats.cooldown = clamp(stats.cooldown * 0.9, 0.08, 0.4);
+      if (core.id === "ember") {
+        stats.damage += 5;
+        stats.projectileSpeed += 18;
+      } else if (core.id === "scatter") {
+        stats.pellets += 2;
+        stats.spread = round(stats.spread * 0.82, 3);
+      } else if (core.id === "lance") {
+        stats.pierce += 2;
+        stats.projectileSpeed += 42;
+      } else if (core.id === "ricochet") {
+        stats.chain += 2;
+        stats.bounce += 1;
+        stats.chainRange = Math.max(stats.chainRange || 0, 198);
       }
     }
     stats.damage = round(stats.damage, 1);
@@ -9382,6 +9554,36 @@
     setBanner("Endform Overdrive", 0.95);
   }
 
+  function deployAfterburnDominion(enemy) {
+    const dominion = state.wave && state.wave.afterburnDominion;
+    if (!dominion || dominion.deployed || dominion.claimed) {
+      return;
+    }
+    const choices = Array.isArray(dominion.choices) ? dominion.choices.filter(Boolean) : [];
+    if (choices.length === 0) {
+      dominion.deployed = true;
+      dominion.claimed = true;
+      return;
+    }
+    dominion.deployed = true;
+    dominion.groupId = `afterburn-dominion-${state.waveIndex + 1}-${state.stats.kills}`;
+    choices.forEach((choice) => {
+      state.drops.push({
+        kind: "afterburn_dominion_cache",
+        x: enemy.x,
+        y: enemy.y,
+        life: AFTERBURN_DOMINION_DROP_LIFE,
+        choice,
+        groupId: dominion.groupId,
+      });
+    });
+    pushCombatFeed(
+      "Dominion Break 노출. 이번 elite가 주무장 전용 endform cache를 떨궜다. 회수하면 다음 bracket 하나가 승리 랩으로 재구성된다.",
+      "DOM"
+    );
+    setBanner("Dominion Break", 0.95);
+  }
+
   function deployLateAscension(enemy) {
     const ascension = state.wave && state.wave.lateAscension;
     if (!ascension || ascension.deployed || ascension.claimed) {
@@ -10057,6 +10259,29 @@
           Math.max(1, run.player.hp + 8),
           Math.max(1, 100 + run.build.maxHpBonus)
         );
+      }
+      return choice;
+    }
+
+    if (choice.type === "utility" && choice.action === "afterburn_dominion") {
+      const dominion = getAfterburnDominionDef(choice.afterburnDominionId || run.build);
+      if (!dominion || run.build.afterburnDominionId) {
+        return null;
+      }
+      run.build.afterburnDominionId = dominion.id;
+      run.build.afterburnDominionVictoryLapWaves = Math.max(
+        run.build.afterburnDominionVictoryLapWaves || 0,
+        1
+      );
+      run.build.upgrades.push(`Dominion Break: ${dominion.label}`);
+      if (run.player) {
+        run.player.heat = Math.max(0, run.player.heat - 24);
+        run.player.overheated = false;
+        run.player.hp = Math.min(
+          Math.max(1, run.player.hp + 14),
+          Math.max(1, 100 + run.build.maxHpBonus)
+        );
+        run.player.invulnerableTime = Math.max(run.player.invulnerableTime || 0, 0.28);
       }
       return choice;
     }
@@ -12474,6 +12699,9 @@
 
   function createPostCapstoneWave(stageIndex = 0, build = null) {
     const boundedStage = clamp(stageIndex, 0, POST_CAPSTONE_WAVE_COUNT - 1);
+    const dominionVictoryLapActive = Boolean(
+      build && build.afterburnDominionId && (build.afterburnDominionVictoryLapWaves || 0) > 0
+    );
     const encounter =
       POST_CAPSTONE_ENCOUNTER_POOL[boundedStage] ||
       POST_CAPSTONE_ENCOUNTER_POOL[POST_CAPSTONE_ENCOUNTER_POOL.length - 1];
@@ -12548,30 +12776,46 @@
             : encounterConfig.hazard.relayDamage,
         }
       : null;
-    return applyRiskMutationPressureTax({
+    const wave = applyRiskMutationPressureTax({
       index: MAX_WAVES + boundedStage,
-      timeLeft: encounterConfig.duration + escalation.durationBonus,
+      timeLeft:
+        encounterConfig.duration +
+        escalation.durationBonus +
+        (dominionVictoryLapActive ? -6 : 0),
       spawnBudget: Math.max(
         encounterConfig.spawnBudget + 16,
         encounterConfig.spawnBudget + escalation.spawnBudgetBonus + spawnBias
-      ),
+      ) + (dominionVictoryLapActive ? -34 : 0),
       spawned: 0,
       spawnTimer: 0.35,
-      label: `Wave ${MAX_WAVES + boundedStage + 1} · ${POST_CAPSTONE_WAVE_LABELS[boundedStage]}${variant ? ` · ${variant.cashoutLabel}` : ""}`,
-      bannerLabel: `${variant ? variant.bannerLabel || variant.cashoutLabel : "Afterburn"} · ${POST_CAPSTONE_WAVE_LABELS[boundedStage]}`,
+      label: `Wave ${MAX_WAVES + boundedStage + 1} · ${POST_CAPSTONE_WAVE_LABELS[boundedStage]}${variant ? ` · ${variant.cashoutLabel}` : ""}${dominionVictoryLapActive ? " · Dominion Run" : ""}`,
+      bannerLabel: dominionVictoryLapActive
+        ? "Dominion Run"
+        : `${variant ? variant.bannerLabel || variant.cashoutLabel : "Afterburn"} · ${POST_CAPSTONE_WAVE_LABELS[boundedStage]}`,
       note: variant
-        ? `${variant.note} 이제는 짧은 시험이 아니라 late-act shared pool이 계속 뒤섞이는 forbidden-territory bracket이며, roaming apex를 잡아 마지막 body splice를 뜯어내는 post-capstone ascent다.`
-        : encounterConfig.note,
-      directive: `${variant ? variant.directive : encounterConfig.directive} Afterburn에서는 relay, pursuit, bastion, surge grammar가 다시 섞여 돌아오므로 한 가지 route repair 답으로는 끝까지 버틸 수 없다.`,
+        ? `${variant.note} ${
+            dominionVictoryLapActive
+              ? "방금 뜯어낸 Dominion 차체가 objective clutter를 잠시 밀어내 한 웨이브 동안 지배 화력을 시험하게 만든다."
+              : "이제는 짧은 시험이 아니라 late-act shared pool이 계속 뒤섞이는 forbidden-territory bracket이며, roaming apex를 잡아 마지막 body splice를 뜯어내는 post-capstone ascent다."
+          }`
+        : dominionVictoryLapActive
+          ? "방금 뜯어낸 Dominion 차체가 전장을 잠시 비워냈다. 이번 bracket은 새로운 endform을 즐기게 하려고 드랍 목표와 추가 세금이 한 박자 늦는다."
+          : encounterConfig.note,
+      directive: dominionVictoryLapActive
+        ? "이번 Dominion Run에서는 새 차체를 믿고 전장을 가로질러도 된다. 목표 세금보다 우월 화력의 폭을 직접 누르는 짧은 victory lap이다."
+        : `${variant ? variant.directive : encounterConfig.directive} Afterburn에서는 relay, pursuit, bastion, surge grammar가 다시 섞여 돌아오므로 한 가지 route repair 답으로는 끝까지 버틸 수 없다.`,
       activeCap: Math.max(
         encounterConfig.activeCap + 2,
         encounterConfig.activeCap + escalation.activeCapBonus + capBias
-      ),
+      ) + (dominionVictoryLapActive ? -8 : 0),
       baseSpawnInterval: Math.max(
         0.074,
-        encounterConfig.baseSpawnInterval * escalation.baseSpawnScale
+        encounterConfig.baseSpawnInterval * escalation.baseSpawnScale * (dominionVictoryLapActive ? 1.12 : 1)
       ),
-      spawnIntervalMin: Math.max(0.076, encounterConfig.spawnIntervalMin * escalation.minSpawnScale),
+      spawnIntervalMin: Math.max(
+        0.076,
+        encounterConfig.spawnIntervalMin * escalation.minSpawnScale * (dominionVictoryLapActive ? 1.08 : 1)
+      ),
       spawnAcceleration: encounterConfig.spawnAcceleration,
       eliteEvery: Math.max(3, encounterConfig.eliteEvery - 1 - (boundedStage > 0 ? 1 : 0)),
       mix: blendEnemyMix(encounterConfig.mix, variant ? variant.mix : null, 0.3 + boundedStage * 0.04),
@@ -12584,6 +12828,7 @@
       hazardTimer: hazard ? hazard.interval * 0.72 : Number.POSITIVE_INFINITY,
       postCapstoneStage: boundedStage + 1,
       postCapstoneTotal: POST_CAPSTONE_WAVE_COUNT,
+      dominionVictoryLapActive,
       skipForgeOnClear: boundedStage < POST_CAPSTONE_WAVE_COUNT - 1,
       lateAscension: shouldOfferLateAscension(build, MAX_WAVES + boundedStage + 1)
         ? {
@@ -12631,6 +12876,14 @@
             choices: getAfterburnOverdriveChoices(build),
           }
         : null,
+      afterburnDominion: shouldOfferAfterburnDominion(build, boundedStage)
+        ? {
+            deployed: false,
+            claimed: false,
+            groupId: null,
+            choices: getAfterburnDominionChoices(build),
+          }
+        : null,
       apexPredator: shouldSpawnApexPredator(build, MAX_WAVES + boundedStage + 1)
         ? {
             spawned: false,
@@ -12642,6 +12895,24 @@
           }
         : null,
     }, build);
+    if (dominionVictoryLapActive) {
+      if (wave.hazard) {
+        wave.hazard.count = Math.max(1, (wave.hazard.count || 1) - 1);
+        if (Number.isFinite(wave.hazard.interval)) {
+          wave.hazard.interval *= 1.16;
+        }
+        if (Number.isFinite(wave.hazard.telegraph)) {
+          wave.hazard.telegraph *= 1.1;
+        }
+      }
+      wave.combatCache = null;
+      wave.finaleMutation = null;
+      wave.afterburnOverdrive = null;
+      wave.afterburnAscension = null;
+      wave.lateAscension = null;
+      wave.apexPredator = null;
+    }
+    return wave;
   }
 
   function createFinalCashoutWave(index = MAX_WAVES - 1, build = null) {
@@ -12764,6 +13035,12 @@
     state.waveIndex = MAX_WAVES + nextStage;
     state.phase = "wave";
     state.wave = createPostCapstoneWave(nextStage, state.build);
+    if ((state.build.afterburnDominionVictoryLapWaves || 0) > 0 && state.wave.dominionVictoryLapActive) {
+      state.build.afterburnDominionVictoryLapWaves = Math.max(
+        0,
+        state.build.afterburnDominionVictoryLapWaves - 1
+      );
+    }
     state.arena = getArenaSize(state.wave);
     state.waveClearTimer = 0;
     state.build.riskMutationQueuedLevel = 0;
@@ -12803,10 +13080,22 @@
         "ASCEND"
       );
     }
+    if (state.wave.afterburnDominion) {
+      pushCombatFeed(
+        "Dominion Break 개방. 이번 Afterburn elite가 주무장 전용 endform cache를 떨어뜨리며, 회수하면 다음 bracket 하나가 domination run으로 재편된다.",
+        "DOM"
+      );
+    }
     if (state.wave.lateAscension) {
       pushCombatFeed(
         "Ascension Core 재가동. 이번 웨이브 첫 elite가 split core를 떨어뜨리며, 회수하면 남은 late waves의 주포/차체가 확정된다.",
         "ASCEND"
+      );
+    }
+    if (state.wave.dominionVictoryLapActive) {
+      pushCombatFeed(
+        "Dominion Run 활성화. 이번 웨이브는 추가 캐시와 apex 목표를 잠시 걷어 내 새 endform을 억지 없이 누르는 승리 랩으로 열린다.",
+        "DOM"
       );
     }
     setBanner(state.wave.bannerLabel || state.wave.label, 1.2);
@@ -14722,6 +15011,7 @@
     fireWeaponPattern(weapon.doctrineFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.lateAscensionFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.afterburnOverdriveFirePattern, weapon, baseAngle, driveActive);
+    fireWeaponPattern(weapon.afterburnDominionFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.lateFieldMutationFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.lateFieldConvergenceFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.illegalOverclockFirePattern, weapon, baseAngle, driveActive);
@@ -15701,6 +15991,7 @@
       if (enemy.type === "elite") {
         deployFinaleMutation(enemy);
         deployAfterburnOverdrive(enemy);
+        deployAfterburnDominion(enemy);
         deployCombatCache(enemy);
         deployLateAscension(enemy);
         deployDoctrineLiveAscension(enemy);
@@ -15826,6 +16117,14 @@
             "OVR"
           );
           state.wave.afterburnOverdrive.claimed = true;
+        }
+      } else if (drop.life <= 0 && drop.kind === "afterburn_dominion_cache") {
+        if (state.wave && state.wave.afterburnDominion && !state.wave.afterburnDominion.claimed) {
+          pushCombatFeed(
+            "Dominion Break가 식었다. 이번 지배 구간은 놓쳤지만 다음 Afterburn elite에서 다시 한 번만 뜯어낼 수 있다.",
+            "DOM"
+          );
+          state.wave.afterburnDominion.claimed = true;
         }
       } else if (drop.life > 0) {
         nextDrops.push(drop);
@@ -16097,6 +16396,28 @@
       return true;
     }
 
+    if (drop.kind === "afterburn_dominion_cache") {
+      const dominion = state.wave && state.wave.afterburnDominion;
+      const choice = drop.choice;
+      if (!dominion || dominion.claimed || !choice || state.build.afterburnDominionId) {
+        return true;
+      }
+      applyForgeChoice(state, choice);
+      refreshDerivedStats(false);
+      dominion.claimed = true;
+      state.drops.forEach((entry) => {
+        if (entry.kind === "afterburn_dominion_cache" && entry.groupId === drop.groupId) {
+          entry.life = 0;
+        }
+      });
+      pushCombatFeed(
+        `${choice.title} 접합. ${choice.bodyLabel || "새 지배 차체"}가 잠겨 다음 bracket 하나가 objective clutter 없이 이 endform을 과시하는 Dominion Run으로 바뀐다.`,
+        "DOM"
+      );
+      setBanner(choice.title, 0.95);
+      return true;
+    }
+
     if (drop.kind === "illegal_overclock_cache") {
       const choice = drop.choice;
       if (
@@ -16345,6 +16666,9 @@
     const lateAscensionSummary = weapon.lateAscensionLabel
       ? `${weapon.lateAscensionLabel} · ${weapon.lateAscensionTraitLabel}`
       : null;
+    const afterburnDominionSummary = weapon.afterburnDominionLabel
+      ? `${weapon.afterburnDominionLabel} · ${weapon.afterburnDominionTraitLabel}`
+      : null;
     const illegalOverclockSummary = weapon.illegalOverclockLabel
       ? `${weapon.illegalOverclockLabel} · ${weapon.illegalOverclockTraitLabel}`
       : null;
@@ -16396,6 +16720,7 @@
           ${weapon.evolutionLabel ? createMiniPill("EVO", weapon.evolutionLabel, "accent") : ""}
           ${weapon.doctrineFormLabel ? createMiniPill("DOC", weapon.doctrineFormLabel, "hot") : ""}
           ${weapon.lateAscensionLabel ? createMiniPill("ASCEND", weapon.lateAscensionLabel, "hot") : ""}
+          ${weapon.afterburnDominionLabel ? createMiniPill("DOM", weapon.afterburnDominionLabel, "hot") : ""}
           ${weapon.lateFieldMutationLabel ? createMiniPill("FIELD", weapon.lateFieldMutationLabel, "hot") : ""}
           ${weapon.lateFieldConvergenceLabel ? createMiniPill("SYNC", weapon.lateFieldConvergenceLabel, "accent") : ""}
           ${getLateFieldAegisLevel(state.build) > 0 ? createMiniPill("AEGIS", `MK ${getLateFieldAegisLevel(state.build)}`, "cool") : ""}
@@ -16419,6 +16744,7 @@
           evolutionSummary,
           doctrineSummary,
           lateAscensionSummary,
+          afterburnDominionSummary,
           lateFieldMutationSummary,
           lateFieldConvergenceSummary,
           lateFieldAegisSummary,
@@ -16653,6 +16979,27 @@
         combatCacheRows.push(createStatusRow("Jump", "locked"));
         combatCacheNote = state.weapon.afterburnOverdriveStatusNote || "Afterburn overdrive가 이미 잠겨 남은 연전 전체를 새 실루엣으로 밀어붙인다.";
       }
+      if (state.phase === "wave" && state.wave && state.wave.afterburnDominion) {
+        const dominion = state.wave.afterburnDominion;
+        combatCacheRows.push(
+          createStatusRow(
+            "Dominion Break",
+            dominion.claimed ? "회수 완료" : dominion.deployed ? "cache live" : "첫 elite 대기"
+          )
+        );
+        combatCacheRows.push(createStatusRow("Victory Lap", "1 wave"));
+        combatCacheNote = dominion.claimed
+          ? "이번 웨이브의 Dominion Break는 닫혔다. 다음 bracket 하나는 추가 목표가 걷힌 지배 구간으로 재편된다."
+          : dominion.deployed
+            ? "주무장 전용 dominion cache가 노출됐다. 회수하면 다음 웨이브 하나가 캐시와 apex 없이 새 endform을 즐기는 victory lap으로 바뀐다."
+            : "Afterburn 후반 첫 elite가 Dominion Break cache를 떨어뜨린다. 이번 전투에서만 다음 bracket의 판 자체를 지배 구간으로 바꿀 수 있다.";
+      } else if (state.wave && state.wave.dominionVictoryLapActive && state.weapon.afterburnDominionLabel) {
+        combatCacheRows.push(createStatusRow("Dominion Run", state.weapon.afterburnDominionLabel));
+        combatCacheRows.push(createStatusRow("Clutter", "cleared"));
+        combatCacheNote =
+          state.weapon.afterburnDominionStatusNote ||
+          "Dominion 차체가 목적지 세금을 잠시 밀어내고 있다. 이번 한 웨이브는 새 endform을 우월감 있게 누르는 승리 랩이다.";
+      }
       if (state.phase === "wave" && state.wave && state.wave.combatCache) {
         const combatCache = state.wave.combatCache;
         combatCacheRows.push(
@@ -16841,7 +17188,7 @@
         }">${
           state.player.overheated
             ? "사격 정지: 열을 비워야 한다."
-            : `${weapon.evolutionStatusNote ? `${weapon.evolutionStatusNote} ` : ""}${weapon.doctrineStatusNote ? `${weapon.doctrineStatusNote} ` : ""}${weapon.lateAscensionStatusNote ? `${weapon.lateAscensionStatusNote} ` : ""}${weapon.afterburnOverdriveStatusNote ? `${weapon.afterburnOverdriveStatusNote} ` : ""}${weapon.illegalOverclockStatusNote ? `${weapon.illegalOverclockStatusNote} ` : ""}${weapon.apexMutationStatusNote ? `${weapon.apexMutationStatusNote} ` : ""}${weapon.capstoneStatusNote ? `${weapon.capstoneStatusNote} ` : ""}${state.supportSystem ? `${state.supportSystem.statusNote} ` : ""}${hazardStatus.note} 자동 사격은 과열 전까지 유지된다.`
+            : `${weapon.evolutionStatusNote ? `${weapon.evolutionStatusNote} ` : ""}${weapon.doctrineStatusNote ? `${weapon.doctrineStatusNote} ` : ""}${weapon.lateAscensionStatusNote ? `${weapon.lateAscensionStatusNote} ` : ""}${weapon.afterburnOverdriveStatusNote ? `${weapon.afterburnOverdriveStatusNote} ` : ""}${weapon.afterburnDominionStatusNote ? `${weapon.afterburnDominionStatusNote} ` : ""}${weapon.illegalOverclockStatusNote ? `${weapon.illegalOverclockStatusNote} ` : ""}${weapon.apexMutationStatusNote ? `${weapon.apexMutationStatusNote} ` : ""}${weapon.capstoneStatusNote ? `${weapon.capstoneStatusNote} ` : ""}${state.supportSystem ? `${state.supportSystem.statusNote} ` : ""}${hazardStatus.note} 자동 사격은 과열 전까지 유지된다.`
         }</p>
       `;
     }
@@ -17292,10 +17639,12 @@
             ? LATE_ASCENSION_DROP_LIFE
           : drop.kind === "illegal_overclock_cache"
               ? ILLEGAL_OVERCLOCK_DROP_LIFE
-            : drop.kind === "afterburn_ascension_cache"
+          : drop.kind === "afterburn_ascension_cache"
               ? AFTERBURN_ASCENSION_DROP_LIFE
             : drop.kind === "afterburn_overdrive_cache"
               ? AFTERBURN_OVERDRIVE_DROP_LIFE
+            : drop.kind === "afterburn_dominion_cache"
+              ? AFTERBURN_DOMINION_DROP_LIFE
             : drop.kind === "combat_cache"
               ? COMBAT_CACHE_DROP_LIFE
             : 10;
@@ -17401,6 +17750,27 @@
         context.font = "bold 10px monospace";
         context.textAlign = "center";
         context.fillText(choice.tag || "OVR", drop.x, drop.y + 29);
+      } else if (drop.kind === "afterburn_dominion_cache") {
+        const choice = drop.choice || {};
+        const dominion = getAfterburnDominionDef(choice.afterburnDominionId);
+        context.strokeStyle = dominion ? dominion.color : "rgba(255, 219, 163, 0.96)";
+        context.lineWidth = 3;
+        context.beginPath();
+        context.arc(drop.x, drop.y, 17, 0, Math.PI * 2);
+        context.stroke();
+        context.fillStyle = dominion ? dominion.color : "rgba(255, 188, 116, 0.92)";
+        context.beginPath();
+        drawPolygon(context, drop.x, drop.y, 11, 5, -Math.PI / 2 + performance.now() * 0.0024);
+        context.fill();
+        context.strokeStyle = "rgba(255, 245, 228, 0.88)";
+        context.lineWidth = 2;
+        context.beginPath();
+        context.arc(drop.x, drop.y, 8, 0, Math.PI * 2);
+        context.stroke();
+        context.fillStyle = "rgba(22, 10, 4, 0.92)";
+        context.font = "bold 10px monospace";
+        context.textAlign = "center";
+        context.fillText(choice.tag || "DOM", drop.x, drop.y + 30);
       } else if (drop.kind === "afterburn_ascension_cache") {
         const choice = drop.choice || {};
         const ascensionPalette =
@@ -17868,6 +18238,7 @@
       drawPlayerDoctrineCapstoneFrame(context);
       drawPlayerLateAscensionFrame(context);
       drawPlayerAfterburnOverdriveFrame(context);
+      drawPlayerAfterburnDominionFrame(context);
       drawPlayerRiskMutationFrame(context);
       drawPlayerApexFrame(context);
       drawPlayerIllegalOverclockFrame(context);
@@ -18530,6 +18901,74 @@
       context.arc(state.player.x, state.player.y, state.player.radius + 11 + pulse * 0.6, 0, Math.PI * 2);
       context.stroke();
     }
+  }
+
+  function drawPlayerAfterburnDominionFrame(context) {
+    if (!state.player || !state.weapon || !state.weapon.afterburnDominionId) {
+      return;
+    }
+    const dominion = getAfterburnDominionDef(state.weapon.afterburnDominionId);
+    if (!dominion) {
+      return;
+    }
+    const facing = state.player.facing || 0;
+    const pulse = Math.sin(performance.now() * 0.02) * 1.8;
+    context.strokeStyle = "rgba(255, 246, 229, 0.72)";
+    context.lineWidth = 2.4;
+    context.beginPath();
+    context.arc(state.player.x, state.player.y, state.player.radius + 17 + pulse, 0, Math.PI * 2);
+    context.stroke();
+    if (dominion.id === "lance") {
+      [-0.42, 0, 0.42].forEach((lane) => {
+        const rail = getOffsetPoint(state.player.x, state.player.y, facing, 7, lane * 16);
+        context.strokeStyle = "rgba(180, 236, 255, 0.9)";
+        context.lineWidth = 2.4;
+        context.beginPath();
+        context.moveTo(rail.x - Math.cos(facing) * 4, rail.y - Math.sin(facing) * 4);
+        context.lineTo(
+          rail.x + Math.cos(facing) * (16 + pulse),
+          rail.y + Math.sin(facing) * (16 + pulse)
+        );
+        context.stroke();
+      });
+      return;
+    }
+    if (dominion.id === "ricochet") {
+      [-1.2, 0, 1.2].forEach((lane) => {
+        const lash = getOffsetPoint(state.player.x, state.player.y, facing, -2, lane * 14);
+        context.strokeStyle = "rgba(162, 233, 219, 0.88)";
+        context.lineWidth = 2.2;
+        context.beginPath();
+        context.moveTo(lash.x, lash.y);
+        context.lineTo(
+          lash.x + Math.cos(facing) * (10 + pulse),
+          lash.y + Math.sin(facing) * (10 + pulse)
+        );
+        context.lineTo(
+          lash.x + Math.cos(facing + 0.34 * Math.sign(lane || 1)) * (14 + pulse),
+          lash.y + Math.sin(facing + 0.34 * Math.sign(lane || 1)) * (14 + pulse)
+        );
+        context.stroke();
+      });
+      return;
+    }
+    const lanes = dominion.id === "scatter" ? [-1.6, -0.8, 0, 0.8, 1.6] : [-1.4, -0.65, 0, 0.65, 1.4];
+    lanes.forEach((lane, index) => {
+      const fin = getOffsetPoint(state.player.x, state.player.y, facing, 5, lane * 12);
+      context.fillStyle = `rgba(255, 221, 172, ${0.9 - index * 0.08})`;
+      context.beginPath();
+      context.moveTo(fin.x + Math.cos(facing) * (12 + pulse), fin.y + Math.sin(facing) * (12 + pulse));
+      context.lineTo(
+        fin.x - Math.cos(facing) * 4 - Math.sin(facing) * 4 * Math.sign(lane || 1),
+        fin.y - Math.sin(facing) * 4 + Math.cos(facing) * 4 * Math.sign(lane || 1)
+      );
+      context.lineTo(
+        fin.x - Math.cos(facing) * 8 + Math.sin(facing) * 4 * Math.sign(lane || 1),
+        fin.y - Math.sin(facing) * 8 - Math.cos(facing) * 4 * Math.sign(lane || 1)
+      );
+      context.closePath();
+      context.fill();
+    });
   }
 
   function drawPlayerIllegalOverclockFrame(context) {

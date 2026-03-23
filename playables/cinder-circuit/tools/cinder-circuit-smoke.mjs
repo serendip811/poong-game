@@ -265,6 +265,27 @@ assert.equal(overdriveRun.build.afterburnOverdriveId, overdriveChoices[0].afterb
 assert.equal(overdriveWeapon.afterburnOverdriveLabel, "Cataclysm Crown");
 assert.ok(overdriveWeapon.afterburnOverdriveFirePattern.offsets.length >= 2);
 assert.ok(overdrivePlayer.moveSpeed > 248);
+const dominionWave = game.createPostCapstoneWave(4, overdriveRun.build);
+assert.ok(dominionWave.afterburnDominion);
+assert.equal(dominionWave.afterburnDominion.choices.length, 1);
+assert.equal(dominionWave.afterburnDominion.choices[0].action, "afterburn_dominion");
+const dominionRun = {
+  build: overdriveRun.build,
+  resources: { scrap: 0 },
+  stats: { scrapCollected: 0, scrapSpent: 0 },
+  player: { hp: 72, maxHp: 100, heat: 48, overheated: true, invulnerableTime: 0 },
+};
+game.applyForgeChoice(dominionRun, dominionWave.afterburnDominion.choices[0]);
+assert.equal(dominionRun.build.afterburnDominionId, "lance");
+assert.equal(dominionRun.build.afterburnDominionVictoryLapWaves, 1);
+const dominionWeapon = game.computeWeaponStats(dominionRun.build);
+assert.equal(dominionWeapon.afterburnDominionLabel, "Vector Dominion");
+assert.ok(dominionWeapon.afterburnDominionFirePattern.offsets.length >= 2);
+const dominionVictoryLap = game.createPostCapstoneWave(5, dominionRun.build);
+assert.equal(dominionVictoryLap.dominionVictoryLapActive, true);
+assert.equal(dominionVictoryLap.combatCache, null);
+assert.equal(dominionVictoryLap.afterburnOverdrive, null);
+assert.equal(dominionVictoryLap.apexPredator, null);
 const convergenceBuild = game.createInitialBuild("relay_oath");
 convergenceBuild.chassisId = "vector_thrusters";
 convergenceBuild.supportBayCap = 3;
