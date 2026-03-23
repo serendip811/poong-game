@@ -13,7 +13,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: vertical-slice-to-alpha expansion.
-- Immediate priority: freeze new branch growth, align docs and implementation around one readable 12-wave spine, and consolidate the existing forge/HUD/build ladder until one dominant chassis fantasy plus one secondary support lane are clear, desirable, and immediately legible without taxonomy-heavy UI.
+- Immediate priority: stop adding branch vocabulary and prove one readable 12-wave run where the main body/weapon ladder owns the spectacle, the arena has room to breathe, and forge/HUD communication sells desire in one glance instead of administration.
 
 ## Release Gates
 
@@ -40,6 +40,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 06:30:00 KST
+  Findings:
+  - `docs/games/cinder-circuit-design.md` and `docs/games/cinder-circuit-source-analysis.md` still frame a `5웨이브`, `6-7분` prototype while `playables/cinder-circuit/game.js` is already building a 12-wave-plus multi-act run. That mismatch is still causing prototype logic: more named wrappers and more explanatory UI instead of one proven long-run backbone.
+  - The combat ladder is long enough to matter now, but `WAVE_CONFIG` still climbs by stacking pressure families, hazards, and active caps almost every wave. Even with larger arenas, the player is too often managing saturation instead of enjoying a brief power window where a new form actually owns space.
+  - The support package visuals are strong, yet `SUPPORT_SYSTEM_DEFS` still reads more viscerally than many of the player-body breakpoints. If satellites, halos, sentries, drones, and missiles are the clearest spectacle, repeat-run hunger shifts away from "my chassis evolved" toward "my attachments got busier."
+  - `updateHUD()` and `renderForgeOverlay()` are still carrying too many concurrent contracts. Compared with the ruthless prioritization in `Hades`, `Nova Drift`, or `Brotato`, the game still asks the player to parse form, breakpoint, side bet, roadmap, draft type, hazard detail, and support context at the same time instead of landing one dominant craving.
+  Top Priority: Rebalance the 12-wave spine around fewer rule changes per band and 1-2 deliberate low-density payoff windows immediately after each major chassis/weapon breakpoint, then simplify HUD/forge framing around only current form, immediate threat, and next transformation.
+  Why Now: The game has enough systems already; what it lacks is clear ownership, breathing room, and replay hunger.
+  Do Not Repeat: Do not add another act wrapper, wildcard, or support branch before one full run proves that the main chassis is the star and post-upgrade waves actually let that star breathe.
+  Release Gate: Combat
 
 - 2026-03-23 23:50:00 KST
   Findings:
@@ -1436,6 +1447,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 06:45:00 KST
+  Changed: retuned the 12-wave combat spine in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the major breakpoint fights now get explicit low-density payoff windows instead of immediately piling on a new rule stack. `Wave 5 · Afterglow` is now a real post-Armory ownership lap with fewer bastion anchors and a lower active cap, `Wave 6` repeats the same territory ecology as a followthrough instead of introducing a fresh contract, and `Wave 7-8` now read as one mortar-backed bastion band that escalates inside the same ruleset. I applied the same pattern to Act 3 by lowering the first `Lockgrid Hunt` and first `Cinder Crown` shared-band fights, then letting their second waves scale inside the same ecology rather than frontloading saturation. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to pin the new payoff-window structure for `Wave 5/9/11` and the followthrough escalation on the second wave of each band. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was still open on the combat side. The highest-value bounded interpretation was to stop changing the question every wave and instead make the first fight after each major chassis/weapon breakpoint visibly easier to own, so the player can actually feel a new body/gun form before the second fight in that band tightens the screws again.
+  Follow-up risk: the spine now gives the player more breathing room immediately after key breakpoints, but the underlying enemy families inside each band are still relatively narrow. If repeat runs still flatten out past Wave 12, the next combat pass should widen late-band ecology through clearer flank/greed variants rather than by turning the density knob back up. Release Gate: `Combat`.
 
 - 2026-03-24 06:20:00 KST
   Changed: tightened the standard forge package in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the reward beat now commits harder to `one headline transformation plus one compact rider at most` instead of reopening three equal-weight follow-up lanes. Headline cards now explicitly preview the recommended next rider lane, and the actual rider step for standard package forges is curated down to the best two follow-ups based on the picked headline: offensive/body spikes now surface `Defense / Utility` first to preserve space for the new form, while defensive headlines surface `Support Rider` first to turn that safer pocket into immediate battlefield ownership. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new 2-card rider contract and the new priority ordering. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
