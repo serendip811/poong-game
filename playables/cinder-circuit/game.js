@@ -10546,16 +10546,6 @@
       return shuffle(choices.slice(0, 3), random);
     }
 
-    if (nextWave < FORGE_PACKAGE_START_WAVE && subsystemCandidates.length > 0) {
-      const takenIds = new Set();
-      return [
-        takeFirstAvailableChoice(evolutionCandidates, takenIds, "주무장 진화"),
-        takeFirstAvailableChoice(commitCandidates, takenIds, "빌드 고정"),
-        takeFirstAvailableChoice(pivotCandidates, takenIds, "전환"),
-        takeFirstAvailableChoice(subsystemCandidates, takenIds, "보조 시스템"),
-      ].filter(Boolean);
-    }
-
     const takenIds = new Set();
     const choices = [
       markForgeContract(
@@ -12435,20 +12425,33 @@
     updateHUD();
   }
 
-  function getForgeDraftDisplayName(draftType) {
-    if (draftType === "architecture_draft") {
+  function getActiveForgeModeLabel() {
+    if (state.pendingFinalForge) {
+      return CONSOLIDATED_12_WAVE_ROUTE ? "Wave 12 Seal" : "Final Forge";
+    }
+    if (state.forgeDraftType === "architecture_draft") {
       return "Architecture Draft";
     }
-    if (draftType === "field_grant") {
-      return "Field Cache";
+    if (state.forgeDraftType === "field_grant") {
+      return shouldUseLateFieldCache(state.waveIndex + 2) ? "Arsenal Cache" : "Field Cache";
     }
-    if (draftType === "bastion_draft") {
+    if (state.forgeDraftType === "bastion_draft") {
       return "Bastion Draft";
     }
-    if (draftType === "catalyst_draft") {
+    if (state.forgeDraftType === "catalyst_draft") {
       return "Catalyst Crucible";
     }
-    return "Forge";
+    if (state.forgeDraftType === "armory") {
+      return getArmoryLabel({
+        finalForge: state.pendingFinalForge,
+        nextWave: state.waveIndex + 2,
+        build: state.build,
+      });
+    }
+    if (state.forgeMaxSteps > 1 && state.forgeStep === 2) {
+      return "Rider Slot";
+    }
+    return "Three-Lane Forge";
   }
 
   function buildForgeFollowupChoices(build, rng, scrapBank, options = null, previousChoice = null) {
@@ -19746,9 +19749,10 @@
       return;
     }
     const waveConfig = state.wave || resolveWaveConfig(state.waveIndex, state.build);
+    const activeForgeLabel = state.phase === "forge" ? getActiveForgeModeLabel() : "";
     const waveLabel =
       state.phase === "forge"
-        ? `${waveConfig.label} · ${getForgeDraftDisplayName(state.forgeDraftType)}`
+        ? `${waveConfig.label} · ${activeForgeLabel}`
         : waveConfig.label;
     const hpRatio = state.player.maxHp > 0 ? state.player.hp / state.player.maxHp : 0;
     const heatRatio = state.player.heat / 100;
@@ -19906,7 +19910,9 @@
                     ? "Bastion Draft 선택 중"
                     : state.forgeDraftType === "catalyst_draft"
                       ? "Catalyst Crucible 선택 중"
-                    : "포지 선택 중"
+                      : state.forgeMaxSteps > 1 && state.forgeStep === 2
+                        ? "세 갈래 포지 rider 선택 중"
+                        : "세 갈래 포지 headline 선택 중"
               : "전투 진행 중"
           }</strong>
           <span class="summary-chip ${
@@ -19951,12 +19957,6 @@
     if (!active) {
       return;
     }
-    const forgeOptions = {
-      finalForge: state.pendingFinalForge,
-      nextWave: state.waveIndex + 2,
-      build: state.build,
-    };
-    const armoryLabel = getArmoryLabel(forgeOptions);
     const activeSupportTrack = getForgeSupportTrackSnapshot(state.build, state.supportSystem);
     const dominantFormSummary = getDominantFormSummary(state.build, state.weapon, state.waveIndex + 2);
     const nextFormStep = getNextBreakpointSummary(state.build, state.weapon, state.waveIndex + 2);
@@ -19968,27 +19968,7 @@
     const showcase = featuredForgeChoice.showcase;
     const featuredIndex = featuredForgeChoice.featuredIndex;
     const featuredChoice = featuredIndex >= 0 ? state.forgeChoices[featuredIndex] : null;
-    const forgeModeLabel = state.pendingFinalForge
-      ? CONSOLIDATED_12_WAVE_ROUTE
-        ? "Wave 12 Seal"
-        : "Final Forge"
-      : state.forgeDraftType === "architecture_draft"
-        ? "Architecture Draft"
-        : state.forgeDraftType === "field_grant"
-          ? shouldUseLateFieldCache(state.waveIndex + 2)
-            ? "Arsenal Cache"
-            : "Field Cache"
-          : state.forgeDraftType === "bastion_draft"
-            ? "Bastion Draft"
-            : state.forgeDraftType === "catalyst_draft"
-              ? "Catalyst Crucible"
-              : state.forgeDraftType === "armory"
-                ? armoryLabel
-                : state.forgeMaxSteps > 1
-                  ? state.forgeStep === 1
-                    ? "Headline Forge"
-                    : "Rider Slot"
-                  : "Forge";
+    const forgeModeLabel = getActiveForgeModeLabel();
     const focusEyebrow = state.pendingFinalForge
       ? "Run Seal"
       : riderStep

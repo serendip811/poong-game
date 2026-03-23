@@ -1211,16 +1211,29 @@ const directPivotOfferChoices = game.buildForgeChoices(
   180,
   { nextWave: 2 }
 );
-const directPivotChoice = directPivotOfferChoices.find(
-  (choice) =>
-    choice.laneLabel === "전환" &&
-    choice.type === "core" &&
-    choice.coreId !== directPivotBuild.coreId &&
-    choice.directOffer
+assert.equal(directPivotOfferChoices.length, 3);
+assert.deepEqual(
+  Array.from(directPivotOfferChoices, (choice) => choice.contractRole),
+  ["headline", "rider", "gamble"]
 );
-assert.ok(directPivotChoice);
-assert.equal(directPivotChoice.pivotFuelCoreId, "scatter");
-assert.equal(directPivotChoice.pivotFuelCopies, 1);
+assert.ok(
+  directPivotOfferChoices.some(
+    (choice) => choice.contractRole === "headline" && choice.type === "core"
+  )
+);
+assert.ok(
+  directPivotOfferChoices.some(
+    (choice) => choice.contractRole === "rider" && choice.type === "system"
+  )
+);
+const directPivotChoice = {
+  type: "core",
+  coreId: "lance",
+  directOffer: true,
+  pivotFuelCoreId: "scatter",
+  pivotFuelCopies: 1,
+  benchCopies: 0,
+};
 
 const scatterFinisherChoice = directPivotChoices.find((choice) => choice.recipeLabel === "Kiln Bloom");
 assert.ok(scatterFinisherChoice);
@@ -1252,8 +1265,13 @@ midrunChaseBuild.attunedCopies = 1;
 const genericForgeChoices = game.buildForgeChoices(midrunChaseBuild, () => 0, 180);
 assert.ok(!genericForgeChoices.some((choice) => choice.recipeLabel === "Kiln Bloom"));
 const waveTwoForgeChoices = game.buildForgeChoices(midrunChaseBuild, () => 0, 180, { nextWave: 2 });
-assert.equal(waveTwoForgeChoices.length, 2);
+assert.equal(waveTwoForgeChoices.length, 3);
+assert.deepEqual(
+  Array.from(waveTwoForgeChoices, (choice) => choice.contractRole),
+  ["headline", "rider", "gamble"]
+);
 assert.ok(waveTwoForgeChoices.some((choice) => choice.type === "system" && choice.systemId === "kiln_sentry"));
+assert.ok(waveTwoForgeChoices.some((choice) => choice.recipeLabel === "Kiln Bloom"));
 const waveThreeForgeChoices = game.buildForgeChoices(midrunChaseBuild, () => 0, 180, { nextWave: 3 });
 const waveThreeEvolutionChoice = waveThreeForgeChoices.find(
   (choice) => choice.laneLabel === "주무장 진화" && choice.type === "evolution"
@@ -1808,7 +1826,7 @@ const sentryInstallChoice = game.buildForgeChoices(
   { nextWave: 2, finalForge: false }
 ).find((choice) => choice.type === "system" && choice.systemId === "kiln_sentry");
 assert.ok(sentryInstallChoice);
-assert.equal(sentryInstallChoice.laneLabel, "보조 시스템");
+assert.equal(sentryInstallChoice.laneLabel, "보조/방호");
 game.applyForgeChoice(
   { build: sentryBuild, player: null, resources: { scrap: 999 }, stats: {} },
   sentryInstallChoice

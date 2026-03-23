@@ -13,7 +13,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: suppress all post-capstone promise from the player-facing route and prove one rerunnable `Wave 1-12` ladder where each forge stop sells one headline mutation first, each era grants a real domination window, and Act 3 closes with payoff-to-spike escalation instead of nonstop layered exams.
+- Immediate priority: freeze route expansion and collapse the run into one readable `Wave 1-12` spine where forge stops sell one headline mutation first, support/admin branches stay secondary, and each era earns a real domination window before the next pressure test.
 
 ## Release Gates
 
@@ -40,6 +40,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 18:05:00 KST
+  Findings:
+  - The game is still acting like a content-rich sequel to itself instead of a finished alpha route. `Architecture Draft`, `Bastion Draft`, `Catalyst Crucible`, field caches, wildcard protocols, late-field convergence, and remaining `Afterburn` scaffolding in `game.js` create too many run contracts for a player to crave one clean rerunnable ladder.
+  - Combat breathing room is only partially fixed. Arena sizes improve in `Wave 5`, `Wave 7`, and `Wave 8`, but `Wave 10-12` still stack relay, ignition, binder, lancer, mortar, and warden asks fast enough that Act 3 reads like continuous space denial rather than "my late form now owns this arena" followed by one final spike.
+  - Build hunger is still too support-led. `SUPPORT_SYSTEM_DEFS` offers obvious, visible jumps like extra satellites, intercept halos, relay turrets, missile racks, and drone swarms, while the main run pitch is buried under roadmap, doctrine, cache, and branch language; the player can understand the system map before they feel an urgent desire for the next gun/body form.
+  - The forge/HUD contract is still over-authored versus strong arena-shooter roguelite references. Compared with the appetite-first reads of `Hades`, `Nova Drift`, or `Brotato`, `renderForgeOverlay()`, roadmap markup, and combat-feed/cache messaging still spend too much screen energy explaining lane taxonomy and future branches instead of landing one power spike, one rider, and one immediate proof.
+  Top Priority: Consolidate the reward layer into a strict three-lane contract for the base route: one oversized main weapon/body evolution, one compact defense/support rider, and one greed/utility gamble, while stripping Act 3 of extra branch messaging so `Wave 9-12` reads as payoff window -> harder proof -> finale.
+  Why Now: Until one full 12-wave run is readable and hunger-inducing on its own, a future 20-30 wave game will just scale confusion.
+  Do Not Repeat: Do not answer this with another cache type, doctrine branch, or late-form wrapper.
+  Release Gate: Progression
 
 - 2026-03-24 17:20:00 KST
   Findings:
@@ -1640,6 +1651,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 18:25:00 KST
+  Changed: normalized the base-route forge contract in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so standard between-wave forges no longer fall back to the old early-run 4-card spread. The generic route now always resolves through the same three lanes, `Headline Mutation`, `Support / Defense Rider`, and `Greed / Utility Gamble`, even before package-era forges start. In the same bounded pass I changed the live HUD and forge overlay to name standard stops as `Three-Lane Forge` / `Rider Slot` instead of a generic `Forge`, so the reward beat keeps selling one dominant pick first and one subordinate rider second rather than feeling like a freeform admin menu.
+  Why: the newest critique's `Top Priority` was already partly implemented in late and package stops, but not consistently across the whole 12-wave base route. The highest-value concrete interpretation was to remove the remaining early exception and make the player learn one reward grammar that can scale into a longer ladder. The UI wording direction deliberately follows the appetite-first contract emphasis of `Hades` boon reveals and `Nova Drift` level-up breaks: one must-have mutation, one quieter rider, one clear proof beat.
+  Follow-up risk: the standard route is more consistent now, but special-case draft/objective surfaces like `Architecture Draft` and `Catalyst Crucible` still carry heavier branch language than the normal forge contract. If critique still flags admin tone, the next pass should compress those exceptional surfaces to the same three-lane read instead of adding another branch.
+  Release Gate: Progression
 
 - 2026-03-24 17:45:00 KST
   Changed: tightened the standard-route contract in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the HUD `Build Focus` card and the forge focus rail now speak in exactly three beats: `Headline Mutation`, `Secondary Rider`, and `Immediate Ask`. The forge top card no longer spends its first read on the old `Current Form / Take This / Next Fight` triptych or numbered slot jargon; it now collapses the moment to one headline pick, one rider line, one proof fight, and minimal cost tags. In the same pass I fenced more post-capstone language out of the core 12-wave roadmap so the late-stage contract now resolves as `Wave 9-12` finale wording instead of leaking `Afterburn` promise text into the standard run. [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts that the consolidated late roadmap keeps `Wave 9-12` framing and avoids `Afterburn` wording.
