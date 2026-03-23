@@ -180,26 +180,26 @@
       bandId: "overdrive_breach",
       bandLabel: "Overdrive Breach",
       pressureFamily: "breach",
-      note: "Cataclysm Arsenal을 골랐다면 두 번째 판은 여전히 breach proof지만, maintenance tax가 headline form을 덮어서는 안 된다. corridor는 하나만 얇게 닫고 arena를 더 벌려, 방금 크게 증설한 포문이 열린 flank 둘을 오래 소유한 채 돌파 창을 직접 늘리는지 먼저 보게 만든다.",
+      note: "Cataclysm Arsenal을 골랐다면 두 번째 판은 여전히 breach proof지만, 아직 victory lap의 결을 끊으면 안 된다. corridor는 하나만 늦게 닫고 arena를 더 크게 벌려, 방금 증설한 포문이 열린 flank 둘을 오래 누른 뒤 마지막 한 줄만 직접 찢게 만든다.",
       directive:
-        "overdrive breach. relay crown이 얇은 corridor 하나만 늦게 잠근다. 가장 넓은 pocket을 먼저 잡고 split volley로 flank 둘을 오래 눌러 벌어진 공간을 유지한 뒤, 닫히는 회랑 하나만 마지막에 찢어 breach 창을 직접 늘려야 한다.",
+        "overdrive breach. relay crown이 얇은 corridor 하나만 늦게 잠근다. 가장 넓은 pocket을 먼저 잡고 split volley로 flank 둘을 오래 눌러 지배 시간을 만든 뒤, 닫히는 회랑 한 줄만 마지막에 찢어 breach 창을 직접 늘려야 한다.",
       arena: {
-        width: 1940,
-        height: 1100,
+        width: 2020,
+        height: 1140,
       },
-      activeCap: 27,
-      spawnBudget: 154,
-      baseSpawnInterval: 0.404,
-      spawnIntervalMin: 0.122,
+      activeCap: 25,
+      spawnBudget: 148,
+      baseSpawnInterval: 0.422,
+      spawnIntervalMin: 0.126,
       eliteEvery: 4,
       mix: {
-        scuttler: 0.04,
+        scuttler: 0.08,
         brute: 0.12,
-        shrike: 0.12,
-        skimmer: 0.22,
+        shrike: 0.14,
+        skimmer: 0.26,
         lancer: 0.24,
-        binder: 0.06,
-        mortar: 0.04,
+        binder: 0.04,
+        mortar: 0.02,
         warden: 0.08,
         brander: 0.02,
       },
@@ -207,16 +207,16 @@
       hazard: {
         label: "Overdrive Crown",
         type: "relay",
-        interval: 9.3,
+        interval: 10,
         count: 1,
         radius: 82,
-        telegraph: 0.84,
-        duration: 5.2,
+        telegraph: 0.88,
+        duration: 4.9,
         damage: 15,
-        coreHp: 66,
+        coreHp: 60,
         coreRadius: 18,
-        relayRange: 500,
-        relayWidth: 28,
+        relayRange: 520,
+        relayWidth: 26,
         relayDamage: 14,
       },
     },
@@ -225,26 +225,26 @@
       bandId: "halo_breach",
       bandLabel: "Halo Breach",
       pressureFamily: "breach",
-      note: "Warplate Halo를 골랐다면 두 번째 판은 halo만 보는 reset 시험이 아니라 breach proof여야 한다. relay corridor가 닫히는 동안 plate를 믿고 한 번 깊게 파고들어, 주포가 연 창을 rider가 얼마나 오래 유지하는지 시험한다.",
+      note: "Warplate Halo를 골랐다면 두 번째 판도 halo upkeep가 아니라 late-form breach proof여야 한다. relay corridor가 한 줄만 늦게 닫히는 동안 plate를 믿고 한 번 깊게 파고들어, 주포가 연 창을 rider가 얼마나 오래 붙잡는지 바로 보여 준다.",
       directive:
         "halo breach. relay crown이 닫히기 전에 plate를 태워 corridor 한 줄을 밀고, 오래 욕심내지 말고 비워 낸 pocket으로 짧게 갈아타야 한다. halo는 정면 교환이 아니라 breach 시간을 늘리는 rider다.",
       arena: {
-        width: 1780,
-        height: 1020,
+        width: 1840,
+        height: 1040,
       },
-      activeCap: 29,
-      spawnBudget: 164,
-      baseSpawnInterval: 0.398,
-      spawnIntervalMin: 0.118,
+      activeCap: 26,
+      spawnBudget: 154,
+      baseSpawnInterval: 0.414,
+      spawnIntervalMin: 0.122,
       eliteEvery: 4,
       mix: {
         scuttler: 0.04,
-        brute: 0.18,
+        brute: 0.2,
         shrike: 0.18,
         skimmer: 0.06,
         lancer: 0.16,
-        binder: 0.12,
-        mortar: 0.06,
+        binder: 0.1,
+        mortar: 0.04,
         warden: 0.12,
         brander: 0.1,
       },
@@ -252,16 +252,16 @@
       hazard: {
         label: "Halo Crown",
         type: "relay",
-        interval: 8.8,
-        count: 2,
+        interval: 9.4,
+        count: 1,
         radius: 88,
-        telegraph: 0.8,
-        duration: 5.9,
+        telegraph: 0.84,
+        duration: 5.5,
         damage: 14,
-        coreHp: 68,
+        coreHp: 64,
         coreRadius: 18,
-        relayRange: 500,
-        relayWidth: 30,
+        relayRange: 506,
+        relayWidth: 28,
         relayDamage: 13,
       },
     },
@@ -270,43 +270,43 @@
       bandId: "jackpot_breach",
       bandLabel: "Jackpot Breach",
       pressureFamily: "breach",
-      note: "Black Ledger Heist를 골랐다면 두 번째 판은 greed chase의 반복이 아니라 breach proof여야 한다. relay corridor가 payout pocket을 잠그는 동안, 방금 벌어 둔 자원으로 더 깊게 찢고 언제 이탈할지 정하게 만들어 greed를 rider 위치에 묶는다.",
+      note: "Black Ledger Heist를 골랐다면 두 번째 판도 greed chase의 반복이 아니라 breach proof여야 한다. relay corridor가 payout pocket 하나만 잠그는 동안, 먼저 주포로 탈출구를 만든 뒤 그 안에서만 짧게 cash-out하도록 강제해 greed를 rider 위치에 묶는다.",
       directive:
         "jackpot breach. relay crown이 payout pocket을 좁히고 brander가 뒤를 태운다. 먼저 corridor를 찢어 살아남을 창을 만든 뒤, 그 안에서만 greed line을 짧게 챙겨야 한다.",
       arena: {
-        width: 1840,
-        height: 1020,
+        width: 1900,
+        height: 1040,
       },
-      activeCap: 30,
-      spawnBudget: 170,
-      baseSpawnInterval: 0.39,
-      spawnIntervalMin: 0.116,
+      activeCap: 27,
+      spawnBudget: 160,
+      baseSpawnInterval: 0.406,
+      spawnIntervalMin: 0.12,
       eliteEvery: 4,
       mix: {
         scuttler: 0.04,
         brute: 0.12,
         shrike: 0.14,
-        skimmer: 0.1,
+        skimmer: 0.12,
         lancer: 0.18,
-        brander: 0.18,
-        binder: 0.12,
-        mortar: 0.08,
-        warden: 0.04,
+        brander: 0.16,
+        binder: 0.1,
+        mortar: 0.06,
+        warden: 0.08,
       },
       mixWeight: 0.58,
       hazard: {
         label: "Jackpot Crown",
         type: "relay",
-        interval: 8.4,
-        count: 2,
+        interval: 9,
+        count: 1,
         radius: 88,
-        telegraph: 0.78,
-        duration: 5.9,
+        telegraph: 0.82,
+        duration: 5.6,
         damage: 15,
-        coreHp: 74,
+        coreHp: 68,
         coreRadius: 18,
-        relayRange: 516,
-        relayWidth: 30,
+        relayRange: 520,
+        relayWidth: 28,
         relayDamage: 14,
       },
     },
@@ -440,37 +440,37 @@
         bandId: "crownbreaker_gallery",
         bandLabel: "Crownbreaker Gallery",
         pressureFamily: "crossfire",
-        note: "Cataclysm Arsenal branch의 마지막 두 웨이브는 이제 확실한 spike band로 열린다. Wave 11은 relay upkeep를 걷어내되 kill lane과 mortar perch 압박을 즉시 올려, 커진 배럴이 corridor 하나가 아니라 전장 폭 전체를 계속 찢을 수 있는지 시험한다.",
+        note: "Cataclysm Arsenal branch의 세 번째 rung은 finale 직전 domination lap이다. relay upkeep를 걷어내고 kill lane만 넓게 남겨, 커진 배럴이 corridor 하나가 아니라 전장 폭 전체를 오래 찢는 시간을 먼저 준다.",
         directive:
           "crownbreaker gallery. relay pylon보다 mortar perch와 marked elite 절개가 먼저다. 열린 사선 둘을 동시에 비우며 새 split volley가 어느 lane까지 덮는지 증명해야 한다.",
-      arena: {
-        width: 1820,
-        height: 1010,
-      },
-        activeCap: 31,
-        spawnBudget: 192,
-        baseSpawnInterval: 0.346,
-        spawnIntervalMin: 0.102,
+        arena: {
+          width: 1940,
+          height: 1080,
+        },
+        activeCap: 28,
+        spawnBudget: 174,
+        baseSpawnInterval: 0.372,
+        spawnIntervalMin: 0.112,
         eliteEvery: 4,
         mix: {
           scuttler: 0.04,
           brute: 0.12,
           shrike: 0.14,
-          skimmer: 0.18,
+          skimmer: 0.22,
           lancer: 0.22,
           mortar: 0.12,
           warden: 0.1,
-          brander: 0.08,
+          brander: 0.04,
         },
         mixWeight: 0.56,
         hazard: {
           label: "Gallery Breakers",
           type: null,
-          interval: 8.8,
-          count: 2,
+          interval: 9.4,
+          count: 1,
           radius: 74,
-          telegraph: 0.76,
-          duration: 4.2,
+          telegraph: 0.82,
+          duration: 4.1,
           damage: 15,
         },
       },
@@ -525,41 +525,41 @@
         bandId: "halo_refuge",
         bandLabel: "Halo Refuge",
         pressureFamily: "pursuit",
-        note: "Warplate Halo branch의 마지막 두 웨이브는 확실한 spike band지만, 방호 build답게 pocket ownership 압박으로 시작한다. drift wake가 전장을 접고 적 밀도도 즉시 올라, plate를 믿고 깊게 들어간 뒤 살아서 빠져나올 cadence를 강하게 묻는다.",
+        note: "Warplate Halo branch의 세 번째 rung은 finale 직전 refuge lap이다. drift wake가 전장을 접더라도 적 점유를 한 박자 늦춰, plate를 믿고 깊게 들어간 뒤 살아서 빠져나오는 cadence를 먼저 즐기게 만든다.",
         directive:
           "halo refuge. drift wake가 닫히기 전에 한 lane을 비우고 오래 욕심내지 말고 reset pocket으로 빠져야 한다. 버티기보다 plate timing과 retreat cadence가 중요하다.",
-      arena: {
-        width: 1700,
-        height: 990,
-      },
-        activeCap: 30,
-        spawnBudget: 184,
-        baseSpawnInterval: 0.356,
-        spawnIntervalMin: 0.104,
+        arena: {
+          width: 1780,
+          height: 1020,
+        },
+        activeCap: 27,
+        spawnBudget: 170,
+        baseSpawnInterval: 0.382,
+        spawnIntervalMin: 0.11,
         eliteEvery: 4,
         mix: {
           scuttler: 0.04,
           brute: 0.18,
           shrike: 0.18,
           skimmer: 0.06,
-          lancer: 0.12,
-          binder: 0.12,
-          mortar: 0.06,
-          warden: 0.12,
-          brander: 0.12,
+          lancer: 0.1,
+          binder: 0.1,
+          mortar: 0.04,
+          warden: 0.14,
+          brander: 0.16,
         },
         mixWeight: 0.52,
         hazard: {
           label: "Halo Refuge Drift",
           type: "drift",
-          interval: 9,
-          count: 2,
+          interval: 9.6,
+          count: 1,
           radius: 94,
-          telegraph: 0.78,
-          duration: 6,
+          telegraph: 0.82,
+          duration: 5.8,
           damage: 15,
-          driftSpeed: 126,
-          driftOrbit: 0.3,
+          driftSpeed: 120,
+          driftOrbit: 0.28,
         },
       },
       11: {
@@ -614,41 +614,42 @@
         bandId: "kingpin_vaultline",
         bandLabel: "Kingpin Vaultline",
         pressureFamily: "raid",
-        note: "Black Ledger branch의 마지막 두 웨이브는 이제 확실한 spike band로 뛰어오른다. 고정 corridor 대신 흩어진 contraband vault와 더 거친 추격 압박을 던져, 어디까지 chase하고 언제 payout을 확정할지 다시 묻는다.",
+        note: "Black Ledger branch의 세 번째 rung은 finale 직전 cash-out lap이다. 고정 corridor 대신 흩어진 contraband vault만 크게 던져, 어디까지 chase하고 언제 이탈할지 greed 판단을 한 판 더 즐기게 만든다.",
         directive:
           "kingpin vaultline. 외곽과 중앙에 흩어진 vault 중 하나만 오래 쫓을 수 있다. jackpot을 노리면 brander와 binder가 회수선을 찢으니, payout line을 정하고 빨리 이탈해야 한다.",
-      arena: {
-        width: 1780,
-        height: 1000,
-      },
-        activeCap: 31,
-        spawnBudget: 194,
-        baseSpawnInterval: 0.342,
-        spawnIntervalMin: 0.102,
+        arena: {
+          width: 1860,
+          height: 1040,
+        },
+        activeCap: 28,
+        spawnBudget: 178,
+        baseSpawnInterval: 0.364,
+        spawnIntervalMin: 0.108,
         eliteEvery: 4,
         mix: {
           scuttler: 0.04,
           brute: 0.14,
           shrike: 0.14,
-          skimmer: 0.12,
-          lancer: 0.16,
+          skimmer: 0.14,
+          lancer: 0.14,
           brander: 0.18,
-          binder: 0.12,
-          mortar: 0.1,
+          binder: 0.08,
+          mortar: 0.08,
+          warden: 0.06,
         },
         mixWeight: 0.54,
         hazard: {
           label: "Kingpin Vaultline",
           type: "salvage",
-          interval: 8.6,
-          count: 3,
+          interval: 9,
+          count: 2,
           radius: 78,
-          telegraph: 0.78,
-          duration: 7.4,
+          telegraph: 0.8,
+          duration: 7.2,
           damage: 14,
           coreHp: 86,
           coreRadius: 19,
-          salvageScrap: 22,
+          salvageScrap: 24,
           salvageBurstCount: 6,
           salvageBurstRadius: 62,
           salvageDropLife: 8.8,
@@ -2160,27 +2161,27 @@
       return {
         label: "Cataclysm cadence",
         detail:
-          "Wave 9는 열린 firing gallery payoff, Wave 10은 Overdrive breach proof, Wave 11-12는 Crownbreaker spike band다.",
+          "Wave 9는 열린 firing gallery payoff, Wave 10은 light breach proof, Wave 11은 Crownbreaker victory lap, Wave 12는 final crownline breach다.",
       };
     }
     if (profileId === "aegis") {
       return {
         label: "Warplate cadence",
         detail:
-          "Wave 9는 open-lane payoff, Wave 10은 Halo breach proof, Wave 11-12는 Halo survival spike band다.",
+          "Wave 9는 open-lane payoff, Wave 10은 Halo breach proof, Wave 11은 Halo refuge lap, Wave 12는 Citadel final stand다.",
       };
     }
     if (profileId === "ledger") {
       return {
         label: "Ledger cadence",
         detail:
-          "Wave 9는 open-lane payoff, Wave 10은 Jackpot breach proof, Wave 11-12는 Kingpin cash-out spike band다.",
+          "Wave 9는 open-lane payoff, Wave 10은 Jackpot breach proof, Wave 11은 Kingpin cash-out lap, Wave 12는 blackout finale다.",
       };
     }
     return {
       label: "Late Break cadence",
       detail:
-        "Wave 9는 payoff window, Wave 10은 breach proof, Wave 11-12는 escalation spike band다.",
+        "Wave 9는 payoff window, Wave 10은 breach proof, Wave 11은 victory lap, Wave 12는 escalation finale다.",
     };
   }
 
@@ -2189,21 +2190,21 @@
       return {
         title: "Cataclysm Arsenal",
         detail:
-          "Wave 9는 열린 firing gallery payoff, Wave 10은 Overdrive breach proof, Wave 11-12는 Crownbreaker spike band로 고정된다.",
+          "Wave 9는 열린 firing gallery payoff, Wave 10은 light breach proof, Wave 11은 Crownbreaker victory lap, Wave 12는 final crownline breach로 고정된다.",
       };
     }
     if (profileId === "aegis") {
       return {
         title: "Warplate Halo",
         detail:
-          "Wave 9는 open-lane payoff, Wave 10은 Halo breach proof, Wave 11-12는 Halo survival spike band로 고정된다.",
+          "Wave 9는 open-lane payoff, Wave 10은 Halo breach proof, Wave 11은 Halo refuge lap, Wave 12는 Citadel final stand로 고정된다.",
       };
     }
     if (profileId === "ledger") {
       return {
         title: "Black Ledger Heist",
         detail:
-          "Wave 9는 open-lane payoff, Wave 10은 Jackpot breach proof, Wave 11-12는 Kingpin cash-out spike band로 고정된다.",
+          "Wave 9는 open-lane payoff, Wave 10은 Jackpot breach proof, Wave 11은 Kingpin cash-out lap, Wave 12는 blackout finale로 고정된다.",
       };
     }
     return null;
@@ -7735,7 +7736,7 @@
       ? CONSOLIDATED_12_WAVE_ROUTE
         ? `${lateBreakHeadline.detail} Wave 9-12는 이 late staircase 하나만 증명하는 고정 finale다.`
         : `${lateBreakHeadline.detail} Wave 8 이후에는 이 계단 하나만 남고 live ascension이나 Afterburn 예외는 열리지 않는다.`
-      : "Wave 8 Late Break Armory에서 하나의 late-form staircase를 고르면 Wave 9 payoff -> Wave 10 breach -> Wave 11-12 spike로 고정된다.";
+      : "Wave 8 Late Break Armory에서 하나의 late-form staircase를 고르면 Wave 9 payoff -> Wave 10 breach -> Wave 11 domination lap -> Wave 12 finale로 고정된다.";
     let stageThreeState = boundedWave >= LATE_BREAK_ARMORY_WAVE ? "primed" : "planned";
     if (build.afterburnDominionId) {
       stageThreeDetail = CONSOLIDATED_12_WAVE_ROUTE
@@ -8387,29 +8388,35 @@
     if (build && build.lateBreakProfileId) {
       if (build.lateBreakProfileId === "mutation") {
         return {
-          label: "Crownbreaker Gallery",
+          label: boundedWave === 11 ? "Crownbreaker Lap" : "Cataclysm Crownline",
           headline:
             (currentWeapon && currentWeapon.headlineFormLabel) ||
             (currentWeapon && currentWeapon.capstoneLabel) ||
             "Cataclysm Arsenal",
           detail:
-            "Wave 11-12는 반복 crown corridor 대신 weapon-branch killbox로 이어진다. 먼저 열린 gallery에서 lane 폭을 먹고, 마지막 crownline breach에서 그 화망으로 직접 돌파 창을 늘리는 구간이다.",
+            boundedWave === 11
+              ? "Wave 11은 반복 crown이 아니라 domination lap이다. 열린 gallery에서 lane 폭을 먼저 먹고 split volley가 전장 폭 전체를 얼마나 오래 잠그는지 즐기게 만든다."
+              : "Wave 12는 Cataclysm branch의 최종 crownline breach다. Wave 11에서 벌어 둔 lane ownership를 실제 돌파 창으로 바꾸며 마지막 corridor를 직접 찢어야 한다.",
         };
       }
       if (build.lateBreakProfileId === "aegis") {
         return {
-          label: "Halo Refuge",
+          label: boundedWave === 11 ? "Halo Refuge" : "Citadel Stand",
           headline: "Warplate Halo",
           detail:
-            "Wave 11-12는 crown 반복 대신 reset-heavy survival climax로 바뀐다. drift pocket에서 회복 창을 캐고, 마지막 citadel stand에서 어느 거점을 잠깐 열고 버릴지 직접 고르게 만든다.",
+            boundedWave === 11
+              ? "Wave 11은 refuge lap이다. drift pocket에서 회복 창을 캐며 plate timing과 짧은 retreat cadence로 넓은 pocket을 오래 버티게 만든다."
+              : "Wave 12는 최종 Citadel stand다. Wave 11에서 벌어 둔 회복 리듬을 바탕으로 어느 거점을 잠깐 열고 버릴지 마지막으로 결정해야 한다.",
         };
       }
       if (build.lateBreakProfileId === "ledger") {
         return {
-          label: "Kingpin Vaultline",
+          label: boundedWave === 11 ? "Kingpin Vaultline" : "Grand Blackout Run",
           headline: "Black Ledger",
           detail:
-            "Wave 11-12는 relay corridor 대신 연속 greed climax다. 분산 vault와 대형 caravan이 payout을 던지므로, 언제 chase를 걸고 언제 cash-out할지 계속 다시 정하는 구간이다.",
+            boundedWave === 11
+              ? "Wave 11은 cash-out lap이다. 분산 vault를 넓게 찢으며 chase line과 이탈 타이밍을 greed 판단으로 한 번 더 벌 수 있다."
+              : "Wave 12는 blackout finale다. 대형 caravan chase가 payout과 퇴로를 동시에 흔드므로, 직전에 벌어 둔 greed 리듬을 끝까지 유지해야 한다.",
         };
       }
     }
@@ -11201,9 +11208,9 @@
       verb: "변이",
       tag: "ARSENAL",
       title: "Cataclysm Arsenal",
-      description: `${CORE_DEFS[build.coreId].label}에 측면 배럴과 브로드사이드 포드를 한 번에 크게 증설해 Late Break 직후 실루엣을 바로 monster form으로 키운다. Wave 9는 열린 firing gallery payoff로, Wave 10은 maintenance tax를 덜어 낸 relay breach proof로 접히며, Wave 11-12는 Crownbreaker spike band로 닫혀 방금 커진 화망을 더 넓은 arena에서 먼저 오래 소유하게 만든다.`,
-      roadmapDetail: "Wave 9 open-lane payoff -> Wave 10 breach proof -> Wave 11-12 Crownbreaker spike",
-      slotText: `추가 배럴 +${barrelCount} · 브로드사이드 포드 확장 · payoff -> proof -> spike x2`,
+      description: `${CORE_DEFS[build.coreId].label}에 측면 배럴과 브로드사이드 포드를 한 번에 크게 증설해 Late Break 직후 실루엣을 바로 monster form으로 키운다. Wave 9는 열린 firing gallery payoff로, Wave 10은 가벼운 relay breach proof로 접히며, Wave 11은 Crownbreaker domination lap로 넓은 arena를 오래 먹게 하고, Wave 12에서만 final crownline breach를 직접 찢게 만든다.`,
+      roadmapDetail: "Wave 9 payoff -> Wave 10 proof -> Wave 11 domination lap -> Wave 12 final breach",
+      slotText: `추가 배럴 +${barrelCount} · 브로드사이드 포드 확장 · payoff -> proof -> lap -> finale`,
       cost: 34,
       laneLabel: "Main Weapon Mutation",
       forgeLaneLabel: "Main Weapon Mutation",
@@ -11228,9 +11235,9 @@
       tag: "HALO",
       title: "Warplate Halo",
       description:
-        "Act 3 진입 전에 재충전식 warplate를 두 겹까지 예열해 큰 한 방을 지우고, plate가 터질 때마다 주변 탄막과 추격선을 같이 뜯어낸다. Wave 9는 headline form이 전장을 먼저 먹는 open-lane payoff로 유지되고, Wave 10은 Halo breach proof로 닫혀 방금 붙인 생존층이 돌파 시간을 얼마나 늘리는지 바로 요구한다. Wave 11-12는 Halo survival spike로 치솟는다.",
-      roadmapDetail: "Wave 9 open-lane payoff -> Wave 10 Halo breach -> Wave 11-12 Halo survival spike",
-      slotText: `warplate ${getLateFieldAegisMaxCharges({ lateFieldAegisLevel: nextLevel })}충전 · reset x2 -> spike x2`,
+        "Act 3 진입 전에 재충전식 warplate를 두 겹까지 예열해 큰 한 방을 지우고, plate가 터질 때마다 주변 탄막과 추격선을 같이 뜯어낸다. Wave 9는 headline form이 전장을 먼저 먹는 open-lane payoff로 유지되고, Wave 10은 Halo breach proof로 닫혀 방금 붙인 생존층이 돌파 시간을 얼마나 늘리는지 바로 요구한다. Wave 11은 Halo refuge lap로 reset pocket을 더 길게 누리게 하고, Wave 12에서만 Citadel final stand를 버티게 만든다.",
+      roadmapDetail: "Wave 9 payoff -> Wave 10 Halo breach -> Wave 11 refuge lap -> Wave 12 final stand",
+      slotText: `warplate ${getLateFieldAegisMaxCharges({ lateFieldAegisLevel: nextLevel })}충전 · payoff -> proof -> refuge -> finale`,
       cost: 26,
       laneLabel: "Defense / Utility",
       forgeLaneLabel: "Defense / Utility",
@@ -11251,9 +11258,9 @@
       tag: "LEDGER",
       title: "Black Ledger Heist",
       description:
-        "Act 3 개막 자금을 먼저 당겨 고철과 회수 효율을 크게 올린다. 대신 첫 rung은 여전히 headline form이 전장을 먹는 open-lane payoff로 유지되고, Wave 10은 Jackpot breach proof로 접혀 greed를 rider 위치에 묶는다. 2웨이브 Siege Debt를 짊어진 채 Wave 11-12는 Kingpin cash-out spike로 닫혀, 열리자마자 깊게 들어가 payout을 뜯을지 안전한 외곽 회전으로 돌아설지 바로 강요한다.",
-      roadmapDetail: "Wave 9 open-lane payoff -> Wave 10 Jackpot breach -> Wave 11-12 Kingpin cash-out spike",
-      slotText: "고철 +52 · 회수 +16% · heist x2 -> spike x2 · 2웨이브 Siege Debt",
+        "Act 3 개막 자금을 먼저 당겨 고철과 회수 효율을 크게 올린다. 대신 첫 rung은 여전히 headline form이 전장을 먹는 open-lane payoff로 유지되고, Wave 10은 Jackpot breach proof로 접혀 greed를 rider 위치에 묶는다. 2웨이브 Siege Debt를 짊어진 채 Wave 11은 Kingpin cash-out lap로 chase 각을 한 판 더 누리게 하고, Wave 12에서만 blackout finale로 큰 payout 압박을 정면으로 받게 만든다.",
+      roadmapDetail: "Wave 9 payoff -> Wave 10 Jackpot breach -> Wave 11 cash-out lap -> Wave 12 blackout finale",
+      slotText: "고철 +52 · 회수 +16% · payoff -> proof -> cash-out lap -> finale · 2웨이브 Siege Debt",
       cost: 0,
       scrapGain: 52,
       scrapMultiplierGain: 0.16,
@@ -15571,8 +15578,8 @@
           : "최종 웨이브 정리 완료. 마지막 포지에서 최종 각인과 7연속 afterburn survival ladder의 시작 형태를 마감한다."
         : isLateBreakArmory(forgeOptions)
           ? state.build.auxiliaryJunctionLevel > 0
-            ? "Wave 8 돌파. Late Break Armory를 단일 breakpoint로 재절단했다. 이제 정확히 세 장만 뜨며, Cataclysm Arsenal, Warplate Halo, Black Ledger Heist 중 하나를 고르면 Wave 9는 open-lane payoff, Wave 10은 breach proof, Wave 11-12는 그 선택 전용 spike band로 꺾인다."
-            : "Wave 8 돌파. Late Break Armory를 단일 breakpoint로 재절단했다. 이제 정확히 세 장만 뜨며, Cataclysm Arsenal, Warplate Halo, Black Ledger Heist 중 하나를 고르면 Wave 9는 open-lane payoff, Wave 10은 breach proof, Wave 11-12는 그 선택 전용 spike band로 꺾인다."
+            ? "Wave 8 돌파. Late Break Armory를 단일 breakpoint로 재절단했다. 이제 정확히 세 장만 뜨며, Cataclysm Arsenal, Warplate Halo, Black Ledger Heist 중 하나를 고르면 Wave 9는 open-lane payoff, Wave 10은 breach proof, Wave 11은 그 선택 전용 domination lap, Wave 12는 최종 finale로 꺾인다."
+            : "Wave 8 돌파. Late Break Armory를 단일 breakpoint로 재절단했다. 이제 정확히 세 장만 뜨며, Cataclysm Arsenal, Warplate Halo, Black Ledger Heist 중 하나를 고르면 Wave 9는 open-lane payoff, Wave 10은 breach proof, Wave 11은 그 선택 전용 domination lap, Wave 12는 최종 finale로 꺾인다."
           : draftType === "armory"
           ? "Wave 4 돌파. Act Break Armory는 이제 headline breakpoint 1장 뒤에 support/defense/greed rider 1장을 얹어, Act 2 빌드 정체성을 더 빨리 조립하게 만든다."
           : "웨이브 종료. 먼저 headline 변신을 고르고, 이어서 작은 rider slot으로 support/defense/greed를 한 장 더 얹는다.",

@@ -41,6 +41,17 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-24 20:05:00 KST
+  Findings:
+  - The project is no longer drifting on paper, but it is still drifting in feel. The docs promise a clean `12-wave` alpha route, while `game.js` still keeps `Afterburn`, ascension cache, and extra route language alive enough that the base run feels like a prelude to a larger game instead of a complete rerunnable ladder.
+  - Act 3 still does not give the player a long enough domination lap after a major form break. `Wave 9` is framed as payoff, but `Wave 10-12` quickly jump back to relay crowns, ignition rings, binders, lancers, and a `41` active cap finale, so the player spends more time servicing closures than enjoying the late form they just built.
+  - Build hunger remains support-led. `SUPPORT_SYSTEM_DEFS` still offers the clearest visible fantasies at a glance: orbitals, shield halos, sentries, missiles, drones. By comparison, the core gun/body route still reads through labels and proof text more than through unmistakable silhouette escalation.
+  - The forge/HUD layer still overspends words and contracts compared with strong references like `Hades`, `Nova Drift`, and `Brotato`. `updateHUD()` and `renderForgeOverlay()` keep stacking headline, rider, next breakpoint, proof window, support track, and route state in the same moment, which makes choices feel administrated instead of craved.
+  Top Priority: Rebalance the base `Wave 9-12` arc into a true late-form victory lap before the final breach, and make the forge/HUD sell that one core transformation more loudly than any support system.
+  Why Now: If the late form never gets to feel unquestionably dominant, players will stop caring about rerunning toward it.
+  Do Not Repeat: Do not answer this with another support module, another branch wrapper, or more finale density.
+  Release Gate: Combat
+
 - 2026-03-24 19:20:00 KST
   Findings:
   - The run still has prototype-scale payoff hiding inside release-scale wording. `Wave 1-12` is described like a three-era ladder, but in practice `Wave 9-12` still behaves more like continuous exam pressure than the kind of domination lap that makes a player want to rebuild toward it again.
@@ -1673,6 +1684,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 20:45:00 KST
+  Changed: recut the base late staircase in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 9-12` now reads as `payoff -> lighter breach proof -> branch-specific domination lap -> final breach` instead of collapsing back into a two-wave spike band. I widened and softened all three `Wave 10` Late Break followthrough profiles (`Overdrive Breach`, `Halo Breach`, `Jackpot Breach`), then retuned each branch's `Wave 11` profile into a lower-tax ownership lap with more arena space and reduced hazard clutter before the unchanged `Wave 12` finale. In the same bounded pass I updated the Late Break armory copy, cadence summaries, and combat/HUD late-wave callouts in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the forge now explicitly sells `Wave 11` as the branch's victory-lap payoff rather than folding it into generic `Wave 11-12 spike` wording; [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts the new branch widths, lower `Wave 10-11` caps, and the revised four-step late-break roadmap.
+  Why: the latest critique's `Top Priority` was still open on the base `Wave 9-12` arc. I took the highest-value bounded interpretation as "give every Late Break branch one more real ownership lap before the final breach" because that improves repeat-run hunger and Act 3 payoff without adding another branch or more finale density. For the UI wording touch, the reference direction was the appetite-first cadence framing in `Hades` boon reveals and `Nova Drift` level-up beats: sell the monster form first, then the proof fight right after.
+  Follow-up risk: `Wave 11` now gives the player more room to enjoy the locked late form, but the visible silhouette growth is still loudest on the `Cataclysm Arsenal` branch. If rerun desire remains uneven, the next bounded pass should make `Warplate Halo` or `Black Ledger Heist` land an equally screen-owning core-form jump rather than solving it with more hazard mix.
+  Release Gate: Combat
 
 - 2026-03-24 20:05:00 KST
   Changed: recut one late-route breakpoint in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) around the `Cataclysm Arsenal` path so the late break now lands as a bigger core weapon leap before a lighter proof wave. The `Late Break Armory` mutation card now jumps straight to `Field Arsenal MK 4`, which immediately opens a denser side-barrel fan and larger broadside pod battery instead of a smaller late bump, and the branch-specific `Wave 10 · Overdrive Breach` now uses a larger arena with one thinner relay closure, lower binder/mortar/warden tax, and slower pressure so the new form gets a real ownership lap inside the breach test before `Wave 11-12` spike again. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the stronger late-break mutation jump and the softer `Wave 10` mutation-proof contract.
