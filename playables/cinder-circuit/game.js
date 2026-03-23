@@ -5574,13 +5574,6 @@
     if (!options || options.finalForge) {
       return false;
     }
-    const nextWave = options.nextWave || 0;
-    if (nextWave === 6) {
-      return true;
-    }
-    if (nextWave === 8) {
-      return !(options.build && options.build.wave6ChassisBreakpoint);
-    }
     return false;
   }
 
@@ -6374,9 +6367,7 @@
     const boundedWave = clamp(Math.round(waveNumber || 1), 1, MAX_WAVES + POST_CAPSTONE_WAVE_COUNT);
     const doctrine = getBastionDoctrineDef(build);
     const pursuit = getDoctrineForgePursuitDef(doctrine || build);
-    const capstone = getDoctrineCapstoneDef(build);
     const currentWeapon = weapon || computeWeaponStats(build);
-    const combatBand = getCombatBandState(build, currentWeapon, boundedWave);
     const doctrineForm = currentWeapon && currentWeapon.doctrineFormLabel ? currentWeapon.doctrineFormLabel : null;
     const activeForm =
       (currentWeapon && currentWeapon.afterburnDominionLabel) ||
@@ -6390,128 +6381,76 @@
     const pathLabel = doctrine
       ? `${doctrine.label} · ${activeForm}`
       : `${CORE_DEFS[build.coreId].label} · ${activeForm}`;
-    const steps = [];
+    const stageOneTitle = doctrine ? doctrine.label : "Monster Form Lock";
+    const stageOneDetail = build.bastionDoctrineId
+      ? `${currentWeapon.doctrineFormLabel || activeForm}이(가) 현재 body/gun 실루엣이다. 이후 포지는 이 형태를 더 과격하게 밀거나 약점을 메우는 쪽으로만 열린다.`
+      : `Wave ${ARCHITECTURE_DRAFT_WAVE}에서 교리를 잠가 첫 monster form과 chassis lane을 연다.`;
+    const stageOneState = build.bastionDoctrineId
+      ? "locked"
+      : boundedWave >= ARCHITECTURE_DRAFT_WAVE
+        ? "primed"
+        : "planned";
 
-    if (doctrine && !build.bastionDoctrineId) {
-      const draftLabel = boundedWave >= 6 ? "Ascension Draft" : "Architecture Draft";
-      steps.push(
-        createRoadmapStep(
-          "PATH",
-          doctrine.label,
-          `${draftLabel}에서 이 교리를 잠가 stage-1 form과 chassis lane을 연다.`,
-          boundedWave >= 3 ? "primed" : "planned"
-        )
-      );
+    const stageTwoTitle =
+      (currentWeapon && currentWeapon.capstoneLabel) ||
+      getDoctrineLateCapstoneLabel(doctrine) ||
+      (doctrine ? `${doctrine.label} Apex` : "Midform Spike");
+    let stageTwoDetail = "중반 marked elite를 따라 다음 weapon/body break를 강제로 연다.";
+    let stageTwoState = "planned";
+    if (build.doctrineCapstoneId) {
+      stageTwoDetail = `${stageTwoTitle}이(가) 이미 잠겼다. Wave 9-12는 새 규칙 학습보다 이 중간 형태로 lane을 찢고 elite를 추적하는 구간이다.`;
+      stageTwoState = "locked";
+    } else if (build.doctrineChaseClaimed) {
+      stageTwoDetail = `다음 live ascension cache가 ${stageTwoTitle} 완성 직전까지 열려 있다. marked elite를 먼저 찢어 body splice를 회수해야 한다.`;
+      stageTwoState = "primed";
+    } else if (build.doctrinePursuitCommitted && pursuit) {
+      stageTwoDetail = `Wave 6-8 marked elite에서 ${pursuit.shardLabel} ${build.doctrinePursuitProgress}/${pursuit.goal}개를 회수하면 ${stageTwoTitle}이(가) 즉시 당겨진다.`;
+      stageTwoState = "live";
+    } else if (build.overcommitUnlocked && pursuit) {
+      stageTwoDetail = `contraband salvage를 전부 챙겼다. 이제 다음 Field Cache의 greed 대신 ${stageTwoTitle} pursuit를 걸면 marked elite ${pursuit.goal}회로 조기 완성을 노릴 수 있다.`;
+      stageTwoState = "primed";
+    } else if (build.overcommitResolved) {
+      stageTwoDetail = `${stageTwoTitle} 조기 chase는 닫혔다. 남은 런에서는 live ascension cache로만 안전하게 끌어와야 한다.`;
+      stageTwoState = "missed";
+    } else if (pursuit) {
+      stageTwoDetail = `Wave 5 contraband salvage를 전부 회수하면 ${stageTwoTitle} pursuit가 열린다. 실패하면 중반 break는 뒤로 밀린다.`;
     }
 
-    if (doctrine && !build.doctrineChaseClaimed && !build.doctrineCapstoneId) {
-      const stageTwoLabel = pursuit ? pursuit.label : getDoctrineLateCapstoneLabel(doctrine) || `${doctrine.label} Frame`;
-      let detail = "중반 marked elite를 따라 weapon/body jump를 앞당긴다.";
-      let stateName = "planned";
-      if (build.doctrinePursuitCommitted && pursuit) {
-        detail = `Wave 6-8 marked elite에서 ${pursuit.shardLabel} ${build.doctrinePursuitProgress}/${pursuit.goal}개를 회수하면 즉시 당겨진다.`;
-        stateName = "live";
-      } else if (build.overcommitUnlocked && pursuit) {
-        detail = `다음 Bastion Draft에서 pursuit를 걸고 Wave 6-8 marked elite ${pursuit.goal}회를 성공시키면 조기 완성된다.`;
-        stateName = "primed";
-      } else if (build.overcommitResolved) {
-        detail = "contraband salvage를 놓쳐 조기 chase는 닫혔다. 남은 late cache로만 secure해야 한다.";
-        stateName = "missed";
-      } else if (pursuit) {
-        detail = `Wave 5 contraband salvage를 챙겨야 ${stageTwoLabel} pursuit가 열리고, 이후 marked elite ${pursuit.goal}회를 요구한다.`;
-      }
-      steps.push(createRoadmapStep("SPIKE", stageTwoLabel, detail, stateName));
+    const stageThreeTitle =
+      (currentWeapon && currentWeapon.afterburnDominionLabel) ||
+      (currentWeapon && currentWeapon.afterburnOverdriveLabel) ||
+      (currentWeapon && currentWeapon.lateAscensionLabel) ||
+      "Endform";
+    let stageThreeDetail = `Wave ${LATE_ASCENSION_START_WAVE}+ elite split cache에서 endform을 고르고, Afterburn에서는 같은 몸을 overdrive와 dominion으로 한 번 더 밀어 올린다.`;
+    let stageThreeState = boundedWave >= LATE_ASCENSION_START_WAVE ? "primed" : "planned";
+    if (build.afterburnDominionId) {
+      stageThreeDetail = `${stageThreeTitle}이(가) 이미 최종 지배 형태로 잠겼다. 남은 bracket은 판돈보다 압도감이 먼저 오는 victory lap이다.`;
+      stageThreeState = "locked";
+    } else if (build.afterburnOverdriveId) {
+      stageThreeDetail = `${stageThreeTitle} overdrive가 켜졌다. 다음 Dominion Break만 회수하면 마지막 bracket 하나가 승리 랩으로 재편된다.`;
+      stageThreeState = "live";
+    } else if (build.lateAscensionId) {
+      stageThreeDetail = `${stageThreeTitle} body split이 잠겼다. Afterburn elite cache로 남은 endurance를 overdrive 실루엣까지 더 밀 수 있다.`;
+      stageThreeState = boundedWave > MAX_WAVES ? "live" : "locked";
     }
 
-    if (doctrine && !build.doctrineCapstoneId) {
-      const capstoneTitle = getDoctrineLateCapstoneLabel(doctrine) || `${doctrine.label} Apex`;
-      const lateWave = boundedWave >= LATE_BREAK_ARMORY_WAVE ? boundedWave : LATE_BREAK_ARMORY_WAVE;
-      const detail =
-        doctrine.id === "storm_artillery"
-          ? `Wave ${lateWave}+ 첫 marked elite의 live ascension cache에서 ${capstoneTitle} 중 하나를 회수해 최종 천공 형태를 확정한다.`
-          : `Wave ${lateWave}+ 첫 marked elite의 live ascension cache를 회수해 ${capstoneTitle} body splice를 secure한다.`;
-      steps.push(
-        createRoadmapStep(
-          "APEX",
-          capstoneTitle,
-          detail,
-          build.doctrineChaseClaimed ? "primed" : "planned"
-        )
-      );
-    }
-
-    const upcomingWildcard = getUpcomingWildcardProtocol(build, boundedWave);
-    if (upcomingWildcard) {
-      const wildcardState =
-        boundedWave >= upcomingWildcard.waveNumber
-          ? "primed"
-          : upcomingWildcard.waveNumber - boundedWave <= 1
-            ? "live"
-            : "planned";
-      steps.push(
-        createRoadmapStep(
-          "WILD",
-          upcomingWildcard.title,
-          upcomingWildcard.roadmapDetail,
-          wildcardState
-        )
-      );
-    }
-
-    if (!build.lateAscensionId) {
-      steps.push(
-        createRoadmapStep(
-          "ASCEND",
-          "Ascension Core",
-          `Wave ${Math.max(LATE_ASCENSION_START_WAVE, boundedWave)}+ 첫 elite split cache에서 주포와 body를 한 번 더 갈라 고른다.`,
-          boundedWave >= LATE_ASCENSION_START_WAVE ? "primed" : "planned"
-        )
-      );
-    }
-
-    if (!build.afterburnOverdriveId) {
-      steps.push(
-        createRoadmapStep(
-          "JUMP",
-          "Endform Overdrive",
-          "Afterburn IV 이후 elite cache를 집어 남은 endurance를 새 silhouette와 보조 포문으로 다시 비튼다.",
-          boundedWave > MAX_WAVES + AFTERBURN_OVERDRIVE_START_STAGE ? "primed" : "planned"
-        )
-      );
-    }
-
-    if (!build.afterburnDominionId) {
-      steps.push(
-        createRoadmapStep(
-          "CROWN",
-          "Dominion Break",
-          "후반 Afterburn elite cache를 확보하면 다음 bracket 하나가 목적지 세금보다 압도감이 먼저 오는 victory lap으로 바뀐다.",
-          boundedWave > MAX_WAVES + AFTERBURN_DOMINION_START_STAGE ? "primed" : "planned"
-        )
-      );
-    }
-
-    const nextSteps = steps.slice(0, 2);
-    const activeStep = nextSteps[0] || null;
-    const prompt = combatBand
-      ? `${pathLabel}. ${combatBand.label} 밴드의 headline target은 ${combatBand.headline}이며, ${combatBand.detail}`
-      : activeStep
-        ? `${pathLabel}. 다음 핵심 점프는 ${activeStep.title}이며, ${activeStep.detail}`
-        : `${pathLabel}. 남은 큰 jump가 잠겨 현재 endform을 그대로 굴리는 구간이다.`;
+    const steps = [
+      createRoadmapStep("I", stageOneTitle, stageOneDetail, stageOneState),
+      createRoadmapStep("II", stageTwoTitle, stageTwoDetail, stageTwoState),
+      createRoadmapStep("III", stageThreeTitle, stageThreeDetail, stageThreeState),
+    ];
+    const nextStep = steps.find((step) => step.state !== "locked") || steps[2];
+    const prompt =
+      nextStep && nextStep.state !== "locked"
+        ? `${pathLabel}. 현재 form track의 다음 점프는 ${nextStep.title}이며, ${nextStep.detail}`
+        : `${pathLabel}. 세 단계 form track이 모두 잠겨 남은 연전은 현재 endform을 오래 증명하는 구간이다.`;
     return {
       pathLabel,
       activeForm,
       doctrineTag: doctrine ? doctrine.tag : "CORE",
       prompt,
-      note:
-        combatBand
-          ? `${combatBand.label} · ${combatBand.headline}`
-          : nextSteps.length > 1
-          ? `${nextSteps[0].title} 다음에는 ${nextSteps[1].title}이 이어진다.`
-          : activeStep
-            ? `${activeStep.title}만 남아 있다.`
-            : "남은 headline breakpoint가 없다.",
-      steps: nextSteps,
+      note: `${steps[0].title} -> ${steps[1].title} -> ${steps[2].title}`,
+      steps,
     };
   }
 
