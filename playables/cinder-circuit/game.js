@@ -479,24 +479,30 @@
 
   const SHARED_LATE_ACT_ENCOUNTER_POOL = {
     8: {
+      label: "Wave 9 · Lockgrid Hunt I",
+      bandId: "lockgrid_hunt",
+      bandLabel: "Lockgrid Hunt",
+      bandFocusId: "doctrine_capstone",
       pressureFamily: "crossfire",
-      note: "Act 3 시작점부터 더는 doctrine별 맞춤 시험지가 아니다. 모든 빌드는 측면 skimmer 떼와 직선 lancer 돌입을 같은 전장에서 풀어야 하며, 자기 무기/차체가 무엇을 먼저 끊어야 사는지 직접 증명해야 한다.",
+      note: "Act 3 첫 밴드는 규칙을 다시 갈아엎지 않는다. 두 웨이브 동안 같은 open-lane hunt를 반복해, 완성 직전 doctrine body/gun이 측면 skimmer 훑기와 lancer 돌입을 실제로 얼마나 오래 잘라내는지 배우게 만든다.",
       directive:
-        "shared lockgrid. skimmer가 외곽 회전선을 긁고 lancer가 직선 charge로 비어 있는 중앙을 찌른다. doctrine별 안전 lane 없이 flank sweep와 charge bait를 동시에 해내야 한다.",
+        "lockgrid hunt. skimmer가 외곽 회전선을 긁고 lancer가 직선 charge로 중앙을 찌른다. 이번 밴드에서는 같은 압박이 두 번 이어지므로, flank sweep와 charge bait 순서를 몸으로 익히며 marked elite dive 각을 직접 만든다.",
       driveGainFactor: 1.4,
-      activeCap: 42,
-      spawnBudget: 190,
+      arena: AFTERBURN_ENDURANCE_ARENA,
+      activeCap: 39,
+      spawnBudget: 188,
       mix: {
         scuttler: 0.08,
         brute: 0.14,
-        shrike: 0.14,
+        shrike: 0.16,
         skimmer: 0.3,
         lancer: 0.22,
         mortar: 0.04,
         warden: 0.08,
       },
       hazard: {
-        label: "Lockgrid Breach",
+        label: "Lockgrid Hunt Surge",
+        type: null,
         interval: 8.8,
         count: 3,
         radius: 78,
@@ -506,84 +512,97 @@
       },
     },
     9: {
-      pressureFamily: "raid",
-      note: "shared late-act 중 하나는 이제 공용 greed bracket이다. contraband vault가 외곽에 잠깐 열리고 warden 봉쇄선과 mortar 포격이 그 접근을 세금처럼 막아, 어떤 빌드든 안전 운영과 고철 강탈 사이를 직접 저울질해야 한다.",
+      label: "Wave 10 · Lockgrid Hunt II",
+      bandId: "lockgrid_hunt",
+      bandLabel: "Lockgrid Hunt",
+      bandFocusId: "doctrine_capstone",
+      pressureFamily: "crossfire",
+      note: "Lockgrid Hunt 두 번째 판도 같은 ecology를 유지한 채 밀도만 올린다. 새 greed 규칙을 끼워 넣지 않고 같은 전장을 더 거칠게 반복해, 플레이어가 band headline인 doctrine capstone dive를 준비하거나 바로 잠글 시간을 만든다.",
       directive:
-        "shared scrapstorm. contraband vault를 부수면 큰 scrap burst가 흩어지지만, 시간을 쓰는 동안 warden 사선과 mortar가 퇴로를 묶는다. 눈앞 적을 닦는 대신 먼 금고를 찢을지 바로 정해야 한다.",
+        "lockgrid hunt. 첫 판보다 pressure clump가 두꺼워졌지만 규칙은 같다. skimmer 외곽 sweep를 먼저 접을지, lancer charge를 bait하며 marked elite cache까지 곧게 찢을지 같은 질문을 한 번 더 푼다.",
       driveGainFactor: 1.44,
-      activeCap: 44,
+      arena: AFTERBURN_ENDURANCE_ARENA,
+      activeCap: 41,
       spawnBudget: 202,
       mix: {
-        scuttler: 0.1,
+        scuttler: 0.08,
         brute: 0.18,
         shrike: 0.18,
-        brander: 0.34,
-        binder: 0.04,
-        mortar: 0.1,
-        warden: 0.14,
+        skimmer: 0.24,
+        lancer: 0.22,
+        mortar: 0.06,
+        warden: 0.12,
       },
       hazard: {
-        label: "Shared Contraband Vault",
-        type: "salvage",
-        interval: 8,
-        count: 2,
-        radius: 74,
-        telegraph: 0.78,
-        duration: 7.4,
-        damage: 13,
-        coreHp: 72,
-        coreRadius: 18,
-        salvageScrap: 20,
-        salvageBurstCount: 4,
-        salvageBurstRadius: 56,
-        salvageDropLife: 9,
+        label: "Lockgrid Hunt Surge",
+        type: null,
+        interval: 8.2,
+        count: 4,
+        radius: 82,
+        telegraph: 0.76,
+        duration: 4.8,
+        damage: 15,
       },
     },
     10: {
-      pressureFamily: "pursuit",
-      note: "후반 pursuit는 한 doctrine이 편한 속도로 굴러가지 않는다. 떠도는 화구, 재진입하는 추격선, 뒤늦게 도착하는 mortar 포격이 동시에 겹쳐 모든 빌드의 회전 능력과 주포 폭발력을 같이 시험한다.",
+      label: "Wave 11 · Cinder Crown I",
+      bandId: "cinder_crown",
+      bandLabel: "Cinder Crown",
+      bandFocusId: "late_form",
+      pressureFamily: null,
+      note: "Act 3 두 번째 밴드는 다시 한 번 규칙을 고정한다. 이제 두 웨이브 동안 같은 relay crown breach를 반복해, doctrine capstone이나 다음 ascension body가 실제로 넓은 회랑을 어떻게 지우는지만 보게 만든다.",
       directive:
-        "starforge pursuit. drifting furnace가 현재 위치를 따라붙고, shrike 재진입과 mortar 탄막이 탈출 루트를 늦게 덮는다. 한 lane에 눌러앉지 말고 전장을 크게 꺾으며 위험 덩어리를 직접 찢어야 한다.",
+        "cinder crown breach. relay crown과 먼 포격원이 회랑을 길게 찢는다. 이 밴드에서는 같은 breach 규칙이 두 번 이어지므로, marked elite cache를 집으러 깊게 들어갈 타이밍과 먼 pylon 절단 루트를 반복 학습하게 된다.",
       driveGainFactor: 1.48,
-      activeCap: 46,
+      arena: AFTERBURN_ENDURANCE_ARENA,
+      activeCap: 43,
       spawnBudget: 218,
       mix: {
-        scuttler: 0.1,
-        brute: 0.2,
-        shrike: 0.22,
-        brander: 0.34,
-        binder: 0.04,
-        mortar: 0.12,
+        scuttler: 0.08,
+        brute: 0.18,
+        shrike: 0.16,
+        skimmer: 0.08,
+        lancer: 0.18,
+        brander: 0.12,
+        mortar: 0.08,
         warden: 0.1,
       },
       hazard: {
-        label: "Starforge Pursuit",
-        type: "drift",
-        interval: 8.3,
-        count: 2,
-        radius: 88,
+        label: "Cinder Crown Relay",
+        type: "relay",
+        interval: 7.5,
+        count: 3,
+        radius: 86,
         telegraph: 0.7,
-        duration: 6,
+        duration: 5,
         damage: 15,
-        driftSpeed: 118,
-        driftOrbit: 0.4,
+        coreHp: 78,
+        coreRadius: 19,
+        relayRange: 516,
+        relayWidth: 38,
+        relayDamage: 15,
       },
     },
     11: {
-      pressureFamily: "breach",
-      note: "최종 late-act crown은 모든 doctrine가 같은 hostile ecology를 통과해야 한다. 사중 relay, warden 차폐선, mortar 후열이 동시에 전장을 찢기 때문에 helper 정리보다 플레이어가 직접 먼 코어와 포격원을 지우는 속도가 더 크게 드러난다.",
+      pressureFamily: null,
+      label: "Wave 12 · Cinder Crown II",
+      bandId: "cinder_crown",
+      bandLabel: "Cinder Crown",
+      bandFocusId: "late_form",
+      note: "Cinder Crown 마지막 판도 같은 breach ecology를 유지한 채 스케일만 높인다. 새 objective를 덧붙이지 않고 같은 회랑 싸움을 한 번 더 크게 열어, 막 변한 endform이 넓은 crown corridor를 정말로 부수는지 증명하게 한다.",
       directive:
-        "cinder crown relay. 사중 relay crown과 warden 차폐선, mortar 포격이 함께 전장을 얇게 찢는다. 어느 doctrine이든 중앙 난전을 오래 붙들기보다 먼 pylon과 포격원을 먼저 지워 shared ecology 자체를 무너뜨려야 한다.",
+        "cinder crown breach. relay crown과 mortar 후열, lancer cut이 한 번 더 두꺼워진다. 하지만 규칙은 그대로이므로, 어느 doctrine이든 같은 corridor fight를 더 공격적으로 풀며 다음 Afterburn endurance를 준비해야 한다.",
       driveGainFactor: 1.54,
-      activeCap: 49,
+      arena: AFTERBURN_ENDURANCE_ARENA,
+      activeCap: 45,
       spawnBudget: 238,
       mix: {
         scuttler: 0.08,
         brute: 0.16,
         shrike: 0.16,
-        brander: 0.32,
-        binder: 0.04,
-        mortar: 0.12,
+        lancer: 0.2,
+        brander: 0.14,
+        mortar: 0.1,
         warden: 0.12,
       },
       hazard: {
@@ -1309,6 +1328,97 @@
     };
   }
 
+  function sanitizeHazardForType(hazard) {
+    if (!hazard) {
+      return hazard;
+    }
+    const nextHazard = { ...hazard };
+    const clearFields = (fields) => {
+      fields.forEach((field) => {
+        delete nextHazard[field];
+      });
+    };
+    if (nextHazard.type === "territory") {
+      clearFields([
+        "relayRange",
+        "relayWidth",
+        "relayDamage",
+        "driftSpeed",
+        "driftOrbit",
+        "salvageScrap",
+        "salvageBurstCount",
+        "salvageBurstRadius",
+        "salvageDropLife",
+      ]);
+      return nextHazard;
+    }
+    if (nextHazard.type === "relay") {
+      clearFields([
+        "turretInterval",
+        "turretDamage",
+        "turretSpeed",
+        "enemyPullRadius",
+        "driftSpeed",
+        "driftOrbit",
+        "salvageScrap",
+        "salvageBurstCount",
+        "salvageBurstRadius",
+        "salvageDropLife",
+      ]);
+      return nextHazard;
+    }
+    if (nextHazard.type === "salvage") {
+      clearFields([
+        "turretInterval",
+        "turretDamage",
+        "turretSpeed",
+        "enemyPullRadius",
+        "relayRange",
+        "relayWidth",
+        "relayDamage",
+        "driftSpeed",
+        "driftOrbit",
+      ]);
+      return nextHazard;
+    }
+    if (nextHazard.type === "drift") {
+      clearFields([
+        "coreHp",
+        "coreRadius",
+        "turretInterval",
+        "turretDamage",
+        "turretSpeed",
+        "enemyPullRadius",
+        "relayRange",
+        "relayWidth",
+        "relayDamage",
+        "salvageScrap",
+        "salvageBurstCount",
+        "salvageBurstRadius",
+        "salvageDropLife",
+      ]);
+      return nextHazard;
+    }
+    clearFields([
+      "coreHp",
+      "coreRadius",
+      "turretInterval",
+      "turretDamage",
+      "turretSpeed",
+      "enemyPullRadius",
+      "relayRange",
+      "relayWidth",
+      "relayDamage",
+      "driftSpeed",
+      "driftOrbit",
+      "salvageScrap",
+      "salvageBurstCount",
+      "salvageBurstRadius",
+      "salvageDropLife",
+    ]);
+    return nextHazard;
+  }
+
   function resolveWaveConfig(index, build = null) {
     const baseConfig = WAVE_CONFIG[clamp(index, 0, MAX_WAVES - 1)];
     if (!baseConfig || index < LATE_BREAK_ARMORY_WAVE - 1 || !build) {
@@ -1322,14 +1432,16 @@
       ...baseConfig,
       ...override,
       mix: override.mix ? { ...override.mix } : { ...baseConfig.mix },
-      hazard: override.hazard
-        ? {
-            ...(baseConfig.hazard || {}),
-            ...override.hazard,
-          }
-        : baseConfig.hazard
-          ? { ...baseConfig.hazard }
-          : null,
+      hazard: sanitizeHazardForType(
+        override.hazard
+          ? {
+              ...(baseConfig.hazard || {}),
+              ...override.hazard,
+            }
+          : baseConfig.hazard
+            ? { ...baseConfig.hazard }
+            : null
+      ),
     });
   }
 
@@ -6264,6 +6376,7 @@
     const pursuit = getDoctrineForgePursuitDef(doctrine || build);
     const capstone = getDoctrineCapstoneDef(build);
     const currentWeapon = weapon || computeWeaponStats(build);
+    const combatBand = getCombatBandState(build, currentWeapon, boundedWave);
     const doctrineForm = currentWeapon && currentWeapon.doctrineFormLabel ? currentWeapon.doctrineFormLabel : null;
     const activeForm =
       (currentWeapon && currentWeapon.afterburnDominionLabel) ||
@@ -6380,16 +6493,20 @@
 
     const nextSteps = steps.slice(0, 2);
     const activeStep = nextSteps[0] || null;
-    const prompt = activeStep
-      ? `${pathLabel}. 다음 핵심 점프는 ${activeStep.title}이며, ${activeStep.detail}`
-      : `${pathLabel}. 남은 큰 jump가 잠겨 현재 endform을 그대로 굴리는 구간이다.`;
+    const prompt = combatBand
+      ? `${pathLabel}. ${combatBand.label} 밴드의 headline target은 ${combatBand.headline}이며, ${combatBand.detail}`
+      : activeStep
+        ? `${pathLabel}. 다음 핵심 점프는 ${activeStep.title}이며, ${activeStep.detail}`
+        : `${pathLabel}. 남은 큰 jump가 잠겨 현재 endform을 그대로 굴리는 구간이다.`;
     return {
       pathLabel,
       activeForm,
       doctrineTag: doctrine ? doctrine.tag : "CORE",
       prompt,
       note:
-        nextSteps.length > 1
+        combatBand
+          ? `${combatBand.label} · ${combatBand.headline}`
+          : nextSteps.length > 1
           ? `${nextSteps[0].title} 다음에는 ${nextSteps[1].title}이 이어진다.`
           : activeStep
             ? `${activeStep.title}만 남아 있다.`
@@ -6434,6 +6551,62 @@
       <div class="roadmap-card__steps">${steps}</div>
       <p class="summary-note">${roadmap.note}</p>
     `;
+  }
+
+  function getCombatBandState(build, weapon = null, waveNumber = 1) {
+    const boundedWave = clamp(Math.round(waveNumber || 1), 1, MAX_WAVES + POST_CAPSTONE_WAVE_COUNT);
+    if (boundedWave < 9 || boundedWave > MAX_WAVES) {
+      return null;
+    }
+    const currentWeapon = weapon || computeWeaponStats(build);
+    const doctrine = getBastionDoctrineDef(build);
+    const capstoneTitle = doctrine
+      ? getDoctrineLateCapstoneLabel(doctrine) || `${doctrine.label} Apex`
+      : "Doctrine Capstone";
+    if (boundedWave <= 10) {
+      const lockedTitle =
+        (currentWeapon && currentWeapon.capstoneLabel) ||
+        (currentWeapon && currentWeapon.doctrineFormLabel) ||
+        capstoneTitle;
+      return build && build.doctrineCapstoneId
+        ? {
+            label: "Lockgrid Hunt",
+            headline: lockedTitle,
+            detail:
+              "이 밴드는 같은 open-lane crossfire를 두 번 반복한다. 이미 잠근 doctrine form을 긴 사선과 flank sweep 위에서 바로 길게 증명하는 구간이다.",
+          }
+        : {
+            label: "Lockgrid Hunt",
+            headline: capstoneTitle,
+            detail:
+              "Wave 9-10은 같은 open-lane crossfire를 유지한다. 새 계약을 읽기보다 같은 pressure 안에서 marked elite cache를 깊게 찢어 doctrine capstone을 당기는 데 집중하는 밴드다.",
+          };
+    }
+    if (build && !build.doctrineCapstoneId) {
+      return {
+        label: "Cinder Crown",
+        headline: capstoneTitle,
+        detail:
+          "Wave 11-12는 같은 crown breach 규칙을 유지한다. relay corridor와 포격 후열이 반복되므로, doctrine capstone cache를 회수할 때까지 같은 dive line을 더 정교하게 밀어붙이게 만든다.",
+      };
+    }
+    if (build && !build.lateAscensionId) {
+      return {
+        label: "Cinder Crown",
+        headline: "Ascension Core",
+        detail:
+          "Wave 11-12는 같은 crown breach를 한 번 더 반복하며 headline target을 Ascension Core 하나로 좁힌다. relay corridor를 가르며 첫 elite split cache를 직접 회수하는 데 집중하는 밴드다.",
+      };
+    }
+    return {
+      label: "Cinder Crown",
+      headline:
+        (currentWeapon && currentWeapon.lateAscensionLabel) ||
+        (currentWeapon && currentWeapon.capstoneLabel) ||
+        "Late Form",
+      detail:
+        "이 밴드는 같은 crown breach를 반복해 방금 잠근 late form을 바로 시험하게 만든다. 새 하위 계약보다 넓은 corridor fight에서 form의 절단력을 확인하는 구간이다.",
+    };
   }
 
   function shouldOfferStormArtilleryAfterburnAscension(build) {
@@ -13240,7 +13413,7 @@
       ? clamp(Math.round((variant.activeCap - 18) * 0.7), -2, 6)
       : 0;
     const hazard = encounterConfig.hazard
-      ? {
+      ? sanitizeHazardForType({
           ...encounterConfig.hazard,
           ...(variant && variant.hazard ? variant.hazard : {}),
           interval: Math.max(
@@ -13275,7 +13448,7 @@
                 ? variant.hazard.relayDamage
                 : encounterConfig.hazard.relayDamage) + escalation.hazardRelayDamageBonus
             : encounterConfig.hazard.relayDamage,
-        }
+        })
       : null;
     const wave = applyRiskMutationPressureTax({
       index: MAX_WAVES + boundedStage,
@@ -17306,6 +17479,8 @@
 
     const enemiesLeft = Math.max(0, state.wave ? state.wave.spawnBudget - state.wave.spawned : 0);
     if (elements.waveObjective) {
+      const combatBand = getCombatBandState(state.build, state.weapon, state.waveIndex + 1);
+      const bandRows = [];
       const overcommitRows = [];
       const pursuitRows = [];
       const combatCacheRows = [];
@@ -17326,6 +17501,10 @@
       let apexNote = "";
       let catalystCrucibleNote = "";
       let ascensionNote = "";
+      if (combatBand) {
+        bandRows.push(createStatusRow("Combat Band", combatBand.label));
+        bandRows.push(createStatusRow("Headline", combatBand.headline));
+      }
       if (state.wave && state.wave.blackLedgerRaid) {
         pactRows.push(
           createStatusRow(
@@ -17648,6 +17827,7 @@
           ${createStatusRow("현재 적", String(state.enemies.length))}
           ${createStatusRow("드랍", String(state.drops.length))}
           ${createStatusRow(hazardStatus.detailLabel, hazardStatus.detailValue)}
+          ${bandRows.join("")}
           ${combatCacheRows.join("")}
           ${lateAscensionRows.join("")}
           ${illegalOverclockRows.join("")}
@@ -17659,7 +17839,7 @@
           ${overcommitRows.join("")}
           ${pursuitRows.join("")}
         </div>
-        <p class="summary-note">${catalystCrucibleNote || ascensionNote || lateAscensionNote || riskMutationNote || apexNote || illegalOverclockNote || combatCacheNote || pactNote || pursuitNote || overcommitNote || hazardStatus.note}</p>
+        <p class="summary-note">${combatBand ? combatBand.detail : catalystCrucibleNote || ascensionNote || lateAscensionNote || riskMutationNote || apexNote || illegalOverclockNote || combatCacheNote || pactNote || pursuitNote || overcommitNote || hazardStatus.note}</p>
       `;
     }
 
