@@ -41,6 +41,18 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-24 12:05:00 KST
+  Findings:
+  - The written contract is finally aligned to a `12-wave` alpha run, so the drift is no longer in the docs. The drift is in the playable still acting like a systems-rich prototype: support modules, shard pursuits, bay language, and forge framing still create more anticipation than the main gun/body becoming absurd.
+  - `Wave 5-6` are closer to a real domination band, but `Wave 7-8` still spend too much of their threat on corridor ownership and backline servicing. With binder, mortar, relay crown, and `activeCap 31 -> 35`, the arena starts breathing and then quickly collapses back into maintenance instead of producing the clean hold-or-dive movement tests strong arena shooters use for replayable tension.
+  - The forge/HUD still briefs too much. `updateHUD()` and `renderForgeOverlay()` keep repeating `Headline Leap`, `Survival Rider`, `Proof Window`, roadmap, and mode labels across multiple panels, while references like `Hades` boon reveals, `Nova Drift` level-ups, and `Brotato` shops sell one hunger spike first and let the proof happen in combat.
+  - The future `20-30 wave` promise is still structurally weak. `POST_CAPSTONE_ASCENSION_PROFILE` mostly adds count, damage, hazard compression, and core HP, which extends endurance but does not imply enough new combat grammar to justify a much longer run.
+  - This should be a consolidation pass, not another content pass. Until one rerunnable route proves that the main chassis fantasy dominates support layers, extra branches or utility wrappers will just make the run feel busier.
+  Top Priority: Rebuild the mid-run reward/readability stack around one oversized primary-form payoff, then retune `Wave 7-8` so that payoff is tested by pursuit/breach movement decisions rather than renewed objective upkeep.
+  Why Now: If the player still wants the satellites, shields, and side systems more than the core form, the run will not sustain repeat-play hunger.
+  Do Not Repeat: Do not answer this with another branch, shard chase, or support module before the main chassis becomes the obvious reason to survive to the next forge.
+  Release Gate: Builds
+
 - 2026-03-24 11:20:00 KST
   Findings:
   - Era II still does not earn repeat-run hunger. `Wave 5-6` now talk like a domination band, but `Wave 7-8` fall back into the same bastion-plus-mortar ecology, so the act reads as one long upkeep family instead of a payoff band that cleanly flips into a spike band.
@@ -1550,6 +1562,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 12:35:00 KST
+  Changed: rebuilt the forge reward read in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) around one simulated `Monster Form Promise` instead of repeating equal-weight `Headline Leap / Survival Rider / Proof Window` summaries across the overlay. The new headline showcase now previews one oversized primary-form candidate by actually applying the card to a cloned build, then surfacing before/after `Form`, `Volley`, and `Battery` deltas so the player sees the next gun/body mutation in concrete combat terms before reading the smaller rider context. I also trimmed the left HUD card to keep the main form and proof cue visible without re-briefing the full three-row contract, added the new hero-panel treatment in [styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css), and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert that forge headline previews produce stable delta rows and a proof label. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was still open on the reward/readability side even after the Act II combat recut. The highest-value bounded interpretation was to stop telling the player about the next form in abstract roadmap language and instead make one main-gun/body payoff visibly dominate the forge moment, because replay hunger depends on wanting the chassis more than the satellites around it.
+  Follow-up risk: the forge now sells one primary-form spike first, but the underlying choice pool can still surface a defense or greed card as the showcased promise if that card creates the largest stat delta for the current build. If that ever starts stealing appetite back from the core gun path, the next pass should hard-author the showcase priority by forge band instead of relying on generic delta scoring. Release Gate: `Rewards`. For reference direction, this UI pass deliberately leaned on the appetite-first hero reveal of `Hades` boon picks and the concrete fire-geometry anticipation of `Nova Drift` level-up prompts.
 
 - 2026-03-24 11:35:00 KST
   Changed: recut Act II's back half in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 7-8` no longer repeat the same bastion-plus-mortar upkeep family that already dominated the old `Wave 5-8` band. `Wave 7 · Crownfire` now flips into a `pursuit`-driven drift spike with binder/lancer collapse and no bastion core tax, while `Wave 8 · Forgecross` now cashes out as a `breach`-style relay crown that asks for one hard corridor tear instead of another territory cleanup rehearsal. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to pin the new `Afterglow -> Breakline -> Crownfire -> Forgecross` cadence: domination proof, open-lane followthrough, drift spike, then relay breach finish. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

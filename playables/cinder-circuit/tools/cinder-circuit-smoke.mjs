@@ -93,6 +93,18 @@ assert.ok(
     ["공세 모듈", "방호/유틸 차체", "보조 시스템"].includes(choice.laneLabel)
   )
 );
+const actBreakHeadlineChoice =
+  actBreakCacheChoices.find((choice) => ["주무장 진화", "대형 화력"].includes(choice.laneLabel)) ||
+  actBreakCacheChoices[0];
+const actBreakHeadlineShowcase = game.getForgeHeadlineShowcase(
+  actBreakHeadlineChoice,
+  actBreakCacheBuild,
+  5
+);
+assert.ok(actBreakHeadlineShowcase);
+assert.equal(actBreakHeadlineShowcase.rows.length, 3);
+assert.ok(actBreakHeadlineShowcase.rows.some((row) => row.label === "Form"));
+assert.ok(actBreakHeadlineShowcase.proofLabel.length > 0);
 const wildcardGrantBuild = game.createInitialBuild("scrap_pact");
 const wildcardGrantChoices = game.buildFieldGrantChoices(wildcardGrantBuild, Math.random, 4);
 const wildcardChoice = wildcardGrantChoices.find(

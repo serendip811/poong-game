@@ -7082,6 +7082,209 @@
     `;
   }
 
+  function clonePreviewBuild(build) {
+    return build ? JSON.parse(JSON.stringify(build)) : null;
+  }
+
+  function createForgePreviewRun(build) {
+    if (!build) {
+      return null;
+    }
+    const previewBuild = clonePreviewBuild(build);
+    return {
+      build: previewBuild,
+      resources: { scrap: 999, scrapCollected: 0, scrapSpent: 0 },
+      stats: { kills: 0, coresCollected: 0, scrapCollected: 0, scrapSpent: 0 },
+      player: {
+        hp: Math.max(1, 100 + (previewBuild.maxHpBonus || 0)),
+        maxHp: Math.max(1, 100 + (previewBuild.maxHpBonus || 0)),
+        heat: 0,
+        overheated: false,
+        invulnerableTime: 0,
+      },
+    };
+  }
+
+  function getWeaponFormLabel(weapon) {
+    if (!weapon) {
+      return "Unknown Form";
+    }
+    return (
+      weapon.headlineFormLabel ||
+      weapon.afterburnDominionLabel ||
+      weapon.afterburnOverdriveLabel ||
+      weapon.lateAscensionLabel ||
+      weapon.lateFieldConvergenceLabel ||
+      weapon.capstoneLabel ||
+      weapon.doctrineFormLabel ||
+      weapon.evolutionLabel ||
+      (weapon.core ? weapon.core.label : "Base Frame")
+    );
+  }
+
+  function getWeaponEchoCount(weapon) {
+    if (!weapon) {
+      return 0;
+    }
+    const patternCounts = [
+      weapon.lateFieldMutationFirePattern &&
+      Array.isArray(weapon.lateFieldMutationFirePattern.offsets)
+        ? weapon.lateFieldMutationFirePattern.offsets.length
+        : 0,
+      weapon.riskMutationFirePattern &&
+      Array.isArray(weapon.riskMutationFirePattern.offsets)
+        ? weapon.riskMutationFirePattern.offsets.length
+        : 0,
+      weapon.apexMutationFirePattern &&
+      Array.isArray(weapon.apexMutationFirePattern.offsets)
+        ? weapon.apexMutationFirePattern.offsets.length
+        : 0,
+      weapon.afterburnDominionFirePattern &&
+      Array.isArray(weapon.afterburnDominionFirePattern.offsets)
+        ? weapon.afterburnDominionFirePattern.offsets.length
+        : 0,
+    ];
+    return Math.max(...patternCounts, 0);
+  }
+
+  function describeWeaponVolley(weapon) {
+    if (!weapon || !weapon.core) {
+      return "화망 미확인";
+    }
+    if (weapon.core.id === "scatter") {
+      return `${weapon.pellets}펠릿 확산`;
+    }
+    if (weapon.core.id === "lance") {
+      return `관통 ${weapon.pierce} 레일`;
+    }
+    if (weapon.core.id === "ricochet") {
+      return `반사 ${weapon.bounce} / 연쇄 ${weapon.chain}`;
+    }
+    return `연사 ${(1 / Math.max(weapon.cooldown || 1, 0.08)).toFixed(1)}/s`;
+  }
+
+  function describeWeaponBattery(weapon) {
+    if (!weapon) {
+      return "보조 포문 없음";
+    }
+    if (weapon.lateFieldBroadsideConfig) {
+      return `브로드사이드 포드 ${weapon.lateFieldBroadsideConfig.podCount}`;
+    }
+    const echoCount = getWeaponEchoCount(weapon);
+    if (echoCount > 0) {
+      return `에코 배럴 ${echoCount}`;
+    }
+    if (weapon.chain > 0) {
+      return `연쇄 반경 ${Math.round(weapon.chainRange || 0)}`;
+    }
+    return `탄속 ${Math.round(weapon.projectileSpeed || 0)}`;
+  }
+
+  function formatHeadlineDeltaRow(label, beforeValue, afterValue) {
+    if (!beforeValue && !afterValue) {
+      return null;
+    }
+    return {
+      label,
+      value:
+        beforeValue && beforeValue !== afterValue
+          ? `${beforeValue} -> ${afterValue}`
+          : afterValue || beforeValue,
+    };
+  }
+
+  function getForgeHeadlineShowcase(choice, build, waveNumber = 1) {
+    if (!choice || !build) {
+      return null;
+    }
+    const previewRun = createForgePreviewRun(build);
+    if (!previewRun) {
+      return null;
+    }
+    const beforeWeapon = computeWeaponStats(build);
+    const beforeSupport = getForgeSupportTrackSnapshot(build);
+    const appliedChoice = applyForgeChoice(previewRun, {
+      ...choice,
+      cost: 0,
+    });
+    if (!appliedChoice) {
+      return null;
+    }
+    const afterWeapon = computeWeaponStats(previewRun.build);
+    const afterSupport = getForgeSupportTrackSnapshot(previewRun.build);
+    const transformation = getForgeChoiceTransformation(choice);
+    const nextProof = getImmediateProofWindowSummary(previewRun.build, waveNumber);
+    const rows = [
+      formatHeadlineDeltaRow("Form", getWeaponFormLabel(beforeWeapon), getWeaponFormLabel(afterWeapon)),
+      formatHeadlineDeltaRow("Volley", describeWeaponVolley(beforeWeapon), describeWeaponVolley(afterWeapon)),
+      formatHeadlineDeltaRow("Battery", describeWeaponBattery(beforeWeapon), describeWeaponBattery(afterWeapon)),
+      formatHeadlineDeltaRow("Rider", beforeSupport.label, afterSupport.label),
+    ]
+      .filter(Boolean)
+      .slice(0, 3);
+    const headlineChanged = rows.some((row) => row.value.includes("->"));
+    const score =
+      (getForgeChoiceTone(choice) === "main" ? 1000 : 0) +
+      (headlineChanged ? 180 : 0) +
+      Math.abs((afterWeapon.pellets || 0) - (beforeWeapon.pellets || 0)) * 120 +
+      Math.abs((afterWeapon.pierce || 0) - (beforeWeapon.pierce || 0)) * 100 +
+      Math.abs((afterWeapon.chain || 0) - (beforeWeapon.chain || 0)) * 90 +
+      Math.abs((afterWeapon.bounce || 0) - (beforeWeapon.bounce || 0)) * 90 +
+      Math.abs(getWeaponEchoCount(afterWeapon) - getWeaponEchoCount(beforeWeapon)) * 70 +
+      Math.abs(
+        ((afterWeapon.lateFieldBroadsideConfig && afterWeapon.lateFieldBroadsideConfig.podCount) || 0) -
+          ((beforeWeapon.lateFieldBroadsideConfig && beforeWeapon.lateFieldBroadsideConfig.podCount) || 0)
+      ) *
+        120;
+    return {
+      choice,
+      transformation,
+      rows,
+      proofLabel: nextProof.label,
+      proofDetail: nextProof.detail,
+      score,
+    };
+  }
+
+  function pickForgeHeadlineShowcase(choices, build, waveNumber = 1) {
+    if (!Array.isArray(choices) || choices.length === 0 || !build) {
+      return null;
+    }
+    return choices
+      .map((choice) => getForgeHeadlineShowcase(choice, build, waveNumber))
+      .filter(Boolean)
+      .sort((left, right) => right.score - left.score)[0] || null;
+  }
+
+  function createForgeHeadlineShowcaseMarkup(showcase) {
+    if (!showcase) {
+      return "";
+    }
+    return `
+      <article class="forge-headline-showcase forge-headline-showcase--${showcase.transformation.tone}">
+        <div class="forge-headline-showcase__header">
+          <p class="panel__eyebrow">Monster Form Promise</p>
+          <span class="forge-headline-showcase__tag">${showcase.choice.contractLabel || showcase.transformation.laneLabel}</span>
+        </div>
+        <strong>${showcase.choice.title}</strong>
+        <p class="forge-headline-showcase__promise">${showcase.transformation.promise}</p>
+        <div class="forge-headline-showcase__grid">
+          ${showcase.rows
+            .map(
+              (row) => `
+                <article class="forge-headline-showcase__cell">
+                  <span>${row.label}</span>
+                  <strong>${row.value}</strong>
+                </article>
+              `
+            )
+            .join("")}
+        </div>
+        <p class="summary-note">${showcase.proofLabel}. ${showcase.transformation.proof}</p>
+      </article>
+    `;
+  }
+
   function getBenchCount(build, coreId) {
     if (!build || !Array.isArray(build.pendingCores)) {
       return 0;
@@ -12955,6 +13158,7 @@
     getDoctrinePursuitCapstoneDef,
     getCatalystCapstone,
     shouldOpenForgePackage,
+    getForgeHeadlineShowcase,
   };
 
   if (typeof module !== "undefined" && module.exports) {
@@ -19415,7 +19619,6 @@
       state.player.overdriveActiveTime > 0
         ? state.player.overdriveActiveTime / Math.max(0.1, state.player.overdriveDuration)
         : state.player.drive / 100;
-    const traitLabels = getWeaponTraitLabels(state.weapon);
     const hazardStatus = describeHazardState(state);
 
     elements.waveLabel.textContent = waveLabel;
@@ -19491,15 +19694,11 @@
             weapon.benchSyncLevel > 0 ? "summary-chip--hot" : ""
           }">${weapon.tierLabel}</span>
         </div>
-        <div class="status-list">
-          ${createStatusRow("Headline Leap", nextBreakpoint.label)}
-          ${createStatusRow("Survival Rider", supportTrack.label)}
-          ${createStatusRow("Proof Window", proofWindow.label)}
-        </div>
         <div class="mini-pill-row">
           ${createMiniPill(getHeadlineFormTierLabel(getHeadlineFormTier(state.build)), headlineLabel, "hot")}
+          ${createMiniPill("Proof", proofWindow.label, "cool")}
         </div>
-        <p class="summary-note">${nextBreakpoint.label} 도약 뒤 ${supportTrack.label}로 버티고 ${proofWindow.label}에서 즉시 증명한다.</p>
+        <p class="summary-note">${nextBreakpoint.label}이 다음 monster-form jump다. ${supportTrack.label}는 rider로만 짧게 남기고, 증명은 ${proofWindow.label}에서 한다.</p>
       `;
     }
 
@@ -19628,6 +19827,9 @@
     const nextFormStep = getNextBreakpointSummary(state.build, state.weapon, state.waveIndex + 2);
     const proofWindow = getImmediateProofWindowSummary(state.build, state.waveIndex + 2);
     const riderStep = state.forgeMaxSteps > 1 && state.forgeStep === 2;
+    const showcase = riderStep
+      ? null
+      : pickForgeHeadlineShowcase(state.forgeChoices, state.build, state.waveIndex + 2);
     const forgeModeLabel = state.pendingFinalForge
       ? "Final Forge"
       : state.forgeDraftType === "architecture_draft"
@@ -19688,7 +19890,7 @@
             ? `${dominantFormSummary.label} 위에 ${activeSupportTrack.label} rider를 얹고 ${proofWindow.label}에서 버틸 시간을 늘린다.`
             : `${dominantFormSummary.label}에서 ${nextFormStep.label}(으)로 뛰고, ${activeSupportTrack.label}로 약점을 받친 뒤 ${proofWindow.label}에서 즉시 증명한다.`
         }</p>
-        ${!riderStep ? createForgeSpotlightMarkup(state.forgeChoices) : ""}
+        ${!riderStep ? createForgeHeadlineShowcaseMarkup(showcase) : ""}
       </article>
       <article class="forge-context__card forge-context__card--span-two">
         ${createEraContractPanelMarkup(
