@@ -185,6 +185,134 @@
       },
     },
   };
+  const LATE_BREAK_FOLLOWTHROUGH_PROFILES = {
+    mutation: {
+      label: "Wave 10 · Overdrive Gallery",
+      bandId: "overdrive_gallery",
+      bandLabel: "Overdrive Gallery",
+      pressureFamily: "crossfire",
+      note: "Cataclysm Arsenal을 골랐다면 다음 late bracket도 반복 사냥판이 아니라 화력 과시 구간으로 이어져야 한다. arena를 더 벌리고 점유형 구조물을 걷어내, 방금 늘어난 배럴과 보조 포문이 열린 사선 두세 개를 동시에 지우는지 바로 드러나게 만든다.",
+      directive:
+        "overdrive gallery. skimmer 외곽 sweep보다 marked elite와 mortar perch 절개가 먼저다. 열린 사선을 먼저 벌린 뒤 lancer charge를 새 split volley로 정면 절단해, 무기가 lane 하나가 아니라 교전 폭 전체를 먹는지 증명해야 한다.",
+      arena: {
+        width: 1760,
+        height: 980,
+      },
+      activeCap: 32,
+      spawnBudget: 188,
+      baseSpawnInterval: 0.372,
+      spawnIntervalMin: 0.112,
+      eliteEvery: 4,
+      mix: {
+        scuttler: 0.04,
+        brute: 0.12,
+        shrike: 0.14,
+        skimmer: 0.26,
+        lancer: 0.24,
+        mortar: 0.08,
+        warden: 0.12,
+      },
+      mixWeight: 0.58,
+      hazard: {
+        label: "Gallery Surge",
+        interval: 9,
+        count: 2,
+        radius: 76,
+        telegraph: 0.78,
+        duration: 4.2,
+        damage: 15,
+      },
+    },
+    aegis: {
+      label: "Wave 10 · Halo Bastion Run",
+      bandId: "halo_bastion_run",
+      bandLabel: "Halo Bastion Run",
+      pressureFamily: "pursuit",
+      note: "Warplate Halo를 골랐다면 다음 late bracket은 같은 hunt 반복이 아니라 복구 창을 직접 캐는 dive-reset 시험이어야 한다. drift furnace가 lane을 접지만 active cap을 낮춰 plate를 믿고 깊게 들어갔다 빠질 수 있는 회복 구간을 남긴다.",
+      directive:
+        "halo bastion run. drifting furnace가 닫히기 전에 guard plate를 태워 전열 한 줄을 비우고, 비워진 pocket을 오래 욕심내지 말고 즉시 재배치해야 한다. 오래 서서 버티기보다 dive-reset cadence가 살아남는 bracket이다.",
+      arena: {
+        width: 1660,
+        height: 960,
+      },
+      activeCap: 30,
+      spawnBudget: 184,
+      baseSpawnInterval: 0.394,
+      spawnIntervalMin: 0.118,
+      eliteEvery: 4,
+      mix: {
+        scuttler: 0.04,
+        brute: 0.18,
+        shrike: 0.18,
+        skimmer: 0.08,
+        lancer: 0.12,
+        binder: 0.12,
+        mortar: 0.06,
+        warden: 0.12,
+        brander: 0.1,
+      },
+      mixWeight: 0.56,
+      hazard: {
+        label: "Halo Bastion Drift",
+        type: "drift",
+        interval: 8.9,
+        count: 2,
+        radius: 94,
+        telegraph: 0.82,
+        duration: 6.1,
+        damage: 14,
+        driftSpeed: 122,
+        driftOrbit: 0.34,
+      },
+    },
+    ledger: {
+      label: "Wave 10 · Jackpot Caravan",
+      bandId: "jackpot_caravan",
+      bandLabel: "Jackpot Caravan",
+      pressureFamily: "raid",
+      note: "Black Ledger Heist를 골랐다면 다음 late bracket은 같은 hunt 반복이 아니라 cash-out chase로 이어져야 한다. moving vault를 크게 키우고 active cap을 낮춰, 깊게 들어가 jackpot을 뜯을지 이탈 타이밍을 칼같이 고를지 바로 다시 묻는다.",
+      directive:
+        "jackpot caravan. contraband vault가 긴 외곽선 위를 도망친다. 금고를 오래 쫓으면 payout은 커지지만 brander와 lancer가 greed lane 뒤를 닫으니, 언제 찢고 언제 버릴지 스스로 cash-out 기준을 정해야 한다.",
+      arena: {
+        width: 1740,
+        height: 960,
+      },
+      activeCap: 31,
+      spawnBudget: 190,
+      baseSpawnInterval: 0.386,
+      spawnIntervalMin: 0.112,
+      eliteEvery: 4,
+      mix: {
+        scuttler: 0.04,
+        brute: 0.12,
+        shrike: 0.14,
+        skimmer: 0.14,
+        lancer: 0.18,
+        brander: 0.18,
+        binder: 0.12,
+        mortar: 0.08,
+      },
+      mixWeight: 0.58,
+      hazard: {
+        label: "Jackpot Caravan",
+        type: "caravan",
+        interval: 8.4,
+        count: 2,
+        radius: 84,
+        telegraph: 0.78,
+        duration: 8,
+        damage: 15,
+        coreHp: 94,
+        coreRadius: 19,
+        salvageScrap: 28,
+        salvageBurstCount: 6,
+        salvageBurstRadius: 66,
+        salvageDropLife: 9.4,
+        driftSpeed: 132,
+        driftOrbit: 0.28,
+      },
+    },
+  };
 
   const WAVE_CONFIG = [
     {
@@ -1602,6 +1730,13 @@
     return LATE_BREAK_ENCOUNTER_PROFILES[build.lateBreakProfileId] || null;
   }
 
+  function getLateBreakFollowthroughProfile(build) {
+    if (!build || !build.lateBreakProfileId) {
+      return null;
+    }
+    return LATE_BREAK_FOLLOWTHROUGH_PROFILES[build.lateBreakProfileId] || null;
+  }
+
   function resolveWaveConfig(index, build = null) {
     const baseConfig = WAVE_CONFIG[clamp(index, 0, MAX_WAVES - 1)];
     if (!baseConfig || index < LATE_BREAK_ARMORY_WAVE - 1 || !build) {
@@ -1639,6 +1774,28 @@
               ? {
                   ...(config.hazard || {}),
                   ...lateBreakProfile.hazard,
+                }
+              : config.hazard
+                ? { ...config.hazard }
+                : null
+          ),
+        };
+      }
+    } else if (index === LATE_BREAK_ARMORY_WAVE) {
+      const lateBreakFollowthrough = getLateBreakFollowthroughProfile(build);
+      if (lateBreakFollowthrough) {
+        config = {
+          ...config,
+          ...lateBreakFollowthrough,
+          arena: lateBreakFollowthrough.arena || config.arena,
+          mix: lateBreakFollowthrough.mix
+            ? { ...lateBreakFollowthrough.mix }
+            : { ...config.mix },
+          hazard: sanitizeHazardForType(
+            lateBreakFollowthrough.hazard
+              ? {
+                  ...(config.hazard || {}),
+                  ...lateBreakFollowthrough.hazard,
                 }
               : config.hazard
                 ? { ...config.hazard }
@@ -13543,8 +13700,8 @@
         ? "최종 웨이브 정리 완료. 마지막 포지에서 최종 각인과 7연속 afterburn survival ladder의 시작 형태를 마감한다."
         : isLateBreakArmory(forgeOptions)
           ? state.build.auxiliaryJunctionLevel > 0
-            ? "Wave 8 돌파. Late Break Armory를 단일 breakpoint로 재절단했다. 이제 정확히 세 장만 뜨며, Cataclysm Arsenal, Warplate Halo, Black Ledger Heist 중 하나를 고르면 Wave 9 spacing과 목표가 즉시 그 선택 쪽으로 꺾인다."
-            : "Wave 8 돌파. Late Break Armory를 단일 breakpoint로 재절단했다. 이제 정확히 세 장만 뜨며, Cataclysm Arsenal, Warplate Halo, Black Ledger Heist 중 하나를 고르면 Wave 9 spacing과 목표가 즉시 그 선택 쪽으로 꺾인다."
+            ? "Wave 8 돌파. Late Break Armory를 단일 breakpoint로 재절단했다. 이제 정확히 세 장만 뜨며, Cataclysm Arsenal, Warplate Halo, Black Ledger Heist 중 하나를 고르면 Wave 9-10 spacing과 objective가 그 선택 쪽으로 연속해서 꺾인다."
+            : "Wave 8 돌파. Late Break Armory를 단일 breakpoint로 재절단했다. 이제 정확히 세 장만 뜨며, Cataclysm Arsenal, Warplate Halo, Black Ledger Heist 중 하나를 고르면 Wave 9-10 spacing과 objective가 그 선택 쪽으로 연속해서 꺾인다."
           : draftType === "armory"
           ? "Wave 4 돌파. Act Break Armory에서 6장 중 대형 카드 두 장을 골라 4웨이브짜리 Act 2 빌드 정체성을 일찍 고정한다."
           : "웨이브 종료. 포지 카드로 다음 화력 축을 고른다.",
@@ -14323,7 +14480,7 @@
       const profile = getLateBreakEncounterProfile(state.build);
       pushCombatFeed(
         profile
-          ? `${profile.bandLabel} 고정. 다음 웨이브는 ${profile.label} 규칙으로 열리며 ${profile.directive}`
+          ? `${profile.bandLabel} 고정. 다음 두 웨이브는 ${profile.label}에서 시작해 같은 appetite를 더 다른 spacing/objective로 밀어붙인다. ${profile.directive}`
           : "Late breakpoint 적용. 다음 웨이브 spacing과 objective가 방금 고른 카드 기준으로 재배치된다.",
         "BREAK"
       );
