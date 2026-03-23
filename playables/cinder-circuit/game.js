@@ -7723,24 +7723,36 @@
     }
 
     const stageThreeTitle =
-      (currentWeapon && currentWeapon.afterburnDominionLabel) ||
-      (currentWeapon && currentWeapon.afterburnOverdriveLabel) ||
-      (currentWeapon && currentWeapon.lateAscensionLabel) ||
+      (CONSOLIDATED_12_WAVE_ROUTE
+        ? (currentWeapon && currentWeapon.lateAscensionLabel) || null
+        : (currentWeapon && currentWeapon.afterburnDominionLabel) ||
+          (currentWeapon && currentWeapon.afterburnOverdriveLabel) ||
+          (currentWeapon && currentWeapon.lateAscensionLabel) ||
+          null) ||
       (lateBreakHeadline && lateBreakHeadline.title) ||
       "Crown Break";
     let stageThreeDetail = lateBreakHeadline
-      ? `${lateBreakHeadline.detail} Wave 8 이후에는 이 계단 하나만 남고 live ascension이나 Afterburn 예외는 열리지 않는다.`
+      ? CONSOLIDATED_12_WAVE_ROUTE
+        ? `${lateBreakHeadline.detail} Wave 9-12는 이 late staircase 하나만 증명하는 고정 finale다.`
+        : `${lateBreakHeadline.detail} Wave 8 이후에는 이 계단 하나만 남고 live ascension이나 Afterburn 예외는 열리지 않는다.`
       : "Wave 8 Late Break Armory에서 하나의 late-form staircase를 고르면 Wave 9 payoff -> Wave 10 breach -> Wave 11-12 spike로 고정된다.";
     let stageThreeState = boundedWave >= LATE_BREAK_ARMORY_WAVE ? "primed" : "planned";
     if (build.afterburnDominionId) {
-      stageThreeDetail = `${stageThreeTitle}이(가) 이미 최종 지배 형태로 잠겼다. 남은 bracket은 판돈보다 압도감이 먼저 오는 victory lap이다.`;
+      stageThreeDetail = CONSOLIDATED_12_WAVE_ROUTE
+        ? `${stageThreeTitle}이(가) 이미 최종 형태로 잠겼다. 남은 Wave 9-12는 새 예외 없이 이 실루엣으로 space ownership를 증명하는 finale다.`
+        : `${stageThreeTitle}이(가) 이미 최종 지배 형태로 잠겼다. 남은 bracket은 판돈보다 압도감이 먼저 오는 victory lap이다.`;
       stageThreeState = "locked";
     } else if (build.afterburnOverdriveId) {
-      stageThreeDetail = `${stageThreeTitle} overdrive가 켜졌다. 다음 Dominion Break만 회수하면 마지막 bracket 하나가 승리 랩으로 재편된다.`;
+      stageThreeDetail = CONSOLIDATED_12_WAVE_ROUTE
+        ? `${stageThreeTitle}이(가) 마지막 headline jump로 잠겼다. 남은 finale는 이 body/gun form이 열린 lane을 얼마나 오래 지키는지 증명하는 구간이다.`
+        : `${stageThreeTitle} overdrive가 켜졌다. 다음 Dominion Break만 회수하면 마지막 bracket 하나가 승리 랩으로 재편된다.`;
       stageThreeState = "live";
     } else if (build.lateAscensionId) {
-      stageThreeDetail = `${stageThreeTitle} body split이 잠겼다. Afterburn elite cache로 남은 endurance를 overdrive 실루엣까지 더 밀 수 있다.`;
-      stageThreeState = boundedWave > MAX_WAVES ? "live" : "locked";
+      stageThreeDetail = CONSOLIDATED_12_WAVE_ROUTE
+        ? `${stageThreeTitle} body split이 잠겼다. 이제 남은 Wave 9-12는 추가 branch 없이 이 headline form을 바로 시험하는 고정 late staircase다.`
+        : `${stageThreeTitle} body split이 잠겼다. Afterburn elite cache로 남은 endurance를 overdrive 실루엣까지 더 밀 수 있다.`;
+      stageThreeState =
+        CONSOLIDATED_12_WAVE_ROUTE ? "locked" : boundedWave > MAX_WAVES ? "live" : "locked";
     } else if (lateBreakHeadline) {
       stageThreeState =
         boundedWave >= MAX_WAVES
@@ -8320,10 +8332,11 @@
       </div>
       <p class="summary-copy roadmap-card__path">지금은 headline form 하나와 rider 하나만 먼저 판다.</p>
       <div class="status-list">
-        ${createStatusRow("Headline Form", nextBreakpoint.label)}
+        ${createStatusRow("Headline Mutation", nextBreakpoint.label)}
         ${createStatusRow("Secondary Rider", supportTrack.label)}
+        ${createStatusRow("Immediate Ask", proofWindow.label)}
       </div>
-      <p class="summary-note">${notePrefix} ${supportTrack.label}는 약점을 덮는 rider로만 남기고, 증명은 ${proofWindow.label}에서 한다.</p>
+      <p class="summary-note">${notePrefix} ${supportTrack.label}는 rider로만 남기고, 다음 증명은 ${proofWindow.label} 하나에만 걸어 둔다.</p>
     `;
   }
 
@@ -15506,7 +15519,7 @@
     pushCombatFeed(
       isFinalForge
         ? CONSOLIDATED_12_WAVE_ROUTE
-          ? "최종 웨이브 정리 완료. 마지막 포지는 post-capstone 사다리를 예고하지 않고, 이번 12-wave spine의 최종 form seal만 잠근다."
+          ? "최종 웨이브 정리 완료. 마지막 포지는 다른 사다리를 예고하지 않고 이번 12-wave spine의 최종 form seal만 잠근다."
           : "최종 웨이브 정리 완료. 마지막 포지에서 최종 각인과 7연속 afterburn survival ladder의 시작 형태를 마감한다."
         : isLateBreakArmory(forgeOptions)
           ? state.build.auxiliaryJunctionLevel > 0
@@ -19979,7 +19992,7 @@
     const focusEyebrow = state.pendingFinalForge
       ? "Run Seal"
       : riderStep
-        ? "Rider Lock"
+        ? "Secondary Rider"
         : "Headline Mutation";
     const focusTitle = state.pendingFinalForge
       ? nextFormStep.label
@@ -19989,8 +20002,8 @@
     const focusPrompt = state.pendingFinalForge
       ? `${dominantFormSummary.label}를 이번 12-wave spine의 최종 실루엣으로 봉인한다.`
       : riderStep
-        ? `${dominantFormSummary.label} 위에 rider 한 장만 얹고 ${proofWindow.label}까지 버틴다.`
-        : `${dominantFormSummary.label} 다음에 가장 크게 전장을 바꿀 변이를 먼저 고른다.`;
+        ? `${dominantFormSummary.label} 위에 rider 한 장만 얹고 바로 다음 전투 ask를 버틴다.`
+        : `${dominantFormSummary.label} 다음에 가장 크게 전장을 바꿀 변이 하나만 먼저 고른다.`;
     elements.forgeSubtitle.textContent = state.pendingFinalForge
       ? `${forgeModeLabel} · ${focusTitle} · 고철 ${Math.round(state.resources.scrap)}`
       : riderStep
@@ -20004,31 +20017,24 @@
         </div>
         <strong>${focusTitle}</strong>
         <p>${focusPrompt}</p>
-        <div class="forge-focus__triptych">
-          <article class="forge-focus__pill">
-            <p class="panel__eyebrow">Current Form</p>
-            <strong>${dominantFormSummary.label}</strong>
-            <p>${dominantFormSummary.detail}</p>
-          </article>
-          <article class="forge-focus__pill">
-            <p class="panel__eyebrow">${riderStep ? "Rider" : "Take This"}</p>
-            <strong>${focusTitle}</strong>
-            <p>${riderStep ? activeSupportTrack.detail : nextFormStep.detail}</p>
-          </article>
-          <article class="forge-focus__pill">
-            <p class="panel__eyebrow">${state.pendingFinalForge ? "Route Payoff" : "Next Fight"}</p>
-            <strong>${proofWindow.label}</strong>
-            <p>${proofWindow.detail}</p>
-          </article>
+        <div class="status-list">
+          ${createStatusRow(
+            "Headline Mutation",
+            riderStep || state.pendingFinalForge ? dominantFormSummary.label : focusTitle
+          )}
+          ${createStatusRow(
+            "Secondary Rider",
+            riderStep ? focusTitle : activeSupportTrack.label
+          )}
+          ${createStatusRow("Immediate Ask", proofWindow.label)}
         </div>
         <p class="forge-focus__proof"><span>${state.pendingFinalForge ? "Route Payoff" : "Next Proof"}</span>${
           state.pendingFinalForge
-            ? `${dominantFormSummary.label}를 ${nextFormStep.label}으로 봉인해 메인 12-wave route의 마지막 실루엣을 확정한다.`
+            ? `${dominantFormSummary.label}를 메인 12-wave route의 최종 실루엣으로 봉인한다.`
             : riderStep
-              ? `${activeSupportTrack.label} rider를 얹고 ${proofWindow.label}에서 버티는 시간이 곧 가치다.`
-              : `${focusTitle}가 ${proofWindow.label}에서 바로 space ownership를 넓혀야 한다.`
+              ? `${focusTitle}는 rider로만 남고, 가치는 ${proofWindow.label}에서 얼마나 오래 버티는지로 바로 드러난다.`
+              : `${focusTitle}를 먼저 집고 ${activeSupportTrack.label}는 rider로만 남긴다. 다음 ask는 ${proofWindow.label} 하나다.`
         }</p>
-        ${!riderStep ? createForgeHeadlineShowcaseMarkup(showcase) : ""}
       </article>
     `;
     elements.forgeCards.innerHTML = state.forgeChoices
@@ -20050,45 +20056,16 @@
               `
             )
             .join("");
-          const slotLabel = choice.riderSlot
-            ? state.resources.scrap < choice.cost
-              ? `${index + 1}번 선택 · rider 고철 부족`
+          const slotLabel =
+            state.resources.scrap < choice.cost
+              ? "고철 부족"
               : choice.cost > 0
-                ? `${index + 1}번 선택 · rider 고철 ${choice.cost}`
-                : `${index + 1}번 선택 · 무료 rider`
-            : state.forgeDraftType === "architecture_draft"
-            ? `${index + 1}번 선택 · 무료 branch lock`
-            : state.forgeDraftType === "field_grant"
-            ? state.resources.scrap < choice.cost
-              ? `${index + 1}번 선택 · 고철 부족`
-              : choice.cost > 0
-                ? `${index + 1}번 선택 · 현장 고철 ${choice.cost}`
-                : `${index + 1}번 선택 · 무료 회수`
-            : state.forgeDraftType === "bastion_draft"
-              ? state.resources.scrap < choice.cost
-                ? `${index + 1}번 선택 · 고철 부족`
+                ? `고철 ${choice.cost}`
                 : choice.action === "bastion_pact"
-                  ? `${index + 1}번 선택 · 체력 대가 계약`
-                  : choice.action === "wave6_ascension"
-                    ? `${index + 1}번 선택 · ascension 고철 ${choice.cost}`
-                  : choice.action === "bastion_bay_forge"
-                    ? wave6AscensionDraft
-                      ? `${index + 1}번 선택 · flex subsystem ${choice.cost}`
-                      : `${index + 1}번 선택 · 시스템 + 베이 ${choice.cost}`
-                    : choice.cost > 0
-                      ? wave6AscensionDraft
-                        ? `${index + 1}번 선택 · breakpoint 고철 ${choice.cost}`
-                        : `${index + 1}번 선택 · spike 고철 ${choice.cost}`
-                      : `${index + 1}번 선택 · 무료 안정화`
-              : state.forgeDraftType === "catalyst_draft"
-                ? choice.type === "fallback"
-                  ? `${index + 1}번 선택 · 촉매 보류`
-                  : choice.action === "catalyst_reforge"
-                    ? `${index + 1}번 선택 · 무료 점화`
-                    : `${index + 1}번 선택 · 무료 안정화`
-              : state.resources.scrap < choice.cost
-                ? `${index + 1}번 선택 · 고철 부족`
-                : `${index + 1}번 선택 · 고철 ${choice.cost}`;
+                  ? "체력 대가"
+                  : choice.type === "fallback"
+                    ? "보류"
+                    : "무료";
           const isFeaturedHeadline = !riderStep && index === featuredIndex;
           if (riderStep) {
             return `
@@ -20122,7 +20099,7 @@
             data-verb="${choice.verb}"
             ${state.resources.scrap < choice.cost ? "disabled" : ""}
           >
-            <span class="forge-card__tag">Alt Pick</span>
+            <span class="forge-card__tag">${contractLabel}</span>
             <h3>${choice.title}</h3>
             <p class="forge-card__hero-copy">${transformation.promise}</p>
             ${
@@ -20146,7 +20123,7 @@
             data-verb="${choice.verb}"
             ${state.resources.scrap < choice.cost ? "disabled" : ""}
           >
-            <span class="forge-card__badge">Primary Mutation</span>
+            <span class="forge-card__badge">Headline Mutation</span>
             <div class="forge-card__hero forge-card__hero--${transformation.tone}">
               <span class="forge-card__hero-label">${contractLabel}</span>
               <h3>${choice.title}</h3>

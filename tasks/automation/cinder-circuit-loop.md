@@ -13,7 +13,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze all post-capstone/ascension spectacle out of the player promise and prove one rerunnable `Wave 1-12` ladder where forge sells a single craveable mutation and each era alternates clean payoff windows with readable breach tests.
+- Immediate priority: suppress all post-capstone promise from the player-facing route and prove one rerunnable `Wave 1-12` ladder where each forge stop sells one headline mutation first, each era grants a real domination window, and Act 3 closes with payoff-to-spike escalation instead of nonstop layered exams.
 
 ## Release Gates
 
@@ -40,6 +40,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 17:20:00 KST
+  Findings:
+  - The run is still advertising a second game instead of closing a strong first one. `POST_CAPSTONE_WAVE_COUNT`, `POST_CAPSTONE_WAVE_LABELS`, the large `POST_CAPSTONE_ENCOUNTER_POOL`, and multiple `Afterburn`/ascension strings in `game.js` keep telling the player that `Wave 12` is only a prelude, which weakens the release-feeling promise of the actual 12-wave route.
+  - Act 3 pacing is still too exam-heavy for repeat-run hunger. `Lockgrid` gives one brief payoff beat, then `Scrapline`, `Starforge`, and `Cinder Crown` stack relay, ignition, pursuit, and binder pressure in near-continuous sequence, so the player spends the finale servicing closures more than enjoying a monster form owning space.
+  - The HUD/forge layer is still reading like an operations console. `updateHUD()` continues to surface dominant form, next breakpoint, proof window, support track, roadmap, telemetry, and hazard detail at once, while `renderForgeOverlay()` still wraps picks in mode labels, triptych context, preview rows, proof copy, and slot jargon before the mutation fantasy can land.
+  - Support growth remains more immediately legible than core chassis escalation. `SUPPORT_SYSTEM_DEFS` gives obvious visual spikes like extra orbitals, triple missiles, larger drone swarms, and relay turrets, so the rerun fantasy can still drift toward attachment clutter instead of "I need to hit that next body/gun form again."
+  Top Priority: Strip the main-route presentation down to one dominant promise: hide all Afterburn/post-capstone language from the standard run and rebuild forge/HUD emphasis around a single oversized headline mutation, one secondary rider, and one immediate combat ask.
+  Why Now: Until the player can instantly read what they are becoming and why the next wave proves it, more depth only feels like more management.
+  Do Not Repeat: Do not answer this with another support branch, cache wrapper, or late-wave hazard remix before the base route reads cleanly at a glance.
+  Release Gate: UX/UI
 
 - 2026-03-24 16:55:00 KST
   Findings:
@@ -1629,6 +1640,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 17:45:00 KST
+  Changed: tightened the standard-route contract in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the HUD `Build Focus` card and the forge focus rail now speak in exactly three beats: `Headline Mutation`, `Secondary Rider`, and `Immediate Ask`. The forge top card no longer spends its first read on the old `Current Form / Take This / Next Fight` triptych or numbered slot jargon; it now collapses the moment to one headline pick, one rider line, one proof fight, and minimal cost tags. In the same pass I fenced more post-capstone language out of the core 12-wave roadmap so the late-stage contract now resolves as `Wave 9-12` finale wording instead of leaking `Afterburn` promise text into the standard run. [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts that the consolidated late roadmap keeps `Wave 9-12` framing and avoids `Afterburn` wording.
+  Why: this directly addresses the newest critique's `Top Priority` on the standard run's readability. The highest-value bounded interpretation was to stop briefing multiple equivalent concepts in the reward/HUD layer and instead make the player read one mutation to want, one rider to remember, and one fight that proves it. The reference direction was the appetite-first hierarchy in `Hades` boon reveals and the stripped future-form chase language in `Nova Drift`.
+  Follow-up risk: the standard route now reads much more cleanly, but several dormant post-capstone systems and labels still exist under the hood for non-core paths and future work. If critique still flags prototype debt, the next pass should hard-gate or remove more of those latent labels from nonessential surfaces rather than add new content.
+  Release Gate: UX/UI
 
 - 2026-03-24 17:20:00 KST
   Changed: rebuilt the main forge stop presentation in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and [styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) around one oversized primary mutation card plus stripped-down support context. The forge header now collapses to `Current Form / Take This / Next Fight`, the featured pick is framed as `Primary Mutation`, and the side picks are demoted to short `Alt Pick` cards with one proof line instead of extra rider/admin meta.

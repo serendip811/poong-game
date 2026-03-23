@@ -68,6 +68,14 @@ assert.ok(primedRoadmap.steps[1].title.includes("Sky Lance Battery"));
 assert.equal(primedRoadmap.steps[1].state, "primed");
 assert.ok(primedRoadmap.steps[1].detail.includes("Field Cache"));
 assert.equal(primedRoadmap.steps[2].title, "Crown Break");
+roadmapBuild.lateBreakProfileId = "mutation";
+const consolidatedLateRoadmap = game.getBuildRoadmap(
+  roadmapBuild,
+  game.computeWeaponStats(roadmapBuild),
+  9
+);
+assert.ok(consolidatedLateRoadmap.steps[2].detail.includes("Wave 9-12"));
+assert.ok(!consolidatedLateRoadmap.steps[2].detail.includes("Afterburn"));
 const lockgridRoadmap = game.getBuildRoadmap(roadmapBuild, game.computeWeaponStats(roadmapBuild), 9);
 assert.ok(lockgridRoadmap.prompt.includes("form track"));
 assert.ok(lockgridRoadmap.note.includes("->"));
