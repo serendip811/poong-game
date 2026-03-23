@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-23 23:45:00 KST
+  Findings:
+  - `playables/cinder-circuit/game.js` now offers satellites, shields, sentries, missiles, drones, chassis breaks, doctrine forms, ascensions, wildcards, and dominions, but the release-feel ceiling is still lower than the system count suggests because too much of the visible power is outsourced to escorts and overlays instead of the machine the player directly pilots.
+  - The support modules already hit clear Mk.I-III silhouette growth, while the main gun/chassis fantasy is less consistently immediate across doctrines. That is backward for repeat-run hunger: players rerun arena roguelites to become a terrifying body first, then decorate it with helpers.
+  - The forge has more categories than before, but many picks still read as coverage patches for missing lanes rather than lust-worthy commitments. A strong long-run build game needs more moments where the player is excited to force a thesis, not merely fix defense, cleanup, or range.
+  - The project is still structurally split between prototype ambition and release ambition. `docs/games/cinder-circuit-design.md` and `docs/games/cinder-circuit-source-analysis.md` still describe a short 5-wave run, so the implementation keeps stacking long-run machinery without a clean three-band power promise the player can actually feel and anticipate.
+  Top Priority: Recenter the run around one unmistakable player-body/main-weapon transformation per doctrine by roughly Wave 6-8, then demote support systems to amplifiers of that form instead of the primary spectacle.
+  Why Now: If the core thing being piloted is not the star, a 20-30 wave future will read like longer system management with prettier escorts.
+  Do Not Repeat: Do not answer this with more support modules, more cache labels, or more overlay roadmap text if the most exciting upgrade is still orbiting the player instead of being the player.
+
 - 2026-03-23 23:20:00 KST
   Findings:
   - `playables/cinder-circuit/game.js` now has real build layers, but rerun hunger is still too scripted. `SIGNATURE_DEFS -> BASTION_DOCTRINE_DEFS -> preferredSystemIds/preferredModIds/preferredAffixIds -> live ascension` means each run is heavily pre-authored into a doctrine rail instead of producing the volatile "what if this run breaks open?" energy that strong action roguelites live on.
@@ -1210,6 +1220,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-23 23:59 KST
+  Changed: added doctrine-specific mid-run body frames in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so a completed `Wave 6-8` forge pursuit now mutates the player chassis, not just the gun/support stack. `Mirror Hunt` now locks `Stormglass Pursuit Frame` for faster chase mobility and a visible winged silhouette, `Kiln Bastion` now locks `Bulwark Carapace` for a tankier reclaimed-pocket body with visible prow/shoulders, and `Storm Artillery` now locks `Thunder Rack Carriage` for a cooler-running siege body with visible dorsal barrels. The pursuit-complete combat feed also calls out the body frame explicitly, and [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts the new doctrine body forms plus their stat shifts. Validation target: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was still unaddressed in the most concrete place that mattered: by `Wave 6-8`, the run already had shard-driven doctrine jumps, but too much of the readable payoff still lived in escorts and support layers instead of in the thing the player directly pilots. The highest-value bounded interpretation was to make pursuit completion itself grant a real body-frame spike with unique handling, survivability, and silhouette per doctrine.
+  Follow-up risk: the new body frames are visible in combat and mechanically relevant, but the forge/HUD summary still headlines weapon-form labels more strongly than body-frame labels. A later pass should surface the active doctrine chassis name in the same appetite-first summary layer so the body mutation is as legible in menus as it is on the battlefield.
 
 - 2026-03-23 23:35 KST
   Changed: added a bounded `Wildcard Protocol` layer in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) that now appears on three scheduled field-cache beats outside doctrine rails: `Wave 4` offers `Smuggler Winch` to hijack the run into salvage-driven movement/economy, `Wave 7` offers `Nullplate Halo` to splice in off-doctrine defense, and `Wave 10` offers `Rogue Lattice` to bolt on autonomous offense plus an immediate late-arsenal jump. Each protocol is tracked on the build, shows up in the roadmap/forge summary, and is injected directly into `Field Cache` / `Arsenal Cache` choice rows so the player can see a rare cross-lane payoff before choosing it instead of discovering it as hidden doctrine permissioning. I also extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new wildcard offers, their application, and the expanded late-cache rows. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

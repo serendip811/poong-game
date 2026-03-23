@@ -3093,6 +3093,46 @@
     },
   };
 
+  const DOCTRINE_BODY_LADDER_DEFS = {
+    mirror_hunt: {
+      2: {
+        label: "Stormglass Pursuit Frame",
+        statusNote:
+          "Stormglass Pursuit Frame이 측면 익판과 절개 척추를 벌려, 열린 외곽을 더 길게 물고 늘어지는 추격 차체가 된다.",
+        applyPlayer(stats) {
+          stats.moveSpeed += 16;
+          stats.pickupRadius += 14;
+          stats.dashCooldown = clamp(stats.dashCooldown - 0.16, 1.15, 3.2);
+        },
+      },
+    },
+    kiln_bastion: {
+      2: {
+        label: "Bulwark Carapace",
+        statusNote:
+          "Bulwark Carapace가 전방 방열판과 용광 어깨를 닫아, reclaimed pocket 안에서 더 오래 버티며 정면 압박을 밀어내는 차체가 된다.",
+        applyPlayer(stats) {
+          stats.maxHp += 18;
+          stats.coolRate += 6;
+          stats.hazardMitigation = clamp(stats.hazardMitigation + 0.08, 0, 0.45);
+        },
+      },
+    },
+    storm_artillery: {
+      2: {
+        label: "Thunder Rack Carriage",
+        statusNote:
+          "Thunder Rack Carriage가 등판 배터리와 길어진 포신을 잠가, 이동은 조금 굼떠져도 공성 사선과 냉각 여유를 더 길게 확보한다.",
+        applyPlayer(stats) {
+          stats.maxHp += 10;
+          stats.moveSpeed -= 6;
+          stats.coolRate += 8;
+          stats.pickupRadius += 10;
+        },
+      },
+    },
+  };
+
   const DEFAULT_SIGNATURE_ID = "relay_oath";
   const ARCHITECTURE_DRAFT_WAVE = 3;
   const FORGE_PACKAGE_START_WAVE = 3;
@@ -6624,6 +6664,33 @@
       : null;
   }
 
+  function getDoctrineBodyForm(build) {
+    if (!build || !build.bastionDoctrineId || build.doctrineCapstoneId) {
+      return null;
+    }
+    const doctrine = getBastionDoctrineDef(build);
+    if (!doctrine) {
+      return null;
+    }
+    const ladder = DOCTRINE_BODY_LADDER_DEFS[doctrine.id];
+    if (!ladder) {
+      return null;
+    }
+    let stage = getDoctrineWeaponStage(build, doctrine);
+    while (stage > 0) {
+      const form = ladder[stage];
+      if (form) {
+        return {
+          stage,
+          doctrineId: doctrine.id,
+          ...form,
+        };
+      }
+      stage -= 1;
+    }
+    return null;
+  }
+
   function getDoctrinePreferredSystemIds(doctrine) {
     if (!doctrine) {
       return [];
@@ -6711,6 +6778,10 @@
       stats.moveSpeed += 5 + riskMutationLevel * 2;
       stats.pickupRadius += 4 + riskMutationLevel * 2;
       stats.maxHp -= Math.max(0, Math.ceil(riskMutationLevel / 2) * 2);
+    }
+    const doctrineBodyForm = getDoctrineBodyForm(build);
+    if (doctrineBodyForm && typeof doctrineBodyForm.applyPlayer === "function") {
+      doctrineBodyForm.applyPlayer(stats, build);
     }
     const stormArtilleryEndform = getStormArtilleryAfterburnEndform(build);
     if (stormArtilleryEndform && typeof stormArtilleryEndform.applyPlayer === "function") {
@@ -10898,6 +10969,7 @@
     shouldRunCatalystDraft,
     applyBlackLedgerRaidConfig,
     getDoctrineWeaponForm,
+    getDoctrineBodyForm,
     getDoctrineCapstoneDef,
     getBuildRoadmap,
     getLateAscensionDef,
@@ -11629,6 +11701,7 @@
       applyForgeChoice(state, systemChoice);
     }
     state.build.doctrineChaseClaimed = true;
+    const bodyForm = getDoctrineBodyForm(state.build);
     state.build.afterburnAscensionOffered = false;
     state.doctrinePursuit.active = false;
     state.build.upgrades.push(
@@ -11636,10 +11709,10 @@
     );
     pushCombatFeed(
       doctrine && doctrine.id === "storm_artillery"
-        ? `${(pursuit && pursuit.label) || "Forge Pursuit"} 완성. Thunder Rack까지는 즉시 잠겼고, Wave 9 live ascension에서 Sky Lance / Stormspire body split 중 하나를 전장에서 직접 회수해야 한다.`
+        ? `${(pursuit && pursuit.label) || "Forge Pursuit"} 완성. ${bodyForm ? `${bodyForm.label}가 즉시 닫히고 ` : ""}Thunder Rack까지는 바로 잠겼다. Wave 9 live ascension에서 Sky Lance / Stormspire body split 중 하나를 전장에서 직접 회수해야 한다.`
         : doctrine && doctrine.id === "kiln_bastion"
-          ? `${(pursuit && pursuit.label) || "Forge Pursuit"} 완성. Crucible Scatter와 거점장은 먼저 잠겼고, 진짜 Bulwark Foundry body splice는 Wave 9 live ascension에서 직접 뜯어내야 한다.`
-          : `${(pursuit && pursuit.label) || "Forge Pursuit"} 완성. Relay Storm Frame은 잠겼지만 최종 Stormglass body splice는 Wave 9 live ascension cache를 직접 회수해야 완성된다.`,
+          ? `${(pursuit && pursuit.label) || "Forge Pursuit"} 완성. ${bodyForm ? `${bodyForm.label}가 먼저 닫히고 ` : ""}Crucible Scatter와 거점장은 증폭층으로 따라붙는다. 진짜 Bulwark Foundry body splice는 Wave 9 live ascension에서 직접 뜯어내야 한다.`
+          : `${(pursuit && pursuit.label) || "Forge Pursuit"} 완성. ${bodyForm ? `${bodyForm.label}가 즉시 닫혀 ` : ""}Relay Storm Frame으로 외곽을 직접 찢을 수 있게 됐지만, 최종 Stormglass body splice는 Wave 9 live ascension cache를 직접 회수해야 완성된다.`,
       "FRAME"
     );
     setBanner(
@@ -18644,6 +18717,7 @@
         state.player.invulnerableTime > 0 ? "#fff0c9" : state.weapon.color;
       drawPlayerWave6AscensionFrame(context);
       drawPlayerChassisFrame(context);
+      drawPlayerDoctrineFrame(context);
       drawPlayerLateFieldMutationFrame(context);
       drawPlayerLateFieldConvergenceFrame(context);
       drawPlayerLateFieldAegisFrame(context);
@@ -18862,6 +18936,88 @@
     context.beginPath();
     context.arc(state.player.x, state.player.y, state.player.radius + 11 + level * 1.5, 0, Math.PI * 2);
     context.stroke();
+  }
+
+  function drawPlayerDoctrineFrame(context) {
+    if (!state.player || !state.build || state.build.doctrineCapstoneId) {
+      return;
+    }
+    const bodyForm = getDoctrineBodyForm(state.build);
+    if (!bodyForm) {
+      return;
+    }
+    const facing = state.player.facing || 0;
+    if (bodyForm.doctrineId === "mirror_hunt") {
+      [-1.2, -0.55, 0.55, 1.2].forEach((lane) => {
+        const fin = getOffsetPoint(state.player.x, state.player.y, facing, -2, 15 * lane);
+        context.fillStyle = "rgba(210, 244, 255, 0.72)";
+        context.beginPath();
+        context.moveTo(fin.x + Math.cos(facing) * 10, fin.y + Math.sin(facing) * 10);
+        context.lineTo(
+          fin.x - Math.cos(facing) * 6 - Math.sin(facing) * 7 * Math.sign(lane || 1),
+          fin.y - Math.sin(facing) * 6 + Math.cos(facing) * 7 * Math.sign(lane || 1)
+        );
+        context.lineTo(
+          fin.x - Math.cos(facing) * 11 + Math.sin(facing) * 5 * Math.sign(lane || 1),
+          fin.y - Math.sin(facing) * 11 - Math.cos(facing) * 5 * Math.sign(lane || 1)
+        );
+        context.closePath();
+        context.fill();
+      });
+      context.strokeStyle = "rgba(231, 250, 255, 0.68)";
+      context.lineWidth = 2;
+      context.beginPath();
+      context.arc(state.player.x, state.player.y, state.player.radius + 12, 0, Math.PI * 2);
+      context.stroke();
+      return;
+    }
+    if (bodyForm.doctrineId === "kiln_bastion") {
+      [-1, 1].forEach((direction) => {
+        const shoulder = getOffsetPoint(state.player.x, state.player.y, facing, -3, 18 * direction);
+        context.fillStyle = "rgba(255, 201, 142, 0.78)";
+        context.fillRect(
+          shoulder.x - 4 - Math.sin(facing) * 4,
+          shoulder.y - 4 + Math.cos(facing) * 4,
+          8,
+          11
+        );
+      });
+      const prow = getOffsetPoint(state.player.x, state.player.y, facing, 13, 0);
+      context.strokeStyle = "rgba(255, 229, 192, 0.72)";
+      context.lineWidth = 2.4;
+      context.beginPath();
+      context.moveTo(
+        prow.x - Math.sin(facing) * 8,
+        prow.y + Math.cos(facing) * 8
+      );
+      context.lineTo(prow.x + Math.cos(facing) * 10, prow.y + Math.sin(facing) * 10);
+      context.lineTo(
+        prow.x + Math.sin(facing) * 8,
+        prow.y - Math.cos(facing) * 8
+      );
+      context.stroke();
+      context.beginPath();
+      context.arc(state.player.x, state.player.y, state.player.radius + 12, 0, Math.PI * 2);
+      context.stroke();
+      return;
+    }
+    if (bodyForm.doctrineId === "storm_artillery") {
+      [-1.2, -0.4, 0.4, 1.2].forEach((lane) => {
+        const barrel = getOffsetPoint(state.player.x, state.player.y, facing, 12, lane * 10);
+        context.fillStyle = "rgba(241, 251, 255, 0.8)";
+        context.fillRect(
+          barrel.x - 2.5 - Math.sin(facing) * 5,
+          barrel.y - 2.5 + Math.cos(facing) * 5,
+          5,
+          13
+        );
+      });
+      context.strokeStyle = "rgba(255, 243, 214, 0.7)";
+      context.lineWidth = 2;
+      context.beginPath();
+      context.arc(state.player.x, state.player.y, state.player.radius + 11, 0, Math.PI * 2);
+      context.stroke();
+    }
   }
 
   function drawPlayerDoctrineCapstoneFrame(context) {
