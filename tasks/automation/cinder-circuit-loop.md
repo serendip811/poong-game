@@ -13,7 +13,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: vertical-slice-to-alpha expansion.
-- Immediate priority: align docs, pacing, and forge/HUD read around one rerunnable three-era 12-wave contract before adding any more branches, wrappers, or late-run systems.
+- Immediate priority: prove one rerunnable three-era 12-wave run by widening Era II breathing room and making forge choices sell dominant chassis/weapon transformations before support taxonomy.
 
 ## Release Gates
 
@@ -40,6 +40,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 10:40:00 KST
+  Findings:
+  - The docs are finally pointed at the right `12-wave` target, so the drift has moved. The current weakness is no longer contract confusion; it is that the actual run still spends too much of Era II on the same bastion ecology. `Wave 5-8` repeats anchor upkeep, mortar cleanup, and ownership chores four times in a row, which teaches maintenance better than it creates rerun hunger.
+  - The escalation spine is still too front-loaded on stress and too thin on dominance. `Wave 4` already spikes to `activeCap: 32`, then `Wave 5` only drops to `27` before the game resumes territory management. A strong arena roguelite usually gives a clearer post-upgrade victory lap where the player gets to exploit new fire geometry, not immediately service another objective tax.
+  - The support layer still has the loudest visible evolution. `Ember Ring`, `Aegis Halo`, and sentry systems gain obvious silhouettes, counts, and behaviors, while the forge/HUD still describes the main build through `Headline Leap`, `Survival Rider`, `Proof Window`, roadmap, and summary-note language. Against references like `Nova Drift`, `Hades`, and `Brotato`, the reward screen is still better at briefing than at making the next gun/body form irresistible.
+  - The game is now at risk of critique-loop repetition. More branches, more wave labels, or more support modules will not raise the ceiling until one 12-wave route proves three things cleanly: a breathing payoff band, a real mid-run transformation high, and a final spike that cashes out that power instead of burying it under chores.
+  Top Priority: Recut Era II so `Wave 5-6` are a true domination band with lighter objective tax and more open-lane firing tests, then rebuild the forge copy/presentation around one oversized main-form promise per stop.
+  Why Now: This is the shortest path from “interesting system stack” to “I want another run.”
+  Do Not Repeat: Stop spending critique passes on contract wording or new branch nouns until the existing mid-run payoff actually lands.
+  Release Gate: Builds
 
 - 2026-03-24 10:05:00 KST
   Findings:
@@ -1527,6 +1538,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 11:05:00 KST
+  Changed: recut Era II's first followthrough in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 6 · Breakline` is no longer a second `territory` upkeep rehearsal right after `Wave 5 · Afterglow`. `Breakline` now runs as a wider `crossfire` domination test with open-lane skimmer/lancer pressure, a plain surge hazard instead of bastion cores, lower `activeCap` than the old version, and a larger arena that lets the new body/gun form hold multiple lanes before `Wave 7-8` reintroduce heavier bastion + mortar ownership asks. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to pin the new `Wave 5-6` cadence: `Afterglow` stays the lighter bastion proof, `Breakline` becomes the open-lane followthrough, and `Crownfire` is now the clear step back up in objective tax. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was still open on `Builds`: Era II spent too much time repeating bastion maintenance, so the mid-run form spike did not get a real victory lap. The highest-value bounded interpretation was to turn `Wave 6` into the missing domination-band cashout instead of adding another reward branch or another support noun.
+  Follow-up risk: `Wave 5-6` now asks for broader lane ownership with much less upkeep, but the forge copy itself still does not oversell that new midform promise as hard as the combat pacing now supports. If the run still feels more "better tuned" than "must replay," the next bounded pass should tighten the Act Break reward copy around this exact `Afterglow -> Breakline` promise rather than add more ecology. Release Gate: `Builds`.
 
 - 2026-03-24 10:40:00 KST
   Changed: rewrote the live run-contract presentation in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the default HUD and forge now speak in one stricter language: `Headline Leap`, `Survival Rider`, and `Proof Window`, with the old roadmap/admin-heavy detail pulled out of the primary read. The `12-Wave Contract` card is now a short three-era summary instead of a full roadmap stack, the left HUD card no longer re-lists support/live-bet/trait clutter, the wave card now focuses on immediate threat plus the next leap/rider pair, and the forge subtitle/notes now sell the current transformation contract instead of bench, catalyst, doctrine, and recycle bookkeeping. I matched that UI pass by updating [cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) and [cinder-circuit-source-analysis.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-analysis.md) so they finally describe the same three-era `Wave 1-4 / 5-8 / 9-12` run the implementation is already building. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
