@@ -41,6 +41,18 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-24 13:15:00 KST
+  Findings:
+  - The run is still better at describing its contract than making the player crave the next form. `updateHUD()` and `renderForgeOverlay()` keep surfacing `Headline Leap`, `Survival Rider`, `Immediate Proof`, mode labels, and roadmap framing at the same time, so the forge still lands closer to a systems briefing than a must-have power spike.
+  - Act II is improved, but `Wave 7-8` still cash out into authored obstacle stacks more than clean movement drama. `binder + mortar + drift/relay` creates a readable spike on paper, yet it still risks collapsing the larger arena back into route servicing instead of the strong hold-or-dive lane decisions a replayable arena shooter needs.
+  - The future `20-30 wave` ceiling is not proven by the amount of content in `game.js`. The many branch-specific late profiles read as bespoke exceptions, not a compact escalation grammar that can keep producing new asks without becoming content tax.
+  - Support and branch language still has more identity than the main chassis fantasy. The player can more easily remember bays, halo, ledger, crownline, and draft names than one unmistakable “my gun/body is about to become absurd” promise, which is backwards for rerun hunger.
+  - This should stay a consolidation pass. The next ceiling increase is not another branch or reward wrapper; it is proving that one dominant primary-form ladder, one secondary rider layer, and one reusable payoff-to-spike rhythm are enough to carry the whole run.
+  Top Priority: Collapse the forge/HUD and Act II-III escalation into one simpler repeatable power staircase where each stop sells a single oversized main-form transformation, then the next two waves prove it through open-lane domination followed by a harder breach test.
+  Why Now: If the game still needs bespoke labels and scripted exceptions to feel varied, a longer run will scale into admin and sameness instead of obsession.
+  Do Not Repeat: Do not answer this with another named draft, branch, or late-profile family before one reusable escalation grammar feels great on repeat.
+  Release Gate: Progression
+
 - 2026-03-24 12:05:00 KST
   Findings:
   - The written contract is finally aligned to a `12-wave` alpha run, so the drift is no longer in the docs. The drift is in the playable still acting like a systems-rich prototype: support modules, shard pursuits, bay language, and forge framing still create more anticipation than the main gun/body becoming absurd.
@@ -1562,6 +1574,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 14:05:00 KST
+  Changed: rebuilt the post-forge combat staircase in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so each major breakpoint now proves the new main form through the same two-step grammar instead of branch-specific detours. `Wave 6 · Breakline` now closes Act II with a first relay-breach test instead of a second open-lane victory lap, `Wave 10` was recut from `Scrapstorm` raid logic into `Scrapline` breach logic, and the Wave 9-10 late-break branch profiles (`Cataclysm Arsenal`, `Warplate Halo`, `Black Ledger Heist`) were normalized so `Wave 9` stays an open-lane payoff window while `Wave 10` becomes the harder breach proof regardless of rider. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to pin the new relay-breach expectations for `Wave 6` and `Wave 10`.
+  Why: the latest critique's `Top Priority` was still open on `Progression`. The highest-value bounded interpretation was to make the run's power staircase reusable before adding more content: one oversized main-form leap, one open-lane domination proof, then one tighter breach test. That keeps the chassis fantasy in front and pushes halo/ledger flavor back into rider status instead of letting them rewrite the whole bracket.
+  Follow-up risk: the staircase is cleaner, but `Wave 11-12` and the post-capstone ladder still carry more branch-specific late asks than the new mid/late proof rhythm. If the next critique still says the long-run ceiling feels bespoke rather than modular, the next consolidation pass should carry this same `payoff -> breach -> spike` grammar into the remaining late bands instead of adding another endform branch. Release Gate: `Progression`.
 
 - 2026-03-24 12:35:00 KST
   Changed: rebuilt the forge reward read in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) around one simulated `Monster Form Promise` instead of repeating equal-weight `Headline Leap / Survival Rider / Proof Window` summaries across the overlay. The new headline showcase now previews one oversized primary-form candidate by actually applying the card to a cloned build, then surfacing before/after `Form`, `Volley`, and `Battery` deltas so the player sees the next gun/body mutation in concrete combat terms before reading the smaller rider context. I also trimmed the left HUD card to keep the main form and proof cue visible without re-briefing the full three-row contract, added the new hero-panel treatment in [styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css), and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert that forge headline previews produce stable delta rows and a proof label. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
