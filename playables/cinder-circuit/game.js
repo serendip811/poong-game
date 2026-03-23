@@ -732,69 +732,80 @@
     },
     {
       waveIndex: 10,
-      pressureFamily: "raid",
+      pressureFamily: "caravan",
       arena: AFTERBURN_ENDURANCE_ARENA,
-      note: "네 번째 afterburn에서만 짧은 objective interruption을 넣어 greed를 다시 묻는다. endurance band 내내 upkeep를 비웠다가 한 번만 contraband vault를 열어, 강한 form이 실제로 언제 dive를 감수할지 선명하게 드러나게 한다.",
+      note: "네 번째 afterburn은 밀도를 잠깐 덜어 주는 대신 움직이는 greed target을 던진다. contraband caravan이 외곽 lane을 따라 도망치므로, 완성된 form이 chase angle을 만들지 압박 덩어리만 계속 정리할지 선택해야 late-run spacing이 달라진다.",
       directive:
-        "afterburn heist break. 길게 열리는 금고 pocket이 한 번씩 뜨지만 전장은 여전히 추격 압박이 더 크다. 무조건 줍기보다, 지금 ring owner를 찢고 욕심을 낼지 바로 접고 다음 장기전으로 넘어갈지 판단해야 한다.",
+        "afterburn smuggler run. contraband caravan이 외곽 arc를 따라 도망친다. chase를 걸면 큰 scrap burst를 얻지만 flank sweep를 깊게 받아내야 하므로, 지금 greed line을 밟을지 pressure clump부터 접을지 직접 정해야 한다.",
+      activeCap: 40,
+      spawnBudget: 228,
       mix: {
         scuttler: 0.06,
         brute: 0.16,
-        shrike: 0.2,
-        skimmer: 0.12,
-        lancer: 0.12,
-        brander: 0.18,
-        binder: 0.04,
-        mortar: 0.08,
+        shrike: 0.18,
+        skimmer: 0.2,
+        lancer: 0.16,
+        brander: 0.14,
+        mortar: 0.06,
         warden: 0.04,
       },
       mixWeight: 0.42,
-      ascensionCarrierType: "binder",
       hazard: {
-        label: "Afterburn Heist Break",
-        type: "salvage",
-        interval: 8.1,
-        count: 1,
-        radius: 78,
+        label: "Afterburn Smuggler Run",
+        type: "caravan",
+        interval: 8.4,
+        count: 2,
+        radius: 82,
         telegraph: 0.76,
-        duration: 7.4,
+        duration: 7.8,
         damage: 14,
-        coreHp: 84,
-        coreRadius: 19,
-        salvageScrap: 24,
+        coreHp: 88,
+        coreRadius: 18,
+        salvageScrap: 26,
         salvageBurstCount: 6,
         salvageBurstRadius: 62,
         salvageDropLife: 8.8,
+        driftSpeed: 128,
+        driftOrbit: 0.34,
       },
     },
     {
       waveIndex: 10,
-      pressureFamily: "pursuit",
+      pressureFamily: "caravan",
       arena: AFTERBURN_ENDURANCE_ARENA,
-      note: "다섯 번째 afterburn은 endurance band의 마지막 전투 전용 시험이다. pursuit grammar를 다시 한 번 키워 structure upkeep 없이 pressure clump만 두껍게 남겨, completed machine이 정말로 몇 분 동안 직접 길을 내는지 확인한다.",
+      note: "다섯 번째 afterburn도 같은 caravan ecology를 한 번 더 유지하되 추격선과 후열 포격을 더 키운다. 밀도는 직전 교차전보다 조금 비워 두고, moving vault를 끝까지 쫓아 자를 build인지 아닌지를 더 명확하게 갈라낸다.",
       directive:
-        "afterburn huntline. drift wake와 재진입 추격선이 겹치지만 붙잡아 둘 코어는 없다. 도망보다 먼저 한 번 깊게 찢어 pressure clump 자체를 줄일지 계속 외곽으로 흘릴지 결단해야 한다.",
+        "afterburn smuggler run. caravan이 더 빠르게 도망치고 mortar 후열이 chase lane을 압박한다. 금고를 잡으러 깊게 들어가 late scrap를 긁을지, 카라반을 버리고 안전한 외곽 회전으로 다음 bracket을 볼지 판단해야 한다.",
+      activeCap: 42,
+      spawnBudget: 244,
       mix: {
         scuttler: 0.04,
         brute: 0.18,
-        shrike: 0.26,
-        skimmer: 0.1,
-        lancer: 0.14,
-        mortar: 0.12,
-        warden: 0.16,
+        shrike: 0.22,
+        skimmer: 0.16,
+        lancer: 0.16,
+        brander: 0.08,
+        mortar: 0.1,
+        warden: 0.06,
       },
-      mixWeight: 0.5,
+      mixWeight: 0.48,
       hazard: {
-        label: "Afterburn Huntline",
-        type: "drift",
-        interval: 7,
-        count: 4,
-        radius: 94,
-        telegraph: 0.64,
-        duration: 6.4,
-        damage: 16,
+        label: "Afterburn Smuggler Run",
+        type: "caravan",
+        interval: 7.8,
+        count: 3,
+        radius: 86,
+        telegraph: 0.7,
+        duration: 8.2,
+        damage: 15,
+        coreHp: 96,
+        coreRadius: 19,
+        salvageScrap: 30,
+        salvageBurstCount: 7,
+        salvageBurstRadius: 66,
+        salvageDropLife: 8.8,
         driftSpeed: 138,
-        driftOrbit: 0.5,
+        driftOrbit: 0.4,
       },
     },
     {
@@ -1003,6 +1014,32 @@
         salvageScrapBonus: 4,
         salvageBurstCountBonus: 1,
         salvageBurstRadiusBonus: 8,
+      },
+    },
+    caravan: {
+      mix: {
+        scuttler: 0.04,
+        brute: 0.14,
+        shrike: 0.18,
+        skimmer: 0.24,
+        lancer: 0.18,
+        brander: 0.12,
+        mortar: 0.06,
+        warden: 0.04,
+      },
+      mixWeight: 0.54,
+      hazard: {
+        countBonus: 1,
+        telegraphScale: 0.9,
+        intervalScale: 0.9,
+        durationBonus: 0.8,
+        radiusBonus: 4,
+        coreHpBonus: 6,
+        salvageScrapBonus: 6,
+        salvageBurstCountBonus: 1,
+        salvageBurstRadiusBonus: 10,
+        driftSpeedBonus: 10,
+        driftOrbitBonus: 0.06,
       },
     },
     pursuit: {
@@ -1381,6 +1418,18 @@
       ]);
       return nextHazard;
     }
+    if (nextHazard.type === "caravan") {
+      clearFields([
+        "turretInterval",
+        "turretDamage",
+        "turretSpeed",
+        "enemyPullRadius",
+        "relayRange",
+        "relayWidth",
+        "relayDamage",
+      ]);
+      return nextHazard;
+    }
     if (nextHazard.type === "drift") {
       clearFields([
         "coreHp",
@@ -1453,7 +1502,10 @@
   function isHazardCoreTarget(hazard) {
     return Boolean(
       hazard &&
-        (hazard.type === "territory" || hazard.type === "relay" || hazard.type === "salvage") &&
+        (hazard.type === "territory" ||
+          hazard.type === "relay" ||
+          hazard.type === "salvage" ||
+          hazard.type === "caravan") &&
         hazard.telegraphTime <= 0 &&
         hazard.activeTime > 0 &&
         hazard.coreHp > 0 &&
@@ -9146,7 +9198,8 @@
     ) {
       return config;
     }
-    const salvageWave = config.hazard && config.hazard.type === "salvage";
+    const salvageWave =
+      config.hazard && (config.hazard.type === "salvage" || config.hazard.type === "caravan");
     const nextConfig = {
       ...config,
       hazard: config.hazard ? { ...config.hazard } : null,
@@ -11258,6 +11311,18 @@
           tone: "summary-chip--hot",
         };
       }
+      const caravanHazards = currentState.hazards.filter(
+        (hazard) => hazard.type === "caravan" && hazard.telegraphTime <= 0 && hazard.activeTime > 0
+      );
+      if (caravanHazards.length > 0) {
+        return {
+          chipLabel: `${wave.hazard.label} LIVE`,
+          detailLabel: "smuggler caravan",
+          detailValue: `${caravanHazards.length}개 도주 중`,
+          note: `${caravanHazards.length}개 contraband caravan이 외곽 lane을 따라 도주 중이다. 쫓아가 파괴하면 큰 scrap burst가 나오지만 chase 동안 flank가 더 얇아진다.`,
+          tone: "summary-chip--hot",
+        };
+      }
       return {
         chipLabel: `${wave.hazard.label} LIVE`,
         detailLabel: "폭주",
@@ -11277,6 +11342,8 @@
           ? "다음 추적"
         : wave.hazard.type === "salvage"
           ? "다음 금고"
+        : wave.hazard.type === "caravan"
+          ? "다음 caravan"
           : "다음 폭주";
     const note =
       wave.hazard.type === "territory"
@@ -11287,6 +11354,8 @@
           ? `${wave.hazard.count}개 추적 화구가 ${wave.hazard.telegraph.toFixed(1)}초 예고 후 플레이어 동선을 따라붙는다.`
           : wave.hazard.type === "salvage"
             ? `${wave.hazard.count}개 contraband vault가 ${wave.hazard.telegraph.toFixed(1)}초 예고 후 잠시 열린다. 부수면 큰 scrap burst가 나오지만, 욕심내다 퇴로를 잃을 수 있다.`
+            : wave.hazard.type === "caravan"
+              ? `${wave.hazard.count}개 contraband caravan이 ${wave.hazard.telegraph.toFixed(1)}초 예고 후 외곽 lane으로 도주한다. chase를 걸면 큰 scrap burst를 얻지만 lane 전체가 얇아진다.`
           : `${wave.hazard.count}개 구역이 ${wave.hazard.telegraph.toFixed(1)}초 예고 후 폭주한다.`;
     return {
       chipLabel: wave.hazard.label,
@@ -14433,7 +14502,12 @@
           hazard.salvageDropLife
         );
         hazard.salvageReleased = true;
-        pushCombatFeed(`${hazard.label} 붕괴. salvage pocket이 열렸다.`, "SALV");
+        pushCombatFeed(
+          hazard.type === "caravan"
+            ? `${hazard.label} 격추. contraband payload가 흩어졌다.`
+            : `${hazard.label} 붕괴. salvage pocket이 열렸다.`,
+          "SALV"
+        );
       }
       state.shake = Math.max(state.shake, 5);
       for (let index = 0; index < 10; index += 1) {
@@ -14442,6 +14516,8 @@
       pushCombatFeed(
         hazard.type === "relay"
           ? `${hazard.label} 절단. 화염 회랑이 붕괴했다.`
+          : hazard.type === "caravan"
+            ? `${hazard.label} 차단 성공. 도주 payload가 arena에 쏟아진다.`
           : hazard.type === "salvage"
             ? `${hazard.label} 탈취 성공. contraband burst가 흩어진다.`
           : `${hazard.label} 코어 파괴. 점거 구역이 붕괴했다.`,
@@ -14469,13 +14545,11 @@
       } else {
         hazard.activeTime -= dt;
         hazard.pulseTimer -= dt;
-        if (hazard.type === "drift" && hazard.driftSpeed > 0) {
-          const chaseVector = normalizeVector(
-            state.player.x - hazard.x,
-            state.player.y - hazard.y,
-            1,
-            0
-          );
+        if ((hazard.type === "drift" || hazard.type === "caravan") && hazard.driftSpeed > 0) {
+          const chaseVector =
+            hazard.type === "caravan"
+              ? normalizeVector(hazard.x - state.player.x, hazard.y - state.player.y, 1, 0)
+              : normalizeVector(state.player.x - hazard.x, state.player.y - hazard.y, 1, 0);
           const orbitVector = {
             x: -chaseVector.y * hazard.orbitDirection,
             y: chaseVector.x * hazard.orbitDirection,
@@ -18100,6 +18174,8 @@
               ? `rgba(255, 151, 79, ${clamp(activeAlpha + 0.1, 0.22, 0.5)})`
             : hazard.type === "salvage"
               ? `rgba(255, 208, 104, ${clamp(activeAlpha + 0.1, 0.24, 0.52)})`
+            : hazard.type === "caravan"
+              ? `rgba(255, 224, 122, ${clamp(activeAlpha + 0.08, 0.22, 0.5)})`
             : `rgba(255, 104, 61, ${activeAlpha})`;
         context.beginPath();
         context.arc(hazard.x, hazard.y, hazard.radius, 0, Math.PI * 2);
@@ -18217,6 +18293,42 @@
           context.stroke();
           context.restore();
           context.strokeStyle = "rgba(255, 246, 224, 0.92)";
+          context.lineWidth = 3;
+          context.beginPath();
+          context.arc(
+            hazard.x,
+            hazard.y,
+            hazard.coreRadius + 9,
+            -Math.PI / 2,
+            -Math.PI / 2 + Math.PI * 2 * hpRatio
+          );
+          context.stroke();
+        } else if (hazard.type === "caravan") {
+          const hpRatio =
+            hazard.coreMaxHp > 0 ? clamp(hazard.coreHp / hazard.coreMaxHp, 0, 1) : 0;
+          context.save();
+          context.translate(hazard.x, hazard.y);
+          context.rotate(Math.atan2(hazard.y - state.player.y, hazard.x - state.player.x));
+          context.fillStyle = "rgba(255, 243, 197, 0.95)";
+          context.strokeStyle = "rgba(255, 193, 74, 0.98)";
+          context.lineWidth = 2.2;
+          context.beginPath();
+          context.moveTo(hazard.coreRadius + 6, 0);
+          context.lineTo(-hazard.coreRadius * 0.85, -hazard.coreRadius * 0.58);
+          context.lineTo(-hazard.coreRadius * 0.48, 0);
+          context.lineTo(-hazard.coreRadius * 0.85, hazard.coreRadius * 0.58);
+          context.closePath();
+          context.fill();
+          context.stroke();
+          context.strokeStyle = "rgba(255, 234, 167, 0.9)";
+          context.beginPath();
+          context.moveTo(-hazard.coreRadius * 0.2, -hazard.coreRadius * 0.34);
+          context.lineTo(-hazard.coreRadius * 0.72, -hazard.coreRadius * 0.34);
+          context.moveTo(-hazard.coreRadius * 0.2, hazard.coreRadius * 0.34);
+          context.lineTo(-hazard.coreRadius * 0.72, hazard.coreRadius * 0.34);
+          context.stroke();
+          context.restore();
+          context.strokeStyle = "rgba(255, 248, 224, 0.94)";
           context.lineWidth = 3;
           context.beginPath();
           context.arc(
