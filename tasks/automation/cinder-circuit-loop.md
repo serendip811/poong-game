@@ -13,7 +13,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: vertical-slice-to-alpha expansion.
-- Immediate priority: strip Wave 5-12 back to one readable escalation spine and one desire-first reward language before adding any new branches.
+- Immediate priority: freeze new branch growth and prove one readable 12-wave spine plus one clean Afterburn payoff band where dominant body/weapon mutations cash out immediately in open combat space.
 
 ## Release Gates
 
@@ -40,6 +40,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 04:05:00 KST
+  Findings:
+  - `playables/cinder-circuit/game.js` has enough `Lockgrid Hunt`, `Cinder Crown`, `Afterburn`, `Architecture Draft`, `Bastion Draft`, and mutation language to suggest scale, but the run is still selling taxonomy harder than hunger. A release-feeling roguelite makes players crave the next visible form breakpoint, not memorize the next bracket name.
+  - `updateHUD()` and `renderForgeOverlay()` are still carrying too many status concepts at once even after the recent cleanup. Compared with the brutal prioritization in `Hades`, `Brotato`, or `Nova Drift`, this UI still spends too much screen and wording on state administration instead of current threat, current form, and the one next payoff worth chasing.
+  - The longer escalation is more believable on paper than in feel. Wave bands now repeat rule families more cleanly, but many of the player's strongest visual spikes still arrive as labels, pills, and roadmap promises rather than battlefield domination that immediately changes how much space they can hold.
+  - The project is still split between prototype docs (`docs/games/cinder-circuit-design.md`, `docs/games/cinder-circuit-source-analysis.md`) and alpha-scale implementation. Until the design language stops framing a 5-wave sprint, the game will keep adding scaffolding instead of committing to a true long-run power curve.
+  Top Priority: Consolidate the run around a single readable 12-wave core plus one short Afterburn proof band, and make every major forge breakpoint cash out as an unmistakable body/weapon spectacle that expands player-owned space within the very next fight.
+  Why Now: More branches will only make the game feel longer unless the existing curve already creates clear desire, readable pressure, and immediate payoff.
+  Do Not Repeat: Do not add another named bracket, roadmap row, or side system until one full run reads cleanly without explanation-heavy UI support.
+  Release Gate: Progression
 
 - 2026-03-24 03:20:00 KST
   Findings:
@@ -1403,6 +1414,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 05:30:00 KST
+  Changed: upgraded the `Main Weapon Mutation` payoff in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Field Arsenal` breakpoints now unlock an autonomous side-battery broadside as soon as the mutation hits `MK II+`. The existing mutation lane still adds more barrels to the main shot, but it now also grows visible flank pods on the player frame and periodically fires a wide automatic cross-lane salvo at clustered or elite targets, making the very next `Wave 5/9/Afterburn` fight read as immediate space ownership instead of only a bigger label. I also extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert that the first offensive breakpoint now grants the new broadside config. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` called for major forge breakpoints to cash out as unmistakable body/weapon spectacle in the very next fight. The highest-value bounded interpretation was to strengthen the already-existing `Main Weapon Mutation` lane rather than add another system: make the offense breakpoint itself widen player-owned space through an on-field autonomous barrage that is visible on the chassis and immediately legible in combat.
+  Follow-up risk: this makes the offensive breakpoint more craveable and easier to prove on the field, but the defense and greed breakpoint lanes still rely more on encounter tuning than on equally loud silhouette changes. A later pass should decide whether `Defense / Utility` and `Greed Contract` need matching on-chassis spectacle so all three major breakpoint lanes feel equally memorable across the 12-wave spine. Release Gate: `Progression`.
 
 - 2026-03-23 18:43:11 KST
   Changed: rebuilt the forge presentation in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and [styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) around one dominant `Headline Mutation` board and one clearly smaller `Optional Rider` follow-up. The old forge context stack was collapsed into a single focus panel that only surfaces `Current Form`, `Next Breakpoint`, and `Live Side Bet`, while step-2 rider picks now render as compact cards with one short promise and one trimmed preview row instead of repeating the full mutation-card treatment. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

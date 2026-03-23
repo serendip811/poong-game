@@ -257,6 +257,11 @@ game.applyForgeChoice(
   },
   mutationChoice
 );
+const mirrorLateWeapon = game.computeWeaponStats(mirrorLateBuild);
+assert.equal(mirrorLateBuild.lateFieldMutationLevel, 2);
+assert.ok(mirrorLateWeapon.lateFieldBroadsideConfig);
+assert.equal(mirrorLateWeapon.lateFieldBroadsideConfig.podCount, 2);
+assert.ok(mirrorLateWeapon.lateFieldBroadsideConfig.range >= 460);
 const mirrorWaveNine = game.resolveWaveConfig(8, mirrorLateBuild);
 const bastionLateBuild = game.createInitialBuild("scrap_pact");
 bastionLateBuild.bastionDoctrineId = "kiln_bastion";

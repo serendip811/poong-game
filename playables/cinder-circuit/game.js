@@ -8420,6 +8420,7 @@
       lateFieldMutationTraitLabel: null,
       lateFieldMutationStatusNote: null,
       lateFieldMutationFirePattern: null,
+      lateFieldBroadsideConfig: null,
       lateFieldConvergenceId: null,
       lateFieldConvergenceLabel: null,
       lateFieldConvergenceTraitLabel: null,
@@ -8638,6 +8639,34 @@
         chainBonus: core.id === "ricochet" ? Math.floor((lateFieldMutationLevel + 1) / 2) : 0,
         color: "#ffe1ac",
       };
+      if (lateFieldMutationLevel >= 2) {
+        const podCount = Math.min(4, 1 + Math.floor(lateFieldMutationLevel / 2));
+        const fanCount =
+          core.id === "scatter"
+            ? 2
+            : lateFieldMutationLevel >= 6
+              ? 3
+              : lateFieldMutationLevel >= 4
+                ? 2
+                : 1;
+        stats.lateFieldBroadsideConfig = {
+          podCount,
+          fanCount,
+          cooldown: Math.max(1.55, 2.7 - lateFieldMutationLevel * 0.16),
+          range: 400 + lateFieldMutationLevel * 30,
+          speedMultiplier: core.id === "lance" ? 1.22 : 1.12,
+          radius: core.id === "lance" ? 5.4 : 4.8,
+          damageMultiplier:
+            (core.id === "scatter" ? 0.26 : 0.36) + lateFieldMutationLevel * 0.025,
+          life: 0.76 + lateFieldMutationLevel * 0.03,
+          pierceBonus: core.id === "lance" ? Math.ceil(lateFieldMutationLevel / 3) : 0,
+          bounceBonus: core.id === "ricochet" && lateFieldMutationLevel >= 4 ? 1 : 0,
+          chainBonus: core.id === "ricochet" ? Math.floor(lateFieldMutationLevel / 3) : 0,
+          fanSpread:
+            core.id === "scatter" ? 0.18 : core.id === "lance" ? 0.08 : 0.12,
+          color: "#ffe0ac",
+        };
+      }
       stats.damage += 2 + lateFieldMutationLevel * 2;
       stats.cooldown = clamp(stats.cooldown * (1 - lateFieldMutationLevel * 0.022), 0.08, 0.4);
       if (core.id === "ember") {
@@ -12368,6 +12397,7 @@
       if (run.player) {
         run.player.heat = Math.max(0, run.player.heat - 16);
         run.player.overheated = false;
+        run.player.lateFieldBroadsideCooldown = 0.16;
       }
       return choice;
     }
@@ -13667,6 +13697,7 @@
       overdriveDuration: playerStats.overdriveDuration,
       hazardMitigation: playerStats.hazardMitigation,
       fireCooldown: 0,
+      lateFieldBroadsideCooldown: 0,
       heat: 0,
       overheated: false,
       drive: 0,
@@ -13733,6 +13764,10 @@
     state.player.chassisAnchorPulseCooldown = Math.max(0, state.player.chassisAnchorPulseCooldown || 0);
     state.player.chassisAnchorActiveTime = Math.max(0, state.player.chassisAnchorActiveTime || 0);
     state.player.wave6AscensionSurgeTime = Math.max(0, state.player.wave6AscensionSurgeTime || 0);
+    state.player.lateFieldBroadsideCooldown = Math.max(
+      0,
+      state.player.lateFieldBroadsideCooldown || 0
+    );
     state.player.fieldAegisCooldown = Math.max(0, state.player.fieldAegisCooldown || 0);
     state.player.fieldAegisCharge = clamp(
       state.player.fieldAegisCharge || 0,
@@ -16491,6 +16526,111 @@
     return target;
   }
 
+  function findLateFieldBroadsideTarget(maxRange) {
+    const origin = state.player;
+    if (!origin) {
+      return null;
+    }
+    let target = null;
+    let bestScore = Number.NEGATIVE_INFINITY;
+    for (const enemy of state.enemies) {
+      if (enemy.defeated || enemy.hp <= 0) {
+        continue;
+      }
+      const distance = Math.hypot(enemy.x - origin.x, enemy.y - origin.y);
+      if (distance > maxRange) {
+        continue;
+      }
+      let nearbyCount = 0;
+      for (const neighbor of state.enemies) {
+        if (neighbor === enemy || neighbor.defeated || neighbor.hp <= 0) {
+          continue;
+        }
+        if (Math.hypot(neighbor.x - enemy.x, neighbor.y - enemy.y) <= 120) {
+          nearbyCount += 1;
+        }
+      }
+      const score =
+        (enemy.type === "elite" ? 3.4 : 0) +
+        nearbyCount * 0.85 +
+        clamp(1.9 - distance / maxRange, 0, 1.9);
+      if (score > bestScore) {
+        bestScore = score;
+        target = enemy;
+      }
+    }
+    return target;
+  }
+
+  function fireLateFieldBroadside() {
+    if (
+      state.phase !== "wave" ||
+      !state.player ||
+      !state.weapon ||
+      !state.weapon.lateFieldBroadsideConfig ||
+      state.player.overheated ||
+      state.enemies.length === 0
+    ) {
+      return;
+    }
+    if ((state.player.lateFieldBroadsideCooldown || 0) > 0) {
+      return;
+    }
+    const broadside = state.weapon.lateFieldBroadsideConfig;
+    const target = findLateFieldBroadsideTarget(broadside.range);
+    if (!target) {
+      return;
+    }
+
+    const baseAngle = Math.atan2(target.y - state.player.y, target.x - state.player.x);
+    const lateralAngles = [-Math.PI / 2, Math.PI / 2];
+    const podCount = Math.max(1, broadside.podCount || 1);
+    const half = (podCount - 1) / 2;
+
+    lateralAngles.forEach((lateralAngle) => {
+      const lateralX = Math.cos(baseAngle + lateralAngle);
+      const lateralY = Math.sin(baseAngle + lateralAngle);
+      for (let podIndex = 0; podIndex < podCount; podIndex += 1) {
+        const laneOffset = (podIndex - half) * 11;
+        const originX =
+          state.player.x +
+          Math.cos(baseAngle) * 6 +
+          lateralX * (state.player.radius + 12 + laneOffset);
+        const originY =
+          state.player.y +
+          Math.sin(baseAngle) * 6 +
+          lateralY * (state.player.radius + 12 + laneOffset);
+        const fanCount = Math.max(1, broadside.fanCount || 1);
+        const fanHalf = (fanCount - 1) / 2;
+        for (let fanIndex = 0; fanIndex < fanCount; fanIndex += 1) {
+          const angle = baseAngle + (fanIndex - fanHalf) * (broadside.fanSpread || 0);
+          state.projectiles.push(
+            createPlayerProjectile(angle, state.weapon, false, {
+              x: originX,
+              y: originY,
+              vx: Math.cos(angle) * state.weapon.projectileSpeed * broadside.speedMultiplier,
+              vy: Math.sin(angle) * state.weapon.projectileSpeed * broadside.speedMultiplier,
+              radius: broadside.radius,
+              damage: round(state.weapon.damage * broadside.damageMultiplier, 1),
+              life: broadside.life,
+              pierce: state.weapon.pierce + (broadside.pierceBonus || 0),
+              bounce: state.weapon.bounce + (broadside.bounceBonus || 0),
+              chain: state.weapon.chain + (broadside.chainBonus || 0),
+              chainRange: state.weapon.chainRange,
+              color: broadside.color,
+            })
+          );
+        }
+      }
+    });
+
+    state.player.lateFieldBroadsideCooldown = broadside.cooldown;
+    state.shake = Math.max(state.shake, 3);
+    for (let index = 0; index < 10; index += 1) {
+      state.particles.push(createParticle(target.x, target.y, broadside.color, 0.7));
+    }
+  }
+
   function fireWeaponPattern(pattern, weapon, baseAngle, driveActive) {
     if (!pattern) {
       return;
@@ -17533,6 +17673,10 @@
     state.player.y = clamp(state.player.y, 18, arena.height - 18);
 
     state.player.fireCooldown = Math.max(0, state.player.fireCooldown - dt * getChassisCooldownFactor());
+    state.player.lateFieldBroadsideCooldown = Math.max(
+      0,
+      (state.player.lateFieldBroadsideCooldown || 0) - dt
+    );
     state.player.invulnerableTime = Math.max(0, state.player.invulnerableTime - dt);
     state.player.heat = Math.max(
       0,
@@ -17584,6 +17728,7 @@
     state.player.dashTrail = Math.max(0, state.player.dashTrail - dt * 3);
 
     fireWeapon();
+    fireLateFieldBroadside();
   }
 
   function dashPlayer() {
@@ -20688,6 +20833,11 @@
     const level = state.weapon.lateFieldMutationLevel;
     const finCount = Math.min(8, 2 + level);
     const half = (finCount - 1) / 2;
+    const broadside = state.weapon.lateFieldBroadsideConfig;
+    const broadsideReady =
+      broadside && broadside.cooldown > 0
+        ? 1 - clamp((state.player.lateFieldBroadsideCooldown || 0) / broadside.cooldown, 0, 1)
+        : 0;
     for (let index = 0; index < finCount; index += 1) {
       const fin = getOffsetPoint(state.player.x, state.player.y, facing, 3, (index - half) * 11);
       context.strokeStyle = `rgba(255, 225, 172, ${0.86 - index * 0.06})`;
@@ -20700,6 +20850,35 @@
       context.lineTo(
         fin.x + Math.cos(facing) * (12 + level * 1.5),
         fin.y + Math.sin(facing) * (12 + level * 1.5)
+      );
+      context.stroke();
+    }
+    if (broadside) {
+      [-1, 1].forEach((side) => {
+        for (let podIndex = 0; podIndex < broadside.podCount; podIndex += 1) {
+          const lane = podIndex - (broadside.podCount - 1) / 2;
+          const pod = getOffsetPoint(
+            state.player.x,
+            state.player.y,
+            facing,
+            1,
+            side * (state.player.radius + 12 + lane * 11)
+          );
+          context.fillStyle = `rgba(255, 235, 188, ${0.28 + broadsideReady * 0.44})`;
+          context.beginPath();
+          context.arc(pod.x, pod.y, 2.6 + broadsideReady * 0.7, 0, Math.PI * 2);
+          context.fill();
+        }
+      });
+      context.strokeStyle = `rgba(255, 232, 194, ${0.2 + broadsideReady * 0.5})`;
+      context.lineWidth = 1.8;
+      context.beginPath();
+      context.arc(
+        state.player.x,
+        state.player.y,
+        state.player.radius + 15 + Math.sin(performance.now() * 0.018) * (0.7 + broadsideReady),
+        0,
+        Math.PI * 2
       );
       context.stroke();
     }
