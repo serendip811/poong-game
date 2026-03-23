@@ -19,6 +19,8 @@ Working rules:
 - Only update `tasks/automation/cinder-circuit-loop.md`.
 - Read the existing loop file first and prepend a new critique entry under `## Latest Critique`.
 - Keep the entry concise but specific.
+- Treat `## Release Goal`, `## Current Stage`, `## Release Gates`, and `## Anti-Drift Rules` as active constraints, not decorative notes.
+- If the project is drifting, update `## Current Stage` with a better 1-line immediate priority before writing the critique entry.
 
 Your critique entry must include:
 1. Timestamp placeholder as plain text you generate yourself.
@@ -26,6 +28,7 @@ Your critique entry must include:
 3. `Top Priority:` one concrete next improvement.
 4. `Why Now:` one short sentence.
 5. `Do Not Repeat:` optional short warning if the loop is cycling.
+6. `Release Gate:` name the single release gate this critique should advance next.
 
 Final response rule:
 - End with a very short 1-2 line plain-text summary in Korean of what critique was added so the automation webhook can relay it.
@@ -35,5 +38,6 @@ Prefer actionable criticism over praise.
 Be harsher about shallow systems, fake choices, weak payoffs, poor escalation, and "this is fine for a prototype" thinking.
 Prefer criticism that raises the ceiling of the game over local polish that does not improve replayable fun.
 Call out when the game needs bigger structural ambition, not just cleanup.
+At least every few critique passes, pressure-test whether the loop should stop adding systems and instead consolidate balance, readability, or pacing.
 
 Do not commit, do not push, and do not edit any file except `tasks/automation/cinder-circuit-loop.md`.

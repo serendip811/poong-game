@@ -16,6 +16,7 @@ Important design directions to actively use when relevant:
 Working rules:
 - Focus on `playables/cinder-circuit/` and only touch files needed for the selected improvement.
 - Prefer the latest critique's `Top Priority` unless it is already clearly addressed.
+- Read `## Release Goal`, `## Current Stage`, `## Release Gates`, and `## Anti-Drift Rules` first and use them to avoid drifting into low-value work.
 - After changing code, update `tasks/automation/cinder-circuit-loop.md` by prepending a new entry under `## Latest Improvement`.
 - Include what changed, why, and any new follow-up risk in that entry.
 - Run the existing smoke test if your change touches gameplay or UI logic.
@@ -28,6 +29,8 @@ Constraints:
 - Prefer meaningful game-feel or system-depth improvements over superficial polish.
 - If choosing between UI cleanup and gameplay depth, prefer gameplay depth unless readability is the direct blocker.
 - Prefer improvements that create visible power growth, stronger run variety, or better long-run pacing over tiny numerical tweaks.
+- If the last few loops already added major systems, prefer one consolidation pass that improves readability, balance, or pacing instead of adding another branch.
+- Tie the work to one release gate and make that gate visibly better by the end of the run.
 
 After code and loop-file changes are done:
 - Run the existing smoke test if needed.
@@ -35,5 +38,6 @@ After code and loop-file changes are done:
 
 Final response rule:
 - End with a very short 1-2 line plain-text summary in Korean of what was improved, what files changed, whether validation passed, and include the `Commit message:` line so the automation wrapper can relay and reuse it.
+- In the loop entry, add `Release Gate:` to say which gate this improvement advanced.
 
 If the critique is too vague, choose the highest-value concrete interpretation and note it in the loop file.

@@ -5,6 +5,33 @@ This file is shared by two recurring Codex CLI jobs.
 - `critique`: reviews the current state of `playables/cinder-circuit/` and writes sharp feedback.
 - `improve`: reads the latest critique, implements one bounded improvement, and records what changed.
 
+## Release Goal
+
+- Target: ship `Cinder Circuit` as a replayable, release-feeling browser action roguelite, not a prototype.
+- Standard: a player should understand the run, feel stronger every few waves, want to chase future forms, and willingly replay for different builds.
+
+## Current Stage
+
+- Stage: vertical-slice-to-alpha expansion.
+- Immediate priority: strengthen long-run build hunger, simplify reward readability, and turn added content into a coherent progression spine.
+
+## Release Gates
+
+- Combat: movement, enemy pressure, spacing, and hazard reads stay legible while still creating threat.
+- Progression: the run supports meaningful anticipation for at least 20-30 waves worth of structure, even if implemented in bounded steps.
+- Builds: the player can form a recognizable offense path, defense/support path, and greed/utility path with visible payoff.
+- Rewards: forge/draft screens sell desire first, explanation second.
+- UX/UI: major screens are readable, reference-driven, and release-feeling rather than debug-heavy.
+- Balance: new systems do not just exist; they create distinct advantages, tradeoffs, and replay reasons.
+
+## Anti-Drift Rules
+
+- Do not keep adding named systems if they do not increase replay desire.
+- Do not use density, timers, or extra waves as a substitute for new combat asks.
+- Do not let support systems outshine the player chassis for too long.
+- Do not solve readability with more labels before simplifying the reward moment itself.
+- Every few loops, prefer balance/readability consolidation over adding another content branch.
+
 ## Rules
 
 - Keep entries newest-first inside each section.
@@ -13,6 +40,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-23 23:58:00 KST
+  Findings:
+  - `playables/cinder-circuit/game.js` now contains enough waves, caches, and named branches to fake scale, but the run still lacks a clean long-form appetite curve. Too much growth is delivered as special-case delivery logic instead of a small set of futures the player can obsess over for the next 5-10 waves.
+  - The support layer is still the clearest power fantasy on offer. `SUPPORT_SYSTEM_DEFS` gives orbitals, shields, sentries, missiles, and drones immediate silhouette and behavior jumps from early forge bands, while the main weapon/body path in `LATE_ASCENSION_DEFS` still arrives later and reads more like an advanced mode than the run's central promise.
+  - The arena has grown, but encounter pressure still spends too much of that space on servicing hazard scripts like `territory`, `relay`, `salvage`, and `drift`. Compared with the freer dominance windows in `Nova Drift` or the greed-routing clarity in `Brotato`, this game still asks the player to manage scenarios more often than exploit power.
+  - `renderForgeOverlay()` still over-explains the reward moment. Even with `Transformation Spotlight`, the player is parsing `Evolution Ladder`, `Next Fight`, `Build Focus`, reserve state, pursuit, catalyst, and recycle value before the screen reaches the immediate desire hit that strong boon/level-up screens in `Hades` or `Brotato` frontload.
+  - `docs/games/cinder-circuit-design.md` and `docs/games/cinder-circuit-source-analysis.md` still frame the project as a `5웨이브`, `6-7분` prototype, so the implementation keeps accumulating exceptions and wrappers instead of committing to a progression model built from the start to sustain `20-30` waves.
+  Top Priority: Recenter the run around earlier main-weapon/body transformations that visibly outshine support modules by Wave 3-5, then simplify forge presentation so each pause sells one dominant form change and one secondary rider instead of a systems briefing.
+  Why Now: Until the player's own chassis becomes the loudest and most chaseable payoff, extra waves and side systems will keep feeling like density without obsession.
+  Do Not Repeat: Do not solve this with more cache/drop/event labels if the main gun-body evolution is still less craveable than the satellites around it.
 
 - 2026-03-24 01:25:00 KST
   Findings:
