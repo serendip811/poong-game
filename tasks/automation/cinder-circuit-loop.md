@@ -12,8 +12,8 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Current Stage
 
-- Stage: vertical-slice-to-alpha expansion.
-- Immediate priority: prove one rerunnable three-era 12-wave run by widening Era II breathing room and making forge choices sell dominant chassis/weapon transformations before support taxonomy.
+- Stage: alpha consolidation.
+- Immediate priority: prove one rerunnable three-era 12-wave run by cutting mid-run admin repetition, making the main chassis/weapon payoff visibly dominate support progression, and validating one clean domination-to-spike arc before adding more branches.
 
 ## Release Gates
 
@@ -40,6 +40,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 11:20:00 KST
+  Findings:
+  - Era II still does not earn repeat-run hunger. `Wave 5-6` now talk like a domination band, but `Wave 7-8` fall back into the same bastion-plus-mortar ecology, so the act reads as one long upkeep family instead of a payoff band that cleanly flips into a spike band.
+  - The combat space is larger on paper, yet the player is still too often servicing anchors, cores, and backline cleanup instead of making high-value movement calls. Against the movement greed in `Nova Drift` or the hold-or-dive pressure in `Brotato`, this still feels like route maintenance more than arena ownership.
+  - The reward/UI stack is still over-informing the player. `updateHUD()` and `renderForgeOverlay()` repeat `Headline Leap`, `Survival Rider`, and `Proof Window` across multiple panels, which makes the forge feel like a contract briefing instead of a must-have power hit. Strong reference patterns frontload one irresistible form change and let the proof happen in play.
+  - Support progression remains easier to crave than the primary chassis fantasy. Shards, bays, riders, and support silhouettes still create clearer anticipation than “my main gun/body becomes outrageous next wave,” which is backwards for a game trying to sustain a future `20-30` wave ladder.
+  - This is a consolidation moment, not a content-expansion moment. Another branch, subsystem, or labeled draft would deepen the spreadsheet without fixing the weak mid-run payoff and reward readability.
+  Top Priority: Recut Act II into a truly distinct `Wave 5-6` domination payoff and `Wave 7-8` spike bracket, then strip the forge/HUD down so each stop sells one monster-form promise and one immediate proof cue.
+  Why Now: If the mid-run high and reward read still blur together, a longer run will only feel longer, not better.
+  Do Not Repeat: Do not answer this with another support branch or new draft wrapper before the existing Act II arc is fun to replay on its own.
+  Release Gate: Rewards
 
 - 2026-03-24 10:40:00 KST
   Findings:
@@ -1538,6 +1550,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 11:35:00 KST
+  Changed: recut Act II's back half in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 7-8` no longer repeat the same bastion-plus-mortar upkeep family that already dominated the old `Wave 5-8` band. `Wave 7 · Crownfire` now flips into a `pursuit`-driven drift spike with binder/lancer collapse and no bastion core tax, while `Wave 8 · Forgecross` now cashes out as a `breach`-style relay crown that asks for one hard corridor tear instead of another territory cleanup rehearsal. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to pin the new `Afterglow -> Breakline -> Crownfire -> Forgecross` cadence: domination proof, open-lane followthrough, drift spike, then relay breach finish. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was still open on the Act II arc itself. The highest-value bounded interpretation was to finish the combat-side recut first by making `Wave 7-8` feel like a distinct spike bracket, because without that separation the run kept reading as four waves of route maintenance no matter how much the forge copy promised.
+  Follow-up risk: Act II now has a cleaner domination-to-spike rhythm in play, but the forge/HUD still may not advertise that turn sharply enough before the player enters it. If replay hunger is still muted after this, the next bounded pass should compress the Act Break reward read around this exact `Wave 5-6 payoff -> Wave 7-8 spike` promise instead of adding another branch or support wrapper. Release Gate: `Combat`.
 
 - 2026-03-24 11:05:00 KST
   Changed: recut Era II's first followthrough in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 6 · Breakline` is no longer a second `territory` upkeep rehearsal right after `Wave 5 · Afterglow`. `Breakline` now runs as a wider `crossfire` domination test with open-lane skimmer/lancer pressure, a plain surge hazard instead of bastion cores, lower `activeCap` than the old version, and a larger arena that lets the new body/gun form hold multiple lanes before `Wave 7-8` reintroduce heavier bastion + mortar ownership asks. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to pin the new `Wave 5-6` cadence: `Afterglow` stays the lighter bastion proof, `Breakline` becomes the open-lane followthrough, and `Crownfire` is now the clear step back up in objective tax. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
