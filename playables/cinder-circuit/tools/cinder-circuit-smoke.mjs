@@ -58,7 +58,7 @@ assert.equal(earlyRoadmap.steps.length, 3);
 assert.equal(earlyRoadmap.steps[0].title, "Storm Artillery Doctrine");
 assert.ok(earlyRoadmap.steps[1].title.includes("Sky Lance"));
 assert.ok(earlyRoadmap.steps[1].detail.includes("Wave 5 contraband salvage"));
-assert.equal(earlyRoadmap.steps[2].title, "Endform");
+assert.equal(earlyRoadmap.steps[2].title, "Crown Break");
 roadmapBuild.bastionDoctrineId = "storm_artillery";
 roadmapBuild.overcommitUnlocked = true;
 const primedRoadmap = game.getBuildRoadmap(roadmapBuild, game.computeWeaponStats(roadmapBuild), 6);
@@ -67,7 +67,7 @@ assert.equal(primedRoadmap.steps[0].state, "locked");
 assert.ok(primedRoadmap.steps[1].title.includes("Sky Lance Battery"));
 assert.equal(primedRoadmap.steps[1].state, "primed");
 assert.ok(primedRoadmap.steps[1].detail.includes("Field Cache"));
-assert.equal(primedRoadmap.steps[2].title, "Endform");
+assert.equal(primedRoadmap.steps[2].title, "Crown Break");
 const lockgridRoadmap = game.getBuildRoadmap(roadmapBuild, game.computeWeaponStats(roadmapBuild), 9);
 assert.ok(lockgridRoadmap.prompt.includes("form track"));
 assert.ok(lockgridRoadmap.note.includes("->"));
@@ -807,13 +807,13 @@ assert.equal(wave6AscensionRun.build.bastionDoctrineId, fallbackWave6AscensionCh
 assert.ok(wave6AscensionRun.build.wave6ChassisBreakpoint);
 assert.ok(wave6AscensionRun.build.supportBayCap >= 3);
 assert.equal(wave6AscensionRun.build.chassisId, fallbackWave6AscensionChoices[0].chassisId);
-assert.ok(game.shouldSkipOwnershipAdminStop(wave6AscensionRun.build, 9));
+assert.equal(game.shouldSkipOwnershipAdminStop(wave6AscensionRun.build, 9), false);
 chassisRun.build.bastionDoctrineId = "kiln_bastion";
 game.applyForgeChoice(chassisRun, wave6ChassisPackages[0]);
 assert.ok(chassisRun.build.wave6ChassisBreakpoint);
 assert.ok(chassisRun.build.supportBayCap >= 3);
 assert.equal(chassisRun.build.chassisId, wave6ChassisPackages[0].chassisId);
-assert.ok(game.shouldSkipOwnershipAdminStop(chassisRun.build, 9));
+assert.equal(game.shouldSkipOwnershipAdminStop(chassisRun.build, 9), false);
 const predatorCacheChoices = game.buildFieldGrantChoices(predatorBaitRun.build, () => 0, 10);
 assert.equal(game.isArsenalBreakpointWave(10), true);
 assert.ok(predatorCacheChoices.some((choice) => choice.action === "field_mutation"));
@@ -1325,7 +1325,7 @@ assert.ok(
 assert.ok(
   architectureRun.build.upgrades.includes("Chassis Breakpoint: flex bay +1 now, auto Wave 8 uplink")
 );
-assert.equal(game.shouldSkipOwnershipAdminStop(architectureRun.build, 9), true);
+assert.equal(game.shouldSkipOwnershipAdminStop(architectureRun.build, 9), false);
 assert.equal(game.unlockLateSupportBay(architectureRun.build), true);
 assert.equal(game.getSupportBayCapacity(architectureRun.build), 4);
 assert.ok(game.doctrineAllowsSystemInstall(architectureRun.build, "aegis_halo"));

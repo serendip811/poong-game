@@ -13,7 +13,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze new draft/cache/afterburn branch inflation and prove one rerunnable three-era 12-wave route whose forge read, Wave 5-8 pacing, and main-form payoff are strong enough to carry repeats before extending the structure again.
+- Immediate priority: cut late-run admin drift and prove one rerunnable three-era 12-wave route where forge desire, Wave 5-8 movement ownership, and Wave 9-12 payoff land without Afterburn/live-ascension bypass clutter.
 
 ## Release Gates
 
@@ -40,6 +40,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 14:10:00 KST
+  Findings:
+  - The project is still violating its own alpha-consolidation contract. `game.js` keeps spending design budget on `Act 4 · Afterburn`, live ascension swaps, armory skips, doctrine caches, and extra bay uplinks when the release target is still one craveable `Wave 1-12` route.
+  - `Wave 7-8` are larger, but the pressure stack is still too maintenance-heavy for a game that wants repeatable aggression. `Crownfire Drift` plus binder/lancer retreat hooks, then `Forgecross Relay Crown` with binder/mortar/warden compression, risks turning the bigger arena back into “service the hazard script” instead of letting the new form hold, dive, and choose exits on its own terms.
+  - The HUD/forge read is still more reference board than appetite spike. `updateHUD()` and `renderForgeOverlay()` continue to repeat `Headline Leap`, `Survival Rider`, proof language, draft mode labels, and roadmap-style status framing, while stronger arena-shooter roguelite references usually sell one oversized power promise and keep the rest quiet until combat proves it.
+  - Build hunger is still too abstract compared with the visible payoff the run needs. The codebase contains many branch nouns and support lanes, but the critique standard is whether players want another run to see the gun/body become ridiculous; that promise is still diluted by system administration.
+  Top Priority: Strip the Wave 9-12 route back to one fixed late-form staircase with no Afterburn/admin bypass variants, then retune Wave 7-8 so the player gets one clean domination lap and one breach test that foreground the main form rather than hazard upkeep.
+  Why Now: A longer run cannot work if the current 12-wave spine still needs side-route exceptions to feel varied.
+  Do Not Repeat: Do not answer this with another cache, uplink, live ascension lane, or skip-rule before the base 12-wave route is fun enough to rerun without them.
+  Release Gate: Progression
 
 - 2026-03-24 02:30:52 KST
   Findings:
@@ -1585,6 +1596,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 16:10:00 KST
+  Changed: consolidated the late route in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) around one fixed `Wave 9-12` staircase and removed the main-run admin detours that were still breaking the alpha contract. `Wave 8` no longer skips `Late Break Armory` through `ownership relay` or `live ascension` bypass logic, doctrine pursuit now locks its capstone immediately instead of arming a separate `Wave 9` cache, `late ascension` split caches no longer spawn inside the core 12-wave route, and `Wave 12` now resolves the run directly instead of rolling into the `Afterburn` ladder. I also updated the roadmap/era copy in the same file so Act III now describes the chosen `Cataclysm Arsenal / Warplate Halo / Black Ledger Heist` staircase as the actual final contract, then refreshed [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new no-bypass expectation. Validation passed with `node --check playables/cinder-circuit/game.js`, `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was still open on `Progression`. The highest-value bounded interpretation was to stop spending Wave 9-12 on exception delivery logic and make the already-authored late-break packages become the only repeatable back-half promise, because a future 20-30 wave ceiling will not matter until the current 12-wave spine is fun without `Afterburn` or admin side routes.
+  Follow-up risk: the route is cleaner, but the latent `Afterburn` content still exists in code as dormant future material and the fixed `Wave 9-12` staircase now carries more responsibility for long-run excitement. If the next critique says the back half is cleaner but not hungry enough, the next pass should tune `Wave 11-12` payoff spectacle or armory desire inside this same fixed spine instead of re-enabling another late exception. Release Gate: `Progression`.
 
 - 2026-03-24 15:00:00 KST
   Changed: consolidated the live reward read in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the combat HUD and forge stop frontloading the full `Headline Leap / Survival Rider / Immediate Proof / 12-Wave Contract` bundle at once. The right HUD card now resolves to a compact `Next Mutation` focus with just one `Headline Form` and one `Secondary Rider`, the left core card swaps its second mini-pill from `Proof` to `Rider`, and the forge top rail now presents only the headline leap plus rider while folding the proof window into the follow-up note instead of a third equal-weight card. I also updated [styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) so the forge focus rail matches the new two-card emphasis. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

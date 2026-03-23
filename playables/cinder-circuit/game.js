@@ -1136,6 +1136,7 @@
         relayWidth: 38,
         relayDamage: 15,
       },
+      completesRun: true,
     },
   ];
 
@@ -2181,6 +2182,31 @@
       detail:
         "Wave 9는 payoff window, Wave 10은 breach proof, Wave 11-12는 escalation spike band다.",
     };
+  }
+
+  function getLateBreakHeadline(profileId) {
+    if (profileId === "mutation") {
+      return {
+        title: "Cataclysm Arsenal",
+        detail:
+          "Wave 9는 열린 firing gallery payoff, Wave 10은 Overdrive breach proof, Wave 11-12는 Crownbreaker spike band로 고정된다.",
+      };
+    }
+    if (profileId === "aegis") {
+      return {
+        title: "Warplate Halo",
+        detail:
+          "Wave 9는 open-lane payoff, Wave 10은 Halo breach proof, Wave 11-12는 Halo survival spike band로 고정된다.",
+      };
+    }
+    if (profileId === "ledger") {
+      return {
+        title: "Black Ledger Heist",
+        detail:
+          "Wave 9는 open-lane payoff, Wave 10은 Jackpot breach proof, Wave 11-12는 Kingpin cash-out spike band로 고정된다.",
+      };
+    }
+    return null;
   }
 
   function getArsenalBreakpointEncounterProfile(build, waveNumber) {
@@ -4145,6 +4171,7 @@
   const FORGE_PACKAGE_START_WAVE = 3;
   const ACT_BREAK_ARMORY_WAVE = 5;
   const LATE_BREAK_ARMORY_WAVE = 9;
+  const CONSOLIDATED_12_WAVE_ROUTE = true;
   const ACT3_CATALYST_DRAFT_WAVE = 10;
   const OVERCOMMIT_TRIAL_WAVE = 5;
   const OVERCOMMIT_SALVAGE_REQUIRED = 3;
@@ -6634,6 +6661,9 @@
   }
 
   function shouldSkipOwnershipAdminStop(build, nextWave = 0) {
+    if (CONSOLIDATED_12_WAVE_ROUTE && nextWave === LATE_BREAK_ARMORY_WAVE) {
+      return false;
+    }
     return Boolean(
       build &&
       build.wave6ChassisBreakpoint &&
@@ -7619,6 +7649,7 @@
     const currentWeapon = weapon || computeWeaponStats(build);
     const doctrineBodyForm = getDoctrineBodyForm(build);
     const doctrineForm = currentWeapon && currentWeapon.doctrineFormLabel ? currentWeapon.doctrineFormLabel : null;
+    const lateBreakHeadline = getLateBreakHeadline(build && build.lateBreakProfileId);
     const activeForm =
       (currentWeapon && currentWeapon.afterburnDominionLabel) ||
       (currentWeapon && currentWeapon.afterburnOverdriveLabel) ||
@@ -7673,9 +7704,12 @@
       (currentWeapon && currentWeapon.afterburnDominionLabel) ||
       (currentWeapon && currentWeapon.afterburnOverdriveLabel) ||
       (currentWeapon && currentWeapon.lateAscensionLabel) ||
-      "Endform";
-    let stageThreeDetail = `Wave ${LATE_ASCENSION_START_WAVE}+ elite split cache에서 endform을 고르고, Afterburn에서는 같은 몸을 overdrive와 dominion으로 한 번 더 밀어 올린다.`;
-    let stageThreeState = boundedWave >= LATE_ASCENSION_START_WAVE ? "primed" : "planned";
+      (lateBreakHeadline && lateBreakHeadline.title) ||
+      "Crown Break";
+    let stageThreeDetail = lateBreakHeadline
+      ? `${lateBreakHeadline.detail} Wave 8 이후에는 이 계단 하나만 남고 live ascension이나 Afterburn 예외는 열리지 않는다.`
+      : "Wave 8 Late Break Armory에서 하나의 late-form staircase를 고르면 Wave 9 payoff -> Wave 10 breach -> Wave 11-12 spike로 고정된다.";
+    let stageThreeState = boundedWave >= LATE_BREAK_ARMORY_WAVE ? "primed" : "planned";
     if (build.afterburnDominionId) {
       stageThreeDetail = `${stageThreeTitle}이(가) 이미 최종 지배 형태로 잠겼다. 남은 bracket은 판돈보다 압도감이 먼저 오는 victory lap이다.`;
       stageThreeState = "locked";
@@ -7685,6 +7719,13 @@
     } else if (build.lateAscensionId) {
       stageThreeDetail = `${stageThreeTitle} body split이 잠겼다. Afterburn elite cache로 남은 endurance를 overdrive 실루엣까지 더 밀 수 있다.`;
       stageThreeState = boundedWave > MAX_WAVES ? "live" : "locked";
+    } else if (lateBreakHeadline) {
+      stageThreeState =
+        boundedWave >= MAX_WAVES
+          ? "locked"
+          : boundedWave >= LATE_BREAK_ARMORY_WAVE
+            ? "live"
+            : "primed";
     }
 
     const steps = [
@@ -8061,6 +8102,7 @@
     const roadmap = getBuildRoadmap(build, currentWeapon, boundedWave);
     const doctrine = getBastionDoctrineDef(build);
     const supportTrack = getForgeSupportTrackSnapshot(build, supportSystem);
+    const lateBreakHeadline = getLateBreakHeadline(build && build.lateBreakProfileId);
     const primaryOpenLabel =
       currentWeapon.doctrineFormLabel ||
       currentWeapon.evolutionLabel ||
@@ -8074,16 +8116,16 @@
       currentWeapon.afterburnDominionLabel ||
       currentWeapon.afterburnOverdriveLabel ||
       currentWeapon.lateAscensionLabel ||
-      "Endform";
+      (lateBreakHeadline && lateBreakHeadline.title) ||
+      "Crown Break";
     const ignitionSupportDetail = supportTrack.detail;
     const siegeSupportDetail =
       supportSystem && supportSystem.statusNote
         ? supportSystem.statusNote
         : `${supportTrack.detail} mid-run에서는 이 축이 weakness cover와 greed recovery를 맡는다.`;
-    const afterburnSupportDetail =
-      build.afterburnDominionId || build.afterburnOverdriveId || build.lateAscensionId
-        ? `${supportTrack.detail} endform이 잠긴 뒤에는 새 서브시스템보다 이 축을 오래 버티게 쓰는 것이 핵심이다.`
-        : `${supportTrack.detail} Afterburn 전에는 이 축이 마지막 survival rail로 남는다.`;
+    const crownSupportDetail = lateBreakHeadline
+      ? `${supportTrack.detail} Act 3에서는 이 축이 ${lateBreakHeadline.title} 계단을 버티는 마지막 survival rail로 남는다.`
+      : `${supportTrack.detail} Act 3에서는 이 축이 마지막 survival rail로 남는다.`;
     const getEraProofWindow = (proofWave, fallbackLabel, fallbackDetail) => {
       const resolvedWave = resolveWaveConfig(clamp(proofWave, 1, MAX_WAVES) - 1, build);
       return {
@@ -8149,7 +8191,7 @@
         primaryDetail:
           roadmap.steps[2] ? roadmap.steps[2].detail : "후반 split cache에서 마지막 body/gun form을 잠그는 구간.",
         secondaryLabel: supportTrack.label,
-        secondaryDetail: afterburnSupportDetail,
+        secondaryDetail: crownSupportDetail,
         proofLabel: eraThreeProof.label,
         proofDetail: eraThreeProof.detail,
       },
@@ -8506,12 +8548,14 @@
       build &&
       !build.lateAscensionId &&
       Number.isFinite(waveNumber) &&
-      waveNumber >= LATE_ASCENSION_START_WAVE
+      waveNumber >= LATE_ASCENSION_START_WAVE &&
+      (!CONSOLIDATED_12_WAVE_ROUTE || waveNumber > MAX_WAVES)
     );
   }
 
   function createLateAscensionChoices(build) {
-    if (!shouldOfferLateAscension(build, LATE_ASCENSION_START_WAVE)) {
+    const ascensionWaveSample = CONSOLIDATED_12_WAVE_ROUTE ? MAX_WAVES + 1 : LATE_ASCENSION_START_WAVE;
+    if (!shouldOfferLateAscension(build, ascensionWaveSample)) {
       return [];
     }
     return Object.values(LATE_ASCENSION_DEFS).map((ascension) => ({
@@ -13801,6 +13845,9 @@
   }
 
   function shouldRunDoctrineLiveAscension(build, waveNumber) {
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
+      return false;
+    }
     return Boolean(
       build &&
       build.bastionDoctrineId &&
@@ -14123,29 +14170,27 @@
     if (systemChoice) {
       applyForgeChoice(state, systemChoice);
     }
+    const capstone = getDoctrinePursuitCapstoneDef(state.build);
+    if (capstone) {
+      applyForgeChoice(state, {
+        type: "utility",
+        action: "doctrine_capstone",
+        doctrineCapstoneId: capstone.id,
+      });
+    }
     state.build.doctrineChaseClaimed = true;
     const bodyForm = getDoctrineBodyForm(state.build);
-    state.build.afterburnAscensionOffered = false;
     state.doctrinePursuit.active = false;
     state.build.upgrades.push(
       `교리 추격 완성: ${(pursuit && pursuit.shortLabel) || (doctrine && doctrine.label) || "Doctrine Frame"}`
     );
     pushCombatFeed(
-      doctrine && doctrine.id === "storm_artillery"
-        ? `${(pursuit && pursuit.label) || "Forge Pursuit"} 완성. ${bodyForm ? `${bodyForm.label}가 즉시 닫히고 ` : ""}Thunder Rack까지는 바로 잠겼다. Wave 9 live ascension에서 Sky Lance / Stormspire body split 중 하나를 전장에서 직접 회수해야 한다.`
-        : doctrine && doctrine.id === "kiln_bastion"
-          ? `${(pursuit && pursuit.label) || "Forge Pursuit"} 완성. ${bodyForm ? `${bodyForm.label}가 먼저 닫히고 ` : ""}Crucible Scatter와 거점장은 증폭층으로 따라붙는다. 진짜 Bulwark Foundry body splice는 Wave 9 live ascension에서 직접 뜯어내야 한다.`
-          : `${(pursuit && pursuit.label) || "Forge Pursuit"} 완성. ${bodyForm ? `${bodyForm.label}가 즉시 닫혀 ` : ""}Relay Storm Frame으로 외곽을 직접 찢을 수 있게 됐지만, 최종 Stormglass body splice는 Wave 9 live ascension cache를 직접 회수해야 완성된다.`,
+      `${(pursuit && pursuit.label) || "Forge Pursuit"} 완성. ${
+        bodyForm ? `${bodyForm.label}가 즉시 닫히고 ` : ""
+      }${capstone ? `${capstone.title}까지 바로 잠겼다.` : "교리 apex가 즉시 잠겼다."} Wave 9-12는 live ascension 예외 없이 이 형태를 바로 증명하는 고정 late staircase다.`,
       "FRAME"
     );
-    setBanner(
-      doctrine && doctrine.id === "storm_artillery"
-        ? "Live Ascension Armed"
-        : doctrine && doctrine.id === "kiln_bastion"
-          ? "Bulwark Foundry Armed"
-          : "Relay Lattice Armed",
-      0.9
-    );
+    setBanner(capstone ? capstone.title : "Doctrine Apex Locked", 0.9);
     refreshDerivedStats(false);
   }
 
@@ -15212,6 +15257,7 @@
       mix: config.mix,
       cleanupPhase: false,
       awaitingForge: false,
+      completesRun: Boolean(config.completesRun),
       driveGainFactor: config.driveGainFactor || 1,
       hazard: config.hazard,
       hazardTimer: config.hazard ? config.hazard.interval * 0.8 : Number.POSITIVE_INFINITY,
@@ -19558,7 +19604,8 @@
         state.hazards = [];
         state.stats.wavesCleared = state.waveIndex + 1;
         const nextWave = state.waveIndex + 2;
-        const enteringAfterburn = state.waveIndex >= MAX_WAVES - 1;
+        const enteringAfterburn =
+          !CONSOLIDATED_12_WAVE_ROUTE && state.waveIndex >= MAX_WAVES - 1;
         const nextPhaseLabel = state.wave.completesRun
           ? "결과 패널"
           : enteringAfterburn
