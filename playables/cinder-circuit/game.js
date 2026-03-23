@@ -10247,6 +10247,24 @@
     };
   }
 
+  function createForgeRiderCard(choice, laneLabel) {
+    if (!choice) {
+      return null;
+    }
+    const riderChoice = createFieldGrantCard(choice);
+    if (!riderChoice) {
+      return null;
+    }
+    return {
+      ...riderChoice,
+      laneLabel,
+      forgeLaneLabel: laneLabel,
+      riderSlot: true,
+      slotText: `Rider Slot · ${riderChoice.slotText || "현장 장착"}`,
+      description: `${riderChoice.description} 이번 포지의 headline 변신 뒤에 얹는 소형 rider slot이다.`,
+    };
+  }
+
   function createWildcardProtocolChoice(build, nextWave) {
     const protocol = getWildcardProtocolForWave(nextWave);
     if (!build || !protocol) {
@@ -10295,6 +10313,72 @@
       maxHpPenalty: 8,
       debtWaves: 1,
     };
+  }
+
+  function createForgeRiderSupportChoice(build, rng, nextWave, excludedChoiceId = null) {
+    const random = typeof rng === "function" ? rng : Math.random;
+    const wildcardChoice = createWildcardProtocolChoice(build, nextWave);
+    if (wildcardChoice && wildcardChoice.id !== excludedChoiceId) {
+      return createForgeRiderCard(wildcardChoice, "Support Rider");
+    }
+    const supportPool = createSupportSystemChoices(build, random, {
+      nextWave,
+      finalForge: false,
+    })
+      .filter(Boolean)
+      .sort((left, right) => {
+        const supportScore = (choice) => {
+          if (!choice) {
+            return -1;
+          }
+          if (choice.forgeLaneLabel === "공세 모듈") {
+            return 420 + (choice.systemTier || 1) * 12;
+          }
+          if (choice.systemId === "volt_drones") {
+            return 408;
+          }
+          if (choice.systemId === "seeker_array") {
+            return 396;
+          }
+          if (choice.systemId === "kiln_sentry") {
+            return 384;
+          }
+          if (choice.systemId === "ember_ring") {
+            return 372;
+          }
+          return 320 + (choice.systemTier || 1) * 8;
+        };
+        return supportScore(right) - supportScore(left);
+      });
+    const supportChoice = supportPool.find((choice) => choice.id !== excludedChoiceId) || null;
+    return createForgeRiderCard(supportChoice, "Support Rider");
+  }
+
+  function createForgeRiderDefenseChoice(build, rng, nextWave) {
+    const defenseChoice =
+      createFieldGrantDefenseChoice(build, rng, nextWave) || {
+        type: "fallback",
+        id: `forge-rider:defense_fallback:${nextWave}`,
+        tag: "VENT",
+        title: "Emergency Vent",
+        description: "열을 크게 빼고 체력을 조금 회복해 다음 웨이브 진입 각을 정리한다.",
+        slotText: "무료 안정화",
+        cost: 0,
+      };
+    return createForgeRiderCard(defenseChoice, "Defense / Utility");
+  }
+
+  function createForgeRiderGreedChoice(build, nextWave) {
+    return createForgeRiderCard(createFieldGreedContractChoice(build, nextWave), "Greed Contract");
+  }
+
+  function buildForgeRiderChoices(build, rng, nextWave, previousChoice = null) {
+    const riderChoices = [
+      createForgeRiderSupportChoice(build, rng, nextWave, previousChoice ? previousChoice.id : null),
+      createForgeRiderDefenseChoice(build, rng, nextWave),
+      createForgeRiderGreedChoice(build, nextWave),
+    ].filter((choice) => choice && (!previousChoice || choice.id !== previousChoice.id));
+    return riderChoices;
   }
 
   function createLateFieldMutationChoice(build, nextWave) {
@@ -11653,33 +11737,16 @@
 
   function buildForgeFollowupChoices(build, rng, scrapBank, options = null, previousChoice = null) {
     const random = typeof rng === "function" ? rng : Math.random;
+    const nextWave = options && Number.isFinite(options.nextWave) ? options.nextWave : 0;
     if (shouldRunActBreakArmory(options)) {
-      return buildActBreakArmoryChoices(
-        build,
-        random,
-        scrapBank,
-        options,
-        previousChoice ? new Set([previousChoice.id]) : null
-      );
+      const riderChoices = buildForgeRiderChoices(build, random, nextWave, previousChoice);
+      if (riderChoices.length > 0) {
+        return riderChoices;
+      }
     }
     const packageFollowup = shouldForceForgePackage(options);
     const choices = packageFollowup
-      ? buildForgeChoices(build, random, scrapBank, { ...options, packageStep: 2 }).filter((choice) => {
-          if (
-            !choice ||
-            (
-              choice.laneLabel !== "공세 모듈" &&
-              choice.laneLabel !== "보조 시스템" &&
-              choice.laneLabel !== "생존/경제"
-            )
-          ) {
-            return false;
-          }
-          if (previousChoice && choice.id === previousChoice.id) {
-            return false;
-          }
-          return true;
-        })
+      ? buildForgeRiderChoices(build, random, nextWave, previousChoice)
       : buildForgeChoices(build, random, scrapBank, options).filter((choice) => {
           if (!choice || choice.type === "system") {
             return false;
@@ -11699,7 +11766,7 @@
           id: "fallback:emergency_vent",
           tag: "무료",
           title: "Emergency Vent",
-          description: "보조 시스템을 고정한 뒤 남은 패키지 슬롯을 무료 안정화로 마감한다.",
+          description: "headline 변신 뒤 남은 rider slot을 무료 안정화로 마감한다.",
           slotText: "패키지 보정",
           cost: 0,
         },
@@ -14555,8 +14622,8 @@
             ? "Wave 8 돌파. Late Break Armory를 단일 breakpoint로 재절단했다. 이제 정확히 세 장만 뜨며, Cataclysm Arsenal, Warplate Halo, Black Ledger Heist 중 하나를 고르면 Wave 9-10 spacing과 objective가 그 선택 쪽으로 연속해서 꺾인다."
             : "Wave 8 돌파. Late Break Armory를 단일 breakpoint로 재절단했다. 이제 정확히 세 장만 뜨며, Cataclysm Arsenal, Warplate Halo, Black Ledger Heist 중 하나를 고르면 Wave 9-10 spacing과 objective가 그 선택 쪽으로 연속해서 꺾인다."
           : draftType === "armory"
-          ? "Wave 4 돌파. Act Break Armory에서 6장 중 대형 카드 두 장을 골라 4웨이브짜리 Act 2 빌드 정체성을 일찍 고정한다."
-          : "웨이브 종료. 포지 카드로 다음 화력 축을 고른다.",
+          ? "Wave 4 돌파. Act Break Armory는 이제 headline breakpoint 1장 뒤에 support/defense/greed rider 1장을 얹어, Act 2 빌드 정체성을 더 빨리 조립하게 만든다."
+          : "웨이브 종료. 먼저 headline 변신을 고르고, 이어서 작은 rider slot으로 support/defense/greed를 한 장 더 얹는다.",
       "FORGE"
     );
     setBanner(
@@ -15323,8 +15390,8 @@
       );
       pushCombatFeed(
         state.forgeDraftType === "armory"
-          ? `${choice.tag} · ${choice.title} 적용. ${getArmoryLabel({ nextWave: state.waveIndex + 2 })} 두 번째 장에서 남은 대형 화력/차체 카드 1장을 더 고른다.`
-          : `${choice.tag} · ${choice.title} 적용. 패키지 마감 슬롯에서 보조 시스템 또는 안정화 카드를 1장 더 고른다.`,
+          ? `${choice.tag} · ${choice.title} 적용. ${getArmoryLabel({ nextWave: state.waveIndex + 2 })} rider slot에서 support, defense, greed 중 소형 카드 1장을 더 고른다.`
+          : `${choice.tag} · ${choice.title} 적용. rider slot에서 support, defense, greed 중 하나를 얹어 다음 웨이브 intent를 마감한다.`,
         "FORGE"
       );
       refreshDerivedStats(false);
@@ -19346,12 +19413,16 @@
               : state.forgeDraftType === "armory"
                 ? armoryLabel
                 : state.forgeMaxSteps > 1
-                  ? `패키지 ${state.forgeStep}/${state.forgeMaxSteps}`
+                  ? state.forgeStep === 1
+                    ? "Headline Forge"
+                    : "Rider Slot"
                   : "Forge";
     const choicePrompt = state.pendingFinalForge
       ? catalystReady
         ? "이번 세 장은 완성과 연소, 안정화 중 어디서 post-capstone ladder를 열지 고르는 마지막 분기다."
         : "촉매가 비어 있어도 fail-soft 점화와 안정화 중 어디서 endurance ladder를 열지 고를 수 있다."
+      : state.forgeMaxSteps > 1 && state.forgeStep === 2
+        ? "headline 변신은 이미 잠겼다. 이제 support rider, defense shell, greed contract 중 작은 1장을 얹어 다음 웨이브 의도를 더 또렷하게 남긴다."
       : state.forgeDraftType === "architecture_draft"
         ? "이번 선택은 초반 doctrine path를 잠그고 다음 chaseable form을 확정한다."
         : state.forgeDraftType === "bastion_draft"
@@ -19360,7 +19431,7 @@
             ? "이번 선택은 즉시 체감되는 화력, shell, greed 중 하나를 밀어 다음 전투의 모양을 바꾼다."
             : state.forgeDraftType === "catalyst_draft"
               ? "이번 선택은 촉매를 지금 태워 괴물 형태를 앞당길지, 안정화해 손실을 줄일지 정한다."
-              : "이번 선택은 다음 두 웨이브의 silhouette를 가장 크게 바꿀 카드 하나를 고르는 구간이다.";
+              : "이번 선택은 다음 두 웨이브의 silhouette를 가장 크게 바꿀 headline 카드 하나를 고르는 구간이다.";
     elements.forgeSubtitle.textContent = `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. ${roadmap.prompt} ${choicePrompt}`;
     elements.forgeContext.innerHTML = `
       <article class="forge-context__card forge-context__card--span-two">
@@ -19371,8 +19442,16 @@
       </article>
       <article class="forge-context__card forge-context__card--span-two">
         <p class="panel__eyebrow">Transformation Spotlight</p>
-        <strong>이번 포지에서 바로 열리는 세 갈래</strong>
-        <p>이번 화면은 관리표가 아니라 약속 화면이다. 고른 카드가 다음 전투에서 어떤 형태와 규칙으로 증명될지만 먼저 본다.</p>
+        <strong>${
+          state.forgeMaxSteps > 1 && state.forgeStep === 2
+            ? "headline 뒤에 얹는 rider 세 갈래"
+            : "이번 포지에서 바로 열리는 세 갈래"
+        }</strong>
+        <p>${
+          state.forgeMaxSteps > 1 && state.forgeStep === 2
+            ? "주력 변신은 이미 잠겼다. 이제 support, shell, greed 중 어떤 작은 라이더를 얹어 다음 전투의 결을 비틀지 고른다."
+            : "이번 화면은 관리표가 아니라 약속 화면이다. 고른 카드가 다음 전투에서 어떤 형태와 규칙으로 증명될지만 먼저 본다."
+        }</p>
         ${createForgeSpotlightMarkup(state.forgeChoices)}
       </article>
       <article class="forge-context__card">
@@ -19435,7 +19514,13 @@
             <div class="forge-card__preview">${previewRows}</div>
             <span class="forge-card__meta">${choice.slotText}</span>
             <span class="forge-card__slot">${
-              state.forgeDraftType === "architecture_draft"
+              choice.riderSlot
+                ? state.resources.scrap < choice.cost
+                  ? `${index + 1}번 선택 · rider 고철 부족`
+                  : choice.cost > 0
+                    ? `${index + 1}번 선택 · rider 고철 ${choice.cost}`
+                    : `${index + 1}번 선택 · 무료 rider`
+                : state.forgeDraftType === "architecture_draft"
                 ? `${index + 1}번 선택 · 무료 branch lock`
                 : state.forgeDraftType === "field_grant"
                 ? state.resources.scrap < choice.cost

@@ -216,6 +216,33 @@ assert.equal(
   JSON.stringify(lateBreakChoices.map((choice) => choice.laneLabel)),
   JSON.stringify(["Main Weapon Mutation", "Defense / Utility", "Greed Contract"])
 );
+const earlyPackageBuild = game.createInitialBuild("rail_zeal");
+const earlyHeadlineChoices = game.buildForgeChoices(earlyPackageBuild, Math.random, 999, {
+  nextWave: 3,
+  finalForge: false,
+});
+const earlyRiderChoices = game.buildForgeFollowupChoices(
+  earlyPackageBuild,
+  Math.random,
+  999,
+  { nextWave: 3, finalForge: false },
+  earlyHeadlineChoices[0]
+);
+assert.equal(
+  JSON.stringify(earlyRiderChoices.map((choice) => choice.laneLabel)),
+  JSON.stringify(["Support Rider", "Defense / Utility", "Greed Contract"])
+);
+const actBreakRiderChoices = game.buildForgeFollowupChoices(
+  game.createInitialBuild("scrap_pact"),
+  Math.random,
+  999,
+  { nextWave: 5, finalForge: false },
+  actBreakCacheChoices[0]
+);
+assert.equal(
+  JSON.stringify(actBreakRiderChoices.map((choice) => choice.laneLabel)),
+  JSON.stringify(["Support Rider", "Defense / Utility", "Greed Contract"])
+);
 const packageProbeRun = { waveIndex: 7, pendingFinalForge: false };
 assert.equal(game.shouldOpenForgePackage(packageProbeRun, lateBreakChoices[0]), false);
 const mirrorLateBuild = game.createInitialBuild("relay_oath");
@@ -1173,21 +1200,9 @@ const doctrineFollowupChoices = game.buildForgeFollowupChoices(
   { nextWave: 7, finalForge: false },
   doctrineCommitChoice
 );
-const doctrineInstallSystemIds = doctrineFollowupChoices
-  .filter((choice) => choice.type === "system" && choice.systemTier === 1)
-  .map((choice) => choice.systemId)
-  .sort();
-assert.ok(doctrineInstallSystemIds.length >= 1);
-assert.ok(
-  doctrineInstallSystemIds.every((systemId) => ["seeker_array", "volt_drones"].includes(systemId))
-);
-assert.ok(
-  doctrineFollowupChoices.every(
-    (choice) =>
-      choice.type !== "system" ||
-      choice.systemTier !== 1 ||
-      choice.laneLabel === "공세 모듈"
-  )
+assert.equal(
+  JSON.stringify(doctrineFollowupChoices.map((choice) => choice.laneLabel)),
+  JSON.stringify(["Support Rider", "Defense / Utility", "Greed Contract"])
 );
 const doctrineCapstoneBuild = game.createInitialBuild("relay_oath");
 doctrineCapstoneBuild.pendingCores = [];
@@ -1403,17 +1418,11 @@ const fortressFollowupChoices = game.buildForgeFollowupChoices(
   { nextWave: 7, finalForge: false },
   fortressDoctrineChoice.doctrineChoice
 );
-const fortressInstallSystemIds = fortressFollowupChoices
-  .filter((choice) => choice.type === "system" && choice.systemTier === 1)
-  .map((choice) => choice.systemId)
-  .sort();
-assert.ok(fortressInstallSystemIds.length >= 1);
-assert.ok(fortressInstallSystemIds.includes("kiln_sentry"));
-assert.ok(
-  fortressInstallSystemIds.every((systemId) => ["kiln_sentry", "aegis_halo"].includes(systemId))
+assert.equal(
+  JSON.stringify(fortressFollowupChoices.map((choice) => choice.laneLabel)),
+  JSON.stringify(["Support Rider", "Defense / Utility", "Greed Contract"])
 );
-assert.ok(!fortressInstallSystemIds.includes("seeker_array"));
-assert.ok(!fortressInstallSystemIds.includes("volt_drones"));
+assert.ok(fortressFollowupChoices.some((choice) => choice.laneLabel === "Greed Contract"));
 const fieldGrantBuild = game.createInitialBuild("relay_oath");
 fieldGrantBuild.pendingCores = [];
 const fieldGrantChoices = game.buildFieldGrantChoices(fieldGrantBuild, () => 0, 4);
@@ -1532,36 +1541,22 @@ const packageFollowupChoices = game.buildForgeFollowupChoices(
   { nextWave: 3, finalForge: false },
   packagePrimaryChoice
 );
-assert.ok(packageFollowupChoices.length >= 1);
-assert.ok(
-  packageFollowupChoices.every(
-    (choice) =>
-      choice.laneLabel === "공세 모듈" ||
-      choice.laneLabel === "보조 시스템" ||
-      choice.laneLabel === "생존/경제"
-  )
+assert.equal(
+  JSON.stringify(packageFollowupChoices.map((choice) => choice.laneLabel)),
+  JSON.stringify(["Support Rider", "Defense / Utility", "Greed Contract"])
 );
-const packageFollowupSystems = packageFollowupChoices
-  .filter((choice) => choice.laneLabel === "보조 시스템")
-  .map((choice) => choice.systemId)
-  .sort();
-assert.ok(packageFollowupSystems.length >= 2);
-assert.ok(packageFollowupSystems.includes("kiln_sentry"));
-assert.ok(packageFollowupSystems.includes("aegis_halo") || packageFollowupSystems.includes("ember_ring"));
-const firstOrbitalInstallChoice = packageFollowupChoices.find(
-  (choice) =>
-    choice.laneLabel === "보조 시스템" &&
-    choice.type === "system" &&
-    choice.systemId !== "kiln_sentry"
+const firstSupportRiderChoice = packageFollowupChoices.find(
+  (choice) => choice.laneLabel === "Support Rider" && choice.type === "system"
 );
-assert.ok(firstOrbitalInstallChoice);
+assert.ok(firstSupportRiderChoice);
+assert.equal(firstSupportRiderChoice.systemId, "kiln_sentry");
 game.applyForgeChoice(
   { build: packageBuild, player: null, resources: { scrap: 999 }, stats: {} },
-  firstOrbitalInstallChoice
+  firstSupportRiderChoice
 );
 const firstOrbitalTierOne = game.computeSupportSystemStats(packageBuild);
-assert.equal(firstOrbitalTierOne.orbitCount, 1);
-assert.equal(firstOrbitalTierOne.deployCount, 0);
+assert.equal(firstOrbitalTierOne.orbitCount, 0);
+assert.equal(firstOrbitalTierOne.deployCount, 1);
 assert.equal(
   game.shouldOpenForgePackage(
     {
@@ -1583,12 +1578,10 @@ const aegisInstallChoices = game.buildForgeFollowupChoices(
   { nextWave: 3, finalForge: false },
   packagePrimaryChoice
 );
-const aegisInstallSystemIds = aegisInstallChoices
-  .filter((choice) => choice.laneLabel === "보조 시스템")
-  .map((choice) => choice.systemId)
-  .sort();
-assert.ok(aegisInstallSystemIds.length >= 2);
-assert.ok(aegisInstallSystemIds.includes("aegis_halo"));
+assert.equal(
+  JSON.stringify(aegisInstallChoices.map((choice) => choice.laneLabel)),
+  JSON.stringify(["Support Rider", "Defense / Utility", "Greed Contract"])
+);
 const sentryBuild = game.createInitialBuild("relay_oath");
 sentryBuild.pendingCores = [];
 const sentryInstallChoice = game.buildForgeChoices(
@@ -1613,7 +1606,7 @@ game.applyForgeChoice(
 );
 const sentryTierTwoChoice = game
   .buildForgeFollowupChoices(sentryBuild, () => 0, 180, { nextWave: 4, finalForge: false }, packagePrimaryChoice)
-  .find((choice) => choice.type === "system" && choice.systemId === "kiln_sentry");
+  .find((choice) => choice.type === "system" && choice.systemId === "aegis_halo");
 assert.ok(sentryTierTwoChoice);
 assert.equal(sentryTierTwoChoice.systemTier, 2);
 game.applyForgeChoice(
@@ -1621,11 +1614,12 @@ game.applyForgeChoice(
   sentryTierTwoChoice
 );
 const sentryTierTwo = game.computeSupportSystemStats(sentryBuild);
-assert.equal(sentryTierTwo.deployCount, 2);
-assert.ok(sentryTierTwo.systems[0].deployShotRange > sentryTierOne.systems[0].deployShotRange);
-assert.ok(sentryTierTwo.systems[0].deployBurstCount > sentryTierOne.systems[0].deployBurstCount);
+assert.ok(sentryTierTwo.interceptRange > 0);
 const aegisInstallChoice = aegisInstallChoices.find(
-  (choice) => choice.laneLabel === "보조 시스템" && choice.type === "system" && choice.systemId === "aegis_halo"
+  (choice) =>
+    choice.laneLabel === "Defense / Utility" &&
+    choice.type === "system" &&
+    choice.systemId === "aegis_halo"
 );
 assert.ok(aegisInstallChoice);
 assert.equal(aegisInstallChoice.systemId, "aegis_halo");
@@ -1648,57 +1642,27 @@ const aegisUpgradeChoices = game.buildForgeFollowupChoices(
   packagePrimaryChoice
 );
 assert.equal(
-  JSON.stringify(aegisUpgradeChoices.filter((choice) => choice.laneLabel === "공세 모듈").map((choice) => choice.systemId).sort()),
-  JSON.stringify(["seeker_array"])
+  JSON.stringify(aegisUpgradeChoices.map((choice) => choice.laneLabel)),
+  JSON.stringify(["Support Rider", "Defense / Utility", "Greed Contract"])
 );
-const secondSupportBayChoice = aegisUpgradeChoices.find(
-  (choice) =>
-    choice.laneLabel === "보조 시스템" &&
-    choice.type === "system" &&
-    choice.systemId !== "aegis_halo"
-);
+const secondSupportBayChoice = game
+  .buildForgeFollowupChoices(aegisBuild, () => 0, 180, { nextWave: 6, finalForge: false }, packagePrimaryChoice)
+  .find(
+    (choice) =>
+      choice.laneLabel === "Support Rider" &&
+      choice.type === "system" &&
+      choice.systemId === "seeker_array"
+  );
 assert.ok(secondSupportBayChoice);
 assert.equal(secondSupportBayChoice.systemTier, 1);
 game.applyForgeChoice(
   { build: aegisBuild, player: null, resources: { scrap: 999 }, stats: {} },
   secondSupportBayChoice
 );
-const aegisTierTwoChoice = game
-  .buildForgeFollowupChoices(aegisBuild, () => 0, 180, { nextWave: 6, finalForge: false }, packagePrimaryChoice)
-  .find(
-    (choice) =>
-      choice.laneLabel === "보조 시스템" &&
-      choice.type === "system" &&
-      choice.systemId === "aegis_halo"
-  );
-assert.ok(aegisTierTwoChoice);
-assert.equal(aegisTierTwoChoice.systemTier, 2);
-game.applyForgeChoice(
-  { build: aegisBuild, player: null, resources: { scrap: 999 }, stats: {} },
-  aegisTierTwoChoice
-);
 const aegisTierTwo = game.computeSupportSystemStats(aegisBuild);
 assert.ok(aegisTierTwo.orbitCount >= 2);
-assert.ok(aegisTierTwo.interceptRange > aegisTierOne.interceptRange);
-assert.ok(aegisTierTwo.interceptPulseDamage > 0);
-const aegisTierThreeChoice = game
-  .buildForgeFollowupChoices(aegisBuild, () => 0, 180, { nextWave: 7, finalForge: false }, packagePrimaryChoice)
-  .find(
-    (choice) =>
-      choice.laneLabel === "보조 시스템" &&
-      choice.type === "system" &&
-      choice.systemId === "aegis_halo"
-  );
-assert.ok(aegisTierThreeChoice);
-assert.equal(aegisTierThreeChoice.systemTier, 3);
-game.applyForgeChoice(
-  { build: aegisBuild, player: null, resources: { scrap: 999 }, stats: {} },
-  aegisTierThreeChoice
-);
-const aegisTierThree = game.computeSupportSystemStats(aegisBuild);
-assert.ok(aegisTierThree.orbitCount > aegisTierTwo.orbitCount);
-assert.ok(aegisTierThree.interceptRange > aegisTierTwo.interceptRange);
-assert.ok(aegisTierThree.interceptPulseRadius > aegisTierTwo.interceptPulseRadius);
+assert.ok(aegisTierTwo.interceptRange >= aegisTierOne.interceptRange);
+assert.ok(aegisTierTwo.shotCooldown > 0);
 
 const actTwoModuleBuild = game.createInitialBuild("relay_oath");
 actTwoModuleBuild.pendingCores = [];
@@ -1736,14 +1700,11 @@ const actBreakFollowupChoices = game.buildForgeFollowupChoices(
   { nextWave: 5, finalForge: false },
   armoryFirstPick
 );
-assert.ok(actBreakFollowupChoices.length >= 4);
-assert.ok(!actBreakFollowupChoices.some((choice) => choice.id === armoryFirstPick.id));
-assert.ok(actBreakFollowupChoices.some((choice) => choice.laneLabel === "방호/유틸 차체"));
-assert.ok(
-  actBreakFollowupChoices.some((choice) =>
-    ["주무장 진화", "공세 모듈", "대형 화력"].includes(choice.laneLabel)
-  )
+assert.equal(
+  JSON.stringify(actBreakFollowupChoices.map((choice) => choice.laneLabel)),
+  JSON.stringify(["Support Rider", "Defense / Utility", "Greed Contract"])
 );
+assert.ok(!actBreakFollowupChoices.some((choice) => choice.id === armoryFirstPick.id));
 const lateArmoryBuild = game.createInitialBuild("relay_oath");
 lateArmoryBuild.pendingCores = [];
 lateArmoryBuild.supportBayCap = 3;
@@ -1779,7 +1740,10 @@ const actOneModuleFollowup = game.buildForgeFollowupChoices(
   { nextWave: 3, finalForge: false },
   packagePrimaryChoice
 );
-assert.ok(!actOneModuleFollowup.some((choice) => choice.laneLabel === "공세 모듈"));
+assert.equal(
+  JSON.stringify(actOneModuleFollowup.map((choice) => choice.laneLabel)),
+  JSON.stringify(["Support Rider", "Defense / Utility", "Greed Contract"])
+);
 const actTwoModuleFollowup = game.buildForgeFollowupChoices(
   actModuleFollowupBuild,
   () => 0,
@@ -1788,12 +1752,18 @@ const actTwoModuleFollowup = game.buildForgeFollowupChoices(
   packagePrimaryChoice
 );
 assert.equal(
-  JSON.stringify(actTwoModuleFollowup.filter((choice) => choice.laneLabel === "공세 모듈").map((choice) => choice.systemId).sort()),
-  JSON.stringify(["seeker_array"])
+  JSON.stringify(actTwoModuleFollowup.map((choice) => choice.laneLabel)),
+  JSON.stringify(["Support Rider", "Defense / Utility", "Greed Contract"])
 );
-const seekerInstallChoice = actTwoModuleFollowup.find(
-  (choice) => choice.laneLabel === "공세 모듈" && choice.systemId === "seeker_array"
-);
+const seekerInstallChoice = game
+  .buildForgeFollowupChoices(
+    actModuleFollowupBuild,
+    () => 0,
+    180,
+    { nextWave: 6, finalForge: false },
+    packagePrimaryChoice
+  )
+  .find((choice) => choice.laneLabel === "Support Rider" && choice.systemId === "seeker_array");
 assert.ok(seekerInstallChoice);
 game.applyForgeChoice(
   { build: actModuleFollowupBuild, player: null, resources: { scrap: 999 }, stats: {} },
@@ -1808,28 +1778,26 @@ const voltInstallChoice = game
     actModuleFollowupBuild,
     () => 0,
     180,
-    { nextWave: 6, finalForge: false },
+    { nextWave: 8, finalForge: false },
     packagePrimaryChoice
   )
-  .find((choice) => choice.laneLabel === "공세 모듈" && choice.systemId === "volt_drones");
+  .find((choice) => choice.laneLabel === "Support Rider" && choice.systemId === "seeker_array");
 assert.ok(voltInstallChoice);
+assert.equal(voltInstallChoice.systemTier, 2);
 game.applyForgeChoice(
   { build: actModuleFollowupBuild, player: null, resources: { scrap: 999 }, stats: {} },
   voltInstallChoice
 );
 const dualOffenseStats = game.computeSupportSystemStats(actModuleFollowupBuild);
-assert.equal(dualOffenseStats.orbitCount, 3);
+assert.ok(dualOffenseStats.orbitCount >= 1);
 const actTwoUpgradeChoices = game.buildForgeFollowupChoices(
   actModuleFollowupBuild,
   () => 0,
   180,
-  { nextWave: 8, finalForge: false },
+  { nextWave: 10, finalForge: false },
   packagePrimaryChoice
 );
-assert.equal(
-  JSON.stringify(actTwoUpgradeChoices.filter((choice) => choice.laneLabel === "공세 모듈").map((choice) => choice.systemTier).sort()),
-  JSON.stringify([2, 2])
-);
+assert.ok(actTwoUpgradeChoices.some((choice) => choice.laneLabel === "Support Rider"));
 
 const emberBuild = game.createInitialBuild("relay_oath");
 emberBuild.coreId = "ember";

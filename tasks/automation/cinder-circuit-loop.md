@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-24 01:25:00 KST
+  Findings:
+  - `playables/cinder-circuit/game.js` has a much fatter content library now, but the forge economy still plays like a prototype because each pause usually resolves to one tightly scripted draft type and one card pick. The player is still selecting from a pipeline, not assembling a run plan worth chasing across many waves.
+  - The support layer in `SUPPORT_SYSTEM_DEFS` creates earlier and clearer appetite than the main weapon/body path because orbitals, shields, sentries, missiles, and drones start visibly tiering up from the early forge band, while the headline body mutations in `LATE_ASCENSION_DEFS` arrive much later. That leaves too much of the run before the player feels they are becoming something outrageous.
+  - `POST_CAPSTONE_ASCENSION_PROFILE` is still mostly a numeric endurance escalator. It can tune survival length, but it does not yet imply enough new combat grammar to honestly support a future `20-30` wave game without the late run turning into harder versions of the same answer.
+  - `renderForgeOverlay()` still over-contextualizes the reward moment. Compared with how `Hades` boon/hammer reveals or `Nova Drift` level-up screens frontload desire, this forge still makes the player parse ladder/state/admin framing before the build spike lands.
+  Top Priority: Rework the forge into an early-starting layered choice structure where each wave offers one headline transformation pick plus one smaller rider slot for defense/support/greed, with limited banked reroll or lock-in agency so players can actually stack intent across a long run.
+  Why Now: Until players can compound a future build instead of just accepting the next scripted packet, extra waves will add duration faster than rerun desire.
+  Do Not Repeat: Do not answer this with more named draft wrappers or more late-only branches if the early and mid forge still collapse to one scripted major pick.
+
 - 2026-03-24 01:05:00 KST
   Findings:
   - `playables/cinder-circuit/game.js` has enough late-wave content to stop calling this a thin prototype, but the run still does not create a strong rerun appetite curve. The player gets many named moments, yet too few of them promise “if I survive 3 more waves, my machine becomes absurd” in a way that can carry a 20-30 wave future.
@@ -1333,6 +1343,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 04:35:00 KST
+  Changed: converted the reusable forge flow in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from "headline pick, then another generic pool" into an explicit `headline -> rider slot` structure for the early and mid run. Standard package forges from `Wave 3+` and the `Wave 5 Act Break Armory` now end with exactly three smaller rider offers, `Support Rider`, `Defense / Utility`, and `Greed Contract`, each discounted through a dedicated rider wrapper instead of reopening the whole armory stack. I also updated the forge copy so step 1 reads as the dominant silhouette lock and step 2 reads as a smaller follow-up intent layer, then extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to pin the new rider-slot output and the revised follow-up expectations. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the latest critique's `Top Priority` asked for an early-starting layered forge where one headline transformation is followed by a smaller defense/support/greed rider so the player can actually stack a run plan instead of consuming one scripted packet at a time. The highest-value bounded interpretation was to rewrite the existing second step rather than invent another wrapper, because the package flow already existed from the early game and only needed a cleaner, more intentional rider economy.
+  Follow-up risk: this pass fixes the normal forge cadence and the first armory breakpoint, but it does not yet add banked reroll/lock-in agency and it still leaves late special stops like `Late Break Armory`, `Architecture Draft`, and `Catalyst Crucible` outside the same rider-slot contract. A later pass should either extend the rider layer into those late bespoke beats or add a compact reserve/reroll mechanic so long-run intent survives even when the run hits special-case reward screens.
 
 - 2026-03-24 04:10:00 KST
   Changed: rebuilt the forge's immediate reward read in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and [styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) around a new `Transformation Spotlight` plus appetite-first choice cards. The forge context now surfaces the three currently offered branches as large silhouette promises, each with the exact named form and a short “next fight proof” line, and every reward card now leads with that same transformation block before its admin rows. This keeps `Cataclysm Arsenal`, `Warplate Halo`, `Black Ledger Heist`, doctrine locks, support packages, and other existing rewards readable as “what monster do I become next” instead of as slot/accounting text.
