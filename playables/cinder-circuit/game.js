@@ -1194,72 +1194,71 @@
       },
     },
     10: {
-      label: "Wave 11 · Cinder Crown I",
-      bandId: "cinder_crown",
-      bandLabel: "Cinder Crown",
+      label: "Wave 11 · Starforge Pursuit",
+      bandId: "starforge_pursuit",
+      bandLabel: "Starforge Pursuit",
       bandFocusId: "late_form",
-      pressureFamily: null,
-      note: "Act 3 두 번째 밴드의 첫 판도 deliberate payoff window다. 이제 두 웨이브 동안 같은 relay crown breach를 반복하되, 첫 판은 corridor 밀도를 낮춰 doctrine capstone이나 새 ascension body가 넓은 회랑을 어떻게 지우는지만 먼저 보게 만든다.",
+      pressureFamily: "pursuit",
+      note: "Late ascension 직후 밴드는 더 이상 같은 crown rehearsal이 아니다. 첫 판은 drift pocket을 읽는 추격 시험으로 꺾어, 방금 잠긴 chassis/weapon leap가 brander ignition과 pursuit hook을 얼마나 크게 꺾는지 바로 증명하게 만든다.",
       directive:
-        "cinder crown breach. relay crown과 먼 포격원이 회랑을 길게 찢는다. 이 밴드에서는 같은 breach 규칙이 두 번 이어지므로, marked elite cache를 집으러 깊게 들어갈 타이밍과 먼 pylon 절단 루트를 반복 학습하게 된다.",
-      driveGainFactor: 1.48,
+        "starforge pursuit. brander ignition ring이 현재 pocket을 태우기 전에 한 lane을 비우고 크게 꺾어야 한다. 회랑 upkeep보다 새 form으로 pursuit 덩어리를 몇 초 만에 잘라내는지가 먼저 드러난다.",
+      driveGainFactor: 1.5,
       arena: AFTERBURN_ENDURANCE_ARENA,
-      activeCap: 36,
-      spawnBudget: 196,
+      activeCap: 34,
+      spawnBudget: 190,
       mix: {
         scuttler: 0.08,
         brute: 0.18,
-        shrike: 0.16,
-        skimmer: 0.08,
-        lancer: 0.18,
-        brander: 0.12,
-        mortar: 0.08,
-        warden: 0.1,
+        shrike: 0.18,
+        skimmer: 0.1,
+        lancer: 0.14,
+        brander: 0.18,
+        binder: 0.1,
+        mortar: 0.06,
+        warden: 0.04,
       },
       hazard: {
-        label: "Cinder Crown Relay",
-        type: "relay",
-        interval: 7.8,
-        count: 2,
-        radius: 84,
-        telegraph: 0.72,
-        duration: 5,
+        label: "Starforge Drift",
+        type: "drift",
+        interval: 8.8,
+        count: 1,
+        radius: 82,
+        telegraph: 0.78,
+        duration: 5.1,
         damage: 15,
-        coreHp: 74,
-        coreRadius: 19,
-        relayRange: 516,
-        relayWidth: 38,
-        relayDamage: 15,
+        driftSpeed: 114,
+        driftOrbit: 0.34,
       },
     },
     11: {
-      pressureFamily: null,
-      label: "Wave 12 · Cinder Crown II",
-      bandId: "cinder_crown",
+      pressureFamily: "breach",
+      label: "Wave 12 · Cinder Crown",
+      bandId: "cinder_crown_break",
       bandLabel: "Cinder Crown",
       bandFocusId: "late_form",
-      note: "Cinder Crown 마지막 판도 같은 breach ecology를 유지한 채 스케일만 높인다. 새 objective를 덧붙이지 않고 같은 회랑 싸움을 한 번 더 크게 열어, 첫 payoff window에서 확인한 corridor ownership을 진짜 endurance pressure까지 밀어 올리게 한다.",
+      note: "추격 시험 다음엔 최종 crown breach 한 판만 남긴다. 이제 relay corridor와 ignition ring이 같이 닫히므로, headline form이 lane을 찢는 힘과 rider 축이 버티는 시간이 같은 전투 안에서 함께 드러난다.",
       directive:
-        "cinder crown breach. relay crown과 mortar 후열, lancer cut이 한 번 더 두꺼워진다. 하지만 규칙은 그대로이므로, 어느 doctrine이든 같은 corridor fight를 더 공격적으로 풀며 다음 Afterburn endurance를 준비해야 한다.",
-      driveGainFactor: 1.54,
+        "cinder crown ignition breach. relay pylon을 멀리서만 끊을 수는 없다. ignition ring이 pocket을 닫기 전에 가장 얇은 회랑을 직접 찢고 rider 생존축으로 오래 버텨 breach window를 연장해야 한다.",
+      driveGainFactor: 1.56,
       arena: AFTERBURN_ENDURANCE_ARENA,
-      activeCap: 40,
-      spawnBudget: 216,
+      activeCap: 38,
+      spawnBudget: 214,
       mix: {
         scuttler: 0.08,
         brute: 0.16,
-        shrike: 0.16,
+        shrike: 0.14,
         lancer: 0.2,
-        brander: 0.14,
-        mortar: 0.1,
+        brander: 0.18,
+        binder: 0.1,
+        mortar: 0.08,
         warden: 0.12,
       },
       hazard: {
         label: "Cinder Crown Relay",
         type: "relay",
-        interval: 7.4,
+        interval: 7.6,
         count: 3,
-        radius: 86,
+        radius: 88,
         telegraph: 0.7,
         duration: 5.1,
         damage: 16,
@@ -7970,18 +7969,31 @@
     }
     if (build && !build.doctrineCapstoneId) {
       return {
-        label: "Cinder Crown",
+        label: "Starforge Pursuit",
         headline: capstoneTitle,
         detail:
-          "Wave 11-12는 같은 crown breach 규칙을 유지한다. relay corridor와 포격 후열이 반복되므로, doctrine capstone cache를 회수할 때까지 같은 dive line을 더 정교하게 밀어붙이게 만든다.",
+          "Wave 11은 반복 crown 대신 pursuit proof window다. doctrine capstone cache를 회수했다면 drift pocket을 크게 꺾으며 새 폼이 추격 덩어리를 얼마나 빨리 지우는지 먼저 증명하게 만든다.",
       };
     }
     if (build && !build.lateAscensionId) {
       return {
-        label: "Cinder Crown",
+        label: boundedWave === 11 ? "Starforge Pursuit" : "Cinder Crown",
         headline: "Ascension Core",
         detail:
-          "Wave 11-12는 같은 crown breach를 한 번 더 반복하며 headline target을 Ascension Core 하나로 좁힌다. relay corridor를 가르며 첫 elite split cache를 직접 회수하는 데 집중하는 밴드다.",
+          boundedWave === 11
+            ? "Wave 11은 late ascension split을 바로 시험하는 pursuit window다. drift pocket을 크게 휘며 첫 elite split cache를 회수하고, headline body jump가 실제 회전 반경을 넓히는지 확인하게 만든다."
+            : "Wave 12는 headline target을 Ascension Core 하나로 좁힌 최종 crown breach다. relay corridor를 가르며 rider 생존축으로 돌파 시간을 직접 늘려야 한다.",
+      };
+    }
+    if (boundedWave === 11) {
+      return {
+        label: "Starforge Pursuit",
+        headline:
+          (currentWeapon && currentWeapon.lateAscensionLabel) ||
+          (currentWeapon && currentWeapon.capstoneLabel) ||
+          "Late Form",
+        detail:
+          "Wave 11은 반복 crown이 아니라 late-form proof window다. drift pocket과 ignition ring을 크게 꺾으며 방금 잠긴 body/gun leap가 추격 덩어리를 직접 찢는지 먼저 보여 준다.",
       };
     }
     return {
@@ -7991,7 +8003,7 @@
         (currentWeapon && currentWeapon.capstoneLabel) ||
         "Late Form",
       detail:
-        "이 밴드는 같은 crown breach를 반복해 방금 잠근 late form을 바로 시험하게 만든다. 새 하위 계약보다 넓은 corridor fight에서 form의 절단력을 확인하는 구간이다.",
+        "Wave 12는 headline late form의 최종 breach proof다. relay corridor와 ignition ring이 한 전투 안에서 겹치므로, 방금 완성한 form과 rider 생존축이 실제로 전장 소유 시간을 얼마나 늘리는지 크게 드러난다.",
     };
   }
 
@@ -13133,6 +13145,15 @@
     return {
       label: nextStep ? nextStep.title : roadmap.activeForm || activeCore.label,
       detail: nextStep ? nextStep.detail : roadmap.prompt,
+    };
+  }
+
+  function getImmediateProofWindowSummary(build, waveNumber = 1) {
+    const boundedWave = clamp(Math.round(waveNumber || 1), 1, MAX_WAVES);
+    const resolvedWave = resolveWaveConfig(boundedWave - 1, build);
+    return {
+      label: resolvedWave.bandLabel || resolvedWave.label,
+      detail: resolvedWave.directive || resolvedWave.note || "다음 전투에서 변형이 바로 증명된다.",
     };
   }
 
@@ -19263,7 +19284,7 @@
     if (!state.player) {
       return;
     }
-    const waveConfig = state.wave || WAVE_CONFIG[state.waveIndex];
+    const waveConfig = state.wave || resolveWaveConfig(state.waveIndex, state.build);
     const waveLabel =
       state.phase === "forge"
         ? `${waveConfig.label} · ${getForgeDraftDisplayName(state.forgeDraftType)}`
@@ -19329,9 +19350,9 @@
     const weapon = state.weapon;
     const dominantForm = getDominantFormSummary(state.build, weapon, state.waveIndex + 1);
     const nextBreakpoint = getNextBreakpointSummary(state.build, weapon, state.waveIndex + 1);
+    const proofWindow = getImmediateProofWindowSummary(state.build, state.waveIndex + 1);
     const liveSideBet = getLiveSideBetSummary(state);
-    const traitSummary = traitLabels.join(" · ");
-    const bodyForm = getDoctrineBodyForm(state.build);
+    const supportTrack = getForgeSupportTrackSnapshot(state.build, state.supportSystem);
     const headlineLabel =
       weapon.afterburnDominionLabel ||
       weapon.afterburnOverdriveLabel ||
@@ -19352,10 +19373,10 @@
           }">${weapon.tierLabel}</span>
         </div>
         <div class="status-list">
-          ${createStatusRow("Core", activeCore.label)}
-          ${createStatusRow("Body", bodyForm ? bodyForm.label : headlineLabel)}
-          ${createStatusRow("Fire Rule", traitSummary || "직선 탄도")}
-          ${createStatusRow("Next Break", nextBreakpoint.label)}
+          ${createStatusRow("Headline Form", dominantForm.label)}
+          ${createStatusRow("Headline Leap", nextBreakpoint.label)}
+          ${createStatusRow("Survival Rider", supportTrack.label)}
+          ${createStatusRow("Proof Window", proofWindow.label)}
         </div>
         <div class="mini-pill-row">
           ${createMiniPill(getHeadlineFormTierLabel(getHeadlineFormTier(state.build)), headlineLabel, "hot")}
@@ -19363,7 +19384,7 @@
           ${liveSideBet ? createMiniPill("BET", `${liveSideBet.label} · ${liveSideBet.status}`, "cool") : ""}
           ${weapon.affixLabels.slice(0, 2).map((label) => createMiniPill("속성", label, "cool")).join("")}
         </div>
-        <p class="summary-note">${dominantForm.detail} 다음 추격점은 ${nextBreakpoint.label}이며, ${nextBreakpoint.detail}</p>
+        <p class="summary-note">${dominantForm.detail} 다음 도약은 ${nextBreakpoint.label}, 보조 생존축은 ${supportTrack.label}, 즉시 증명 무대는 ${proofWindow.label}다.</p>
       `;
     }
 
@@ -19412,14 +19433,13 @@
           </span>
         </div>
         <div class="status-list">
-          ${createStatusRow("남은 스폰", String(enemiesLeft))}
           ${createStatusRow("Immediate Threat", `${hazardStatus.detailLabel} ${hazardStatus.detailValue}`)}
-          ${createStatusRow("Combat Band", combatBand ? `${combatBand.label} · ${combatBand.headline}` : waveConfig.label)}
           ${createStatusRow("Current Form", dominantForm.label)}
-          ${createStatusRow("Next Break", nextBreakpoint.label)}
-          ${createStatusRow("Side Bet", liveSideBet ? `${liveSideBet.label} · ${liveSideBet.status}` : "quiet")}
+          ${createStatusRow("Headline Leap", nextBreakpoint.label)}
+          ${createStatusRow("Survival Rider", supportTrack.label)}
+          ${createStatusRow("Proof Window", combatBand ? `${combatBand.label} · ${combatBand.headline}` : proofWindow.label)}
         </div>
-        <p class="summary-note">${objectiveNote}</p>
+        <p class="summary-note">${proofWindow.detail} ${liveSideBet ? `${liveSideBet.label}: ${liveSideBet.note}` : objectiveNote}</p>
       `;
     }
 
@@ -19506,15 +19526,10 @@
       build: state.build,
     };
     const armoryLabel = getArmoryLabel(forgeOptions);
-    const roadmap = getBuildRoadmap(state.build, state.weapon, state.waveIndex + 2);
     const activeSupportTrack = getForgeSupportTrackSnapshot(state.build, state.supportSystem);
     const dominantFormSummary = getDominantFormSummary(state.build, state.weapon, state.waveIndex + 2);
     const nextFormStep = getNextBreakpointSummary(state.build, state.weapon, state.waveIndex + 2);
-    const liveSideBet = getLiveSideBetSummary(state) || {
-      label: activeSupportTrack.label,
-      status: activeSupportTrack.label === "Bare Hull" ? "quiet" : "armed",
-      note: activeSupportTrack.detail,
-    };
+    const proofWindow = getImmediateProofWindowSummary(state.build, state.waveIndex + 2);
     const riderStep = state.forgeMaxSteps > 1 && state.forgeStep === 2;
     const forgeModeLabel = state.pendingFinalForge
       ? "Final Forge"
@@ -19535,61 +19550,46 @@
                     ? "Headline Forge"
                     : "Rider Slot"
                   : "Forge";
-    const choicePrompt = state.pendingFinalForge
-      ? catalystReady
-        ? "이번 세 장은 완성과 연소, 안정화 중 어디서 post-capstone ladder를 열지 고르는 마지막 분기다."
-        : "촉매가 비어 있어도 fail-soft 점화와 안정화 중 어디서 endurance ladder를 열지 고를 수 있다."
-      : state.forgeMaxSteps > 1 && state.forgeStep === 2
-        ? "headline 변신은 이미 잠겼다. 이제 support rider, defense shell, greed contract 중 작은 1장을 얹어 다음 웨이브 의도를 더 또렷하게 남긴다."
-      : state.forgeDraftType === "architecture_draft"
-        ? "이번 선택은 초반 doctrine path를 잠그고 다음 chaseable form을 확정한다."
-        : state.forgeDraftType === "bastion_draft"
-          ? "이번 선택은 pursuit를 걸어 mid-run jump를 앞당기거나, 그대로 안정화를 택해 long-run secure만 노리는 갈림길이다."
-          : state.forgeDraftType === "field_grant"
-            ? "이번 선택은 즉시 체감되는 화력, shell, greed 중 하나를 밀어 다음 전투의 모양을 바꾼다."
-            : state.forgeDraftType === "catalyst_draft"
-              ? "이번 선택은 촉매를 지금 태워 괴물 형태를 앞당길지, 안정화해 손실을 줄일지 정한다."
-              : "이번 선택은 다음 두 웨이브의 silhouette를 가장 크게 바꿀 headline 카드 하나를 고르는 구간이다.";
     elements.forgeSubtitle.textContent = riderStep
-      ? `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. headline 변신은 잠겼다. 이제 rider 1장만 얹어 다음 전투 결을 마감한다.`
-      : `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. ${choicePrompt}`;
+      ? `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. headline leap은 잠겼다. 이제 survival rider 1장만 얹고 ${proofWindow.label}에서 바로 증명한다.`
+      : `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. ${nextFormStep.label}로 뛰는 headline leap 하나와 ${activeSupportTrack.label} rider를 정리한 뒤 ${proofWindow.label}에서 즉시 증명한다.`;
     elements.forgeContext.innerHTML = `
       <article class="forge-focus forge-focus--${riderStep ? "rider" : "headline"} forge-context__card forge-context__card--span-two">
         <div class="forge-focus__header">
-          <p class="panel__eyebrow">${riderStep ? "Optional Rider" : "Headline Mutation"}</p>
+          <p class="panel__eyebrow">${riderStep ? "Survival Rider" : "Headline Leap"}</p>
           <span class="forge-focus__mode">${forgeModeLabel}</span>
         </div>
         <strong>${
           riderStep
-            ? "큰 변신 뒤에 얹는 작은 한 장"
+            ? "큰 변신 뒤에 얹는 생존/유틸 한 장"
             : "이번 포지에서 다음 전투를 바꿀 한 장"
         }</strong>
         <p>${
           riderStep
-            ? "주력 변신은 이미 고정됐다. 이번 단계는 support, shell, greed 중 하나만 짧게 얹어 다음 웨이브의 보조 의도를 남기는 선택이다."
-            : "관리표보다 먼저 보여 줄 것은 현재 폼, 다음 브레이크포인트, 그리고 이번에 크게 잠기는 변신이다."
+            ? "headline leap은 이미 고정됐다. 이번 단계는 support, shell, greed 중 하나를 rider로 얹어 proof window에서 얼마나 오래 버티는지 정하는 선택이다."
+            : "이번 포지는 관리표보다 먼저 세 가지만 보여 준다. 다음 headline leap, 이를 받쳐 줄 survival rider, 그리고 바로 다음 proof window다."
         }</p>
         <div class="forge-focus__rail">
           <article class="forge-focus__pill">
-            <p class="panel__eyebrow">Current Form</p>
-            <strong>${dominantFormSummary.label}</strong>
-            <p>${dominantFormSummary.detail}</p>
-          </article>
-          <article class="forge-focus__pill">
-            <p class="panel__eyebrow">Next Breakpoint</p>
+            <p class="panel__eyebrow">Headline Leap</p>
             <strong>${nextFormStep.label}</strong>
             <p>${nextFormStep.detail}</p>
           </article>
           <article class="forge-focus__pill">
-            <p class="panel__eyebrow">Live Side Bet</p>
-            <strong>${liveSideBet.label} · ${liveSideBet.status}</strong>
-            <p>${liveSideBet.note}</p>
+            <p class="panel__eyebrow">Survival Rider</p>
+            <strong>${activeSupportTrack.label}</strong>
+            <p>${activeSupportTrack.detail}</p>
+          </article>
+          <article class="forge-focus__pill">
+            <p class="panel__eyebrow">Immediate Proof</p>
+            <strong>${proofWindow.label}</strong>
+            <p>${proofWindow.detail}</p>
           </article>
         </div>
         <p class="summary-note forge-focus__note">${
           riderStep
-            ? `${activeSupportTrack.label} · ${forgeSystemSummary} · ${supportBaySummary}`
-            : `${activeCore.label} · ${state.weapon.tierLabel} · ${traitSummary} · ${roadmap.prompt}`
+            ? `${dominantFormSummary.label} · ${forgeSystemSummary} · ${supportBaySummary}`
+            : `${dominantFormSummary.label} · ${activeCore.label} · ${state.weapon.tierLabel} · ${traitSummary}`
         }</p>
         ${
           riderStep

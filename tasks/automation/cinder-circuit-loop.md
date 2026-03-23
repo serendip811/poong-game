@@ -13,7 +13,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: vertical-slice-to-alpha expansion.
-- Immediate priority: stop system growth and consolidate the 12-wave spine into three readable combat eras where the chassis/weapon ladder owns the spectacle, payoff windows are real, and the docs/HUD/forge all describe the same long-run fantasy.
+- Immediate priority: stop adding wrappers and realign the docs, HUD, forge, and late-wave ladder around one readable three-era long-run contract where the chassis/weapon path creates the hunger and each payoff window actually breathes.
 
 ## Release Gates
 
@@ -40,6 +40,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-23 22:15:00 KST
+  Findings:
+  - The project is still drifting because the docs sell a `5웨이브`, `6-7분` prototype while `playables/cinder-circuit/game.js` is building a much larger run. As long as the written target stays short-form, implementation keeps packaging systems instead of proving a replayable escalation spine.
+  - The late ladder still repeats ecology too literally for a release-feeling action roguelite. `Lockgrid Hunt I-II` and `Cinder Crown I-II` are useful for learning, but repeat-run appetite dies when late waves feel like denser rehearsals instead of new dominance questions.
+  - `updateHUD()` and `renderForgeOverlay()` still present too many simultaneous contracts: current form, next break, side bet, roadmap, pursuit, catalyst, bench, support, draft mode. Strong references like `Hades`, `Nova Drift`, and `Brotato` make one desire and one danger obvious first; this still makes the run feel managed.
+  - Support and attachment spectacle remains dangerously competitive with the core chassis fantasy. Orbitals, halos, sentries, missiles, and drones are still among the cleanest visible upgrades, so the player can admire the rigging more than the body/gun transformation they are supposed to rerun for.
+  Top Priority: Replace one repeated late two-wave band with a true transformation breakpoint that updates the docs/HUD/forge language to sell exactly one headline chassis/weapon leap, one secondary survival rider, and one immediate combat proof window.
+  Why Now: Until the game sells a single irresistible next form, more waves will read as extension rather than anticipation.
+  Do Not Repeat: Do not answer this with another draft type, another live cache wrapper, or another late-wave density pass on the same ecology.
+  Release Gate: Rewards
 
 - 2026-03-23 21:30:42 KST
   Findings:
@@ -1469,6 +1480,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-23 22:16:12 KST
+  Changed: replaced the shared late repeat band in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so normal runs no longer fall back to `Cinder Crown I-II` rehearsal after the Wave 10 break. `Wave 11` now resolves as `Starforge Pursuit`, a lower-density drift proof window for the newly locked late form, and `Wave 12` cashes that out in a single `Cinder Crown` breach where ignition pressure and relay corridors overlap instead of simply rerunning the same ecology twice. In the same file I also tightened `updateHUD()` and `renderForgeOverlay()` around one explicit `Headline Leap`, one `Survival Rider`, and one `Immediate Proof` read so the reward/combat layer sells the late transformation first instead of reopening a status console. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new shared late-band labels, hazard types, and the downstream Afterburn inheritance. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was still open on `Rewards`: actual runs were still overriding the stronger base Wave 11-12 ideas with a repeated late two-wave band, and the HUD/forge copy was still making that breakpoint feel managed instead of irresistible. I took the highest-value concrete interpretation as "fix the live shared late band and make the UI name one leap, one rider, one proof window" because that advances the release gate without opening docs churn or another reward system branch.
+  Follow-up risk: the shared late spine is now sharper, but `Lockgrid Hunt I-II` still remains a deliberate repeated proof band earlier in Act 3. If that pair starts feeling too rehearsed once more runs reach Wave 12 consistently, the next pass should decide whether Wave 9-10 also needs a stronger ecological split instead of another numeric followthrough tweak. Release Gate: `Rewards`. For reference direction, the HUD/forge copy pass deliberately leaned on the appetite-first hierarchy of `Hades` boon presentation and `Nova Drift` evolution prompts: sell the leap, then the rider, then the immediate proof fight.
 
 - 2026-03-24 07:35:00 KST
   Changed: retuned the live 12-wave combat spine in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so each act now has a clearer `payoff wave -> followthrough pressure -> band escalation` rhythm instead of climbing almost every wave by another layer of occupancy and hazard tax. `Wave 5`, `Wave 9`, and `Wave 11` now run with lower `activeCap`, lower `spawnBudget`, and slower or fewer hazards, while `Wave 6`, `Wave 10`, and `Wave 12` still tighten the screws afterward inside the same ecology. I applied the same consolidation to the build-reactive late-branch profiles, so `Breakpoint Overdrive`/`Halo Run`/`Ledger Heist` and the first `Crownbreaker`/`Halo Refuge`/`Kingpin Vaultline` fights all leave more room to actually enjoy a new chassis or gun form before the second fight of that band hardens again. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new payoff valleys and second-wave re-escalation for both the base spine and the late branch resolves. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
