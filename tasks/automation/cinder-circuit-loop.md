@@ -13,7 +13,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze branch expansion and force the base `Wave 1-12` route to prove one readable contract: visible core-form leaps, a real Act 3 domination window, and forge/HUD choices that sell appetite before taxonomy.
+- Immediate priority: stop branch/admin spillover and prove one stripped base `Wave 1-12` contract with a readable forge/HUD, a longer Act 3 victory lap, and headline core-form payoffs that beat support spectacle.
 
 ## Release Gates
 
@@ -40,6 +40,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 20:32:00 KST
+  Findings:
+  - The project is still drifting at the reward/readability layer. `docs/games/cinder-circuit-source-application.md` still carries `5-wave act curve` language while `game.js` still routes through `Architecture Draft`, `Bastion Draft`, live ascension, field grants, and `Afterburn` remnants, so the base run still feels like a junction box for future branches instead of a release-proof ladder.
+  - The late route is cleaner on paper, but the arena still does not breathe enough to create a memorable domination phase. `Wave 9-12` climbs back through roughly `34 / 37 / 35 / 41` active-cap pressure, which is better than pure wall-to-wall saturation but still too busy to feel like the kind of long-form payoff band that could scale toward a satisfying `20-30` wave future.
+  - Build desire is still upside down against strong references such as `Nova Drift`, `Hades`, and `Brotato`: `SUPPORT_SYSTEM_DEFS` advertises orbitals, halos, sentries, missiles, and drones with immediate readable spectacle, while the core gun/body route still needs explanation text, roadmap framing, and proof copy to land the fantasy.
+  - `updateHUD()` and `renderForgeOverlay()` are still acting like control panels, not crave engines. The player is asked to parse headline form, rider, proof window, support track, contract mode, and run state in the same glance, so the forge moment still feels supervised instead of explosive.
+  Top Priority: Collapse the base route to one appetite-first forge contract by removing branch/admin wording from the standard run presentation and giving Act 3 a larger, lower-tax victory lap where the core form owns the screen before the final breach.
+  Why Now: Until the run is readable and craveable without future-branch scaffolding, more systems only make replay desire flatter.
+  Do Not Repeat: Do not spend the next pass on another draft wrapper, live ascension exception, or support spectacle add.
+  Release Gate: Rewards
 
 - 2026-03-24 20:05:00 KST
   Findings:
@@ -1684,6 +1695,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 21:05:00 KST
+  Changed: collapsed more branch/admin wording out of the standard `Wave 1-12` reward presentation in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). Base-route forge stops now announce themselves with appetite-first labels such as `Forge Break`, `Form Break`, `Act 3 Forge`, `Main Leap`, `Rider Lock`, and `Final Form` instead of surfacing `Architecture Draft`, `Bastion Draft`, `Catalyst Crucible`, `Late Break Armory`, or support-bay/flex-lane admin across the main route. I also tightened the base-route HUD and forge focus copy so the player now reads `current form -> pick -> next proof` more directly, with the active-core panel emphasizing `Next Leap` and `Next Proof` instead of parallel rider/admin framing. Validation passed with `node --check playables/cinder-circuit/game.js` and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was still open on the `Rewards` gate, specifically the instruction to remove branch/admin wording from standard-run presentation and make the forge read like one appetite-first contract. The highest-value bounded interpretation was to keep the existing choice generation but rewrite the presentation layer around the immediate power fantasy, so the base run no longer sounds like a junction box for future branches before the player even picks the card.
+  Follow-up risk: the main route now hides much more routing/admin language at the forge entry points, but some per-wave combat-feed lines and individual choice descriptions still carry cache/ascension jargon underneath. If critique still says the reward layer feels supervised, the next bounded pass should sanitize those per-choice descriptions for base-route display rather than add another reward surface. For the UI wording direction, this pass deliberately followed the appetite-first reward framing of `Hades` boon reveals and `Nova Drift` level-up breaks, where the current power jump owns the screen and the wrapper stays quiet.
+  Release Gate: Rewards
 
 - 2026-03-24 20:45:00 KST
   Changed: recut the base late staircase in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 9-12` now reads as `payoff -> lighter breach proof -> branch-specific domination lap -> final breach` instead of collapsing back into a two-wave spike band. I widened and softened all three `Wave 10` Late Break followthrough profiles (`Overdrive Breach`, `Halo Breach`, `Jackpot Breach`), then retuned each branch's `Wave 11` profile into a lower-tax ownership lap with more arena space and reduced hazard clutter before the unchanged `Wave 12` finale. In the same bounded pass I updated the Late Break armory copy, cadence summaries, and combat/HUD late-wave callouts in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the forge now explicitly sells `Wave 11` as the branch's victory-lap payoff rather than folding it into generic `Wave 11-12 spike` wording; [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts the new branch widths, lower `Wave 10-11` caps, and the revised four-step late-break roadmap.
