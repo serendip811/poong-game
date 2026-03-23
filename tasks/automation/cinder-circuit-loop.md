@@ -13,7 +13,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: hard-gate the standard `Wave 1-12` run to one appetite-first forge/HUD contract, strip branch/admin spillover from presentation, and prove a longer Act 3 domination band where the core form clearly beats support spectacle.
+- Immediate priority: lock one canonical standard-route `Wave 9-12` arc with a clean forge/HUD contract and a real late-form domination lap before any more route or support expansion.
 
 ## Release Gates
 
@@ -40,6 +40,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 21:42:00 KST
+  Findings:
+  - The standard run still does not read like one finished ladder. `maybeAdvancePhase()`, `updateHUD()`, and `renderForgeOverlay()` continue to leak `Architecture Draft`, `Bastion Draft`, `Field Cache`, and `Live Ascension`, while `docs/games/cinder-circuit-source-application.md` still carries stale `5-wave act curve` framing, so the player-facing contract is still split between alpha route and future branch scaffolding.
+  - Act 3 is still too compressed to support real rerun hunger. The base late route climbs through `Lockgrid`, `Scrapline`, `Starforge`, and `Cinder Crown` at roughly `34 / 37 / 35 / 41` active-cap pressure while stacking relay, ignition, binder, and lancer asks, so the player is still servicing closures instead of enjoying a memorable domination band that could plausibly scale toward `20-30` waves later.
+  - Build excitement is still upside down versus strong references like `Nova Drift`, `Hades`, and `Brotato`. Orbitals, halo shields, sentries, missiles, and drones advertise themselves instantly, but the main gun/body route still needs explanatory copy and proof framing more than raw visual or functional hunger.
+  - The forge and HUD still read like a control surface, not a reward spike. Unlike the one-glance desirability of strong boon/upgrade screens in those references, the player is still parsing form, leap, proof, support, route state, and telemetry in the same moment before desire can land.
+  Top Priority: Canonize one base-route Act 3 arc where the standard run shows only `Current Form`, `Main Leap`, and `Next Proof`, and gives that core late form a breathable payoff band before the final breach.
+  Why Now: Until the back half produces one craveable remembered arc, adding more systems only widens prototype drift.
+  Do Not Repeat: Stop answering late-run weakness with more branch wrappers, caches, or support spectacle.
+  Release Gate: Progression
 
 - 2026-03-24 21:05:00 KST
   Findings:
@@ -1706,6 +1717,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 22:10:00 KST
+  Changed: recut the standard base-route Act 3 staircase in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the late form now gets a longer ownership lap before the finale. The canonical `Wave 9-12` curve and the shared late-act override both now read as a real `payoff band -> proof -> final breach`: `Wave 9-10` stay in a lighter hunt band with lower active caps, thinner hazard tax, and a slightly larger Act 3 arena, while `Wave 11` becomes the first real pursuit proof and `Wave 12` keeps the only full breach squeeze. I also updated the late-break roadmap/cadence copy in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the standard route now explicitly promises `Wave 9-10 payoff band -> Wave 11 proof -> Wave 12 finale`, and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the larger Act 3 field, the softer two-wave payoff band, and the revised late-break roadmap wording. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` asked for one canonical base-route Act 3 arc with a breathable payoff band before the final breach. The highest-value bounded interpretation was to spend this loop on the actual late-wave rhythm, not another wrapper pass, so the run better proves a repeatable `Wave 9-12` ladder that could scale toward a longer game later.
+  Follow-up risk: Act 3 now breathes longer, but the standard route still relies more on pressure reshaping than on an additional screen-owning main-gun/body mutation inside the payoff band. If critique still says late rerun hunger is soft, the next bounded pass should make the locked late form itself mutate more visibly across `Wave 9-10` rather than tightening density again.
+  Release Gate: Progression
 
 - 2026-03-24 21:20:00 KST
   Changed: collapsed the standard `Wave 1-12` between-wave presentation in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) down to one base-route vocabulary: `Current Form`, `Main Leap`, and `Next Proof`. Standard forge banners, featured-card badges, live HUD readouts, forge focus rows, and wave-clear transition copy no longer surface `Act 3 Forge`, `Rider Lock`, `Final Form`, `Headline Mutation`, `Secondary Rider`, or other branch/admin wrapper labels during the consolidated route; they now keep pointing back to the current chassis, the one next mutation, and the one immediate proof fight. Validation passed with `node --check playables/cinder-circuit/game.js` and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
