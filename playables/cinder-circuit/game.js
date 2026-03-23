@@ -7320,6 +7320,24 @@
     `;
   }
 
+  function getForgeFeaturedChoice(choices, build, waveNumber = 1) {
+    const showcase = pickForgeHeadlineShowcase(choices, build, waveNumber);
+    if (!showcase) {
+      return { showcase: null, featuredIndex: -1 };
+    }
+    const featuredIndex = Array.isArray(choices)
+      ? choices.findIndex(
+          (choice) =>
+            choice === showcase.choice ||
+            (choice && showcase.choice && choice.id && choice.id === showcase.choice.id)
+        )
+      : -1;
+    return {
+      showcase,
+      featuredIndex,
+    };
+  }
+
   function getBenchCount(build, coreId) {
     if (!build || !Array.isArray(build.pendingCores)) {
       return 0;
@@ -19848,10 +19866,9 @@
         </div>
         <div class="status-list">
           ${createStatusRow("Immediate Threat", `${hazardStatus.detailLabel} ${hazardStatus.detailValue}`)}
-          ${createStatusRow("Headline Leap", nextBreakpoint.label)}
-          ${createStatusRow("Survival Rider", supportTrack.label)}
+          ${createStatusRow("Combat Ask", combatBand ? combatBand.label : proofWindow.label)}
         </div>
-        <p class="summary-note">${combatBand ? `${combatBand.label} · ${combatBand.headline}` : proofWindow.label}. ${objectiveNote}</p>
+        <p class="summary-note">${nextBreakpoint.label} + ${supportTrack.label}. ${combatBand ? `${combatBand.headline}. ` : ""}${objectiveNote}</p>
       `;
     }
 
@@ -19925,9 +19942,11 @@
     const nextFormStep = getNextBreakpointSummary(state.build, state.weapon, state.waveIndex + 2);
     const proofWindow = getImmediateProofWindowSummary(state.build, state.waveIndex + 2);
     const riderStep = state.forgeMaxSteps > 1 && state.forgeStep === 2;
-    const showcase = riderStep
-      ? null
-      : pickForgeHeadlineShowcase(state.forgeChoices, state.build, state.waveIndex + 2);
+    const featuredForgeChoice = riderStep
+      ? { showcase: null, featuredIndex: -1 }
+      : getForgeFeaturedChoice(state.forgeChoices, state.build, state.waveIndex + 2);
+    const showcase = featuredForgeChoice.showcase;
+    const featuredIndex = featuredForgeChoice.featuredIndex;
     const forgeModeLabel = state.pendingFinalForge
       ? "Final Forge"
       : state.forgeDraftType === "architecture_draft"
@@ -19948,8 +19967,8 @@
                     : "Rider Slot"
                   : "Forge";
     elements.forgeSubtitle.textContent = riderStep
-      ? `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. headline leap은 잠겼다. 이제 rider 1장만 얹고 ${proofWindow.label}에서 바로 버티는 시간을 증명한다.`
-      : `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. 이 12-wave run은 headline leap 하나, survival rider 하나, 즉시 proof window 하나만 먼저 보여 준다.`;
+      ? `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. headline leap은 잠겼다. 이제 rider 1장만 얹고 ${proofWindow.label}에서 바로 버틴다.`
+      : `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. 이번 포지는 headline mutation 하나를 크게 보여 주고, rider 한 장만 짧게 붙인다.`;
     elements.forgeContext.innerHTML = `
       <article class="forge-focus forge-focus--${riderStep ? "rider" : "headline"} forge-context__card forge-context__card--span-two">
         <div class="forge-focus__header">
@@ -19964,7 +19983,7 @@
         <p>${
           riderStep
             ? "headline leap은 이미 고정됐다. 이번 단계는 support, shell, greed 중 하나를 rider로 얹어 proof window에서 얼마나 오래 버티는지 정하는 선택이다."
-            : "이번 포지는 관리표 대신 다음 headline leap과 그것을 받칠 rider만 먼저 보여 준다. proof는 다음 전투 설명으로만 짧게 남긴다."
+            : "이번 포지는 관리표 대신 이번 정지에서 가장 크게 실루엣을 바꾸는 mutation 하나만 앞으로 꺼낸다. 나머지 선택지는 비교용으로 짧게 남긴다."
         }</p>
         <div class="forge-focus__rail">
           <article class="forge-focus__pill">
@@ -19978,6 +19997,7 @@
             <p>${activeSupportTrack.detail}</p>
           </article>
         </div>
+        <p class="forge-focus__proof"><span>Next Proof</span>${proofWindow.label}. ${proofWindow.detail}</p>
         <p class="summary-note forge-focus__note">${
           riderStep
             ? `${dominantFormSummary.label} 위에 ${activeSupportTrack.label} rider를 얹고 ${proofWindow.label}에서 버틸 시간을 늘린다. ${proofWindow.detail}`
@@ -19993,6 +20013,7 @@
             choice.type === "utility" ? choice.action || "utility" : choice.type || "choice";
           const transformation = getForgeChoiceTransformation(choice);
           const contractLabel = choice.contractLabel || transformation.laneLabel;
+          const compactPreviewRow = createForgePreviewRows(choice)[0];
           const previewRows = createForgePreviewRows(choice)
             .slice(0, riderStep ? 1 : 2)
             .map(
@@ -20043,6 +20064,7 @@
               : state.resources.scrap < choice.cost
                 ? `${index + 1}번 선택 · 고철 부족`
                 : `${index + 1}번 선택 · 고철 ${choice.cost}`;
+          const isFeaturedHeadline = !riderStep && index === featuredIndex;
           if (riderStep) {
             return `
           <button
@@ -20063,10 +20085,11 @@
           </button>
         `;
           }
-          return `
+          if (!isFeaturedHeadline) {
+            return `
           <button
             type="button"
-            class="forge-card forge-card--${choice.tag.toLowerCase()}"
+            class="forge-card forge-card--compact forge-card--${choice.tag.toLowerCase()}"
             data-kind="${kind}"
             data-contract="${choice.contractRole || "open"}"
             data-index="${index}"
@@ -20075,6 +20098,30 @@
             ${state.resources.scrap < choice.cost ? "disabled" : ""}
           >
             <span class="forge-card__tag">${contractLabel}${choice.tag ? ` · ${choice.tag}` : ""}</span>
+            <h3>${choice.title}</h3>
+            <p class="forge-card__hero-copy">${transformation.promise}</p>
+            ${
+              compactPreviewRow
+                ? `<p class="forge-card__pivot"><span>${compactPreviewRow.label}</span><strong>${compactPreviewRow.value}</strong></p>`
+                : ""
+            }
+            <span class="forge-card__slot">${slotLabel}</span>
+          </button>
+        `;
+          }
+          return `
+          <button
+            type="button"
+            class="forge-card forge-card--featured forge-card--${choice.tag.toLowerCase()}"
+            data-kind="${kind}"
+            data-contract="${choice.contractRole || "open"}"
+            data-index="${index}"
+            data-tone="${transformation.tone}"
+            data-verb="${choice.verb}"
+            ${state.resources.scrap < choice.cost ? "disabled" : ""}
+          >
+            <span class="forge-card__badge">Featured Mutation</span>
+            <span class="forge-card__tag">${contractLabel}${choice.tag ? ` · ${choice.tag}` : ""}</span>
             <div class="forge-card__hero forge-card__hero--${transformation.tone}">
               <span class="forge-card__hero-label">${contractLabel}</span>
               <h3>${choice.title}</h3>
@@ -20082,7 +20129,7 @@
             </div>
             <p class="forge-card__proof"><span>다음 전투 증명</span>${transformation.proof}</p>
             <div class="forge-card__preview">${previewRows}</div>
-            <span class="forge-card__meta">${choice.laneLabel || transformation.laneLabel} · 추천 rider ${transformation.riderLabel}</span>
+            <span class="forge-card__meta">추천 rider ${transformation.riderLabel} · ${choice.laneLabel || transformation.laneLabel}</span>
             <span class="forge-card__slot">${slotLabel}</span>
           </button>
         `;

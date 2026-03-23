@@ -1283,6 +1283,26 @@ body[data-overdrive="true"] .backdrop__glow--right {
   margin-top: 12px;
 }
 
+.forge-focus__proof {
+  display: grid;
+  gap: 5px;
+  margin: 14px 0 0;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(7, 6, 5, 0.34);
+  color: var(--muted-strong);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.forge-focus__proof span {
+  color: #ffd4b3;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .forge-era-list {
   display: grid;
   gap: 10px;
@@ -1711,6 +1731,37 @@ body[data-overdrive="true"] .backdrop__glow--right {
   font-size: 0.98rem;
 }
 
+.forge-card--featured {
+  grid-column: span 2;
+  padding: 16px;
+  border-color: rgba(255, 145, 88, 0.28);
+  background:
+    radial-gradient(circle at top left, rgba(255, 162, 96, 0.18), transparent 38%),
+    linear-gradient(180deg, rgba(255, 145, 88, 0.14), transparent 44%),
+    rgba(255, 255, 255, 0.045);
+}
+
+.forge-card--compact {
+  min-height: 0;
+  gap: 10px;
+  justify-content: flex-start;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 44%),
+    rgba(14, 11, 10, 0.92);
+}
+
+.forge-card__badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: rgba(255, 145, 88, 0.18);
+  color: #ffd4b3;
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .forge-card__hero {
   width: 100%;
   padding: 12px;
@@ -1839,6 +1890,27 @@ body[data-overdrive="true"] .backdrop__glow--right {
   margin-top: 2px;
   color: var(--muted);
   font-size: 0.8rem;
+}
+
+.forge-card__pivot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  margin: 0;
+  padding-top: 2px;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.forge-card__pivot span {
+  color: var(--muted);
+}
+
+.forge-card__pivot strong {
+  color: var(--text);
+  text-align: right;
 }
 
 .forge-card--rider {
@@ -2018,6 +2090,10 @@ body[data-overdrive="true"] .backdrop__glow--right {
 
   .forge-focus__rail {
     grid-template-columns: 1fr;
+  }
+
+  .forge-card--featured {
+    grid-column: span 1;
   }
 
   .hud-overlay--top {
