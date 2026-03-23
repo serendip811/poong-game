@@ -13,7 +13,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop branch/admin spillover and prove one stripped base `Wave 1-12` contract with a readable forge/HUD, a longer Act 3 victory lap, and headline core-form payoffs that beat support spectacle.
+- Immediate priority: hard-gate the standard `Wave 1-12` run to one appetite-first forge/HUD contract, strip branch/admin spillover from presentation, and prove a longer Act 3 domination band where the core form clearly beats support spectacle.
 
 ## Release Gates
 
@@ -40,6 +40,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 21:05:00 KST
+  Findings:
+  - The project is still drifting at the presentation layer hard enough to damage the run contract. Even after the loop’s repeated warnings, `maybeAdvancePhase()`, `updateHUD()`, and `renderForgeOverlay()` still expose `Architecture Draft`, `Bastion Draft`, `Field Cache`, `Live Ascension`, and other branch/admin language during the supposed standard route, so the run still feels like a staging area instead of a finished ladder.
+  - Act 3 is better than the old `34 / 37 / 35 / 41` squeeze, but the current late-route profiles still split payoff across too many branch flavors instead of proving one memorable base arc. A release-feeling action roguelite needs one default late-form domination band players can crave and learn, not several partially-clean variants.
+  - Build hunger is still support-led. `SUPPORT_SYSTEM_DEFS` sells orbitals, halo shields, sentries, missiles, and drones with immediate silhouette payoff, while the main weapon/body route still relies on explanatory copy and contract framing to communicate why the player should care.
+  - Compared with strong reward/UI reads in `Hades`, `Nova Drift`, and `Brotato`, the forge still asks for too much parsing before desire lands. The current overlay and HUD keep mixing current form, next leap, rider, proof, support track, route state, and drive telemetry in the same glance, which weakens the emotional spike between waves.
+  Top Priority: For the standard base route, remove branch/admin wording from phase transitions, HUD, and forge copy so every between-wave moment sells only `Current Form`, `Main Leap`, and `Next Proof`.
+  Why Now: If the game cannot present one clean rerunnable contract, extra systems and cleaner balance will keep reading as prototype scaffolding.
+  Do Not Repeat: Do not spend the next pass adding another route variant or support spectacle before the base route reads cleanly end to end.
+  Release Gate: UX/UI
 
 - 2026-03-24 20:32:00 KST
   Findings:
@@ -1695,6 +1706,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 21:20:00 KST
+  Changed: collapsed the standard `Wave 1-12` between-wave presentation in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) down to one base-route vocabulary: `Current Form`, `Main Leap`, and `Next Proof`. Standard forge banners, featured-card badges, live HUD readouts, forge focus rows, and wave-clear transition copy no longer surface `Act 3 Forge`, `Rider Lock`, `Final Form`, `Headline Mutation`, `Secondary Rider`, or other branch/admin wrapper labels during the consolidated route; they now keep pointing back to the current chassis, the one next mutation, and the one immediate proof fight. Validation passed with `node --check playables/cinder-circuit/game.js` and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was still explicitly open on phase transitions, HUD, and forge copy. The highest-value bounded interpretation was not another reward layout pass, but a vocabulary collapse on the standard route so the player stops reading wrapper states and instead reads the core rerun contract at every break.
+  Follow-up risk: the standard-route shell is much cleaner now, but some hidden choice descriptions and non-core-path combat-feed lines still contain cache/ascension terminology beneath this presentation layer. If critique still flags prototype spillover, the next bounded pass should sanitize per-choice/body copy for base-route display rather than add more reward framing. For reference direction, this UI wording pass deliberately followed the appetite-first reveal discipline in `Hades` boon moments and `Nova Drift` level-up breaks, where the current power jump and the next proof fight dominate the read.
+  Release Gate: UX/UI
 
 - 2026-03-24 21:05:00 KST
   Changed: collapsed more branch/admin wording out of the standard `Wave 1-12` reward presentation in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). Base-route forge stops now announce themselves with appetite-first labels such as `Forge Break`, `Form Break`, `Act 3 Forge`, `Main Leap`, `Rider Lock`, and `Final Form` instead of surfacing `Architecture Draft`, `Bastion Draft`, `Catalyst Crucible`, `Late Break Armory`, or support-bay/flex-lane admin across the main route. I also tightened the base-route HUD and forge focus copy so the player now reads `current form -> pick -> next proof` more directly, with the active-core panel emphasizing `Next Leap` and `Next Proof` instead of parallel rider/admin framing. Validation passed with `node --check playables/cinder-circuit/game.js` and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
