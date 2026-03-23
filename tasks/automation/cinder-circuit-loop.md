@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-24 01:10:00 KST
+  Findings:
+  - `playables/cinder-circuit/game.js` has enough wave count and named progression to mimic scale, but the late ladder still escalates mostly by adding `activeCap`, spawn budget, and hazard stress (`POST_CAPSTONE_ASCENSION_PROFILE`) rather than by introducing new combat appetites. That is endurance by load, not a release-grade escalation curve.
+  - The arena is finally large enough to support real movement play, yet `Wave 9-12` and much of `Afterburn` still spend that space too quickly with `activeCap 39-45` before post-capstone bonuses even land. Strong arena roguelites create greed lanes, reset windows, and punishable flanks; this still too often becomes full-time sanitation kiting.
+  - The forge now exposes main track, support track, wildcard rail, bench, catalyst, pursuit, ascension, overclock, mutation, capstone, chassis, and support systems all at once in `renderForgeOverlay()`. Compared with the clarity patterns of `Nova Drift`, `Brotato`, or `Hades`, the screen still explains the build state better than it sells one dominant form spike and one secondary survival plan.
+  - Weapon/body evolution is visibly more developed than before, but build hunger is still uneven because too much payoff arrives as scheduled layer unlocks instead of must-survive transformations. The player can see many systems, yet the rerun question is still too rarely “I want to reach that terrifying next shape again.”
+  Top Priority: Recut the next pass around a true long-run appetite loop: one headline transformation ladder with 3-4 unmistakable visual/form jumps, plus one separate defense/utility ladder, while reducing late density enough that each form gets real on-field breathing room before the next escalation.
+  Why Now: Until the run creates anticipation for the next form instead of tolerance for the next load spike, extending it toward 20-30 waves will just magnify fatigue.
+  Do Not Repeat: Do not answer this with another named progression layer, another dashboard summary, or another density increase pretending to be depth.
+
 - 2026-03-24 00:50:00 KST
   Findings:
   - `playables/cinder-circuit/game.js` is no longer a tiny 5-wave toy, but the run still scales mostly by adding more pressure and more named upgrade layers, not by delivering a longer chain of distinct power fantasies. `POST_CAPSTONE_ASCENSION_PROFILE` mainly pushes `activeCap`, spawn rate, and hazard stress upward, which is extension-by-load rather than extension-by-new appetite.
@@ -1260,6 +1270,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 01:35:00 KST
+  Changed: tightened the latest critique into one bounded gameplay pass in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) by turning the late-form chain into a clearer `FORM 2 -> FORM 3 -> FORM 4` headline ladder and giving each step a more obvious on-field jump. `Late Ascension`, `Afterburn Overdrive`, and `Dominion` trait text now read as one continuous transformation spine, while their firing patterns gained larger barrel counts / volley fans so each pickup changes the silhouette and lane coverage more dramatically. In the same pass I cut `Wave 9-12` active caps and softened the post-capstone escalation profile so the enlarged arena keeps actual breathing room for those new forms instead of immediately collapsing back into sanitation kiting. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the lower Afterburn entry density and the new `FORM 2/3/4` headline ladder expectations. Validation passed with `node --check playables/cinder-circuit/game.js` and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the latest critique's `Top Priority` asked for one true long-run appetite loop with unmistakable form jumps plus less late density so each jump can actually breathe on the field. The highest-value bounded interpretation was to make the existing late transformation spine hit harder and read more continuously, rather than inventing another named progression layer.
+  Follow-up risk: this pass makes the late gun/body ladder more legible and gives it more arena oxygen, but the defense/utility rail is still structurally broader and less theatrical than the headline weapon track. The next pass should make one survival system ladder produce equally visible body tech spikes instead of only improving the main form again.
 
 - 2026-03-24 01:10:00 KST
   Changed: rebuilt the forge overlay in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and [styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) so the run no longer reads like one long diagnostics sentence. The overlay now adds an `Era Plan` card that frames the build as `Era I / II / III`, and each era explicitly separates one `Main Track` headline transformation from one `Support Track` survival/utility rail. I also replaced the old build-dump paragraph with a tighter `Build Focus` card that surfaces the active form, next form jump, current support rail, and reserve state before the full compressed ledger. Validation passed with `node --check playables/cinder-circuit/game.js` and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

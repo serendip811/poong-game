@@ -489,8 +489,8 @@
         "lockgrid hunt. skimmer가 외곽 회전선을 긁고 lancer가 직선 charge로 중앙을 찌른다. 이번 밴드에서는 같은 압박이 두 번 이어지므로, flank sweep와 charge bait 순서를 몸으로 익히며 marked elite dive 각을 직접 만든다.",
       driveGainFactor: 1.4,
       arena: AFTERBURN_ENDURANCE_ARENA,
-      activeCap: 39,
-      spawnBudget: 188,
+      activeCap: 36,
+      spawnBudget: 182,
       mix: {
         scuttler: 0.08,
         brute: 0.14,
@@ -522,8 +522,8 @@
         "lockgrid hunt. 첫 판보다 pressure clump가 두꺼워졌지만 규칙은 같다. skimmer 외곽 sweep를 먼저 접을지, lancer charge를 bait하며 marked elite cache까지 곧게 찢을지 같은 질문을 한 번 더 푼다.",
       driveGainFactor: 1.44,
       arena: AFTERBURN_ENDURANCE_ARENA,
-      activeCap: 41,
-      spawnBudget: 202,
+      activeCap: 38,
+      spawnBudget: 194,
       mix: {
         scuttler: 0.08,
         brute: 0.18,
@@ -555,8 +555,8 @@
         "cinder crown breach. relay crown과 먼 포격원이 회랑을 길게 찢는다. 이 밴드에서는 같은 breach 규칙이 두 번 이어지므로, marked elite cache를 집으러 깊게 들어갈 타이밍과 먼 pylon 절단 루트를 반복 학습하게 된다.",
       driveGainFactor: 1.48,
       arena: AFTERBURN_ENDURANCE_ARENA,
-      activeCap: 43,
-      spawnBudget: 218,
+      activeCap: 40,
+      spawnBudget: 210,
       mix: {
         scuttler: 0.08,
         brute: 0.18,
@@ -594,8 +594,8 @@
         "cinder crown breach. relay crown과 mortar 후열, lancer cut이 한 번 더 두꺼워진다. 하지만 규칙은 그대로이므로, 어느 doctrine이든 같은 corridor fight를 더 공격적으로 풀며 다음 Afterburn endurance를 준비해야 한다.",
       driveGainFactor: 1.54,
       arena: AFTERBURN_ENDURANCE_ARENA,
-      activeCap: 45,
-      spawnBudget: 238,
+      activeCap: 42,
+      spawnBudget: 226,
       mix: {
         scuttler: 0.08,
         brute: 0.16,
@@ -871,10 +871,10 @@
     {
       durationBonus: 6,
       spawnBudgetBonus: 24,
-      activeCapBonus: 4,
-      baseSpawnScale: 0.9,
-      minSpawnScale: 0.94,
-      hazardIntervalScale: 0.88,
+      activeCapBonus: 2,
+      baseSpawnScale: 0.94,
+      minSpawnScale: 0.97,
+      hazardIntervalScale: 0.92,
       hazardTelegraphScale: 0.94,
       hazardCountBonus: 0,
       hazardDamageBonus: 2,
@@ -885,11 +885,11 @@
     },
     {
       durationBonus: 10,
-      spawnBudgetBonus: 42,
-      activeCapBonus: 7,
-      baseSpawnScale: 0.84,
-      minSpawnScale: 0.9,
-      hazardIntervalScale: 0.8,
+      spawnBudgetBonus: 36,
+      activeCapBonus: 4,
+      baseSpawnScale: 0.89,
+      minSpawnScale: 0.93,
+      hazardIntervalScale: 0.86,
       hazardTelegraphScale: 0.9,
       hazardCountBonus: 1,
       hazardDamageBonus: 3,
@@ -900,11 +900,11 @@
     },
     {
       durationBonus: 14,
-      spawnBudgetBonus: 62,
-      activeCapBonus: 10,
-      baseSpawnScale: 0.78,
-      minSpawnScale: 0.86,
-      hazardIntervalScale: 0.74,
+      spawnBudgetBonus: 52,
+      activeCapBonus: 6,
+      baseSpawnScale: 0.85,
+      minSpawnScale: 0.9,
+      hazardIntervalScale: 0.82,
       hazardTelegraphScale: 0.86,
       hazardCountBonus: 1,
       hazardDamageBonus: 4,
@@ -915,11 +915,11 @@
     },
     {
       durationBonus: 18,
-      spawnBudgetBonus: 80,
-      activeCapBonus: 12,
-      baseSpawnScale: 0.74,
-      minSpawnScale: 0.84,
-      hazardIntervalScale: 0.7,
+      spawnBudgetBonus: 68,
+      activeCapBonus: 8,
+      baseSpawnScale: 0.82,
+      minSpawnScale: 0.88,
+      hazardIntervalScale: 0.78,
       hazardTelegraphScale: 0.82,
       hazardCountBonus: 1,
       hazardDamageBonus: 5,
@@ -930,11 +930,11 @@
     },
     {
       durationBonus: 22,
-      spawnBudgetBonus: 98,
-      activeCapBonus: 14,
-      baseSpawnScale: 0.7,
-      minSpawnScale: 0.8,
-      hazardIntervalScale: 0.66,
+      spawnBudgetBonus: 84,
+      activeCapBonus: 9,
+      baseSpawnScale: 0.79,
+      minSpawnScale: 0.86,
+      hazardIntervalScale: 0.74,
       hazardTelegraphScale: 0.78,
       hazardCountBonus: 2,
       hazardDamageBonus: 6,
@@ -945,11 +945,11 @@
     },
     {
       durationBonus: 26,
-      spawnBudgetBonus: 118,
-      activeCapBonus: 16,
-      baseSpawnScale: 0.68,
-      minSpawnScale: 0.78,
-      hazardIntervalScale: 0.62,
+      spawnBudgetBonus: 100,
+      activeCapBonus: 11,
+      baseSpawnScale: 0.76,
+      minSpawnScale: 0.84,
+      hazardIntervalScale: 0.7,
       hazardTelegraphScale: 0.76,
       hazardCountBonus: 2,
       hazardDamageBonus: 7,
@@ -960,11 +960,11 @@
     },
     {
       durationBonus: 30,
-      spawnBudgetBonus: 138,
-      activeCapBonus: 18,
-      baseSpawnScale: 0.64,
-      minSpawnScale: 0.76,
-      hazardIntervalScale: 0.58,
+      spawnBudgetBonus: 118,
+      activeCapBonus: 12,
+      baseSpawnScale: 0.74,
+      minSpawnScale: 0.82,
+      hazardIntervalScale: 0.68,
       hazardTelegraphScale: 0.72,
       hazardCountBonus: 2,
       hazardDamageBonus: 8,
@@ -4425,21 +4425,21 @@
         }
       },
       getFirePattern(supportLevel) {
-        const offsets = [-0.22, 0.22];
+        const offsets = [-0.34, -0.12, 0.12, 0.34];
         if (supportLevel >= 2) {
-          offsets.unshift(-0.42);
-          offsets.push(0.42);
+          offsets.unshift(-0.58);
+          offsets.push(0.58);
         }
         if (supportLevel >= 3) {
-          offsets.unshift(-0.62);
-          offsets.push(0.62);
+          offsets.unshift(-0.82);
+          offsets.push(0.82);
         }
         return {
           kind: "split_wing",
           offsets,
           speedMultiplier: 1.08,
           radius: 4.6,
-          damageMultiplier: 0.42 + supportLevel * 0.03,
+          damageMultiplier: 0.39 + supportLevel * 0.035,
           life: 0.96,
           pierceBonus: supportLevel >= 2 ? 1 : 0,
           bounceBonus: 0,
@@ -4476,8 +4476,8 @@
       getFirePattern(supportLevel) {
         return {
           kind: "slag_seed",
-          count: 1 + Math.floor((supportLevel + 1) / 2),
-          spread: 0.18,
+          count: 2 + Math.floor((supportLevel + 1) / 2),
+          spread: 0.24,
           speedMultiplier: 0.84,
           radius: 5.4,
           damageMultiplier: 0.34 + supportLevel * 0.03,
@@ -4522,16 +4522,16 @@
       getFirePattern(supportLevel) {
         const offsets =
           supportLevel >= 3
-            ? [-0.4, -0.2, 0, 0.2, 0.4]
+            ? [-0.54, -0.34, -0.16, 0, 0.16, 0.34, 0.54]
             : supportLevel >= 2
-              ? [-0.28, 0, 0.28]
-              : [-0.18, 0.18];
+              ? [-0.4, -0.18, 0, 0.18, 0.4]
+              : [-0.28, -0.08, 0.08, 0.28];
         return {
           kind: "split_wing",
           offsets,
           speedMultiplier: 1.18,
           radius: 4.7,
-          damageMultiplier: 0.31 + supportLevel * 0.025,
+          damageMultiplier: 0.29 + supportLevel * 0.03,
           life: 0.88,
           pierceBonus: 0,
           bounceBonus: 0,
@@ -4568,16 +4568,16 @@
       getFirePattern(supportLevel) {
         const offsets =
           supportLevel >= 3
-            ? [-0.34, -0.17, 0, 0.17, 0.34]
+            ? [-0.42, -0.28, -0.14, 0, 0.14, 0.28, 0.42]
             : supportLevel >= 2
-              ? [-0.2, 0, 0.2]
-              : [-0.12, 0.12];
+              ? [-0.28, -0.12, 0, 0.12, 0.28]
+              : [-0.18, 0, 0.18];
         return {
           kind: "split_wing",
           offsets,
           speedMultiplier: 0.94,
           radius: 5.8,
-          damageMultiplier: 0.42 + supportLevel * 0.04,
+          damageMultiplier: 0.38 + supportLevel * 0.045,
           life: 0.78,
           pierceBonus: supportLevel >= 2 ? 1 : 0,
           bounceBonus: 0,
@@ -4742,10 +4742,10 @@
         const greedLevel = getLateFieldGreedPressure(build);
         const offsets =
           supportLevel >= 3
-            ? [-0.54, -0.27, 0, 0.27, 0.54]
+            ? [-0.7, -0.46, -0.22, 0, 0.22, 0.46, 0.7]
             : supportLevel >= 2
-              ? [-0.36, 0, 0.36]
-              : [-0.24, 0.24];
+              ? [-0.5, -0.18, 0.18, 0.5]
+              : [-0.36, -0.12, 0.12, 0.36];
         return {
           kind: "afterburn_overdrive",
           offsets,
@@ -4791,7 +4791,8 @@
       },
       getFirePattern(build, core) {
         const supportLevel = Math.max(1, getInstalledSupportSystems(build).length);
-        const offsets = supportLevel >= 3 ? [-0.16, 0, 0.16] : [-0.1, 0.1];
+        const offsets =
+          supportLevel >= 3 ? [-0.22, -0.1, 0, 0.1, 0.22] : [-0.16, 0, 0.16];
         return {
           kind: "afterburn_overdrive",
           offsets: core.id === "lance" ? offsets.map((offset) => offset * 0.7) : offsets,
@@ -4843,8 +4844,8 @@
         const supportLevel = Math.max(1, getInstalledSupportSystems(build).length);
         const offsets =
           greedLevel >= 2
-            ? [-0.46, -0.18, 0.18, 0.46]
-            : [-0.34, 0.34];
+            ? [-0.62, -0.36, -0.12, 0.12, 0.36, 0.62]
+            : [-0.46, -0.16, 0.16, 0.46];
         return {
           kind: "afterburn_overdrive",
           offsets,
@@ -6843,6 +6844,29 @@
     return clamp(getInstalledSupportSystems(build).length, 0, MAX_SUPPORT_BAY_LIMIT);
   }
 
+  function getHeadlineFormTier(build) {
+    if (!build) {
+      return 0;
+    }
+    if (build.afterburnDominionId) {
+      return 4;
+    }
+    if (build.afterburnOverdriveId) {
+      return 3;
+    }
+    if (build.lateAscensionId) {
+      return 2;
+    }
+    if (build.doctrineCapstoneId || build.lateFieldConvergenceId || getDoctrineWeaponStage(build) >= 2) {
+      return 1;
+    }
+    return 0;
+  }
+
+  function getHeadlineFormTierLabel(tier) {
+    return `FORM ${clamp(Math.round(tier || 0), 1, 4)}`;
+  }
+
   function shouldOfferLateAscension(build, waveNumber) {
     return Boolean(
       build &&
@@ -7204,6 +7228,8 @@
       lateAscensionTraitLabel: null,
       lateAscensionStatusNote: null,
       lateAscensionFirePattern: null,
+      headlineFormTier: 0,
+      headlineFormLabel: null,
       lateFieldMutationLevel: 0,
       lateFieldMutationLabel: null,
       lateFieldMutationTraitLabel: null,
@@ -7276,12 +7302,15 @@
     const lateAscension = getLateAscensionDef(build);
     if (lateAscension) {
       const supportLevel = getLateAscensionSupportLevel(build);
+      const headlineTier = Math.max(2, getHeadlineFormTier(build));
       stats.lateAscensionId = lateAscension.id;
       stats.lateAscensionLabel = lateAscension.label;
       stats.lateAscensionTraitLabel =
-        `${lateAscension.traitLabel} · SUPPORT ${supportLevel}`;
+        `${getHeadlineFormTierLabel(headlineTier)} · ${lateAscension.traitLabel} · SUPPORT ${supportLevel}`;
       stats.lateAscensionStatusNote =
-        `${lateAscension.statusNote} 현재 support uplink ${supportLevel}칸이 ascension form을 밀어 올리고 있다.`;
+        `${lateAscension.statusNote} 현재 support uplink ${supportLevel}칸이 ${getHeadlineFormTierLabel(headlineTier)} ascension form을 밀어 올리고 있다.`;
+      stats.headlineFormTier = headlineTier;
+      stats.headlineFormLabel = `${getHeadlineFormTierLabel(headlineTier)} · ${lateAscension.label}`;
       stats.lateAscensionFirePattern =
         typeof lateAscension.getFirePattern === "function"
           ? lateAscension.getFirePattern(supportLevel, build, core)
@@ -7457,10 +7486,13 @@
     }
     const afterburnOverdrive = getAfterburnOverdriveDef(build);
     if (afterburnOverdrive) {
+      const headlineTier = Math.max(3, getHeadlineFormTier(build));
       stats.afterburnOverdriveId = afterburnOverdrive.id;
       stats.afterburnOverdriveLabel = afterburnOverdrive.title;
-      stats.afterburnOverdriveTraitLabel = afterburnOverdrive.traitLabel;
-      stats.afterburnOverdriveStatusNote = afterburnOverdrive.statusNote;
+      stats.afterburnOverdriveTraitLabel = `${getHeadlineFormTierLabel(headlineTier)} · ${afterburnOverdrive.traitLabel}`;
+      stats.afterburnOverdriveStatusNote = `${afterburnOverdrive.statusNote} ${getHeadlineFormTierLabel(headlineTier)}가 열려 이전 ascension frame 위에 두 번째 포문 jump가 겹친다.`;
+      stats.headlineFormTier = headlineTier;
+      stats.headlineFormLabel = `${getHeadlineFormTierLabel(headlineTier)} · ${afterburnOverdrive.title}`;
       stats.afterburnOverdriveFirePattern =
         typeof afterburnOverdrive.getFirePattern === "function"
           ? afterburnOverdrive.getFirePattern(build, core)
@@ -7471,33 +7503,36 @@
     }
     const afterburnDominion = getAfterburnDominionDef(build);
     if (afterburnDominion) {
+      const headlineTier = Math.max(4, getHeadlineFormTier(build));
       const offsets =
         core.id === "scatter"
-          ? [-0.38, -0.19, 0, 0.19, 0.38]
+          ? [-0.54, -0.33, -0.12, 0.12, 0.33, 0.54]
           : core.id === "lance"
-            ? [-0.14, 0.14]
+            ? [-0.28, -0.1, 0.1, 0.28]
             : core.id === "ricochet"
-              ? [-0.26, 0, 0.26]
-              : [-0.32, -0.12, 0.12, 0.32];
+              ? [-0.4, -0.2, 0, 0.2, 0.4]
+              : [-0.46, -0.28, -0.1, 0.1, 0.28, 0.46];
       stats.afterburnDominionId = afterburnDominion.id;
       stats.afterburnDominionLabel = afterburnDominion.title;
-      stats.afterburnDominionTraitLabel = afterburnDominion.traitLabel;
+      stats.afterburnDominionTraitLabel = `${getHeadlineFormTierLabel(headlineTier)} · ${afterburnDominion.traitLabel}`;
       stats.afterburnDominionStatusNote =
-        `${afterburnDominion.bodyText} Afterburn 지배 구간이 열려 다음 한 웨이브는 목적지 세금보다 압도감이 먼저 온다.`;
+        `${afterburnDominion.bodyText} ${getHeadlineFormTierLabel(headlineTier)}가 완성되어 Afterburn 지배 구간이 열리고, 다음 한 웨이브는 목적지 세금보다 압도감이 먼저 온다.`;
+      stats.headlineFormTier = headlineTier;
+      stats.headlineFormLabel = `${getHeadlineFormTierLabel(headlineTier)} · ${afterburnDominion.title}`;
       stats.afterburnDominionFirePattern = {
         kind: "afterburn_dominion",
         offsets,
         speedMultiplier: core.id === "lance" ? 1.24 : 1.1,
         radius: core.id === "lance" ? 5.8 : 5.1,
-        damageMultiplier: core.id === "scatter" ? 0.26 : 0.34,
+        damageMultiplier: core.id === "scatter" ? 0.28 : 0.36,
         life: 0.9,
         pierceBonus: core.id === "lance" ? 2 : 0,
         bounceBonus: core.id === "ricochet" ? 1 : 0,
         chainBonus: core.id === "ricochet" ? 1 : 0,
         color: afterburnDominion.color,
       };
-      stats.damage += 7;
-      stats.cooldown = clamp(stats.cooldown * 0.9, 0.08, 0.4);
+      stats.damage += 8;
+      stats.cooldown = clamp(stats.cooldown * 0.88, 0.08, 0.4);
       if (core.id === "ember") {
         stats.damage += 5;
         stats.projectileSpeed += 18;
