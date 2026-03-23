@@ -2246,6 +2246,72 @@
     },
   };
 
+  const WILDCARD_PROTOCOL_WAVES = [4, 7, 10];
+  const WILDCARD_PROTOCOL_ORDER = ["smuggler_winch", "nullplate_halo", "rogue_lattice"];
+  const WILDCARD_PROTOCOL_DEFS = {
+    smuggler_winch: {
+      id: "smuggler_winch",
+      tag: "WILD",
+      title: "Smuggler Winch",
+      wave: 4,
+      laneLabel: "Wildcard Protocol",
+      description:
+        "교리 선호를 무시하고 Salvage Winch를 불법 접속한다. 회수 동선이 곧 가속선이 되어 scrap payout과 drive 회전이 같이 치솟고, 비어 있는 flex bay도 즉시 뚫린다.",
+      slotText: "Salvage Winch + 회수 폭주 + flex bay",
+      roadmapDetail: "Wave 4 field cache가 회수/기동 프로토콜을 열어 교리 밖 경제 동선을 런 축으로 바꿀 수 있다.",
+      apply(build, run) {
+        applyAuxiliaryJunction(build);
+        applyChassisBreakpoint(build, "salvage_winch", run);
+        build.scrapMultiplier += 0.1;
+        build.pickupBonus += 16;
+        build.moveSpeedBonus += 10;
+        build.dashCooldownBonus += 0.12;
+      },
+    },
+    nullplate_halo: {
+      id: "nullplate_halo",
+      tag: "WILD",
+      title: "Nullplate Halo",
+      wave: 7,
+      laneLabel: "Wildcard Protocol",
+      description:
+        "교리 예약 lane과 무관하게 Bulwark Treads와 Aegis Halo를 직결한다. 큰 한 방을 씹는 null plate와 탄막 요격 고리가 같이 붙어, 평소 방호 약점이던 빌드도 갑자기 정면전이 가능해진다.",
+      slotText: "Bulwark Treads + Aegis Halo + field plate",
+      roadmapDetail: "Wave 7 cache가 방호 계열 와일드카드를 열어 원래 약한 빌드도 정면 hold form으로 꺾을 수 있다.",
+      apply(build, run) {
+        applyAuxiliaryJunction(build);
+        build.supportBayCap = Math.max(getSupportBayCapacity(build), MAX_SUPPORT_BAY_LIMIT);
+        applyChassisBreakpoint(build, "bulwark_treads", run);
+        build.lateFieldAegisLevel = Math.max(getLateFieldAegisLevel(build), 1);
+        const haloChoice = createSupportSystemTierChoice("aegis_halo", 1);
+        if (haloChoice) {
+          applyForgeChoice(run, { ...haloChoice, cost: 0 });
+        }
+      },
+    },
+    rogue_lattice: {
+      id: "rogue_lattice",
+      tag: "WILD",
+      title: "Rogue Lattice",
+      wave: 10,
+      laneLabel: "Wildcard Protocol",
+      description:
+        "교리 밖 autonomous lattice를 몰수해 빈 flex bay에 즉시 꽂는다. 남은 런은 주포 실루엣 위에 자율 포격층이 덧붙어, 원래 빌드 계획보다 훨씬 난폭한 screen-clear 머신으로 기울 수 있다.",
+      slotText: "off-doctrine arsenal + 추가 배럴 jump",
+      roadmapDetail: "Wave 10 arsenal cache가 자율 포격 프로토콜을 열어 남은 bracket을 off-doctrine 공세 기계로 납치할 수 있다.",
+      apply(build, run) {
+        applyAuxiliaryJunction(build);
+        build.supportBayCap = Math.max(getSupportBayCapacity(build), MAX_SUPPORT_BAY_LIMIT);
+        build.lateFieldMutationLevel = Math.max(getLateFieldMutationLevel(build), 2);
+        const preferredSystemId = build.coreId === "lance" ? "seeker_array" : "volt_drones";
+        const systemChoice = createSupportSystemTierChoice(preferredSystemId, 1);
+        if (systemChoice) {
+          applyForgeChoice(run, { ...systemChoice, cost: 0 });
+        }
+      },
+    },
+  };
+
   const WAVE6_ASCENSION_DEFS = {
     mirror_hunt: {
       id: "mirror_hunt",
@@ -4095,6 +4161,7 @@
     riskMutationQueuedLevel: 0,
     apexMutationLevel: 0,
     predatorBaitCharges: 0,
+    wildcardProtocolIds: [],
     lateFieldMutationLevel: 0,
     lateFieldAegisLevel: 0,
     lateFieldConvergenceId: null,
@@ -5955,6 +6022,7 @@
         riskMutationQueuedLevel: BASE_BUILD.riskMutationQueuedLevel,
         apexMutationLevel: BASE_BUILD.apexMutationLevel,
         predatorBaitCharges: BASE_BUILD.predatorBaitCharges,
+        wildcardProtocolIds: BASE_BUILD.wildcardProtocolIds.slice(),
         lateFieldMutationLevel: BASE_BUILD.lateFieldMutationLevel,
         lateFieldAegisLevel: BASE_BUILD.lateFieldAegisLevel,
         lateFieldConvergenceId: BASE_BUILD.lateFieldConvergenceId,
@@ -6219,6 +6287,24 @@
       );
     }
 
+    const upcomingWildcard = getUpcomingWildcardProtocol(build, boundedWave);
+    if (upcomingWildcard) {
+      const wildcardState =
+        boundedWave >= upcomingWildcard.waveNumber
+          ? "primed"
+          : upcomingWildcard.waveNumber - boundedWave <= 1
+            ? "live"
+            : "planned";
+      steps.push(
+        createRoadmapStep(
+          "WILD",
+          upcomingWildcard.title,
+          upcomingWildcard.roadmapDetail,
+          wildcardState
+        )
+      );
+    }
+
     if (!build.lateAscensionId) {
       steps.push(
         createRoadmapStep(
@@ -6463,6 +6549,49 @@
       stage = 3;
     }
     return stage;
+  }
+
+  function getClaimedWildcardProtocolIds(build) {
+    if (!build || !Array.isArray(build.wildcardProtocolIds)) {
+      return [];
+    }
+    return build.wildcardProtocolIds.filter((protocolId) => WILDCARD_PROTOCOL_DEFS[protocolId]);
+  }
+
+  function getWildcardProtocolForWave(nextWave) {
+    const index = WILDCARD_PROTOCOL_WAVES.indexOf(nextWave);
+    if (index < 0) {
+      return null;
+    }
+    const protocolId = WILDCARD_PROTOCOL_ORDER[index];
+    return protocolId ? WILDCARD_PROTOCOL_DEFS[protocolId] || null : null;
+  }
+
+  function getUpcomingWildcardProtocol(build, waveNumber) {
+    const claimedIds = new Set(getClaimedWildcardProtocolIds(build));
+    for (let index = 0; index < WILDCARD_PROTOCOL_WAVES.length; index += 1) {
+      const scheduledWave = WILDCARD_PROTOCOL_WAVES[index];
+      const protocolId = WILDCARD_PROTOCOL_ORDER[index];
+      if (!protocolId || claimedIds.has(protocolId) || scheduledWave < waveNumber) {
+        continue;
+      }
+      const protocol = WILDCARD_PROTOCOL_DEFS[protocolId];
+      if (!protocol) {
+        continue;
+      }
+      return {
+        ...protocol,
+        waveNumber: scheduledWave,
+      };
+    }
+    return null;
+  }
+
+  function getWildcardProtocolSummary(build) {
+    const labels = getClaimedWildcardProtocolIds(build).map(
+      (protocolId) => WILDCARD_PROTOCOL_DEFS[protocolId].title
+    );
+    return labels.length > 0 ? `Wildcard ${labels.join(" + ")}` : "Wildcard 없음";
   }
 
   function getDoctrineWeaponForm(build, coreId) {
@@ -8409,6 +8538,9 @@
     if (choice.type === "utility" && choice.action === "field_convergence") {
       return "Convergence Form";
     }
+    if (choice.type === "utility" && choice.action === "wildcard_protocol") {
+      return "Wildcard Protocol";
+    }
     if (
       choice.type === "evolution" ||
       (choice.type === "utility" && (choice.action === "risk_mutation" || choice.action === "predator_bait"))
@@ -8547,6 +8679,32 @@
           ? choice.slotText || "현장 안정화"
           : `${choice.slotText || "현장 장착"} · 할인 ${Math.max(0, originalCost - fieldGrantCost)}`,
       fieldGrant: true,
+    };
+  }
+
+  function createWildcardProtocolChoice(build, nextWave) {
+    const protocol = getWildcardProtocolForWave(nextWave);
+    if (!build || !protocol) {
+      return null;
+    }
+    if (getClaimedWildcardProtocolIds(build).includes(protocol.id)) {
+      return null;
+    }
+    return {
+      type: "utility",
+      action: "wildcard_protocol",
+      id: `utility:wildcard_protocol:${protocol.id}:${nextWave}`,
+      verb: "탈취",
+      tag: protocol.tag,
+      title: protocol.title,
+      description: protocol.description,
+      slotText: protocol.slotText,
+      cost: 0,
+      laneLabel: protocol.laneLabel,
+      forgeLaneLabel: protocol.laneLabel,
+      wildcardProtocolId: protocol.id,
+      wildcardWave: protocol.wave,
+      roadmapDetail: protocol.roadmapDetail,
     };
   }
 
@@ -9448,11 +9606,13 @@
   }
 
   function buildFieldGrantChoices(build, rng, nextWave) {
+    const wildcardChoice = createWildcardProtocolChoice(build, nextWave);
     if (shouldUseLateFieldCache(nextWave)) {
       const convergenceChoice = createLateFieldConvergenceChoice(build, nextWave);
       const systemChoice = createLateFieldSystemChoice(build, rng, nextWave);
       return [
         createFieldGrantCard(convergenceChoice || createLateFieldMutationChoice(build, nextWave)),
+        wildcardChoice ? createFieldGrantCard(wildcardChoice) : null,
         createFieldGrantCard(systemChoice),
         createFieldGrantCard(createLateFieldAegisChoice(build, nextWave)),
         createFieldGrantCard(createLateFieldGreedContractChoice(build, nextWave)),
@@ -9505,6 +9665,7 @@
             cost: 0,
             laneLabel: "Main Weapon Mutation",
           }),
+      wildcardChoice ? createFieldGrantCard(wildcardChoice) : null,
       createFieldGrantCard(survivalChoice),
       greedChoice ? createFieldGrantCard(greedChoice) : null,
     ].filter(Boolean);
@@ -9595,6 +9756,7 @@
 
   function enterFieldGrant() {
     const nextWave = state.waveIndex + 2;
+    const wildcardProtocol = getWildcardProtocolForWave(nextWave);
     state.phase = "forge";
     state.pendingFinalForge = false;
     state.forgeStep = 1;
@@ -9611,6 +9773,12 @@
         : "Field Cache 확보. 이제 현장 선택은 주포 변이, 생존층, 탐욕 계약 세 장으로만 나와 즉시 판돈을 고르게 한다.",
       "CACHE"
     );
+    if (wildcardProtocol) {
+      pushCombatFeed(
+        `${wildcardProtocol.title} 프로토콜 감지. 이번 캐시에서는 교리 예약 lane 바깥의 불법 차체/시스템 패키지가 섞여 들어와, 런 축 자체를 옆으로 꺾을 수 있다.`,
+        "WILD"
+      );
+    }
     setBanner(
       shouldUseLateFieldCache(nextWave)
         ? isArsenalBreakpointWave(nextWave)
@@ -10540,6 +10708,32 @@
         run.player.heat = Math.max(0, run.player.heat - 20);
         run.player.overheated = false;
         run.player.invulnerableTime = Math.max(run.player.invulnerableTime || 0, 0.2);
+      }
+      return choice;
+    }
+
+    if (choice.type === "utility" && choice.action === "wildcard_protocol") {
+      const protocol = WILDCARD_PROTOCOL_DEFS[choice.wildcardProtocolId];
+      if (!protocol) {
+        return null;
+      }
+      const claimedIds = new Set(getClaimedWildcardProtocolIds(run.build));
+      if (claimedIds.has(protocol.id)) {
+        return null;
+      }
+      if (typeof protocol.apply === "function") {
+        protocol.apply(run.build, run);
+      }
+      run.build.wildcardProtocolIds = getClaimedWildcardProtocolIds(run.build).concat(protocol.id);
+      run.build.upgrades.push(`Wildcard Protocol: ${protocol.title}`);
+      if (run.player) {
+        run.player.hp = Math.min(
+          Math.max(1, run.player.hp + 8),
+          Math.max(1, 100 + run.build.maxHpBonus)
+        );
+        run.player.heat = Math.max(0, run.player.heat - 18);
+        run.player.overheated = false;
+        run.player.invulnerableTime = Math.max(run.player.invulnerableTime || 0, 0.18);
       }
       return choice;
     }
@@ -17506,6 +17700,7 @@
         : doctrinePursuit
           ? `${doctrinePursuit.shortLabel} 미계약`
           : "교리 pursuit 없음";
+    const wildcardSummary = getWildcardProtocolSummary(state.build);
     const forgeOptions = {
       finalForge: state.pendingFinalForge,
       nextWave: state.waveIndex + 2,
@@ -17556,7 +17751,7 @@
       <article class="forge-context__card">
         <p class="panel__eyebrow">현재 빌드 압축</p>
         <strong>${affixSummary}</strong>
-        <p>${evolutionSummary} · ${doctrineSummary} · ${lateAscensionSummary} · ${lateFieldConvergenceSummary} · ${illegalOverclockSummary} · ${apexMutationSummary} · ${capstoneSummary} · ${chassisSummary} · ${forgeSystemSummary} · ${doctrinePursuitSummary} · ${supportBaySummary} · 보관 ${benchEntries.length}종 · ${catalystSummary} · 분해 예상 고철 ${getRecycleValue(state.build)}</p>
+        <p>${evolutionSummary} · ${doctrineSummary} · ${lateAscensionSummary} · ${lateFieldConvergenceSummary} · ${illegalOverclockSummary} · ${apexMutationSummary} · ${capstoneSummary} · ${chassisSummary} · ${forgeSystemSummary} · ${wildcardSummary} · ${doctrinePursuitSummary} · ${supportBaySummary} · 보관 ${benchEntries.length}종 · ${catalystSummary} · 분해 예상 고철 ${getRecycleValue(state.build)}</p>
       </article>
     `;
     elements.forgeCards.innerHTML = state.forgeChoices

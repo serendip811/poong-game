@@ -62,6 +62,21 @@ assert.ok(
     ["공세 모듈", "방호/유틸 차체", "보조 시스템"].includes(choice.laneLabel)
   )
 );
+const wildcardGrantBuild = game.createInitialBuild("scrap_pact");
+const wildcardGrantChoices = game.buildFieldGrantChoices(wildcardGrantBuild, Math.random, 4);
+const wildcardChoice = wildcardGrantChoices.find((choice) => choice.laneLabel === "Wildcard Protocol");
+assert.ok(wildcardChoice);
+assert.equal(wildcardChoice.title, "Smuggler Winch");
+const wildcardRun = {
+  build: wildcardGrantBuild,
+  resources: { scrap: 0 },
+  stats: { scrapCollected: 0, scrapSpent: 0 },
+  player: { hp: 100, maxHp: 100, heat: 18, overheated: false, invulnerableTime: 0 },
+};
+game.applyForgeChoice(wildcardRun, wildcardChoice);
+assert.ok(wildcardRun.build.wildcardProtocolIds.includes("smuggler_winch"));
+assert.equal(wildcardRun.build.chassisId, "salvage_winch");
+assert.ok(game.getSupportBayCapacity(wildcardRun.build) >= 3);
 assert.ok(game.WAVE_CONFIG[7].spawnBudget > game.WAVE_CONFIG[4].spawnBudget);
 assert.ok(game.WAVE_CONFIG[7].mix.warden > 0);
 assert.ok(game.WAVE_CONFIG[7].mix.mortar > 0);
@@ -103,8 +118,9 @@ lateCacheBuild.supportSystems = [{ id: "volt_drones", tier: 1 }];
 lateCacheBuild.blackLedgerRaidWaves = 1;
 lateCacheBuild.lateFieldMutationLevel = 2;
 const lateCacheChoices = game.buildFieldGrantChoices(lateCacheBuild, Math.random, 10);
-assert.equal(lateCacheChoices.length, 4);
+assert.equal(lateCacheChoices.length, 5);
 assert.equal(lateCacheChoices[0].laneLabel, "Convergence Form");
+assert.ok(lateCacheChoices.some((choice) => choice.laneLabel === "Wildcard Protocol"));
 assert.ok(lateCacheChoices.some((choice) => choice.laneLabel === "Autonomous Arsenal"));
 assert.ok(
   lateCacheChoices.some(
@@ -411,11 +427,12 @@ const predatorCacheChoices = game.buildFieldGrantChoices(predatorBaitRun.build, 
 assert.equal(game.isArsenalBreakpointWave(10), true);
 assert.ok(predatorCacheChoices.some((choice) => choice.action === "field_mutation"));
 assert.ok(predatorCacheChoices.some((choice) => choice.action === "field_aegis"));
-assert.equal(predatorCacheChoices.length, 4);
+assert.equal(predatorCacheChoices.length, 5);
 assert.equal(
   JSON.stringify(predatorCacheChoices.map((choice) => choice.laneLabel)),
   JSON.stringify([
     "Main Weapon Mutation",
+    "Wildcard Protocol",
     "Autonomous Arsenal",
     "Defense / Utility",
     "Greed Contract",
@@ -1224,10 +1241,10 @@ assert.ok(!fortressInstallSystemIds.includes("volt_drones"));
 const fieldGrantBuild = game.createInitialBuild("relay_oath");
 fieldGrantBuild.pendingCores = [];
 const fieldGrantChoices = game.buildFieldGrantChoices(fieldGrantBuild, () => 0, 4);
-assert.equal(fieldGrantChoices.length, 3);
+assert.equal(fieldGrantChoices.length, 4);
 assert.equal(
   JSON.stringify(fieldGrantChoices.map((choice) => choice.laneLabel)),
-  JSON.stringify(["Main Weapon Mutation", "Defense / Utility", "Greed Contract"])
+  JSON.stringify(["Main Weapon Mutation", "Wildcard Protocol", "Defense / Utility", "Greed Contract"])
 );
 assert.ok(
   fieldGrantChoices.every((choice) =>
@@ -1240,7 +1257,7 @@ assert.ok(fieldGrantChoices.some((choice) => choice.type === "utility" && choice
 assert.ok(
   fieldGrantChoices
     .filter((choice) => choice.type !== "fallback" && choice.cost > 0)
-    .every((choice) => choice.originalCost > choice.cost)
+    .every((choice) => (choice.originalCost || 0) === 0 || choice.originalCost > choice.cost)
 );
 
 const evolutionBuild = game.createInitialBuild("relay_oath");
