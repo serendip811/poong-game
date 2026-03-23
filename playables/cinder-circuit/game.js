@@ -12885,6 +12885,167 @@
       : `${systemStats.label} · 위성 ${systemStats.orbitCount}기${capstoneSuffix}`;
   }
 
+  function getDominantFormSummary(build, weapon, waveNumber = 1) {
+    const roadmap = getBuildRoadmap(build, weapon, waveNumber);
+    const activeCore = CORE_DEFS[build.coreId];
+    const doctrineBodyForm = getDoctrineBodyForm(build);
+    const activeForm = roadmap.activeForm || activeCore.label;
+    const dominantForm = doctrineBodyForm ? `${activeForm} / ${doctrineBodyForm.label}` : activeForm;
+    const formDetail =
+      weapon.afterburnDominionStatusNote ||
+      weapon.afterburnOverdriveStatusNote ||
+      weapon.lateAscensionStatusNote ||
+      weapon.capstoneStatusNote ||
+      weapon.doctrineStatusNote ||
+      weapon.evolutionStatusNote ||
+      `${activeCore.label} ${weapon.tierLabel} 프레임이 현재 주력이다.`;
+    return {
+      label: dominantForm,
+      detail: formDetail,
+    };
+  }
+
+  function getNextBreakpointSummary(build, weapon, waveNumber = 1) {
+    const roadmap = getBuildRoadmap(build, weapon, waveNumber);
+    const activeCore = CORE_DEFS[build.coreId];
+    const nextStep = roadmap.steps.find((step) => step.state !== "locked") || roadmap.steps[2] || null;
+    return {
+      label: nextStep ? nextStep.title : roadmap.activeForm || activeCore.label,
+      detail: nextStep ? nextStep.detail : roadmap.prompt,
+    };
+  }
+
+  function getLiveSideBetSummary(currentState = state) {
+    const pursuit = getDoctrineForgePursuitDef(currentState.build);
+    if (currentState.catalystCrucible.active) {
+      return {
+        label: "Catalyst Crucible",
+        status: currentState.catalystCrucible.cacheDropped ? "cache live" : "core breach",
+        note: currentState.catalystCrucible.cacheDropped
+          ? "세 갈래 splice cache 중 하나만 집는 순간 나머지 bet는 닫힌다."
+          : "점거 코어를 먼저 깨야 splice cache가 열린다.",
+      };
+    }
+    if (currentState.phase === "wave" && currentState.wave && currentState.wave.doctrineAscension) {
+      const ascension = currentState.wave.doctrineAscension;
+      return {
+        label: "Live Ascension",
+        status: ascension.claimed ? "claimed" : ascension.deployed ? "split live" : "elite trigger",
+        note: ascension.deployed
+          ? "전장에 떨어진 cache 중 하나만 회수할 수 있다."
+          : "이번 웨이브 첫 elite가 doctrine ascension cache를 떨어뜨린다.",
+      };
+    }
+    if (currentState.phase === "wave" && currentState.wave && currentState.wave.afterburnAscension) {
+      const ascension = currentState.wave.afterburnAscension;
+      return {
+        label: "Afterburn Ascension",
+        status: ascension.claimed ? "claimed" : ascension.deployed ? "split live" : "elite trigger",
+        note: ascension.deployed
+          ? "둘 중 하나를 집는 순간 남은 endform split은 닫힌다."
+          : "이번 afterburn 첫 elite가 endform split cache를 떨어뜨린다.",
+      };
+    }
+    if (currentState.phase === "wave" && currentState.wave && currentState.wave.lateAscension) {
+      const lateAscension = currentState.wave.lateAscension;
+      return {
+        label: "Ascension Core",
+        status: lateAscension.claimed ? "claimed" : lateAscension.deployed ? "split live" : "elite trigger",
+        note: lateAscension.deployed
+          ? "둘 중 하나를 회수해야 남은 run의 주포/차체가 굳는다."
+          : "이번 late wave 첫 elite가 Ascension Core split을 떨어뜨린다.",
+      };
+    }
+    if (currentState.phase === "wave" && currentState.wave && currentState.wave.afterburnOverdrive) {
+      const overdrive = currentState.wave.afterburnOverdrive;
+      return {
+        label: "Endform Overdrive",
+        status: overdrive.claimed ? "claimed" : overdrive.deployed ? "cache live" : "elite trigger",
+        note: overdrive.deployed
+          ? "전장 cache 하나만 집어 마지막 jump를 잠가야 한다."
+          : "중반 afterburn elite가 마지막 jump cache를 떨어뜨린다.",
+      };
+    }
+    if (currentState.phase === "wave" && currentState.wave && currentState.wave.afterburnDominion) {
+      const dominion = currentState.wave.afterburnDominion;
+      return {
+        label: "Dominion Break",
+        status: dominion.claimed ? "claimed" : dominion.deployed ? "cache live" : "elite trigger",
+        note: dominion.deployed
+          ? "cache를 집으면 다음 bracket 하나가 victory lap으로 바뀐다."
+          : "이번 전투 첫 elite가 dominion cache를 떨어뜨린다.",
+      };
+    }
+    if (currentState.phase === "wave" && currentState.wave && currentState.wave.combatCache) {
+      const combatCache = currentState.wave.combatCache;
+      return {
+        label: shouldUseLateFieldCache(currentState.waveIndex + 2) ? "Arsenal Cache" : "Combat Cache",
+        status: combatCache.claimed ? "claimed" : combatCache.deployed ? "live" : "elite trigger",
+        note: combatCache.deployed
+          ? "현장 cache 하나를 집으면 다음 웨이브가 포지 정지 없이 직결된다."
+          : "이번 웨이브 첫 elite가 live cache를 떨어뜨린다.",
+      };
+    }
+    if (currentState.phase === "wave" && currentState.wave && currentState.wave.blackLedgerRaid) {
+      return {
+        label: "Black Ledger Raid",
+        status: currentState.wave.blackLedgerRaid.salvageWave ? "jackpot live" : "tempo live",
+        note: currentState.wave.blackLedgerRaid.note,
+      };
+    }
+    if (currentState.phase === "wave" && currentState.wave && currentState.wave.bastionPactDebt) {
+      return {
+        label: "Siege Debt",
+        status: `${currentState.wave.bastionPactDebt.wavesRemaining} left`,
+        note: "greed 청구서가 활성화되어 적 밀도와 위험이 같이 올라간다.",
+      };
+    }
+    if (currentState.overcommit.active) {
+      return {
+        label: "Overcommit",
+        status: currentState.overcommit.targetDefeated ? "salvage sweep" : "marked elite hunt",
+        note: currentState.overcommit.targetDefeated
+          ? "흩어진 contraband salvage를 전부 주워야 pursuit 계약이 열린다."
+          : "먼저 marked elite를 부숴 contraband salvage를 떨어뜨려야 한다.",
+      };
+    }
+    if (
+      currentState.build.doctrinePursuitCommitted &&
+      pursuit &&
+      !currentState.build.doctrineChaseClaimed
+    ) {
+      return {
+        label: pursuit.shortLabel,
+        status: `${currentState.build.doctrinePursuitProgress}/${pursuit.goal}`,
+        note: currentState.doctrinePursuit.active
+          ? `이번 웨이브 marked elite를 잡고 ${pursuit.shardLabel}를 회수해야 한다.`
+          : "남은 웨이브 안에 shard를 못 모으면 조기 monster form이 닫힌다.",
+      };
+    }
+    if (
+      currentState.phase === "wave" &&
+      currentState.wave &&
+      currentState.wave.apexPredator &&
+      !currentState.wave.apexPredator.defeated
+    ) {
+      return {
+        label: "Apex Predator",
+        status: currentState.wave.apexPredator.spawned ? "live" : "inbound",
+        note: currentState.wave.apexPredator.spawned
+          ? "roaming apex가 구조물 없이 옆구리를 찌르므로 rotate route를 길게 유지해야 한다."
+          : "웨이브 후반 apex가 난입한다. 미리 회전선을 확보해야 한다.",
+      };
+    }
+    if (getRiskMutationQueuedLevel(currentState.build) > 0) {
+      return {
+        label: "Risk Tax",
+        status: getRiskMutationTierLabel(getRiskMutationQueuedLevel(currentState.build)),
+        note: "다음 웨이브에 적 예산, active cap, hazard count가 함께 오른다.",
+      };
+    }
+    return null;
+  }
+
   function getRunGrade(result) {
     if (result.victory && result.scrapBanked >= 28 && result.overdrivesUsed >= 2) {
       return { grade: "S", note: "압박 구간을 안정적으로 봉인한 러닝." };
@@ -18779,11 +18940,6 @@
         : state.player.drive / 100;
     const traitLabels = getWeaponTraitLabels(state.weapon);
     const hazardStatus = describeHazardState(state);
-    const supportSystemSummary = getSupportSystemSummary(state.supportSystem);
-    const kilnFieldSummary =
-      state.player.bastionFieldTime > 0
-        ? `거점장 복귀 · 피해 -${Math.round((state.player.bastionDamageMitigation || 0) * 100)}% · 냉각 가속`
-        : null;
 
     elements.waveLabel.textContent = waveLabel;
     elements.hpStat.textContent = `${Math.ceil(state.player.hp)} / ${state.player.maxHp}`;
@@ -18835,111 +18991,43 @@
 
     const activeCore = CORE_DEFS[state.build.coreId];
     const weapon = state.weapon;
+    const dominantForm = getDominantFormSummary(state.build, weapon, state.waveIndex + 1);
+    const nextBreakpoint = getNextBreakpointSummary(state.build, weapon, state.waveIndex + 1);
+    const liveSideBet = getLiveSideBetSummary(state);
     const traitSummary = traitLabels.join(" · ");
-    const affixSummary = weapon.affixLabels.length ? weapon.affixLabels.join(" · ") : "속성 없음";
-    const evolutionSummary = weapon.evolutionLabel
-      ? `${weapon.evolutionLabel} · ${weapon.evolutionTraitLabel}`
-      : null;
-    const doctrineSummary = weapon.doctrineFormLabel
-      ? `${weapon.doctrineFormLabel} · ${weapon.doctrineTraitLabel}`
-      : null;
-    const lateAscensionSummary = weapon.lateAscensionLabel
-      ? `${weapon.lateAscensionLabel} · ${weapon.lateAscensionTraitLabel}`
-      : null;
-    const afterburnDominionSummary = weapon.afterburnDominionLabel
-      ? `${weapon.afterburnDominionLabel} · ${weapon.afterburnDominionTraitLabel}`
-      : null;
-    const illegalOverclockSummary = weapon.illegalOverclockLabel
-      ? `${weapon.illegalOverclockLabel} · ${weapon.illegalOverclockTraitLabel}`
-      : null;
-    const riskMutationSummary = weapon.riskMutationLabel
-      ? `${weapon.riskMutationLabel} · ${weapon.riskMutationTraitLabel}`
-      : null;
-    const apexMutationSummary = weapon.apexMutationLabel
-      ? `${weapon.apexMutationLabel} · ${weapon.apexMutationTraitLabel}`
-      : null;
-    const lateFieldMutationSummary = weapon.lateFieldMutationLabel
-      ? `${weapon.lateFieldMutationLabel} · ${weapon.lateFieldMutationTraitLabel}`
-      : null;
-    const lateFieldConvergenceSummary = weapon.lateFieldConvergenceLabel
-      ? `${weapon.lateFieldConvergenceLabel} · ${weapon.lateFieldConvergenceTraitLabel}`
-      : null;
-    const lateFieldAegisSummary = getLateFieldAegisLevel(state.build) > 0
-      ? `${getLateFieldAegisTierLabel(getLateFieldAegisLevel(state.build))} · guard plate ${state.player ? state.player.fieldAegisCharge || 0 : 0}/${getLateFieldAegisMaxCharges(state.build)}`
-      : null;
-    const capstoneSummary = weapon.capstoneLabel
-      ? `${weapon.capstoneLabel} · ${weapon.capstoneTraitLabel}`
-      : null;
-    const stormArtilleryEndformSummary = getStormArtilleryAfterburnEndform(state.build)
-      ? `${getStormArtilleryAfterburnEndform(state.build).bodyLabel} · ${getStormArtilleryAfterburnEndform(state.build).bodyText}`
-      : null;
+    const bodyForm = getDoctrineBodyForm(state.build);
+    const headlineLabel =
+      weapon.afterburnDominionLabel ||
+      weapon.afterburnOverdriveLabel ||
+      weapon.lateAscensionLabel ||
+      weapon.capstoneLabel ||
+      weapon.doctrineFormLabel ||
+      weapon.evolutionLabel ||
+      activeCore.label;
     if (elements.activeCore) {
       elements.activeCore.innerHTML = `
         <div class="summary-head">
           <div>
             <p class="forge-card__tag">${activeCore.tag}</p>
-            <h3>${activeCore.label}</h3>
+            <h3>${dominantForm.label}</h3>
           </div>
           <span class="summary-chip ${
             weapon.benchSyncLevel > 0 ? "summary-chip--hot" : ""
           }">${weapon.tierLabel}</span>
         </div>
         <div class="status-list">
-          ${createStatusRow("위력", String(weapon.damage))}
-          ${createStatusRow("연사", `${weapon.cooldown}s`)}
-          ${createStatusRow("발열", String(weapon.heatPerShot))}
-          ${weapon.lateAscensionLabel ? createStatusRow("Ascension", weapon.lateAscensionLabel) : ""}
-          ${createStatusRow("등급", `${weapon.tierLabel} / ${weapon.benchSyncLabel}`)}
+          ${createStatusRow("Core", activeCore.label)}
+          ${createStatusRow("Body", bodyForm ? bodyForm.label : headlineLabel)}
+          ${createStatusRow("Fire Rule", traitSummary || "직선 탄도")}
+          ${createStatusRow("Next Break", nextBreakpoint.label)}
         </div>
         <div class="mini-pill-row">
-          ${
-            traitLabels.length
-              ? traitLabels.map((label) => createMiniPill("TRAIT", label, "accent")).join("")
-              : createMiniPill("TRAIT", "직선 탄도")
-          }
-          ${weapon.evolutionLabel ? createMiniPill("EVO", weapon.evolutionLabel, "accent") : ""}
-          ${weapon.doctrineFormLabel ? createMiniPill("DOC", weapon.doctrineFormLabel, "hot") : ""}
-          ${weapon.lateAscensionLabel ? createMiniPill("ASCEND", weapon.lateAscensionLabel, "hot") : ""}
-          ${weapon.afterburnDominionLabel ? createMiniPill("DOM", weapon.afterburnDominionLabel, "hot") : ""}
-          ${weapon.lateFieldMutationLabel ? createMiniPill("FIELD", weapon.lateFieldMutationLabel, "hot") : ""}
-          ${weapon.lateFieldConvergenceLabel ? createMiniPill("SYNC", weapon.lateFieldConvergenceLabel, "accent") : ""}
-          ${getLateFieldAegisLevel(state.build) > 0 ? createMiniPill("AEGIS", `MK ${getLateFieldAegisLevel(state.build)}`, "cool") : ""}
-          ${
-            weapon.riskMutationLabel || weapon.illegalOverclockLabel || weapon.apexMutationLabel
-              ? createMiniPill(
-                  "MOLT",
-                  weapon.riskMutationLabel
-                    ? `${getRiskMutationTierLabel(weapon.riskMutationLevel)}${weapon.illegalOverclockLabel ? ` · ${weapon.illegalOverclockLabel}` : ""}`
-                    : weapon.apexMutationLabel || weapon.illegalOverclockLabel,
-                  "hot"
-                )
-              : ""
-          }
-          ${capstoneSummary ? createMiniPill("CAP", weapon.capstoneLabel, "hot") : ""}
+          ${createMiniPill(getHeadlineFormTierLabel(getHeadlineFormTier(state.build)), headlineLabel, "hot")}
           ${state.supportSystem ? createMiniPill("SYS", state.supportSystem.label, "accent") : ""}
-          ${weapon.affixLabels.map((label) => createMiniPill("속성", label, "cool")).join("")}
+          ${liveSideBet ? createMiniPill("BET", `${liveSideBet.label} · ${liveSideBet.status}`, "cool") : ""}
+          ${weapon.affixLabels.slice(0, 2).map((label) => createMiniPill("속성", label, "cool")).join("")}
         </div>
-        <p class="summary-note">${[
-          affixSummary,
-          evolutionSummary,
-          doctrineSummary,
-          lateAscensionSummary,
-          afterburnDominionSummary,
-          lateFieldMutationSummary,
-          lateFieldConvergenceSummary,
-          lateFieldAegisSummary,
-          illegalOverclockSummary,
-          riskMutationSummary,
-          apexMutationSummary,
-          capstoneSummary,
-          stormArtilleryEndformSummary,
-          supportSystemSummary,
-          getDoctrineForgePursuitDef(state.build) && state.build.doctrinePursuitCommitted
-            ? `${getDoctrineForgePursuitDef(state.build).shortLabel} ${state.build.doctrinePursuitProgress}/${getDoctrineForgePursuitDef(state.build).goal}${state.build.doctrineChaseClaimed ? " 완성" : state.build.doctrinePursuitExpired ? " 실패" : ""}`
-            : null,
-          kilnFieldSummary,
-          `보관 ${weapon.benchCopies}개 대기`,
-        ].filter(Boolean).join(" · ")}</p>
+        <p class="summary-note">${dominantForm.detail} 다음 추격점은 ${nextBreakpoint.label}이며, ${nextBreakpoint.detail}</p>
       `;
     }
 
@@ -18977,341 +19065,9 @@
     const enemiesLeft = Math.max(0, state.wave ? state.wave.spawnBudget - state.wave.spawned : 0);
     if (elements.waveObjective) {
       const combatBand = getCombatBandState(state.build, state.weapon, state.waveIndex + 1);
-      const bandRows = [];
-      const overcommitRows = [];
-      const pursuitRows = [];
-      const combatCacheRows = [];
-      const lateAscensionRows = [];
-      const pactRows = [];
-      const illegalOverclockRows = [];
-      const riskMutationRows = [];
-      const apexRows = [];
-      const catalystCrucibleRows = [];
-      const ascensionRows = [];
-      let overcommitNote = "";
-      let pursuitNote = "";
-      let combatCacheNote = "";
-      let lateAscensionNote = "";
-      let pactNote = "";
-      let illegalOverclockNote = "";
-      let riskMutationNote = "";
-      let apexNote = "";
-      let catalystCrucibleNote = "";
-      let ascensionNote = "";
-      if (combatBand) {
-        bandRows.push(createStatusRow("Combat Band", combatBand.label));
-        bandRows.push(createStatusRow("Headline", combatBand.headline));
-      }
-      if (state.wave && state.wave.blackLedgerRaid) {
-        pactRows.push(
-          createStatusRow(
-            "Ledger Raid",
-            state.wave.blackLedgerRaid.salvageWave ? "jackpot live" : "tempo live"
-          )
-        );
-        pactRows.push(
-          createStatusRow("Payout", `+${Math.round(state.wave.blackLedgerRaid.payoutScrap)} scrap`)
-        );
-        pactNote = state.wave.blackLedgerRaid.note;
-      }
-      if (state.wave && state.wave.bastionPactDebt) {
-        pactRows.push(createStatusRow("Siege Debt", `${state.wave.bastionPactDebt.wavesRemaining} left`));
-        pactRows.push(createStatusRow("Debt Tax", "+24% damage / +4 cap"));
-        if (!pactNote) {
-          pactNote = "Siege Salvage Pact 후유증이 유지 중이다. 적 밀도와 위험이 같이 올라 scrap greed의 청구서를 지금 받는다.";
-        }
-      } else if ((state.build.bastionPactDebtWaves || 0) > 0) {
-        pactRows.push(createStatusRow("Siege Debt", `${state.build.bastionPactDebtWaves} queued`));
-        if (!pactNote) {
-          pactNote = "다음 웨이브에 Siege Debt가 다시 이어진다.";
-        }
-      }
-      if (state.overcommit.active) {
-        overcommitRows.push(
-          createStatusRow(
-            "Overcommit",
-            state.overcommit.targetDefeated ? "salvage 회수" : "marked elite 추적"
-          )
-        );
-        overcommitRows.push(
-          createStatusRow(
-            "Contraband",
-            `${state.overcommit.salvageCollected}/${state.overcommit.salvageRequired}`
-          )
-        );
-        overcommitNote = state.overcommit.targetDefeated
-          ? "흩어진 salvage를 전부 주워야 Wave 6 Bastion Draft가 Forge Pursuit 계약으로 변한다."
-          : "Wave 5 marked elite를 먼저 부수고 contraband salvage를 전부 회수해야 한다.";
-      } else if (state.build.overcommitUnlocked) {
-        overcommitRows.push(createStatusRow("Overcommit", "해금"));
-        overcommitRows.push(createStatusRow("Contraband", "Pursuit ready"));
-        overcommitNote = "다음 Bastion Draft에서 Forge Pursuit 계약이 열린다.";
-      } else if (state.build.overcommitResolved) {
-        overcommitRows.push(createStatusRow("Overcommit", "실패"));
-        overcommitRows.push(createStatusRow("Contraband", "봉인"));
-        overcommitNote = "이번 런에서는 Forge Pursuit 계약을 더는 열 수 없다.";
-      }
-      const pursuit = getDoctrineForgePursuitDef(state.build);
-      if (state.build.doctrinePursuitCommitted && pursuit && !state.build.doctrineChaseClaimed) {
-        pursuitRows.push(createStatusRow("Forge Pursuit", pursuit.shortLabel));
-        pursuitRows.push(
-          createStatusRow("Frame Shards", `${state.build.doctrinePursuitProgress}/${pursuit.goal}`)
-        );
-        pursuitNote = state.doctrinePursuit.active
-          ? `이번 웨이브 marked elite를 잡고 ${pursuit.shardLabel}를 회수해야 ${pursuit.shortLabel}이 전진한다.`
-          : state.build.doctrinePursuitExpired
-            ? `${pursuit.shortLabel} pursuit가 끊겼다. 조기 monster form은 이번 런에서 끝났다.`
-            : `${pursuit.shortLabel} pursuit 진행 중. Wave 6-8 shard ${pursuit.goal}개를 모아야 조기 완성이 열린다.`;
-      } else if (state.build.doctrineChaseClaimed && pursuit) {
-        pursuitRows.push(createStatusRow("Forge Pursuit", `${pursuit.shortLabel} 완성`));
-        pursuitRows.push(createStatusRow("Frame Shards", `${pursuit.goal}/${pursuit.goal}`));
-        pursuitNote = `${pursuit.shortLabel} 완성. 조기 monster form이 이미 전장을 바꾸고 있다.`;
-      }
-      if (state.phase === "wave" && state.wave && state.wave.doctrineAscension) {
-        const ascension = state.wave.doctrineAscension;
-        const doctrine = getBastionDoctrineDef(state.build);
-        ascensionRows.push(
-          createStatusRow(
-            "Live Ascension",
-            ascension.claimed ? "회수 완료" : ascension.deployed ? "split live" : "첫 elite 대기"
-          )
-        );
-        ascensionRows.push(
-          createStatusRow(
-            "Doctrine",
-            ascension.choices.length > 1
-              ? "2-way split"
-              : (doctrine && doctrine.label) || "Doctrine"
-          )
-        );
-        ascensionNote = ascension.claimed
-          ? "이번 웨이브의 doctrine ascension cache는 닫혔다. 아직 capstone을 못 집었다면 다음 late wave에서 다시 찢어낼 수 있다."
-          : ascension.deployed
-            ? "드롭된 doctrine cache 중 하나만 회수할 수 있다. 무엇을 집느냐에 따라 남은 late waves의 주포와 차체가 갈라진다."
-            : "이번 late wave 첫 marked elite가 doctrine ascension cache를 떨어뜨린다. 전장 한복판에서 하나를 직접 회수해야 교리 monster form이 완성된다.";
-      } else if (state.phase === "wave" && state.wave && state.wave.afterburnAscension) {
-        const ascension = state.wave.afterburnAscension;
-        ascensionRows.push(
-          createStatusRow(
-            "Ascension",
-            ascension.claimed ? "다음 웨이브 재개" : ascension.deployed ? "split live" : "첫 elite 대기"
-          )
-        );
-        ascensionRows.push(createStatusRow("Doctrine", "Sky / Spire"));
-        ascensionNote = ascension.claimed
-          ? "이번 웨이브의 Storm Artillery split cache는 닫혔다. 아직 endform을 못 골랐다면 다음 afterburn에서 다시 뜯어낼 수 있다."
-          : ascension.deployed
-            ? "두 split cache 중 하나만 회수할 수 있다. 어떤 쪽을 집느냐에 따라 남은 afterburn의 주포와 body plan이 갈라진다."
-            : "이번 afterburn 첫 elite가 Storm Artillery split cache를 떨어뜨린다. 전장 한복판에서 최종 weapon/body endform 하나를 직접 회수해야 한다.";
-      } else {
-        const endform = getStormArtilleryAfterburnEndform(state.build);
-        const capstone = getDoctrineCapstoneDef(state.build);
-        if (endform && capstone) {
-          ascensionRows.push(createStatusRow("Ascension", endform.bodyLabel || "endform live"));
-          ascensionRows.push(createStatusRow("Doctrine", capstone.title));
-          ascensionNote = endform.statusNote;
-        }
-      }
-      if (state.phase === "wave" && state.wave && state.wave.lateAscension) {
-        const lateAscension = state.wave.lateAscension;
-        lateAscensionRows.push(
-          createStatusRow(
-            "Ascension Core",
-            lateAscension.claimed ? "회수 완료" : lateAscension.deployed ? "split live" : "첫 elite 대기"
-          )
-        );
-        lateAscensionRows.push(createStatusRow("Form", "2-way split"));
-        lateAscensionNote = lateAscension.claimed
-          ? "이번 웨이브의 Ascension Core split은 닫혔다. 아직 못 집었다면 다음 late wave에서 다시 찢어낼 수 있다."
-          : lateAscension.deployed
-            ? "두 split core 중 하나만 회수할 수 있다. 어떤 형태를 집느냐에 따라 남은 late waves의 주포와 차체 규칙이 갈라진다."
-            : "이번 late wave 첫 elite가 Ascension Core split을 떨어뜨린다. 전장 한복판에서 하나를 직접 회수해야 남은 run의 주포/차체가 완성된다.";
-      } else if (state.weapon.lateAscensionLabel) {
-        lateAscensionRows.push(createStatusRow("Ascension Core", state.weapon.lateAscensionLabel));
-        lateAscensionRows.push(createStatusRow("Support Sync", `${getLateAscensionSupportLevel(state.build)} uplink`));
-        lateAscensionNote = state.weapon.lateAscensionStatusNote;
-      }
-      if (state.phase === "wave" && state.wave && state.wave.finaleMutation) {
-        const finaleMutation = state.wave.finaleMutation;
-        combatCacheRows.push(
-          createStatusRow(
-            "Act 4 Splice",
-            finaleMutation.claimed ? "회수 완료" : finaleMutation.deployed ? "cache live" : "첫 elite 대기"
-          )
-        );
-        combatCacheRows.push(createStatusRow("Finale", "1 pick"));
-        combatCacheNote = finaleMutation.claimed
-          ? "이번 웨이브의 Act 4 splice는 이미 닫혔다. 아직 최종 각인을 못 골랐다면 다음 Afterburn에서 다시 찢어낼 수 있다."
-          : finaleMutation.deployed
-            ? "드롭된 mutation cache 중 하나만 회수할 수 있다. 무엇을 집느냐에 따라 남은 Afterburn bracket의 최종 각인이 달라진다."
-            : "이번 Afterburn 첫 elite가 Act 4 mutation cache를 떨어뜨린다. 마지막 포지 없이 하나의 splice를 전장에서 직접 잠가야 하며, 놓치면 다음 Afterburn에서 다시 뜬다.";
-      } else if (state.postCapstone && state.postCapstone.active && getSelectedFinaleVariant(state.build)) {
-        const finaleVariant = getSelectedFinaleVariant(state.build);
-        combatCacheRows.push(createStatusRow("Act 4 Splice", finaleVariant.title || finaleVariant.label));
-        combatCacheRows.push(createStatusRow("Finale", "locked"));
-        combatCacheNote = "Act 4 splice가 이미 잠겨 남은 Afterburn escalation 전체가 이 최종 각인 위에서 가속 중이다.";
-      }
-      if (state.phase === "wave" && state.wave && state.wave.afterburnOverdrive) {
-        const overdrive = state.wave.afterburnOverdrive;
-        combatCacheRows.push(
-          createStatusRow(
-            "Endform Overdrive",
-            overdrive.claimed ? "회수 완료" : overdrive.deployed ? "cache live" : "첫 elite 대기"
-          )
-        );
-        combatCacheRows.push(createStatusRow("Jump", "1 pick"));
-        combatCacheNote = overdrive.claimed
-          ? "이번 웨이브의 Endform Overdrive 창구는 닫혔다. 아직 jump를 못 집었다면 다음 Afterburn elite에서 다시 찢어낼 수 있다."
-          : overdrive.deployed
-            ? "드롭된 overdrive cache 중 하나만 회수할 수 있다. 어떤 jump를 집느냐에 따라 남은 Afterburn의 차체와 보조 포문 규칙이 다시 바뀐다."
-            : "Afterburn 중반부터 첫 elite가 Endform Overdrive cache를 떨어뜨린다. 살아남으려면 중반 endurance 한복판에서 마지막 jump를 직접 회수해야 한다.";
-      } else if (state.postCapstone && state.postCapstone.active && state.weapon.afterburnOverdriveLabel) {
-        combatCacheRows.push(createStatusRow("Endform Overdrive", state.weapon.afterburnOverdriveLabel));
-        combatCacheRows.push(createStatusRow("Jump", "locked"));
-        combatCacheNote = state.weapon.afterburnOverdriveStatusNote || "Afterburn overdrive가 이미 잠겨 남은 연전 전체를 새 실루엣으로 밀어붙인다.";
-      }
-      if (state.phase === "wave" && state.wave && state.wave.afterburnDominion) {
-        const dominion = state.wave.afterburnDominion;
-        combatCacheRows.push(
-          createStatusRow(
-            "Dominion Break",
-            dominion.claimed ? "회수 완료" : dominion.deployed ? "cache live" : "첫 elite 대기"
-          )
-        );
-        combatCacheRows.push(createStatusRow("Victory Lap", "1 wave"));
-        combatCacheNote = dominion.claimed
-          ? "이번 웨이브의 Dominion Break는 닫혔다. 다음 bracket 하나는 추가 목표가 걷힌 지배 구간으로 재편된다."
-          : dominion.deployed
-            ? "주무장 전용 dominion cache가 노출됐다. 회수하면 다음 웨이브 하나가 캐시와 apex 없이 새 endform을 즐기는 victory lap으로 바뀐다."
-            : "Afterburn 후반 첫 elite가 Dominion Break cache를 떨어뜨린다. 이번 전투에서만 다음 bracket의 판 자체를 지배 구간으로 바꿀 수 있다.";
-      } else if (state.wave && state.wave.dominionVictoryLapActive && state.weapon.afterburnDominionLabel) {
-        combatCacheRows.push(createStatusRow("Dominion Run", state.weapon.afterburnDominionLabel));
-        combatCacheRows.push(createStatusRow("Clutter", "cleared"));
-        combatCacheNote =
-          state.weapon.afterburnDominionStatusNote ||
-          "Dominion 차체가 목적지 세금을 잠시 밀어내고 있다. 이번 한 웨이브는 새 endform을 우월감 있게 누르는 승리 랩이다.";
-      }
-      if (state.phase === "wave" && state.wave && state.wave.combatCache) {
-        const combatCache = state.wave.combatCache;
-        combatCacheRows.push(
-          createStatusRow(
-            "Combat Cache",
-            combatCache.claimed ? "회수 완료" : combatCache.deployed ? "전장 노출" : "첫 elite 대기"
-          )
-        );
-        combatCacheRows.push(
-          createStatusRow(
-            shouldUseLateFieldCache(state.waveIndex + 2) ? "Arsenal" : "Forge Skip",
-            combatCache.claimed ? "다음 웨이브 직결" : shouldUseLateFieldCache(state.waveIndex + 2) ? "대형 패키지 1픽" : "회수 시 직결"
-          )
-        );
-        combatCacheNote = combatCache.claimed
-          ? "이번 웨이브의 live cache를 이미 잠갔다. 정리 후 Field Cache 정지 없이 다음 웨이브로 즉시 이어진다."
-          : combatCache.deployed
-            ? shouldUseLateFieldCache(state.waveIndex + 2)
-              ? "드롭된 Arsenal Cache 중 하나만 회수할 수 있다. 이번 late cache는 주포 변이, guard plate, 블랙마켓 계약 중 하나를 즉시 잠가 후반 곡선을 다시 밀어 올리고 다음 raid 목적지까지 바꾼다."
-              : "드롭된 Combat Cache 중 하나만 회수할 수 있다. 놓치면 이번 웨이브의 현장 spike는 사라진다."
-            : shouldUseLateFieldCache(state.waveIndex + 2)
-              ? "이번 짝수 late wave 첫 elite가 Arsenal Cache를 떨어뜨린다. 회수에 성공하면 후반 대형 패키지 1장을 바로 잠근 채 다음 웨이브 raid와 변이 곡선까지 직결된다."
-              : "이번 웨이브 첫 elite가 Combat Cache를 떨어뜨린다. 회수에 성공하면 Field Cache 정지 없이 다음 웨이브로 직결된다.";
-      }
-      if (state.build.illegalOverclockId || getRiskMutationLevel(state.build) > 0) {
-        const illegalOverclock = getIllegalOverclockDef(state.build);
-        illegalOverclockRows.push(
-          createStatusRow(
-            "Dominant Mutation",
-            getRiskMutationLevel(state.build) > 0
-              ? getRiskMutationTierLabel(getRiskMutationLevel(state.build))
-              : illegalOverclock
-                ? illegalOverclock.label
-                : "접속"
-          )
-        );
-        illegalOverclockRows.push(
-          createStatusRow(
-            "Splice",
-            illegalOverclock
-              ? `${illegalOverclock.label}${getIllegalOverclockMutationLevel(state.build) > 0 ? ` · ${getIllegalMutationTierLabel(getIllegalOverclockMutationLevel(state.build))}` : ""}`
-              : "growing"
-          )
-        );
-        illegalOverclockNote =
-          getRiskMutationLevel(state.build) > 0
-            ? `${
-                state.weapon.riskMutationStatusNote || "주 변이가 주무장 포문과 차체 프레임을 유지 중이다."
-              } ${
-                illegalOverclock
-                  ? `${illegalOverclock.label}는 이제 별도 black-site 선택이 아니라 이 변이 레인 안에 접혀 있다.`
-                  : ""
-              }`
-            : illegalOverclock
-              ? illegalOverclock.statusNote
-              : "불법 과투입이 활성화되어 있다.";
-      }
-      if (getRiskMutationLevel(state.build) > 0) {
-        riskMutationRows.push(
-          createStatusRow("Wave Tax", getRiskMutationTierLabel(getRiskMutationLevel(state.build)))
-        );
-        riskMutationRows.push(
-          createStatusRow(
-            "Tax",
-            getRiskMutationQueuedLevel(state.build) > 0
-              ? `Wave tax armed`
-              : "paid"
-          )
-        );
-        riskMutationNote =
-          getRiskMutationQueuedLevel(state.build) > 0
-            ? `${getRiskMutationTierLabel(getRiskMutationQueuedLevel(state.build))} 압박세가 다음 웨이브에 걸려 있다. 적 예산, active cap, hazard count가 함께 뛴다.`
-            : state.weapon.riskMutationStatusNote || "Risk mutation이 주무장 보조 포문과 기동 프레임을 유지 중이다.";
-      }
-      if (state.wave && state.wave.apexPredator && !state.wave.apexPredator.defeated) {
-        apexRows.push(
-          createStatusRow(
-            "Apex",
-            state.wave.apexPredator.spawned ? "Cinder Maw live" : "breach inbound"
-          )
-        );
-        apexRows.push(
-          createStatusRow(
-            "Predator Molt",
-            `${getApexMutationLevel(state.build)}/${MAX_APEX_MUTATION_LEVEL}`
-          )
-        );
-        apexNote = state.wave.apexPredator.spawned
-          ? state.wave.apexPredator.contractArmed
-            ? "Predator Bait가 점화된 Cinder Maw다. 이번 웨이브는 적 밀도와 hazard도 같이 올라, apex를 자르러 나갈 타이밍이 곧 생존 루트를 결정한다."
-            : "Cinder Maw는 구조물을 남기지 않고 옆구리를 파고들며 charge를 반복한다. 늦게 반응해 한 lane을 붙들면 곧바로 압박이 닫힌다."
-          : state.wave.apexPredator.contractArmed
-            ? "Predator Bait 계약으로 roaming apex가 훨씬 일찍 난입한다. 지금 길을 넓혀 두지 못하면 body splice를 노리기도 전에 외곽이 닫힌다."
-            : "이 웨이브 후반에 roaming apex가 난입한다. 구조물 정리 순서보다 먼저, 어디로 미리 rotate할지 읽어 둬야 한다.";
-      } else if (getApexMutationLevel(state.build) > 0) {
-        apexRows.push(createStatusRow("Apex", `Predator Molt ${getApexMutationLevel(state.build)}`));
-        apexRows.push(createStatusRow("Predator", "body splice live"));
-        apexNote = "Cinder Maw body splice가 살아 있어 주무장 측면 배럴과 차체 돌진 프레임이 유지 중이다.";
-      }
-      if (state.catalystCrucible.active) {
-        catalystCrucibleRows.push(
-          createStatusRow(
-            "Crucible",
-            state.catalystCrucible.cacheDropped ? "ignite cache" : "core breach"
-          )
-        );
-        catalystCrucibleRows.push(
-          createStatusRow("Mutation", `${CATALYST_REFORGE_DEFS[state.build.coreId].label} live`)
-        );
-        catalystCrucibleNote = state.catalystCrucible.cacheDropped
-          ? "붕괴한 코어 자리에서 세 개의 splice cache 중 하나를 직접 주워야 즉시 변이와 systems bet가 함께 잠긴다. 하나를 집는 순간 나머지 둘은 닫힌다."
-          : "Catalyst Crucible 코어를 먼저 찢어야 한다. 점거 구역 안으로 깊게 들어갈수록 세 갈래 ascension cache와 실패 리스크가 같이 커진다.";
-      } else if (state.catalystCrucible.status === "claimed") {
-        catalystCrucibleRows.push(createStatusRow("Crucible", "claimed"));
-        catalystCrucibleRows.push(createStatusRow("Mutation", "live"));
-        catalystCrucibleNote = "전장 점화 성공. 남은 웨이브는 capstone form과 잠근 systems bet 위에서만 전개되며 몸체는 영구 손상을 안고 간다.";
-      } else if (state.catalystCrucible.status === "failed") {
-        catalystCrucibleRows.push(createStatusRow("Crucible", "failed"));
-        catalystCrucibleRows.push(createStatusRow("Mutation", "held"));
-        catalystCrucibleNote = "이번 웨이브 live splice는 놓쳤다. 촉매는 마지막 포지까지 들고 가지만 Act 3의 독점 systems bet는 사라졌다.";
-      }
+      const objectiveNote = liveSideBet
+        ? liveSideBet.note
+        : hazardStatus.note || (combatBand ? combatBand.detail : nextBreakpoint.detail);
       elements.waveObjective.innerHTML = `
         <div class="summary-head">
           <strong>${waveConfig.label}</strong>
@@ -19321,22 +19077,13 @@
         </div>
         <div class="status-list">
           ${createStatusRow("남은 스폰", String(enemiesLeft))}
-          ${createStatusRow("현재 적", String(state.enemies.length))}
-          ${createStatusRow("드랍", String(state.drops.length))}
-          ${createStatusRow(hazardStatus.detailLabel, hazardStatus.detailValue)}
-          ${bandRows.join("")}
-          ${combatCacheRows.join("")}
-          ${lateAscensionRows.join("")}
-          ${illegalOverclockRows.join("")}
-          ${riskMutationRows.join("")}
-          ${apexRows.join("")}
-          ${catalystCrucibleRows.join("")}
-          ${ascensionRows.join("")}
-          ${pactRows.join("")}
-          ${overcommitRows.join("")}
-          ${pursuitRows.join("")}
+          ${createStatusRow("Immediate Threat", `${hazardStatus.detailLabel} ${hazardStatus.detailValue}`)}
+          ${createStatusRow("Combat Band", combatBand ? `${combatBand.label} · ${combatBand.headline}` : waveConfig.label)}
+          ${createStatusRow("Current Form", dominantForm.label)}
+          ${createStatusRow("Next Break", nextBreakpoint.label)}
+          ${createStatusRow("Side Bet", liveSideBet ? `${liveSideBet.label} · ${liveSideBet.status}` : "quiet")}
         </div>
-        <p class="summary-note">${combatBand ? combatBand.detail : catalystCrucibleNote || ascensionNote || lateAscensionNote || riskMutationNote || apexNote || illegalOverclockNote || combatCacheNote || pactNote || pursuitNote || overcommitNote || hazardStatus.note}</p>
+        <p class="summary-note">${objectiveNote}</p>
       `;
     }
 
@@ -19380,7 +19127,7 @@
         }">${
           state.player.overheated
             ? "사격 정지: 열을 비워야 한다."
-            : `${weapon.evolutionStatusNote ? `${weapon.evolutionStatusNote} ` : ""}${weapon.doctrineStatusNote ? `${weapon.doctrineStatusNote} ` : ""}${weapon.lateAscensionStatusNote ? `${weapon.lateAscensionStatusNote} ` : ""}${weapon.afterburnOverdriveStatusNote ? `${weapon.afterburnOverdriveStatusNote} ` : ""}${weapon.afterburnDominionStatusNote ? `${weapon.afterburnDominionStatusNote} ` : ""}${weapon.illegalOverclockStatusNote ? `${weapon.illegalOverclockStatusNote} ` : ""}${weapon.apexMutationStatusNote ? `${weapon.apexMutationStatusNote} ` : ""}${weapon.capstoneStatusNote ? `${weapon.capstoneStatusNote} ` : ""}${state.supportSystem ? `${state.supportSystem.statusNote} ` : ""}${hazardStatus.note} 자동 사격은 과열 전까지 유지된다.`
+            : `${dominantForm.detail} ${liveSideBet ? `${liveSideBet.label}: ${liveSideBet.note} ` : ""}${hazardStatus.note} 자동 사격은 과열 전까지 유지된다.`
         }</p>
       `;
     }
@@ -19400,7 +19147,6 @@
     }
     const activeCore = CORE_DEFS[state.build.coreId];
     const traitSummary = getWeaponTraitLabels(state.weapon).join(" · ") || "직선 탄도";
-    const chassisSummary = getChassisSummary(state.build);
     const forgeSystemSummary = getSupportSystemSummary(state.supportSystem);
     const supportBaySummary = `${getInstalledSupportSystems(state.build).length}/${getSupportBayCapacity(state.build)} 베이`;
     const benchEntries = getBenchEntries(state.build);
@@ -19418,7 +19164,6 @@
         : doctrinePursuit
           ? `${doctrinePursuit.shortLabel} 미계약`
           : "교리 pursuit 없음";
-    const wildcardSummary = getWildcardProtocolSummary(state.build);
     const forgeOptions = {
       finalForge: state.pendingFinalForge,
       nextWave: state.waveIndex + 2,
@@ -19426,19 +19171,14 @@
     };
     const armoryLabel = getArmoryLabel(forgeOptions);
     const roadmap = getBuildRoadmap(state.build, state.weapon, state.waveIndex + 2);
-    const evolutionLadder = getForgeEvolutionLadder(
-      state.build,
-      state.weapon,
-      state.supportSystem,
-      state.waveIndex + 2
-    );
     const activeSupportTrack = getForgeSupportTrackSnapshot(state.build, state.supportSystem);
-    const doctrineBodyForm = getDoctrineBodyForm(state.build);
-    const activeFormSummary = roadmap.activeForm || activeCore.label;
-    const dominantFormSummary = doctrineBodyForm
-      ? `${activeFormSummary} / ${doctrineBodyForm.label}`
-      : activeFormSummary;
-    const nextFormStep = roadmap.steps.find((step) => step.state !== "locked") || roadmap.steps[2] || null;
+    const dominantFormSummary = getDominantFormSummary(state.build, state.weapon, state.waveIndex + 2);
+    const nextFormStep = getNextBreakpointSummary(state.build, state.weapon, state.waveIndex + 2);
+    const liveSideBet = getLiveSideBetSummary(state) || {
+      label: activeSupportTrack.label,
+      status: activeSupportTrack.label === "Bare Hull" ? "quiet" : "armed",
+      note: activeSupportTrack.detail,
+    };
     const forgeModeLabel = state.pendingFinalForge
       ? "Final Forge"
       : state.forgeDraftType === "architecture_draft"
@@ -19476,12 +19216,6 @@
     elements.forgeSubtitle.textContent = `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. ${roadmap.prompt} ${choicePrompt}`;
     elements.forgeContext.innerHTML = `
       <article class="forge-context__card forge-context__card--span-two">
-        <p class="panel__eyebrow">Evolution Ladder</p>
-        <strong>${roadmap.pathLabel}</strong>
-        <p>참고선은 세 개뿐이다. 공세 실루엣, 생존 실루엣, 탐욕 계약이 어디까지 커질지만 먼저 보여 준다.</p>
-        <div class="evolution-lane-list">${createEvolutionLadderMarkup(evolutionLadder)}</div>
-      </article>
-      <article class="forge-context__card forge-context__card--span-two">
         <p class="panel__eyebrow">Transformation Spotlight</p>
         <strong>${
           state.forgeMaxSteps > 1 && state.forgeStep === 2
@@ -19496,27 +19230,26 @@
         ${createForgeSpotlightMarkup(state.forgeChoices)}
       </article>
       <article class="forge-context__card">
-        <p class="panel__eyebrow">Next Fight</p>
-        <strong>${nextFormStep ? nextFormStep.title : activeFormSummary}</strong>
-        <p>${nextFormStep ? nextFormStep.detail : roadmap.prompt}</p>
+        <p class="panel__eyebrow">Current Form</p>
+        <strong>${dominantFormSummary.label}</strong>
+        <p>${dominantFormSummary.detail}</p>
+        <p class="summary-note">${activeCore.label} · ${state.weapon.tierLabel} · ${traitSummary}</p>
+      </article>
+      <article class="forge-context__card">
+        <p class="panel__eyebrow">Next Breakpoint</p>
+        <strong>${nextFormStep.label}</strong>
+        <p>${nextFormStep.detail}</p>
         <p class="summary-note">${choicePrompt}</p>
       </article>
       <article class="forge-context__card">
-        <p class="panel__eyebrow">Dominant Form</p>
-        <strong>${dominantFormSummary}</strong>
-        <p>${activeCore.label} · ${state.weapon.tierLabel} · ${traitSummary}</p>
-      </article>
-      <article class="forge-context__card">
-        <p class="panel__eyebrow">Rider Rail</p>
-        <strong>${activeSupportTrack.label}</strong>
+        <p class="panel__eyebrow">Live Side Bet</p>
+        <strong>${liveSideBet.label}</strong>
         <div class="status-list">
-          ${createStatusRow("Main", dominantFormSummary)}
-          ${createStatusRow("Next", nextFormStep ? nextFormStep.title : activeFormSummary)}
-          ${createStatusRow("Support", activeSupportTrack.label)}
-          ${createStatusRow("Aux Rail", wildcardSummary)}
+          ${createStatusRow("Status", liveSideBet.status)}
+          ${createStatusRow("Rider", activeSupportTrack.label)}
           ${createStatusRow("Reserve", `${supportBaySummary} · 보관 ${benchEntries.length}종`)}
         </div>
-        <p>${activeSupportTrack.detail}</p>
+        <p>${liveSideBet.note}</p>
         <p class="summary-note">${forgeSystemSummary} · ${doctrinePursuitSummary} · ${catalystSummary} · 분해 예상 고철 ${getRecycleValue(state.build)}</p>
       </article>
     `;

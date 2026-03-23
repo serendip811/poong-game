@@ -13,7 +13,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: vertical-slice-to-alpha expansion.
-- Immediate priority: strengthen long-run build hunger, simplify reward readability, and turn added content into a coherent progression spine.
+- Immediate priority: consolidate Wave 5-12 into a readable progression spine with fewer concurrent systems before adding more branches.
 
 ## Release Gates
 
@@ -40,6 +40,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 02:10:00 KST
+  Findings:
+  - `playables/cinder-circuit/game.js` now has enough doctrines, caches, mutations, rider lanes, and post-capstone branches to imply depth, but the run fantasy is fragmenting. Players are asked to track too many parallel ladders instead of obsessing over one dominant chassis/weapon future and one secondary support layer.
+  - The larger arena helps, yet `territory`, `relay`, `salvage`, and `drift` still consume too much of the movement budget from the midgame onward. Compared with the cleaner space control and greed-routing windows in `Nova Drift` or `Brotato`, too many waves still feel like encounter upkeep instead of power expression.
+  - `updateHUD()` and `renderForgeOverlay()` still expose too much simultaneous state. Strong action-roguelite UI patterns frontload three things: immediate threat, current power identity, and next chase. Here the player is still reading administration for caches, mutations, pursuit, reserve state, and side contracts while trying to stay excited.
+  - The game has reached the point where adding more named systems is more likely to lower replay desire than raise it. The next ceiling increase is not another branch; it is proving that the existing midgame can be read instantly, played aggressively, and replayed for distinct build hunger.
+  Top Priority: Freeze new content branches for a pass and collapse Wave 5-12 into one cleaner midgame spine with fewer concurrent objective types, one visibly dominant main-form ladder, and a forge/HUD presentation that only foregrounds the current form, the next breakpoint, and the single live side bet.
+  Why Now: If Wave 8 already feels administratively saturated, a future 20-30 wave run will scale into fatigue before obsession.
+  Do Not Repeat: Do not answer this with another cache, draft, mutation, or support branch before one existing midgame route is genuinely clean and replayable.
+  Release Gate: Combat
 
 - 2026-03-23 23:58:00 KST
   Findings:
@@ -1381,6 +1392,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-23 18:17:04 KST
+  Changed: simplified the mid-run read in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `updateHUD()` and `renderForgeOverlay()` now foreground only three things: the current dominant form, the next breakpoint, and one live side bet. The combat HUD's old objective card no longer dumps pursuit/cache/mutation/admin rows all at once; it now shows `Immediate Threat`, `Combat Band`, `Current Form`, `Next Break`, and a single `Side Bet` chosen from the highest-priority live contract. The core summary was also collapsed into a chassis-first read, and the forge context was trimmed from ladder/admin cards down to `Transformation Spotlight`, `Current Form`, `Next Breakpoint`, and `Live Side Bet`. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to stop making players parse multiple parallel ladders in the middle of combat and between-wave rewards. The highest-value bounded interpretation was a presentation-side consolidation pass: keep the existing systems, but make the live read behave more like a `Hades` boon reveal plus `Nova Drift` current-form/next-chase framing, where the player can immediately answer "what am I now, what am I chasing next, and what one bet is live?" without reading the rest of the machine ledger.
+  Follow-up risk: this pass cuts the administrative read substantially, but it does not yet reduce the underlying number of midgame contracts in `Wave 5-12`; it only chooses one to foreground. A later combat pass should remove or merge at least one overlapping mid-run objective lane so the cleaner HUD is backed by a cleaner wave spine as well. Release Gate: `Combat`. For UI direction, this pass deliberately followed the appetite-first reward focus of `Hades` boon panels and the current-form / next-break clarity of `Nova Drift`.
 
 - 2026-03-24 05:05:00 KST
   Changed: frontloaded doctrine identity in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 3-5` main-weapon/body growth now lands before support modules can steal the spotlight. Each doctrine's first lock now upgrades the gun into a visibly louder early pattern (`Hunt Frame` becomes a triple hunting spread, `Kiln Frame` plants twin slag seeds, `Siege Frame` opens a three-line battery), and every doctrine now also gains a new stage-1 chassis form with immediate stat payoff plus an on-field silhouette pass before the old pursuit-complete stage-2 body arrives. In the same bounded pass I trimmed the forge context so the right-hand read now leads with `Dominant Form` and a slimmer rider rail summary instead of restating the whole system ledger, while [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now asserts the new stage-1 doctrine gun/body forms and their stat shifts. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
