@@ -6544,6 +6544,147 @@
     `;
   }
 
+  function getForgeSupportTrackSnapshot(build, supportSystem = null) {
+    const chassis = getChassisBreakpointDef(build);
+    const installedSupport = getInstalledSupportSystems(build);
+    const wildcardIds = getClaimedWildcardProtocolIds(build);
+    const catalystReady = hasFinisherCatalyst(build, build.coreId);
+    const catalystRecipe = FINISHER_RECIPE_DEFS[build.coreId];
+    if (supportSystem) {
+      return {
+        label: supportSystem.label,
+        detail: getSupportSystemSummary(supportSystem),
+      };
+    }
+    if (wildcardIds.length > 0) {
+      return {
+        label: "Wildcard Rail",
+        detail: getWildcardProtocolSummary(build),
+      };
+    }
+    if (installedSupport.length > 0) {
+      return {
+        label: `${installedSupport.length} Bay Package`,
+        detail: `${installedSupport.map((system) => system.shortLabel || system.label).join(" + ")} · support bay 확장 중`,
+      };
+    }
+    if (catalystReady && catalystRecipe) {
+      return {
+        label: `${catalystRecipe.label} Catalyst`,
+        detail: `${catalystRecipe.label} 촉매 확보 · 남은 포지는 연소 리스크보다 유지력을 어디서 챙길지 고르는 단계다.`,
+      };
+    }
+    if (chassis) {
+      return {
+        label: chassis.label,
+        detail: chassis.statusNote,
+      };
+    }
+    return {
+      label: "Bare Hull",
+      detail: "보조 생존/유틸 축이 아직 비어 있다. 첫 chassis나 support bay를 확보하면 회복 루트가 열린다.",
+    };
+  }
+
+  function getForgeEraPlan(build, weapon = null, supportSystem = null, waveNumber = 1) {
+    const boundedWave = clamp(Math.round(waveNumber || 1), 1, MAX_WAVES + POST_CAPSTONE_WAVE_COUNT);
+    const currentWeapon = weapon || computeWeaponStats(build);
+    const roadmap = getBuildRoadmap(build, currentWeapon, boundedWave);
+    const doctrine = getBastionDoctrineDef(build);
+    const supportTrack = getForgeSupportTrackSnapshot(build, supportSystem);
+    const primaryOpenLabel =
+      currentWeapon.doctrineFormLabel ||
+      currentWeapon.evolutionLabel ||
+      CORE_DEFS[build.coreId].label;
+    const primaryBreakLabel =
+      currentWeapon.capstoneLabel ||
+      currentWeapon.doctrineFormLabel ||
+      getDoctrineLateCapstoneLabel(doctrine) ||
+      (doctrine ? `${doctrine.label} Apex` : "Midform Spike");
+    const primaryEndformLabel =
+      currentWeapon.afterburnDominionLabel ||
+      currentWeapon.afterburnOverdriveLabel ||
+      currentWeapon.lateAscensionLabel ||
+      "Endform";
+    const ignitionSupportDetail = supportTrack.detail;
+    const siegeSupportDetail =
+      supportSystem && supportSystem.statusNote
+        ? supportSystem.statusNote
+        : `${supportTrack.detail} mid-run에서는 이 축이 weakness cover와 greed recovery를 맡는다.`;
+    const afterburnSupportDetail =
+      build.afterburnDominionId || build.afterburnOverdriveId || build.lateAscensionId
+        ? `${supportTrack.detail} endform이 잠긴 뒤에는 새 서브시스템보다 이 축을 오래 버티게 쓰는 것이 핵심이다.`
+        : `${supportTrack.detail} Afterburn 전에는 이 축이 마지막 survival rail로 남는다.`;
+    const getEraState = (start, end) => {
+      if (boundedWave > end) {
+        return "locked";
+      }
+      if (boundedWave >= start) {
+        return "live";
+      }
+      return boundedWave + 1 >= start ? "primed" : "planned";
+    };
+    return [
+      {
+        label: "Era I",
+        title: "Ignition Frame",
+        state: getEraState(1, 4),
+        primaryLabel: primaryOpenLabel,
+        primaryDetail: roadmap.steps[0] ? roadmap.steps[0].detail : "첫 변신 실루엣을 잠그는 구간.",
+        secondaryLabel: supportTrack.label,
+        secondaryDetail: ignitionSupportDetail,
+      },
+      {
+        label: "Era II",
+        title: "Siege Break",
+        state: getEraState(5, 12),
+        primaryLabel: primaryBreakLabel,
+        primaryDetail: roadmap.steps[1] ? roadmap.steps[1].detail : "중반 break를 앞당겨 doctrine form을 전장에 고정한다.",
+        secondaryLabel: supportTrack.label,
+        secondaryDetail: siegeSupportDetail,
+      },
+      {
+        label: "Era III",
+        title: "Afterburn Endform",
+        state: getEraState(13, MAX_WAVES + POST_CAPSTONE_WAVE_COUNT),
+        primaryLabel: primaryEndformLabel,
+        primaryDetail: roadmap.steps[2] ? roadmap.steps[2].detail : "후반 split cache에서 최종 body를 잠근다.",
+        secondaryLabel: supportTrack.label,
+        secondaryDetail: afterburnSupportDetail,
+      },
+    ];
+  }
+
+  function createForgeEraMarkup(eras) {
+    if (!eras || eras.length === 0) {
+      return "";
+    }
+    return eras
+      .map(
+        (era) => `
+          <article class="forge-era" data-state="${era.state}">
+            <div class="forge-era__header">
+              <span class="forge-era__state">${era.label}</span>
+              <strong>${era.title}</strong>
+            </div>
+            <div class="forge-era__tracks">
+              <div class="forge-era__track">
+                <span>Main Track</span>
+                <strong>${era.primaryLabel}</strong>
+                <p>${era.primaryDetail}</p>
+              </div>
+              <div class="forge-era__track">
+                <span>Support Track</span>
+                <strong>${era.secondaryLabel}</strong>
+                <p>${era.secondaryDetail}</p>
+              </div>
+            </div>
+          </article>
+        `
+      )
+      .join("");
+  }
+
   function getCombatBandState(build, weapon = null, waveNumber = 1) {
     const boundedWave = clamp(Math.round(waveNumber || 1), 1, MAX_WAVES + POST_CAPSTONE_WAVE_COUNT);
     if (boundedWave < 9 || boundedWave > MAX_WAVES) {
@@ -17974,6 +18115,15 @@
     };
     const armoryLabel = getArmoryLabel(forgeOptions);
     const roadmap = getBuildRoadmap(state.build, state.weapon, state.waveIndex + 2);
+    const eraPlan = getForgeEraPlan(
+      state.build,
+      state.weapon,
+      state.supportSystem,
+      state.waveIndex + 2
+    );
+    const activeSupportTrack = getForgeSupportTrackSnapshot(state.build, state.supportSystem);
+    const activeFormSummary = roadmap.activeForm || activeCore.label;
+    const nextFormStep = roadmap.steps.find((step) => step.state !== "locked") || roadmap.steps[2] || null;
     const forgeModeLabel = state.pendingFinalForge
       ? "Final Forge"
       : state.forgeDraftType === "architecture_draft"
@@ -18010,14 +18160,28 @@
         ${createRoadmapMarkup(roadmap)}
       </article>
       <article class="forge-context__card">
+        <p class="panel__eyebrow">Era Plan</p>
+        <strong>${roadmap.pathLabel}</strong>
+        <p>주력 변신과 생존 rail을 분리해 다음 jump를 한눈에 읽게 만든다.</p>
+        <div class="forge-era-list">${createForgeEraMarkup(eraPlan)}</div>
+      </article>
+      <article class="forge-context__card">
         <p class="panel__eyebrow">현재 무기</p>
         <strong>${activeCore.label}</strong>
         <p>${state.weapon.tierLabel} · ${state.weapon.benchSyncLabel} · ${traitSummary}</p>
       </article>
       <article class="forge-context__card">
-        <p class="panel__eyebrow">현재 빌드 압축</p>
-        <strong>${affixSummary}</strong>
-        <p>${evolutionSummary} · ${doctrineSummary} · ${lateAscensionSummary} · ${lateFieldConvergenceSummary} · ${illegalOverclockSummary} · ${apexMutationSummary} · ${capstoneSummary} · ${chassisSummary} · ${forgeSystemSummary} · ${wildcardSummary} · ${doctrinePursuitSummary} · ${supportBaySummary} · 보관 ${benchEntries.length}종 · ${catalystSummary} · 분해 예상 고철 ${getRecycleValue(state.build)}</p>
+        <p class="panel__eyebrow">Build Focus</p>
+        <strong>${activeFormSummary}</strong>
+        <div class="status-list">
+          ${createStatusRow("Main Track", nextFormStep ? nextFormStep.title : activeFormSummary)}
+          ${createStatusRow("Support Track", activeSupportTrack.label)}
+          ${createStatusRow("Aux Rail", wildcardSummary)}
+          ${createStatusRow("Reserve", `${supportBaySummary} · 보관 ${benchEntries.length}종`)}
+        </div>
+        <p>${nextFormStep ? nextFormStep.detail : roadmap.prompt}</p>
+        <p>${activeSupportTrack.detail}</p>
+        <p class="summary-note">${evolutionSummary} · ${doctrineSummary} · ${lateAscensionSummary} · ${lateFieldConvergenceSummary} · ${illegalOverclockSummary} · ${apexMutationSummary} · ${capstoneSummary} · ${chassisSummary} · ${forgeSystemSummary} · ${doctrinePursuitSummary} · ${catalystSummary} · 분해 예상 고철 ${getRecycleValue(state.build)}</p>
       </article>
     `;
     elements.forgeCards.innerHTML = state.forgeChoices
