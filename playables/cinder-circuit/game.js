@@ -12454,6 +12454,51 @@
     return "Three-Lane Forge";
   }
 
+  function shouldUseBaseRouteForgeContract(run = state) {
+    return Boolean(
+      CONSOLIDATED_12_WAVE_ROUTE &&
+        run &&
+        run.phase === "forge" &&
+        (run.pendingFinalForge || run.waveIndex < MAX_WAVES)
+    );
+  }
+
+  function getBaseRouteForgeContractLabel(role, choice, riderStep = false) {
+    if (riderStep) {
+      return "Secondary Rider";
+    }
+    if (role === "headline") {
+      return "Headline Mutation";
+    }
+    if (role === "rider") {
+      return "Secondary Rider";
+    }
+    if (role === "gamble") {
+      return "Greed / Utility Gamble";
+    }
+    const tone = getForgeChoiceTone(choice);
+    if (tone === "greed") {
+      return "Greed / Utility Gamble";
+    }
+    if (tone === "defense") {
+      return "Secondary Rider";
+    }
+    return "Headline Mutation";
+  }
+
+  function getForgeDisplayModeLabel() {
+    if (shouldUseBaseRouteForgeContract()) {
+      if (state.pendingFinalForge) {
+        return "Run Seal";
+      }
+      if (state.forgeMaxSteps > 1 && state.forgeStep === 2) {
+        return "Rider Pick";
+      }
+      return "Forge Pick";
+    }
+    return getActiveForgeModeLabel();
+  }
+
   function buildForgeFollowupChoices(build, rng, scrapBank, options = null, previousChoice = null) {
     const random = typeof rng === "function" ? rng : Math.random;
     const nextWave = options && Number.isFinite(options.nextWave) ? options.nextWave : 0;
@@ -19749,7 +19794,7 @@
       return;
     }
     const waveConfig = state.wave || resolveWaveConfig(state.waveIndex, state.build);
-    const activeForgeLabel = state.phase === "forge" ? getActiveForgeModeLabel() : "";
+    const activeForgeLabel = state.phase === "forge" ? getForgeDisplayModeLabel() : "";
     const waveLabel =
       state.phase === "forge"
         ? `${waveConfig.label} · ${activeForgeLabel}`
@@ -19898,22 +19943,27 @@
     }
 
     if (elements.liveReadout) {
+      const forgeReadoutLabel = shouldUseBaseRouteForgeContract()
+        ? state.pendingFinalForge
+          ? "Run Seal 선택 중"
+          : state.forgeMaxSteps > 1 && state.forgeStep === 2
+            ? "Secondary Rider 선택 중"
+            : "Headline / Rider / Gamble 선택 중"
+        : state.forgeDraftType === "architecture_draft"
+          ? "Architecture Draft 선택 중"
+          : state.forgeDraftType === "field_grant"
+            ? "Field Cache 선택 중"
+            : state.forgeDraftType === "bastion_draft"
+              ? "Bastion Draft 선택 중"
+              : state.forgeDraftType === "catalyst_draft"
+                ? "Catalyst Crucible 선택 중"
+                : state.forgeMaxSteps > 1 && state.forgeStep === 2
+                  ? "세 갈래 포지 rider 선택 중"
+                  : "세 갈래 포지 headline 선택 중";
       elements.liveReadout.innerHTML = `
         <div class="summary-head">
           <strong>${
-            state.phase === "forge"
-              ? state.forgeDraftType === "architecture_draft"
-                ? "Architecture Draft 선택 중"
-                : state.forgeDraftType === "field_grant"
-                  ? "Field Cache 선택 중"
-                  : state.forgeDraftType === "bastion_draft"
-                    ? "Bastion Draft 선택 중"
-                    : state.forgeDraftType === "catalyst_draft"
-                      ? "Catalyst Crucible 선택 중"
-                      : state.forgeMaxSteps > 1 && state.forgeStep === 2
-                        ? "세 갈래 포지 rider 선택 중"
-                        : "세 갈래 포지 headline 선택 중"
-              : "전투 진행 중"
+            state.phase === "forge" ? forgeReadoutLabel : "전투 진행 중"
           }</strong>
           <span class="summary-chip ${
             state.player.overdriveActiveTime > 0 || state.player.drive >= 100
@@ -19968,7 +20018,8 @@
     const showcase = featuredForgeChoice.showcase;
     const featuredIndex = featuredForgeChoice.featuredIndex;
     const featuredChoice = featuredIndex >= 0 ? state.forgeChoices[featuredIndex] : null;
-    const forgeModeLabel = getActiveForgeModeLabel();
+    const useBaseRouteContract = shouldUseBaseRouteForgeContract();
+    const forgeModeLabel = getForgeDisplayModeLabel();
     const focusEyebrow = state.pendingFinalForge
       ? "Run Seal"
       : riderStep
@@ -19984,16 +20035,22 @@
       : riderStep
         ? `${dominantFormSummary.label} 위에 rider 한 장만 얹고 바로 다음 전투 ask를 버틴다.`
         : `${dominantFormSummary.label} 다음에 가장 크게 전장을 바꿀 변이 하나만 먼저 고른다.`;
-    elements.forgeSubtitle.textContent = state.pendingFinalForge
-      ? `${forgeModeLabel} · ${focusTitle} · 고철 ${Math.round(state.resources.scrap)}`
-      : riderStep
-        ? `${forgeModeLabel} · ${proofWindow.label} 대비 rider 선택 · 고철 ${Math.round(state.resources.scrap)}`
-        : `${forgeModeLabel} · ${focusTitle} 먼저 · 고철 ${Math.round(state.resources.scrap)}`;
+    elements.forgeSubtitle.textContent = useBaseRouteContract
+      ? state.pendingFinalForge
+        ? `${focusTitle} 봉인 · 고철 ${Math.round(state.resources.scrap)}`
+        : riderStep
+          ? `Secondary Rider 1장 선택 · 고철 ${Math.round(state.resources.scrap)}`
+          : `Headline / Rider / Gamble 중 1장 선택 · 고철 ${Math.round(state.resources.scrap)}`
+      : state.pendingFinalForge
+        ? `${forgeModeLabel} · ${focusTitle} · 고철 ${Math.round(state.resources.scrap)}`
+        : riderStep
+          ? `${forgeModeLabel} · ${proofWindow.label} 대비 rider 선택 · 고철 ${Math.round(state.resources.scrap)}`
+          : `${forgeModeLabel} · ${focusTitle} 먼저 · 고철 ${Math.round(state.resources.scrap)}`;
     elements.forgeContext.innerHTML = `
       <article class="forge-focus forge-focus--${riderStep ? "rider" : "headline"} forge-context__card forge-context__card--span-two">
         <div class="forge-focus__header">
           <p class="panel__eyebrow">${focusEyebrow}</p>
-          <span class="forge-focus__mode">${forgeModeLabel}</span>
+          <span class="forge-focus__mode">${useBaseRouteContract ? "12-Wave Route" : forgeModeLabel}</span>
         </div>
         <strong>${focusTitle}</strong>
         <p>${focusPrompt}</p>
@@ -20023,7 +20080,9 @@
           const kind =
             choice.type === "utility" ? choice.action || "utility" : choice.type || "choice";
           const transformation = getForgeChoiceTransformation(choice);
-          const contractLabel = choice.contractLabel || transformation.laneLabel;
+          const contractLabel = useBaseRouteContract
+            ? getBaseRouteForgeContractLabel(choice.contractRole, choice, riderStep)
+            : choice.contractLabel || transformation.laneLabel;
           const compactPreviewRow = createForgePreviewRows(choice)[0];
           const previewRows = createForgePreviewRows(choice)
             .slice(0, riderStep ? 1 : 2)

@@ -13,7 +13,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze route expansion and collapse the run into one readable `Wave 1-12` spine where forge stops sell one headline mutation first, support/admin branches stay secondary, and each era earns a real domination window before the next pressure test.
+- Immediate priority: stop feeding the standard route with `Afterburn`, cache, wildcard, and draft-branch noise until one rerunnable `Wave 1-12` spine lands as a clean headline/rider/gamble loop with real payoff windows.
 
 ## Release Gates
 
@@ -40,6 +40,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 18:40:00 KST
+  Findings:
+  - The standard run still reads like it is borrowing excitement from future branches instead of earning it inside `Wave 1-12`. `POST_CAPSTONE_*`, `Afterburn` labels, wildcard protocols, field-cache roadmap copy, and multi-draft language keep implying the real toybox is elsewhere.
+  - Forge desire is still diluted by taxonomy. Even though `renderForgeOverlay()` frames a featured mutation, the player is still asked to parse mode labels, proof text, slot language, rider framing, and branch context before the power spike itself becomes irresistible.
+  - Build readability is upside down in places. `SUPPORT_SYSTEM_DEFS` gives immediate visible fantasies like orbitals, shield halos, sentries, missile racks, and drone nets, while core chassis/weapon growth is too often described as a roadmap step instead of a screen-owning transformation.
+  - Act 3 pacing is cleaner than before, but `Lockgrid Hunt I-II` plus `Starforge Pursuit` still risks feeling like three consecutive competency checks before the finale. A rerun-worthy late game needs a clearer domination lap between "I locked the form" and "prove it under pressure."
+  Top Priority: Strip the base route down to one release-proof contract: each forge stop should present one oversized core form leap, one clearly secondary rider, and one greed/utility gamble, with all `Afterburn`/cache/wildcard branch signaling removed from the standard `Wave 1-12` reward language.
+  Why Now: If the reward layer still feels like a routing menu, players will not rerun the combat no matter how many future systems exist.
+  Do Not Repeat: Do not spend another pass adding branch wrappers or late-route promises before the core 12-wave loop becomes craveable on its own.
+  Release Gate: Rewards
 
 - 2026-03-24 18:05:00 KST
   Findings:
@@ -1651,6 +1662,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 19:05:00 KST
+  Changed: stripped more branch/admin wording out of the standard `Wave 1-12` reward read in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). The forge overlay and live HUD now collapse base-route forge stops to generic `Forge Pick`, `Rider Pick`, and `Run Seal` framing instead of surfacing `Architecture Draft`, `Field Cache`, `Bastion Draft`, or `Catalyst Crucible` labels during the core route, and standard forge cards now consistently relabel themselves as `Headline Mutation`, `Secondary Rider`, or `Greed / Utility Gamble` even when the underlying choice came from one of those special generators.
+  Why: the latest critique's `Top Priority` was to make each forge stop read like one oversized core leap, one clearly secondary rider, and one greed/utility gamble, without implying that the real game lives in another branch. The highest-value bounded interpretation was to change presentation rather than add systems: keep the existing choice generation, but suppress route-taxonomy language across the base reward surface so the player reads one appetitive contract first. The reference direction was the appetite-first naming hierarchy in `Hades` boon reveals and `Nova Drift` level-up breaks, where the current power jump owns the screen and the wrapper stays quiet.
+  Follow-up risk: this pass hides much more branch signaling on the standard route, but some individual card descriptions and combat-feed lines from special choice sources still carry cache/draft-specific language under the hood. If critique still says the reward layer feels like routing, the next bounded pass should sanitize those per-choice descriptions for base-route display instead of adding another reward wrapper.
+  Release Gate: Rewards
 
 - 2026-03-24 18:25:00 KST
   Changed: normalized the base-route forge contract in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so standard between-wave forges no longer fall back to the old early-run 4-card spread. The generic route now always resolves through the same three lanes, `Headline Mutation`, `Support / Defense Rider`, and `Greed / Utility Gamble`, even before package-era forges start. In the same bounded pass I changed the live HUD and forge overlay to name standard stops as `Three-Lane Forge` / `Rider Slot` instead of a generic `Forge`, so the reward beat keeps selling one dominant pick first and one subordinate rider second rather than feeling like a freeform admin menu.
