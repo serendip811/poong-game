@@ -148,20 +148,64 @@ const predatorBaitRun = {
 };
 game.applyForgeChoice(predatorBaitRun, predatorBaitChoice);
 assert.equal(predatorBaitRun.build.predatorBaitCharges, 1);
+const lateBreakBuild = game.createInitialBuild("relay_oath");
+const lateBreakChoices = game.buildForgeChoices(lateBreakBuild, Math.random, 999, {
+  nextWave: 9,
+  finalForge: false,
+});
+assert.equal(lateBreakChoices.length, 3);
+assert.equal(
+  JSON.stringify(lateBreakChoices.map((choice) => choice.laneLabel)),
+  JSON.stringify(["Main Weapon Mutation", "Defense / Utility", "Greed Contract"])
+);
+const packageProbeRun = { waveIndex: 7, pendingFinalForge: false };
+assert.equal(game.shouldOpenForgePackage(packageProbeRun, lateBreakChoices[0]), false);
 const mirrorLateBuild = game.createInitialBuild("relay_oath");
 mirrorLateBuild.bastionDoctrineId = "mirror_hunt";
+const mutationChoice = lateBreakChoices.find((choice) => choice.laneLabel === "Main Weapon Mutation");
+game.applyForgeChoice(
+  {
+    build: mirrorLateBuild,
+    resources: { scrap: 999 },
+    stats: { scrapCollected: 0, scrapSpent: 0 },
+    player: { hp: 100, maxHp: 100, heat: 24, overheated: false, fieldAegisCharge: 0, fieldAegisCooldown: 0, invulnerableTime: 0 },
+  },
+  mutationChoice
+);
 const mirrorWaveNine = game.resolveWaveConfig(8, mirrorLateBuild);
 const bastionLateBuild = game.createInitialBuild("scrap_pact");
 bastionLateBuild.bastionDoctrineId = "kiln_bastion";
+const aegisChoice = lateBreakChoices.find((choice) => choice.laneLabel === "Defense / Utility");
+game.applyForgeChoice(
+  {
+    build: bastionLateBuild,
+    resources: { scrap: 999 },
+    stats: { scrapCollected: 0, scrapSpent: 0 },
+    player: { hp: 100, maxHp: 100, heat: 24, overheated: false, fieldAegisCharge: 0, fieldAegisCooldown: 0, invulnerableTime: 0 },
+  },
+  aegisChoice
+);
 const bastionWaveNine = game.resolveWaveConfig(8, bastionLateBuild);
 const bastionWaveTen = game.resolveWaveConfig(9, bastionLateBuild);
 const bastionWaveEleven = game.resolveWaveConfig(10, bastionLateBuild);
 const bastionWaveTwelve = game.resolveWaveConfig(11, bastionLateBuild);
 const artilleryLateBuild = game.createInitialBuild("rail_zeal");
 artilleryLateBuild.bastionDoctrineId = "storm_artillery";
+const greedChoice = lateBreakChoices.find((choice) => choice.laneLabel === "Greed Contract");
+game.applyForgeChoice(
+  {
+    build: artilleryLateBuild,
+    resources: { scrap: 999 },
+    stats: { scrapCollected: 0, scrapSpent: 0 },
+    player: { hp: 100, maxHp: 100, heat: 24, overheated: false, invulnerableTime: 0 },
+  },
+  greedChoice
+);
+assert.equal(artilleryLateBuild.lateBreakProfileId, "ledger");
 const artilleryWaveTen = game.resolveWaveConfig(9, artilleryLateBuild);
 const artilleryWaveEleven = game.resolveWaveConfig(10, artilleryLateBuild);
 const artilleryWaveTwelve = game.resolveWaveConfig(11, artilleryLateBuild);
+const artilleryWaveNine = game.resolveWaveConfig(8, artilleryLateBuild);
 const mirrorBaseStats = game.computePlayerStats(game.createInitialBuild("relay_oath"));
 const mirrorChaseBuild = game.createInitialBuild("relay_oath");
 mirrorChaseBuild.bastionDoctrineId = "mirror_hunt";
@@ -189,26 +233,32 @@ const kilnCapstoneForm = game.getDoctrineWeaponForm(kilnCapstoneBuild, "scatter"
 const mirrorWaveTen = game.resolveWaveConfig(9, mirrorLateBuild);
 const mirrorWaveEleven = game.resolveWaveConfig(10, mirrorLateBuild);
 const mirrorWaveTwelve = game.resolveWaveConfig(11, mirrorLateBuild);
-assert.equal(mirrorWaveNine.label, "Wave 9 · Lockgrid Hunt I");
+assert.equal(mirrorWaveNine.label, "Wave 9 · Breakpoint Overdrive");
 assert.equal(mirrorWaveTen.label, "Wave 10 · Lockgrid Hunt II");
 assert.equal(mirrorWaveEleven.label, "Wave 11 · Cinder Crown I");
 assert.equal(mirrorWaveTwelve.label, "Wave 12 · Cinder Crown II");
-assert.equal(JSON.stringify(mirrorWaveNine), JSON.stringify(bastionWaveNine));
-assert.equal(JSON.stringify(mirrorWaveTen), JSON.stringify(bastionWaveTen));
+assert.equal(bastionWaveNine.label, "Wave 9 · Halo Run");
+assert.equal(artilleryWaveNine.label, "Wave 9 · Ledger Heist");
 assert.equal(JSON.stringify(mirrorWaveEleven), JSON.stringify(bastionWaveEleven));
 assert.equal(JSON.stringify(mirrorWaveTwelve), JSON.stringify(bastionWaveTwelve));
 assert.equal(JSON.stringify(artilleryWaveTen), JSON.stringify(bastionWaveTen));
 assert.equal(JSON.stringify(artilleryWaveEleven), JSON.stringify(bastionWaveEleven));
 assert.equal(JSON.stringify(artilleryWaveTwelve), JSON.stringify(bastionWaveTwelve));
 assert.equal(mirrorWaveNine.hazard.type || "pulse", "pulse");
+assert.equal(bastionWaveNine.hazard.type, "drift");
+assert.equal(artilleryWaveNine.hazard.type, "caravan");
 assert.equal(mirrorWaveTen.hazard.type || "pulse", "pulse");
 assert.equal(mirrorWaveEleven.hazard.type, "relay");
 assert.equal(mirrorWaveTwelve.hazard.type, "relay");
-assert.equal(mirrorWaveNine.arena.width, 1560);
+assert.equal(mirrorWaveNine.arena.width, 1700);
+assert.equal(bastionWaveNine.arena.width, 1620);
+assert.equal(artilleryWaveNine.arena.width, 1680);
 assert.equal(mirrorWaveTwelve.arena.height, 900);
 assert.ok(mirrorWaveNine.mix.skimmer > mirrorWaveNine.mix.warden);
 assert.ok(mirrorWaveNine.mix.lancer > mirrorWaveNine.mix.mortar);
 assert.ok(mirrorWaveNine.mix.skimmer > mirrorWaveNine.mix.shrike);
+assert.ok(bastionWaveNine.activeCap < mirrorWaveTen.activeCap);
+assert.ok(artilleryWaveNine.hazard.salvageScrap > 0);
 assert.ok(mirrorWaveTen.hazard.count > mirrorWaveNine.hazard.count);
 assert.ok(mirrorWaveTen.mix.skimmer > mirrorWaveTen.mix.mortar);
 assert.ok(mirrorWaveTen.mix.lancer > mirrorWaveTen.mix.warden);
@@ -1098,12 +1148,15 @@ const doctrineLateArmoryChoices = game.buildForgeChoices(
   180,
   { nextWave: 9, finalForge: false }
 );
-const doctrineCapstoneChoice = doctrineLateArmoryChoices.find(
-  (choice) => choice.action === "doctrine_capstone"
+assert.equal(
+  doctrineLateArmoryChoices.some((choice) => choice.action === "doctrine_capstone"),
+  false
 );
-assert.ok(doctrineCapstoneChoice);
-assert.equal(doctrineCapstoneChoice.title, "Relay Storm Lattice");
-assert.equal(doctrineCapstoneChoice.laneLabel, "Doctrine Apex");
+const doctrineCapstoneChoice = {
+  type: "utility",
+  action: "doctrine_capstone",
+  doctrineCapstoneId: "relay_storm_lattice",
+};
 game.applyForgeChoice(
   { build: doctrineCapstoneBuild, player: null, resources: { scrap: 999 }, stats: {} },
   doctrineCapstoneChoice
@@ -1626,22 +1679,19 @@ const lateArmoryChoices = game.buildForgeChoices(
   220,
   { nextWave: 9, finalForge: false }
 );
-assert.equal(lateArmoryChoices.length, 6);
-assert.ok(lateArmoryChoices.some((choice) => choice.laneLabel === "공세 모듈"));
-const thirdBayChoice = lateArmoryChoices.find(
-  (choice) =>
-    choice.type === "system" &&
-    choice.systemTier === 1 &&
-    ["seeker_array", "volt_drones"].includes(choice.systemId)
-);
+assert.equal(lateArmoryChoices.length, 3);
+assert.ok(lateArmoryChoices.some((choice) => choice.laneLabel === "Main Weapon Mutation"));
+assert.ok(lateArmoryChoices.some((choice) => choice.laneLabel === "Defense / Utility"));
+assert.ok(lateArmoryChoices.some((choice) => choice.laneLabel === "Greed Contract"));
+const thirdBayChoice = lateArmoryChoices.find((choice) => choice.laneLabel === "Defense / Utility");
 assert.ok(thirdBayChoice);
 game.applyForgeChoice(
   { build: lateArmoryBuild, player: null, resources: { scrap: 999 }, stats: {} },
   thirdBayChoice
 );
 const lateArmorySystems = game.computeSupportSystemStats(lateArmoryBuild);
-assert.equal(lateArmoryBuild.supportSystems.length, 3);
-assert.ok(lateArmorySystems.orbitCount >= 5);
+assert.ok(lateArmoryBuild.lateFieldAegisLevel >= 2);
+assert.ok(lateArmorySystems.interceptRange >= 0);
 const actModuleFollowupBuild = game.createInitialBuild("relay_oath");
 actModuleFollowupBuild.pendingCores = [];
 const actOneModuleFollowup = game.buildForgeFollowupChoices(
@@ -2347,31 +2397,32 @@ const waveSummary = game.WAVE_CONFIG.map((wave) => ({
   hazard: wave.hazard ? wave.hazard.label : "none",
 }));
 
-const lateBreakBuild = game.createInitialBuild("scrap_pact");
-lateBreakBuild.bastionDoctrineId = "kiln_bastion";
-const lateBreakChoices = game.buildForgeChoices(lateBreakBuild, () => 0, 999, {
+const lateBreakSmokeBuild = game.createInitialBuild("scrap_pact");
+lateBreakSmokeBuild.bastionDoctrineId = "kiln_bastion";
+const lateBreakSmokeChoices = game.buildForgeChoices(lateBreakSmokeBuild, () => 0, 999, {
   nextWave: 9,
   finalForge: false,
   packageStep: 1,
 });
-assert.equal(lateBreakChoices.length, 6);
-assert.ok(lateBreakChoices.some((choice) => choice.title === "Breakline Arsenal"));
-assert.ok(lateBreakChoices.some((choice) => choice.title === "Warplate Halo"));
-assert.ok(lateBreakChoices.some((choice) => choice.title === "Black Ledger Promissory"));
-const lateBreakMutation = lateBreakChoices.find((choice) => choice.title === "Breakline Arsenal");
-const lateBreakDefense = lateBreakChoices.find((choice) => choice.title === "Warplate Halo");
-const lateBreakGreed = lateBreakChoices.find((choice) => choice.title === "Black Ledger Promissory");
+assert.equal(lateBreakSmokeChoices.length, 3);
+assert.ok(lateBreakSmokeChoices.some((choice) => choice.title === "Cataclysm Arsenal"));
+assert.ok(lateBreakSmokeChoices.some((choice) => choice.title === "Warplate Halo"));
+assert.ok(lateBreakSmokeChoices.some((choice) => choice.title === "Black Ledger Heist"));
+const lateBreakMutation = lateBreakSmokeChoices.find((choice) => choice.title === "Cataclysm Arsenal");
+const lateBreakDefense = lateBreakSmokeChoices.find((choice) => choice.title === "Warplate Halo");
+const lateBreakGreed = lateBreakSmokeChoices.find((choice) => choice.title === "Black Ledger Heist");
 assert.equal(lateBreakMutation.laneLabel, "Main Weapon Mutation");
 assert.equal(lateBreakDefense.laneLabel, "Defense / Utility");
 assert.equal(lateBreakGreed.laneLabel, "Greed Contract");
 const lateBreakRun = {
-  build: lateBreakBuild,
+  build: lateBreakSmokeBuild,
   resources: { scrap: 0 },
   stats: { scrapCollected: 0, scrapSpent: 0 },
   player: { hp: 100, maxHp: 100, heat: 0, overheated: false },
 };
 game.applyForgeChoice(lateBreakRun, lateBreakGreed);
 assert.equal(lateBreakRun.build.blackLedgerRaidWaves, 2);
+assert.equal(lateBreakRun.build.lateBreakProfileId, "ledger");
 
 console.log("cinder-circuit smoke ok");
 console.table(waveSummary);

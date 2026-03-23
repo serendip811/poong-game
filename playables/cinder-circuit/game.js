@@ -58,6 +58,133 @@
     binder: 0.08,
     mortar: 0.1,
   };
+  const LATE_BREAK_ENCOUNTER_PROFILES = {
+    mutation: {
+      label: "Wave 9 · Breakpoint Overdrive",
+      bandId: "breakpoint_overdrive",
+      bandLabel: "Breakpoint Overdrive",
+      pressureFamily: "crossfire",
+      note: "Late Break에서 주포 변이를 집었다면 첫 late bracket은 더 이상 rehearsal이 아니다. 전장을 크게 벌리고 구조물 upkeep를 걷어내, 방금 증설한 배럴과 보조 포문이 얼마나 깊게 lane을 찢는지만 먼저 증명하게 만든다.",
+      directive:
+        "overdrive gallery. 구조물 코어보다 열린 사선과 marked elite 절개가 우선이다. skimmer 훑기를 얇게 만든 뒤 lancer charge를 정면 화망으로 자르며 새 주포 실루엣을 바로 시험해야 한다.",
+      arena: {
+        width: 1700,
+        height: 940,
+      },
+      activeCap: 33,
+      spawnBudget: 176,
+      baseSpawnInterval: 0.39,
+      spawnIntervalMin: 0.118,
+      eliteEvery: 4,
+      mix: {
+        scuttler: 0.06,
+        brute: 0.12,
+        shrike: 0.14,
+        skimmer: 0.34,
+        lancer: 0.24,
+        mortar: 0.02,
+        warden: 0.08,
+      },
+      mixWeight: 0.62,
+      hazard: {
+        label: "Overdrive Surge",
+        interval: 9.6,
+        count: 2,
+        radius: 72,
+        telegraph: 0.86,
+        duration: 4.1,
+        damage: 14,
+      },
+    },
+    aegis: {
+      label: "Wave 9 · Halo Run",
+      bandId: "halo_run",
+      bandLabel: "Halo Run",
+      pressureFamily: "pursuit",
+      note: "Warplate Halo를 집었다면 첫 late bracket은 더 넓은 복구 창을 주는 reset 시험으로 바뀐다. 연속 drift furnace가 pocket을 밀어내지만 적 점유를 늦춰, 막 예열한 plate를 믿고 깊게 들어갔다 빠지는 리듬을 배우게 만든다.",
+      directive:
+        "halo run. drift wake가 닫히기 전에 plate를 태워 한 lane을 밀어내고 다시 비워진 측면으로 복귀해야 한다. 정지 화력보다 dive-reset 리듬을 먼저 고르는 bracket이다.",
+      arena: {
+        width: 1620,
+        height: 920,
+      },
+      activeCap: 31,
+      spawnBudget: 170,
+      baseSpawnInterval: 0.4,
+      spawnIntervalMin: 0.12,
+      eliteEvery: 4,
+      mix: {
+        scuttler: 0.06,
+        brute: 0.16,
+        shrike: 0.2,
+        skimmer: 0.14,
+        lancer: 0.16,
+        binder: 0.12,
+        mortar: 0.04,
+        warden: 0.12,
+      },
+      mixWeight: 0.58,
+      hazard: {
+        label: "Halo Drift",
+        type: "drift",
+        interval: 9.4,
+        count: 2,
+        radius: 96,
+        telegraph: 0.84,
+        duration: 6,
+        damage: 14,
+        driftSpeed: 118,
+        driftOrbit: 0.38,
+      },
+    },
+    ledger: {
+      label: "Wave 9 · Ledger Heist",
+      bandId: "ledger_heist",
+      bandLabel: "Ledger Heist",
+      pressureFamily: "raid",
+      note: "Black Ledger 계약을 집었다면 첫 late bracket은 곧바로 greed heist로 비틀린다. open-lane hunt 대신 moving vault를 따라 깊게 들어갈지, payout을 버리고 안전한 외곽 회전으로 돌아설지 계속 강요한다.",
+      directive:
+        "ledger heist. contraband caravan이 외곽 사선을 따라 도망친다. 금고를 찢고 바로 이탈하면 큰 payout이 터지지만, linger하면 brander와 lancer가 greed pocket을 즉시 봉쇄한다.",
+      arena: {
+        width: 1680,
+        height: 930,
+      },
+      activeCap: 34,
+      spawnBudget: 182,
+      baseSpawnInterval: 0.385,
+      spawnIntervalMin: 0.114,
+      eliteEvery: 4,
+      mix: {
+        scuttler: 0.06,
+        brute: 0.14,
+        shrike: 0.16,
+        skimmer: 0.18,
+        lancer: 0.16,
+        brander: 0.16,
+        binder: 0.1,
+        mortar: 0.04,
+      },
+      mixWeight: 0.58,
+      hazard: {
+        label: "Ledger Caravan",
+        type: "caravan",
+        interval: 8.8,
+        count: 2,
+        radius: 82,
+        telegraph: 0.8,
+        duration: 7.6,
+        damage: 14,
+        coreHp: 84,
+        coreRadius: 18,
+        salvageScrap: 24,
+        salvageBurstCount: 5,
+        salvageBurstRadius: 60,
+        salvageDropLife: 8.8,
+        driftSpeed: 124,
+        driftOrbit: 0.3,
+      },
+    },
+  };
 
   const WAVE_CONFIG = [
     {
@@ -1468,6 +1595,13 @@
     return nextHazard;
   }
 
+  function getLateBreakEncounterProfile(build) {
+    if (!build || !build.lateBreakProfileId) {
+      return null;
+    }
+    return LATE_BREAK_ENCOUNTER_PROFILES[build.lateBreakProfileId] || null;
+  }
+
   function resolveWaveConfig(index, build = null) {
     const baseConfig = WAVE_CONFIG[clamp(index, 0, MAX_WAVES - 1)];
     if (!baseConfig || index < LATE_BREAK_ARMORY_WAVE - 1 || !build) {
@@ -1477,7 +1611,7 @@
     if (!override) {
       return applyEncounterPressureFamily(baseConfig);
     }
-    return applyEncounterPressureFamily({
+    let config = {
       ...baseConfig,
       ...override,
       mix: override.mix ? { ...override.mix } : { ...baseConfig.mix },
@@ -1491,7 +1625,29 @@
             ? { ...baseConfig.hazard }
             : null
       ),
-    });
+    };
+    if (index === LATE_BREAK_ARMORY_WAVE - 1) {
+      const lateBreakProfile = getLateBreakEncounterProfile(build);
+      if (lateBreakProfile) {
+        config = {
+          ...config,
+          ...lateBreakProfile,
+          arena: lateBreakProfile.arena || config.arena,
+          mix: lateBreakProfile.mix ? { ...lateBreakProfile.mix } : { ...config.mix },
+          hazard: sanitizeHazardForType(
+            lateBreakProfile.hazard
+              ? {
+                  ...(config.hazard || {}),
+                  ...lateBreakProfile.hazard,
+                }
+              : config.hazard
+                ? { ...config.hazard }
+                : null
+          ),
+        };
+      }
+    }
+    return applyEncounterPressureFamily(config);
   }
 
   function getActLabelForWave(waveNumber) {
@@ -4369,6 +4525,7 @@
     lateFieldMutationLevel: 0,
     lateFieldAegisLevel: 0,
     lateFieldConvergenceId: null,
+    lateBreakProfileId: null,
     blackLedgerRaidWaves: 0,
     bastionPactDebtWaves: 0,
     wave6ChassisBreakpoint: false,
@@ -6224,6 +6381,7 @@
         lateFieldMutationLevel: BASE_BUILD.lateFieldMutationLevel,
         lateFieldAegisLevel: BASE_BUILD.lateFieldAegisLevel,
         lateFieldConvergenceId: BASE_BUILD.lateFieldConvergenceId,
+        lateBreakProfileId: BASE_BUILD.lateBreakProfileId,
         blackLedgerRaidWaves: BASE_BUILD.blackLedgerRaidWaves,
         bastionPactDebtWaves: BASE_BUILD.bastionPactDebtWaves,
         wave6ChassisBreakpoint: BASE_BUILD.wave6ChassisBreakpoint,
@@ -8345,6 +8503,9 @@
           createLateBreakGreedContractChoice(build, options && options.nextWave),
         ].filter(Boolean)
       : [];
+    if (isLateBreakArmory(options)) {
+      return lateBreakTriadChoices;
+    }
     const currentAffixIds = sanitizeAffixIds(build.affixes, getAffixCapacity(build));
     const offensiveModChoices = shuffle(
       ["shock_lens", "pulse_gate", "arc_array", "rail_sleeve"]
@@ -8838,6 +8999,9 @@
       return false;
     }
     const nextWave = Number.isFinite(run.waveIndex) ? run.waveIndex + 2 : 0;
+    if (nextWave === LATE_BREAK_ARMORY_WAVE) {
+      return false;
+    }
     return nextWave >= FORGE_PACKAGE_START_WAVE;
   }
 
@@ -9303,13 +9467,14 @@
       id: `utility:latebreak_mutation:${build.coreId}:${nextWave}:${nextLevel}`,
       verb: "변이",
       tag: "ARSENAL",
-      title: "Breakline Arsenal",
-      description: `${CORE_DEFS[build.coreId].label}에 측면 배럴과 과열 보조 포문을 한 번에 증설해 Act 3 입장부터 ${getLateFieldMutationTierLabel(nextLevel)} 화망으로 뛰어오른다. 이후 Wave 10 cache는 이 변이 위에 추가 증설만 남는다.`,
-      slotText: `추가 배럴 +${barrelCount} · Act 3 opening spike`,
+      title: "Cataclysm Arsenal",
+      description: `${CORE_DEFS[build.coreId].label}에 측면 배럴과 과열 보조 포문을 한 번에 증설해 Act 3 첫 교전을 열린 firing gallery로 바꾼다. 다음 Wave 9는 구조물 upkeep보다 open-lane kill race 쪽으로 기울며, 방금 늘어난 화망을 바로 시험하게 만든다.`,
+      slotText: `추가 배럴 +${barrelCount} · Wave 9 open-lane hunt`,
       cost: 34,
       laneLabel: "Main Weapon Mutation",
       forgeLaneLabel: "Main Weapon Mutation",
       lateFieldMutationLevel: nextLevel,
+      lateBreakProfileId: "mutation",
     };
   }
 
@@ -9329,12 +9494,13 @@
       tag: "HALO",
       title: "Warplate Halo",
       description:
-        "Act 3 진입 전에 재충전식 warplate를 두 겹까지 예열해 큰 한 방을 지우고, plate가 터질 때마다 주변 탄막과 추격선을 같이 뜯어낸다. 이후 late cache는 방호층을 더 넓히는 보강 단계만 남긴다.",
-      slotText: `warplate ${getLateFieldAegisMaxCharges({ lateFieldAegisLevel: nextLevel })}충전 · 피해 ${Math.round(getLateFieldAegisReduction(nextLevel) * 100)}% 완충`,
+        "Act 3 진입 전에 재충전식 warplate를 두 겹까지 예열해 큰 한 방을 지우고, plate가 터질 때마다 주변 탄막과 추격선을 같이 뜯어낸다. 다음 Wave 9는 drift-reset bracket으로 바뀌어, 방금 붙인 생존층으로 깊게 들어갔다 빠지는 리듬을 바로 요구한다.",
+      slotText: `warplate ${getLateFieldAegisMaxCharges({ lateFieldAegisLevel: nextLevel })}충전 · Wave 9 reset run`,
       cost: 26,
       laneLabel: "Defense / Utility",
       forgeLaneLabel: "Defense / Utility",
       lateFieldAegisLevel: nextLevel,
+      lateBreakProfileId: "aegis",
     };
   }
 
@@ -9348,10 +9514,10 @@
       id: `utility:latebreak_greed:${nextWave}`,
       verb: "계약",
       tag: "LEDGER",
-      title: "Black Ledger Promissory",
+      title: "Black Ledger Heist",
       description:
-        "Act 3 개막 자금을 먼저 당겨 고철과 회수 효율을 크게 올린다. 대신 Wave 9부터 2웨이브 동안 Siege Debt를 짊어지고, 이어지는 Scrapstorm는 contraband vault raid로 바뀌어 더 큰 payout과 더 거친 청구서를 같이 연다.",
-      slotText: "고철 +52 · 회수 +16% · 2웨이브 Siege Debt · 다음 Scrapstorm raid",
+        "Act 3 개막 자금을 먼저 당겨 고철과 회수 효율을 크게 올린다. 대신 Wave 9를 moving contraband heist로 비틀고 2웨이브 Siege Debt까지 짊어진다. 열리자마자 깊게 들어가 payout을 뜯을지 안전한 외곽 회전으로 돌아설지 바로 강요한다.",
+      slotText: "고철 +52 · 회수 +16% · Wave 9 caravan heist · 2웨이브 Siege Debt",
       cost: 0,
       scrapGain: 52,
       scrapMultiplierGain: 0.16,
@@ -9362,6 +9528,7 @@
       blackLedgerRaidWaves: 2,
       laneLabel: "Greed Contract",
       forgeLaneLabel: "Greed Contract",
+      lateBreakProfileId: "ledger",
     };
   }
 
@@ -11087,6 +11254,9 @@
     if (choice.type === "utility" && choice.action === "field_mutation") {
       const nextLevel = Math.max(getLateFieldMutationLevel(run.build), choice.lateFieldMutationLevel || 1);
       run.build.lateFieldMutationLevel = nextLevel;
+      if (choice.lateBreakProfileId) {
+        run.build.lateBreakProfileId = choice.lateBreakProfileId;
+      }
       run.build.upgrades.push(`Field Arsenal MK ${nextLevel}: ${getLateFieldMutationTierLabel(nextLevel)}`);
       if (run.player) {
         run.player.heat = Math.max(0, run.player.heat - 16);
@@ -11098,6 +11268,9 @@
     if (choice.type === "utility" && choice.action === "field_aegis") {
       const nextLevel = Math.max(getLateFieldAegisLevel(run.build), choice.lateFieldAegisLevel || 1);
       run.build.lateFieldAegisLevel = nextLevel;
+      if (choice.lateBreakProfileId) {
+        run.build.lateBreakProfileId = choice.lateBreakProfileId;
+      }
       run.build.upgrades.push(`Field Aegis MK ${nextLevel}: ${getLateFieldAegisTierLabel(nextLevel)}`);
       if (run.player) {
         run.player.fieldAegisCharge = getLateFieldAegisMaxCharges(run.build);
@@ -11168,6 +11341,9 @@
         run.build.bastionPactDebtWaves || 0,
         Math.max(0, choice.debtWaves || 0)
       );
+      if (choice.lateBreakProfileId) {
+        run.build.lateBreakProfileId = choice.lateBreakProfileId;
+      }
       run.build.upgrades.push(
         `${choice.title || "Greed Contract"}: 고철 +${Math.max(0, choice.scrapGain || 0)} / 회수 +${Math.round((choice.scrapMultiplierGain || 0) * 100)}%${choice.blackLedgerRaidWaves ? " / Black Ledger Raid" : ""} / Siege Debt ${Math.max(0, choice.debtWaves || 0)}웨이브`
       );
@@ -13327,7 +13503,8 @@
     };
     const draftType = getForgeDraftType(forgeOptions);
     const armoryLabel = getArmoryLabel(forgeOptions);
-    const startsPackage = draftType === "package" || draftType === "armory";
+    const startsPackage =
+      draftType === "package" || (draftType === "armory" && !isLateBreakArmory(forgeOptions));
     state.phase = "forge";
     state.pendingFinalForge = isFinalForge;
     state.forgeStep = 1;
@@ -13366,8 +13543,8 @@
         ? "최종 웨이브 정리 완료. 마지막 포지에서 최종 각인과 7연속 afterburn survival ladder의 시작 형태를 마감한다."
         : isLateBreakArmory(forgeOptions)
           ? state.build.auxiliaryJunctionLevel > 0
-            ? "Wave 8 돌파. Late Break Armory에서 주무장 변이, warplate 생존층, Black Ledger 계약이 먼저 떠 Act 3 첫 판돈을 고르게 하고, 남은 대형 카드로 네 번째 베이와 이중 교리 flex lane까지 덧씌운다."
-            : "Wave 8 돌파. Late Break Armory에서 주무장 변이, warplate 생존층, Black Ledger 계약이 먼저 떠 Act 3 첫 판돈을 고르게 하고, 남은 대형 카드로 세 번째 베이와 교리 wildcard까지 덧씌운다."
+            ? "Wave 8 돌파. Late Break Armory를 단일 breakpoint로 재절단했다. 이제 정확히 세 장만 뜨며, Cataclysm Arsenal, Warplate Halo, Black Ledger Heist 중 하나를 고르면 Wave 9 spacing과 목표가 즉시 그 선택 쪽으로 꺾인다."
+            : "Wave 8 돌파. Late Break Armory를 단일 breakpoint로 재절단했다. 이제 정확히 세 장만 뜨며, Cataclysm Arsenal, Warplate Halo, Black Ledger Heist 중 하나를 고르면 Wave 9 spacing과 목표가 즉시 그 선택 쪽으로 꺾인다."
           : draftType === "armory"
           ? "Wave 4 돌파. Act Break Armory에서 6장 중 대형 카드 두 장을 골라 4웨이브짜리 Act 2 빌드 정체성을 일찍 고정한다."
           : "웨이브 종료. 포지 카드로 다음 화력 축을 고른다.",
@@ -14142,6 +14319,15 @@
       return;
     }
     pushCombatFeed(`${choice.tag} · ${choice.title} 적용.`, "FORGE");
+    if (state.waveIndex + 2 === LATE_BREAK_ARMORY_WAVE && choice.lateBreakProfileId) {
+      const profile = getLateBreakEncounterProfile(state.build);
+      pushCombatFeed(
+        profile
+          ? `${profile.bandLabel} 고정. 다음 웨이브는 ${profile.label} 규칙으로 열리며 ${profile.directive}`
+          : "Late breakpoint 적용. 다음 웨이브 spacing과 objective가 방금 고른 카드 기준으로 재배치된다.",
+        "BREAK"
+      );
+    }
     refreshDerivedStats(false);
     if (shouldFinishAfterForge(state)) {
       beginFinalCashout();
