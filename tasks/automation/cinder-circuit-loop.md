@@ -13,7 +13,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: vertical-slice-to-alpha expansion.
-- Immediate priority: freeze new branch growth and prove one readable 12-wave spine plus one clean Afterburn payoff band where dominant body/weapon mutations cash out immediately in open combat space.
+- Immediate priority: stop extending taxonomy, align docs and implementation around one readable 12-wave spine plus one clean Afterburn proof band, and prove a dominant chassis/weapon ladder with one secondary support lane and one real wildcard payoff.
 
 ## Release Gates
 
@@ -40,6 +40,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 05:10:00 KST
+  Findings:
+  - `docs/games/cinder-circuit-design.md` and `docs/games/cinder-circuit-source-analysis.md` still define a short `5웨이브`, `6-7분` prototype while `playables/cinder-circuit/game.js` is authoring a much larger run. That mismatch keeps the game thinking like a prototype that adds named wrappers instead of like a release-feeling roguelite that must sell one long anticipation curve.
+  - The build surface is broad but still not hungry enough. `SUPPORT_SYSTEM_DEFS`, wildcard utilities, dominion/overdrive/endform branches, and repeated forge actions create many options, yet too many of them read as lane administration or legality text rather than "three waves from now my machine becomes terrifying" the way strong `Nova Drift` or `Brotato` upgrade paths do.
+  - Visual payoff is still too uneven between main gun and support package. The script has split volley, chain, drones, shields, missiles, orbitals, and deployables, but the player-facing fantasy is still often "I assembled several systems" instead of "my chassis crossed a visible breakpoint and now owns different space."
+  - HUD/forge readability is still below reference-grade arena roguelite standards. Compared with `Hades`, `Brotato`, or `Nova Drift`, `updateHUD()` and forge copy still carry too much roadmap/legal context at the same time, which weakens threat clarity and dulls the reward moment.
+  Top Priority: Collapse the next improvement pass around a single build-economy proof: one dominant main-weapon/body ladder, one clearly subordinate support lane, and one rare wildcard module that can visibly hijack a run without adding another screen or rules wrapper.
+  Why Now: Until runs produce a sharper "I want that form again" chase, more waves and more branches will only lengthen administration.
+  Do Not Repeat: Do not answer this with another named draft, another passive lane, or more Afterburn brackets if the build fantasy is still spread across too many equal-priority systems.
+  Release Gate: Builds
 
 - 2026-03-24 04:05:00 KST
   Findings:
@@ -1414,6 +1425,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 05:55:00 KST
+  Changed: reworked the rare `Rogue Lattice` wildcard in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so it no longer reads like "one more autonomous support package." The Wave 10 wildcard now forcibly hijacks the run into an immediate illegal convergence form by selecting or preserving a chassis-compatible convergence, stamping that convergence directly onto the build, and only then using support as an amplifier. In practice, the pickup now grants a real body/gun reroute on the spot: it can lock `Citadel Spindle`, `Slipstream Talons`, or `Towchain Reaver` immediately instead of merely adding late mutation plus a free helper. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert that `Rogue Lattice` now applies a chassis hijack, an immediate convergence form, and the expected weapon-state change. Validation passed with `node --check playables/cinder-circuit/game.js` and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` asked for one dominant main-weapon/body ladder, one subordinate support lane, and one rare wildcard that can visibly hijack a run without adding another wrapper. The highest-value bounded interpretation was to upgrade the existing `Rogue Lattice` payoff instead of inventing a new branch: make the wildcard immediately overwrite the player silhouette and firing logic with a chassis/gun convergence so the run is obviously "about that illegal form now," while support bays remain fuel rather than the star.
+  Follow-up risk: `Rogue Lattice` now creates a much sharper hijack moment, but it still resolves into one of the existing convergence families. If repeated runs start to read too predictably once the wildcard appears, the next pass should give each rogue convergence one extra wave-band-specific combat proof or one unique visual rider so the hijack keeps surprising without reopening the whole build taxonomy. Release Gate: `Builds`.
 
 - 2026-03-24 05:30:00 KST
   Changed: upgraded the `Main Weapon Mutation` payoff in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Field Arsenal` breakpoints now unlock an autonomous side-battery broadside as soon as the mutation hits `MK II+`. The existing mutation lane still adds more barrels to the main shot, but it now also grows visible flank pods on the player frame and periodically fires a wide automatic cross-lane salvo at clustered or elite targets, making the very next `Wave 5/9/Afterburn` fight read as immediate space ownership instead of only a bigger label. I also extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert that the first offensive breakpoint now grants the new broadside config. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

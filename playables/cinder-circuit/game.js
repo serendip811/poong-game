@@ -3219,14 +3219,22 @@
       wave: 10,
       laneLabel: "Wildcard Protocol",
       description:
-        "교리 밖 autonomous lattice를 몰수해 빈 flex bay에 즉시 꽂는다. 남은 런은 주포 실루엣 위에 자율 포격층이 덧붙어, 원래 빌드 계획보다 훨씬 난폭한 screen-clear 머신으로 기울 수 있다.",
-      slotText: "off-doctrine arsenal + 추가 배럴 jump",
-      roadmapDetail: "Wave 10 arsenal cache가 자율 포격 프로토콜을 열어 남은 bracket을 off-doctrine 공세 기계로 납치할 수 있다.",
+        "교리 밖 rogue lattice를 current chassis와 불법 직결해 즉시 convergence form으로 굳힌다. 남은 런은 support가 주역이 아니라 증폭기로 내려앉고, 주포/차체 자체가 새 갈퀴 프레임으로 접혀 원래 계획보다 훨씬 난폭한 lane-owner 머신으로 꺾일 수 있다.",
+      slotText: "illegal convergence + chassis hijack + 배럴 jump",
+      roadmapDetail: "Wave 10 arsenal cache가 rogue convergence를 열어 남은 bracket을 off-doctrine body/gun form으로 납치할 수 있다.",
       apply(build, run) {
         applyAuxiliaryJunction(build);
         build.supportBayCap = Math.max(getSupportBayCapacity(build), MAX_SUPPORT_BAY_LIMIT);
+        const chassisId = getRogueLatticeChassisId(build);
+        if (chassisId) {
+          applyChassisBreakpoint(build, chassisId, run);
+        }
         build.lateFieldMutationLevel = Math.max(getLateFieldMutationLevel(build), 2);
-        const preferredSystemId = build.coreId === "lance" ? "seeker_array" : "volt_drones";
+        const convergenceDef = getRogueLatticeConvergenceDef(build, chassisId);
+        if (convergenceDef) {
+          build.lateFieldConvergenceId = convergenceDef.id;
+        }
+        const preferredSystemId = getRogueLatticeSupportSystemId(build, chassisId);
         const systemChoice = createSupportSystemTierChoice(preferredSystemId, 1);
         if (systemChoice) {
           applyForgeChoice(run, { ...systemChoice, cost: 0 });
@@ -8148,6 +8156,40 @@
     return labels.length > 0 ? `Wildcard ${labels.join(" + ")}` : "Wildcard 없음";
   }
 
+  function getRogueLatticeChassisId(build) {
+    if (build && build.chassisId && LATE_FIELD_CONVERGENCE_DEFS[build.chassisId]) {
+      return build.chassisId;
+    }
+    const doctrine = getBastionDoctrineDef(build);
+    const ascension = doctrine ? WAVE6_ASCENSION_DEFS[doctrine.id] || null : null;
+    if (ascension && ascension.chassisId && LATE_FIELD_CONVERGENCE_DEFS[ascension.chassisId]) {
+      return ascension.chassisId;
+    }
+    const fallbackChassisIdByCore = {
+      ember: "vector_thrusters",
+      scatter: "bulwark_treads",
+      lance: "vector_thrusters",
+      ricochet: "salvage_winch",
+    };
+    return fallbackChassisIdByCore[build && build.coreId] || "vector_thrusters";
+  }
+
+  function getRogueLatticeConvergenceDef(build, chassisId = null) {
+    const resolvedChassisId = chassisId || getRogueLatticeChassisId(build);
+    return resolvedChassisId ? LATE_FIELD_CONVERGENCE_DEFS[resolvedChassisId] || null : null;
+  }
+
+  function getRogueLatticeSupportSystemId(build, chassisId = null) {
+    const resolvedChassisId = chassisId || getRogueLatticeChassisId(build);
+    if (resolvedChassisId === "bulwark_treads") {
+      return "aegis_halo";
+    }
+    if (resolvedChassisId === "salvage_winch") {
+      return "seeker_array";
+    }
+    return build && build.coreId === "lance" ? "seeker_array" : "volt_drones";
+  }
+
   function getDoctrineWeaponForm(build, coreId) {
     if (!build || !coreId) {
       return null;
@@ -12604,6 +12646,7 @@
     getCombatCacheChoicesForWave,
     buildArchitectureDraftChoices,
     buildFieldGrantChoices,
+    createWildcardProtocolChoice,
     createLateFieldConvergenceChoice,
     buildBastionDraftChoices,
     buildWave6ChassisBreakpointChoices,
@@ -12925,6 +12968,9 @@
       weapon.afterburnDominionStatusNote ||
       weapon.afterburnOverdriveStatusNote ||
       weapon.lateAscensionStatusNote ||
+      (getClaimedWildcardProtocolIds(build).includes("rogue_lattice")
+        ? weapon.lateFieldConvergenceStatusNote || weapon.lateFieldMutationStatusNote
+        : null) ||
       weapon.capstoneStatusNote ||
       weapon.doctrineStatusNote ||
       weapon.evolutionStatusNote ||

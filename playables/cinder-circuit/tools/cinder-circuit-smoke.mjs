@@ -85,6 +85,28 @@ game.applyForgeChoice(wildcardRun, wildcardChoice);
 assert.ok(wildcardRun.build.wildcardProtocolIds.includes("smuggler_winch"));
 assert.equal(wildcardRun.build.chassisId, "salvage_winch");
 assert.ok(game.getSupportBayCapacity(wildcardRun.build) >= 3);
+const rogueLatticeBuild = game.createInitialBuild("rail_zeal");
+rogueLatticeBuild.bastionDoctrineId = "storm_artillery";
+rogueLatticeBuild.supportBayCap = 3;
+rogueLatticeBuild.supportSystems = [{ id: "aegis_halo", tier: 1 }];
+const rogueLatticeChoice = game.createWildcardProtocolChoice(rogueLatticeBuild, 10);
+assert.ok(rogueLatticeChoice);
+assert.equal(rogueLatticeChoice.title, "Rogue Lattice");
+const rogueLatticeRun = {
+  build: rogueLatticeBuild,
+  resources: { scrap: 0 },
+  stats: { scrapCollected: 0, scrapSpent: 0 },
+  player: { hp: 100, maxHp: 100, heat: 18, overheated: false, invulnerableTime: 0 },
+};
+game.applyForgeChoice(rogueLatticeRun, rogueLatticeChoice);
+assert.ok(rogueLatticeRun.build.wildcardProtocolIds.includes("rogue_lattice"));
+assert.equal(rogueLatticeRun.build.chassisId, "bulwark_treads");
+assert.equal(rogueLatticeRun.build.lateFieldConvergenceId, "citadel_spindle");
+assert.ok(game.getSupportBayCapacity(rogueLatticeRun.build) >= 4);
+const rogueLatticeWeapon = game.computeWeaponStats(rogueLatticeRun.build);
+assert.equal(rogueLatticeWeapon.lateFieldConvergenceLabel, "Citadel Spindle");
+assert.equal(rogueLatticeWeapon.lateFieldConvergenceFirePattern.kind, "late_field_convergence");
+assert.equal(rogueLatticeWeapon.lateFieldMutationLevel, 2);
 assert.ok(game.WAVE_CONFIG[7].spawnBudget > game.WAVE_CONFIG[4].spawnBudget);
 assert.ok(game.WAVE_CONFIG[7].mix.warden > 0);
 assert.ok(game.WAVE_CONFIG[7].mix.mortar > 0);
