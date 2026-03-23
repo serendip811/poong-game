@@ -239,31 +239,37 @@ assert.equal(
   JSON.stringify(["Main Weapon Mutation", "Defense / Utility", "Greed Contract"])
 );
 const earlyPackageBuild = game.createInitialBuild("rail_zeal");
-const earlyHeadlineChoices = game.buildForgeChoices(earlyPackageBuild, Math.random, 999, {
-  nextWave: 3,
-  finalForge: false,
-});
 const earlyRiderChoices = game.buildForgeFollowupChoices(
   earlyPackageBuild,
   Math.random,
   999,
   { nextWave: 3, finalForge: false },
-  earlyHeadlineChoices[0]
+  {
+    id: "headline:main",
+    laneLabel: "Main Weapon Mutation",
+    forgeLaneLabel: "Main Weapon Mutation",
+    tag: "MUTATE",
+  }
 );
 assert.equal(
   JSON.stringify(earlyRiderChoices.map((choice) => choice.laneLabel)),
-  JSON.stringify(["Support Rider", "Defense / Utility", "Greed Contract"])
+  JSON.stringify(["Defense / Utility", "Support Rider"])
 );
 const actBreakRiderChoices = game.buildForgeFollowupChoices(
   game.createInitialBuild("scrap_pact"),
   Math.random,
   999,
   { nextWave: 5, finalForge: false },
-  actBreakCacheChoices[0]
+  {
+    id: "headline:defense",
+    laneLabel: "Defense / Utility",
+    forgeLaneLabel: "Defense / Utility",
+    tag: "HALO",
+  }
 );
 assert.equal(
   JSON.stringify(actBreakRiderChoices.map((choice) => choice.laneLabel)),
-  JSON.stringify(["Support Rider", "Defense / Utility", "Greed Contract"])
+  JSON.stringify(["Support Rider", "Greed Contract"])
 );
 const packageProbeRun = { waveIndex: 7, pendingFinalForge: false };
 assert.equal(game.shouldOpenForgePackage(packageProbeRun, lateBreakChoices[0]), false);
@@ -1257,7 +1263,7 @@ const doctrineFollowupChoices = game.buildForgeFollowupChoices(
 );
 assert.equal(
   JSON.stringify(doctrineFollowupChoices.map((choice) => choice.laneLabel)),
-  JSON.stringify(["Support Rider", "Defense / Utility", "Greed Contract"])
+  JSON.stringify(["Defense / Utility", "Support Rider"])
 );
 const doctrineCapstoneBuild = game.createInitialBuild("relay_oath");
 doctrineCapstoneBuild.pendingCores = [];
@@ -1475,9 +1481,9 @@ const fortressFollowupChoices = game.buildForgeFollowupChoices(
 );
 assert.equal(
   JSON.stringify(fortressFollowupChoices.map((choice) => choice.laneLabel)),
-  JSON.stringify(["Support Rider", "Defense / Utility", "Greed Contract"])
+  JSON.stringify(["Defense / Utility", "Support Rider"])
 );
-assert.ok(fortressFollowupChoices.some((choice) => choice.laneLabel === "Greed Contract"));
+assert.ok(fortressFollowupChoices.some((choice) => choice.laneLabel === "Support Rider"));
 const fieldGrantBuild = game.createInitialBuild("relay_oath");
 fieldGrantBuild.pendingCores = [];
 const fieldGrantChoices = game.buildFieldGrantChoices(fieldGrantBuild, () => 0, 4);
@@ -1598,7 +1604,7 @@ const packageFollowupChoices = game.buildForgeFollowupChoices(
 );
 assert.equal(
   JSON.stringify(packageFollowupChoices.map((choice) => choice.laneLabel)),
-  JSON.stringify(["Support Rider", "Defense / Utility", "Greed Contract"])
+  JSON.stringify(["Defense / Utility", "Support Rider"])
 );
 const firstSupportRiderChoice = packageFollowupChoices.find(
   (choice) => choice.laneLabel === "Support Rider" && choice.type === "system"
@@ -1635,7 +1641,7 @@ const aegisInstallChoices = game.buildForgeFollowupChoices(
 );
 assert.equal(
   JSON.stringify(aegisInstallChoices.map((choice) => choice.laneLabel)),
-  JSON.stringify(["Support Rider", "Defense / Utility", "Greed Contract"])
+  JSON.stringify(["Defense / Utility", "Support Rider"])
 );
 const sentryBuild = game.createInitialBuild("relay_oath");
 sentryBuild.pendingCores = [];
@@ -1698,7 +1704,7 @@ const aegisUpgradeChoices = game.buildForgeFollowupChoices(
 );
 assert.equal(
   JSON.stringify(aegisUpgradeChoices.map((choice) => choice.laneLabel)),
-  JSON.stringify(["Support Rider", "Defense / Utility", "Greed Contract"])
+  JSON.stringify(["Defense / Utility", "Support Rider"])
 );
 const secondSupportBayChoice = game
   .buildForgeFollowupChoices(aegisBuild, () => 0, 180, { nextWave: 6, finalForge: false }, packagePrimaryChoice)
@@ -1757,7 +1763,7 @@ const actBreakFollowupChoices = game.buildForgeFollowupChoices(
 );
 assert.equal(
   JSON.stringify(actBreakFollowupChoices.map((choice) => choice.laneLabel)),
-  JSON.stringify(["Support Rider", "Defense / Utility", "Greed Contract"])
+  JSON.stringify(["Defense / Utility", "Support Rider"])
 );
 assert.ok(!actBreakFollowupChoices.some((choice) => choice.id === armoryFirstPick.id));
 const lateArmoryBuild = game.createInitialBuild("relay_oath");
@@ -1797,7 +1803,7 @@ const actOneModuleFollowup = game.buildForgeFollowupChoices(
 );
 assert.equal(
   JSON.stringify(actOneModuleFollowup.map((choice) => choice.laneLabel)),
-  JSON.stringify(["Support Rider", "Defense / Utility", "Greed Contract"])
+  JSON.stringify(["Defense / Utility", "Support Rider"])
 );
 const actTwoModuleFollowup = game.buildForgeFollowupChoices(
   actModuleFollowupBuild,
@@ -1808,7 +1814,7 @@ const actTwoModuleFollowup = game.buildForgeFollowupChoices(
 );
 assert.equal(
   JSON.stringify(actTwoModuleFollowup.map((choice) => choice.laneLabel)),
-  JSON.stringify(["Support Rider", "Defense / Utility", "Greed Contract"])
+  JSON.stringify(["Defense / Utility", "Support Rider"])
 );
 const seekerInstallChoice = game
   .buildForgeFollowupChoices(

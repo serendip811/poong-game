@@ -6925,6 +6925,58 @@
     return "main";
   }
 
+  function getForgeRecommendedRiderPlan(choice) {
+    const tone = getForgeChoiceTone(choice);
+    if (tone === "defense") {
+      return {
+        laneLabel: "Support Rider",
+        note: "안정화된 pocket 위에 자동 화력을 얹어 다음 전투 소유권을 더 빠르게 넓힌다.",
+      };
+    }
+    if (tone === "greed") {
+      return {
+        laneLabel: "Defense / Utility",
+        note: "탐욕 계약 직후의 debt와 진입 리스크를 바로 상쇄해 다음 웨이브를 버틴다.",
+      };
+    }
+    return {
+      laneLabel: "Defense / Utility",
+      note: "커진 주포 실루엣이 바로 숨 쉴 공간을 갖도록 shell과 회복 여지를 먼저 붙인다.",
+    };
+  }
+
+  function scoreForgeRiderChoice(choice, previousChoice) {
+    if (!choice) {
+      return -1;
+    }
+    const recommendedLane = getForgeRecommendedRiderPlan(previousChoice).laneLabel;
+    const riderLane = choice.laneLabel || choice.forgeLaneLabel || "";
+    const tone = getForgeChoiceTone(previousChoice);
+    let score = 0;
+    if (riderLane === recommendedLane) {
+      score += 120;
+    } else if (riderLane === "Support Rider") {
+      score += tone === "main" ? 78 : tone === "greed" ? 72 : 54;
+    } else if (riderLane === "Defense / Utility") {
+      score += tone === "defense" ? 42 : 84;
+    } else if (riderLane === "Greed Contract") {
+      score += tone === "defense" ? 70 : 36;
+    }
+    if ((choice.cost || 0) <= 0) {
+      score += 8;
+    }
+    return score;
+  }
+
+  function curateForgeRiderChoices(riderChoices, previousChoice) {
+    if (!Array.isArray(riderChoices) || riderChoices.length <= 2) {
+      return riderChoices || [];
+    }
+    return [...riderChoices]
+      .sort((left, right) => scoreForgeRiderChoice(right, previousChoice) - scoreForgeRiderChoice(left, previousChoice))
+      .slice(0, 2);
+  }
+
   function getForgeChoiceTransformation(choice) {
     if (!choice) {
       return {
@@ -6933,12 +6985,15 @@
         tone: "main",
         promise: "다음 전투 실루엣을 크게 바꾸는 선택이다.",
         proof: "선택 직후 전장 규칙이 즉시 바뀐다.",
+        riderLabel: "Defense / Utility",
+        riderNote: "다음 전투 진입을 안전하게 다듬는다.",
       };
     }
     const descriptionSentences = splitForgeSentences(choice.description);
     const previewRows = createForgePreviewRows(choice).filter(Boolean);
     const primaryPreview = previewRows[0];
     const secondaryPreview = previewRows[1];
+    const riderPlan = getForgeRecommendedRiderPlan(choice);
     const proofText =
       choice.roadmapDetail ||
       (choice.finalePreview
@@ -6958,6 +7013,8 @@
       tone: getForgeChoiceTone(choice),
       promise: promiseText,
       proof: proofText,
+      riderLabel: riderPlan.laneLabel,
+      riderNote: riderPlan.note,
       accent: primaryPreview ? `${primaryPreview.label} ${primaryPreview.value}` : choice.slotText || "",
     };
   }
@@ -6978,6 +7035,7 @@
                 <strong>${transformation.title}</strong>
                 <p class="forge-spotlight__promise">${transformation.promise}</p>
                 <p class="summary-note">${transformation.proof}</p>
+                <p class="summary-note">추천 rider · ${transformation.riderLabel}</p>
               </article>
             `;
           })
@@ -10486,7 +10544,7 @@
       createForgeRiderDefenseChoice(build, rng, nextWave),
       createForgeRiderGreedChoice(build, nextWave),
     ].filter((choice) => choice && (!previousChoice || choice.id !== previousChoice.id));
-    return riderChoices;
+    return curateForgeRiderChoices(riderChoices, previousChoice);
   }
 
   function createLateFieldMutationChoice(build, nextWave) {
@@ -19546,7 +19604,7 @@
             </div>
             <p class="forge-card__proof"><span>다음 전투 증명</span>${transformation.proof}</p>
             <div class="forge-card__preview">${previewRows}</div>
-            <span class="forge-card__meta">${choice.slotText}</span>
+            <span class="forge-card__meta">추천 rider · ${transformation.riderLabel}</span>
             <span class="forge-card__slot">${slotLabel}</span>
           </button>
         `;

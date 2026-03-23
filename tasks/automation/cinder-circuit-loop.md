@@ -13,7 +13,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: vertical-slice-to-alpha expansion.
-- Immediate priority: stop extending taxonomy, align docs and implementation around one readable 12-wave spine plus one clean Afterburn proof band, and prove a dominant chassis/weapon ladder with one secondary support lane and one real wildcard payoff.
+- Immediate priority: freeze new branch growth, align docs and implementation around one readable 12-wave spine, and consolidate the existing forge/HUD/build ladder until one dominant chassis fantasy plus one secondary support lane are clear, desirable, and immediately legible without taxonomy-heavy UI.
 
 ## Release Gates
 
@@ -40,6 +40,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-23 23:50:00 KST
+  Findings:
+  - `playables/cinder-circuit/game.js` now has enough doctrines, armories, dominions, wildcard valves, and pursuit layers to imply scale, but the run is still spending too much excitement budget on structure names and eligibility logic. This is drifting past "build depth" into administration.
+  - The combat space is broader than before, but the reward loop still too often resolves into menu parsing instead of the instant appetite strong references create. Compared with `Hades` boon moments, `Brotato` shop rows, or `Nova Drift` evolution breaks, the forge/HUD stack still explains too much before it makes the player want the pick.
+  - The main weapon has more authored forms now, yet repeat-run hunger is still fragile because too many spikes are split across chassis, support bays, dominion/endform labels, and late wildcard legality. Players should be chasing one terrifying body/gun future first, not auditing four parallel ladders.
+  - `docs/games/cinder-circuit-design.md` and `docs/games/cinder-circuit-source-analysis.md` still describe a short prototype run, so implementation keeps inheriting prototype thinking: add another wrapper, another branch, another offer type, instead of proving that one full run already lands clarity, escalation, and payoff.
+  Top Priority: Consolidate the between-wave reward structure into one headline transformation choice plus one compact secondary rider at most, and make the next 12-wave pass prove that each major breakpoint visibly changes battlefield ownership within the very next fight.
+  Why Now: A 20-30 wave future will fail if the current 12-wave spine still needs UI and taxonomy to sell power.
+  Do Not Repeat: Do not answer this with another doctrine, another wildcard lane, or another bracket rename before the existing reward stack becomes faster to read and harder to forget.
+  Release Gate: Rewards
 
 - 2026-03-24 05:10:00 KST
   Findings:
@@ -1425,6 +1436,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 06:20:00 KST
+  Changed: tightened the standard forge package in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the reward beat now commits harder to `one headline transformation plus one compact rider at most` instead of reopening three equal-weight follow-up lanes. Headline cards now explicitly preview the recommended next rider lane, and the actual rider step for standard package forges is curated down to the best two follow-ups based on the picked headline: offensive/body spikes now surface `Defense / Utility` first to preserve space for the new form, while defensive headlines surface `Support Rider` first to turn that safer pocket into immediate battlefield ownership. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new 2-card rider contract and the new priority ordering. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` said the between-wave reward stack was still spending too much excitement on structure and choice administration even after the headline/rider split existed. The highest-value bounded interpretation was to consolidate the existing package flow further instead of adding another rule wrapper: make each headline card already imply the small follow-up plan, then reduce the rider screen to two authored follow-ups that reinforce the chosen fantasy instead of reopening a full mini-draft.
+  Follow-up risk: this makes the normal forge cadence faster to read and more intention-led, but special-case reward stops like `Architecture Draft`, `Bastion Draft`, and `Catalyst Crucible` still sit outside the same fully reduced contract. A later pass should decide whether those bespoke stops should inherit the same 2-option rider curation or be cut even harder so the entire 12-wave spine sells power with the same snap. Release Gate: `Rewards`. For reference direction, this pass deliberately leaned on the appetite-first commitment of `Hades` boon reveals and the smaller, more legible follow-up choice weight seen in `Brotato` shop rows rather than leaving the rider step as another equal-priority menu.
 
 - 2026-03-24 05:55:00 KST
   Changed: reworked the rare `Rogue Lattice` wildcard in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so it no longer reads like "one more autonomous support package." The Wave 10 wildcard now forcibly hijacks the run into an immediate illegal convergence form by selecting or preserving a chassis-compatible convergence, stamping that convergence directly onto the build, and only then using support as an amplifier. In practice, the pickup now grants a real body/gun reroute on the spot: it can lock `Citadel Spindle`, `Slipstream Talons`, or `Towchain Reaver` immediately instead of merely adding late mutation plus a free helper. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert that `Rogue Lattice` now applies a chassis hijack, an immediate convergence form, and the expected weapon-state change. Validation passed with `node --check playables/cinder-circuit/game.js` and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
