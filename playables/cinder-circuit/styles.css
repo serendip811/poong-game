@@ -1264,6 +1264,13 @@ body[data-overdrive="true"] .backdrop__glow--right {
   margin-top: 14px;
 }
 
+.forge-focus__triptych {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
 .forge-focus__pill {
   padding: 12px;
   border-radius: 14px;
@@ -1277,10 +1284,6 @@ body[data-overdrive="true"] .backdrop__glow--right {
 
 .forge-focus__pill p:last-child {
   font-size: 0.84rem;
-}
-
-.forge-focus__note {
-  margin-top: 12px;
 }
 
 .forge-focus__proof {
@@ -1822,6 +1825,36 @@ body[data-overdrive="true"] .backdrop__glow--right {
   text-transform: uppercase;
 }
 
+.forge-card__impact-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  width: 100%;
+}
+
+.forge-card__impact {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.forge-card__impact span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.forge-card__impact strong {
+  font-size: 0.86rem;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
 .forge-card__preview {
   width: 100%;
   padding: 8px 10px;
@@ -1911,6 +1944,12 @@ body[data-overdrive="true"] .backdrop__glow--right {
 .forge-card__pivot strong {
   color: var(--text);
   text-align: right;
+}
+
+.forge-card__side-note {
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
 }
 
 .forge-card--rider {
@@ -2092,8 +2131,16 @@ body[data-overdrive="true"] .backdrop__glow--right {
     grid-template-columns: 1fr;
   }
 
+  .forge-focus__triptych {
+    grid-template-columns: 1fr;
+  }
+
   .forge-card--featured {
     grid-column: span 1;
+  }
+
+  .forge-card__impact-strip {
+    grid-template-columns: 1fr;
   }
 
   .hud-overlay--top {

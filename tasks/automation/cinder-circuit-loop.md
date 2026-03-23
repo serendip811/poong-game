@@ -13,7 +13,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: hard-fence `Wave 1-12` as the only validated route, strip `Afterburn`/live-ascension/admin distractions out of the core promise, and prove one rerunnable three-era ladder where each major mutation earns a clean payoff window before the next breach test.
+- Immediate priority: freeze all post-capstone/ascension spectacle out of the player promise and prove one rerunnable `Wave 1-12` ladder where forge sells a single craveable mutation and each era alternates clean payoff windows with readable breach tests.
 
 ## Release Gates
 
@@ -40,6 +40,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 16:55:00 KST
+  Findings:
+  - The run is still selling too much future beyond the validated route. `POST_CAPSTONE_WAVE_COUNT`, `POST_CAPSTONE_WAVE_LABELS`, the large `POST_CAPSTONE_ENCOUNTER_POOL`, and repeated late-ascension/Afterburn wording in `game.js` keep implying that the real game starts after `Wave 12`, which weakens replay desire for the core ladder instead of strengthening it.
+  - `Wave 7-12` has better intent than before, but the actual curve is still too uniformly “serious.” `Crownfire` is described as a domination lap, yet the wave still carries drift plus seven enemy families; then `Forgecross`, `Scrapline`, `Starforge`, and `Cinder Crown` chain breach, ignition, pursuit, and binder pressure so tightly that the player gets too few genuine victory laps between exams.
+  - The forge/HUD presentation is still more system-rich than appetite-rich. `updateHUD()` keeps stacking dominant form, next breakpoint, proof window, support track, roadmap, hazard detail, and economy in parallel, while `renderForgeOverlay()` still frames picks through mode labels, rails, proof copy, preview rows, rider meta, and slot language before the player can just want the mutation.
+  - Build payoff is still at risk of feeling distributed rather than transformational. The code clearly contains enough spectacle layers, but the read is still “several concurrent systems progressing” more than “my gun/body just crossed a visible threshold and now owns different space.”
+  Top Priority: Rebuild the next improve pass around one ruthless release proof: make every forge stop present one oversized mutation first, cut supporting admin copy to the minimum, and retune `Wave 7-12` so each major form gets a real low-tax domination window before the next breach exam lands.
+  Why Now: A future `20-30` wave run only works if the current `12-wave` spine already creates hunger, relief, and payoff in the right rhythm.
+  Do Not Repeat: Do not answer this with more Afterburn encounters, ascension wrappers, or support-side spectacle until the base ladder produces stronger “one more run” desire on its own.
+  Release Gate: Rewards
 
 - 2026-03-24 16:20:00 KST
   Findings:
@@ -1618,6 +1629,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 17:20:00 KST
+  Changed: rebuilt the main forge stop presentation in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and [styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) around one oversized primary mutation card plus stripped-down support context. The forge header now collapses to `Current Form / Take This / Next Fight`, the featured pick is framed as `Primary Mutation`, and the side picks are demoted to short `Alt Pick` cards with one proof line instead of extra rider/admin meta.
+  Why: this directly answers the latest critique's `Top Priority` on the `Rewards` gate by making forge stops sell desire first and explanation second. The reference direction was the appetite-first reward reveal used by `Hades` boon moments and `Nova Drift` level-up cards: one dominant mutation in front, alternatives quieter, combat proof immediately underneath.
+  Risk: the underlying HUD is still carrying too much parallel state during combat, so the forge screen is now cleaner than the in-wave read. A follow-up pass should cut HUD admin with the same ruthlessness so the reward payoff survives after the menu closes.
+  Release Gate: Rewards
 
 - 2026-03-24 17:05:00 KST
   Changed: fenced `Afterburn` reward presentation out of the core `Wave 1-12` route in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) without ripping out the latent post-capstone systems yet. Forge cards still keep their hidden `finalePreview` data for future content, but the live forge overlay no longer surfaces `시험 / 압박` Afterburn rows or `Afterburn` proof copy while `CONSOLIDATED_12_WAVE_ROUTE` is active; the final forge now frames itself as a `Wave 12 Seal` that sells the current run's last form instead of the next branch's ladder. In the same bounded pass I retuned `Wave 7 · Crownfire` into a shorter domination lap with lower binder/mortar upkeep, slower drift closure, and a wider arena, then recut `Wave 8 · Forgecross` into one clearer breach test with a single late relay crown instead of a double maintenance stack. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to pin both the new `Wave 7-8` cadence and the rule that final-forge preview rows stop surfacing Afterburn labels in the consolidated route. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

@@ -19938,7 +19938,6 @@
     if (!active) {
       return;
     }
-    const activeCore = CORE_DEFS[state.build.coreId];
     const forgeOptions = {
       finalForge: state.pendingFinalForge,
       nextWave: state.waveIndex + 2,
@@ -19955,6 +19954,7 @@
       : getForgeFeaturedChoice(state.forgeChoices, state.build, state.waveIndex + 2);
     const showcase = featuredForgeChoice.showcase;
     const featuredIndex = featuredForgeChoice.featuredIndex;
+    const featuredChoice = featuredIndex >= 0 ? state.forgeChoices[featuredIndex] : null;
     const forgeModeLabel = state.pendingFinalForge
       ? CONSOLIDATED_12_WAVE_ROUTE
         ? "Wave 12 Seal"
@@ -19976,62 +19976,57 @@
                     ? "Headline Forge"
                     : "Rider Slot"
                   : "Forge";
-    elements.forgeSubtitle.textContent = state.pendingFinalForge
-      ? `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. 여기서는 post-capstone 사다리를 미리 팔지 않고, 이번 12-wave spine을 닫는 final seal만 보여 준다.`
+    const focusEyebrow = state.pendingFinalForge
+      ? "Run Seal"
       : riderStep
-        ? `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. headline leap은 잠겼다. 이제 rider 1장만 얹고 ${proofWindow.label}에서 바로 버틴다.`
-        : `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. 이번 포지는 headline mutation 하나를 크게 보여 주고, rider 한 장만 짧게 붙인다.`;
+        ? "Rider Lock"
+        : "Headline Mutation";
+    const focusTitle = state.pendingFinalForge
+      ? nextFormStep.label
+      : riderStep
+        ? activeSupportTrack.label
+        : (featuredChoice && featuredChoice.title) || nextFormStep.label;
+    const focusPrompt = state.pendingFinalForge
+      ? `${dominantFormSummary.label}를 이번 12-wave spine의 최종 실루엣으로 봉인한다.`
+      : riderStep
+        ? `${dominantFormSummary.label} 위에 rider 한 장만 얹고 ${proofWindow.label}까지 버틴다.`
+        : `${dominantFormSummary.label} 다음에 가장 크게 전장을 바꿀 변이를 먼저 고른다.`;
+    elements.forgeSubtitle.textContent = state.pendingFinalForge
+      ? `${forgeModeLabel} · ${focusTitle} · 고철 ${Math.round(state.resources.scrap)}`
+      : riderStep
+        ? `${forgeModeLabel} · ${proofWindow.label} 대비 rider 선택 · 고철 ${Math.round(state.resources.scrap)}`
+        : `${forgeModeLabel} · ${focusTitle} 먼저 · 고철 ${Math.round(state.resources.scrap)}`;
     elements.forgeContext.innerHTML = `
       <article class="forge-focus forge-focus--${riderStep ? "rider" : "headline"} forge-context__card forge-context__card--span-two">
         <div class="forge-focus__header">
-          <p class="panel__eyebrow">${
-            state.pendingFinalForge
-              ? "Run Seal"
-              : riderStep
-                ? "Survival Rider"
-                : "Headline Leap"
-          }</p>
+          <p class="panel__eyebrow">${focusEyebrow}</p>
           <span class="forge-focus__mode">${forgeModeLabel}</span>
         </div>
-        <strong>${
-          state.pendingFinalForge
-            ? "메인 루트를 닫는 마지막 각인 한 장"
-            : riderStep
-            ? "큰 변신 뒤에 얹는 생존/유틸 한 장"
-            : "이번 포지에서 다음 전투를 바꿀 한 장"
-        }</strong>
-        <p>${
-          state.pendingFinalForge
-            ? "이 정지에서는 Afterburn trial, cache, post-capstone hazard preview를 전면에 두지 않는다. 지금 런의 최종 form을 잠그는 선택만 크게 보여 주고 나머지는 짧게 남긴다."
-            : riderStep
-            ? "headline leap은 이미 고정됐다. 이번 단계는 support, shell, greed 중 하나를 rider로 얹어 proof window에서 얼마나 오래 버티는지 정하는 선택이다."
-            : "이번 포지는 관리표 대신 이번 정지에서 가장 크게 실루엣을 바꾸는 mutation 하나만 앞으로 꺼낸다. 나머지 선택지는 비교용으로 짧게 남긴다."
-        }</p>
-        <div class="forge-focus__rail">
+        <strong>${focusTitle}</strong>
+        <p>${focusPrompt}</p>
+        <div class="forge-focus__triptych">
           <article class="forge-focus__pill">
-            <p class="panel__eyebrow">Headline Leap</p>
-            <strong>${nextFormStep.label}</strong>
-            <p>${nextFormStep.detail}</p>
+            <p class="panel__eyebrow">Current Form</p>
+            <strong>${dominantFormSummary.label}</strong>
+            <p>${dominantFormSummary.detail}</p>
           </article>
           <article class="forge-focus__pill">
-            <p class="panel__eyebrow">Survival Rider</p>
-            <strong>${activeSupportTrack.label}</strong>
-            <p>${activeSupportTrack.detail}</p>
+            <p class="panel__eyebrow">${riderStep ? "Rider" : "Take This"}</p>
+            <strong>${focusTitle}</strong>
+            <p>${riderStep ? activeSupportTrack.detail : nextFormStep.detail}</p>
+          </article>
+          <article class="forge-focus__pill">
+            <p class="panel__eyebrow">${state.pendingFinalForge ? "Route Payoff" : "Next Fight"}</p>
+            <strong>${proofWindow.label}</strong>
+            <p>${proofWindow.detail}</p>
           </article>
         </div>
-        <p class="forge-focus__proof"><span>${
-          state.pendingFinalForge ? "Route Payoff" : "Next Proof"
-        }</span>${
+        <p class="forge-focus__proof"><span>${state.pendingFinalForge ? "Route Payoff" : "Next Proof"}</span>${
           state.pendingFinalForge
             ? `${dominantFormSummary.label}를 ${nextFormStep.label}으로 봉인해 메인 12-wave route의 마지막 실루엣을 확정한다.`
-            : `${proofWindow.label}. ${proofWindow.detail}`
-        }</p>
-        <p class="summary-note forge-focus__note">${
-          state.pendingFinalForge
-            ? `${dominantFormSummary.label}에서 ${nextFormStep.label}(으)로 닫고 ${activeSupportTrack.label}는 rider로만 남긴다. post-capstone 보상 예고 대신 현재 런이 어디까지 진화했는지만 앞세운다.`
             : riderStep
-            ? `${dominantFormSummary.label} 위에 ${activeSupportTrack.label} rider를 얹고 ${proofWindow.label}에서 버틸 시간을 늘린다. ${proofWindow.detail}`
-            : `${dominantFormSummary.label}에서 ${nextFormStep.label}(으)로 뛰고 ${activeSupportTrack.label}로 약점을 받친 뒤 ${proofWindow.label}에서 즉시 증명한다. ${proofWindow.detail}`
+              ? `${activeSupportTrack.label} rider를 얹고 ${proofWindow.label}에서 버티는 시간이 곧 가치다.`
+              : `${focusTitle}가 ${proofWindow.label}에서 바로 space ownership를 넓혀야 한다.`
         }</p>
         ${!riderStep ? createForgeHeadlineShowcaseMarkup(showcase) : ""}
       </article>
@@ -20127,7 +20122,7 @@
             data-verb="${choice.verb}"
             ${state.resources.scrap < choice.cost ? "disabled" : ""}
           >
-            <span class="forge-card__tag">${contractLabel}${choice.tag ? ` · ${choice.tag}` : ""}</span>
+            <span class="forge-card__tag">Alt Pick</span>
             <h3>${choice.title}</h3>
             <p class="forge-card__hero-copy">${transformation.promise}</p>
             ${
@@ -20135,6 +20130,7 @@
                 ? `<p class="forge-card__pivot"><span>${compactPreviewRow.label}</span><strong>${compactPreviewRow.value}</strong></p>`
                 : ""
             }
+            <p class="forge-card__side-note">${transformation.proof}</p>
             <span class="forge-card__slot">${slotLabel}</span>
           </button>
         `;
@@ -20150,8 +20146,7 @@
             data-verb="${choice.verb}"
             ${state.resources.scrap < choice.cost ? "disabled" : ""}
           >
-            <span class="forge-card__badge">Featured Mutation</span>
-            <span class="forge-card__tag">${contractLabel}${choice.tag ? ` · ${choice.tag}` : ""}</span>
+            <span class="forge-card__badge">Primary Mutation</span>
             <div class="forge-card__hero forge-card__hero--${transformation.tone}">
               <span class="forge-card__hero-label">${contractLabel}</span>
               <h3>${choice.title}</h3>
@@ -20159,7 +20154,20 @@
             </div>
             <p class="forge-card__proof"><span>다음 전투 증명</span>${transformation.proof}</p>
             <div class="forge-card__preview">${previewRows}</div>
-            <span class="forge-card__meta">추천 rider ${transformation.riderLabel} · ${choice.laneLabel || transformation.laneLabel}</span>
+            ${
+              showcase && showcase.choice === choice
+                ? `<div class="forge-card__impact-strip">${showcase.rows
+                    .map(
+                      (row) => `
+                        <article class="forge-card__impact">
+                          <span>${row.label}</span>
+                          <strong>${row.value}</strong>
+                        </article>
+                      `
+                    )
+                    .join("")}</div>`
+                : ""
+            }
             <span class="forge-card__slot">${slotLabel}</span>
           </button>
         `;
