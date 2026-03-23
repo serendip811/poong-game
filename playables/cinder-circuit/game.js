@@ -64,17 +64,17 @@
       bandId: "breakpoint_overdrive",
       bandLabel: "Breakpoint Overdrive",
       pressureFamily: "crossfire",
-      note: "Late Break에서 주포 변이를 집었다면 첫 late bracket은 확실한 payoff band로 열려야 한다. 전장을 크게 벌리고 구조물 upkeep를 걷어내, 방금 증설한 배럴과 보조 포문이 얼마나 깊게 lane을 찢는지만 먼저 증명하게 만든다.",
+      note: "Late Break에서 주포 변이를 집었다면 첫 late bracket은 확실한 breathing payoff band로 열려야 한다. 전장을 더 크게 벌리고 구조물 upkeep를 걷어내, 방금 증설한 배럴과 보조 포문이 두 웨이브 동안 열린 lane을 얼마나 깊게 찢는지 먼저 즐기게 만든다.",
       directive:
         "overdrive gallery. 구조물 코어보다 열린 사선과 marked elite 절개가 우선이다. skimmer 훑기를 얇게 만든 뒤 lancer charge를 정면 화망으로 자르며 새 주포 실루엣을 바로 시험해야 한다.",
       arena: {
-        width: 1760,
-        height: 980,
+        width: 1820,
+        height: 1020,
       },
-      activeCap: 27,
-      spawnBudget: 152,
-      baseSpawnInterval: 0.422,
-      spawnIntervalMin: 0.122,
+      activeCap: 24,
+      spawnBudget: 144,
+      baseSpawnInterval: 0.438,
+      spawnIntervalMin: 0.126,
       eliteEvery: 4,
       mix: {
         scuttler: 0.06,
@@ -88,10 +88,10 @@
       mixWeight: 0.62,
       hazard: {
         label: "Overdrive Surge",
-        interval: 10.8,
+        interval: 11.2,
         count: 1,
         radius: 68,
-        telegraph: 0.9,
+        telegraph: 0.92,
         duration: 3.7,
         damage: 14,
       },
@@ -101,17 +101,17 @@
       bandId: "halo_run",
       bandLabel: "Halo Run",
       pressureFamily: "pursuit",
-      note: "Warplate Halo를 집었다면 첫 late bracket은 더 넓은 복구 창을 주는 reset 시험으로 바뀐다. 연속 drift furnace가 pocket을 밀어내지만 적 점유를 늦춰, 막 예열한 plate를 믿고 깊게 들어갔다 빠지는 리듬을 배우게 만든다.",
+      note: "Warplate Halo를 집었다면 첫 late bracket은 더 넓은 복구 창을 주는 breathing reset 시험으로 바뀐다. 연속 drift furnace가 pocket을 밀어내지만 적 점유를 늦춰, 막 예열한 plate를 믿고 두 웨이브 동안 깊게 들어갔다 빠지는 리듬을 배우게 만든다.",
       directive:
         "halo run. drift wake가 닫히기 전에 plate를 태워 한 lane을 밀어내고 다시 비워진 측면으로 복귀해야 한다. 정지 화력보다 dive-reset 리듬을 먼저 고르는 bracket이다.",
       arena: {
-        width: 1680,
-        height: 960,
+        width: 1740,
+        height: 990,
       },
-      activeCap: 25,
-      spawnBudget: 148,
-      baseSpawnInterval: 0.432,
-      spawnIntervalMin: 0.124,
+      activeCap: 23,
+      spawnBudget: 140,
+      baseSpawnInterval: 0.446,
+      spawnIntervalMin: 0.128,
       eliteEvery: 4,
       mix: {
         scuttler: 0.06,
@@ -127,10 +127,10 @@
       hazard: {
         label: "Halo Drift",
         type: "drift",
-        interval: 10.6,
+        interval: 11,
         count: 1,
         radius: 92,
-        telegraph: 0.86,
+        telegraph: 0.88,
         duration: 5.5,
         damage: 14,
         driftSpeed: 112,
@@ -142,17 +142,17 @@
       bandId: "ledger_heist",
       bandLabel: "Ledger Heist",
       pressureFamily: "raid",
-      note: "Black Ledger 계약을 집었다면 첫 late bracket은 곧바로 greed heist로 비틀린다. open-lane hunt 대신 moving vault를 따라 깊게 들어갈지, payout을 버리고 안전한 외곽 회전으로 돌아설지 계속 강요한다.",
+      note: "Black Ledger 계약을 집었다면 첫 late bracket은 breathing greed heist로 비틀린다. open-lane hunt 대신 moving vault를 따라 두 웨이브 동안 깊게 들어갈지, payout을 버리고 안전한 외곽 회전으로 돌아설지 계속 강요한다.",
       directive:
         "ledger heist. contraband caravan이 외곽 사선을 따라 도망친다. 금고를 찢고 바로 이탈하면 큰 payout이 터지지만, linger하면 brander와 lancer가 greed pocket을 즉시 봉쇄한다.",
       arena: {
-        width: 1720,
-        height: 970,
+        width: 1780,
+        height: 1000,
       },
-      activeCap: 26,
-      spawnBudget: 154,
-      baseSpawnInterval: 0.418,
-      spawnIntervalMin: 0.12,
+      activeCap: 24,
+      spawnBudget: 146,
+      baseSpawnInterval: 0.432,
+      spawnIntervalMin: 0.124,
       eliteEvery: 4,
       mix: {
         scuttler: 0.06,
@@ -168,10 +168,10 @@
       hazard: {
         label: "Ledger Caravan",
         type: "caravan",
-        interval: 9.9,
+        interval: 10.3,
         count: 1,
         radius: 76,
-        telegraph: 0.84,
+        telegraph: 0.86,
         duration: 6.8,
         damage: 14,
         coreHp: 72,
@@ -191,17 +191,17 @@
       bandId: "overdrive_gallery",
       bandLabel: "Overdrive Gallery",
       pressureFamily: "crossfire",
-      note: "Cataclysm Arsenal을 골랐다면 payoff band의 두 번째 판도 아직 low-density mastery test로 남아야 한다. arena를 더 벌리고 점유형 구조물을 걷어내, 방금 늘어난 배럴과 보조 포문이 열린 사선 두세 개를 동시에 지우는지 바로 드러나게 만든다.",
+      note: "Cataclysm Arsenal을 골랐다면 payoff band의 두 번째 판도 아직 low-density mastery test로 남아야 한다. arena를 더 벌리고 점유형 구조물을 걷어내, 방금 늘어난 배럴과 보조 포문이 열린 사선 두세 개를 두 번째로 동시에 지우는지 바로 드러나게 만든다.",
       directive:
         "overdrive gallery. skimmer 외곽 sweep보다 marked elite와 mortar perch 절개가 먼저다. 열린 사선을 먼저 벌린 뒤 lancer charge를 새 split volley로 정면 절단해, 무기가 lane 하나가 아니라 교전 폭 전체를 먹는지 증명해야 한다.",
       arena: {
-        width: 1820,
-        height: 1020,
+        width: 1880,
+        height: 1050,
       },
-      activeCap: 30,
-      spawnBudget: 166,
-      baseSpawnInterval: 0.398,
-      spawnIntervalMin: 0.118,
+      activeCap: 27,
+      spawnBudget: 156,
+      baseSpawnInterval: 0.414,
+      spawnIntervalMin: 0.122,
       eliteEvery: 4,
       mix: {
         scuttler: 0.04,
@@ -215,10 +215,10 @@
       mixWeight: 0.58,
       hazard: {
         label: "Gallery Surge",
-        interval: 9.8,
+        interval: 10.3,
         count: 1,
         radius: 74,
-        telegraph: 0.8,
+        telegraph: 0.82,
         duration: 4,
         damage: 15,
       },
@@ -228,17 +228,17 @@
       bandId: "halo_bastion_run",
       bandLabel: "Halo Bastion Run",
       pressureFamily: "pursuit",
-      note: "Warplate Halo를 골랐다면 payoff band의 두 번째 판도 같은 hunt 반복이 아니라 복구 창을 직접 캐는 dive-reset 시험이어야 한다. drift furnace가 lane을 접지만 active cap을 낮춰 plate를 믿고 깊게 들어갔다 빠질 수 있는 회복 구간을 남긴다.",
+      note: "Warplate Halo를 골랐다면 payoff band의 두 번째 판도 같은 hunt 반복이 아니라 복구 창을 직접 캐는 dive-reset 시험이어야 한다. drift furnace가 lane을 접지만 active cap을 더 낮춰 plate를 믿고 깊게 들어갔다 빠질 수 있는 회복 구간을 남긴다.",
       directive:
         "halo bastion run. drifting furnace가 닫히기 전에 guard plate를 태워 전열 한 줄을 비우고, 비워진 pocket을 오래 욕심내지 말고 즉시 재배치해야 한다. 오래 서서 버티기보다 dive-reset cadence가 살아남는 bracket이다.",
       arena: {
-        width: 1720,
-        height: 990,
+        width: 1780,
+        height: 1020,
       },
-      activeCap: 28,
-      spawnBudget: 160,
-      baseSpawnInterval: 0.416,
-      spawnIntervalMin: 0.122,
+      activeCap: 26,
+      spawnBudget: 152,
+      baseSpawnInterval: 0.428,
+      spawnIntervalMin: 0.124,
       eliteEvery: 4,
       mix: {
         scuttler: 0.04,
@@ -255,10 +255,10 @@
       hazard: {
         label: "Halo Bastion Drift",
         type: "drift",
-        interval: 9.6,
+        interval: 10,
         count: 1,
         radius: 92,
-        telegraph: 0.84,
+        telegraph: 0.86,
         duration: 5.8,
         damage: 14,
         driftSpeed: 116,
@@ -270,17 +270,17 @@
       bandId: "jackpot_caravan",
       bandLabel: "Jackpot Caravan",
       pressureFamily: "raid",
-      note: "Black Ledger Heist를 골랐다면 payoff band의 두 번째 판도 같은 hunt 반복이 아니라 cash-out chase로 이어져야 한다. moving vault를 크게 키우고 active cap을 낮춰, 깊게 들어가 jackpot을 뜯을지 이탈 타이밍을 칼같이 고를지 바로 다시 묻는다.",
+      note: "Black Ledger Heist를 골랐다면 payoff band의 두 번째 판도 같은 hunt 반복이 아니라 cash-out chase로 이어져야 한다. moving vault를 크게 키우고 active cap을 더 눌러, 깊게 들어가 jackpot을 뜯을지 이탈 타이밍을 칼같이 고를지 바로 다시 묻는다.",
       directive:
         "jackpot caravan. contraband vault가 긴 외곽선 위를 도망친다. 금고를 오래 쫓으면 payout은 커지지만 brander와 lancer가 greed lane 뒤를 닫으니, 언제 찢고 언제 버릴지 스스로 cash-out 기준을 정해야 한다.",
       arena: {
-        width: 1780,
-        height: 990,
+        width: 1840,
+        height: 1020,
       },
-      activeCap: 29,
-      spawnBudget: 168,
-      baseSpawnInterval: 0.408,
-      spawnIntervalMin: 0.118,
+      activeCap: 27,
+      spawnBudget: 158,
+      baseSpawnInterval: 0.422,
+      spawnIntervalMin: 0.122,
       eliteEvery: 4,
       mix: {
         scuttler: 0.04,
@@ -296,10 +296,10 @@
       hazard: {
         label: "Jackpot Caravan",
         type: "caravan",
-        interval: 9.2,
+        interval: 9.7,
         count: 1,
         radius: 82,
-        telegraph: 0.8,
+        telegraph: 0.82,
         duration: 7.4,
         damage: 15,
         coreHp: 88,
@@ -449,10 +449,10 @@
         width: 1820,
         height: 1010,
       },
-        activeCap: 35,
-        spawnBudget: 206,
-        baseSpawnInterval: 0.332,
-        spawnIntervalMin: 0.098,
+        activeCap: 31,
+        spawnBudget: 192,
+        baseSpawnInterval: 0.346,
+        spawnIntervalMin: 0.102,
         eliteEvery: 4,
         mix: {
           scuttler: 0.04,
@@ -468,10 +468,10 @@
         hazard: {
           label: "Gallery Breakers",
           type: null,
-          interval: 8.2,
+          interval: 8.8,
           count: 2,
           radius: 74,
-          telegraph: 0.74,
+          telegraph: 0.76,
           duration: 4.2,
           damage: 15,
         },
@@ -488,10 +488,10 @@
           width: 1840,
           height: 1030,
         },
-        activeCap: 40,
-        spawnBudget: 244,
-        baseSpawnInterval: 0.294,
-        spawnIntervalMin: 0.09,
+        activeCap: 39,
+        spawnBudget: 234,
+        baseSpawnInterval: 0.302,
+        spawnIntervalMin: 0.092,
         eliteEvery: 4,
         mix: {
           scuttler: 0.04,
@@ -534,10 +534,10 @@
         width: 1700,
         height: 990,
       },
-        activeCap: 33,
-        spawnBudget: 198,
-        baseSpawnInterval: 0.344,
-        spawnIntervalMin: 0.1,
+        activeCap: 30,
+        spawnBudget: 184,
+        baseSpawnInterval: 0.356,
+        spawnIntervalMin: 0.104,
         eliteEvery: 4,
         mix: {
           scuttler: 0.04,
@@ -554,10 +554,10 @@
         hazard: {
           label: "Halo Refuge Drift",
           type: "drift",
-          interval: 8.4,
+          interval: 9,
           count: 2,
           radius: 94,
-          telegraph: 0.76,
+          telegraph: 0.78,
           duration: 6,
           damage: 15,
           driftSpeed: 126,
@@ -576,10 +576,10 @@
           width: 1720,
           height: 1000,
         },
-        activeCap: 37,
-        spawnBudget: 236,
-        baseSpawnInterval: 0.308,
-        spawnIntervalMin: 0.092,
+        activeCap: 38,
+        spawnBudget: 228,
+        baseSpawnInterval: 0.314,
+        spawnIntervalMin: 0.094,
         eliteEvery: 4,
         mix: {
           scuttler: 0.04,
@@ -623,10 +623,10 @@
         width: 1780,
         height: 1000,
       },
-        activeCap: 34,
-        spawnBudget: 210,
-        baseSpawnInterval: 0.33,
-        spawnIntervalMin: 0.098,
+        activeCap: 31,
+        spawnBudget: 194,
+        baseSpawnInterval: 0.342,
+        spawnIntervalMin: 0.102,
         eliteEvery: 4,
         mix: {
           scuttler: 0.04,
@@ -642,10 +642,10 @@
         hazard: {
           label: "Kingpin Vaultline",
           type: "salvage",
-          interval: 8,
+          interval: 8.6,
           count: 3,
           radius: 78,
-          telegraph: 0.76,
+          telegraph: 0.78,
           duration: 7.4,
           damage: 14,
           coreHp: 86,
@@ -668,10 +668,10 @@
           width: 1820,
           height: 1020,
         },
-        activeCap: 40,
-        spawnBudget: 248,
-        baseSpawnInterval: 0.292,
-        spawnIntervalMin: 0.09,
+        activeCap: 39,
+        spawnBudget: 238,
+        baseSpawnInterval: 0.3,
+        spawnIntervalMin: 0.092,
         eliteEvery: 4,
         mix: {
           scuttler: 0.04,
@@ -2139,6 +2139,35 @@
       return null;
     }
     return branchProfiles[index] || null;
+  }
+
+  function getLateBreakCadenceSummary(profileId) {
+    if (profileId === "mutation") {
+      return {
+        label: "Cataclysm cadence",
+        detail:
+          "Wave 9-10은 열린 firing gallery payoff band, Wave 11-12는 Crownbreaker spike band다.",
+      };
+    }
+    if (profileId === "aegis") {
+      return {
+        label: "Warplate cadence",
+        detail:
+          "Wave 9-10은 dive-reset payoff band, Wave 11-12는 Halo survival spike band다.",
+      };
+    }
+    if (profileId === "ledger") {
+      return {
+        label: "Ledger cadence",
+        detail:
+          "Wave 9-10은 greed heist payoff band, Wave 11-12는 Kingpin cash-out spike band다.",
+      };
+    }
+    return {
+      label: "Late Break cadence",
+      detail:
+        "Wave 9-10은 breathing payoff band, Wave 11-12는 escalation spike band다.",
+    };
   }
 
   function getArsenalBreakpointEncounterProfile(build, waveNumber) {
@@ -10831,8 +10860,9 @@
       verb: "변이",
       tag: "ARSENAL",
       title: "Cataclysm Arsenal",
-      description: `${CORE_DEFS[build.coreId].label}에 측면 배럴과 과열 보조 포문을 한 번에 증설해 Act 3 첫 교전을 열린 firing gallery로 바꾼다. 다음 Wave 9는 구조물 upkeep보다 open-lane kill race 쪽으로 기울며, 방금 늘어난 화망을 바로 시험하게 만든다.`,
-      slotText: `추가 배럴 +${barrelCount} · Wave 9 open-lane hunt`,
+      description: `${CORE_DEFS[build.coreId].label}에 측면 배럴과 과열 보조 포문을 한 번에 증설해 Act 3 첫 두 웨이브를 열린 firing gallery payoff band로 바꾼다. Wave 9-10은 구조물 upkeep보다 open-lane kill race 쪽으로 기울고, Wave 11-12는 Crownbreaker spike band로 닫혀 방금 늘어난 화망을 끝까지 밀어붙이게 만든다.`,
+      roadmapDetail: "Wave 9-10 open-lane payoff band -> Wave 11-12 Crownbreaker spike band",
+      slotText: `추가 배럴 +${barrelCount} · payoff x2 -> spike x2`,
       cost: 34,
       laneLabel: "Main Weapon Mutation",
       forgeLaneLabel: "Main Weapon Mutation",
@@ -10857,8 +10887,9 @@
       tag: "HALO",
       title: "Warplate Halo",
       description:
-        "Act 3 진입 전에 재충전식 warplate를 두 겹까지 예열해 큰 한 방을 지우고, plate가 터질 때마다 주변 탄막과 추격선을 같이 뜯어낸다. 다음 Wave 9는 drift-reset bracket으로 바뀌어, 방금 붙인 생존층으로 깊게 들어갔다 빠지는 리듬을 바로 요구한다.",
-      slotText: `warplate ${getLateFieldAegisMaxCharges({ lateFieldAegisLevel: nextLevel })}충전 · Wave 9 reset run`,
+        "Act 3 진입 전에 재충전식 warplate를 두 겹까지 예열해 큰 한 방을 지우고, plate가 터질 때마다 주변 탄막과 추격선을 같이 뜯어낸다. Wave 9-10은 breathing reset payoff band로 바뀌고, Wave 11-12는 Halo survival spike로 닫혀 방금 붙인 생존층으로 깊게 들어갔다 빠지는 리듬을 바로 요구한다.",
+      roadmapDetail: "Wave 9-10 dive-reset payoff band -> Wave 11-12 Halo survival spike",
+      slotText: `warplate ${getLateFieldAegisMaxCharges({ lateFieldAegisLevel: nextLevel })}충전 · reset x2 -> spike x2`,
       cost: 26,
       laneLabel: "Defense / Utility",
       forgeLaneLabel: "Defense / Utility",
@@ -10879,8 +10910,9 @@
       tag: "LEDGER",
       title: "Black Ledger Heist",
       description:
-        "Act 3 개막 자금을 먼저 당겨 고철과 회수 효율을 크게 올린다. 대신 Wave 9를 moving contraband heist로 비틀고 2웨이브 Siege Debt까지 짊어진다. 열리자마자 깊게 들어가 payout을 뜯을지 안전한 외곽 회전으로 돌아설지 바로 강요한다.",
-      slotText: "고철 +52 · 회수 +16% · Wave 9 caravan heist · 2웨이브 Siege Debt",
+        "Act 3 개막 자금을 먼저 당겨 고철과 회수 효율을 크게 올린다. 대신 Wave 9-10을 moving contraband heist payoff band로 비틀고 2웨이브 Siege Debt까지 짊어진다. Wave 11-12는 Kingpin cash-out spike로 닫혀, 열리자마자 깊게 들어가 payout을 뜯을지 안전한 외곽 회전으로 돌아설지 바로 강요한다.",
+      roadmapDetail: "Wave 9-10 greed heist payoff band -> Wave 11-12 Kingpin cash-out spike",
+      slotText: "고철 +52 · 회수 +16% · heist x2 -> spike x2 · 2웨이브 Siege Debt",
       cost: 0,
       scrapGain: 52,
       scrapMultiplierGain: 0.16,
@@ -15133,8 +15165,8 @@
         ? "최종 웨이브 정리 완료. 마지막 포지에서 최종 각인과 7연속 afterburn survival ladder의 시작 형태를 마감한다."
         : isLateBreakArmory(forgeOptions)
           ? state.build.auxiliaryJunctionLevel > 0
-            ? "Wave 8 돌파. Late Break Armory를 단일 breakpoint로 재절단했다. 이제 정확히 세 장만 뜨며, Cataclysm Arsenal, Warplate Halo, Black Ledger Heist 중 하나를 고르면 Wave 9-10 spacing과 objective가 그 선택 쪽으로 연속해서 꺾인다."
-            : "Wave 8 돌파. Late Break Armory를 단일 breakpoint로 재절단했다. 이제 정확히 세 장만 뜨며, Cataclysm Arsenal, Warplate Halo, Black Ledger Heist 중 하나를 고르면 Wave 9-10 spacing과 objective가 그 선택 쪽으로 연속해서 꺾인다."
+            ? "Wave 8 돌파. Late Break Armory를 단일 breakpoint로 재절단했다. 이제 정확히 세 장만 뜨며, Cataclysm Arsenal, Warplate Halo, Black Ledger Heist 중 하나를 고르면 Wave 9-10은 breathing payoff band로, Wave 11-12는 그 선택 전용 spike band로 꺾인다."
+            : "Wave 8 돌파. Late Break Armory를 단일 breakpoint로 재절단했다. 이제 정확히 세 장만 뜨며, Cataclysm Arsenal, Warplate Halo, Black Ledger Heist 중 하나를 고르면 Wave 9-10은 breathing payoff band로, Wave 11-12는 그 선택 전용 spike band로 꺾인다."
           : draftType === "armory"
           ? "Wave 4 돌파. Act Break Armory는 이제 headline breakpoint 1장 뒤에 support/defense/greed rider 1장을 얹어, Act 2 빌드 정체성을 더 빨리 조립하게 만든다."
           : "웨이브 종료. 먼저 headline 변신을 고르고, 이어서 작은 rider slot으로 support/defense/greed를 한 장 더 얹는다.",
@@ -15916,10 +15948,11 @@
     pushCombatFeed(`${choice.tag} · ${choice.title} 적용.`, "FORGE");
     if (state.waveIndex + 2 === LATE_BREAK_ARMORY_WAVE && choice.lateBreakProfileId) {
       const profile = getLateBreakEncounterProfile(state.build);
+      const cadence = getLateBreakCadenceSummary(choice.lateBreakProfileId);
       pushCombatFeed(
         profile
-          ? `${profile.bandLabel} 고정. 다음 두 웨이브는 ${profile.label}에서 시작해 같은 appetite를 더 다른 spacing/objective로 밀어붙인다. ${profile.directive}`
-          : "Late breakpoint 적용. 다음 웨이브 spacing과 objective가 방금 고른 카드 기준으로 재배치된다.",
+          ? `${profile.bandLabel} 고정. ${cadence.detail} 다음 두 웨이브는 ${profile.label}에서 숨을 트고, 마지막 두 웨이브는 branch 전용 spike로 닫힌다. ${profile.directive}`
+          : `Late breakpoint 적용. ${cadence.detail}`,
         "BREAK"
       );
     }
@@ -19623,9 +19656,15 @@
                     ? "Headline Forge"
                     : "Rider Slot"
                   : "Forge";
-    elements.forgeSubtitle.textContent = riderStep
-      ? `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. headline leap은 잠겼다. 이제 survival rider 1장만 얹고 ${proofWindow.label}에서 바로 증명한다.`
-      : `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. ${nextFormStep.label}로 뛰는 headline leap 하나와 ${activeSupportTrack.label} rider를 정리한 뒤 ${proofWindow.label}에서 즉시 증명한다.`;
+    const lateBreakArmoryActive =
+      !riderStep &&
+      state.forgeDraftType === "armory" &&
+      state.waveIndex + 2 === LATE_BREAK_ARMORY_WAVE;
+    elements.forgeSubtitle.textContent = lateBreakArmoryActive
+      ? `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. 이번 정지는 support 설명보다 먼저 Act 3의 4웨이브 계약을 고른다. Wave 9-10 payoff band를 즐기고, Wave 11-12 spike band를 어떻게 닫을지만 정하면 된다.`
+      : riderStep
+        ? `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. headline leap은 잠겼다. 이제 survival rider 1장만 얹고 ${proofWindow.label}에서 바로 증명한다.`
+        : `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. ${nextFormStep.label}로 뛰는 headline leap 하나와 ${activeSupportTrack.label} rider를 정리한 뒤 ${proofWindow.label}에서 즉시 증명한다.`;
     elements.forgeContext.innerHTML = `
       <article class="forge-focus forge-focus--${riderStep ? "rider" : "headline"} forge-context__card forge-context__card--span-two">
         <div class="forge-focus__header">

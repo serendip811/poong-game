@@ -230,6 +230,14 @@ assert.equal(
 assert.ok(lateCacheChoices.some((choice) => choice.arsenalBreakpointProfileId === "mutation"));
 assert.ok(lateCacheChoices.some((choice) => choice.arsenalBreakpointProfileId === "aegis"));
 assert.ok(lateCacheChoices.some((choice) => choice.arsenalBreakpointProfileId === "ledger"));
+const lateBreakArmoryChoices = game.buildForgeChoices(lateCacheBuild, Math.random, 999, {
+  finalForge: false,
+  nextWave: 9,
+  build: lateCacheBuild,
+});
+assert.equal(lateBreakArmoryChoices.length, 3);
+assert.ok(lateBreakArmoryChoices.every((choice) => choice.roadmapDetail?.includes("Wave 9-10")));
+assert.ok(lateBreakArmoryChoices.every((choice) => choice.roadmapDetail?.includes("Wave 11-12")));
 const afterburnBreakpointChoices = game.getCombatCacheChoicesForWave(lateCacheBuild, 14);
 assert.equal(afterburnBreakpointChoices.length, 3);
 assert.equal(
@@ -487,12 +495,12 @@ assert.equal(bastionWaveEleven.hazard.type, "drift");
 assert.equal(bastionWaveTwelve.hazard.type, "territory");
 assert.equal(artilleryWaveEleven.hazard.type, "salvage");
 assert.equal(artilleryWaveTwelve.hazard.type, "caravan");
-assert.equal(mirrorWaveNine.arena.width, 1760);
-assert.equal(bastionWaveNine.arena.width, 1680);
-assert.equal(artilleryWaveNine.arena.width, 1720);
-assert.equal(mirrorWaveTen.arena.width, 1820);
-assert.equal(bastionWaveTen.arena.width, 1720);
-assert.equal(artilleryWaveTen.arena.width, 1780);
+assert.equal(mirrorWaveNine.arena.width, 1820);
+assert.equal(bastionWaveNine.arena.width, 1740);
+assert.equal(artilleryWaveNine.arena.width, 1780);
+assert.equal(mirrorWaveTen.arena.width, 1880);
+assert.equal(bastionWaveTen.arena.width, 1780);
+assert.equal(artilleryWaveTen.arena.width, 1840);
 assert.equal(mirrorWaveEleven.arena.width, 1820);
 assert.equal(mirrorWaveTwelve.arena.height, 1030);
 assert.equal(bastionWaveEleven.arena.width, 1700);
@@ -502,11 +510,14 @@ assert.equal(artilleryWaveTwelve.arena.height, 1020);
 assert.ok(mirrorWaveNine.mix.skimmer > mirrorWaveNine.mix.warden);
 assert.ok(mirrorWaveNine.mix.lancer > mirrorWaveNine.mix.mortar);
 assert.ok(mirrorWaveNine.mix.skimmer > mirrorWaveNine.mix.shrike);
+assert.ok(mirrorWaveNine.activeCap < 26);
+assert.ok(bastionWaveNine.activeCap < 24);
+assert.ok(artilleryWaveNine.activeCap < 25);
 assert.ok(bastionWaveNine.activeCap < mirrorWaveTen.activeCap);
 assert.ok(artilleryWaveNine.hazard.salvageScrap > 0);
-assert.ok(mirrorWaveTen.activeCap < 38);
+assert.ok(mirrorWaveTen.activeCap < 30);
 assert.ok(bastionWaveTen.activeCap < mirrorWaveTen.activeCap);
-assert.ok(artilleryWaveTen.activeCap < 34);
+assert.ok(artilleryWaveTen.activeCap < 29);
 assert.ok(mirrorWaveTen.mix.skimmer > mirrorWaveTen.mix.mortar);
 assert.ok(mirrorWaveTen.mix.lancer > mirrorWaveTen.mix.warden);
 assert.ok(bastionWaveTen.mix.brute > bastionWaveTen.mix.skimmer);
@@ -518,9 +529,11 @@ assert.ok(mirrorWaveTwelve.mix.lancer > mirrorWaveTwelve.mix.mortar);
 assert.ok(mirrorWaveTwelve.activeCap > mirrorWaveEleven.activeCap);
 assert.ok(bastionWaveEleven.activeCap < mirrorWaveEleven.activeCap);
 assert.ok(bastionWaveTwelve.hazard.coreHp > 0);
+assert.ok(bastionWaveEleven.activeCap < bastionWaveTwelve.activeCap);
 assert.ok(artilleryWaveEleven.hazard.salvageScrap > 0);
 assert.ok(artilleryWaveTwelve.hazard.salvageScrap > artilleryWaveEleven.hazard.salvageScrap);
 assert.ok(artilleryWaveTwelve.hazard.driftSpeed > 0);
+assert.ok(artilleryWaveEleven.activeCap < artilleryWaveTwelve.activeCap);
 assert.equal(kilnCapstoneForm.label, "Bulwark Furnace");
 assert.equal(kilnCapstoneForm.onHit.kind, "foundry_shatter");
 assert.equal(kilnCapstoneForm.onHit.burstCount, 3);

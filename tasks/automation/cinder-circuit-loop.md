@@ -13,7 +13,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: vertical-slice-to-alpha expansion.
-- Immediate priority: stop prototype-target drift by rewriting the game around one committed three-era 12-wave contract, then spend the next pass on reward/readability consolidation so the headline chassis/weapon leap lands harder than the support/admin stack.
+- Immediate priority: freeze new wrapper growth and consolidate one rerunnable three-era 12-wave contract so combat spacing, forge appetite, and visible chassis/weapon payoff read cleanly before any more system spread.
 
 ## Release Gates
 
@@ -40,6 +40,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 09:15:00 KST
+  Findings:
+  - The run now has enough wave bands and support toys to suggest scale, but it still does not feel like a rerunnable action roguelite because the player’s main anticipation curve is weak. Too many moments are framed as mode changes or draft wrappers instead of “three waves from now my machine becomes monstrous.”
+  - Combat pacing is still crowding its own good ideas. Even with larger arenas, late `activeCap` bands and repeated bastion/relay upkeep asks keep collapsing movement into sanitation laps, where the player is maintaining the script instead of making bold dive, hold, and greed decisions.
+  - The most legible visual power spikes are still support-side: shields, missiles, drones, orbitals. Against reference standards like `Nova Drift`, `Hades`, and `Brotato`, the core chassis/weapon silhouette is still not winning the reward moment hard enough, so build hunger plateaus before the back half pays off.
+  - The forge/HUD stack is still over-explaining the run. `updateHUD()` and `renderForgeOverlay()` keep surfacing headline leap, rider, proof, roadmap, support, bench, and economy context in the same breath, which makes progression feel supervised instead of intoxicating.
+  - This is the point where adding more authored branches would be drift. The game already has enough content to prove whether pacing, readability, and payoff actually work; without that proof, more systems will only lengthen a prototype.
+  Top Priority: Recut the existing 12-wave run so each era has one true breathing payoff band, one escalation band, and one breakpoint forge that sells a dominant chassis/weapon transformation first, with support/greed clearly secondary.
+  Why Now: The ceiling will not rise from more content until one full run is genuinely fun to repeat.
+  Do Not Repeat: Do not spend the next pass on another branch, cache, doctrine, or support module before the current 12-wave pacing and reward read are proven.
+  Release Gate: Rewards
 
 - 2026-03-23 01:20:00 KST
   Findings:
@@ -1504,6 +1516,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-23 23:46:46 KST
+  Changed: recut the `Late Break Armory` contract in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the Wave `9-12` back half now sells one explicit four-wave promise instead of a vague late-mode switch. `Cataclysm Arsenal`, `Warplate Halo`, and `Black Ledger Heist` now each preview a branch-specific `Wave 9-10 payoff band -> Wave 11-12 spike band` cadence directly in their forge copy, the forge subtitle now frames Wave 8 as choosing that four-wave contract first, and the late-break combat feed now repeats the same cadence after selection instead of generic spacing text. I matched the reward read with combat tuning in the same bounded pass: all three branch-specific `Wave 9-10` profiles now open in larger arenas with lower `activeCap`, lower `spawnBudget`, and slower hazards, while their `Wave 11-12` spike fights stay clearly above the payoff band without immediately jumping back to the old low-40s crowding. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to pin the new armory roadmap copy and the widened payoff-vs-spike separation. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was still open on `Rewards`: the game already had the right branch content, but the Wave 8 forge still mostly described a wrapper while the Wave `9-12` pacing climbed back toward crowding before the chosen form had really been enjoyed. The highest-value bounded interpretation was to make the existing late breakpoint sell one dominant chassis/weapon promise and then give that promise more real breathing room on the field, rather than add another branch or support system.
+  Follow-up risk: the late armory now names and paces its four-wave contract much more clearly, but the shared non-branch Wave `9-12` spine outside these late-break resolves is still denser and more generic than the new branch payoff cadence. If replay hunger is still flattening after this, the next consolidation pass should pull the same appetite-first `payoff -> spike` clarity into the shared late route instead of inventing another authored lane. Release Gate: `Rewards`. For reference direction, the forge wording deliberately leaned on the appetite-first reveal hierarchy of `Hades` boon moments and the explicit future-form chase language of `Nova Drift`: lead with the monster form and the proof band, not the subsystem ledger.
 
 - 2026-03-24 08:10:00 KST
   Changed: rewrote the in-game era contract in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Cinder Circuit` now presents one explicit `Wave 1-4 / 5-8 / 9-12` run plan instead of the older prototype-drift split where `Era II` swallowed `Wave 5-12` and `Era III` only started after the capstone. `getForgeEraPlan()` now defines all three release-era bands inside the 12-wave run and gives each one exactly three promises: one `Headline Form`, one `Survival Rider`, and one `Proof Band`. I then replaced the old HUD roadmap panel with that same `12-Wave Contract` card and added the contract directly into the forge context so both combat and reward stops speak the same reduced progression language. I updated [styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) to support the new three-column era read, and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to pin the new era ranges and state transitions. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
