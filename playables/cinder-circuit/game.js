@@ -7308,6 +7308,274 @@
     `;
   }
 
+  function getNextLateFieldBreakpointWave(waveNumber, offset = 0) {
+    let candidate = Math.max(
+      LATE_FIELD_CACHE_START_WAVE,
+      clamp(Math.round(waveNumber || 1), 1, MAX_WAVES + POST_CAPSTONE_WAVE_COUNT)
+    );
+    while (!isArsenalBreakpointWave(candidate)) {
+      candidate += 1;
+    }
+    while (offset > 0) {
+      candidate += LATE_FIELD_BREAKPOINT_INTERVAL;
+      offset -= 1;
+    }
+    return candidate;
+  }
+
+  function createEvolutionLanePayoff(label, title, detail, state = "planned") {
+    return {
+      label,
+      title,
+      detail,
+      state,
+    };
+  }
+
+  function getInstalledSupportSnapshot(build) {
+    const installedSupport = getInstalledSupportSystems(build);
+    if (installedSupport.length === 0) {
+      return null;
+    }
+    const primarySupport = installedSupport[0];
+    const systemDef = primarySupport ? SUPPORT_SYSTEM_DEFS[primarySupport.id] : null;
+    const tierDef = systemDef && systemDef.tiers ? systemDef.tiers[primarySupport.tier] : null;
+    return {
+      entries: installedSupport,
+      primary: primarySupport,
+      systemDef,
+      tierDef,
+    };
+  }
+
+  function getForgeEvolutionLadder(build, weapon = null, supportSystem = null, waveNumber = 1) {
+    const boundedWave = clamp(Math.round(waveNumber || 1), 1, MAX_WAVES + POST_CAPSTONE_WAVE_COUNT);
+    const currentWeapon = weapon || computeWeaponStats(build);
+    const roadmap = getBuildRoadmap(build, currentWeapon, boundedWave);
+    const doctrine = getBastionDoctrineDef(build);
+    const supportTrack = getForgeSupportTrackSnapshot(build, supportSystem);
+    const supportSnapshot = getInstalledSupportSnapshot(build);
+    const ascensionDef = doctrine ? WAVE6_ASCENSION_DEFS[doctrine.id] || null : null;
+    const ascensionChassis = ascensionDef ? getChassisBreakpointDef(ascensionDef.chassisId) : null;
+    const preferredSupportSystem =
+      ascensionDef && ascensionDef.preferredSystemId
+        ? SUPPORT_SYSTEM_DEFS[ascensionDef.preferredSystemId] || null
+        : null;
+    const activeChassis = getChassisBreakpointDef(build);
+    const activeConvergence = getLateFieldConvergenceDef(build);
+    const futureConvergence =
+      activeChassis && LATE_FIELD_CONVERGENCE_DEFS[activeChassis.id]
+        ? LATE_FIELD_CONVERGENCE_DEFS[activeChassis.id]
+        : ascensionChassis && LATE_FIELD_CONVERGENCE_DEFS[ascensionChassis.id]
+          ? LATE_FIELD_CONVERGENCE_DEFS[ascensionChassis.id]
+          : null;
+    const roadmapFutureSteps = roadmap.steps.filter((step) => step.state !== "locked");
+    const mainPayoffs = [
+      roadmapFutureSteps[0] || roadmap.steps[1] || roadmap.steps[0],
+      roadmapFutureSteps[1] || roadmap.steps[2] || roadmap.steps[roadmap.steps.length - 1],
+    ]
+      .filter(Boolean)
+      .map((step, index) =>
+        createEvolutionLanePayoff(
+          index === 0 ? "Next" : "Then",
+          step.title,
+          step.detail,
+          step.state || "planned"
+        )
+      );
+
+    const supportCurrentLabel =
+      (supportSystem && supportSystem.label) ||
+      (supportSnapshot &&
+      supportSnapshot.entries.length > 1
+        ? `${supportSnapshot.entries.length} Bay Package`
+        : supportTrack.label);
+    const supportCurrentDetail =
+      (supportSystem && supportSystem.statusNote) ||
+      (supportSnapshot && supportSnapshot.tierDef && supportSnapshot.tierDef.statusNote) ||
+      supportTrack.detail;
+    let defensePrimaryPayoff;
+    if (build.chassisId) {
+      if (getLateFieldAegisLevel(build) > 0) {
+        const nextHaloLevel = Math.min(MAX_LATE_FIELD_AEGIS_LEVEL, getLateFieldAegisLevel(build) + 1);
+        defensePrimaryPayoff = createEvolutionLanePayoff(
+          "Next",
+          getLateFieldAegisTierLabel(nextHaloLevel),
+          "재충전식 guard plate를 한 단계 더 끌어올려 큰 한 방을 지우고, 판 전체를 버티는 방호 창을 더 길게 만든다.",
+          getLateFieldAegisLevel(build) >= MAX_LATE_FIELD_AEGIS_LEVEL ? "locked" : "live"
+        );
+      } else {
+        defensePrimaryPayoff = createEvolutionLanePayoff(
+          "Next",
+          "Warplate Halo",
+          "중후반 생존 브레이크포인트. 재충전식 plate를 켜 다음 dive-reset 구간을 버틸 수 있는 방호 실루엣으로 바꾼다.",
+          boundedWave >= LATE_BREAK_ARMORY_WAVE ? "live" : boundedWave + 1 >= LATE_BREAK_ARMORY_WAVE ? "primed" : "planned"
+        );
+      }
+    } else if (ascensionChassis || preferredSupportSystem) {
+      defensePrimaryPayoff = createEvolutionLanePayoff(
+        "Next",
+        `${ascensionChassis ? ascensionChassis.title : "Support Uplink"}${preferredSupportSystem ? ` + ${preferredSupportSystem.tiers[1].title}` : ""}`,
+        ascensionDef ? ascensionDef.summary : "첫 chassis와 support 패키지를 열어 생존 rail을 본격적으로 켠다.",
+        boundedWave >= 6 ? "live" : boundedWave + 1 >= 6 ? "primed" : "planned"
+      );
+    } else {
+      defensePrimaryPayoff = createEvolutionLanePayoff(
+        "Next",
+        "First Support Package",
+        "첫 chassis나 위성/드론/미사일 패키지를 열어 빈 hull을 생존형 실루엣으로 바꾼다.",
+        boundedWave >= FORGE_PACKAGE_START_WAVE ? "live" : "planned"
+      );
+    }
+    const defenseSecondaryPayoff = futureConvergence
+      ? createEvolutionLanePayoff(
+          "Then",
+          futureConvergence.title,
+          futureConvergence.description,
+          activeConvergence && activeConvergence.id === futureConvergence.id
+            ? "locked"
+            : boundedWave >= LATE_FIELD_CACHE_START_WAVE
+              ? "live"
+              : boundedWave + 1 >= LATE_FIELD_CACHE_START_WAVE
+                ? "primed"
+                : "planned"
+        )
+      : preferredSupportSystem
+        ? createEvolutionLanePayoff(
+            "Then",
+            preferredSupportSystem.tiers[3].title,
+            preferredSupportSystem.tiers[3].description,
+            supportSnapshot &&
+            supportSnapshot.primary &&
+            supportSnapshot.primary.id === preferredSupportSystem.id &&
+            supportSnapshot.primary.tier >= 3
+              ? "locked"
+              : "planned"
+          )
+        : createEvolutionLanePayoff(
+            "Then",
+            "Citadel Halo",
+            "방호 레인을 끝까지 밀면 더 큰 요격층과 회복 창으로 후반 교전을 오래 버티는 요새형 실루엣으로 간다.",
+            "planned"
+          );
+
+    const greedPressure = getLateFieldGreedPressure(build);
+    const nextGreedBreak =
+      boundedWave < LATE_BREAK_ARMORY_WAVE
+        ? createLateBreakGreedContractChoice(build, LATE_BREAK_ARMORY_WAVE)
+        : boundedWave < LATE_FIELD_CACHE_START_WAVE
+          ? createLateFieldGreedContractChoice(build, LATE_FIELD_CACHE_START_WAVE)
+          : createLateFieldGreedContractChoice(build, getNextLateFieldBreakpointWave(boundedWave));
+    const laterGreedBreak = createLateFieldGreedContractChoice(
+      build,
+      getNextLateFieldBreakpointWave(
+        boundedWave < LATE_FIELD_CACHE_START_WAVE ? LATE_FIELD_CACHE_START_WAVE : boundedWave,
+        1
+      )
+    );
+    const greedCurrentLabel =
+      build.blackLedgerRaidWaves > 0
+        ? "Black Ledger Route"
+        : build.overcommitUnlocked || greedPressure > 0
+          ? "Contraband Route"
+          : "Cold Ledger";
+    const greedCurrentDetail =
+      build.blackLedgerRaidWaves > 0
+        ? `raid/debt ${greedPressure}웨이브가 남아 있어 payout을 노릴수록 바로 청구서도 커진다.`
+        : build.overcommitUnlocked
+          ? "회수 루트가 열린 상태다. 지금부터는 payout을 당길지 안정성을 지킬지 계속 스스로 결정해야 한다."
+          : "아직 탐욕 라인이 조용하다. salvage와 payout을 당기기 시작하면 다음 계약이 바로 성격을 바꾼다.";
+    const greedPayoffs = [
+      createEvolutionLanePayoff(
+        "Next",
+        nextGreedBreak ? nextGreedBreak.title : "Black Ledger Heist",
+        nextGreedBreak
+          ? nextGreedBreak.description
+          : "첫 greed 계약. payout을 먼저 당기지만 다음 전투 objective와 spacing도 즉시 뒤틀린다.",
+        build.lateBreakProfileId === "ledger" || build.blackLedgerRaidWaves > 0
+          ? "locked"
+          : boundedWave >= LATE_BREAK_ARMORY_WAVE
+            ? "live"
+            : boundedWave + 1 >= LATE_BREAK_ARMORY_WAVE
+              ? "primed"
+              : "planned"
+      ),
+      createEvolutionLanePayoff(
+        "Then",
+        laterGreedBreak ? laterGreedBreak.title : "Black Ledger Catastrophe",
+        laterGreedBreak
+          ? laterGreedBreak.description
+          : "탐욕 레인을 계속 밀면 한 번 더 큰 payout과 더 무거운 debt가 같이 오는 장기 계약으로 굳어진다.",
+        boundedWave >= LATE_FIELD_CACHE_START_WAVE ? "live" : "planned"
+      ),
+    ];
+
+    return [
+      {
+        id: "main",
+        laneLabel: "Main Weapon / Body",
+        title: "Assault Ladder",
+        currentLabel: roadmap.activeForm || CORE_DEFS[build.coreId].label,
+        currentDetail: roadmap.prompt,
+        payoffs: mainPayoffs,
+      },
+      {
+        id: "defense",
+        laneLabel: "Defense / Support",
+        title: "Bulwark Ladder",
+        currentLabel: supportCurrentLabel,
+        currentDetail: supportCurrentDetail,
+        payoffs: [defensePrimaryPayoff, defenseSecondaryPayoff],
+      },
+      {
+        id: "greed",
+        laneLabel: "Greed Contract",
+        title: "Ledger Ladder",
+        currentLabel: greedCurrentLabel,
+        currentDetail: greedCurrentDetail,
+        payoffs: greedPayoffs,
+      },
+    ];
+  }
+
+  function createEvolutionLadderMarkup(lanes) {
+    if (!lanes || lanes.length === 0) {
+      return "";
+    }
+    return lanes
+      .map(
+        (lane) => `
+          <article class="evolution-lane evolution-lane--${lane.id}">
+            <div class="evolution-lane__header">
+              <span>${lane.laneLabel}</span>
+              <strong>${lane.title}</strong>
+            </div>
+            <div class="evolution-lane__current">
+              <p class="panel__eyebrow">Current</p>
+              <strong>${lane.currentLabel}</strong>
+              <p>${lane.currentDetail}</p>
+            </div>
+            <div class="evolution-lane__payoffs">
+              ${lane.payoffs
+                .map(
+                  (payoff) => `
+                    <article class="evolution-payoff" data-state="${payoff.state}">
+                      <span class="evolution-payoff__label">${payoff.label}</span>
+                      <div>
+                        <strong>${payoff.title}</strong>
+                        <p>${payoff.detail}</p>
+                      </div>
+                    </article>
+                  `
+                )
+                .join("")}
+            </div>
+          </article>
+        `
+      )
+      .join("");
+  }
+
   function getForgeSupportTrackSnapshot(build, supportSystem = null) {
     const chassis = getChassisBreakpointDef(build);
     const installedSupport = getInstalledSupportSystems(build);
@@ -18940,42 +19208,10 @@
     }
     const activeCore = CORE_DEFS[state.build.coreId];
     const traitSummary = getWeaponTraitLabels(state.weapon).join(" · ") || "직선 탄도";
-    const affixSummary = state.weapon.affixLabels.length
-      ? state.weapon.affixLabels.join(" · ")
-      : "속성 없음";
-    const evolutionSummary = state.weapon.evolutionLabel
-      ? `${state.weapon.evolutionLabel} · ${state.weapon.evolutionTraitLabel}`
-      : "주무장 진화 없음";
-    const doctrineSummary = state.weapon.doctrineFormLabel
-      ? `${state.weapon.doctrineFormLabel} · ${state.weapon.doctrineTraitLabel}`
-      : "교리 전용 주무장 없음";
-    const lateAscensionSummary = state.weapon.lateAscensionLabel
-      ? `${state.weapon.lateAscensionLabel} · ${state.weapon.lateAscensionTraitLabel}`
-      : "late ascension 없음";
-    const lateFieldConvergenceSummary = state.weapon.lateFieldConvergenceLabel
-      ? `${state.weapon.lateFieldConvergenceLabel} · ${state.weapon.lateFieldConvergenceTraitLabel}`
-      : "late convergence 없음";
-    const illegalOverclockSummary = state.weapon.illegalOverclockLabel
-      ? `${state.weapon.illegalOverclockLabel} · ${state.weapon.illegalOverclockTraitLabel}`
-      : "불법 과투입 없음";
-    const apexMutationSummary = state.weapon.apexMutationLabel
-      ? `${state.weapon.apexMutationLabel} · ${state.weapon.apexMutationTraitLabel}`
-      : "apex body splice 없음";
-    const capstoneSummary = state.weapon.capstoneLabel
-      ? `${state.weapon.capstoneLabel} · ${state.weapon.capstoneTraitLabel}`
-      : "활성 촉매 재구성 없음";
     const chassisSummary = getChassisSummary(state.build);
     const forgeSystemSummary = getSupportSystemSummary(state.supportSystem);
     const supportBaySummary = `${getInstalledSupportSystems(state.build).length}/${getSupportBayCapacity(state.build)} 베이`;
     const benchEntries = getBenchEntries(state.build);
-    const benchSummary = benchEntries.length
-      ? benchEntries
-          .map(
-            (entry) =>
-              `${CORE_DEFS[entry.coreId].short} x${entry.copies} ${formatSyncLabel(entry.syncLevel)}`
-          )
-          .join(" · ")
-      : "보관 코어 없음";
     const catalystReady = hasFinisherCatalyst(state.build, state.build.coreId);
     const catalystEligible = buildCanEarnFinisherCatalyst(state.build) || catalystReady;
     const catalystSummary = catalystEligible
@@ -18998,7 +19234,7 @@
     };
     const armoryLabel = getArmoryLabel(forgeOptions);
     const roadmap = getBuildRoadmap(state.build, state.weapon, state.waveIndex + 2);
-    const eraPlan = getForgeEraPlan(
+    const evolutionLadder = getForgeEvolutionLadder(
       state.build,
       state.weapon,
       state.supportSystem,
@@ -19039,14 +19275,17 @@
               : "이번 선택은 다음 두 웨이브의 silhouette를 가장 크게 바꿀 카드 하나를 고르는 구간이다.";
     elements.forgeSubtitle.textContent = `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. ${roadmap.prompt} ${choicePrompt}`;
     elements.forgeContext.innerHTML = `
-      <article class="forge-context__card roadmap-card">
-        ${createRoadmapMarkup(roadmap)}
+      <article class="forge-context__card forge-context__card--span-two">
+        <p class="panel__eyebrow">Evolution Ladder</p>
+        <strong>${roadmap.pathLabel}</strong>
+        <p>참고선은 세 개뿐이다. 공세 실루엣, 생존 실루엣, 탐욕 계약이 어디까지 커질지만 먼저 보여 준다.</p>
+        <div class="evolution-lane-list">${createEvolutionLadderMarkup(evolutionLadder)}</div>
       </article>
       <article class="forge-context__card">
-        <p class="panel__eyebrow">Era Plan</p>
-        <strong>${roadmap.pathLabel}</strong>
-        <p>주력 변신과 생존 rail을 분리해 다음 jump를 한눈에 읽게 만든다.</p>
-        <div class="forge-era-list">${createForgeEraMarkup(eraPlan)}</div>
+        <p class="panel__eyebrow">Next Fight</p>
+        <strong>${nextFormStep ? nextFormStep.title : activeFormSummary}</strong>
+        <p>${nextFormStep ? nextFormStep.detail : roadmap.prompt}</p>
+        <p class="summary-note">${choicePrompt}</p>
       </article>
       <article class="forge-context__card">
         <p class="panel__eyebrow">현재 무기</p>
@@ -19057,14 +19296,13 @@
         <p class="panel__eyebrow">Build Focus</p>
         <strong>${activeFormSummary}</strong>
         <div class="status-list">
-          ${createStatusRow("Main Track", nextFormStep ? nextFormStep.title : activeFormSummary)}
-          ${createStatusRow("Support Track", activeSupportTrack.label)}
+          ${createStatusRow("Main", nextFormStep ? nextFormStep.title : activeFormSummary)}
+          ${createStatusRow("Support", activeSupportTrack.label)}
           ${createStatusRow("Aux Rail", wildcardSummary)}
           ${createStatusRow("Reserve", `${supportBaySummary} · 보관 ${benchEntries.length}종`)}
         </div>
-        <p>${nextFormStep ? nextFormStep.detail : roadmap.prompt}</p>
         <p>${activeSupportTrack.detail}</p>
-        <p class="summary-note">${evolutionSummary} · ${doctrineSummary} · ${lateAscensionSummary} · ${lateFieldConvergenceSummary} · ${illegalOverclockSummary} · ${apexMutationSummary} · ${capstoneSummary} · ${chassisSummary} · ${forgeSystemSummary} · ${doctrinePursuitSummary} · ${catalystSummary} · 분해 예상 고철 ${getRecycleValue(state.build)}</p>
+        <p class="summary-note">${chassisSummary} · ${forgeSystemSummary} · ${doctrinePursuitSummary} · ${catalystSummary} · 분해 예상 고철 ${getRecycleValue(state.build)}</p>
       </article>
     `;
     elements.forgeCards.innerHTML = state.forgeChoices
