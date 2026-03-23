@@ -6857,6 +6857,94 @@
     return [{ label: "효과", value: choice.slotText || choice.description || "선택" }, ...finaleRows];
   }
 
+  function splitForgeSentences(text) {
+    if (!text) {
+      return [];
+    }
+    return String(text)
+      .split(/(?<=[.!?])\s+/)
+      .map((sentence) => sentence.trim())
+      .filter(Boolean);
+  }
+
+  function getForgeChoiceTone(choice) {
+    const laneText = `${choice?.forgeLaneLabel || ""} ${choice?.laneLabel || ""} ${choice?.tag || ""} ${choice?.action || ""}`.toLowerCase();
+    if (laneText.includes("greed") || laneText.includes("ledger") || laneText.includes("pact")) {
+      return "greed";
+    }
+    if (
+      laneText.includes("defense") ||
+      laneText.includes("support") ||
+      laneText.includes("utility") ||
+      laneText.includes("halo") ||
+      laneText.includes("bay")
+    ) {
+      return "defense";
+    }
+    return "main";
+  }
+
+  function getForgeChoiceTransformation(choice) {
+    if (!choice) {
+      return {
+        laneLabel: "Forge",
+        title: "Unknown",
+        tone: "main",
+        promise: "다음 전투 실루엣을 크게 바꾸는 선택이다.",
+        proof: "선택 직후 전장 규칙이 즉시 바뀐다.",
+      };
+    }
+    const descriptionSentences = splitForgeSentences(choice.description);
+    const previewRows = createForgePreviewRows(choice).filter(Boolean);
+    const primaryPreview = previewRows[0];
+    const secondaryPreview = previewRows[1];
+    const proofText =
+      choice.roadmapDetail ||
+      (choice.finalePreview
+        ? `${choice.finalePreview.label} · ${choice.finalePreview.hazard}`
+        : descriptionSentences[1] ||
+          (secondaryPreview ? `${secondaryPreview.label} ${secondaryPreview.value}` : "") ||
+          choice.slotText ||
+          "다음 전투에서 변형이 즉시 드러난다.");
+    const promiseText =
+      descriptionSentences[0] ||
+      (primaryPreview ? `${primaryPreview.label} ${primaryPreview.value}` : "") ||
+      choice.slotText ||
+      "실루엣을 바꾸는 선택";
+    return {
+      laneLabel: choice.forgeLaneLabel || choice.laneLabel || "Forge Lane",
+      title: choice.title || choice.slotText || "Unnamed Shift",
+      tone: getForgeChoiceTone(choice),
+      promise: promiseText,
+      proof: proofText,
+      accent: primaryPreview ? `${primaryPreview.label} ${primaryPreview.value}` : choice.slotText || "",
+    };
+  }
+
+  function createForgeSpotlightMarkup(choices) {
+    if (!Array.isArray(choices) || choices.length === 0) {
+      return "";
+    }
+    return `
+      <div class="forge-spotlight-grid">
+        ${choices
+          .slice(0, 3)
+          .map((choice) => {
+            const transformation = getForgeChoiceTransformation(choice);
+            return `
+              <article class="forge-spotlight forge-spotlight--${transformation.tone}">
+                <p class="panel__eyebrow">${transformation.laneLabel}</p>
+                <strong>${transformation.title}</strong>
+                <p class="forge-spotlight__promise">${transformation.promise}</p>
+                <p class="summary-note">${transformation.proof}</p>
+              </article>
+            `;
+          })
+          .join("")}
+      </div>
+    `;
+  }
+
   function getBenchCount(build, coreId) {
     if (!build || !Array.isArray(build.pendingCores)) {
       return 0;
@@ -19281,6 +19369,12 @@
         <p>참고선은 세 개뿐이다. 공세 실루엣, 생존 실루엣, 탐욕 계약이 어디까지 커질지만 먼저 보여 준다.</p>
         <div class="evolution-lane-list">${createEvolutionLadderMarkup(evolutionLadder)}</div>
       </article>
+      <article class="forge-context__card forge-context__card--span-two">
+        <p class="panel__eyebrow">Transformation Spotlight</p>
+        <strong>이번 포지에서 바로 열리는 세 갈래</strong>
+        <p>이번 화면은 관리표가 아니라 약속 화면이다. 고른 카드가 다음 전투에서 어떤 형태와 규칙으로 증명될지만 먼저 본다.</p>
+        ${createForgeSpotlightMarkup(state.forgeChoices)}
+      </article>
       <article class="forge-context__card">
         <p class="panel__eyebrow">Next Fight</p>
         <strong>${nextFormStep ? nextFormStep.title : activeFormSummary}</strong>
@@ -19310,6 +19404,7 @@
         (choice, index) => {
           const kind =
             choice.type === "utility" ? choice.action || "utility" : choice.type || "choice";
+          const transformation = getForgeChoiceTransformation(choice);
           const previewRows = createForgePreviewRows(choice)
             .map(
               (row) => `
@@ -19326,12 +19421,17 @@
             class="forge-card forge-card--${choice.tag.toLowerCase()}"
             data-kind="${kind}"
             data-index="${index}"
+            data-tone="${transformation.tone}"
             data-verb="${choice.verb}"
             ${state.resources.scrap < choice.cost ? "disabled" : ""}
           >
             <span class="forge-card__tag">${choice.laneLabel ? `${choice.laneLabel} · ${choice.tag}` : choice.tag}</span>
-            <h3>${choice.title}</h3>
-            <p>${choice.description}</p>
+            <div class="forge-card__hero forge-card__hero--${transformation.tone}">
+              <span class="forge-card__hero-label">${transformation.laneLabel}</span>
+              <h3>${choice.title}</h3>
+              <p class="forge-card__hero-copy">${transformation.promise}</p>
+            </div>
+            <p class="forge-card__proof"><span>다음 전투 증명</span>${transformation.proof}</p>
             <div class="forge-card__preview">${previewRows}</div>
             <span class="forge-card__meta">${choice.slotText}</span>
             <span class="forge-card__slot">${
