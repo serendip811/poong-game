@@ -7839,6 +7839,13 @@
       build.afterburnDominionId || build.afterburnOverdriveId || build.lateAscensionId
         ? `${supportTrack.detail} endform이 잠긴 뒤에는 새 서브시스템보다 이 축을 오래 버티게 쓰는 것이 핵심이다.`
         : `${supportTrack.detail} Afterburn 전에는 이 축이 마지막 survival rail로 남는다.`;
+    const getEraProofWindow = (proofWave, fallbackLabel, fallbackDetail) => {
+      const resolvedWave = resolveWaveConfig(clamp(proofWave, 1, MAX_WAVES) - 1, build);
+      return {
+        label: resolvedWave.bandLabel || resolvedWave.label || fallbackLabel,
+        detail: resolvedWave.directive || resolvedWave.note || fallbackDetail,
+      };
+    };
     const getEraState = (start, end) => {
       if (boundedWave > end) {
         return "locked";
@@ -7848,33 +7855,58 @@
       }
       return boundedWave + 1 >= start ? "primed" : "planned";
     };
+    const eraOneProof = getEraProofWindow(
+      4,
+      "First Proof Window",
+      "Wave 4에서 첫 doctrine/body lock이 실제 lane ownership으로 이어지는지 증명한다."
+    );
+    const eraTwoProof = getEraProofWindow(
+      5,
+      "Act II Proof Window",
+      "Wave 5-6의 breathing band에서 headline midform이 바로 space ownership으로 바뀌는지 확인한다."
+    );
+    const eraThreeProof = getEraProofWindow(
+      9,
+      "Act III Proof Window",
+      "Wave 9-10 payoff band에서 마지막 headline form이 pressure 재상승 전에 먼저 breathing room을 먹어야 한다."
+    );
     return [
       {
         label: "Era I",
         title: "Ignition Frame",
+        waveLabel: "Wave 1-4",
         state: getEraState(1, 4),
         primaryLabel: primaryOpenLabel,
         primaryDetail: roadmap.steps[0] ? roadmap.steps[0].detail : "첫 변신 실루엣을 잠그는 구간.",
         secondaryLabel: supportTrack.label,
         secondaryDetail: ignitionSupportDetail,
+        proofLabel: eraOneProof.label,
+        proofDetail: eraOneProof.detail,
       },
       {
         label: "Era II",
         title: "Siege Break",
-        state: getEraState(5, 12),
+        waveLabel: "Wave 5-8",
+        state: getEraState(5, 8),
         primaryLabel: primaryBreakLabel,
         primaryDetail: roadmap.steps[1] ? roadmap.steps[1].detail : "중반 break를 앞당겨 doctrine form을 전장에 고정한다.",
         secondaryLabel: supportTrack.label,
         secondaryDetail: siegeSupportDetail,
+        proofLabel: eraTwoProof.label,
+        proofDetail: eraTwoProof.detail,
       },
       {
         label: "Era III",
-        title: "Afterburn Endform",
-        state: getEraState(13, MAX_WAVES + POST_CAPSTONE_WAVE_COUNT),
+        title: "Crown Break",
+        waveLabel: "Wave 9-12",
+        state: getEraState(9, MAX_WAVES),
         primaryLabel: primaryEndformLabel,
-        primaryDetail: roadmap.steps[2] ? roadmap.steps[2].detail : "후반 split cache에서 최종 body를 잠근다.",
+        primaryDetail:
+          roadmap.steps[2] ? roadmap.steps[2].detail : "후반 split cache에서 마지막 body/gun form을 잠그는 구간.",
         secondaryLabel: supportTrack.label,
         secondaryDetail: afterburnSupportDetail,
+        proofLabel: eraThreeProof.label,
+        proofDetail: eraThreeProof.detail,
       },
     ];
   }
@@ -7883,30 +7915,66 @@
     if (!eras || eras.length === 0) {
       return "";
     }
+    const stateLabelMap = {
+      planned: "PLANNED",
+      primed: "PRIMED",
+      live: "LIVE",
+      locked: "LOCKED",
+      missed: "MISSED",
+    };
     return eras
       .map(
         (era) => `
           <article class="forge-era" data-state="${era.state}">
             <div class="forge-era__header">
-              <span class="forge-era__state">${era.label}</span>
-              <strong>${era.title}</strong>
+              <span class="forge-era__state">${stateLabelMap[era.state] || era.state}</span>
+              <div class="forge-era__title">
+                <p>${era.label} · ${era.waveLabel || ""}</p>
+                <strong>${era.title}</strong>
+              </div>
             </div>
             <div class="forge-era__tracks">
               <div class="forge-era__track">
-                <span>Main Track</span>
+                <span>Headline Form</span>
                 <strong>${era.primaryLabel}</strong>
                 <p>${era.primaryDetail}</p>
               </div>
               <div class="forge-era__track">
-                <span>Support Track</span>
+                <span>Survival Rider</span>
                 <strong>${era.secondaryLabel}</strong>
                 <p>${era.secondaryDetail}</p>
+              </div>
+              <div class="forge-era__track">
+                <span>Proof Band</span>
+                <strong>${era.proofLabel}</strong>
+                <p>${era.proofDetail}</p>
               </div>
             </div>
           </article>
         `
       )
       .join("");
+  }
+
+  function createEraContractPanelMarkup(build, weapon = null, supportSystem = null, waveNumber = 1) {
+    const eras = getForgeEraPlan(build, weapon, supportSystem, waveNumber);
+    if (!eras || eras.length === 0) {
+      return "";
+    }
+    const currentEra =
+      eras.find((era) => era.state === "live") ||
+      eras.find((era) => era.state === "primed") ||
+      eras[eras.length - 1];
+    const act = getActLabelForWave(clamp(Math.round(waveNumber || 1), 1, MAX_WAVES));
+    return `
+      <div class="summary-head">
+        <strong>12-Wave Contract</strong>
+        <span class="summary-chip ${currentEra.state === "live" ? "summary-chip--hot" : ""}">${act.shortLabel}</span>
+      </div>
+      <p class="summary-copy roadmap-card__path">세 시대 모두 한 가지 headline form, 한 가지 survival rider, 한 가지 breathing proof band만 먼저 약속한다.</p>
+      <div class="forge-era-list">${createForgeEraMarkup(eras)}</div>
+      <p class="summary-note">${currentEra.label} ${currentEra.title}: ${currentEra.primaryLabel}을(를) 전면에 세우고 ${currentEra.secondaryLabel}로 약점을 받친 뒤 ${currentEra.proofLabel}에서 즉시 증명한다.</p>
+    `;
   }
 
   function getCombatBandState(build, weapon = null, waveNumber = 1) {
@@ -12832,6 +12900,7 @@
     getDoctrineBodyForm,
     getDoctrineCapstoneDef,
     getBuildRoadmap,
+    getForgeEraPlan,
     getLateAscensionDef,
     getDoctrinePursuitCapstoneDef,
     getCatalystCapstone,
@@ -19415,8 +19484,12 @@
     }
 
     if (elements.buildRoadmap) {
-      const roadmap = getBuildRoadmap(state.build, state.weapon, state.waveIndex + 1);
-      elements.buildRoadmap.innerHTML = createRoadmapMarkup(roadmap);
+      elements.buildRoadmap.innerHTML = createEraContractPanelMarkup(
+        state.build,
+        state.weapon,
+        state.supportSystem,
+        state.waveIndex + 1
+      );
     }
 
     const enemiesLeft = Math.max(0, state.wave ? state.wave.spawnBudget - state.wave.spawned : 0);
@@ -19596,6 +19669,14 @@
             ? `<p class="summary-note forge-focus__note">${doctrinePursuitSummary} · ${catalystSummary} · 보관 ${benchEntries.length}종 · 분해 예상 고철 ${getRecycleValue(state.build)}</p>`
             : createForgeSpotlightMarkup(state.forgeChoices)
         }
+      </article>
+      <article class="forge-context__card forge-context__card--span-two">
+        ${createEraContractPanelMarkup(
+          state.build,
+          state.weapon,
+          state.supportSystem,
+          state.waveIndex + 2
+        )}
       </article>
     `;
     elements.forgeCards.innerHTML = state.forgeChoices

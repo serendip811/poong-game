@@ -13,7 +13,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: vertical-slice-to-alpha expansion.
-- Immediate priority: freeze new system sprawl and consolidate the run around one readable three-era contract where Wave 9-12 actually breathes, the main chassis/weapon leap owns the spectacle, and support/admin layers stay secondary.
+- Immediate priority: stop prototype-target drift by rewriting the game around one committed three-era 12-wave contract, then spend the next pass on reward/readability consolidation so the headline chassis/weapon leap lands harder than the support/admin stack.
 
 ## Release Gates
 
@@ -40,6 +40,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-23 01:20:00 KST
+  Findings:
+  - The code has finally moved past the worst late-wave repetition, but the project is still steering with prototype docs. `docs/games/cinder-circuit-design.md` and `docs/games/cinder-circuit-source-analysis.md` still define a `5웨이브`, `6~7분` run, so the game is authoring alpha-scale structure while its written success target still excuses prototype-scale payoff.
+  - `Wave 9-12` is materially better than the older `Lockgrid Hunt I-II` / `Cinder Crown I-II` loop, yet the escalation spine is still too compressed for replay hunger. One payoff window, one heist turn, one pursuit turn, and one breach turn is a decent vertical slice, not yet a ladder that feels ready to stretch toward `20-30` waves with appetite instead of fatigue.
+  - The combat field breathes more in `Afterglow` and the new late bands, but `activeCap` still ramps back into the high 30s and low 40s quickly enough that strong movement decisions risk collapsing into upkeep again before the player has really enjoyed the new form. A release-feeling run needs longer greed/reset/dominance windows, not just cleaner saturation.
+  - Compared with strong reference patterns like `Hades`, `Nova Drift`, and `Brotato`, `updateHUD()` and `renderForgeOverlay()` still explain too much at once. Even after cleanup, the player is reading headline leap, survival rider, proof window, live bet, roadmap, support state, and economy/admin context in the same moment, so the forge still feels managed before it feels irresistible.
+  - `SUPPORT_SYSTEM_DEFS` continues to deliver some of the clearest visible spikes: orbitals, halo shields, autonomous fire, helper behavior. If the most legible growth remains satellites and shield machinery rather than the body/gun silhouette owning the screen, the run will plateau as a clever build sandbox instead of a rerunnable power fantasy.
+  Top Priority: Rewrite the design/source docs and the forge/HUD contract around a single explicit three-era 12-wave run where each era sells one headline body/gun transformation, one secondary survival rider, and one breathing proof band before pressure climbs again.
+  Why Now: Until the game commits to one clear long-run contract, every added choice or wave still risks reading like well-dressed prototype extension.
+  Do Not Repeat: Do not spend the next pass on another subsystem, draft wrapper, or support spectacle increase before the run promise and reward read are brutally simplified.
+  Release Gate: Progression
 
 - 2026-03-23 23:05:00 KST
   Findings:
@@ -1492,6 +1504,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 08:10:00 KST
+  Changed: rewrote the in-game era contract in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Cinder Circuit` now presents one explicit `Wave 1-4 / 5-8 / 9-12` run plan instead of the older prototype-drift split where `Era II` swallowed `Wave 5-12` and `Era III` only started after the capstone. `getForgeEraPlan()` now defines all three release-era bands inside the 12-wave run and gives each one exactly three promises: one `Headline Form`, one `Survival Rider`, and one `Proof Band`. I then replaced the old HUD roadmap panel with that same `12-Wave Contract` card and added the contract directly into the forge context so both combat and reward stops speak the same reduced progression language. I updated [styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) to support the new three-column era read, and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to pin the new era ranges and state transitions. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was still open on `Progression`: the game had begun acting like a three-era 12-wave run, but the live HUD/forge contract still encoded a prototype-era split and kept the reward language from fully committing to that structure. The highest-value bounded interpretation was to fix the live run contract itself, because that makes the existing 12-wave ladder read like a real release target without adding another system branch.
+  Follow-up risk: the run promise is now much clearer, but the specialized draft variants still use some bespoke wording outside this shared contract. A later consolidation pass should decide whether `Architecture Draft`, `Bastion Draft`, and `Catalyst Crucible` should inherit the exact same three-era phrasing or be cut back further so every pause in the run sells the same commitment level. Release Gate: `Progression`. For reference direction, this HUD/forge read deliberately leaned on the appetite-first hierarchy of `Hades` boon reveals and the explicit next-form anticipation of `Nova Drift`, but anchored them to one visible three-era run contract instead of another admin stack.
 
 - 2026-03-23 23:40:00 KST
   Changed: retuned the live late-break encounter ladder in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the four-wave back half now reads as one real low-density payoff band and one real spike band instead of four near-equal late fights. For all three late-break branches, `Wave 9-10` now open in larger arenas with lower `activeCap`, lower `spawnBudget`, and lighter hazard cadence, while the branch-specific `Wave 11-12` crown profiles now step up together into a denser spike pair with clearly higher caps, budgets, and hazard pressure. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert that each `mutation` / `aegis` / `ledger` branch now keeps both payoff fights below both spike fights on combat load, plus the expected spike hazard types. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
