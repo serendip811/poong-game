@@ -227,6 +227,22 @@ assert.ok(lockgridPayoff.spawnBudget < lockgridEscalation.spawnBudget);
 assert.ok(lockgridPayoff.hazard.count <= lockgridEscalation.hazard.count);
 
 const mutationLateBandBuild = game.createInitialBuild("scrap_pact");
+const mutationLateBreakChoices = game.buildForgeChoices(mutationLateBandBuild, Math.random, 999, { nextWave: 9 });
+const cataclysmChoice = mutationLateBreakChoices.find((choice) => choice.action === "field_mutation");
+assert.ok(cataclysmChoice);
+assert.equal(cataclysmChoice.title, "Cataclysm Arsenal");
+assert.equal(cataclysmChoice.lateFieldMutationLevel, 4);
+const cataclysmRun = {
+  build: mutationLateBandBuild,
+  resources: { scrap: 999 },
+  stats: { scrapCollected: 0, scrapSpent: 0 },
+  player: { hp: 100, maxHp: 100, heat: 18, overheated: false, invulnerableTime: 0, lateFieldBroadsideCooldown: 0 },
+};
+game.applyForgeChoice(cataclysmRun, cataclysmChoice);
+const cataclysmWeapon = game.computeWeaponStats(cataclysmRun.build);
+assert.equal(cataclysmWeapon.lateFieldMutationLevel, 4);
+assert.equal(cataclysmWeapon.lateFieldMutationFirePattern.offsets.length, 6);
+assert.ok(cataclysmWeapon.lateFieldBroadsideConfig.podCount >= 3);
 mutationLateBandBuild.lateBreakProfileId = "mutation";
 const mutationPayoffOne = game.resolveWaveConfig(8, mutationLateBandBuild);
 const mutationPayoffTwo = game.resolveWaveConfig(9, mutationLateBandBuild);
@@ -235,6 +251,10 @@ const mutationSpikeTwo = game.resolveWaveConfig(11, mutationLateBandBuild);
 assert.ok(Math.max(mutationPayoffOne.activeCap, mutationPayoffTwo.activeCap) < Math.min(mutationSpikeOne.activeCap, mutationSpikeTwo.activeCap));
 assert.ok(Math.max(mutationPayoffOne.spawnBudget, mutationPayoffTwo.spawnBudget) < Math.min(mutationSpikeOne.spawnBudget, mutationSpikeTwo.spawnBudget));
 assert.ok(mutationPayoffOne.arena.width < mutationPayoffTwo.arena.width);
+assert.ok(mutationPayoffTwo.arena.width > mutationPayoffOne.arena.width);
+assert.equal(mutationPayoffTwo.hazard.type, "relay");
+assert.ok(mutationPayoffTwo.activeCap < 30);
+assert.ok(mutationPayoffTwo.hazard.count < mutationSpikeTwo.hazard.count);
 assert.ok(mutationSpikeOne.hazard.count <= mutationSpikeTwo.hazard.count);
 
 const aegisLateBandBuild = game.createInitialBuild("rail_zeal");
@@ -416,10 +436,10 @@ game.applyForgeChoice(
   mutationChoice
 );
 const mirrorLateWeapon = game.computeWeaponStats(mirrorLateBuild);
-assert.equal(mirrorLateBuild.lateFieldMutationLevel, 2);
+assert.equal(mirrorLateBuild.lateFieldMutationLevel, 4);
 assert.ok(mirrorLateWeapon.lateFieldBroadsideConfig);
-assert.equal(mirrorLateWeapon.lateFieldBroadsideConfig.podCount, 2);
-assert.ok(mirrorLateWeapon.lateFieldBroadsideConfig.range >= 460);
+assert.equal(mirrorLateWeapon.lateFieldBroadsideConfig.podCount, 3);
+assert.ok(mirrorLateWeapon.lateFieldBroadsideConfig.range >= 520);
 const mirrorWaveNine = game.resolveWaveConfig(8, mirrorLateBuild);
 const bastionLateBuild = game.createInitialBuild("scrap_pact");
 bastionLateBuild.bastionDoctrineId = "kiln_bastion";
@@ -536,7 +556,7 @@ assert.equal(artilleryWaveTwelve.hazard.type, "caravan");
 assert.equal(mirrorWaveNine.arena.width, 1820);
 assert.equal(bastionWaveNine.arena.width, 1740);
 assert.equal(artilleryWaveNine.arena.width, 1780);
-assert.equal(mirrorWaveTen.arena.width, 1880);
+assert.equal(mirrorWaveTen.arena.width, 1940);
 assert.equal(bastionWaveTen.arena.width, 1780);
 assert.equal(artilleryWaveTen.arena.width, 1840);
 assert.equal(mirrorWaveEleven.arena.width, 1820);
@@ -554,7 +574,7 @@ assert.ok(artilleryWaveNine.activeCap < 25);
 assert.ok(bastionWaveNine.activeCap < mirrorWaveTen.activeCap);
 assert.ok(artilleryWaveNine.mix.skimmer > artilleryWaveNine.mix.brander);
 assert.ok(mirrorWaveTen.activeCap <= 30);
-assert.ok(bastionWaveTen.activeCap < mirrorWaveTen.activeCap);
+assert.ok(bastionWaveTen.activeCap <= 30);
 assert.ok(artilleryWaveTen.activeCap <= 30);
 assert.ok(mirrorWaveTen.mix.skimmer > mirrorWaveTen.mix.mortar);
 assert.ok(mirrorWaveTen.mix.lancer > mirrorWaveTen.mix.warden);

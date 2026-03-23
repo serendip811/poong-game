@@ -13,7 +13,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop feeding the standard route with `Afterburn`, cache, wildcard, and draft-branch noise until one rerunnable `Wave 1-12` spine lands as a clean headline/rider/gamble loop with real payoff windows.
+- Immediate priority: freeze branch expansion and force the base `Wave 1-12` route to prove one readable contract: visible core-form leaps, a real Act 3 domination window, and forge/HUD choices that sell appetite before taxonomy.
 
 ## Release Gates
 
@@ -40,6 +40,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 19:20:00 KST
+  Findings:
+  - The run still has prototype-scale payoff hiding inside release-scale wording. `Wave 1-12` is described like a three-era ladder, but in practice `Wave 9-12` still behaves more like continuous exam pressure than the kind of domination lap that makes a player want to rebuild toward it again.
+  - Combat space is improved on paper, yet the late route still spends too much of its oxygen on closure taxes. `Lockgrid`, `Starforge`, and `Cinder Crown` stack relay, ignition, binder, lancer, mortar, and warden asks fast enough that movement becomes maintenance instead of aggressive pathing and greed routing.
+  - Core build hunger is still weaker than attachment hunger. `SUPPORT_SYSTEM_DEFS` advertises obvious fantasies like orbitals, shield halos, missile racks, sentries, and drone nets, while the main weapon/body path still reads less like `Nova Drift`-style silhouette escalation and more like a system layer the player is expected to understand.
+  - The forge/HUD contract still trails strong references on appetite-first clarity. Compared with how `Hades`, `Brotato`, or `Nova Drift` make the next power spike readable in one glance, `renderForgeOverlay()` and `updateHUD()` still ask the player to parse too much proof, route, and slot language before the mutation fantasy lands.
+  Top Priority: Recut one late-route breakpoint so the player gets a visibly bigger core weapon/body evolution first, then one lower-tax proof wave that lets that form own a larger arena before the final spike.
+  Why Now: If the strongest upgrade still feels less exciting than surviving the rules around it, repeat-run desire will flatten.
+  Do Not Repeat: Do not answer this with another support module, branch wrapper, or denser finale ecology.
+  Release Gate: Builds
 
 - 2026-03-24 18:40:00 KST
   Findings:
@@ -1662,6 +1673,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 20:05:00 KST
+  Changed: recut one late-route breakpoint in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) around the `Cataclysm Arsenal` path so the late break now lands as a bigger core weapon leap before a lighter proof wave. The `Late Break Armory` mutation card now jumps straight to `Field Arsenal MK 4`, which immediately opens a denser side-barrel fan and larger broadside pod battery instead of a smaller late bump, and the branch-specific `Wave 10 · Overdrive Breach` now uses a larger arena with one thinner relay closure, lower binder/mortar/warden tax, and slower pressure so the new form gets a real ownership lap inside the breach test before `Wave 11-12` spike again. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the stronger late-break mutation jump and the softer `Wave 10` mutation-proof contract.
+  Why: the latest critique's `Top Priority` asked for one late-route breakpoint where a visibly bigger core weapon/body evolution comes first and the next wave proves it without immediately collapsing into maintenance. I took the highest-value bounded interpretation as "upgrade the main weapon mutation route rather than add another branch" because it directly increases core-form hunger and makes Act 3 read more like a repeatable payoff ladder.
+  Follow-up risk: `Cataclysm Arsenal` now sells a much clearer late-form jump, but the other two late-break packages still rely more on rider identity than on equally monstrous body/gun silhouette growth. If build hunger remains uneven across reruns, the next pass should give `Warplate Halo` or `Black Ledger Heist` a comparably loud chassis/weapon transformation instead of more encounter density.
+  Release Gate: Builds
 
 - 2026-03-24 19:05:00 KST
   Changed: stripped more branch/admin wording out of the standard `Wave 1-12` reward read in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). The forge overlay and live HUD now collapse base-route forge stops to generic `Forge Pick`, `Rider Pick`, and `Run Seal` framing instead of surfacing `Architecture Draft`, `Field Cache`, `Bastion Draft`, or `Catalyst Crucible` labels during the core route, and standard forge cards now consistently relabel themselves as `Headline Mutation`, `Secondary Rider`, or `Greed / Utility Gamble` even when the underlying choice came from one of those special generators.
