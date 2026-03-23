@@ -893,40 +893,40 @@
       label: "Wave 7 · Crownfire",
       pressureFamily: "pursuit",
       duration: 86,
-      spawnBudget: 144,
-      activeCap: 31,
-      baseSpawnInterval: 0.446,
+      spawnBudget: 132,
+      activeCap: 28,
+      baseSpawnInterval: 0.468,
       spawnIntervalMin: 0.132,
-      spawnAcceleration: 0.29,
-      eliteEvery: 6,
+      spawnAcceleration: 0.26,
+      eliteEvery: 7,
       mix: {
-        scuttler: 0.12,
-        brute: 0.2,
+        scuttler: 0.14,
+        brute: 0.18,
         shrike: 0.24,
-        skimmer: 0.16,
-        lancer: 0.16,
-        binder: 0.08,
-        mortar: 0.04,
+        skimmer: 0.22,
+        lancer: 0.14,
+        binder: 0.04,
+        mortar: 0.02,
       },
-      note: "Act 2 spike bracket의 첫 판. bastion upkeep를 끌고 가지 않고 drift furnace와 pursuit hook만 남겨, domination band 다음에는 곧바로 깊게 들어갔다 살아서 빠져나오는 hold-or-dive 판단으로 리듬을 꺾는다.",
+      note: "Act 2 후반의 짧은 domination lap. drift furnace는 남기되 binder와 mortar upkeep를 한 번 걷어내, 방금 커진 form이 열린 lane 두 개를 실제로 오래 들고 밀어붙이는 시간을 먼저 준다.",
       directive:
-        "crownfire pursuit. drifting furnace가 열린 lane을 다시 접는 동안 binder와 lancer가 퇴로를 낚아챈다. 새 form으로 한 번 깊게 밀어 넣은 뒤 오래 머물지 않고 pocket이 닫히기 전에 빠져나와야 한다.",
-      driveGainFactor: 1.3,
+        "crownfire victory lap. drifting furnace가 lane 하나를 천천히 접지만 corridor tax는 아직 얇다. 가장 넓은 pocket을 먼저 잡고 새 form의 split fire로 flank 둘을 오래 눌러, 다음 breach 전에 space ownership를 크게 벌어야 한다.",
+      driveGainFactor: 1.28,
       arena: {
-        width: 1400,
+        width: 1440,
         height: 780,
       },
       hazard: {
         label: "Crownfire Drift",
         type: "drift",
-        interval: 8.8,
+        interval: 10.2,
         count: 1,
         radius: 96,
         telegraph: 0.9,
-        duration: 5.6,
-        damage: 12,
-        driftSpeed: 118,
-        driftOrbit: 0.34,
+        duration: 5.1,
+        damage: 11,
+        driftSpeed: 102,
+        driftOrbit: 0.28,
       },
     },
     {
@@ -934,25 +934,25 @@
       label: "Wave 8 · Forgecross",
       pressureFamily: "breach",
       duration: 90,
-      spawnBudget: 166,
-      activeCap: 35,
-      baseSpawnInterval: 0.404,
-      spawnIntervalMin: 0.12,
-      spawnAcceleration: 0.31,
-      eliteEvery: 5,
+      spawnBudget: 154,
+      activeCap: 32,
+      baseSpawnInterval: 0.424,
+      spawnIntervalMin: 0.124,
+      spawnAcceleration: 0.29,
+      eliteEvery: 6,
       mix: {
         scuttler: 0.08,
         brute: 0.2,
-        shrike: 0.18,
-        lancer: 0.18,
-        binder: 0.16,
-        mortar: 0.08,
-        warden: 0.12,
+        shrike: 0.2,
+        lancer: 0.24,
+        binder: 0.1,
+        mortar: 0.04,
+        warden: 0.1,
       },
-      note: "Act 2 결산은 더 이상 Crownfire의 반복이 아니다. relay breach corridor가 늦게 but hard하게 닫히며 mortar perch와 binder pinch가 함께 겹쳐, domination band에서 얻은 space ownership를 마지막 한 판의 돌파 window로 바꾸게 만든다.",
+      note: "Act 2 결산은 이제 maintenance stack이 아니라 단일 breach test다. 늦게 닫히는 relay crown 하나와 flank bruiser가 겹쳐, Crownfire에서 벌어 둔 space ownership를 마지막 한 번의 돌파 각으로 바꾸게 만든다.",
       directive:
-        "forgecross breach. relay crown이 가장 얇은 corridor만 길게 잠그고 mortar perch가 breach pocket을 덮는다. 가장 먼저 찢을 회랑을 고른 뒤 split fire로 flank를 같이 눌러 직접 Late Break Armory 직전 탈출구를 열어야 한다.",
-      driveGainFactor: 1.36,
+        "forgecross breach. relay crown 하나가 늦게 but hard하게 corridor를 닫고, lancer wedge와 warden wall이 탈출각을 시험한다. 먼저 찢을 lane을 스스로 고른 뒤 짧은 burst로 문을 열고 바로 빠져나와 Late Break Armory 직전 돌파를 완성해야 한다.",
+      driveGainFactor: 1.34,
       arena: {
         width: 1440,
         height: 800,
@@ -960,16 +960,16 @@
       hazard: {
         label: "Forgecross Relay Crown",
         type: "relay",
-        interval: 7.8,
-        count: 2,
+        interval: 8.7,
+        count: 1,
         radius: 108,
         telegraph: 0.9,
-        duration: 6.8,
+        duration: 6.4,
         damage: 12,
-        coreHp: 62,
+        coreHp: 56,
         coreRadius: 18,
         relayRange: 516,
-        relayWidth: 34,
+        relayWidth: 30,
         relayDamage: 14,
       },
     },
@@ -6796,11 +6796,15 @@
     };
   }
 
+  function shouldSurfaceForgeFinalePreview(choice) {
+    return Boolean(choice && choice.finalePreview && !CONSOLIDATED_12_WAVE_ROUTE);
+  }
+
   function createForgePreviewRows(choice) {
     if (!choice) {
       return [];
     }
-    const finaleRows = choice.finalePreview
+    const finaleRows = shouldSurfaceForgeFinalePreview(choice)
       ? [
           { label: "시험", value: choice.finalePreview.label },
           { label: "압박", value: choice.finalePreview.hazard },
@@ -7069,7 +7073,7 @@
     const riderPlan = getForgeRecommendedRiderPlan(choice);
     const proofText =
       choice.roadmapDetail ||
-      (choice.finalePreview
+      (shouldSurfaceForgeFinalePreview(choice)
         ? `${choice.finalePreview.label} · ${choice.finalePreview.hazard}`
         : descriptionSentences[1] ||
           (secondaryPreview ? `${secondaryPreview.label} ${secondaryPreview.value}` : "") ||
@@ -13272,6 +13276,8 @@
     getCatalystCapstone,
     shouldOpenForgePackage,
     getForgeHeadlineShowcase,
+    createForgePreviewRows,
+    getForgeChoiceTransformation,
   };
 
   if (typeof module !== "undefined" && module.exports) {
@@ -15499,7 +15505,9 @@
     state.player.overheated = false;
     pushCombatFeed(
       isFinalForge
-        ? "최종 웨이브 정리 완료. 마지막 포지에서 최종 각인과 7연속 afterburn survival ladder의 시작 형태를 마감한다."
+        ? CONSOLIDATED_12_WAVE_ROUTE
+          ? "최종 웨이브 정리 완료. 마지막 포지는 post-capstone 사다리를 예고하지 않고, 이번 12-wave spine의 최종 form seal만 잠근다."
+          : "최종 웨이브 정리 완료. 마지막 포지에서 최종 각인과 7연속 afterburn survival ladder의 시작 형태를 마감한다."
         : isLateBreakArmory(forgeOptions)
           ? state.build.auxiliaryJunctionLevel > 0
             ? "Wave 8 돌파. Late Break Armory를 단일 breakpoint로 재절단했다. 이제 정확히 세 장만 뜨며, Cataclysm Arsenal, Warplate Halo, Black Ledger Heist 중 하나를 고르면 Wave 9는 open-lane payoff, Wave 10은 breach proof, Wave 11-12는 그 선택 전용 spike band로 꺾인다."
@@ -19948,7 +19956,9 @@
     const showcase = featuredForgeChoice.showcase;
     const featuredIndex = featuredForgeChoice.featuredIndex;
     const forgeModeLabel = state.pendingFinalForge
-      ? "Final Forge"
+      ? CONSOLIDATED_12_WAVE_ROUTE
+        ? "Wave 12 Seal"
+        : "Final Forge"
       : state.forgeDraftType === "architecture_draft"
         ? "Architecture Draft"
         : state.forgeDraftType === "field_grant"
@@ -19966,22 +19976,34 @@
                     ? "Headline Forge"
                     : "Rider Slot"
                   : "Forge";
-    elements.forgeSubtitle.textContent = riderStep
-      ? `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. headline leap은 잠겼다. 이제 rider 1장만 얹고 ${proofWindow.label}에서 바로 버틴다.`
-      : `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. 이번 포지는 headline mutation 하나를 크게 보여 주고, rider 한 장만 짧게 붙인다.`;
+    elements.forgeSubtitle.textContent = state.pendingFinalForge
+      ? `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. 여기서는 post-capstone 사다리를 미리 팔지 않고, 이번 12-wave spine을 닫는 final seal만 보여 준다.`
+      : riderStep
+        ? `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. headline leap은 잠겼다. 이제 rider 1장만 얹고 ${proofWindow.label}에서 바로 버틴다.`
+        : `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. 이번 포지는 headline mutation 하나를 크게 보여 주고, rider 한 장만 짧게 붙인다.`;
     elements.forgeContext.innerHTML = `
       <article class="forge-focus forge-focus--${riderStep ? "rider" : "headline"} forge-context__card forge-context__card--span-two">
         <div class="forge-focus__header">
-          <p class="panel__eyebrow">${riderStep ? "Survival Rider" : "Headline Leap"}</p>
+          <p class="panel__eyebrow">${
+            state.pendingFinalForge
+              ? "Run Seal"
+              : riderStep
+                ? "Survival Rider"
+                : "Headline Leap"
+          }</p>
           <span class="forge-focus__mode">${forgeModeLabel}</span>
         </div>
         <strong>${
-          riderStep
+          state.pendingFinalForge
+            ? "메인 루트를 닫는 마지막 각인 한 장"
+            : riderStep
             ? "큰 변신 뒤에 얹는 생존/유틸 한 장"
             : "이번 포지에서 다음 전투를 바꿀 한 장"
         }</strong>
         <p>${
-          riderStep
+          state.pendingFinalForge
+            ? "이 정지에서는 Afterburn trial, cache, post-capstone hazard preview를 전면에 두지 않는다. 지금 런의 최종 form을 잠그는 선택만 크게 보여 주고 나머지는 짧게 남긴다."
+            : riderStep
             ? "headline leap은 이미 고정됐다. 이번 단계는 support, shell, greed 중 하나를 rider로 얹어 proof window에서 얼마나 오래 버티는지 정하는 선택이다."
             : "이번 포지는 관리표 대신 이번 정지에서 가장 크게 실루엣을 바꾸는 mutation 하나만 앞으로 꺼낸다. 나머지 선택지는 비교용으로 짧게 남긴다."
         }</p>
@@ -19997,9 +20019,17 @@
             <p>${activeSupportTrack.detail}</p>
           </article>
         </div>
-        <p class="forge-focus__proof"><span>Next Proof</span>${proofWindow.label}. ${proofWindow.detail}</p>
+        <p class="forge-focus__proof"><span>${
+          state.pendingFinalForge ? "Route Payoff" : "Next Proof"
+        }</span>${
+          state.pendingFinalForge
+            ? `${dominantFormSummary.label}를 ${nextFormStep.label}으로 봉인해 메인 12-wave route의 마지막 실루엣을 확정한다.`
+            : `${proofWindow.label}. ${proofWindow.detail}`
+        }</p>
         <p class="summary-note forge-focus__note">${
-          riderStep
+          state.pendingFinalForge
+            ? `${dominantFormSummary.label}에서 ${nextFormStep.label}(으)로 닫고 ${activeSupportTrack.label}는 rider로만 남긴다. post-capstone 보상 예고 대신 현재 런이 어디까지 진화했는지만 앞세운다.`
+            : riderStep
             ? `${dominantFormSummary.label} 위에 ${activeSupportTrack.label} rider를 얹고 ${proofWindow.label}에서 버틸 시간을 늘린다. ${proofWindow.detail}`
             : `${dominantFormSummary.label}에서 ${nextFormStep.label}(으)로 뛰고 ${activeSupportTrack.label}로 약점을 받친 뒤 ${proofWindow.label}에서 즉시 증명한다. ${proofWindow.detail}`
         }</p>
