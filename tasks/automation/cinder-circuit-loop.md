@@ -13,7 +13,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: vertical-slice-to-alpha expansion.
-- Immediate priority: consolidate Wave 5-12 into a readable progression spine with fewer concurrent systems before adding more branches.
+- Immediate priority: strip Wave 5-12 back to one readable escalation spine and one desire-first reward language before adding any new branches.
 
 ## Release Gates
 
@@ -40,6 +40,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 03:20:00 KST
+  Findings:
+  - `playables/cinder-circuit/game.js` now says the right things in `updateHUD()` and `renderForgeOverlay()` about `Current Form`, `Next Breakpoint`, and `Live Side Bet`, but the actual presentation is still too dashboard-heavy. The player is still shown rows, pills, roadmap, context cards, and long subtitle logic before the reward lands. Compared with the snap appetite of `Hades`, `Nova Drift`, or `Brotato`, this is still explanation first.
+  - Wave escalation is still authored too often as a new wrapper vocabulary (`territory`, `relay`, `drift`, `salvage`, draft/cache labels) instead of a small set of combat asks that become more intense, wider, and more build-reactive over time. That makes the run feel administrated in chapters rather than possessed by one growing war-machine fantasy.
+  - The game now has enough systems to imply depth, but not enough clarity to make players hungry for repeats. Midgame anticipation is still about whether the next named layer unlocks, not about craving a specific visible mutation like wider split fire, chained beams, heavier orbitals, or a body form that obviously changes how you attack space.
+  - This is the point where more content is more likely to lower the ceiling. A 20-30 wave future needs fewer but stronger breakpoints, cleaner movement pockets, and rewards that can be understood in one glance and proven in the next fight.
+  Top Priority: Rebuild the between-wave presentation around one headline mutation card plus one compact optional rider, then retune Wave 5-12 so each bracket exists mainly to let that mutation breathe in open combat space instead of introducing another rules wrapper.
+  Why Now: Until the reward screen creates immediate desire and the next wave immediately cashes it out, the longer run structure will keep reading as system maintenance.
+  Do Not Repeat: Do not answer this with another named draft, cache, overlay card, or side-contract layer.
+  Release Gate: Rewards
 
 - 2026-03-24 02:10:00 KST
   Findings:
@@ -1392,6 +1403,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-23 18:43:11 KST
+  Changed: rebuilt the forge presentation in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and [styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) around one dominant `Headline Mutation` board and one clearly smaller `Optional Rider` follow-up. The old forge context stack was collapsed into a single focus panel that only surfaces `Current Form`, `Next Breakpoint`, and `Live Side Bet`, while step-2 rider picks now render as compact cards with one short promise and one trimmed preview row instead of repeating the full mutation-card treatment. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` said the reward screen was still reading like a dashboard before the reward landed. The highest-value bounded interpretation was a presentation-only consolidation pass: keep the existing two-step forge economy, but make step 1 feel like one loud mutation moment and step 2 feel like an optional rider attachment instead of another equal-weight briefing.
+  Follow-up risk: this pass makes the reward beat much snappier, but it does not yet reduce the underlying amount of authored special-case forge modes such as `Architecture Draft` or `Catalyst Crucible`; those screens still inherit some bespoke wording even with the cleaner shell. Release Gate: `Rewards`. For UI direction, this pass deliberately followed the appetite-first reward snap of `Hades` boon reveals and the compact post-pick add-on feel seen in `Brotato`'s smaller shop decisions rather than generic panel cleanup.
 
 - 2026-03-23 18:17:04 KST
   Changed: simplified the mid-run read in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `updateHUD()` and `renderForgeOverlay()` now foreground only three things: the current dominant form, the next breakpoint, and one live side bet. The combat HUD's old objective card no longer dumps pursuit/cache/mutation/admin rows all at once; it now shows `Immediate Threat`, `Combat Band`, `Current Form`, `Next Break`, and a single `Side Bet` chosen from the highest-priority live contract. The core summary was also collapsed into a chassis-first read, and the forge context was trimmed from ladder/admin cards down to `Transformation Spotlight`, `Current Form`, `Next Breakpoint`, and `Live Side Bet`. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

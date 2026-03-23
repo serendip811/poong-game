@@ -19179,6 +19179,7 @@
       status: activeSupportTrack.label === "Bare Hull" ? "quiet" : "armed",
       note: activeSupportTrack.detail,
     };
+    const riderStep = state.forgeMaxSteps > 1 && state.forgeStep === 2;
     const forgeModeLabel = state.pendingFinalForge
       ? "Final Forge"
       : state.forgeDraftType === "architecture_draft"
@@ -19213,44 +19214,52 @@
             : state.forgeDraftType === "catalyst_draft"
               ? "이번 선택은 촉매를 지금 태워 괴물 형태를 앞당길지, 안정화해 손실을 줄일지 정한다."
               : "이번 선택은 다음 두 웨이브의 silhouette를 가장 크게 바꿀 headline 카드 하나를 고르는 구간이다.";
-    elements.forgeSubtitle.textContent = `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. ${roadmap.prompt} ${choicePrompt}`;
+    elements.forgeSubtitle.textContent = riderStep
+      ? `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. headline 변신은 잠겼다. 이제 rider 1장만 얹어 다음 전투 결을 마감한다.`
+      : `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. ${choicePrompt}`;
     elements.forgeContext.innerHTML = `
-      <article class="forge-context__card forge-context__card--span-two">
-        <p class="panel__eyebrow">Transformation Spotlight</p>
+      <article class="forge-focus forge-focus--${riderStep ? "rider" : "headline"} forge-context__card forge-context__card--span-two">
+        <div class="forge-focus__header">
+          <p class="panel__eyebrow">${riderStep ? "Optional Rider" : "Headline Mutation"}</p>
+          <span class="forge-focus__mode">${forgeModeLabel}</span>
+        </div>
         <strong>${
-          state.forgeMaxSteps > 1 && state.forgeStep === 2
-            ? "headline 뒤에 얹는 rider 세 갈래"
-            : "이번 포지에서 바로 열리는 세 갈래"
+          riderStep
+            ? "큰 변신 뒤에 얹는 작은 한 장"
+            : "이번 포지에서 다음 전투를 바꿀 한 장"
         }</strong>
         <p>${
-          state.forgeMaxSteps > 1 && state.forgeStep === 2
-            ? "주력 변신은 이미 잠겼다. 이제 support, shell, greed 중 어떤 작은 라이더를 얹어 다음 전투의 결을 비틀지 고른다."
-            : "이번 화면은 관리표가 아니라 약속 화면이다. 고른 카드가 다음 전투에서 어떤 형태와 규칙으로 증명될지만 먼저 본다."
+          riderStep
+            ? "주력 변신은 이미 고정됐다. 이번 단계는 support, shell, greed 중 하나만 짧게 얹어 다음 웨이브의 보조 의도를 남기는 선택이다."
+            : "관리표보다 먼저 보여 줄 것은 현재 폼, 다음 브레이크포인트, 그리고 이번에 크게 잠기는 변신이다."
         }</p>
-        ${createForgeSpotlightMarkup(state.forgeChoices)}
-      </article>
-      <article class="forge-context__card">
-        <p class="panel__eyebrow">Current Form</p>
-        <strong>${dominantFormSummary.label}</strong>
-        <p>${dominantFormSummary.detail}</p>
-        <p class="summary-note">${activeCore.label} · ${state.weapon.tierLabel} · ${traitSummary}</p>
-      </article>
-      <article class="forge-context__card">
-        <p class="panel__eyebrow">Next Breakpoint</p>
-        <strong>${nextFormStep.label}</strong>
-        <p>${nextFormStep.detail}</p>
-        <p class="summary-note">${choicePrompt}</p>
-      </article>
-      <article class="forge-context__card">
-        <p class="panel__eyebrow">Live Side Bet</p>
-        <strong>${liveSideBet.label}</strong>
-        <div class="status-list">
-          ${createStatusRow("Status", liveSideBet.status)}
-          ${createStatusRow("Rider", activeSupportTrack.label)}
-          ${createStatusRow("Reserve", `${supportBaySummary} · 보관 ${benchEntries.length}종`)}
+        <div class="forge-focus__rail">
+          <article class="forge-focus__pill">
+            <p class="panel__eyebrow">Current Form</p>
+            <strong>${dominantFormSummary.label}</strong>
+            <p>${dominantFormSummary.detail}</p>
+          </article>
+          <article class="forge-focus__pill">
+            <p class="panel__eyebrow">Next Breakpoint</p>
+            <strong>${nextFormStep.label}</strong>
+            <p>${nextFormStep.detail}</p>
+          </article>
+          <article class="forge-focus__pill">
+            <p class="panel__eyebrow">Live Side Bet</p>
+            <strong>${liveSideBet.label} · ${liveSideBet.status}</strong>
+            <p>${liveSideBet.note}</p>
+          </article>
         </div>
-        <p>${liveSideBet.note}</p>
-        <p class="summary-note">${forgeSystemSummary} · ${doctrinePursuitSummary} · ${catalystSummary} · 분해 예상 고철 ${getRecycleValue(state.build)}</p>
+        <p class="summary-note forge-focus__note">${
+          riderStep
+            ? `${activeSupportTrack.label} · ${forgeSystemSummary} · ${supportBaySummary}`
+            : `${activeCore.label} · ${state.weapon.tierLabel} · ${traitSummary} · ${roadmap.prompt}`
+        }</p>
+        ${
+          riderStep
+            ? `<p class="summary-note forge-focus__note">${doctrinePursuitSummary} · ${catalystSummary} · 보관 ${benchEntries.length}종 · 분해 예상 고철 ${getRecycleValue(state.build)}</p>`
+            : createForgeSpotlightMarkup(state.forgeChoices)
+        }
       </article>
     `;
     elements.forgeCards.innerHTML = state.forgeChoices
@@ -19260,6 +19269,7 @@
             choice.type === "utility" ? choice.action || "utility" : choice.type || "choice";
           const transformation = getForgeChoiceTransformation(choice);
           const previewRows = createForgePreviewRows(choice)
+            .slice(0, riderStep ? 1 : 2)
             .map(
               (row) => `
                 <div class="forge-card__row">
@@ -19269,6 +19279,64 @@
               `
             )
             .join("");
+          const slotLabel = choice.riderSlot
+            ? state.resources.scrap < choice.cost
+              ? `${index + 1}번 선택 · rider 고철 부족`
+              : choice.cost > 0
+                ? `${index + 1}번 선택 · rider 고철 ${choice.cost}`
+                : `${index + 1}번 선택 · 무료 rider`
+            : state.forgeDraftType === "architecture_draft"
+            ? `${index + 1}번 선택 · 무료 branch lock`
+            : state.forgeDraftType === "field_grant"
+            ? state.resources.scrap < choice.cost
+              ? `${index + 1}번 선택 · 고철 부족`
+              : choice.cost > 0
+                ? `${index + 1}번 선택 · 현장 고철 ${choice.cost}`
+                : `${index + 1}번 선택 · 무료 회수`
+            : state.forgeDraftType === "bastion_draft"
+              ? state.resources.scrap < choice.cost
+                ? `${index + 1}번 선택 · 고철 부족`
+                : choice.action === "bastion_pact"
+                  ? `${index + 1}번 선택 · 체력 대가 계약`
+                  : choice.action === "wave6_ascension"
+                    ? `${index + 1}번 선택 · ascension 고철 ${choice.cost}`
+                  : choice.action === "bastion_bay_forge"
+                    ? wave6AscensionDraft
+                      ? `${index + 1}번 선택 · flex subsystem ${choice.cost}`
+                      : `${index + 1}번 선택 · 시스템 + 베이 ${choice.cost}`
+                    : choice.cost > 0
+                      ? wave6AscensionDraft
+                        ? `${index + 1}번 선택 · breakpoint 고철 ${choice.cost}`
+                        : `${index + 1}번 선택 · spike 고철 ${choice.cost}`
+                      : `${index + 1}번 선택 · 무료 안정화`
+              : state.forgeDraftType === "catalyst_draft"
+                ? choice.type === "fallback"
+                  ? `${index + 1}번 선택 · 촉매 보류`
+                  : choice.action === "catalyst_reforge"
+                    ? `${index + 1}번 선택 · 무료 점화`
+                    : `${index + 1}번 선택 · 무료 안정화`
+              : state.resources.scrap < choice.cost
+                ? `${index + 1}번 선택 · 고철 부족`
+                : `${index + 1}번 선택 · 고철 ${choice.cost}`;
+          if (riderStep) {
+            return `
+          <button
+            type="button"
+            class="forge-card forge-card--rider forge-card--${choice.tag.toLowerCase()}"
+            data-kind="${kind}"
+            data-index="${index}"
+            data-tone="${transformation.tone}"
+            data-verb="${choice.verb}"
+            ${state.resources.scrap < choice.cost ? "disabled" : ""}
+          >
+            <span class="forge-card__tag">${transformation.laneLabel}</span>
+            <h3>${choice.title}</h3>
+            <p class="forge-card__hero-copy">${transformation.promise}</p>
+            ${previewRows ? `<div class="forge-card__preview forge-card__preview--compact">${previewRows}</div>` : ""}
+            <span class="forge-card__slot">${slotLabel}</span>
+          </button>
+        `;
+          }
           return `
           <button
             type="button"
@@ -19288,47 +19356,7 @@
             <p class="forge-card__proof"><span>다음 전투 증명</span>${transformation.proof}</p>
             <div class="forge-card__preview">${previewRows}</div>
             <span class="forge-card__meta">${choice.slotText}</span>
-            <span class="forge-card__slot">${
-              choice.riderSlot
-                ? state.resources.scrap < choice.cost
-                  ? `${index + 1}번 선택 · rider 고철 부족`
-                  : choice.cost > 0
-                    ? `${index + 1}번 선택 · rider 고철 ${choice.cost}`
-                    : `${index + 1}번 선택 · 무료 rider`
-                : state.forgeDraftType === "architecture_draft"
-                ? `${index + 1}번 선택 · 무료 branch lock`
-                : state.forgeDraftType === "field_grant"
-                ? state.resources.scrap < choice.cost
-                  ? `${index + 1}번 선택 · 고철 부족`
-                  : choice.cost > 0
-                    ? `${index + 1}번 선택 · 현장 고철 ${choice.cost}`
-                    : `${index + 1}번 선택 · 무료 회수`
-                : state.forgeDraftType === "bastion_draft"
-                  ? state.resources.scrap < choice.cost
-                    ? `${index + 1}번 선택 · 고철 부족`
-                    : choice.action === "bastion_pact"
-                      ? `${index + 1}번 선택 · 체력 대가 계약`
-                      : choice.action === "wave6_ascension"
-                        ? `${index + 1}번 선택 · ascension 고철 ${choice.cost}`
-                      : choice.action === "bastion_bay_forge"
-                        ? wave6AscensionDraft
-                          ? `${index + 1}번 선택 · flex subsystem ${choice.cost}`
-                          : `${index + 1}번 선택 · 시스템 + 베이 ${choice.cost}`
-                      : choice.cost > 0
-                        ? wave6AscensionDraft
-                          ? `${index + 1}번 선택 · breakpoint 고철 ${choice.cost}`
-                          : `${index + 1}번 선택 · spike 고철 ${choice.cost}`
-                        : `${index + 1}번 선택 · 무료 안정화`
-                : state.forgeDraftType === "catalyst_draft"
-                  ? choice.type === "fallback"
-                    ? `${index + 1}번 선택 · 촉매 보류`
-                    : choice.action === "catalyst_reforge"
-                      ? `${index + 1}번 선택 · 무료 점화`
-                      : `${index + 1}번 선택 · 무료 안정화`
-                : state.resources.scrap < choice.cost
-                  ? `${index + 1}번 선택 · 고철 부족`
-                  : `${index + 1}번 선택 · 고철 ${choice.cost}`
-            }</span>
+            <span class="forge-card__slot">${slotLabel}</span>
           </button>
         `;
         }

@@ -1225,6 +1225,64 @@ body[data-overdrive="true"] .backdrop__glow--right {
   line-height: 1.56;
 }
 
+.forge-focus {
+  padding: 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 145, 88, 0.08), transparent 34%),
+    rgba(255, 255, 255, 0.04);
+}
+
+.forge-focus--rider {
+  background:
+    linear-gradient(180deg, rgba(121, 213, 223, 0.08), transparent 34%),
+    rgba(255, 255, 255, 0.04);
+}
+
+.forge-focus__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.forge-focus__mode {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffe0c2;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.forge-focus__rail {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.forge-focus__pill {
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(6, 5, 4, 0.32);
+}
+
+.forge-focus__pill strong {
+  margin-top: 6px;
+}
+
+.forge-focus__pill p:last-child {
+  font-size: 0.84rem;
+}
+
+.forge-focus__note {
+  margin-top: 12px;
+}
+
 .forge-era-list {
   display: grid;
   gap: 10px;
@@ -1614,6 +1672,11 @@ body[data-overdrive="true"] .backdrop__glow--right {
   background: rgba(255, 255, 255, 0.035);
 }
 
+.forge-card__preview--compact {
+  padding: 7px 9px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
 .forge-card__row {
   display: flex;
   align-items: center;
@@ -1669,6 +1732,35 @@ body[data-overdrive="true"] .backdrop__glow--right {
   margin-top: 2px;
   color: var(--muted);
   font-size: 0.8rem;
+}
+
+.forge-card--rider {
+  min-height: 0;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 44%),
+    rgba(16, 13, 11, 0.92);
+}
+
+.forge-card--rider h3 {
+  font-size: 1.02rem;
+}
+
+.forge-card--rider .forge-card__hero-copy {
+  margin-top: 0;
+  font-size: 0.88rem;
+  line-height: 1.46;
+}
+
+.forge-card--rider .forge-card__tag {
+  padding: 5px 9px;
+  font-size: 0.68rem;
+}
+
+.forge-card--rider .forge-card__slot {
+  margin-top: auto;
 }
 
 .arena-foot {
@@ -1810,6 +1902,10 @@ body[data-overdrive="true"] .backdrop__glow--right {
   }
 
   .forge-spotlight-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .forge-focus__rail {
     grid-template-columns: 1fr;
   }
 
