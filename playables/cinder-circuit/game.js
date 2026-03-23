@@ -6141,6 +6141,175 @@
     return STORM_ARTILLERY_AFTERBURN_ENDFORM_DEFS[capstone.id] || null;
   }
 
+  function createRoadmapStep(label, title, detail, stateName = "planned") {
+    return {
+      label,
+      title,
+      detail,
+      state: stateName,
+    };
+  }
+
+  function getBuildRoadmap(build, weapon = null, waveNumber = 1) {
+    const boundedWave = clamp(Math.round(waveNumber || 1), 1, MAX_WAVES + POST_CAPSTONE_WAVE_COUNT);
+    const doctrine = getBastionDoctrineDef(build);
+    const pursuit = getDoctrineForgePursuitDef(doctrine || build);
+    const capstone = getDoctrineCapstoneDef(build);
+    const currentWeapon = weapon || computeWeaponStats(build);
+    const doctrineForm = currentWeapon && currentWeapon.doctrineFormLabel ? currentWeapon.doctrineFormLabel : null;
+    const activeForm =
+      (currentWeapon && currentWeapon.afterburnDominionLabel) ||
+      (currentWeapon && currentWeapon.afterburnOverdriveLabel) ||
+      (currentWeapon && currentWeapon.lateAscensionLabel) ||
+      (currentWeapon && currentWeapon.lateFieldConvergenceLabel) ||
+      (currentWeapon && currentWeapon.capstoneLabel) ||
+      doctrineForm ||
+      (currentWeapon && currentWeapon.evolutionLabel) ||
+      CORE_DEFS[build.coreId].label;
+    const pathLabel = doctrine
+      ? `${doctrine.label} · ${activeForm}`
+      : `${CORE_DEFS[build.coreId].label} · ${activeForm}`;
+    const steps = [];
+
+    if (doctrine && !build.bastionDoctrineId) {
+      const draftLabel = boundedWave >= 6 ? "Ascension Draft" : "Architecture Draft";
+      steps.push(
+        createRoadmapStep(
+          "PATH",
+          doctrine.label,
+          `${draftLabel}에서 이 교리를 잠가 stage-1 form과 chassis lane을 연다.`,
+          boundedWave >= 3 ? "primed" : "planned"
+        )
+      );
+    }
+
+    if (doctrine && !build.doctrineChaseClaimed && !build.doctrineCapstoneId) {
+      const stageTwoLabel = pursuit ? pursuit.label : getDoctrineLateCapstoneLabel(doctrine) || `${doctrine.label} Frame`;
+      let detail = "중반 marked elite를 따라 weapon/body jump를 앞당긴다.";
+      let stateName = "planned";
+      if (build.doctrinePursuitCommitted && pursuit) {
+        detail = `Wave 6-8 marked elite에서 ${pursuit.shardLabel} ${build.doctrinePursuitProgress}/${pursuit.goal}개를 회수하면 즉시 당겨진다.`;
+        stateName = "live";
+      } else if (build.overcommitUnlocked && pursuit) {
+        detail = `다음 Bastion Draft에서 pursuit를 걸고 Wave 6-8 marked elite ${pursuit.goal}회를 성공시키면 조기 완성된다.`;
+        stateName = "primed";
+      } else if (build.overcommitResolved) {
+        detail = "contraband salvage를 놓쳐 조기 chase는 닫혔다. 남은 late cache로만 secure해야 한다.";
+        stateName = "missed";
+      } else if (pursuit) {
+        detail = `Wave 5 contraband salvage를 챙겨야 ${stageTwoLabel} pursuit가 열리고, 이후 marked elite ${pursuit.goal}회를 요구한다.`;
+      }
+      steps.push(createRoadmapStep("SPIKE", stageTwoLabel, detail, stateName));
+    }
+
+    if (doctrine && !build.doctrineCapstoneId) {
+      const capstoneTitle = getDoctrineLateCapstoneLabel(doctrine) || `${doctrine.label} Apex`;
+      const lateWave = boundedWave >= LATE_BREAK_ARMORY_WAVE ? boundedWave : LATE_BREAK_ARMORY_WAVE;
+      const detail =
+        doctrine.id === "storm_artillery"
+          ? `Wave ${lateWave}+ 첫 marked elite의 live ascension cache에서 ${capstoneTitle} 중 하나를 회수해 최종 천공 형태를 확정한다.`
+          : `Wave ${lateWave}+ 첫 marked elite의 live ascension cache를 회수해 ${capstoneTitle} body splice를 secure한다.`;
+      steps.push(
+        createRoadmapStep(
+          "APEX",
+          capstoneTitle,
+          detail,
+          build.doctrineChaseClaimed ? "primed" : "planned"
+        )
+      );
+    }
+
+    if (!build.lateAscensionId) {
+      steps.push(
+        createRoadmapStep(
+          "ASCEND",
+          "Ascension Core",
+          `Wave ${Math.max(LATE_ASCENSION_START_WAVE, boundedWave)}+ 첫 elite split cache에서 주포와 body를 한 번 더 갈라 고른다.`,
+          boundedWave >= LATE_ASCENSION_START_WAVE ? "primed" : "planned"
+        )
+      );
+    }
+
+    if (!build.afterburnOverdriveId) {
+      steps.push(
+        createRoadmapStep(
+          "JUMP",
+          "Endform Overdrive",
+          "Afterburn IV 이후 elite cache를 집어 남은 endurance를 새 silhouette와 보조 포문으로 다시 비튼다.",
+          boundedWave > MAX_WAVES + AFTERBURN_OVERDRIVE_START_STAGE ? "primed" : "planned"
+        )
+      );
+    }
+
+    if (!build.afterburnDominionId) {
+      steps.push(
+        createRoadmapStep(
+          "CROWN",
+          "Dominion Break",
+          "후반 Afterburn elite cache를 확보하면 다음 bracket 하나가 목적지 세금보다 압도감이 먼저 오는 victory lap으로 바뀐다.",
+          boundedWave > MAX_WAVES + AFTERBURN_DOMINION_START_STAGE ? "primed" : "planned"
+        )
+      );
+    }
+
+    const nextSteps = steps.slice(0, 2);
+    const activeStep = nextSteps[0] || null;
+    const prompt = activeStep
+      ? `${pathLabel}. 다음 핵심 점프는 ${activeStep.title}이며, ${activeStep.detail}`
+      : `${pathLabel}. 남은 큰 jump가 잠겨 현재 endform을 그대로 굴리는 구간이다.`;
+    return {
+      pathLabel,
+      activeForm,
+      doctrineTag: doctrine ? doctrine.tag : "CORE",
+      prompt,
+      note:
+        nextSteps.length > 1
+          ? `${nextSteps[0].title} 다음에는 ${nextSteps[1].title}이 이어진다.`
+          : activeStep
+            ? `${activeStep.title}만 남아 있다.`
+            : "남은 headline breakpoint가 없다.",
+      steps: nextSteps,
+    };
+  }
+
+  function createRoadmapMarkup(roadmap) {
+    if (!roadmap) {
+      return "";
+    }
+    const steps = roadmap.steps.length
+      ? roadmap.steps
+          .map(
+            (step) => `
+              <article class="roadmap-step" data-state="${step.state}">
+                <span class="roadmap-step__state">${step.label}</span>
+                <div>
+                  <strong>${step.title}</strong>
+                  <p>${step.detail}</p>
+                </div>
+              </article>
+            `
+          )
+          .join("")
+      : `
+        <article class="roadmap-step" data-state="locked">
+          <span class="roadmap-step__state">LIVE</span>
+          <div>
+            <strong>${roadmap.activeForm}</strong>
+            <p>주요 breakpoint가 모두 잠겨 남은 연전은 현재 형태를 실제 전장에서 증명하는 구간이다.</p>
+          </div>
+        </article>
+      `;
+    return `
+      <div class="summary-head">
+        <strong>Build Roadmap</strong>
+        <span class="summary-chip ${roadmap.steps[0] && roadmap.steps[0].state === "primed" ? "summary-chip--hot" : roadmap.steps.length === 0 ? "summary-chip--cool" : ""}">${roadmap.doctrineTag}</span>
+      </div>
+      <p class="summary-copy roadmap-card__path">${roadmap.pathLabel}</p>
+      <div class="roadmap-card__steps">${steps}</div>
+      <p class="summary-note">${roadmap.note}</p>
+    `;
+  }
+
   function shouldOfferStormArtilleryAfterburnAscension(build) {
     return Boolean(
       build &&
@@ -10536,6 +10705,7 @@
     applyBlackLedgerRaidConfig,
     getDoctrineWeaponForm,
     getDoctrineCapstoneDef,
+    getBuildRoadmap,
     getLateAscensionDef,
     getDoctrinePursuitCapstoneDef,
     getCatalystCapstone,
@@ -10579,6 +10749,7 @@
     activeCore: document.getElementById("active-core"),
     pendingCores: document.getElementById("pending-cores"),
     upgradeList: document.getElementById("upgrade-list"),
+    buildRoadmap: document.getElementById("build-roadmap"),
     waveObjective: document.getElementById("wave-objective"),
     liveReadout: document.getElementById("live-readout"),
     forgeOverlay: document.getElementById("forge-overlay"),
@@ -16861,6 +17032,11 @@
         : `<li>아직 포지 보강이 없다.</li>`;
     }
 
+    if (elements.buildRoadmap) {
+      const roadmap = getBuildRoadmap(state.build, state.weapon, state.waveIndex + 1);
+      elements.buildRoadmap.innerHTML = createRoadmapMarkup(roadmap);
+    }
+
     const enemiesLeft = Math.max(0, state.wave ? state.wave.spawnBudget - state.wave.spawned : 0);
     if (elements.waveObjective) {
       const overcommitRows = [];
@@ -17336,80 +17512,49 @@
       build: state.build,
     };
     const armoryLabel = getArmoryLabel(forgeOptions);
-    const wave6AscensionDraft =
-      state.forgeDraftType === "bastion_draft" &&
-      state.build &&
-      !state.build.bastionDoctrineId &&
-      state.waveIndex + 2 === 6;
-    const packageSummary =
-      state.forgeDraftType === "architecture_draft"
-        ? "Architecture Draft · 세 장기 교리 중 1픽으로 Wave 3부터 monster form을 잠그고, Wave 6은 pursuit 또는 greed branch만 남긴다"
-        : state.forgeDraftType === "field_grant"
-        ? isArsenalBreakpointWave(state.waveIndex + 2)
-          ? "Arsenal Breakpoint · outrageous main gun, warplate survival form, or a greed raid that twists the next fight"
-          : state.waveIndex + 2 >= RISK_MUTATION_START_WAVE
-          ? "Field Cache · Main Weapon Mutation 대신 준비된 chassis/support/greed 조합이면 branch-specific Convergence Form이 떠 late form을 합성한다"
-          : "Field Cache · 주포 변이, 생존층, 탐욕 계약 세 장 중 1픽으로 지금 판돈을 고른다"
-        : state.forgeDraftType === "bastion_draft"
-        ? wave6AscensionDraft
-          ? "Ascension Draft · 세 장기 교리 중 1픽으로 즉시 weapon mutation, utility chassis, doctrine-free flex lane을 함께 잠그고 Wave 8 Armory를 건너뛴다"
-          : state.build.bastionDoctrineId
-            ? state.build.overcommitUnlocked && !state.build.doctrineChaseClaimed
-              ? "Bastion Draft · 회수한 contraband salvage를 장기 Forge Pursuit 계약으로 바꾸거나, 계약/안정화로 greed를 접는다"
-              : "Bastion Draft · 기존 교리 위에 추가 spike 또는 고통 계약을 더 얹어 Act 2 greed를 강제한다"
-            : "Bastion Draft · 세 장기 교리 중 1픽으로 실제 doctrine을 확정하고, 곧바로 chassis/body plan까지 이어서 잠근다"
-        : state.forgeDraftType === "catalyst_draft"
-        ? "Catalyst Crucible · 회수한 촉매를 지금 태워 Act 3 본편을 괴물 화력이나 운영형 안정화로 먼저 고정한다"
-        : state.forgeDraftType === "armory"
-        ? isLateBreakArmory(forgeOptions)
-          ? state.build.auxiliaryJunctionLevel > 0
-            ? `${armoryLabel} ${state.forgeStep}/${state.forgeMaxSteps} · 6장 중 2픽, triad breakpoint가 먼저 떠 네 번째 베이와 이중 교리 flex lane 위에 Act 3 판돈을 고른다`
-            : `${armoryLabel} ${state.forgeStep}/${state.forgeMaxSteps} · 6장 중 2픽, triad breakpoint가 먼저 떠 세 번째 베이와 교리 wildcard 위에 Act 3 판돈을 고른다`
-          : `${armoryLabel} ${state.forgeStep}/${state.forgeMaxSteps} · 6장 중 2픽, 대형 화력이 과투입되어 안전한 lane 보장이 없다`
-        : state.forgeMaxSteps > 1
-        ? `패키지 ${state.forgeStep}/${state.forgeMaxSteps} · 1슬롯 화력/전환, 2슬롯 시스템/안정화`
-        : state.waveIndex + 2 >= FORGE_PACKAGE_START_WAVE && !state.pendingFinalForge
-          ? "Wave 3+ 포지는 두 슬롯으로 진행된다: 먼저 화력/전환, 다음 시스템/안정화"
-          : "단일 포지 선택";
-    elements.forgeSubtitle.textContent = state.pendingFinalForge
-      ? catalystReady
-        ? `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 세 장은 완성, 촉매 연소, 안정화로 고정되며 각 카드가 바로 이어질 7연속 post-capstone afterburn ladder의 시작 형태를 미리 보여준다.`
-        : `고철 ${Math.round(state.resources.scrap)} 보유. 최종 포지다. 촉매가 없어도 비상 점화와 안정화 fail-soft 카드가 열리며, 각 카드가 다른 7연속 post-capstone afterburn ladder로 바로 이어진다.`
+    const roadmap = getBuildRoadmap(state.build, state.weapon, state.waveIndex + 2);
+    const forgeModeLabel = state.pendingFinalForge
+      ? "Final Forge"
       : state.forgeDraftType === "architecture_draft"
-        ? `Wave 3 진입 직전 Architecture Draft다. 이제 세 장기 교리 중 하나를 바로 monster form으로 잠가 주포 stage-1 mutation, utility chassis, 세 번째 support bay flex lane까지 한 번에 연다. Wave 6 Bastion Draft는 재선택이 아니라 pursuit 계약이나 greed spike를 얹는 후속 분기다.`
-      : state.forgeDraftType === "field_grant"
-        ? isArsenalBreakpointWave(state.waveIndex + 2)
-          ? `고철 ${Math.round(state.resources.scrap)} 보유. Arsenal Breakpoint다. 이번 Wave ${state.waveIndex + 2} 판돈은 세 욕구만 크게 읽히면 된다. Overdrive Arsenal 계열은 즉시 추가 배럴을 두 단계 당겨 오고, halo 계열은 재충전식 plate 층을 예열하며, Black Ledger raid 계열은 다음 전투 objective를 불법 금고 습격으로 비튼다.`
-          : shouldUseLateFieldCache(state.waveIndex + 2)
-          ? `고철 ${Math.round(state.resources.scrap)} 보유. Arsenal Cache다. 이제 Wave 10 이후 짝수 late wave마다 대형 현장 패키지 1장을 바로 잠근다. 준비된 chassis/support/greed 묶음이 있다면 generic mutation 대신 branch-specific Convergence Form이 뜨고, 아니어도 미사일 랙·드론·오비탈·포탑 같은 autonomous branch가 주포/방호/탐욕과 같은 급으로 경쟁한다.`
-          : state.waveIndex + 2 >= RISK_MUTATION_START_WAVE
-          ? `고철 ${Math.round(state.resources.scrap)} 보유. Field Cache다. 이제 late reward는 Main Weapon Mutation, Autonomous Arsenal, Defense / Utility, Greed Contract 네 욕구로 정리된다. Dominant Mutation은 주포/차체를 당겨 오고, autonomous branch는 미사일·드론·오비탈을 바로 붙이며, 생존층은 다음 교차 압박을 버티게 하고, 탐욕 계약은 고철을 먼저 주는 대신 다음 웨이브 청구서를 즉시 붙인다.`
-          : `고철 ${Math.round(state.resources.scrap)} 보유. Field Cache다. 이번 현장 선택은 주포 변이, 생존층, 탐욕 계약 세 장뿐이다. 지금 더 위험하게 당겨서 강해질지, 상태를 정리하고 다음 큰 포지까지 버틸지 직접 고른다.`
+        ? "Architecture Draft"
+        : state.forgeDraftType === "field_grant"
+          ? shouldUseLateFieldCache(state.waveIndex + 2)
+            ? "Arsenal Cache"
+            : "Field Cache"
+          : state.forgeDraftType === "bastion_draft"
+            ? "Bastion Draft"
+            : state.forgeDraftType === "catalyst_draft"
+              ? "Catalyst Crucible"
+              : state.forgeDraftType === "armory"
+                ? armoryLabel
+                : state.forgeMaxSteps > 1
+                  ? `패키지 ${state.forgeStep}/${state.forgeMaxSteps}`
+                  : "Forge";
+    const choicePrompt = state.pendingFinalForge
+      ? catalystReady
+        ? "이번 세 장은 완성과 연소, 안정화 중 어디서 post-capstone ladder를 열지 고르는 마지막 분기다."
+        : "촉매가 비어 있어도 fail-soft 점화와 안정화 중 어디서 endurance ladder를 열지 고를 수 있다."
+      : state.forgeDraftType === "architecture_draft"
+        ? "이번 선택은 초반 doctrine path를 잠그고 다음 chaseable form을 확정한다."
         : state.forgeDraftType === "bastion_draft"
-        ? wave6AscensionDraft
-          ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 6 Ascension Draft다. 이제 세 장기 교리 중 하나를 irreversible form으로 잠근다. 이 한 번의 픽이 주무장 stage-1 mutation, utility chassis, 그리고 교리 reserve를 무시하는 off-doctrine flex lane을 동시에 켜고, Wave 8 Late Break Armory는 전장 uplink로 대체한다.`
-          : state.build.bastionDoctrineId
-            ? state.build.overcommitUnlocked && !state.build.doctrineChaseClaimed
-              ? `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. Wave 5에서 회수한 contraband salvage가 살아 있어 장기 Forge Pursuit 계약이 열렸다. 지금 pursuit를 걸고 Wave 6-8 marked elite에서 shard를 모아 이미 잠긴 monster form의 다음 분기를 당길지, Siege Salvage Pact나 무료 안정화로 greed를 접을지 정한다.`
-              : `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. 이미 잠긴 monster form 위에 추가 spike 1장과 Siege Salvage Pact, 무료 안정화가 다시 뜬다. 지금 더 깊게 묶일지, 체력을 태워 greed를 당길지 결정한다.`
-            : `고철 ${Math.round(state.resources.scrap)} 보유. Bastion Draft다. doctrine lock이 비어 있는 fallback 상태다. 정상 흐름이라면 Wave 3에서 이미 monster form이 확정되어 있어야 한다.`
-        : state.forgeDraftType === "catalyst_draft"
-        ? `고철 ${Math.round(state.resources.scrap)} 보유. Catalyst Crucible이다. 이제 막 회수한 촉매를 무료로 점화하거나 안정화해 남은 Act 3 웨이브를 완성형 회로로 직접 소모한다. 최종 포지까지 묵혀 두는 대신 지금부터 괴물 형태를 실제 전장에 투입한다.`
-        : state.forgeDraftType === "armory"
-        ? isLateBreakArmory(forgeOptions)
-          ? state.build.auxiliaryJunctionLevel > 0
-            ? `고철 ${Math.round(state.resources.scrap)} 보유. Wave 8을 넘기며 ${armoryLabel}가 열린다. 여기서는 Hades식 즉시 욕구 판독에 맞춰 Act 3 triad breakpoint가 먼저 보장된다. Breakline Arsenal은 추가 배럴을 곧바로 붙이고, Warplate Halo는 run-saving 완충층을 예열하며, Black Ledger Promissory는 다음 Scrapstorm를 금고 습격으로 비튼다. 그 뒤 남은 대형 카드로 네 번째 support bay와 이중 flex lane까지 묶는다.`
-            : `고철 ${Math.round(state.resources.scrap)} 보유. Wave 8을 넘기며 ${armoryLabel}가 열린다. 여기서는 Hades식 즉시 욕구 판독에 맞춰 Act 3 triad breakpoint가 먼저 보장된다. Breakline Arsenal은 추가 배럴을 곧바로 붙이고, Warplate Halo는 run-saving 완충층을 예열하며, Black Ledger Promissory는 다음 Scrapstorm를 금고 습격으로 비튼다. 그 뒤 세 번째 support bay와 교리 wildcard에 부족한 시스템을 덧댄다.`
-          : `고철 ${Math.round(state.resources.scrap)} 보유. Wave 4를 넘기면 일반 패키지 대신 ${armoryLabel}가 열린다. 이번 포지는 6장 중 2장을 고르며, 주무장 진화와 공세 카드가 여러 장 겹쳐 떠 4웨이브짜리 Act 2 운영을 일찍 잠근다.`
-      : `고철 ${Math.round(state.resources.scrap)} 보유. 장착은 무기 등급을 올리거나 바꾸고, 각인은 속성을 붙이며, 재구성/분해는 보관 코어를 정리한다. ${packageSummary}.`;
+          ? "이번 선택은 pursuit를 걸어 mid-run jump를 앞당기거나, 그대로 안정화를 택해 long-run secure만 노리는 갈림길이다."
+          : state.forgeDraftType === "field_grant"
+            ? "이번 선택은 즉시 체감되는 화력, shell, greed 중 하나를 밀어 다음 전투의 모양을 바꾼다."
+            : state.forgeDraftType === "catalyst_draft"
+              ? "이번 선택은 촉매를 지금 태워 괴물 형태를 앞당길지, 안정화해 손실을 줄일지 정한다."
+              : "이번 선택은 다음 두 웨이브의 silhouette를 가장 크게 바꿀 카드 하나를 고르는 구간이다.";
+    elements.forgeSubtitle.textContent = `고철 ${Math.round(state.resources.scrap)} 보유. ${forgeModeLabel}. ${roadmap.prompt} ${choicePrompt}`;
     elements.forgeContext.innerHTML = `
+      <article class="forge-context__card roadmap-card">
+        ${createRoadmapMarkup(roadmap)}
+      </article>
       <article class="forge-context__card">
         <p class="panel__eyebrow">현재 무기</p>
         <strong>${activeCore.label}</strong>
         <p>${state.weapon.tierLabel} · ${state.weapon.benchSyncLabel} · ${traitSummary}</p>
       </article>
       <article class="forge-context__card">
-        <p class="panel__eyebrow">속성 / 진화 / 시스템</p>
+        <p class="panel__eyebrow">현재 빌드 압축</p>
         <strong>${affixSummary}</strong>
         <p>${evolutionSummary} · ${doctrineSummary} · ${lateAscensionSummary} · ${lateFieldConvergenceSummary} · ${illegalOverclockSummary} · ${apexMutationSummary} · ${capstoneSummary} · ${chassisSummary} · ${forgeSystemSummary} · ${doctrinePursuitSummary} · ${supportBaySummary} · 보관 ${benchEntries.length}종 · ${catalystSummary} · 분해 예상 고철 ${getRecycleValue(state.build)}</p>
       </article>
