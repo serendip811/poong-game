@@ -13,7 +13,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: prove one rerunnable three-era 12-wave run by cutting mid-run admin repetition, making the main chassis/weapon payoff visibly dominate support progression, and validating one clean domination-to-spike arc before adding more branches.
+- Immediate priority: freeze new draft/cache/afterburn branch inflation and prove one rerunnable three-era 12-wave route whose forge read, Wave 5-8 pacing, and main-form payoff are strong enough to carry repeats before extending the structure again.
 
 ## Release Gates
 
@@ -40,6 +40,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 02:30:52 KST
+  Findings:
+  - The project is still drifting against its own consolidation stage. `game.js` keeps layering live ascension caches, catalyst splice bets, afterburn overdrives, dominion breaks, and `POST_CAPSTONE_ASCENSION_PROFILE`, which makes the run feel like stacked exception paths instead of one release-feeling 12-wave spine.
+  - `Wave 7-8` are cleaner than before, but they still cash out as authored hazard service more than player expression. `Crownfire Drift` and `Forgecross Relay Crown` plus `binder/lancer/mortar/warden` pressure risk turning the larger arena back into corridor maintenance when this bracket should mostly prove whether the new form can create and hold space.
+  - The UI is still selling framework over lust. `updateHUD()` and `renderForgeOverlay()` continue to foreground `Headline Leap`, `Survival Rider`, `Immediate Proof`, roadmap steps, and live side-bet framing together, while strong references in `Hades`, `Nova Drift`, and `Brotato` frontload one irresistible power ask and let the next fight do the explaining.
+  - Visible build hunger is still split across too many nouns. The player can chase halo, bay, splice, pursuit, cache, and crownline language, but the core fantasy should be one obvious “my gun/body is about to mutate again” ladder with support layers clearly secondary.
+  Top Priority: Cut the next improve pass to one consolidation move: simplify forge/HUD presentation to one headline form plus one secondary rider, then retune `Wave 7-8` so the headline form gets one real domination lap and one breach test without extra live-drop wrappers.
+  Why Now: Until one route feels clean and craveable on repeat, more late-run branches only increase admin and balance debt.
+  Do Not Repeat: Do not answer this with another cache, splice, pursuit, afterburn profile, or support wrapper before the existing 12-wave route feels worth replaying by itself.
+  Release Gate: Rewards
 
 - 2026-03-24 13:15:00 KST
   Findings:
@@ -1574,6 +1585,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 15:00:00 KST
+  Changed: consolidated the live reward read in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the combat HUD and forge stop frontloading the full `Headline Leap / Survival Rider / Immediate Proof / 12-Wave Contract` bundle at once. The right HUD card now resolves to a compact `Next Mutation` focus with just one `Headline Form` and one `Secondary Rider`, the left core card swaps its second mini-pill from `Proof` to `Rider`, and the forge top rail now presents only the headline leap plus rider while folding the proof window into the follow-up note instead of a third equal-weight card. I also updated [styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) so the forge focus rail matches the new two-card emphasis. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was still open on `Rewards`. The highest-value bounded interpretation was to finish the UI consolidation half first: make the player read one monster-form promise and one support rider before anything else, then let the next wave do the proving instead of spending the reward beat on another contract panel.
+  Follow-up risk: the headline/rider hierarchy is cleaner, but `Wave 7-8` still carry the second half of the same critique and may need one more pacing pass if the combat read still feels busier than the reward read. Release Gate: `Rewards`. For reference direction, this UI pass deliberately leaned on the appetite-first reveal hierarchy of `Hades` boon screens and the two-step future-form chase of `Nova Drift`: sell the mutation first, keep the rider visible, and leave proof to the next fight.
 
 - 2026-03-24 14:05:00 KST
   Changed: rebuilt the post-forge combat staircase in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so each major breakpoint now proves the new main form through the same two-step grammar instead of branch-specific detours. `Wave 6 · Breakline` now closes Act II with a first relay-breach test instead of a second open-lane victory lap, `Wave 10` was recut from `Scrapstorm` raid logic into `Scrapline` breach logic, and the Wave 9-10 late-break branch profiles (`Cataclysm Arsenal`, `Warplate Halo`, `Black Ledger Heist`) were normalized so `Wave 9` stays an open-lane payoff window while `Wave 10` becomes the harder breach proof regardless of rider. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to pin the new relay-breach expectations for `Wave 6` and `Wave 10`.

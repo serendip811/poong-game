@@ -8232,6 +8232,37 @@
     `;
   }
 
+  function createHeadlineRiderFocusMarkup(
+    build,
+    weapon = null,
+    supportSystem = null,
+    waveNumber = 1,
+    options = {}
+  ) {
+    const boundedWave = clamp(Math.round(waveNumber || 1), 1, MAX_WAVES);
+    const currentWeapon = weapon || computeWeaponStats(build);
+    const dominantForm = getDominantFormSummary(build, currentWeapon, boundedWave);
+    const nextBreakpoint = getNextBreakpointSummary(build, currentWeapon, boundedWave);
+    const supportTrack = getForgeSupportTrackSnapshot(build, supportSystem);
+    const proofWindow = getImmediateProofWindowSummary(build, boundedWave);
+    const act = getActLabelForWave(boundedWave);
+    const title = options.title || "Next Mutation";
+    const chipLabel = options.chipLabel || act.shortLabel;
+    const notePrefix = options.notePrefix || `${dominantForm.label}에서 ${nextBreakpoint.label}(으)로 뛴다.`;
+    return `
+      <div class="summary-head">
+        <strong>${title}</strong>
+        <span class="summary-chip ${options.hotChip ? "summary-chip--hot" : ""}">${chipLabel}</span>
+      </div>
+      <p class="summary-copy roadmap-card__path">지금은 headline form 하나와 rider 하나만 먼저 판다.</p>
+      <div class="status-list">
+        ${createStatusRow("Headline Form", nextBreakpoint.label)}
+        ${createStatusRow("Secondary Rider", supportTrack.label)}
+      </div>
+      <p class="summary-note">${notePrefix} ${supportTrack.label}는 약점을 덮는 rider로만 남기고, 증명은 ${proofWindow.label}에서 한다.</p>
+    `;
+  }
+
   function getCombatBandState(build, weapon = null, waveNumber = 1) {
     const boundedWave = clamp(Math.round(waveNumber || 1), 1, MAX_WAVES + POST_CAPSTONE_WAVE_COUNT);
     if (boundedWave < 9 || boundedWave > MAX_WAVES) {
@@ -19716,9 +19747,9 @@
         </div>
         <div class="mini-pill-row">
           ${createMiniPill(getHeadlineFormTierLabel(getHeadlineFormTier(state.build)), headlineLabel, "hot")}
-          ${createMiniPill("Proof", proofWindow.label, "cool")}
+          ${createMiniPill("Rider", supportTrack.label, "cool")}
         </div>
-        <p class="summary-note">${nextBreakpoint.label}이 다음 monster-form jump다. ${supportTrack.label}는 rider로만 짧게 남기고, 증명은 ${proofWindow.label}에서 한다.</p>
+        <p class="summary-note">${nextBreakpoint.label}이 다음 monster-form jump다. ${supportTrack.label}는 rider로만 짧게 남기고, ${proofWindow.label}에서 바로 space ownership를 증명한다.</p>
       `;
     }
 
@@ -19749,7 +19780,7 @@
     }
 
     if (elements.buildRoadmap) {
-      elements.buildRoadmap.innerHTML = createEraContractPanelMarkup(
+      elements.buildRoadmap.innerHTML = createHeadlineRiderFocusMarkup(
         state.build,
         state.weapon,
         state.supportSystem,
@@ -19886,7 +19917,7 @@
         <p>${
           riderStep
             ? "headline leap은 이미 고정됐다. 이번 단계는 support, shell, greed 중 하나를 rider로 얹어 proof window에서 얼마나 오래 버티는지 정하는 선택이다."
-            : "이번 포지는 관리표보다 먼저 세 가지만 보여 준다. 다음 headline leap, 이를 받쳐 줄 survival rider, 그리고 바로 다음 proof window다."
+            : "이번 포지는 관리표 대신 다음 headline leap과 그것을 받칠 rider만 먼저 보여 준다. proof는 다음 전투 설명으로만 짧게 남긴다."
         }</p>
         <div class="forge-focus__rail">
           <article class="forge-focus__pill">
@@ -19899,26 +19930,13 @@
             <strong>${activeSupportTrack.label}</strong>
             <p>${activeSupportTrack.detail}</p>
           </article>
-          <article class="forge-focus__pill">
-            <p class="panel__eyebrow">Immediate Proof</p>
-            <strong>${proofWindow.label}</strong>
-            <p>${proofWindow.detail}</p>
-          </article>
         </div>
         <p class="summary-note forge-focus__note">${
           riderStep
-            ? `${dominantFormSummary.label} 위에 ${activeSupportTrack.label} rider를 얹고 ${proofWindow.label}에서 버틸 시간을 늘린다.`
-            : `${dominantFormSummary.label}에서 ${nextFormStep.label}(으)로 뛰고, ${activeSupportTrack.label}로 약점을 받친 뒤 ${proofWindow.label}에서 즉시 증명한다.`
+            ? `${dominantFormSummary.label} 위에 ${activeSupportTrack.label} rider를 얹고 ${proofWindow.label}에서 버틸 시간을 늘린다. ${proofWindow.detail}`
+            : `${dominantFormSummary.label}에서 ${nextFormStep.label}(으)로 뛰고 ${activeSupportTrack.label}로 약점을 받친 뒤 ${proofWindow.label}에서 즉시 증명한다. ${proofWindow.detail}`
         }</p>
         ${!riderStep ? createForgeHeadlineShowcaseMarkup(showcase) : ""}
-      </article>
-      <article class="forge-context__card forge-context__card--span-two">
-        ${createEraContractPanelMarkup(
-          state.build,
-          state.weapon,
-          state.supportSystem,
-          state.waveIndex + 2
-        )}
       </article>
     `;
     elements.forgeCards.innerHTML = state.forgeChoices
