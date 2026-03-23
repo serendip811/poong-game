@@ -292,6 +292,15 @@ const artilleryWaveEleven = game.resolveWaveConfig(10, artilleryLateBuild);
 const artilleryWaveTwelve = game.resolveWaveConfig(11, artilleryLateBuild);
 const artilleryWaveNine = game.resolveWaveConfig(8, artilleryLateBuild);
 const mirrorBaseStats = game.computePlayerStats(game.createInitialBuild("relay_oath"));
+const mirrorStageOneBuild = game.createInitialBuild("relay_oath");
+mirrorStageOneBuild.bastionDoctrineId = "mirror_hunt";
+const mirrorStageOneWeapon = game.computeWeaponStats(mirrorStageOneBuild);
+const mirrorStageOneBody = game.getDoctrineBodyForm(mirrorStageOneBuild);
+const mirrorStageOneStats = game.computePlayerStats(mirrorStageOneBuild);
+assert.equal(mirrorStageOneWeapon.doctrineFormLabel, "Hunt Frame");
+assert.equal(mirrorStageOneBody.label, "Hunt Wing Rig");
+assert.ok((mirrorStageOneWeapon.doctrineFirePattern?.offsets || []).length >= 3);
+assert.ok(mirrorStageOneStats.moveSpeed > mirrorBaseStats.moveSpeed);
 const mirrorChaseBuild = game.createInitialBuild("relay_oath");
 mirrorChaseBuild.bastionDoctrineId = "mirror_hunt";
 mirrorChaseBuild.doctrineChaseClaimed = true;
@@ -301,6 +310,15 @@ assert.equal(mirrorBodyForm.label, "Stormglass Pursuit Frame");
 assert.ok(mirrorChaseStats.moveSpeed > mirrorBaseStats.moveSpeed);
 assert.ok(mirrorChaseStats.pickupRadius > mirrorBaseStats.pickupRadius);
 const stormBaseStats = game.computePlayerStats(game.createInitialBuild("rail_zeal"));
+const stormStageOneBuild = game.createInitialBuild("rail_zeal");
+stormStageOneBuild.bastionDoctrineId = "storm_artillery";
+const stormStageOneWeapon = game.computeWeaponStats(stormStageOneBuild);
+const stormStageOneBody = game.getDoctrineBodyForm(stormStageOneBuild);
+const stormStageOneStats = game.computePlayerStats(stormStageOneBuild);
+assert.equal(stormStageOneWeapon.doctrineFormLabel, "Siege Frame");
+assert.equal(stormStageOneBody.label, "Siege Rack Carriage");
+assert.ok((stormStageOneWeapon.doctrineFirePattern?.offsets || []).length >= 3);
+assert.ok(stormStageOneStats.coolRate > stormBaseStats.coolRate);
 const stormChaseBuild = game.createInitialBuild("rail_zeal");
 stormChaseBuild.bastionDoctrineId = "storm_artillery";
 stormChaseBuild.doctrineChaseClaimed = true;
@@ -309,6 +327,16 @@ const stormChaseStats = game.computePlayerStats(stormChaseBuild);
 assert.equal(stormBodyForm.label, "Thunder Rack Carriage");
 assert.ok(stormChaseStats.coolRate > stormBaseStats.coolRate);
 assert.ok(stormChaseStats.moveSpeed < stormBaseStats.moveSpeed);
+const kilnBaseStats = game.computePlayerStats(game.createInitialBuild("scrap_pact"));
+const kilnStageOneBuild = game.createInitialBuild("scrap_pact");
+kilnStageOneBuild.bastionDoctrineId = "kiln_bastion";
+const kilnStageOneWeapon = game.computeWeaponStats(kilnStageOneBuild);
+const kilnStageOneBody = game.getDoctrineBodyForm(kilnStageOneBuild);
+const kilnStageOneStats = game.computePlayerStats(kilnStageOneBuild);
+assert.equal(kilnStageOneWeapon.doctrineFormLabel, "Kiln Frame");
+assert.equal(kilnStageOneBody.label, "Kiln Mantlet");
+assert.equal(kilnStageOneWeapon.doctrineFirePattern?.count, 2);
+assert.ok(kilnStageOneStats.maxHp > kilnBaseStats.maxHp);
 const kilnCapstoneBuild = game.createInitialBuild("scrap_pact");
 kilnCapstoneBuild.coreId = "scatter";
 kilnCapstoneBuild.bastionDoctrineId = "kiln_bastion";
@@ -889,7 +917,7 @@ const kilnFrameWeapon = game.computeWeaponStats(kilnFrameBuild);
 assert.equal(kilnFrameWeapon.doctrineFormLabel, "Kiln Frame");
 assert.equal(kilnFrameWeapon.doctrineStage, 1);
 assert.equal(kilnFrameWeapon.doctrineFirePattern.kind, "slag_seed");
-assert.equal(kilnFrameWeapon.doctrineFirePattern.count, 1);
+assert.equal(kilnFrameWeapon.doctrineFirePattern.count, 2);
 kilnFrameBuild.doctrineChaseClaimed = true;
 const kilnCrucibleWeapon = game.computeWeaponStats(kilnFrameBuild);
 assert.equal(kilnCrucibleWeapon.doctrineFormLabel, "Crucible Scatter");
@@ -1223,7 +1251,7 @@ assert.equal(mirrorWaveThreeWeapon.doctrineFormLabel, "Hunt Frame");
 assert.equal(mirrorWaveThreeWeapon.doctrineStage, 1);
 assert.equal(
   JSON.stringify(mirrorWaveThreeWeapon.doctrineFirePattern.offsets),
-  JSON.stringify([-0.22, 0.22])
+  JSON.stringify([-0.28, 0, 0.28])
 );
 doctrineCapstoneBuild.doctrineChaseClaimed = true;
 const mirrorWaveSevenWeapon = game.computeWeaponStats(doctrineCapstoneBuild);
@@ -1284,10 +1312,10 @@ game.applyForgeChoice(
 const artilleryWaveThreeWeapon = game.computeWeaponStats(artilleryDoctrineBuild);
 assert.equal(artilleryWaveThreeWeapon.evolutionLabel, "Twin Spine");
 assert.equal(artilleryWaveThreeWeapon.doctrineFormLabel, "Siege Frame");
-assert.equal(artilleryWaveThreeWeapon.doctrineTraitLabel, "외곽 공성선");
+assert.equal(artilleryWaveThreeWeapon.doctrineTraitLabel, "삼연 외곽 공성선");
 assert.equal(
   JSON.stringify(artilleryWaveThreeWeapon.doctrineFirePattern.offsets),
-  JSON.stringify([-0.22, 0.22])
+  JSON.stringify([-0.26, 0, 0.26])
 );
 const artilleryChaseChoice = game
   .buildBastionDraftChoices(
@@ -1309,7 +1337,7 @@ assert.equal(artilleryWaveFiveWeapon.doctrineStage, 1);
 assert.equal(artilleryWaveFiveWeapon.chain, 1);
 assert.equal(
   JSON.stringify(artilleryWaveFiveWeapon.doctrineFirePattern.offsets),
-  JSON.stringify([-0.22, 0.22])
+  JSON.stringify([-0.26, 0, 0.26])
 );
 artilleryDoctrineBuild.doctrineChaseClaimed = true;
 const artilleryWaveSevenWeapon = game.computeWeaponStats(artilleryDoctrineBuild);

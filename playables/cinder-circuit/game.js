@@ -3713,16 +3713,17 @@
       stages: {
         1: {
           label: "Hunt Frame",
-          traitLabel: "쌍익 추적 분광",
-          statusNote: "Hunt Frame이 양옆 추적 분광을 덧대 반사 진입과 측면 스윕을 동시에 더 쉽게 연다.",
-          damageBonus: 3,
-          cooldownMultiplier: 0.96,
+          traitLabel: "삼익 추적 분광",
+          statusNote:
+            "Hunt Frame이 중앙 주포 양옆에 추적 분광 날개를 더해, 교리 잠금 직후부터 반사 진입과 측면 스윕이 동시에 보이는 사냥 차체가 된다.",
+          damageBonus: 5,
+          cooldownMultiplier: 0.94,
           firePattern: {
-            offsets: [-0.22, 0.22],
-            damageMultiplier: 0.5,
-            speedMultiplier: 1.06,
-            radius: 4.1,
-            life: 1.18,
+            offsets: [-0.28, 0, 0.28],
+            damageMultiplier: 0.58,
+            speedMultiplier: 1.08,
+            radius: 4.3,
+            life: 1.2,
             pierceBonus: 0,
             bounceBonus: 1,
             chainBonus: 0,
@@ -3790,24 +3791,25 @@
       stages: {
         1: {
           label: "Kiln Frame",
-          traitLabel: "전방 용광 씨앗",
-          statusNote: "Kiln Frame이 산탄 사이에 용광 씨앗을 함께 박아 reclaim pocket 앞에 직접 불도랑을 깐다.",
-          damageBonus: 3,
-          cooldownMultiplier: 0.97,
+          traitLabel: "쌍중 용광 씨앗",
+          statusNote:
+            "Kiln Frame이 산탄 사이에 이중 용광 씨앗을 함께 박아, 초반부터 sentry보다 플레이어 본체가 pocket 입구를 먼저 태워 여는 공성형 차체가 된다.",
+          damageBonus: 5,
+          cooldownMultiplier: 0.95,
           firePattern: {
             kind: "slag_seed",
-            count: 1,
-            spread: 0,
-            speedMultiplier: 0.68,
-            radius: 6.4,
-            life: 0.7,
-            damageMultiplier: 0.7,
-            blastRadius: 54,
-            blastDamageMultiplier: 0.72,
-            poolRadius: 62,
-            poolDuration: 1.45,
+            count: 2,
+            spread: 0.14,
+            speedMultiplier: 0.7,
+            radius: 6.6,
+            life: 0.72,
+            damageMultiplier: 0.76,
+            blastRadius: 58,
+            blastDamageMultiplier: 0.78,
+            poolRadius: 68,
+            poolDuration: 1.58,
             poolTickInterval: 0.32,
-            poolDamageMultiplier: 0.16,
+            poolDamageMultiplier: 0.17,
             color: "#ffd59b",
             poolColor: "rgba(255, 163, 84, 0.28)",
           },
@@ -3894,16 +3896,17 @@
       stages: {
         1: {
           label: "Siege Frame",
-          traitLabel: "외곽 공성선",
-          statusNote: "Siege Frame이 주 레일 바깥에 공성 보조선을 깔아 먼 포대까지 함께 꿰뚫는다.",
-          damageBonus: 3,
-          cooldownMultiplier: 0.96,
+          traitLabel: "삼연 외곽 공성선",
+          statusNote:
+            "Siege Frame이 중앙 레일 양옆에 장거리 공성선을 더해, doctrine 잠금 직후부터 본체가 화면 폭 사선을 먼저 장악하는 포격 차체가 된다.",
+          damageBonus: 5,
+          cooldownMultiplier: 0.94,
           firePattern: {
-            offsets: [-0.22, 0.22],
-            damageMultiplier: 0.52,
-            speedMultiplier: 1.14,
-            radius: 5.1,
-            life: 1.2,
+            offsets: [-0.26, 0, 0.26],
+            damageMultiplier: 0.6,
+            speedMultiplier: 1.16,
+            radius: 5.2,
+            life: 1.22,
             pierceBonus: 1,
             bounceBonus: 0,
             chainBonus: 0,
@@ -4018,6 +4021,16 @@
 
   const DOCTRINE_BODY_LADDER_DEFS = {
     mirror_hunt: {
+      1: {
+        label: "Hunt Wing Rig",
+        statusNote:
+          "Hunt Wing Rig가 측면 익판을 먼저 펼쳐, 교리 잠금 직후부터 짧은 flank cut과 shard 회수를 본체 기동으로 여는 차체가 된다.",
+        applyPlayer(stats) {
+          stats.moveSpeed += 10;
+          stats.pickupRadius += 8;
+          stats.dashCooldown = clamp(stats.dashCooldown - 0.08, 1.2, 3.2);
+        },
+      },
       2: {
         label: "Stormglass Pursuit Frame",
         statusNote:
@@ -4030,6 +4043,16 @@
       },
     },
     kiln_bastion: {
+      1: {
+        label: "Kiln Mantlet",
+        statusNote:
+          "Kiln Mantlet가 전방 방열판과 어깨 차폐를 먼저 닫아, 웨이브 3-5부터 본체가 sentry보다 앞에서 pocket 입구를 버티며 태우는 차체가 된다.",
+        applyPlayer(stats) {
+          stats.maxHp += 10;
+          stats.coolRate += 4;
+          stats.hazardMitigation = clamp(stats.hazardMitigation + 0.04, 0, 0.45);
+        },
+      },
       2: {
         label: "Bulwark Carapace",
         statusNote:
@@ -4042,6 +4065,16 @@
       },
     },
     storm_artillery: {
+      1: {
+        label: "Siege Rack Carriage",
+        statusNote:
+          "Siege Rack Carriage가 등판 배터리와 앞포신을 먼저 잠가, 웨이브 3-5부터 긴 사선을 기체 실루엣 자체로 읽히게 만든다.",
+        applyPlayer(stats) {
+          stats.maxHp += 6;
+          stats.coolRate += 4;
+          stats.pickupRadius += 6;
+        },
+      },
       2: {
         label: "Thunder Rack Carriage",
         statusNote:
@@ -7272,6 +7305,7 @@
     const doctrine = getBastionDoctrineDef(build);
     const pursuit = getDoctrineForgePursuitDef(doctrine || build);
     const currentWeapon = weapon || computeWeaponStats(build);
+    const doctrineBodyForm = getDoctrineBodyForm(build);
     const doctrineForm = currentWeapon && currentWeapon.doctrineFormLabel ? currentWeapon.doctrineFormLabel : null;
     const activeForm =
       (currentWeapon && currentWeapon.afterburnDominionLabel) ||
@@ -7282,12 +7316,15 @@
       doctrineForm ||
       (currentWeapon && currentWeapon.evolutionLabel) ||
       CORE_DEFS[build.coreId].label;
+    const activeBodyLabel = doctrineBodyForm ? doctrineBodyForm.label : null;
     const pathLabel = doctrine
-      ? `${doctrine.label} · ${activeForm}`
+      ? `${doctrine.label} · ${activeForm}${activeBodyLabel ? ` / ${activeBodyLabel}` : ""}`
       : `${CORE_DEFS[build.coreId].label} · ${activeForm}`;
     const stageOneTitle = doctrine ? doctrine.label : "Monster Form Lock";
     const stageOneDetail = build.bastionDoctrineId
-      ? `${currentWeapon.doctrineFormLabel || activeForm}이(가) 현재 body/gun 실루엣이다. 이후 포지는 이 형태를 더 과격하게 밀거나 약점을 메우는 쪽으로만 열린다.`
+      ? `${currentWeapon.doctrineFormLabel || activeForm}${
+          activeBodyLabel ? ` / ${activeBodyLabel}` : ""
+        }이(가) 현재 body/gun 실루엣이다. 이후 포지는 이 형태를 더 과격하게 밀거나 약점을 메우는 쪽으로만 열린다.`
       : `Wave ${ARCHITECTURE_DRAFT_WAVE}에서 교리를 잠가 첫 monster form과 chassis lane을 연다.`;
     const stageOneState = build.bastionDoctrineId
       ? "locked"
@@ -19396,7 +19433,11 @@
       state.waveIndex + 2
     );
     const activeSupportTrack = getForgeSupportTrackSnapshot(state.build, state.supportSystem);
+    const doctrineBodyForm = getDoctrineBodyForm(state.build);
     const activeFormSummary = roadmap.activeForm || activeCore.label;
+    const dominantFormSummary = doctrineBodyForm
+      ? `${activeFormSummary} / ${doctrineBodyForm.label}`
+      : activeFormSummary;
     const nextFormStep = roadmap.steps.find((step) => step.state !== "locked") || roadmap.steps[2] || null;
     const forgeModeLabel = state.pendingFinalForge
       ? "Final Forge"
@@ -19461,21 +19502,22 @@
         <p class="summary-note">${choicePrompt}</p>
       </article>
       <article class="forge-context__card">
-        <p class="panel__eyebrow">현재 무기</p>
-        <strong>${activeCore.label}</strong>
-        <p>${state.weapon.tierLabel} · ${state.weapon.benchSyncLabel} · ${traitSummary}</p>
+        <p class="panel__eyebrow">Dominant Form</p>
+        <strong>${dominantFormSummary}</strong>
+        <p>${activeCore.label} · ${state.weapon.tierLabel} · ${traitSummary}</p>
       </article>
       <article class="forge-context__card">
-        <p class="panel__eyebrow">Build Focus</p>
-        <strong>${activeFormSummary}</strong>
+        <p class="panel__eyebrow">Rider Rail</p>
+        <strong>${activeSupportTrack.label}</strong>
         <div class="status-list">
-          ${createStatusRow("Main", nextFormStep ? nextFormStep.title : activeFormSummary)}
+          ${createStatusRow("Main", dominantFormSummary)}
+          ${createStatusRow("Next", nextFormStep ? nextFormStep.title : activeFormSummary)}
           ${createStatusRow("Support", activeSupportTrack.label)}
           ${createStatusRow("Aux Rail", wildcardSummary)}
           ${createStatusRow("Reserve", `${supportBaySummary} · 보관 ${benchEntries.length}종`)}
         </div>
         <p>${activeSupportTrack.detail}</p>
-        <p class="summary-note">${chassisSummary} · ${forgeSystemSummary} · ${doctrinePursuitSummary} · ${catalystSummary} · 분해 예상 고철 ${getRecycleValue(state.build)}</p>
+        <p class="summary-note">${forgeSystemSummary} · ${doctrinePursuitSummary} · ${catalystSummary} · 분해 예상 고철 ${getRecycleValue(state.build)}</p>
       </article>
     `;
     elements.forgeCards.innerHTML = state.forgeChoices
@@ -20649,18 +20691,22 @@
     }
     const facing = state.player.facing || 0;
     if (bodyForm.doctrineId === "mirror_hunt") {
-      [-1.2, -0.55, 0.55, 1.2].forEach((lane) => {
+      const lanes = bodyForm.stage >= 2 ? [-1.2, -0.55, 0.55, 1.2] : [-0.95, 0.95];
+      lanes.forEach((lane) => {
         const fin = getOffsetPoint(state.player.x, state.player.y, facing, -2, 15 * lane);
         context.fillStyle = "rgba(210, 244, 255, 0.72)";
         context.beginPath();
-        context.moveTo(fin.x + Math.cos(facing) * 10, fin.y + Math.sin(facing) * 10);
-        context.lineTo(
-          fin.x - Math.cos(facing) * 6 - Math.sin(facing) * 7 * Math.sign(lane || 1),
-          fin.y - Math.sin(facing) * 6 + Math.cos(facing) * 7 * Math.sign(lane || 1)
+        context.moveTo(
+          fin.x + Math.cos(facing) * (bodyForm.stage >= 2 ? 10 : 8),
+          fin.y + Math.sin(facing) * (bodyForm.stage >= 2 ? 10 : 8)
         );
         context.lineTo(
-          fin.x - Math.cos(facing) * 11 + Math.sin(facing) * 5 * Math.sign(lane || 1),
-          fin.y - Math.sin(facing) * 11 - Math.cos(facing) * 5 * Math.sign(lane || 1)
+          fin.x - Math.cos(facing) * (bodyForm.stage >= 2 ? 6 : 5) - Math.sin(facing) * 7 * Math.sign(lane || 1),
+          fin.y - Math.sin(facing) * (bodyForm.stage >= 2 ? 6 : 5) + Math.cos(facing) * 7 * Math.sign(lane || 1)
+        );
+        context.lineTo(
+          fin.x - Math.cos(facing) * (bodyForm.stage >= 2 ? 11 : 8.5) + Math.sin(facing) * 5 * Math.sign(lane || 1),
+          fin.y - Math.sin(facing) * (bodyForm.stage >= 2 ? 11 : 8.5) - Math.cos(facing) * 5 * Math.sign(lane || 1)
         );
         context.closePath();
         context.fill();
@@ -20668,55 +20714,71 @@
       context.strokeStyle = "rgba(231, 250, 255, 0.68)";
       context.lineWidth = 2;
       context.beginPath();
-      context.arc(state.player.x, state.player.y, state.player.radius + 12, 0, Math.PI * 2);
+      context.arc(state.player.x, state.player.y, state.player.radius + (bodyForm.stage >= 2 ? 12 : 9), 0, Math.PI * 2);
       context.stroke();
       return;
     }
     if (bodyForm.doctrineId === "kiln_bastion") {
       [-1, 1].forEach((direction) => {
-        const shoulder = getOffsetPoint(state.player.x, state.player.y, facing, -3, 18 * direction);
+        const shoulder = getOffsetPoint(
+          state.player.x,
+          state.player.y,
+          facing,
+          -3,
+          (bodyForm.stage >= 2 ? 18 : 15) * direction
+        );
         context.fillStyle = "rgba(255, 201, 142, 0.78)";
         context.fillRect(
-          shoulder.x - 4 - Math.sin(facing) * 4,
-          shoulder.y - 4 + Math.cos(facing) * 4,
-          8,
-          11
+          shoulder.x - (bodyForm.stage >= 2 ? 4 : 3.6) - Math.sin(facing) * 4,
+          shoulder.y - (bodyForm.stage >= 2 ? 4 : 3.6) + Math.cos(facing) * 4,
+          bodyForm.stage >= 2 ? 8 : 7.2,
+          bodyForm.stage >= 2 ? 11 : 9.4
         );
       });
-      const prow = getOffsetPoint(state.player.x, state.player.y, facing, 13, 0);
+      const prow = getOffsetPoint(state.player.x, state.player.y, facing, bodyForm.stage >= 2 ? 13 : 11, 0);
       context.strokeStyle = "rgba(255, 229, 192, 0.72)";
       context.lineWidth = 2.4;
       context.beginPath();
       context.moveTo(
-        prow.x - Math.sin(facing) * 8,
-        prow.y + Math.cos(facing) * 8
+        prow.x - Math.sin(facing) * (bodyForm.stage >= 2 ? 8 : 6.5),
+        prow.y + Math.cos(facing) * (bodyForm.stage >= 2 ? 8 : 6.5)
       );
-      context.lineTo(prow.x + Math.cos(facing) * 10, prow.y + Math.sin(facing) * 10);
       context.lineTo(
-        prow.x + Math.sin(facing) * 8,
-        prow.y - Math.cos(facing) * 8
+        prow.x + Math.cos(facing) * (bodyForm.stage >= 2 ? 10 : 8),
+        prow.y + Math.sin(facing) * (bodyForm.stage >= 2 ? 10 : 8)
+      );
+      context.lineTo(
+        prow.x + Math.sin(facing) * (bodyForm.stage >= 2 ? 8 : 6.5),
+        prow.y - Math.cos(facing) * (bodyForm.stage >= 2 ? 8 : 6.5)
       );
       context.stroke();
       context.beginPath();
-      context.arc(state.player.x, state.player.y, state.player.radius + 12, 0, Math.PI * 2);
+      context.arc(state.player.x, state.player.y, state.player.radius + (bodyForm.stage >= 2 ? 12 : 9), 0, Math.PI * 2);
       context.stroke();
       return;
     }
     if (bodyForm.doctrineId === "storm_artillery") {
-      [-1.2, -0.4, 0.4, 1.2].forEach((lane) => {
-        const barrel = getOffsetPoint(state.player.x, state.player.y, facing, 12, lane * 10);
+      const lanes = bodyForm.stage >= 2 ? [-1.2, -0.4, 0.4, 1.2] : [-0.8, 0, 0.8];
+      lanes.forEach((lane) => {
+        const barrel = getOffsetPoint(
+          state.player.x,
+          state.player.y,
+          facing,
+          bodyForm.stage >= 2 ? 12 : 10,
+          lane * (bodyForm.stage >= 2 ? 10 : 9)
+        );
         context.fillStyle = "rgba(241, 251, 255, 0.8)";
         context.fillRect(
-          barrel.x - 2.5 - Math.sin(facing) * 5,
-          barrel.y - 2.5 + Math.cos(facing) * 5,
-          5,
-          13
+          barrel.x - (bodyForm.stage >= 2 ? 2.5 : 2.2) - Math.sin(facing) * 5,
+          barrel.y - (bodyForm.stage >= 2 ? 2.5 : 2.2) + Math.cos(facing) * 5,
+          bodyForm.stage >= 2 ? 5 : 4.4,
+          bodyForm.stage >= 2 ? 13 : 10.5
         );
       });
       context.strokeStyle = "rgba(255, 243, 214, 0.7)";
       context.lineWidth = 2;
       context.beginPath();
-      context.arc(state.player.x, state.player.y, state.player.radius + 11, 0, Math.PI * 2);
+      context.arc(state.player.x, state.player.y, state.player.radius + (bodyForm.stage >= 2 ? 11 : 9), 0, Math.PI * 2);
       context.stroke();
     }
   }
