@@ -13,7 +13,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: vertical-slice-to-alpha expansion.
-- Immediate priority: stop adding wrappers and realign the docs, HUD, forge, and late-wave ladder around one readable three-era long-run contract where the chassis/weapon path creates the hunger and each payoff window actually breathes.
+- Immediate priority: freeze new system sprawl and consolidate the run around one readable three-era contract where Wave 9-12 actually breathes, the main chassis/weapon leap owns the spectacle, and support/admin layers stay secondary.
 
 ## Release Gates
 
@@ -40,6 +40,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-23 23:05:00 KST
+  Findings:
+  - `docs/games/cinder-circuit-design.md` and `docs/games/cinder-circuit-source-analysis.md` still frame the game as a short `5웨이브`, `6-7분` run, so the project is still authoring a bigger ladder without a committed long-run promise. That keeps the implementation sounding ambitious while still pacing like a prototype.
+  - `Wave 5-12` does have more room on paper, but the run keeps spending that oxygen too fast. `activeCap` jumps back into the low-30s to low-40s almost immediately, and the late bands still resolve into sustained sanitation/kiting more often than deliberate lane-taking, greed dives, or recovery windows.
+  - The late combat ecologies are still too repetitive for repeat-run appetite. `Afterglow -> Breakline` and `Crownfire -> Forgecross`, then `Lockgrid -> Scrapstorm -> Starforge -> Cinder Crown`, read more like denser remixes than a sequence of new asks the player wants to survive to see again.
+  - The reward surface is still over-instrumented. `updateHUD()` and `renderForgeOverlay()` now try to lead with headline leap language, but they still carry roadmap, rider, proof window, pursuit, catalyst, support bay, bench, and draft state at once, which keeps the forge feeling managed instead of craved.
+  - Support systems still threaten to outshine the core body/gun fantasy because their gains are cleaner and more obviously visible: more orbitals, more shields, more drones, more missiles. If those reads stay louder than the chassis/weapon breakpoints, repeat-run hunger will flatten.
+  Top Priority: Freeze new progression nouns and recut `Wave 9-12` into one true low-density payoff band and one true spike band, then strip the forge/HUD to one headline form leap plus one secondary rider so the next transformation is clearer than the support package.
+  Why Now: The game already has enough systems to fake scale; what it lacks is a combat/reward rhythm players would actually want to rerun.
+  Do Not Repeat: Do not answer this with another cache, doctrine wrapper, or support branch before late-wave spacing and payoff clarity are proven.
+  Release Gate: Combat
 
 - 2026-03-23 22:15:00 KST
   Findings:
@@ -1480,6 +1492,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-23 23:40:00 KST
+  Changed: retuned the live late-break encounter ladder in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the four-wave back half now reads as one real low-density payoff band and one real spike band instead of four near-equal late fights. For all three late-break branches, `Wave 9-10` now open in larger arenas with lower `activeCap`, lower `spawnBudget`, and lighter hazard cadence, while the branch-specific `Wave 11-12` crown profiles now step up together into a denser spike pair with clearly higher caps, budgets, and hazard pressure. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert that each `mutation` / `aegis` / `ledger` branch now keeps both payoff fights below both spike fights on combat load, plus the expected spike hazard types. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was still open on `Combat`: late runs had the authored wave count, but not a convincing two-band rhythm where the post-armory form could breathe before the final spike. The highest-value bounded interpretation was to consolidate the existing late-break branch profiles rather than add another system, because actual runs already route through those profiles and that is where the spacing appetite needed to become visible.
+  Follow-up risk: the late back half now has a cleaner `payoff -> spike` split, but `Wave 9-10` still ask mostly branch-shaped variants of pursuit/crossfire/raid rather than wholly new ecologies. If replay appetite still flattens after this, the next combat pass should widen the kind of ask inside the payoff band itself instead of restoring saturation. Release Gate: `Combat`.
 
 - 2026-03-23 22:16:12 KST
   Changed: replaced the shared late repeat band in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so normal runs no longer fall back to `Cinder Crown I-II` rehearsal after the Wave 10 break. `Wave 11` now resolves as `Starforge Pursuit`, a lower-density drift proof window for the newly locked late form, and `Wave 12` cashes that out in a single `Cinder Crown` breach where ignition pressure and relay corridors overlap instead of simply rerunning the same ecology twice. In the same file I also tightened `updateHUD()` and `renderForgeOverlay()` around one explicit `Headline Leap`, one `Survival Rider`, and one `Immediate Proof` read so the reward/combat layer sells the late transformation first instead of reopening a status console. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new shared late-band labels, hazard types, and the downstream Afterburn inheritance. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
