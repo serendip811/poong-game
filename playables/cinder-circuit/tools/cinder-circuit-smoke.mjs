@@ -41,6 +41,15 @@ assert.equal(game.WAVE_CONFIG[4].arena.width, 1280);
 assert.equal(game.WAVE_CONFIG[4].arena.height, 720);
 assert.equal(game.WAVE_CONFIG[4].hazard.type, "territory");
 assert.ok(game.WAVE_CONFIG[4].hazard.coreHp > 0);
+const actBreakCacheBuild = game.createInitialBuild("rail_zeal");
+const actBreakCacheChoices = game.getCombatCacheChoicesForWave(actBreakCacheBuild, 5, 12);
+assert.equal(actBreakCacheChoices.length, 3);
+assert.ok(actBreakCacheChoices.some((choice) => choice.laneLabel === "주무장 진화" || choice.laneLabel === "대형 화력"));
+assert.ok(
+  actBreakCacheChoices.some((choice) =>
+    ["공세 모듈", "방호/유틸 차체", "보조 시스템"].includes(choice.laneLabel)
+  )
+);
 assert.ok(game.WAVE_CONFIG[7].spawnBudget > game.WAVE_CONFIG[4].spawnBudget);
 assert.ok(game.WAVE_CONFIG[7].mix.warden > 0);
 assert.ok(game.WAVE_CONFIG[7].mix.mortar > 0);

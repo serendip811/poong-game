@@ -5326,6 +5326,13 @@
     return nextWave === ACT_BREAK_ARMORY_WAVE || nextWave === LATE_BREAK_ARMORY_WAVE;
   }
 
+  function shouldUseCompactActBreakCache(options) {
+    if (!options || options.finalForge) {
+      return false;
+    }
+    return (options.nextWave || 0) === ACT_BREAK_ARMORY_WAVE;
+  }
+
   function shouldRunArchitectureDraft(options) {
     if (!options || options.finalForge) {
       return false;
@@ -7762,6 +7769,42 @@
     return shuffle(choices.slice(0, ACT_BREAK_ARMORY_MAX_CHOICES), random);
   }
 
+  function buildCompactActBreakCacheChoices(build, rng, scrapBank) {
+    const random = typeof rng === "function" ? rng : Math.random;
+    const armoryChoices = buildActBreakArmoryChoices(
+      build,
+      random,
+      scrapBank,
+      { nextWave: ACT_BREAK_ARMORY_WAVE, finalForge: false }
+    );
+    if (armoryChoices.length <= 3) {
+      return armoryChoices.slice(0, 3);
+    }
+    const picks = [];
+    const pickedIds = new Set();
+    const laneGroups = [
+      ["주무장 진화", "대형 화력"],
+      ["공세 모듈", "방호/유틸 차체", "보조 시스템"],
+    ];
+    laneGroups.forEach((labels) => {
+      const match = armoryChoices.find(
+        (choice) => choice && !pickedIds.has(choice.id) && labels.includes(choice.laneLabel)
+      );
+      if (match) {
+        pickedIds.add(match.id);
+        picks.push(match);
+      }
+    });
+    armoryChoices.forEach((choice) => {
+      if (!choice || pickedIds.has(choice.id) || picks.length >= 3) {
+        return;
+      }
+      pickedIds.add(choice.id);
+      picks.push(choice);
+    });
+    return picks.slice(0, 3);
+  }
+
   function getRecycleValue(build) {
     return sanitizeBenchCoreIds(build.pendingCores).reduce(
       (total, coreId) => total + Math.max(10, Math.round(CORE_DEFS[coreId].cost * 0.35)),
@@ -9411,7 +9454,10 @@
     updateHUD();
   }
 
-  function getCombatCacheChoicesForWave(build, nextWave) {
+  function getCombatCacheChoicesForWave(build, nextWave, scrapBank = Number.POSITIVE_INFINITY) {
+    if (shouldUseCompactActBreakCache({ nextWave, finalForge: false })) {
+      return buildCompactActBreakCacheChoices(build, Math.random, scrapBank);
+    }
     return buildFieldGrantChoices(build, Math.random, nextWave).slice(0, 3);
   }
 
@@ -9446,13 +9492,16 @@
     const hasDominantMutation = choices.some(
       (choice) => choice.action === "risk_mutation" || choice.action === "predator_bait"
     );
+    const compactActBreak = combatCache.variant === "act_break_cache";
     pushCombatFeed(
-      hasDominantMutation
+      compactActBreak
+        ? `Act Break Cache 노출. ${cacheSummary} 중 하나만 집고 Wave 5로 바로 밀어붙인다. 초반 armory 2픽 대신 현장에서 주력 스파이크를 직접 잠그는 전투형 breakpoint다.`
+        : hasDominantMutation
         ? `Mutation Cache 노출. ${cacheSummary} 중 한 장만 집을 수 있으며, 가장 큰 카드는 late monster form을 다음 웨이브까지 직접 끌고 간다.`
         : `Combat Cache 노출. ${cacheSummary} 중 하나를 전장에서 직접 회수하면 다음 웨이브로 즉시 연결된다.`,
       "CACHE"
     );
-    setBanner("Combat Cache", 0.9);
+    setBanner(compactActBreak ? "Act Break Cache" : "Combat Cache", 0.9);
   }
 
   function deployStormArtilleryAfterburnAscension(enemy) {
@@ -10458,6 +10507,7 @@
     buildHazardCandidates,
     buildForgeChoices,
     buildForgeFollowupChoices,
+    getCombatCacheChoicesForWave,
     buildArchitectureDraftChoices,
     buildFieldGrantChoices,
     createLateFieldConvergenceChoice,
@@ -12309,13 +12359,24 @@
             activeCapBonus: 4,
           }
         : null,
-      combatCache: shouldUseFieldGrant({ nextWave: waveNumber + 1, finalForge: false })
+      combatCache:
+        shouldUseCompactActBreakCache({ nextWave: waveNumber + 1, finalForge: false }) ||
+        shouldUseFieldGrant({ nextWave: waveNumber + 1, finalForge: false })
         ? {
             armed: true,
             deployed: false,
             claimed: false,
             groupId: null,
-            choices: getCombatCacheChoicesForWave(state.build, waveNumber + 1),
+            variant: shouldUseCompactActBreakCache({ nextWave: waveNumber + 1, finalForge: false })
+              ? "act_break_cache"
+              : "field_cache",
+            choices: getCombatCacheChoicesForWave(
+              state.build,
+              waveNumber + 1,
+              state.resources && Number.isFinite(state.resources.scrap)
+                ? state.resources.scrap
+                : Number.POSITIVE_INFINITY
+            ),
           }
         : null,
       lateAscension: shouldOfferLateAscension(state.build, waveNumber)
@@ -12436,7 +12497,9 @@
     }
     if (state.wave.combatCache) {
       pushCombatFeed(
-        "첫 elite가 Combat Cache를 떨어뜨린다. 현장에서 하나를 회수하면 Field Cache 정지 없이 바로 다음 웨이브로 이어진다.",
+        state.wave.combatCache.variant === "act_break_cache"
+          ? "첫 elite가 Act Break Cache를 떨어뜨린다. 여기서 하나만 집으면 Wave 5는 Armory 정지 없이 바로 시작되고, 초반 2픽 대신 전장 한복판에서 주력 카드 하나를 잠근다."
+          : "첫 elite가 Combat Cache를 떨어뜨린다. 현장에서 하나를 회수하면 Field Cache 정지 없이 바로 다음 웨이브로 이어진다.",
         "CACHE"
       );
     }
@@ -16283,13 +16346,18 @@
         }
       });
       const grantLabel = choice.forgeLaneLabel || choice.laneLabel || choice.tag || "CACHE";
+      const compactActBreak = combatCache.variant === "act_break_cache";
       pushCombatFeed(
-        choice.type === "fallback"
-          ? `${grantLabel} 현장 회수. 상태만 정리하고 Field Cache 정지 없이 다음 웨이브로 밀어붙인다.`
-          : `${grantLabel} 현장 회수. ${choice.title}${choice.cost > 0 ? `(${choice.cost})` : ""}을(를) 전장 한복판에서 잠그고 다음 웨이브까지 압박을 이어 간다.`,
+        compactActBreak
+          ? choice.type === "fallback"
+            ? `${grantLabel} 현장 회수. 초반 armory 정지 대신 상태만 정리하고 Wave 5를 바로 연다.`
+            : `${grantLabel} 현장 회수. ${choice.title}${choice.cost > 0 ? `(${choice.cost})` : ""}을(를) 전장 한복판에서 잠그고 Act Break Armory를 생략한 채 Wave 5 압박으로 곧장 이어 간다.`
+          : choice.type === "fallback"
+            ? `${grantLabel} 현장 회수. 상태만 정리하고 Field Cache 정지 없이 다음 웨이브로 밀어붙인다.`
+            : `${grantLabel} 현장 회수. ${choice.title}${choice.cost > 0 ? `(${choice.cost})` : ""}을(를) 전장 한복판에서 잠그고 다음 웨이브까지 압박을 이어 간다.`,
         "CACHE"
       );
-      setBanner(`${choice.tag} 확보`, 0.8);
+      setBanner(compactActBreak ? `Act Break · ${choice.tag}` : `${choice.tag} 확보`, 0.8);
       return true;
     }
 
@@ -16494,6 +16562,8 @@
           ? "결과 패널"
           : enteringAfterburn
             ? "Act 4 · Afterburn"
+          : shouldUseCompactActBreakCache({ nextWave, finalForge: false })
+            ? `Wave ${nextWave}`
           : state.wave.skipForgeOnClear
             ? `Wave ${nextWave}`
           : shouldRunCatalystCrucibleObjective(state.build, nextWave)
@@ -16525,6 +16595,8 @@
           finishRun(true);
         } else if (state.waveIndex >= MAX_WAVES - 1) {
           beginFinalCashout();
+        } else if (shouldUseCompactActBreakCache({ nextWave: state.waveIndex + 2, finalForge: false })) {
+          beginWave(state.waveIndex + 1);
         } else if (state.wave.skipForgeOnClear) {
           beginNextPostCapstoneWave();
         } else if (shouldRunCatalystCrucibleObjective(state.build, state.waveIndex + 2)) {

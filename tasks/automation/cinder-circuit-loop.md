@@ -14,6 +14,16 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-23 22:45:00 KST
+  Findings:
+  - `playables/cinder-circuit/game.js` is still pacing like a prototype that stops to explain itself. Wave-end forge pauses, `Wave 3+` package steps, `Armory` 2-picks, `Architecture/Ascension/Catalyst` drafts, and final forge stack too many full-stop admin beats for a game that now wants a 19-wave run and is hinting at `20-30` later.
+  - The reward presentation keeps turning power spikes into reading tasks. The forge overlay around `playables/cinder-circuit/game.js:17190-17345` opens with long subtitle/context paragraphs and a dense state ledger; compared with the snap readability of `Hades` boon moments, `Brotato` shop rows, or `20 Minutes Till Dawn` level-up cards, the player is still parsing systems longer than they are feeling desire.
+  - Because so many upgrades arrive in paused packages, combat intensity keeps venting out between waves instead of carrying momentum forward. Even “live” moments are usually framed as another named bracket or cache rule, not a fast battlefield reward that lets the player stay hot and immediately test the new toy.
+  - This matters more as the run length grows: a longer ladder cannot survive release-grade replayability if every 60-90 seconds the game asks for another mini design meeting. Strong repeat-run arena shooters reserve ceremony for rare transformations and let lesser gains land almost instantly.
+  Top Priority: Cut the number and weight of mandatory full-screen forge stops by moving most non-capstone upgrades into faster combat-earned pickup moments or compact one-decision breakpoints, and reserve the big overlay treatment for only the few transformations that genuinely change silhouette, fire pattern, or run plan.
+  Why Now: If the run cannot stay in flow, adding more waves will make it feel longer before it feels more addictive.
+  Do Not Repeat: Do not answer this with another renamed draft/package if the player is still leaving combat to read paragraphs every wave.
+
 - 2026-03-23 22:05:00 KST
   Findings:
   - `playables/cinder-circuit/game.js` has the skeleton of a 19-wave run, but the emotional peak still lands too early. Between `Architecture Draft`, `Ascension Draft`, `Catalyst Crucible`, late ascension, convergence, and `Afterburn Overdrive`, the player is told many times that another form change exists, yet too much of the real authorship is already settled before the long endurance tail proves it.
@@ -1180,6 +1190,11 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-23 23:05 KST
+  Changed: replaced the early full-screen `Act Break Armory` stop with a combat-earned `Act Break Cache` in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). `Wave 4` now arms a first-elite cache that offers one compact three-card breakpoint pulled from the armory power band, and clearing the wave rolls straight into `Wave 5` instead of pausing for the old 6-card, 2-pick overlay. I updated the cache spawn, pickup messaging, and wave-clear routing so this early spike now lands as a live battlefield reward rather than another admin intermission, and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert that the `Wave 5` cache is now a bounded three-choice armory drop with offensive plus non-offensive coverage. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the latest critique's `Top Priority` was to cut mandatory full-screen forge stops by moving non-capstone rewards into fast combat-earned pickups or compact one-decision breakpoints. The highest-value bounded interpretation was to remove the earliest repeated admin stop first, because deleting `Act Break Armory` keeps Act 2 momentum hot without reopening the later ascension/catalyst structure in the same pass.
+  Follow-up risk: compressing the early armory from 2 picks to 1 live cache makes Act 2 cleaner, but it may also flatten early build volume if the compact cache's three-card pool does not hit hard enough or misses too many support/chassis rescue cases. A later pass should tune the compact cache pool or add one small auto-grant rider if Act 2 starts underfeeding, not reintroduce another full-screen stop.
 
 - 2026-03-23 22:40 KST
   Changed: added a new combat-earned late `Afterburn` breakpoint, `Dominion Break`, in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). Starting in the back half of `Afterburn`, the first elite can now drop a main-weapon-only dominion cache keyed to the active core; picking it locks one more visible endform jump with a new firing pattern, louder body frame, and extra chassis stats for `Ember`, `Scatter`, `Lance`, or `Ricochet`. I also made the next post-pick wave become a short `Dominion Run`: pressure is eased, extra cache/apex objectives are cleared out, and the HUD now explicitly calls the run state out so the player gets one clean “I became monstrous” victory lap instead of immediately going back to admin clutter. I extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert both the new drop and the reduced-clutter follow-up wave. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
