@@ -1548,6 +1548,21 @@ body[data-overdrive="true"] .backdrop__glow--right {
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22);
 }
 
+.forge-card[data-contract="headline"] {
+  border-color: rgba(255, 145, 88, 0.24);
+  background:
+    linear-gradient(180deg, rgba(255, 145, 88, 0.16), transparent 42%),
+    rgba(255, 255, 255, 0.04);
+}
+
+.forge-card[data-contract="rider"] {
+  border-color: rgba(138, 231, 255, 0.18);
+}
+
+.forge-card[data-contract="gamble"] {
+  border-color: rgba(255, 209, 102, 0.18);
+}
+
 .forge-card:disabled {
   opacity: 0.46;
   cursor: not-allowed;

@@ -77,7 +77,9 @@ assert.ok(
 );
 const wildcardGrantBuild = game.createInitialBuild("scrap_pact");
 const wildcardGrantChoices = game.buildFieldGrantChoices(wildcardGrantBuild, Math.random, 4);
-const wildcardChoice = wildcardGrantChoices.find((choice) => choice.laneLabel === "Wildcard Protocol");
+const wildcardChoice = wildcardGrantChoices.find(
+  (choice) => choice.type === "utility" && choice.action === "wildcard_protocol"
+);
 assert.ok(wildcardChoice);
 assert.equal(wildcardChoice.title, "Smuggler Winch");
 const wildcardRun = {
@@ -1062,13 +1064,17 @@ const rng = () => {
 };
 
 const choices = game.buildForgeChoices(build, rng, 180);
-assert.equal(choices.length, 4);
+assert.equal(choices.length, 3);
 assert.equal(
-  JSON.stringify(choices.map((choice) => choice.laneLabel).sort()),
-  JSON.stringify(["빌드 고정", "생존/경제", "예비", "전환"])
+  JSON.stringify(choices.map((choice) => choice.contractLabel)),
+  JSON.stringify([
+    "Headline Mutation",
+    "Support / Defense Rider",
+    "Greed / Utility Gamble",
+  ])
 );
-assert.ok(choices.some((choice) => choice.laneLabel === "전환" && choice.type === "core"));
-assert.ok(choices.some((choice) => choice.laneLabel === "생존/경제"));
+assert.ok(choices.some((choice) => choice.contractRole === "gamble"));
+assert.ok(choices.some((choice) => choice.contractRole === "rider"));
 assert.ok(choices.every((choice) => typeof choice.verb === "string" || choice.type === "fallback"));
 assert.ok(choices.every((choice) => typeof choice.cost === "number"));
 
@@ -1081,7 +1087,18 @@ assert.ok(scatterChoice.cost < game.CORE_DEFS.scatter.cost);
 const directPivotBuild = game.createInitialBuild("scrap_pact");
 directPivotBuild.pendingCores = game.sanitizeBenchCoreIds(["scatter"]);
 const directPivotChoices = game.buildForgeChoices(directPivotBuild, () => 0, 180);
-const directPivotChoice = directPivotChoices.find(
+assert.ok(
+  directPivotChoices.some(
+    (choice) => choice.contractRole === "gamble" && choice.action === "recycle"
+  )
+);
+const directPivotOfferChoices = game.buildForgeChoices(
+  directPivotBuild,
+  () => 0,
+  180,
+  { nextWave: 2 }
+);
+const directPivotChoice = directPivotOfferChoices.find(
   (choice) =>
     choice.laneLabel === "전환" &&
     choice.type === "core" &&
@@ -1092,9 +1109,7 @@ assert.ok(directPivotChoice);
 assert.equal(directPivotChoice.pivotFuelCoreId, "scatter");
 assert.equal(directPivotChoice.pivotFuelCopies, 1);
 
-const scatterFinisherChoice = directPivotChoices.find(
-  (choice) => choice.laneLabel === "빌드 고정" && choice.recipeLabel === "Kiln Bloom"
-);
+const scatterFinisherChoice = directPivotChoices.find((choice) => choice.recipeLabel === "Kiln Bloom");
 assert.ok(scatterFinisherChoice);
 assert.equal(scatterFinisherChoice.type, "core");
 assert.equal(scatterFinisherChoice.coreId, "scatter");
@@ -1104,9 +1119,7 @@ const railBuild = game.createInitialBuild("rail_zeal");
 railBuild.pendingCores = [];
 railBuild.attunedCopies = 4;
 const railChoices = game.buildForgeChoices(railBuild, () => 0, 180);
-const railFinisherChoice = railChoices.find(
-  (choice) => choice.laneLabel === "빌드 고정" && choice.recipeLabel === "Sky Pierce"
-);
+const railFinisherChoice = railChoices.find((choice) => choice.recipeLabel === "Sky Pierce");
 assert.ok(railFinisherChoice);
 assert.equal(railFinisherChoice.type, "affix");
 assert.equal(railFinisherChoice.affixId, "phase_rounds");
@@ -1115,9 +1128,7 @@ const prismBuild = game.createInitialBuild("relay_oath");
 prismBuild.pendingCores = [];
 prismBuild.attunedCopies = 4;
 const prismChoices = game.buildForgeChoices(prismBuild, () => 0, 180);
-const prismFinisherChoice = prismChoices.find(
-  (choice) => choice.laneLabel === "빌드 고정" && choice.recipeLabel === "Prism Cascade"
-);
+const prismFinisherChoice = prismChoices.find((choice) => choice.recipeLabel === "Prism Cascade");
 assert.ok(prismFinisherChoice);
 assert.equal(prismFinisherChoice.type, "affix");
 assert.equal(prismFinisherChoice.affixId, "arc_link");
@@ -1126,9 +1137,9 @@ const midrunChaseBuild = game.createInitialBuild("scrap_pact");
 midrunChaseBuild.pendingCores = [];
 midrunChaseBuild.attunedCopies = 1;
 const genericForgeChoices = game.buildForgeChoices(midrunChaseBuild, () => 0, 180);
-assert.ok(!genericForgeChoices.some((choice) => choice.laneLabel === "빌드 고정" && choice.recipeLabel === "Kiln Bloom"));
+assert.ok(!genericForgeChoices.some((choice) => choice.recipeLabel === "Kiln Bloom"));
 const waveTwoForgeChoices = game.buildForgeChoices(midrunChaseBuild, () => 0, 180, { nextWave: 2 });
-assert.equal(waveTwoForgeChoices.length, 3);
+assert.equal(waveTwoForgeChoices.length, 2);
 assert.ok(waveTwoForgeChoices.some((choice) => choice.type === "system" && choice.systemId === "kiln_sentry"));
 const waveThreeForgeChoices = game.buildForgeChoices(midrunChaseBuild, () => 0, 180, { nextWave: 3 });
 const waveThreeEvolutionChoice = waveThreeForgeChoices.find(
@@ -1137,9 +1148,7 @@ const waveThreeEvolutionChoice = waveThreeForgeChoices.find(
 assert.ok(waveThreeEvolutionChoice);
 assert.equal(waveThreeEvolutionChoice.coreId, "scatter");
 assert.equal(waveThreeEvolutionChoice.evolutionTier, 1);
-const midrunForgeFinisherChoice = waveThreeForgeChoices.find(
-  (choice) => choice.laneLabel === "빌드 고정" && choice.recipeLabel === "Kiln Bloom"
-);
+const midrunForgeFinisherChoice = waveThreeForgeChoices.find((choice) => choice.recipeLabel === "Kiln Bloom");
 assert.ok(midrunForgeFinisherChoice);
 assert.equal(midrunForgeFinisherChoice.type, "core");
 assert.equal(midrunForgeFinisherChoice.coreId, "scatter");
@@ -1275,9 +1284,7 @@ const doctrinePrimaryChoices = game.buildForgeChoices(
   180,
   { nextWave: 7, finalForge: false }
 );
-const doctrineCommitChoice = doctrinePrimaryChoices.find(
-  (choice) => choice.laneLabel === "빌드 고정"
-);
+const doctrineCommitChoice = doctrinePrimaryChoices.find((choice) => choice.modId === "drive_sync");
 assert.ok(doctrineCommitChoice);
 assert.equal(doctrineCommitChoice.modId, "drive_sync");
 const doctrineFollowupChoices = game.buildForgeFollowupChoices(
@@ -1513,10 +1520,14 @@ assert.ok(fortressFollowupChoices.some((choice) => choice.laneLabel === "Support
 const fieldGrantBuild = game.createInitialBuild("relay_oath");
 fieldGrantBuild.pendingCores = [];
 const fieldGrantChoices = game.buildFieldGrantChoices(fieldGrantBuild, () => 0, 4);
-assert.equal(fieldGrantChoices.length, 4);
+assert.equal(fieldGrantChoices.length, 3);
 assert.equal(
-  JSON.stringify(fieldGrantChoices.map((choice) => choice.laneLabel)),
-  JSON.stringify(["Main Weapon Mutation", "Wildcard Protocol", "Defense / Utility", "Greed Contract"])
+  JSON.stringify(fieldGrantChoices.map((choice) => choice.contractLabel)),
+  JSON.stringify([
+    "Headline Mutation",
+    "Support / Defense Rider",
+    "Greed / Utility Gamble",
+  ])
 );
 assert.ok(
   fieldGrantChoices.every((choice) =>
@@ -1525,7 +1536,13 @@ assert.ok(
 );
 assert.ok(fieldGrantChoices.every((choice) => choice.fieldGrant === true));
 assert.ok(fieldGrantChoices.every((choice) => choice.type !== "core"));
-assert.ok(fieldGrantChoices.some((choice) => choice.type === "utility" && choice.action === "field_greed"));
+assert.ok(
+  fieldGrantChoices.some(
+    (choice) =>
+      choice.type === "utility" &&
+      (choice.action === "field_greed" || choice.action === "wildcard_protocol")
+  )
+);
 assert.ok(
   fieldGrantChoices
     .filter((choice) => choice.type !== "fallback" && choice.cost > 0)
@@ -2026,14 +2043,12 @@ assert.equal(JSON.stringify(catalystGateBuild.affixes), JSON.stringify(["overclo
 catalystGateBuild.finisherCatalysts = ["scatter"];
 assert.equal(game.hasFinisherCatalyst(catalystGateBuild, "scatter"), true);
 const catalystReadyChoices = game.buildForgeChoices(catalystGateBuild, () => 0, 180);
-const catalystFinisherChoice = catalystReadyChoices.find(
-  (choice) => choice.laneLabel === "빌드 고정" && choice.affixId === "hotshot"
-);
+const catalystFinisherChoice = catalystReadyChoices.find((choice) => choice.affixId === "hotshot");
 assert.ok(catalystFinisherChoice);
 assert.equal(catalystFinisherChoice.tag, "FINISHER");
 assert.equal(catalystFinisherChoice.consumesCatalyst, true);
 const catalystReforgeChoice = catalystReadyChoices.find(
-  (choice) => choice.laneLabel === "전환" && choice.action === "catalyst_reforge"
+  (choice) => choice.action === "catalyst_reforge"
 );
 assert.ok(catalystReforgeChoice);
 assert.equal(catalystReforgeChoice.capstoneLabel, "Flash Temper");
@@ -2131,7 +2146,7 @@ const catalystPivotRun = {
 };
 const catalystPivotChoices = game.buildForgeChoices(catalystPivotBuild, () => 0, 180);
 const flashTemperChoice = catalystPivotChoices.find(
-  (choice) => choice.laneLabel === "전환" && choice.action === "catalyst_reforge"
+  (choice) => choice.action === "catalyst_reforge"
 );
 assert.ok(flashTemperChoice);
 game.applyForgeChoice(catalystPivotRun, flashTemperChoice);
@@ -2153,7 +2168,7 @@ stormRailBuild.affixes = ["phase_rounds", "arc_link"];
 stormRailBuild.finisherCatalysts = ["lance"];
 const stormRailChoice = game
   .buildForgeChoices(stormRailBuild, () => 0, 180)
-  .find((choice) => choice.laneLabel === "전환" && choice.action === "catalyst_reforge");
+  .find((choice) => choice.action === "catalyst_reforge");
 assert.ok(stormRailChoice);
 game.applyForgeChoice(
   { build: stormRailBuild, player: null, resources: { scrap: 999 }, stats: {} },
@@ -2172,7 +2187,7 @@ mirrorSpiralBuild.affixes = ["arc_link", "overclock"];
 mirrorSpiralBuild.finisherCatalysts = ["ricochet"];
 const mirrorSpiralChoice = game
   .buildForgeChoices(mirrorSpiralBuild, () => 0, 180)
-  .find((choice) => choice.laneLabel === "전환" && choice.action === "catalyst_reforge");
+  .find((choice) => choice.action === "catalyst_reforge");
 assert.ok(mirrorSpiralChoice);
 game.applyForgeChoice(
   { build: mirrorSpiralBuild, player: null, resources: { scrap: 999 }, stats: {} },
@@ -2349,8 +2364,7 @@ game.applyForgeChoice(
 assert.ok(affixBuild.affixes.includes("arc_link"));
 
 const lowBankChoices = game.buildForgeChoices(build, rng, 0);
-assert.ok(lowBankChoices.some((choice) => choice.laneLabel === "전환"));
-assert.ok(lowBankChoices.some((choice) => choice.laneLabel === "생존/경제" && choice.cost === 0));
+assert.ok(lowBankChoices.some((choice) => choice.contractRole === "gamble"));
 assert.ok(lowBankChoices.some((choice) => choice.cost === 0));
 
 const hazardConfig = game.WAVE_CONFIG[4].hazard;
@@ -2392,7 +2406,7 @@ const fallbackBuild = game.createInitialBuild();
 fallbackBuild.pendingCores = [];
 const fallbackChoices = game.buildForgeChoices(fallbackBuild, rng, 0);
 assert.ok(!fallbackChoices.some((choice) => choice.type === "core" && choice.directOffer));
-assert.ok(fallbackChoices.some((choice) => choice.laneLabel === "전환"));
+assert.ok(fallbackChoices.some((choice) => choice.contractRole === "gamble"));
 assert.ok(fallbackChoices.some((choice) => choice.type === "fallback"));
 
 const run = {

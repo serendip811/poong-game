@@ -7033,7 +7033,7 @@
             const transformation = getForgeChoiceTransformation(choice);
             return `
               <article class="forge-spotlight forge-spotlight--${transformation.tone}">
-                <p class="panel__eyebrow">${transformation.laneLabel}</p>
+                <p class="panel__eyebrow">${choice.contractLabel || transformation.laneLabel}</p>
                 <strong>${transformation.title}</strong>
                 <p class="forge-spotlight__promise">${transformation.promise}</p>
                 <p class="summary-note">${transformation.proof}</p>
@@ -8942,6 +8942,17 @@
     };
   }
 
+  function markForgeContract(choice, contractRole, contractLabel) {
+    if (!choice) {
+      return null;
+    }
+    return {
+      ...choice,
+      contractRole,
+      contractLabel,
+    };
+  }
+
   function pushChoiceIfOpen(list, choice, seenIds) {
     if (!choice || seenIds.has(choice.id)) {
       return;
@@ -9879,7 +9890,9 @@
     const offensiveModuleCandidates = [];
     const subsystemCandidates = [];
     const sustainCandidates = [];
+    const gambleCandidates = [];
     const currentAffixIds = sanitizeAffixIds(build.affixes, getAffixCapacity(build));
+    const nextWave = options && Number.isFinite(options.nextWave) ? options.nextWave : 0;
     const catalystReforgeChoice = createCatalystReforgeChoice(build);
     const recycleChoice = createRecycleChoice(build);
     const reforgeChoice = catalystReforgeChoice || createReforgeChoice(build, random);
@@ -9887,6 +9900,8 @@
     const finisherChoice = createRecipeFinisherChoice(build);
     const weaponEvolutionChoice = createWeaponEvolutionChoice(build, options);
     const doctrineChaseChoice = createDoctrineChaseChoice(build, options);
+    const wildcardChoice = createWildcardProtocolChoice(build, nextWave);
+    const greedContractChoice = createFieldGreedContractChoice(build, nextWave);
     const supportSystemChoices = shouldOfferSupportSystem(build, options)
       ? createSupportSystemChoices(build, random, options)
       : [];
@@ -9898,6 +9913,11 @@
     pushChoiceIfOpen(evolutionCandidates, weaponEvolutionChoice, choiceCatalog);
     pushChoiceIfOpen(commitCandidates, doctrineChaseChoice, choiceCatalog);
     pushChoiceIfOpen(commitCandidates, guaranteedMidrunChase || finisherChoice, choiceCatalog);
+    pushChoiceIfOpen(gambleCandidates, wildcardChoice, choiceCatalog);
+    pushChoiceIfOpen(gambleCandidates, greedContractChoice, choiceCatalog);
+    pushChoiceIfOpen(gambleCandidates, recycleChoice, choiceCatalog);
+    pushChoiceIfOpen(gambleCandidates, reforgeChoice, choiceCatalog);
+    pushChoiceIfOpen(gambleCandidates, affixReforgeChoice, choiceCatalog);
 
     const sameCoreChoice = createCoreChoice(build.coreId, build);
     if (sameCoreChoice.benchCopies > 0) {
@@ -9938,10 +9958,6 @@
         pushChoiceIfOpen(pivotCandidates, choice, choiceCatalog);
       });
 
-    [reforgeChoice, affixReforgeChoice].forEach((choice) => {
-      pushChoiceIfOpen(pivotCandidates, choice, choiceCatalog);
-    });
-
     supportSystemChoices.forEach((choice) => {
       if (choice.forgeLaneLabel === "공세 모듈") {
         pushChoiceIfOpen(offensiveModuleCandidates, choice, choiceCatalog);
@@ -9950,11 +9966,7 @@
       }
     });
 
-    if (Number.isFinite(scrapBank) && scrapBank < 32 && recycleChoice) {
-      pushChoiceIfOpen(sustainCandidates, recycleChoice, choiceCatalog);
-    }
-
-    [recycleChoice, createModChoice("coolant_purge"), createModChoice("magnet_rig"), createModChoice("armor_mesh"), createModChoice("step_servos")]
+    [createModChoice("coolant_purge"), createModChoice("magnet_rig"), createModChoice("armor_mesh"), createModChoice("step_servos")]
       .filter(Boolean)
       .forEach((choice) => pushChoiceIfOpen(sustainCandidates, choice, choiceCatalog));
 
@@ -10074,7 +10086,6 @@
       return shuffle(choices.slice(0, 3), random);
     }
 
-    const nextWave = options && Number.isFinite(options.nextWave) ? options.nextWave : 0;
     if (nextWave < FORGE_PACKAGE_START_WAVE && subsystemCandidates.length > 0) {
       const takenIds = new Set();
       return [
@@ -10086,70 +10097,97 @@
     }
 
     const takenIds = new Set();
-    const laneChoices = [
-      takeFirstAvailableChoice(evolutionCandidates, takenIds, "주무장 진화"),
-      takeFirstAvailableChoice(commitCandidates, takenIds, "빌드 고정"),
-      takeFirstAvailableChoice(pivotCandidates, takenIds, "전환"),
-      takeFirstAvailableChoice(offensiveModuleCandidates, takenIds, "공세 모듈"),
-      takeFirstAvailableChoice(subsystemCandidates, takenIds, "보조 시스템"),
-      takeFirstAvailableChoice(sustainCandidates, takenIds, "생존/경제"),
+    const choices = [
+      markForgeContract(
+        takeFirstAvailableChoice(
+          [
+            ...evolutionCandidates,
+            ...commitCandidates,
+            ...offensiveModuleCandidates,
+            ...pivotCandidates,
+          ],
+          takenIds,
+          "주력 변신"
+        ),
+        "headline",
+        "Headline Mutation"
+      ),
+      markForgeContract(
+        takeFirstAvailableChoice(
+          [...subsystemCandidates, ...sustainCandidates],
+          takenIds,
+          "보조/방호"
+        ),
+        "rider",
+        "Support / Defense Rider"
+      ),
+      markForgeContract(
+        takeFirstAvailableChoice(
+          [
+            ...gambleCandidates,
+            ...pivotCandidates,
+            ...sustainCandidates,
+            ...offensiveModuleCandidates,
+          ],
+          takenIds,
+          "탐욕/유틸"
+        ),
+        "gamble",
+        "Greed / Utility Gamble"
+      ),
     ].filter(Boolean);
-    const choices = getInstalledSupportSystems(build).length === 0 && subsystemCandidates.length > 1
-      ? laneChoices.filter((choice) => choice.laneLabel !== "생존/경제")
-      : laneChoices;
-    const maxChoices =
-      subsystemCandidates.length > 0 || offensiveModuleCandidates.length > 0 ? 6 : 4;
-    const extraChoicePool = getInstalledSupportSystems(build).length === 0 && subsystemCandidates.length > 1
-      ? [
-          ...offensiveModuleCandidates,
-          ...subsystemCandidates,
-          ...evolutionCandidates,
-          ...commitCandidates,
-          ...pivotCandidates,
-          ...sustainCandidates,
-        ]
-      : [
-          ...evolutionCandidates,
-          ...commitCandidates,
-          ...pivotCandidates,
-          ...offensiveModuleCandidates,
-          ...subsystemCandidates,
-          ...sustainCandidates,
-        ];
 
-    for (const choice of extraChoicePool) {
-      if (choices.length >= maxChoices) {
-        break;
-      }
-      if (takenIds.has(choice.id)) {
-        continue;
-      }
-      takenIds.add(choice.id);
-      choices.push(
-        markForgeLane(
-          choice,
-          choice.type === "system" ? choice.forgeLaneLabel || "보조 시스템" : "예비"
-        )
-      );
-    }
+    [
+      ["headline", "Headline Mutation", "주력 변신"],
+      ["rider", "Support / Defense Rider", "보조/방호"],
+      ["gamble", "Greed / Utility Gamble", "탐욕/유틸"],
+    ]
+      .filter(([role]) => !choices.some((choice) => choice.contractRole === role))
+      .forEach(([role, label, laneLabel], index) => {
+        choices.push(
+          markForgeContract(
+            markForgeLane(
+              {
+                type: "fallback",
+                id: `fallback:contract_fill:${nextWave}:${role}:${index}`,
+                tag: "VENT",
+                title: "Emergency Vent",
+                description: "빈 계약 슬롯은 무료 안정화로 대체해 다음 웨이브 진입 각만 정리한다.",
+                slotText: "무료 정비",
+                cost: 0,
+              },
+              laneLabel
+            ),
+            role,
+            label
+          )
+        );
+      });
 
     if (
       Number.isFinite(scrapBank) &&
       choices.length > 0 &&
       choices.every((choice) => choice.cost > scrapBank)
     ) {
-      choices[choices.length - 1] = markForgeLane({
-        type: "fallback",
-        id: "fallback:emergency_vent",
-        tag: "무료",
-        title: "Emergency Vent",
-        description: "무료 안정화. 열을 크게 빼고 체력을 조금 회복한다.",
-        slotText: "무료 정비",
-        cost: 0,
-      }, "생존/경제");
+      choices[choices.length - 1] = markForgeContract(
+        markForgeLane(
+          {
+            type: "fallback",
+            id: "fallback:emergency_vent",
+            tag: "무료",
+            title: "Emergency Vent",
+            description: "세 계약이 전부 너무 비싸 무료 안정화 카드 1장을 끼워 넣는다.",
+            slotText: "무료 정비",
+            cost: 0,
+          },
+          "탐욕/유틸"
+        ),
+        "gamble",
+        "Greed / Utility Gamble"
+      );
     }
 
-    return shuffle(choices.slice(0, maxChoices), random);
+    return choices.slice(0, 3);
   }
 
   function shouldOpenForgePackage(run, choice) {
@@ -11437,17 +11475,41 @@
           createFieldGrantCard(createLateFieldMutationChoice(build, nextWave)),
           createFieldGrantCard(createLateFieldAegisChoice(build, nextWave)),
           createFieldGrantCard(createLateFieldGreedContractChoice(build, nextWave)),
-        ].filter(Boolean);
+        ]
+          .filter(Boolean)
+          .map((choice, index) =>
+            markForgeContract(
+              choice,
+              index === 0 ? "headline" : index === 1 ? "rider" : "gamble",
+              index === 0
+                ? "Headline Mutation"
+                : index === 1
+                  ? "Support / Defense Rider"
+                  : "Greed / Utility Gamble"
+            )
+          );
       }
       const convergenceChoice = createLateFieldConvergenceChoice(build, nextWave);
       const systemChoice = createLateFieldSystemChoice(build, rng, nextWave);
+      const riderChoice = systemChoice || createLateFieldAegisChoice(build, nextWave);
+      const gambleChoice = wildcardChoice || createLateFieldGreedContractChoice(build, nextWave);
       return [
         createFieldGrantCard(convergenceChoice || createLateFieldMutationChoice(build, nextWave)),
-        wildcardChoice ? createFieldGrantCard(wildcardChoice) : null,
-        createFieldGrantCard(systemChoice),
-        createFieldGrantCard(createLateFieldAegisChoice(build, nextWave)),
-        createFieldGrantCard(createLateFieldGreedContractChoice(build, nextWave)),
-      ].filter(Boolean);
+        createFieldGrantCard(riderChoice),
+        createFieldGrantCard(gambleChoice),
+      ]
+        .filter(Boolean)
+        .map((choice, index) =>
+          markForgeContract(
+            choice,
+            index === 0 ? "headline" : index === 1 ? "rider" : "gamble",
+            index === 0
+              ? "Headline Mutation"
+              : index === 1
+                ? "Support / Defense Rider"
+                : "Greed / Utility Gamble"
+          )
+        );
     }
     const pool = buildForgeChoices(build, rng, FIELD_GRANT_MAX_COST, {
       nextWave,
@@ -11483,6 +11545,7 @@
       laneLabel: "Defense / Utility",
     };
     const greedChoice = createFieldGreedContractChoice(build, nextWave);
+    const gambleChoice = wildcardChoice || greedChoice;
     const choices = [
       dominantMutationChoice
         ? createFieldGrantCard(dominantMutationChoice)
@@ -11496,10 +11559,32 @@
             cost: 0,
             laneLabel: "Main Weapon Mutation",
           }),
-      wildcardChoice ? createFieldGrantCard(wildcardChoice) : null,
       createFieldGrantCard(survivalChoice),
-      greedChoice ? createFieldGrantCard(greedChoice) : null,
-    ].filter(Boolean);
+      gambleChoice
+        ? createFieldGrantCard(gambleChoice)
+        : createFieldGrantCard({
+            type: "fallback",
+            id: `fieldgrant:gamble_fallback:${nextWave}`,
+            tag: "CACHE",
+            title: "Emergency Vent",
+            description: "이번 캐시는 탐욕/유틸 카드가 비어 있어 열과 체력만 정리한다.",
+            slotText: "현장 보급",
+            cost: 0,
+            laneLabel: "Greed / Utility",
+          }),
+    ]
+      .filter(Boolean)
+      .map((choice, index) =>
+        markForgeContract(
+          choice,
+          index === 0 ? "headline" : index === 1 ? "rider" : "gamble",
+          index === 0
+            ? "Headline Mutation"
+            : index === 1
+              ? "Support / Defense Rider"
+              : "Greed / Utility Gamble"
+        )
+      );
     return choices;
   }
 
@@ -19519,6 +19604,7 @@
           const kind =
             choice.type === "utility" ? choice.action || "utility" : choice.type || "choice";
           const transformation = getForgeChoiceTransformation(choice);
+          const contractLabel = choice.contractLabel || transformation.laneLabel;
           const previewRows = createForgePreviewRows(choice)
             .slice(0, riderStep ? 1 : 2)
             .map(
@@ -19575,12 +19661,13 @@
             type="button"
             class="forge-card forge-card--rider forge-card--${choice.tag.toLowerCase()}"
             data-kind="${kind}"
+            data-contract="${choice.contractRole || "rider"}"
             data-index="${index}"
             data-tone="${transformation.tone}"
             data-verb="${choice.verb}"
             ${state.resources.scrap < choice.cost ? "disabled" : ""}
           >
-            <span class="forge-card__tag">${transformation.laneLabel}</span>
+            <span class="forge-card__tag">${contractLabel}</span>
             <h3>${choice.title}</h3>
             <p class="forge-card__hero-copy">${transformation.promise}</p>
             ${previewRows ? `<div class="forge-card__preview forge-card__preview--compact">${previewRows}</div>` : ""}
@@ -19593,20 +19680,21 @@
             type="button"
             class="forge-card forge-card--${choice.tag.toLowerCase()}"
             data-kind="${kind}"
+            data-contract="${choice.contractRole || "open"}"
             data-index="${index}"
             data-tone="${transformation.tone}"
             data-verb="${choice.verb}"
             ${state.resources.scrap < choice.cost ? "disabled" : ""}
           >
-            <span class="forge-card__tag">${choice.laneLabel ? `${choice.laneLabel} · ${choice.tag}` : choice.tag}</span>
+            <span class="forge-card__tag">${contractLabel}${choice.tag ? ` · ${choice.tag}` : ""}</span>
             <div class="forge-card__hero forge-card__hero--${transformation.tone}">
-              <span class="forge-card__hero-label">${transformation.laneLabel}</span>
+              <span class="forge-card__hero-label">${contractLabel}</span>
               <h3>${choice.title}</h3>
               <p class="forge-card__hero-copy">${transformation.promise}</p>
             </div>
             <p class="forge-card__proof"><span>다음 전투 증명</span>${transformation.proof}</p>
             <div class="forge-card__preview">${previewRows}</div>
-            <span class="forge-card__meta">추천 rider · ${transformation.riderLabel}</span>
+            <span class="forge-card__meta">${choice.laneLabel || transformation.laneLabel} · 추천 rider ${transformation.riderLabel}</span>
             <span class="forge-card__slot">${slotLabel}</span>
           </button>
         `;
