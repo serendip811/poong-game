@@ -118,18 +118,47 @@ assert.equal(eraThreePlan[0].state, "locked");
 assert.equal(eraThreePlan[1].state, "locked");
 assert.equal(eraThreePlan[2].state, "live");
 assert.ok(eraThreePlan[2].proofLabel.length > 0);
-assert.equal(game.shouldUseFieldGrant({ nextWave: 6, finalForge: false, build: roadmapBuild }), true);
+assert.equal(game.shouldUseFieldGrant({ nextWave: 6, finalForge: false, build: roadmapBuild }), false);
+const recurringWave3Choices = game.buildForgeChoices(roadmapBuild, Math.random, 40, {
+  nextWave: 3,
+  finalForge: false,
+  build: roadmapBuild,
+});
+assert.equal(recurringWave3Choices.length, 3);
+assert.equal(
+  recurringWave3Choices.map((choice) => choice.contractRole).join("|"),
+  "headline|rider|gamble"
+);
+const recurringWave5Choices = game.buildForgeChoices(roadmapBuild, Math.random, 40, {
+  nextWave: 5,
+  finalForge: false,
+  build: roadmapBuild,
+});
+assert.equal(recurringWave5Choices.length, 3);
+assert.equal(
+  recurringWave5Choices.map((choice) => choice.contractRole).join("|"),
+  "headline|rider|gamble"
+);
+const recurringWave6Choices = game.buildForgeChoices(roadmapBuild, Math.random, 40, {
+  nextWave: 6,
+  finalForge: false,
+  build: roadmapBuild,
+});
+const wave6DefenseChoice = recurringWave6Choices.find((choice) => choice.contractRole === "rider");
+assert.ok(wave6DefenseChoice);
+assert.equal(wave6DefenseChoice.action, "bastion_bay_forge");
+assert.equal(wave6DefenseChoice.bayUnlock, false);
 const actBreakCacheBuild = game.createInitialBuild("rail_zeal");
 const actBreakCacheChoices = game.getCombatCacheChoicesForWave(actBreakCacheBuild, 5, 12);
 assert.equal(actBreakCacheChoices.length, 3);
-assert.ok(actBreakCacheChoices.some((choice) => choice.laneLabel === "주무장 진화" || choice.laneLabel === "대형 화력"));
-assert.ok(
-  actBreakCacheChoices.some((choice) =>
-    ["공세 모듈", "방호/유틸 차체", "보조 시스템"].includes(choice.laneLabel)
-  )
+assert.equal(
+  actBreakCacheChoices.map((choice) => choice.contractRole).join("|"),
+  "headline|rider|gamble"
 );
+assert.ok(actBreakCacheChoices.some((choice) => choice.laneLabel === "Main Weapon Mutation"));
+assert.ok(actBreakCacheChoices.some((choice) => choice.laneLabel === "Defense / Utility"));
 const actBreakHeadlineChoice =
-  actBreakCacheChoices.find((choice) => ["주무장 진화", "대형 화력"].includes(choice.laneLabel)) ||
+  actBreakCacheChoices.find((choice) => choice.contractRole === "headline") ||
   actBreakCacheChoices[0];
 const actBreakHeadlineShowcase = game.getForgeHeadlineShowcase(
   actBreakHeadlineChoice,
@@ -463,8 +492,8 @@ const earlyRiderChoices = game.buildForgeFollowupChoices(
   }
 );
 assert.equal(
-  JSON.stringify(earlyRiderChoices.map((choice) => choice.laneLabel)),
-  JSON.stringify(["Defense / Utility", "Greed Contract"])
+  earlyRiderChoices.map((choice) => choice.contractRole).join("|"),
+  "headline|rider|gamble"
 );
 const actBreakRiderChoices = game.buildForgeFollowupChoices(
   game.createInitialBuild("scrap_pact"),
@@ -479,8 +508,8 @@ const actBreakRiderChoices = game.buildForgeFollowupChoices(
   }
 );
 assert.equal(
-  JSON.stringify(actBreakRiderChoices.map((choice) => choice.laneLabel)),
-  JSON.stringify(["Defense / Utility", "Greed Contract"])
+  actBreakRiderChoices.map((choice) => choice.contractRole).join("|"),
+  "headline|rider|gamble"
 );
 const packageProbeRun = { waveIndex: 7, pendingFinalForge: false };
 assert.equal(game.shouldOpenForgePackage(packageProbeRun, lateBreakChoices[0]), false);
@@ -1389,18 +1418,16 @@ assert.ok(!waveTwoForgeChoices.some((choice) => choice.type === "system"));
 assert.ok(waveTwoForgeChoices.some((choice) => choice.recipeLabel === "Kiln Bloom"));
 const waveThreeForgeChoices = game.buildForgeChoices(midrunChaseBuild, () => 0, 180, { nextWave: 3 });
 const waveThreeEvolutionChoice = waveThreeForgeChoices.find(
-  (choice) => choice.laneLabel === "주무장 진화" && choice.type === "evolution"
+  (choice) => choice.contractRole === "headline" && choice.type === "evolution"
 );
 assert.ok(waveThreeEvolutionChoice);
 assert.equal(waveThreeEvolutionChoice.coreId, "scatter");
 assert.equal(waveThreeEvolutionChoice.evolutionTier, 1);
-const midrunForgeFinisherChoice = waveThreeForgeChoices.find((choice) => choice.recipeLabel === "Kiln Bloom");
-assert.ok(midrunForgeFinisherChoice);
-assert.equal(midrunForgeFinisherChoice.type, "core");
-assert.equal(midrunForgeFinisherChoice.coreId, "scatter");
-assert.equal(midrunForgeFinisherChoice.benchCopies, 0);
-assert.equal(midrunForgeFinisherChoice.tag, "FINISHER");
 assert.equal(waveThreeForgeChoices.length, 3);
+assert.equal(
+  waveThreeForgeChoices.map((choice) => choice.contractRole).join("|"),
+  "headline|rider|gamble"
+);
 assert.ok(waveThreeForgeChoices.every((choice) => choice.laneLabel !== "보조 시스템"));
 assert.ok(waveThreeForgeChoices.every((choice) => choice.laneLabel !== "생존/경제"));
 assert.equal(game.shouldUseFieldGrant({ nextWave: 3, finalForge: false }), false);
@@ -1531,9 +1558,8 @@ const doctrinePrimaryChoices = game.buildForgeChoices(
   180,
   { nextWave: 7, finalForge: false }
 );
-const doctrineCommitChoice = doctrinePrimaryChoices.find((choice) => choice.modId === "drive_sync");
+const doctrineCommitChoice = doctrinePrimaryChoices.find((choice) => choice.contractRole === "headline");
 assert.ok(doctrineCommitChoice);
-assert.equal(doctrineCommitChoice.modId, "drive_sync");
 const doctrineFollowupChoices = game.buildForgeFollowupChoices(
   bastionDoctrineBuild,
   () => 0,
@@ -1542,8 +1568,8 @@ const doctrineFollowupChoices = game.buildForgeFollowupChoices(
   doctrineCommitChoice
 );
 assert.equal(
-  JSON.stringify(doctrineFollowupChoices.map((choice) => choice.laneLabel)),
-  JSON.stringify(["Defense / Utility", "Support Rider"])
+  doctrineFollowupChoices.map((choice) => choice.contractRole).join("|"),
+  "rider|gamble"
 );
 const doctrineCapstoneBuild = game.createInitialBuild("relay_oath");
 doctrineCapstoneBuild.pendingCores = [];
@@ -1760,10 +1786,10 @@ const fortressFollowupChoices = game.buildForgeFollowupChoices(
   fortressDoctrineChoice.doctrineChoice
 );
 assert.equal(
-  JSON.stringify(fortressFollowupChoices.map((choice) => choice.laneLabel)),
-  JSON.stringify(["Defense / Utility", "Support Rider"])
+  fortressFollowupChoices.map((choice) => choice.contractRole).join("|"),
+  "headline|rider|gamble"
 );
-assert.ok(fortressFollowupChoices.some((choice) => choice.laneLabel === "Support Rider"));
+assert.ok(!fortressFollowupChoices.some((choice) => choice.laneLabel === "Support Rider"));
 const fieldGrantBuild = game.createInitialBuild("relay_oath");
 fieldGrantBuild.pendingCores = [];
 const fieldGrantChoices = game.buildFieldGrantChoices(fieldGrantBuild, () => 0, 4);
@@ -1864,10 +1890,7 @@ const packageBuild = game.createInitialBuild("relay_oath");
 packageBuild.pendingCores = [];
 const packageWaveThreeChoices = game.buildForgeChoices(packageBuild, () => 0, 180, { nextWave: 3 });
 const packagePrimaryChoice = packageWaveThreeChoices.find(
-  (choice) =>
-    choice.laneLabel === "주무장 진화" ||
-    choice.laneLabel === "빌드 고정" ||
-    choice.laneLabel === "전환"
+  (choice) => choice.contractRole === "headline"
 );
 assert.ok(packagePrimaryChoice);
 assert.equal(
@@ -1879,7 +1902,7 @@ assert.equal(
     },
     packagePrimaryChoice
   ),
-  true
+  false
 );
 game.applyForgeChoice(
   { build: packageBuild, player: null, resources: { scrap: 999 }, stats: {} },
@@ -1893,8 +1916,8 @@ const packageFollowupChoices = game.buildForgeFollowupChoices(
   packagePrimaryChoice
 );
 assert.equal(
-  JSON.stringify(packageFollowupChoices.map((choice) => choice.laneLabel)),
-  JSON.stringify(["Defense / Utility", "Greed Contract"])
+  packageFollowupChoices.map((choice) => choice.contractRole).join("|"),
+  "headline|rider|gamble"
 );
 assert.ok(!packageFollowupChoices.some((choice) => choice.type === "system"));
 assert.equal(
@@ -1918,10 +1941,7 @@ const aegisInstallChoices = game.buildForgeFollowupChoices(
   { nextWave: 8, finalForge: false },
   packagePrimaryChoice
 );
-assert.equal(
-  JSON.stringify(aegisInstallChoices.map((choice) => choice.laneLabel)),
-  JSON.stringify(["Defense / Utility", "Support Rider"])
-);
+assert.equal(aegisInstallChoices.map((choice) => choice.contractRole).join("|"), "rider|gamble");
 const sentryBuild = game.createInitialBuild("relay_oath");
 sentryBuild.pendingCores = [];
 game.applyForgeChoice(
@@ -1947,24 +1967,8 @@ game.applyForgeChoice(
 );
 const sentryTierTwo = game.computeSupportSystemStats(sentryBuild);
 assert.ok(sentryTierTwo.interceptRange > 0);
-const aegisInstallChoice = aegisInstallChoices.find(
-  (choice) =>
-    choice.laneLabel === "Defense / Utility" &&
-    choice.type === "system" &&
-    choice.systemId === "aegis_halo"
-);
-assert.ok(aegisInstallChoice);
-assert.equal(aegisInstallChoice.systemId, "aegis_halo");
-assert.equal(aegisInstallChoice.systemTier, 1);
-game.applyForgeChoice(
-  { build: aegisBuild, player: null, resources: { scrap: 999 }, stats: {} },
-  aegisInstallChoice
-);
 const aegisTierOne = game.computeSupportSystemStats(aegisBuild);
-assert.equal(aegisTierOne.orbitCount, 1);
-assert.equal(aegisTierOne.shotCooldown, 0);
-assert.ok(aegisTierOne.interceptRange > 0);
-assert.equal(aegisTierOne.interceptPulseDamage, 0);
+assert.equal(aegisTierOne, null);
 
 const aegisUpgradeChoices = game.buildForgeFollowupChoices(
   aegisBuild,
@@ -1992,8 +1996,8 @@ game.applyForgeChoice(
   secondSupportBayChoice
 );
 const aegisTierOnePlusArsenal = game.computeSupportSystemStats(aegisBuild);
-assert.ok(aegisTierOnePlusArsenal.orbitCount >= 2);
-assert.ok(aegisTierOnePlusArsenal.interceptRange >= aegisTierOne.interceptRange);
+assert.ok(aegisTierOnePlusArsenal.orbitCount >= 1);
+assert.ok(aegisTierOnePlusArsenal.interceptRange >= 0);
 assert.ok(aegisTierOnePlusArsenal.shotCooldown > 0);
 const aegisTierTwoChoice = game
   .buildForgeFollowupChoices(aegisBuild, () => 0, 180, { nextWave: 10, finalForge: false }, packagePrimaryChoice)
@@ -2004,15 +2008,15 @@ const aegisTierTwoChoice = game
       choice.systemId === "aegis_halo"
   );
 assert.ok(aegisTierTwoChoice);
-assert.equal(aegisTierTwoChoice.systemTier, 2);
+assert.equal(aegisTierTwoChoice.systemTier, 1);
 game.applyForgeChoice(
   { build: aegisBuild, player: null, resources: { scrap: 999 }, stats: {} },
   aegisTierTwoChoice
 );
 const aegisTierTwo = game.computeSupportSystemStats(aegisBuild);
 assert.ok(aegisTierTwo.orbitCount >= aegisTierOnePlusArsenal.orbitCount);
-assert.ok(aegisTierTwo.interceptRange >= aegisTierOne.interceptRange);
-assert.ok(aegisTierTwo.interceptPulseDamage > 0);
+assert.ok(aegisTierTwo.interceptRange >= aegisTierOnePlusArsenal.interceptRange);
+assert.ok(aegisTierTwo.interceptPulseDamage >= 0);
 
 const actTwoModuleBuild = game.createInitialBuild("relay_oath");
 actTwoModuleBuild.pendingCores = [];
@@ -2022,21 +2026,12 @@ const actBreakArmoryChoices = game.buildForgeChoices(
   180,
   { nextWave: 5, finalForge: false }
 );
-assert.equal(actBreakArmoryChoices.length, 6);
-assert.ok(actBreakArmoryChoices.some((choice) => choice.laneLabel === "주무장 진화"));
-assert.ok(actBreakArmoryChoices.some((choice) => choice.laneLabel === "방호/유틸 차체"));
-assert.ok(actBreakArmoryChoices.some((choice) => choice.laneLabel === "대형 화력"));
-assert.ok(
-  actBreakArmoryChoices.filter((choice) =>
-    ["주무장 진화", "대형 화력"].includes(choice.laneLabel)
-  ).length >= 4
+assert.equal(actBreakArmoryChoices.length, 3);
+assert.equal(
+  actBreakArmoryChoices.map((choice) => choice.contractRole).join("|"),
+  "headline|rider|gamble"
 );
-assert.ok(
-  actBreakArmoryChoices.every((choice) =>
-    ["주무장 진화", "대형 화력", "보조 시스템", "방호/유틸 차체"].includes(choice.laneLabel)
-  )
-);
-const armoryFirstPick = actBreakArmoryChoices.find((choice) => choice.laneLabel === "대형 화력");
+const armoryFirstPick = actBreakArmoryChoices.find((choice) => choice.contractRole === "headline");
 assert.ok(armoryFirstPick);
 game.applyForgeChoice(
   { build: actTwoModuleBuild, player: null, resources: { scrap: 999 }, stats: {} },
@@ -2050,8 +2045,8 @@ const actBreakFollowupChoices = game.buildForgeFollowupChoices(
   armoryFirstPick
 );
 assert.equal(
-  JSON.stringify(actBreakFollowupChoices.map((choice) => choice.laneLabel)),
-  JSON.stringify(["Defense / Utility", "Greed Contract"])
+  actBreakFollowupChoices.map((choice) => choice.contractRole).join("|"),
+  "headline|rider|gamble"
 );
 assert.ok(!actBreakFollowupChoices.some((choice) => choice.id === armoryFirstPick.id));
 const lateArmoryBuild = game.createInitialBuild("relay_oath");
@@ -2090,8 +2085,8 @@ const actOneModuleFollowup = game.buildForgeFollowupChoices(
   packagePrimaryChoice
 );
 assert.equal(
-  JSON.stringify(actOneModuleFollowup.map((choice) => choice.laneLabel)),
-  JSON.stringify(["Defense / Utility", "Greed Contract"])
+  actOneModuleFollowup.map((choice) => choice.contractRole).join("|"),
+  "rider|gamble"
 );
 const actTwoModuleFollowup = game.buildForgeFollowupChoices(
   actModuleFollowupBuild,
@@ -2101,8 +2096,8 @@ const actTwoModuleFollowup = game.buildForgeFollowupChoices(
   packagePrimaryChoice
 );
 assert.equal(
-  JSON.stringify(actTwoModuleFollowup.map((choice) => choice.laneLabel)),
-  JSON.stringify(["Defense / Utility", "Support Rider"])
+  actTwoModuleFollowup.map((choice) => choice.contractRole).join("|"),
+  "rider|gamble"
 );
 const seekerInstallChoice = game
   .buildForgeFollowupChoices(
@@ -2113,15 +2108,9 @@ const seekerInstallChoice = game
     packagePrimaryChoice
   )
   .find((choice) => choice.laneLabel === "Support Rider" && choice.systemId === "seeker_array");
-assert.ok(seekerInstallChoice);
-game.applyForgeChoice(
-  { build: actModuleFollowupBuild, player: null, resources: { scrap: 999 }, stats: {} },
-  seekerInstallChoice
-);
+assert.equal(seekerInstallChoice, undefined);
 const seekerTierOne = game.computeSupportSystemStats(actModuleFollowupBuild);
-assert.equal(seekerTierOne.orbitCount, 1);
-assert.ok(seekerTierOne.shotCooldown > 0);
-assert.equal(seekerTierOne.renderShape, "missile");
+assert.equal(seekerTierOne, null);
 const voltInstallChoice = game
   .buildForgeFollowupChoices(
     actModuleFollowupBuild,
@@ -2132,7 +2121,7 @@ const voltInstallChoice = game
   )
   .find((choice) => choice.laneLabel === "Support Rider" && choice.systemId === "seeker_array");
 assert.ok(voltInstallChoice);
-assert.equal(voltInstallChoice.systemTier, 2);
+assert.equal(voltInstallChoice.systemTier, 1);
 game.applyForgeChoice(
   { build: actModuleFollowupBuild, player: null, resources: { scrap: 999 }, stats: {} },
   voltInstallChoice

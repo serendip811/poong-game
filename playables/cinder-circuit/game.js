@@ -6484,6 +6484,13 @@
     if (!options || options.finalForge || options.fastGrant) {
       return false;
     }
+    if (
+      CONSOLIDATED_12_WAVE_ROUTE &&
+      Number.isFinite(options.nextWave) &&
+      options.nextWave < LATE_BREAK_ARMORY_WAVE
+    ) {
+      return false;
+    }
     return (options.nextWave || 0) >= FORGE_PACKAGE_START_WAVE;
   }
 
@@ -6492,6 +6499,9 @@
       return false;
     }
     const nextWave = options.nextWave || 0;
+    if (CONSOLIDATED_12_WAVE_ROUTE && nextWave === ACT_BREAK_ARMORY_WAVE) {
+      return false;
+    }
     return nextWave === ACT_BREAK_ARMORY_WAVE || nextWave === LATE_BREAK_ARMORY_WAVE;
   }
 
@@ -6499,11 +6509,17 @@
     if (!options || options.finalForge) {
       return false;
     }
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
+      return false;
+    }
     return (options.nextWave || 0) === ACT_BREAK_ARMORY_WAVE;
   }
 
   function shouldRunArchitectureDraft(options) {
     if (!options || options.finalForge) {
+      return false;
+    }
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
       return false;
     }
     return (options.nextWave || 0) === ARCHITECTURE_DRAFT_WAVE;
@@ -6547,6 +6563,9 @@
       return false;
     }
     const nextWave = options.nextWave || 0;
+    if (CONSOLIDATED_12_WAVE_ROUTE && nextWave < LATE_BREAK_ARMORY_WAVE) {
+      return false;
+    }
     return (
       nextWave >= FORGE_PACKAGE_START_WAVE &&
       !shouldRunArchitectureDraft(options) &&
@@ -10685,6 +10704,8 @@
     const gambleCandidates = [];
     const currentAffixIds = sanitizeAffixIds(build.affixes, getAffixCapacity(build));
     const nextWave = options && Number.isFinite(options.nextWave) ? options.nextWave : 0;
+    const recurringBaseRouteContract =
+      CONSOLIDATED_12_WAVE_ROUTE && Number.isFinite(nextWave) && nextWave < LATE_BREAK_ARMORY_WAVE;
     const catalystReforgeChoice = createCatalystReforgeChoice(build);
     const recycleChoice = createRecycleChoice(build);
     const reforgeChoice = catalystReforgeChoice || createReforgeChoice(build, random);
@@ -10694,9 +10715,16 @@
     const doctrineChaseChoice = createDoctrineChaseChoice(build, options);
     const wildcardChoice = createWildcardProtocolChoice(build, nextWave);
     const greedContractChoice = createFieldGreedContractChoice(build, nextWave);
-    const supportSystemChoices = shouldOfferSupportSystem(build, options)
-      ? createSupportSystemChoices(build, random, options)
-      : [];
+    const supportSystemChoices =
+      recurringBaseRouteContract && nextWave < LATE_BREAK_ARMORY_WAVE
+        ? []
+        : shouldOfferSupportSystem(build, options)
+          ? createSupportSystemChoices(build, random, options)
+          : [];
+    const chassisBreakpointChoices =
+      recurringBaseRouteContract && nextWave === 6
+        ? buildWave6ChassisBreakpointChoices(build, random, nextWave)
+        : [];
     const doctrine = build && build.bastionDoctrineId ? getBastionDoctrineDef(build) : null;
     const guaranteedMidrunChase = shouldGuaranteeMidrunChase(options)
       ? createGuaranteedChaseChoice(build)
@@ -10778,6 +10806,7 @@
     sortChoicesForDoctrine(offensiveModuleCandidates, doctrine);
     sortChoicesForDoctrine(subsystemCandidates, doctrine);
     sortChoicesForDoctrine(sustainCandidates, doctrine);
+    sortChoicesForDoctrine(chassisBreakpointChoices, doctrine);
 
     if (sustainCandidates.length === 0) {
       sustainCandidates.push({
@@ -10879,6 +10908,10 @@
     }
 
     const takenIds = new Set();
+    const defensePool =
+      recurringBaseRouteContract && nextWave === 6
+        ? [...chassisBreakpointChoices, ...subsystemCandidates, ...sustainCandidates]
+        : [...subsystemCandidates, ...sustainCandidates];
     const choices = [
       markForgeContract(
         takeFirstAvailableChoice(
@@ -10896,7 +10929,7 @@
       ),
       markForgeContract(
         takeFirstAvailableChoice(
-          [...subsystemCandidates, ...sustainCandidates],
+          defensePool,
           takenIds,
           "보조/방호"
         ),
@@ -10977,6 +11010,9 @@
       return false;
     }
     const nextWave = Number.isFinite(run.waveIndex) ? run.waveIndex + 2 : 0;
+    if (CONSOLIDATED_12_WAVE_ROUTE && nextWave < LATE_BREAK_ARMORY_WAVE) {
+      return false;
+    }
     if (nextWave === LATE_BREAK_ARMORY_WAVE) {
       return false;
     }

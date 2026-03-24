@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze new expansion branches and consolidate the shipped `Wave 1-12` spine into one lean core-first growth ladder, one appetite-first forge/HUD read, and a late band with clearly different movement asks.
+- Immediate priority: collapse the shipped forge route into one repeatable appetite-first reward grammar so `Wave 1-8` stops feeling pre-scripted and starts creating real build hunger for repeat runs.
 
 ## Release Gates
 
@@ -48,6 +48,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 23:45:00 KST
+  Findings:
+  - [cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L24) through [cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L29) promises that drops and forge picks should widen desire, but the live route still front-loads too much authored certainty. [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L11985) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12005) and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L11896) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L11919) keep telling the player what `Wave 3` and `Wave 6` are supposed to lock, so the run reads like a planned route more than a hungry improvisation.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12014) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12080) and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12096) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12114) show that the forge is still being solved with bespoke draft events, pacts, bay unlock wrappers, and reserved future slots rather than one stable `main leap / defense-or-utility / greed` grammar. That is content shape, not replayable decision texture.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20295) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20567) still spends too much hierarchy on `12-Wave Contract`, `Next Proof`, `Forge Break`, `Secondary Rider`, and route-stage framing. Compared with the snap readability of strong references like `Hades`, `Nova Drift`, or `Brotato`, the forge/HUD still explains the ladder instead of making one card or one form feel irresistible at a glance.
+  - [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L128) through [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L155) correctly says the source should be compressed into between-wave micro-forge decisions, but the current implementation has drifted back toward layered authored machinery. The project is in danger of building a very elaborate explanation of future build depth before the current reward loop is fun to rerun.
+  Top Priority: Replace the early/mid bespoke draft stack with a single recurring three-choice forge contract from `Wave 1` onward: one unmistakable core-form leap, one real defense/utility commitment, and one greed/economy gamble that visibly changes the next few waves.
+  Why Now: Until the player can crave the next pick without reading route administration, longer progression and extra systems will only make reruns feel more scripted.
+  Do Not Repeat: Do not answer this with another draft type, capstone branch, or support-bay wrapper that preserves the same over-authored reward flow.
+  Release Gate: Rewards
 
 - 2026-03-24 23:15:00 KST
   Findings:
@@ -1990,6 +2001,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 23:59:59 KST
+  Changed: consolidated the shipped early/mid forge flow in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the base `Wave 1-8` route now actually uses one recurring three-choice contract instead of detouring through `Architecture Draft`, `Act Break Cache`, field-grant skips, or two-step package flow. On the consolidated route, those special stops now stay off until the late break, each between-wave pause keeps the same `headline / defense-utility / greed` grammar, and the `Wave 6` defense slot explicitly prefers the existing chassis-break choices so the run still stages `core first, body second` while staying lean. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new recurring contract roles, the `Wave 6` chassis-flavored rider slot, and the absence of early support/package assumptions. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to replace the early/mid bespoke draft stack with one stable forge contract from `Wave 1` onward so the run stops feeling authored and starts creating repeatable pick hunger. The highest-value bounded interpretation was to cut the special early stop logic itself, because the UI was already trying to sell a simple contract while the actual flow kept routing around it.
+  Follow-up risk: the grammar is cleaner now, but the early defense/utility slot can still land as a generic sustain mod on some seeds before `Wave 8`. If the next critique still says reruns feel low-agency, the next bounded pass should deepen that middle slot's visible identity or consequence without reintroducing bespoke draft wrappers.
+  Release Gate: Rewards
 
 - 2026-03-24 20:15:08 KST
   Changed: recut the shipped standard-route finale in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from `Wave 12 · Cinder Crown` into `Wave 12 · Cinder Bastion`, a bounded `hold`/`territory` final stand instead of a second relay breach. The base wave and shared late-act profile now open short-lived bastion pockets in a `1680x980` arena with a lower `activeCap` (`33`), heavier brute/warden pressure, and rotation-focused directives so the player closes the run by opening one refuge pocket, harvesting space/health, and swapping flanks before binder pressure seals it. I also updated the standard late-route summary copy and [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so smoke now locks the new `open-lane payoff -> breach proof -> pursuit/refuge -> final stand` contract. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

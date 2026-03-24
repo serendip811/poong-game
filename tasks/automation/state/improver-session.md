@@ -18,6 +18,7 @@ Keep this short and replace stale notes instead of endlessly appending.
 - Validate every gameplay/UI change with the existing smoke test when relevant.
 - On the base `12-wave` route, prefer shipping-beat labels (`Core Lock`, `Chassis Break`, `Late Form`, `Proof Loadout`, `Final Seal`) and appetite-first promises over any draft/cache/relay/admin nouns in combat feed or forge copy.
 - On the consolidated route, the best readability move is now `one contract card + one threat card`; hide bench/upgrades/live telemetry by default and let inspect/pause carry the extra detail.
+- On the consolidated route, `Wave 1-8` should now stay on one recurring three-lane forge contract; do not reintroduce `Architecture Draft`, `Act Break Cache`, field-grant skips, or two-step package flow before `Wave 9`.
 - The base-route HUD/forge contract lands better when it speaks only `Current Form`, `Main Leap`, and `Next Proof`; support should read as a subordinate rider note, not a co-equal reward pillar.
 - Standard `Wave 9-10` improvements are highest value when they create a clearly different movement ask with the same locked form; `Wave 10` can carry a mobile greed/breach split without adding a whole new progression system.
 - Base-route `Wave 11` is higher value as a pursuit/refuge cadence than another gallery lap; use drift-driven reentry pressure to force pocket-to-pocket rotation before the final breach.
@@ -25,6 +26,7 @@ Keep this short and replace stale notes instead of endlessly appending.
 - Base-route `Wave 12` lands better when it stays a single crownline breach with a slightly larger arena, lower active cap, and lighter binder/mortar tax; difficulty should come from holding one opened corridor, not restoring every closure family at once.
 - Late Break Armory cards are stronger when they preview `Wave 11` and `Wave 12` by name; the lane should read like a future payoff the player can chase, not just a stat package.
 - Early `Wave 3-6` staging still has more leverage than new branches: lock the core gun first, add chassis second, and keep support bay/off-doctrine spectacle behind `Wave 8` unless a later critique proves the base ladder is starving.
+- If `Wave 6` stops offering a chassis-flavored defense card inside the recurring contract, the early ladder has slipped back toward generic stat filler; keep that slot visibly body-plan focused even while the overall forge grammar stays consistent.
 - If `Wave 3` doctrine cards still name drones, sentries, missiles, bays, or reserve lanes in sentence one, the opening fantasy is still upside down; move support preference text to post-`Wave 8` support install copy instead.
 - On the consolidated route, `Wave 6` chassis picks should stay chassis-only in both behavior and copy; if a smoke test assumes immediate bay uplink there, update the test because the release contract now expects the first real rider divergence at `Wave 8`.
 - Late-form card text should sell the weapon/body mutation in sentence one and mention rider/support amplification only as a secondary clause, otherwise support fantasy steals the anticipation again.
