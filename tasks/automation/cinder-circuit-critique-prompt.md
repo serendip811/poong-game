@@ -23,6 +23,7 @@ Working rules:
 - Read `tasks/automation/state/critic-session.md` first and refresh it after your critique so the role keeps memory across runs.
 - Keep the entry concise but specific.
 - Treat `## Release Goal`, `## Current Stage`, `## Release Gates`, and `## Anti-Drift Rules` as active constraints, not decorative notes.
+- Treat `## Player Feedback Rules` and `## Current Red Flags` as highest-priority reality checks.
 - If the project is drifting, update `## Current Stage` with a better 1-line immediate priority before writing the critique entry.
 
 Your critique entry must include:
@@ -44,5 +45,6 @@ Call out when the game needs bigger structural ambition, not just cleanup.
 At least every few critique passes, pressure-test whether the loop should stop adding systems and instead consolidate balance, readability, or pacing.
 Actively call out when UI/UX is becoming verbose enough to hide the fantasy or slow decision-making.
 Call out when the game front-loads power in a way that weakens the feeling of later transformation.
+If player feedback says the opening is too busy or too wordy, critique should aggressively push simplification before proposing new content.
 
 Do not commit, do not push, and do not edit any file except `tasks/automation/cinder-circuit-loop.md` and `tasks/automation/state/critic-session.md`.

@@ -19,6 +19,7 @@ Working rules:
 - Focus on `playables/cinder-circuit/` and only touch files needed for the selected improvement.
 - Prefer the latest critique's `Top Priority` unless it is already clearly addressed.
 - Read `## Release Goal`, `## Current Stage`, `## Release Gates`, and `## Anti-Drift Rules` first and use them to avoid drifting into low-value work.
+- Read `## Player Feedback Rules` and `## Current Red Flags` first and treat them as hard steering guidance.
 - Read `tasks/automation/state/improver-session.md` first and update it after the change so this role keeps a practical implementation memory across runs.
 - After changing code, update `tasks/automation/cinder-circuit-loop.md` by prepending a new entry under `## Latest Improvement`.
 - Include what changed, why, and any new follow-up risk in that entry.
@@ -35,6 +36,7 @@ Constraints:
 - If the last few loops already added major systems, prefer one consolidation pass that improves readability, balance, or pacing instead of adding another branch.
 - Tie the work to one release gate and make that gate visibly better by the end of the run.
 - If the game is becoming too wordy or over-explained, prioritize simplification passes that remove redundant explanation and make reward moments faster to parse.
+- If current player feedback says the opening is too loud or too text-heavy, prioritize reducing early missiles/support spectacle, reducing opening text, and simplifying `Tab` before adding more progression content.
 - If the player starts too powerful or too visually complete, prioritize re-staging upgrades so early waves feel lean and later waves deliver the bigger transformation payoff.
 
 After code and loop-file changes are done:

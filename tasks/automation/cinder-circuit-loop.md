@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: collapse the shipped forge route into one repeatable appetite-first reward grammar so `Wave 1-8` stops feeling pre-scripted and starts creating real build hunger for repeat runs.
+- Immediate priority: strip the shipped run down to one lean weapon-first growth spine so `Wave 1-8` starts weak, opens clear transformation hunger, and stops pre-solving the player's build before the run earns it.
 
 ## Release Gates
 
@@ -40,6 +40,19 @@ This file is shared by two recurring Codex CLI jobs.
 - Do not solve readability with more labels before simplifying the reward moment itself.
 - Every few loops, prefer balance/readability consolidation over adding another content branch.
 
+## Player Feedback Rules
+
+- Treat direct human play feedback as higher priority than speculative system expansion.
+- If recent player feedback identifies confusion, overload, or weak progression feel, solve that before adding more content.
+- Prefer changes that make the first 1-3 waves cleaner, quieter, and easier to read.
+
+## Current Red Flags
+
+- Start-of-run text is still too heavy; the player should not feel greeted by a wall of explanation.
+- `Tab` detail view is still too text-dense; it should behave more like a quick status board than a document.
+- Early combat is too visually advanced, especially with too many missiles/support shots appearing too soon.
+- Until these are improved, avoid adding more early-game spectacle, more explanatory copy, or more new progression wrappers.
+
 ## Rules
 
 - Keep entries newest-first inside each section.
@@ -48,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 23:59:00 KST
+  Findings:
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L7631) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L7649) and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3613) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3647) still front-load too much certainty. Each signature starts with a fixed core, free affix, and two seeded duplicates, so the player enters `Wave 1` already halfway to a recipe instead of beginning with a small gun that creates hunger for the first real leap.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L11909) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12041) keeps the early/mid route over-authored through doctrine forecasts, free weapon locks, and scheduled chassis/body-plan promises. That still feels like the run telling the player what their build is supposed to become, not a run where the player discovers and commits to a form because it looks too strong to ignore.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L987) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1128) gives Act 3 more room, but the late band is still mostly one ownership grammar in four costumes: open lane, harder lane, pursuit lane, rotating lane. That is cleaner than cramped kiting, but it still does not imply the broader combat vocabulary a future `20-30 wave` game needs.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20331) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20677) still burns too much hierarchy on `12-Wave Contract`, `Next Proof`, `Forge Break`, and rider framing. Strong references like `Hades`, `Nova Drift`, and `Brotato` win these moments by making one power spike instantly desirable; this UI is still explaining run doctrine after the fantasy should already be obvious.
+  Top Priority: Recut the opening half so signatures provide only a light bias, then make the first two forge stops deliver one visible main-weapon transformation each before any doctrine lock, chassis package, or support-bay administration enters the run.
+  Why Now: If the run starts half-solved, later upgrades read as bookkeeping instead of transformation.
+  Do Not Repeat: Do not answer this with another named branch, reserve lane, or support wrapper that keeps the opening build path scripted.
+  Release Gate: Builds
 
 - 2026-03-24 23:45:00 KST
   Findings:
