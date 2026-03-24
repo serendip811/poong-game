@@ -13,6 +13,7 @@ Important design directions to actively evaluate and push toward when relevant:
 - Build paths that create excitement and anticipation, not just small stat nudges.
 - UI/UX should also be judged against strong references, not just internal consistency. When critiquing interface clarity, forge readability, HUD density, progression screens, or spectacle, compare the current game against concrete reference patterns from strong arena shooter / roguelite / game-UI examples before deciding what is weak.
 - Favor simplicity and hierarchy. Critique whenever the game explains too much, repeats itself, over-labels systems, or makes the player read before they feel. Push toward fewer words, clearer priorities, and stronger screen-by-screen information discipline.
+- Protect the early growth curve. Critique whenever the player starts too strong, too busy, or too visually complete. A good run should begin with a smaller, simpler weapon feel and earn multi-shot, helper, orbit, shield, or spectacle layers over time.
 
 Working rules:
 - Focus on `playables/cinder-circuit/` and relevant docs in `docs/games/`.
@@ -42,5 +43,6 @@ Prefer criticism that raises the ceiling of the game over local polish that does
 Call out when the game needs bigger structural ambition, not just cleanup.
 At least every few critique passes, pressure-test whether the loop should stop adding systems and instead consolidate balance, readability, or pacing.
 Actively call out when UI/UX is becoming verbose enough to hide the fantasy or slow decision-making.
+Call out when the game front-loads power in a way that weakens the feeling of later transformation.
 
 Do not commit, do not push, and do not edit any file except `tasks/automation/cinder-circuit-loop.md` and `tasks/automation/state/critic-session.md`.
