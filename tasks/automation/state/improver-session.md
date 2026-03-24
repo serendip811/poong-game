@@ -15,7 +15,7 @@ Keep this short and replace stale notes instead of endlessly appending.
 - Prefer one meaningful gameplay or readability improvement per run.
 - Avoid adding another named system if the same benefit could come from simplifying or deepening an existing one.
 - Validate every gameplay/UI change with the existing smoke test when relevant.
-- On the consolidated route, the highest-value readability move is a visible `12-wave ladder`, not another synonym pass over route machinery.
+- On the consolidated route, the best readability move is now `one contract card + one threat card`; hide bench/upgrades/live telemetry by default and let inspect/pause carry the extra detail.
 - Standard `Wave 9-10` improvements are highest value when they buy more lane-ownership time through lower caps and larger arenas, not when they add another late mechanic.
 - Early `Wave 3-6` staging now has more leverage than new branches: lock the core gun first, add chassis second, and keep support bay/off-doctrine spectacle behind `Wave 8` unless a later critique proves the base ladder is starving.
-- On the consolidated route, presentation should name shipping beats (`Core Lock`, `Chassis Break`, `Late Form`, `Proof Loadout`) instead of draft/cache/ascension wrappers; if the route read slips, fix naming before adding content.
+- The remaining route-read debt is not the ladder card itself; it is special-event copy and stale docs still leaking `Architecture Draft`, `Bastion Draft`, `Live Ascension`, and older pacing assumptions.

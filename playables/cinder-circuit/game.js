@@ -8448,6 +8448,50 @@
     `;
   }
 
+  function createRouteContractMarkup({
+    eyebrow = "12-Wave Contract",
+    chipLabel = "",
+    title,
+    prompt,
+    headlineLabel,
+    riderLabel,
+    proofLabel,
+    note = "",
+    compact = false,
+  }) {
+    return `
+      <div class="summary-head">
+        <strong>${eyebrow}</strong>
+        ${
+          chipLabel
+            ? `<span class="summary-chip ${compact ? "" : "summary-chip--hot"}">${chipLabel}</span>`
+            : ""
+        }
+      </div>
+      <p class="summary-copy roadmap-card__path">${prompt}</p>
+      <strong class="route-contract__title">${title}</strong>
+      <div class="contract-strip ${compact ? "contract-strip--compact" : ""}">
+        <article class="contract-strip__item contract-strip__item--headline">
+          <span class="contract-strip__label">Headline</span>
+          <strong class="contract-strip__value">${headlineLabel}</strong>
+        </article>
+        <article class="contract-strip__item">
+          <span class="contract-strip__label">Rider</span>
+          <strong class="contract-strip__value">${riderLabel}</strong>
+        </article>
+        <article class="contract-strip__item">
+          <span class="contract-strip__label">Proof</span>
+          <strong class="contract-strip__value">${proofLabel}</strong>
+        </article>
+      </div>
+      ${note ? `<p class="summary-note">${note}</p>` : ""}
+    `;
+  }
+
+  function shouldUseMinimalBaseRouteHud(run = state) {
+    return Boolean(run && CONSOLIDATED_12_WAVE_ROUTE && !run.hudInspect && !run.paused);
+  }
+
   function getCombatBandState(build, weapon = null, waveNumber = 1) {
     const boundedWave = clamp(Math.round(waveNumber || 1), 1, MAX_WAVES + POST_CAPSTONE_WAVE_COUNT);
     if (boundedWave < 9 || boundedWave > MAX_WAVES) {
@@ -20026,6 +20070,7 @@
     const waveConfig = state.wave || resolveWaveConfig(state.waveIndex, state.build);
     const activeForgeLabel = state.phase === "forge" ? getForgeDisplayModeLabel() : "";
     const baseRouteForgeActive = shouldUseBaseRouteForgeContract();
+    const minimalBaseRouteHud = shouldUseMinimalBaseRouteHud(state);
     const baseRouteForgeStage = baseRouteForgeActive
       ? getBaseRouteForgeStage(state, state.waveIndex + 2)
       : null;
@@ -20115,26 +20160,29 @@
             weapon.benchSyncLevel > 0 ? "summary-chip--hot" : ""
           }">${weapon.tierLabel}</span>
         </div>
-        <div class="mini-pill-row">
-          ${
-            baseRouteForgeActive
-              ? createMiniPill("Run Ladder", baseRouteForgeStage ? baseRouteForgeStage.label : "Forge Break", "hot") +
-                createMiniPill("Locked Form", dominantForm.label, "hot") +
-                createMiniPill("Next Gate", proofWindow.label, "cool")
-              : createMiniPill(getHeadlineFormTierLabel(getHeadlineFormTier(state.build)), headlineLabel, "hot") +
-                createMiniPill("Rider", supportTrack.label, "cool")
-          }
-        </div>
-        <p class="summary-note">${
-          baseRouteForgeActive
-            ? `${ladderFocus.title}. ${dominantForm.label}를 유지한 채 다음 관문 ${proofWindow.label}만 먼저 읽게 만든다.`
-            : `${nextBreakpoint.label}이 다음 monster-form jump다. ${supportTrack.label}는 rider로만 짧게 남기고, ${proofWindow.label}에서 바로 space ownership를 증명한다.`
-        }</p>
+        ${
+          minimalBaseRouteHud
+            ? `<p class="summary-note">${dominantForm.label} 실루엣을 전면에 두고 ${proofWindow.label} 하나만 먼저 본다.</p>`
+            : `<div class="mini-pill-row">${
+                baseRouteForgeActive
+                  ? createMiniPill("Run Ladder", baseRouteForgeStage ? baseRouteForgeStage.label : "Forge Break", "hot") +
+                    createMiniPill("Locked Form", dominantForm.label, "hot") +
+                    createMiniPill("Next Gate", proofWindow.label, "cool")
+                  : createMiniPill(getHeadlineFormTierLabel(getHeadlineFormTier(state.build)), headlineLabel, "hot") +
+                    createMiniPill("Rider", supportTrack.label, "cool")
+              }</div>
+              <p class="summary-note">${
+                baseRouteForgeActive
+                  ? `${ladderFocus.title}. ${dominantForm.label}를 유지한 채 다음 관문 ${proofWindow.label}만 먼저 읽게 만든다.`
+                  : `${nextBreakpoint.label}이 다음 monster-form jump다. ${supportTrack.label}는 rider로만 짧게 남기고, ${proofWindow.label}에서 바로 space ownership를 증명한다.`
+              }</p>`
+        }
       `;
     }
 
     const benchEntries = getBenchEntries(state.build);
     if (elements.pendingCores) {
+      elements.pendingCores.classList.toggle("hidden", minimalBaseRouteHud);
       elements.pendingCores.innerHTML = benchEntries.length
         ? benchEntries
             .map(
@@ -20151,6 +20199,7 @@
     }
 
     if (elements.upgradeList) {
+      elements.upgradeList.classList.toggle("hidden", minimalBaseRouteHud);
       elements.upgradeList.innerHTML = state.build.upgrades.length
         ? state.build.upgrades
             .slice(-4)
@@ -20160,12 +20209,28 @@
     }
 
     if (elements.buildRoadmap) {
-      elements.buildRoadmap.innerHTML = createHeadlineRiderFocusMarkup(
-        state.build,
-        state.weapon,
-        state.supportSystem,
-        state.waveIndex + 1
-      );
+      elements.buildRoadmap.classList.toggle("roadmap-card--contract", minimalBaseRouteHud);
+      elements.buildRoadmap.innerHTML = minimalBaseRouteHud
+        ? createRouteContractMarkup({
+            eyebrow: "12-Wave Contract",
+            chipLabel: ladderFocus.label,
+            title: dominantForm.label,
+            prompt:
+              state.phase === "forge"
+                ? `${baseRouteForgeStage ? baseRouteForgeStage.label : "Forge Break"}에서는 변이 하나를 먼저 잠그고 바로 다음 증명으로 복귀한다.`
+                : `${ladderFocus.title} 구간이다. 지금은 현재 실루엣으로 전장을 점유하고 다음 관문만 본다.`,
+            headlineLabel: dominantForm.label,
+            riderLabel: supportTrack.label,
+            proofLabel: proofWindow.label,
+            note: `${supportTrack.label}는 보조선에만 남기고, 이번 읽기는 ${proofWindow.label} 하나에 묶는다.`,
+            compact: true,
+          })
+        : createHeadlineRiderFocusMarkup(
+            state.build,
+            state.weapon,
+            state.supportSystem,
+            state.waveIndex + 1
+          );
     }
 
     const enemiesLeft = Math.max(0, state.wave ? state.wave.spawnBudget - state.wave.spawned : 0);
@@ -20184,14 +20249,17 @@
           ${createStatusRow("Combat Ask", combatBand ? combatBand.label : proofWindow.label)}
         </div>
         <p class="summary-note">${
-          baseRouteForgeActive
-            ? `${baseRouteForgeStage ? baseRouteForgeStage.label : "Forge Break"} 이후 곧바로 ${proofWindow.label}를 증명한다. ${combatBand ? `${combatBand.headline}. ` : ""}${objectiveNote}`
-            : `${nextBreakpoint.label} + ${supportTrack.label}. ${combatBand ? `${combatBand.headline}. ` : ""}${objectiveNote}`
+          minimalBaseRouteHud
+            ? `${proofWindow.label} 하나만 보면 된다. ${objectiveNote}`
+            : baseRouteForgeActive
+              ? `${baseRouteForgeStage ? baseRouteForgeStage.label : "Forge Break"} 이후 곧바로 ${proofWindow.label}를 증명한다. ${combatBand ? `${combatBand.headline}. ` : ""}${objectiveNote}`
+              : `${nextBreakpoint.label} + ${supportTrack.label}. ${combatBand ? `${combatBand.headline}. ` : ""}${objectiveNote}`
         }</p>
       `;
     }
 
     if (elements.liveReadout) {
+      elements.liveReadout.classList.toggle("hidden", minimalBaseRouteHud);
       const forgeReadoutLabel = shouldUseBaseRouteForgeContract()
         ? `${getBaseRouteForgeStage(state, state.waveIndex + 2).label} 선택 중`
         : state.forgeDraftType === "architecture_draft"
@@ -20268,7 +20336,6 @@
     const baseRouteForgeStage = useBaseRouteContract
       ? getBaseRouteForgeStage(state, state.waveIndex + 2)
       : null;
-    const ladderFocus = getShippingLadderFocus(state.build, state.weapon, state.waveIndex + 2);
     const focusEyebrow = useBaseRouteContract
       ? "12-Wave Ladder"
       : state.pendingFinalForge
@@ -20301,52 +20368,51 @@
         : riderStep
           ? `${forgeModeLabel} · ${proofWindow.label} 대비 rider 선택 · 고철 ${Math.round(state.resources.scrap)}`
           : `${forgeModeLabel} · ${focusTitle} 먼저 · 고철 ${Math.round(state.resources.scrap)}`;
-    elements.forgeContext.innerHTML = `
-      <article class="forge-focus forge-focus--${riderStep ? "rider" : "headline"} forge-context__card forge-context__card--span-two">
-        <div class="forge-focus__header">
-          <p class="panel__eyebrow">${focusEyebrow}</p>
-          <span class="forge-focus__mode">${useBaseRouteContract ? getBaseRouteForgeBannerLabel(state) : forgeModeLabel}</span>
-        </div>
-        <strong>${focusTitle}</strong>
-        <p>${focusPrompt}</p>
-        <div class="status-list">
-          ${createStatusRow(
-            useBaseRouteContract ? "This Stop" : "Headline Mutation",
-            useBaseRouteContract
-              ? (baseRouteForgeStage ? baseRouteForgeStage.label : "Forge Break")
-              : riderStep || state.pendingFinalForge
-                ? dominantFormSummary.label
-                : focusTitle
-          )}
-          ${createStatusRow(
-            useBaseRouteContract
-              ? "Locked Form"
-              : "Secondary Rider",
-            useBaseRouteContract
-              ? dominantFormSummary.label
-              : riderStep
-                ? focusTitle
-                : activeSupportTrack.label
-          )}
-          ${createStatusRow(useBaseRouteContract ? "Next Gate" : "Immediate Ask", proofWindow.label)}
-        </div>
-        <p class="forge-focus__proof"><span>${
-          useBaseRouteContract ? "Run Contract" : state.pendingFinalForge ? "Route Payoff" : "Next Proof"
-        }</span>${
-          useBaseRouteContract
-            ? state.pendingFinalForge
-              ? `${baseRouteForgeStage ? baseRouteForgeStage.label : "Final Seal"}로 ${dominantFormSummary.label}를 이번 런의 마지막 실루엣으로 봉인한다.`
-              : riderStep
-                ? `${baseRouteForgeStage ? baseRouteForgeStage.label : "Proof Loadout"}에서는 ${focusTitle}를 얹고, ${proofWindow.label}에서 화면 점유 시간을 늘린다.`
-                : `${baseRouteForgeStage ? baseRouteForgeStage.label : "Forge Break"}에서는 ${focusTitle}를 먼저 잠그고, ${ladderFocus.title} 구간의 다음 관문 ${proofWindow.label}에서 바로 전장 소유를 증명한다.`
-            : state.pendingFinalForge
+    elements.forgeContext.innerHTML = useBaseRouteContract
+      ? `
+        <article class="forge-focus forge-focus--${riderStep ? "rider" : "headline"} forge-context__card forge-context__card--span-two">
+          ${createRouteContractMarkup({
+            eyebrow: focusEyebrow,
+            chipLabel: baseRouteForgeStage ? baseRouteForgeStage.label : "Forge Break",
+            title: focusTitle,
+            prompt: focusPrompt,
+            headlineLabel:
+              state.pendingFinalForge || riderStep ? dominantFormSummary.label : focusTitle,
+            riderLabel: riderStep ? focusTitle : activeSupportTrack.label,
+            proofLabel: proofWindow.label,
+            note: state.pendingFinalForge
+              ? `${dominantFormSummary.label}를 이번 런의 마지막 실루엣으로 봉인한다.`
+              : `${proofWindow.label}에서 바로 전장 소유 시간을 증명한다.`,
+          })}
+        </article>
+      `
+      : `
+        <article class="forge-focus forge-focus--${riderStep ? "rider" : "headline"} forge-context__card forge-context__card--span-two">
+          <div class="forge-focus__header">
+            <p class="panel__eyebrow">${focusEyebrow}</p>
+            <span class="forge-focus__mode">${forgeModeLabel}</span>
+          </div>
+          <strong>${focusTitle}</strong>
+          <p>${focusPrompt}</p>
+          <div class="status-list">
+            ${createStatusRow(
+              "Headline Mutation",
+              riderStep || state.pendingFinalForge ? dominantFormSummary.label : focusTitle
+            )}
+            ${createStatusRow("Secondary Rider", riderStep ? focusTitle : activeSupportTrack.label)}
+            ${createStatusRow("Immediate Ask", proofWindow.label)}
+          </div>
+          <p class="forge-focus__proof"><span>${
+            state.pendingFinalForge ? "Route Payoff" : "Next Proof"
+          }</span>${
+            state.pendingFinalForge
               ? `${dominantFormSummary.label}를 메인 12-wave route의 최종 실루엣으로 봉인한다.`
               : riderStep
                 ? `${focusTitle}는 rider로만 남고, 가치는 ${proofWindow.label}에서 얼마나 오래 버티는지로 바로 드러난다.`
                 : `${focusTitle}를 먼저 집고 ${activeSupportTrack.label}는 rider로만 남긴다. 다음 ask는 ${proofWindow.label} 하나다.`
-        }</p>
-      </article>
-    `;
+          }</p>
+        </article>
+      `;
     elements.forgeCards.innerHTML = state.forgeChoices
       .map(
         (choice, index) => {

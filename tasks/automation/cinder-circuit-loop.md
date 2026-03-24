@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze branch/support expansion and lock one shipping `Wave 1-12` staircase where `Wave 3` only secures the core gun, `Wave 6` secures the body, `Wave 8` delivers one oversized late-form jump, and `Wave 9-10` prove it through two clearly different combat asks.
+- Immediate priority: remove post-`Wave 12` and branch/admin language from the default route, then reduce every forge/HUD stop to one oversized headline mutation plus one next-proof read before adding more systems or variants.
 
 ## Release Gates
 
@@ -48,6 +48,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 12:00:00 KST
+  Findings:
+  - The default run is still presented like a route controller, not a release ladder. `maybeAdvancePhase()`, `updateHUD()`, and `renderForgeOverlay()` still keep `Live Ascension`, `Ownership Relay`, `Architecture Draft`, `Bastion Draft`, field-cache logic, and `Afterburn` awareness alive around the standard `Wave 1-12` path, so the player keeps reading exceptions and future branches at the exact moments that should sell hunger.
+  - The docs are still teaching prototype-length pacing. [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md) still maps the source bracket to a `5-wave act curve` and `Wave 1-5` power table, which quietly fights the stated `12-wave` alpha spine and the longer `20-30 wave` ambition.
+  - The late route still lacks enough combat grammar spread to justify a longer game. `Wave 9 · Lockgrid` and `Wave 10 · Scrapline` are both same-arena crossfire proofs at `activeCap 28 -> 29`, so the run extends time more than it creates clearly different movement decisions or proof beats.
+  - Support systems still advertise the stronger visible fantasy. `SUPPORT_SYSTEM_DEFS` gives orbitals and halo tiers immediate silhouette growth, while the core gun/body ladder still needs contract language to explain why the player should care, which means the run is still front-loading accessory desire instead of protecting early lean growth and earning spectacle later.
+  - The forge/HUD hierarchy is still below release-grade arena-shooter references. Compared with the appetite-first reward reads in `Hades`, `Nova Drift`, or `Brotato`, the current panels still stack `Run Ladder`, `Locked Form`, `Next Gate`, threat rows, proof text, and telemetry at once, so desire lands after reading.
+  Top Priority: Strip the default route down to one appetite-first contract across docs, HUD, and forge flow: one oversized headline mutation per stop, one clearly secondary rider, and one immediate proof ask, with all branch/post-`Wave 12` language hidden from the shipping path.
+  Why Now: The loop is cycling because the base run is still being explained as several future systems instead of being sold as one rerunnable power arc.
+  Do Not Repeat: Do not answer this with another support tier, cache variant, or `Afterburn` wrapper.
+  Release Gate: UX/UI
 
 - 2026-03-24 11:30:38 KST
   Findings:
@@ -1794,6 +1806,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 12:20:00 KST
+  Changed: recut the consolidated-route HUD and forge pause in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and [styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) around one appetite-first contract card. The default `Wave 1-12` route now collapses its main read to `Headline / Rider / Proof`, hides bench chips, upgrade history, and live telemetry unless the player expands HUD detail, and turns the forge header into one oversized mutation contract instead of stacked roadmap/proof/admin rows. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the latest critique's `Top Priority` was to stop explaining the shipping path like a route controller and make each stop read as one mutation promise plus one immediate proof ask. The highest-value bounded interpretation was to simplify the default HUD/forge hierarchy itself, because that is the surface the player rereads every wave and it was still asking for too much parsing before desire landed.
+  Follow-up risk: the pause surfaces are cleaner now, but special-event feed text and the design docs can still leak `Architecture Draft`, `Bastion Draft`, `Live Ascension`, and old pacing language around the same route. If the next critique still says the shipping path feels branchy, the next bounded pass should sanitize those event/docs strings instead of adding another presentation layer. For UI direction, this pass deliberately followed the one-dominant-reward hierarchy of `Hades` boon screens and `Nova Drift` level-up panels, where one promise owns the pause and secondary context stays subordinate.
+  Release Gate: UX/UI
 
 - 2026-03-24 11:42:30 KST
   Changed: rebuilt the default-route HUD and forge contract in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) around one visible `12-Wave Ladder` instead of route-admin phrasing. The build roadmap card now always shows the shipping staircase `Wave 3 core lock -> Wave 6 chassis break -> Wave 8 late form -> Wave 9-10 proof -> Wave 11-12 finish`, while the active-core HUD pills and forge focus card were relabeled from `Route Beat / Current Form / Next Fight / Route Contract` to `Run Ladder / Locked Form / Next Gate / Run Contract` so the player reads one ladder and one current form before anything else. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
