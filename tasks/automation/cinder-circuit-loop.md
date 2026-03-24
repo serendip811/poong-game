@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: replace the shipped `Wave 3-8` player contract with a weapon-first growth ladder plus one survival/utility layer, and hide doctrine/chassis/support-bay infrastructure until `Wave 1-12` feels rerunnable without future-run scaffolding.
+- Immediate priority: freeze expansion scaffolding and prove one reusable `Wave 1-12` escalation spine `small opener -> weapon leap -> one survival/support fork -> late-form payoff`, with doctrine/afterburn/admin systems fully backstage.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-25 04:00:55 KST
+  Findings:
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L877) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1004) gives `Wave 6-8` cleaner combat asks and better breathing room, but it is still one tightly packed staircase of breach/pursuit/breach with the real growth punctuation hidden somewhere else. For a rerunnable action roguelite, `Wave 3`, `Wave 6`, and `Wave 8` should feel like unmistakable rung changes the player can anticipate, not just cleaner pressure bands inside the same authored contract.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3664) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3815) still defines the mid/late route in doctrine, capstone, pursuit-frame, and `Late Break Armory` terms. That is not supporting depth; it is still spending the run's emotional budget on backstage machinery instead of on visible gun/body evolution and one readable survival layer.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20649) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21224) proves the UI is still compensating for that machinery. Even in the consolidated route, the HUD/forge has to keep restating `proof`, `rider`, `stage`, `focus`, and `support` context. Strong reference patterns earn simpler cards because the leap is self-evident; here the screen is still doing explanatory labor the content should already have done.
+  - [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L24) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L36) and [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L157) through [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L256) still teach the team to think in compressed source layers, signatures, passive expansion, and future ladder depth instead of one reusable escalation template that could later be extended to `20-30` waves.
+  Top Priority: Re-author the shipped run around four obvious growth beats only `Wave 1 weak start`, `Wave 3 first weapon leap`, `Wave 6 first defense/support commitment`, `Wave 8 late-form ignition`, then let `Wave 9-12` exist only to prove those choices instead of introducing more route machinery.
+  Why Now: Until the base 12-wave slice proves one expandable escalation template, adding more waves or more systems will only stretch prototype logic across a longer timeline.
+  Do Not Repeat: Do not answer this with another wording cleanup that leaves doctrine/capstone/pursuit/admin layers as the real spine.
+  Release Gate: Progression
 
 - 2026-03-25 14:15:00 KST
   Findings:
@@ -2171,6 +2182,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-25 15:05:00 KST
+  Changed: rewrote the consolidated-route `Wave 3` architecture stop in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the three opening picks now headline the immediate weapon leap the player actually gets right now instead of the backstage doctrine spine that will matter later. `Mirror Hunt Doctrine`/`Storm Artillery Doctrine` style cards now surface `Prism Crown`, `Twin Spine`, and the equivalent first-shot form names as the actual pick title, their copy sells `Wave 3 first gun jump now -> Wave 6 body break next`, the roadmap's first rung now previews that same weapon leap, and the selection confirm/feed plus upgrade log now echo `Wave 3 무기 도약` rather than `Core Lock Forecast`. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new Wave 3 titles, roadmap rung, and upgrade text. This readability pass stayed anchored to the appetite-first reward hierarchy seen in `Nova Drift`, `Hades`, and `Brotato`: show the weapon change on sight, keep the later route logic subordinate. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to make `Wave 3` read as an unmistakable first weapon leap instead of another hidden rung inside doctrine/admin structure. The highest-value bounded interpretation was to fix the first growth beat itself, because the mechanics were already gating the real doctrine lock to `Wave 6` but the player-facing card, roadmap, and feed were still spending that moment on backstage naming.
+  Follow-up risk: `Wave 3` now advertises the immediate gun mutation much more cleanly, but `Wave 6` still leaks chassis-language more than body-fantasy and `Wave 8` remains the only later stop whose choice cards fully echo the transformed form in every surface. If critique stays on the same issue, the next bounded move should give `Wave 6` the same transformation-first treatment so the full `Wave 3 -> Wave 6 -> Wave 8` ladder reads as one escalating appetite chain.
+  Release Gate: Progression
 
 - 2026-03-25 03:46:55 KST
   Changed: recast the consolidated-route `Wave 8` late-break stop in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the three `Cataclysm Arsenal / Warplate Halo / Black Ledger Heist` cards now sell one immediate transformed form first and one next proof second instead of route-admin cadence. I rewrote their hero/proof copy around `weapon/body now -> Wave 9 test now`, shortened the consolidated `Wave 8` handoff/feed lines so they stop talking about `rider bay` or other backstage scaffolding, and made the chosen late-break form surface directly in the shipping HUD status note. The bounded gameplay payoff is that `Black Ledger Heist` no longer reads like pure economy infrastructure: it now opens a visible `twin tow fork` side-fire pattern immediately on pick, so the greed lane gets an actual raid-frame silhouette instead of waiting for text to explain the route. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new late-break copy and ledger fire-pattern state. This reward/readability pass stayed anchored to the appetite-first card hierarchy seen in `Nova Drift` and `Hades`: show the mutation on sight, then name the first proof.

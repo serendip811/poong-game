@@ -12,6 +12,7 @@ Keep this short and replace stale notes instead of endlessly appending.
 
 ## Current Memory
 
+- On the consolidated route, `Wave 3` lands better when the card, roadmap rung, and confirm feed all headline the immediate weapon leap `Prism Crown` / `Twin Spine` style rather than the backstage doctrine name; if the first stop reads `Doctrine`, `Forecast`, or `Core Lock` first, the opening growth beat has drifted back into scaffolding.
 - On the consolidated route, `Wave 8` late-break picks land better when each card sells an immediate transformed form and the HUD/feed echoes that form directly; if `Cataclysm Arsenal`, `Warplate Halo`, or `Black Ledger Heist` fall back to bay/admin wording instead of `weapon/body now -> Wave 9 proof now`, the midgame contract has drifted back into infrastructure.
 - On the consolidated route, forge reward cards land better when the base three-card contract shows only `what changes now`, one `다음 시험`, and one `비용·대가` line; if compact or featured cards regrow preview grids, impact strips, or side notes, the reward snap has slipped back into briefing mode.
 - On the consolidated route, `Tab` inspect and compact forge focus land better as `headline title + next proof capsule + one bill/resource pill row`; do not let those pauses regress into three parallel lane notes or schema explanations.

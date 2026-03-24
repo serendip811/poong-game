@@ -71,14 +71,14 @@ assert.equal(game.WAVE_CONFIG[11].pressureFamily, "hold");
 const roadmapBuild = game.createInitialBuild("rail_zeal");
 const earlyRoadmap = game.getBuildRoadmap(roadmapBuild, game.computeWeaponStats(roadmapBuild), 1);
 assert.equal(earlyRoadmap.steps.length, 3);
-assert.equal(earlyRoadmap.steps[0].title, "Storm Artillery Doctrine");
+assert.equal(earlyRoadmap.steps[0].title, "Twin Spine");
 assert.ok(earlyRoadmap.steps[1].title.includes("Sky Lance"));
 assert.ok(earlyRoadmap.steps[1].detail.includes("Wave 5 contraband salvage"));
 assert.equal(earlyRoadmap.steps[2].title, "Crown Break");
 roadmapBuild.bastionDoctrineId = "storm_artillery";
 roadmapBuild.overcommitUnlocked = true;
 const primedRoadmap = game.getBuildRoadmap(roadmapBuild, game.computeWeaponStats(roadmapBuild), 6);
-assert.equal(primedRoadmap.steps[0].title, "Storm Artillery Doctrine");
+assert.equal(primedRoadmap.steps[0].title, "Siege Frame");
 assert.equal(primedRoadmap.steps[0].state, "locked");
 assert.ok(primedRoadmap.steps[1].title.includes("Sky Lance Battery"));
 assert.equal(primedRoadmap.steps[1].state, "primed");
@@ -1502,7 +1502,7 @@ assert.equal(architectureRun.build.bastionDoctrineId, null);
 assert.equal(architectureRun.build.architectureForecastId, architectureDraftChoices[0].doctrineId);
 assert.equal(architectureRun.build.doctrineChaseClaimed, false);
 assert.ok(
-  architectureRun.build.upgrades.some((upgrade) => upgrade.startsWith("Core Lock Forecast: "))
+  architectureRun.build.upgrades.some((upgrade) => upgrade.startsWith("Wave 3 무기 도약: "))
 );
 assert.equal(architectureRun.build.coreId, "ricochet");
 assert.equal(game.computeWeaponStats(architectureRun.build).evolutionTier, 1);
@@ -1624,9 +1624,10 @@ const doctrineCapstoneBuild = game.createInitialBuild("relay_oath");
 doctrineCapstoneBuild.pendingCores = [];
 const mirrorArchitectureChoice = game
   .buildArchitectureDraftChoices(doctrineCapstoneBuild)
-  .find((choice) => choice.title === "Mirror Hunt Doctrine");
+  .find((choice) => choice.title === "Prism Crown");
 assert.ok(mirrorArchitectureChoice);
-assert.ok(mirrorArchitectureChoice.description.includes("Wave 3에서는"));
+assert.ok(mirrorArchitectureChoice.description.includes("Wave 3"));
+assert.ok(mirrorArchitectureChoice.description.includes("첫 주포 도약"));
 assert.ok(!mirrorArchitectureChoice.description.includes("support bay"));
 assert.ok(!mirrorArchitectureChoice.description.includes("marked elite shard"));
 game.applyForgeChoice(
@@ -1688,7 +1689,7 @@ const artilleryDoctrineBuild = game.createInitialBuild("rail_zeal");
 artilleryDoctrineBuild.pendingCores = [];
 const artilleryArchitectureChoice = game
   .buildArchitectureDraftChoices(artilleryDoctrineBuild)
-  .find((choice) => choice.title === "Storm Artillery Doctrine");
+  .find((choice) => choice.title === "Twin Spine");
 assert.ok(artilleryArchitectureChoice);
 assert.equal(
   artilleryArchitectureChoice.doctrineCapstoneLabel,
@@ -1775,7 +1776,7 @@ const artilleryNeedleBuild = game.createInitialBuild("rail_zeal");
 artilleryNeedleBuild.pendingCores = [];
 const artilleryNeedleArchitectureChoice = game
   .buildArchitectureDraftChoices(artilleryNeedleBuild)
-  .find((choice) => choice.title === "Storm Artillery Doctrine");
+  .find((choice) => choice.title === "Twin Spine");
 assert.ok(artilleryNeedleArchitectureChoice);
 game.applyForgeChoice(
   { build: artilleryNeedleBuild, player: null, resources: { scrap: 999 }, stats: {} },

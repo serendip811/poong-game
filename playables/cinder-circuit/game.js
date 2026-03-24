@@ -7921,12 +7921,18 @@
     const pathLabel = doctrine
       ? `${doctrine.label} · ${activeForm}${activeBodyLabel ? ` / ${activeBodyLabel}` : ""}`
       : `${CORE_DEFS[build.coreId].label} · ${activeForm}`;
-    const stageOneTitle = doctrine ? doctrine.label : "Monster Form Lock";
+    const wave3LeapPreview = getArchitectureWeaponLeapPreview(build, doctrine);
+    const stageOneTitle =
+      (build.bastionDoctrineId && (currentWeapon.doctrineFormLabel || activeForm)) ||
+      (wave3LeapPreview && wave3LeapPreview.weaponChoice.title) ||
+      (doctrine ? doctrine.label : "Monster Form Lock");
     const stageOneDetail = build.bastionDoctrineId
       ? `${currentWeapon.doctrineFormLabel || activeForm}${
           activeBodyLabel ? ` / ${activeBodyLabel}` : ""
         }이(가) 현재 body/gun 실루엣이다. 이후 포지는 이 형태를 더 과격하게 밀거나 약점을 메우는 쪽으로만 열린다.`
-      : `Wave ${ARCHITECTURE_DRAFT_WAVE}에서 교리를 잠가 첫 monster form과 chassis lane을 연다.`;
+      : wave3LeapPreview
+        ? `Wave ${ARCHITECTURE_DRAFT_WAVE}에서 ${wave3LeapPreview.weaponChoice.title}을(를) 먼저 붙여 첫 주포 도약을 만든다. Wave 6에서는 ${(wave3LeapPreview.chassis && wave3LeapPreview.chassis.title) || "차체 break"}를 더해 몸체 리듬까지 확정한다.`
+        : `Wave ${ARCHITECTURE_DRAFT_WAVE}에서 교리를 잠가 첫 monster form과 chassis lane을 연다.`;
     const stageOneState = build.bastionDoctrineId
       ? "locked"
       : boundedWave >= ARCHITECTURE_DRAFT_WAVE
@@ -12292,46 +12298,53 @@
       : null;
   }
 
+  function getArchitectureWeaponLeapPreview(build = null, doctrine = null) {
+    const resolvedDoctrine = doctrine || getBastionDoctrineDef(build);
+    if (!resolvedDoctrine) {
+      return null;
+    }
+    const weaponChoice = createArchitectureDoctrineWeaponChoice(build, resolvedDoctrine);
+    if (!weaponChoice) {
+      return null;
+    }
+    const ascensionDef = WAVE6_ASCENSION_DEFS[resolvedDoctrine.id];
+    const chassis = ascensionDef ? getChassisBreakpointDef(ascensionDef.chassisId) : null;
+    return {
+      doctrine: resolvedDoctrine,
+      weaponChoice,
+      ascensionDef,
+      chassis,
+    };
+  }
+
   function createArchitectureDoctrineChoice(doctrine, build = null) {
     if (!doctrine) {
       return null;
     }
-    const weaponChoice = createArchitectureDoctrineWeaponChoice(build, doctrine);
-    const ascensionDef = WAVE6_ASCENSION_DEFS[doctrine.id];
-    const chassis = ascensionDef ? getChassisBreakpointDef(ascensionDef.chassisId) : null;
-    const doctrineForm = build
-      ? getDoctrineWeaponForm(
-          {
-            ...build,
-            bastionDoctrineId: doctrine.id,
-            doctrineChaseClaimed: false,
-            doctrineCapstoneId: null,
-          },
-          doctrine.favoredCoreId
-        )
-      : null;
-    if (!weaponChoice || !ascensionDef) {
+    const preview = getArchitectureWeaponLeapPreview(build, doctrine);
+    if (!preview || !preview.ascensionDef) {
       return null;
     }
+    const { weaponChoice, ascensionDef, chassis } = preview;
     return {
       type: "utility",
       action: "architecture_forecast",
       id: `utility:architecture_doctrine:${doctrine.id}`,
       verb: "잠금",
       tag: "ARCH",
-      title: doctrine.label,
+      title: weaponChoice.title,
       description:
-        `${doctrine.description} Wave 3에서는 ${weaponChoice.title}만 먼저 무료 접속해 첫 주포 실루엣만 바꾼다. 이번 pick은 아직 doctrine lock도, chassis package도 아니다. ${chassis ? chassis.title : "Chassis Breakpoint"}와 실제 doctrine 채택은 Wave 6에서 함께 고른다.`,
-      slotText: `core lock · ${weaponChoice.title}`,
+        `${weaponChoice.title}을(를) 지금 바로 붙여 Wave 3 첫 주포 도약을 만든다. 이번 pick은 support나 운영 패키지가 아니라 발사 각과 실루엣을 먼저 크게 바꾸는 선택이다. Wave 6에서는 ${chassis ? chassis.title : "차체 break"}를 붙여 몸체 리듬까지 함께 확정한다.`,
+      slotText: `${weaponChoice.title} · ${weaponChoice.slotText || "첫 주포 도약"}`,
       cost: 0,
-      laneLabel: "Core Lock",
-      forgeLaneLabel: "Core Lock",
+      laneLabel: "주력 변이",
+      forgeLaneLabel: "주력 변이",
       doctrineId: doctrine.id,
       doctrineLabel: doctrine.label,
       doctrineCapstoneLabel: getDoctrineLateCapstoneLabel(doctrine),
       weaponChoice,
-      doctrineFormLabel: doctrineForm ? doctrineForm.label : doctrine.label,
-      doctrineFormTrait: doctrineForm ? doctrineForm.traitLabel : null,
+      doctrineFormLabel: weaponChoice.title,
+      doctrineFormTrait: weaponChoice.slotText || null,
       breakpointLabel: chassis ? chassis.title : ascensionDef.chassisId,
     };
   }
@@ -13613,7 +13626,9 @@
         return choice;
       }
       run.build.architectureForecastId = doctrine.id;
-      run.build.upgrades.push(`Core Lock Forecast: ${doctrine.label}`);
+      run.build.upgrades.push(
+        `Wave 3 무기 도약: ${choice.weaponChoice ? choice.weaponChoice.title : doctrine.label}`
+      );
       if (choice.weaponChoice) {
         applyForgeChoice(run, choice.weaponChoice);
       }
@@ -17108,7 +17123,7 @@
       pushCombatFeed(
         state.forgeDraftType === "architecture_draft"
           ? choice.action === "architecture_forecast"
-            ? `${choice.doctrineLabel} 방향 고정. ${choice.weaponChoice ? choice.weaponChoice.title : "주포 mutation"}만 먼저 붙여 다음 웨이브부터 lean한 core form으로 싸운다. ${choice.breakpointLabel || "Wave 6 Chassis Break"}는 다음 break에서 고른다.`
+            ? `${choice.weaponChoice ? choice.weaponChoice.title : choice.title} 장착. Wave 3부터 주포 발사각이 바로 꺾인다. ${choice.breakpointLabel || "Wave 6 차체 break"}는 다음 정지에서 붙이고, 큰 보조 연출은 Wave 8까지 미룬다.`
             : `${grantLabel} 적용. 아키텍처 방향을 기울인 채 다음 웨이브를 연다.`
         : state.forgeDraftType === "bastion_draft"
           ? choice.type === "fallback"
