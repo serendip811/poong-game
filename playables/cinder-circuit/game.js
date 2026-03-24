@@ -8598,7 +8598,7 @@
   }
 
   function createBaseRouteFocusMarkup({
-    eyebrow = "12-Wave Contract",
+    eyebrow = "",
     chipLabel = "",
     title,
     prompt,
@@ -8610,10 +8610,10 @@
     compact = false,
   }) {
     const spotlightLabel = compact ? currentFormLabel : mainLeapLabel;
-    const spotlightVerb = compact ? "Current Form" : "Main Leap";
+    const proofHeader = compact ? "다음 시험" : "메인 변이";
     return `
       <div class="summary-head">
-        <strong>${eyebrow}</strong>
+        <strong>${eyebrow || title}</strong>
         ${
           chipLabel
             ? `<span class="summary-chip ${compact ? "" : "summary-chip--hot"}">${chipLabel}</span>`
@@ -8622,8 +8622,8 @@
       </div>
       <p class="summary-copy roadmap-card__path">${prompt}</p>
       <strong class="route-contract__title">${spotlightLabel}</strong>
-      <div class="forge-focus__proof"><span>${compact ? "Next Proof" : spotlightVerb}</span>${compact ? proofLabel : `${mainLeapLabel}. ${proofLabel}에서 바로 증명한다.`}</div>
-      ${supportLabel ? `<div class="mini-pill-row">${createMiniPill("Rider", supportLabel, "cool")}</div>` : ""}
+      <div class="forge-focus__proof"><span>${proofHeader}</span>${compact ? proofLabel : `${mainLeapLabel}. ${proofLabel}에서 바로 증명한다.`}</div>
+      ${supportLabel ? `<div class="mini-pill-row">${createMiniPill("보조", supportLabel, "cool")}</div>` : ""}
       ${note ? `<p class="summary-note">${note}</p>` : ""}
     `;
   }
@@ -12894,9 +12894,15 @@
 
   function getBaseRouteForgeContractLabel(role, choice, riderStep = false) {
     if (riderStep) {
-      return getBaseRouteForgeStage(state).label;
+      return "보조 선택";
     }
-    return getBaseRouteForgeStage(state).label;
+    if (role === "headline") {
+      return "주력 변이";
+    }
+    if (role === "gamble") {
+      return "판돈";
+    }
+    return "보조 선택";
   }
 
   function getBaseRouteForgeBannerLabel(run = state) {
@@ -20341,13 +20347,13 @@
         </div>
         ${
           minimalBaseRouteHud
-            ? `<div class="forge-focus__proof"><span>Next Proof</span>${proofWindow.label}</div><p class="summary-note">${dominantForm.label} 실루엣을 전면에 두고 ${proofWindow.label} 하나만 먼저 본다.</p>`
+            ? `<div class="forge-focus__proof"><span>다음 시험</span>${proofWindow.label}</div><p class="summary-note">${dominantForm.label} 실루엣을 전면에 두고 ${proofWindow.label} 하나만 먼저 본다.</p>`
             : `<div class="mini-pill-row">${
                 baseRouteForgeActive
                   ? createMiniPill("Proof", proofWindow.label, "hot") +
-                    createMiniPill("Rider", supportTrack.label, "cool")
+                    createMiniPill("보조", supportTrack.label, "cool")
                   : createMiniPill(getHeadlineFormTierLabel(getHeadlineFormTier(state.build)), headlineLabel, "hot") +
-                    createMiniPill("Rider", supportTrack.label, "cool")
+                    createMiniPill("보조", supportTrack.label, "cool")
               }</div>
               <p class="summary-note">${
                 baseRouteForgeActive
@@ -20390,18 +20396,18 @@
       elements.buildRoadmap.classList.toggle("roadmap-card--contract", minimalBaseRouteHud);
       elements.buildRoadmap.innerHTML = minimalBaseRouteHud
         ? createBaseRouteFocusMarkup({
-            eyebrow: "12-Wave Contract",
+            eyebrow: "",
             chipLabel: ladderFocus.label,
             title: dominantForm.label,
             prompt:
               state.phase === "forge"
-                ? `${baseRouteForgeStage ? baseRouteForgeStage.label : "Forge Break"}에서는 main leap 하나를 먼저 잠그고 바로 다음 증명으로 복귀한다.`
-                : `${ladderFocus.title} 구간이다. 지금은 현재 실루엣으로 전장을 점유하고 다음 관문만 본다.`,
+                ? `이번 정비에서는 ${nextBreakpoint.label}처럼 크게 보이는 선택 하나만 먼저 집고 바로 전투로 돌아간다.`
+                : `${ladderFocus.title} 구간이다. 지금 실루엣으로 전장을 점유하며 ${proofWindow.label} 하나만 준비한다.`,
             currentFormLabel: dominantForm.label,
             mainLeapLabel: nextBreakpoint.label,
             proofLabel: proofWindow.label,
             supportLabel: supportTrack.label,
-            note: `${supportTrack.label}는 보조선에만 남기고, 이번 읽기는 ${proofWindow.label} 하나에 묶는다.`,
+            note: `${supportTrack.label}는 작은 보조 신호로만 남기고, 시선은 ${proofWindow.label} 하나에 묶는다.`,
             compact: true,
           })
         : createHeadlineRiderFocusMarkup(
@@ -20425,7 +20431,7 @@
         </div>
         <div class="status-list">
           ${createStatusRow("Immediate Threat", `${hazardStatus.detailLabel} ${hazardStatus.detailValue}`)}
-          ${createStatusRow(baseRouteForgeActive ? "Next Proof" : "Combat Ask", combatBand ? combatBand.label : proofWindow.label)}
+          ${createStatusRow(baseRouteForgeActive ? "다음 시험" : "Combat Ask", combatBand ? combatBand.label : proofWindow.label)}
         </div>
         <p class="summary-note">${
           minimalBaseRouteHud
@@ -20516,7 +20522,11 @@
       ? getBaseRouteForgeStage(state, state.waveIndex + 2)
       : null;
     const focusEyebrow = useBaseRouteContract
-      ? "12-Wave Contract"
+      ? riderStep
+        ? "보조 선택"
+        : state.pendingFinalForge
+          ? "최종 봉인"
+          : "주력 변이"
       : state.pendingFinalForge
         ? "Final Form"
         : riderStep
@@ -20531,17 +20541,17 @@
         : (featuredChoice && featuredChoice.title) || nextFormStep.label;
     const focusPrompt = useBaseRouteContract
       ? state.pendingFinalForge
-        ? `${baseRouteForgeStage ? baseRouteForgeStage.label : "Final Seal"}로 ${dominantFormSummary.label}를 이번 런의 마지막 실루엣으로 고정한다.`
+        ? `${dominantFormSummary.label}를 이번 런의 마지막 실루엣으로 고정한다.`
         : riderStep
-          ? `${baseRouteForgeStage ? baseRouteForgeStage.label : "Proof Loadout"}에서는 ${proofWindow.label} 전에 버틸 rider 한 장만 얹는다.`
-          : `${baseRouteForgeStage ? baseRouteForgeStage.label : "Forge Break"}에서는 ${focusTitle} 하나만 먼저 고른다.`
+          ? `${proofWindow.label} 전에 버틸 보조선 한 장만 얹는다.`
+          : `${focusTitle}처럼 전장을 크게 바꿀 한 장만 먼저 고른다.`
       : state.pendingFinalForge
         ? `${dominantFormSummary.label}를 이번 12-wave spine의 최종 실루엣으로 봉인한다.`
         : riderStep
           ? `${dominantFormSummary.label} 위에 rider 한 장만 얹고 바로 다음 전투 ask를 버틴다.`
           : `${dominantFormSummary.label} 다음에 가장 크게 전장을 바꿀 변이 하나만 먼저 고른다.`;
     elements.forgeSubtitle.textContent = useBaseRouteContract
-      ? `${baseRouteForgeStage ? baseRouteForgeStage.label : "Forge Break"} · 고철 ${Math.round(state.resources.scrap)}`
+      ? `고철 ${Math.round(state.resources.scrap)}`
       : state.pendingFinalForge
         ? `${forgeModeLabel} · ${focusTitle} · 고철 ${Math.round(state.resources.scrap)}`
         : riderStep
@@ -20552,7 +20562,7 @@
         <article class="forge-focus forge-focus--${riderStep ? "rider" : "headline"} forge-context__card forge-context__card--span-two">
           ${createBaseRouteFocusMarkup({
             eyebrow: focusEyebrow,
-            chipLabel: baseRouteForgeStage ? baseRouteForgeStage.label : "Forge Break",
+            chipLabel: baseRouteForgeStage ? baseRouteForgeStage.label : "",
             prompt: focusPrompt,
             currentFormLabel: dominantFormSummary.label,
             mainLeapLabel: riderStep ? dominantFormSummary.label : focusTitle,
@@ -20561,8 +20571,8 @@
             note: state.pendingFinalForge
               ? `${dominantFormSummary.label}를 이번 런의 마지막 실루엣으로 봉인한다.`
               : riderStep
-                ? `${focusTitle}는 보조 rider로만 얹고 ${proofWindow.label}에서 바로 버티는지 본다.`
-                : `${proofWindow.label}에서 바로 전장 소유 시간을 증명한다. rider는 보조선으로만 남긴다.`,
+                ? `${focusTitle}는 보조선으로만 얹고 ${proofWindow.label}에서 바로 버티는지 본다.`
+                : `${proofWindow.label}에서 바로 전장 소유 시간을 증명한다. 보조선은 뒤로 물린다.`,
           })}
         </article>
       `
@@ -20683,9 +20693,9 @@
           >
             <span class="forge-card__badge">${
               useBaseRouteContract && baseRouteForgeStage
-                ? baseRouteForgeStage.label
+                ? "추천"
                 : useBaseRouteContract
-                  ? "Forge Break"
+                  ? "추천"
                   : "Headline Mutation"
             }</span>
             <div class="forge-card__hero forge-card__hero--${transformation.tone}">
@@ -20693,7 +20703,7 @@
               <h3>${choice.title}</h3>
               <p class="forge-card__hero-copy">${transformation.promise}</p>
             </div>
-            <p class="forge-card__proof"><span>다음 전투 증명</span>${transformation.proof}</p>
+            <p class="forge-card__proof"><span>다음 시험</span>${transformation.proof}</p>
             <div class="forge-card__preview">${previewRows}</div>
             ${
               showcase && showcase.choice === choice

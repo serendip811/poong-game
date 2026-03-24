@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Builds`: the run still begins too pre-solved, so the player gets doctrine certainty before earning a satisfying weapon-first climb.
-- Repeated false solution: answering shallow rerun appetite with another branch wrapper, doctrine reservation, support-bay unlock, or explanatory UI pass instead of making the first half start lean and transform harder.
-- Keep comparing forge/HUD hierarchy against `Hades`, `Nova Drift`, and `Brotato`. If one reward does not dominate at a glance, the screen is still too explanatory.
-- Keep pressure on late-wave combat vocabulary as well as rewards. Bigger arenas alone are not enough if `Wave 9-12` still repeats lane-ownership homework in slightly different skins.
-- Next valuable critique angle: after any opener simplification, check whether `Wave 1-6` now creates real anticipation for offense/defense/greed divergence without front-loading recipe certainty.
+- The most fragile gate is now `UX/UI`: the forge/HUD still reads like route administration, so reward desire and combat readability are being buried under labels.
+- Repeated false solution: solving shallow rerun appetite with another draft/contract wrapper, another late-form teaser, or more explanatory copy instead of cutting the player-facing hierarchy down to one dominant reward.
+- Keep comparing reward moments against `Hades`, `Nova Drift`, and `Brotato`. If the player has to parse more than one obvious prize before choosing, the screen is still too verbose.
+- Keep pressure on encounter vocabulary after readability passes. More arena space is not enough if `Wave 9-12` still resolves into minor variations of lane ownership, pursuit, and hold.
+- Next valuable critique angle: after UI contraction, check whether the current `Wave 1-12` clear finally feels self-contained or still smells like prologue-to-Afterburn.

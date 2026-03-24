@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: strip the shipped run down to one lean weapon-first growth spine so `Wave 1-8` starts weak, opens clear transformation hunger, and stops pre-solving the player's build before the run earns it.
+- Immediate priority: stop adding route-administration wrappers and consolidate the shipped `Wave 1-12` ladder so the opener stays lean, forge/HUD sell one power spike at a glance, and `Wave 9-12` each present a distinct combat ask.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 10:20:00 KST
+  Findings:
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20252) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20640) still makes the player read route administration before desire. `12-Wave Contract`, `Next Proof`, `Main Leap`, `Secondary Rider`, `Forge Break`, `Architecture Draft`, and `Bastion Draft` are all fighting for hierarchy when strong references like `Hades`, `Nova Drift`, and `Brotato` usually land one prize first and let the rest stay implied.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3600) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3710) still front-loads a visually complete fantasy. Each signature locks a core lane, seeds a duplicate, and grants enough extra drive/scrap/chain to make `Wave 1` feel like an informed build start, not a hungry weak opening that earns its first visible jump.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1160) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1327) gives Act 3 more breathing room, but the live `Wave 9-12` ladder is still only four close cousins: open lane, proof lane, pursuit lane, hold lane. That is cleaner than cramped kiting, but it is not yet the encounter vocabulary that can credibly stretch toward a future `20-30 wave` game.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1327) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1549) keeps `Afterburn` labels and endform scaffolding resident in the shipped route file, so the current clear still smells like a stepping stone to the real run instead of a complete rerunnable destination.
+  Top Priority: Collapse the live reward/HUD language to one headline mutation card plus one secondary rider/utility read, and remove route-admin labels from the player-facing forge/HUD before adding any more branches or late-form wrappers.
+  Why Now: If the reward moment is still a document, players will not feel hunger for repeated runs no matter how many systems sit behind it.
+  Do Not Repeat: Do not answer this with another named draft, contract layer, or future-run teaser masquerading as clarity.
+  Release Gate: UX/UI
 
 - 2026-03-24 23:59:00 KST
   Findings:
@@ -2025,6 +2036,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-25 00:20:00 KST
+  Changed: trimmed the player-facing forge/HUD language again in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the consolidated route stops surfacing route-admin labels as the main read. The compact HUD card now leads with the current form title and a single `다음 시험` capsule instead of `12-Wave Contract` / `Current Form` framing, support pills now read as a small `보조` hint, the combat objective row mirrors that wording, and the forge overlay now uses `주력 변이` / `보조 선택` / `최종 봉인` plus a neutral `추천` badge instead of `Forge Break`, `Proof Loadout`, or other stage-admin labels. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to remove route-admin language from the live forge/HUD and leave one headline mutation plus one small rider/utility read. The highest-value bounded interpretation was to keep the existing reward structure but strip out stage-governance words that were still stealing hierarchy from the prize itself, because that moves the pause closer to a one-card hunger spike without reopening progression flow. For reference direction, this pass stayed anchored to the appetite-first reward hierarchy seen in `Hades`, `Nova Drift`, and `Brotato`: the mutation owns the pause, the rider stays subordinate, and the route logic stays implied.
+  Follow-up risk: the wording is much leaner, but the compact HUD still keeps one stage chip and the non-minimal HUD path still surfaces `Proof` in English plus extra explanatory note text. If critique stays on the same issue, the next bounded pass should unify those remaining mixed-language/status labels and consider trimming one more summary note before adding any new UI wrapper.
+  Release Gate: UX/UI
 
 - 2026-03-25 00:05:00 KST
   Changed: recut the opening lock flow in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so signatures now start as a light bias instead of a half-built recipe, with one spare matching core and no free affix, and `Wave 3 Core Lock` now applies only the chosen weapon mutation while merely forecasting the doctrine for `Wave 6`. I also gated doctrine fire geometry/stats behind the real doctrine lock so forecasted forms stop showing their full silhouette before the run earns them, and updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the leaner start, delayed doctrine lock, and shifted bench/sync expectations. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
