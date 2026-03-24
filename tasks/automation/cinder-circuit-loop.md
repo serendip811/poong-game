@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: strip standard-route branch/post-capstone exceptions and rebuild the `Wave 1-12` spine around a smaller opening chassis, one dominant main-form ladder, and a cleaner late payoff/proof/finale staircase.
+- Immediate priority: freeze branch/support expansion and lock one shipping `Wave 1-12` staircase where `Wave 3` only secures the core gun, `Wave 6` secures the body, `Wave 8` delivers one oversized late-form jump, and `Wave 9-10` prove it through two clearly different combat asks.
 
 ## Release Gates
 
@@ -48,6 +48,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 11:00:50 KST
+  Findings:
+  - The base route still is not a shipping route. [`maybeAdvancePhase()`](playables/cinder-circuit/game.js) continues to thread `Live Ascension`, `Ownership Relay`, `Architecture Draft`, `Bastion Draft`, field grants, and `Afterburn` awareness through the normal flow, so the run still reads like a branch router instead of one replayable ladder.
+  - The design docs are still quietly feeding prototype-scale thinking. [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md) keeps `5-wave act curve` and `Wave 1-5` power-bracket framing alive, which undercuts the stated `12-wave` alpha contract and makes long escalation feel optional instead of foundational.
+  - Support fantasy still has the clearest visible hunger. `SUPPORT_SYSTEM_DEFS` gives orbitals, halos, and helper growth cleaner tier silhouettes than the main weapon/body path, so the player is still invited to want accessories more than the next core mutation.
+  - Late escalation is still too narrow to justify a future `20-30 wave` game. `Wave 9 · Lockgrid`, `Wave 10 · Scrapline`, and the hunt variants mostly remix the same crossfire ecology and similar `activeCap` values, which stretches duration more than combat grammar.
+  - HUD/forge clarity is still behind release-grade references. `updateHUD()` and `renderForgeOverlay()` keep stacking `Current Form`, `Main Leap`, `Next Proof`, mode labels, status rows, and explanation copy at the exact moment strong references would show one dominant promise and let the fight prove the rest.
+  Top Priority: Lock the shipping route contract in both docs and flow: make the base run expose only `Wave 3 core gun lock -> Wave 6 chassis break -> Wave 8 single late-form pick -> Wave 9-10 two distinct proof beats`, and remove branch/live-ascension/Afterburn language from the default HUD and reward presentation.
+  Why Now: The critique loop is already cycling, and every extra branch or label added before this lock makes the eventual release route flatter and harder to balance.
+  Do Not Repeat: Do not answer this with another support module, another late-route variant, or another wording cleanup that leaves the default run structure unresolved.
+  Release Gate: Progression
 
 - 2026-03-24 23:59:00 KST
   Findings:
@@ -1771,6 +1783,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 11:14:53 KST
+  Changed: tightened the consolidated-route presentation contract in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the default `Wave 1-12` run now names its forge beats through shipping-route milestones instead of generic or branch-facing wrappers. I added a shared base-route stage helper and routed wave-clear transitions, the forge banner/mode labels, the featured-card badge, the active-form HUD pills, and the forge focus card through it, so the player now reads `Core Lock`, `Chassis Break`, `Late Form`, `Proof Loadout`, and `Final Seal` where the old pass still said `Main Leap` / `Next Proof` or otherwise implied draft-style routing. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to lock the shipping-route contract in flow and presentation, not add another system. The highest-value bounded interpretation was to make the base HUD/forge/transition layer consistently speak in release-route beats, so the run reads like one remembered ladder before any deeper branch logic exists under the hood.
+  Follow-up risk: the main presentation is cleaner now, but some underlying choice descriptions and off-route combat-feed strings still carry older draft/cache language. If critique still says the base run feels like a router, the next bounded pass should sanitize those remaining per-choice descriptions on the consolidated route rather than widen the feature surface again. For reference direction, this HUD/forge naming pass deliberately followed the appetite-first hierarchy of `Hades` boon headers and `Nova Drift` level-up breaks, where one dominant promise owns the reward moment and the wrapper stays quiet.
+  Release Gate: Progression
 
 - 2026-03-24 23:59:00 KST
   Changed: restaged the standard early doctrine ladder in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 3-6` no longer hands out a near-finished machine before the late break. `Architecture Draft` now locks only the core gun/doctrine form at `Wave 3`, while `Wave 6 Ascension` upgrades that path into a weapon-plus-chassis break without also opening a third support bay, flex lane, or off-doctrine system. I updated the affected forge-preview rows and instant-draft combat-feed copy to sell the new `gun first -> chassis second -> support spectacle at Wave 8` contract, then extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so it asserts the leaner pre-`Wave 8` state and the delayed bay unlock. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

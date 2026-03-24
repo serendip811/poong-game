@@ -12531,35 +12531,50 @@
     );
   }
 
+  function getBaseRouteForgeStage(run = state, nextWave = null) {
+    if (!run) {
+      return { id: "forge_break", label: "Forge Break" };
+    }
+    if (run.pendingFinalForge) {
+      return { id: "final_seal", label: "Final Seal" };
+    }
+    if (run.phase === "forge" && run.forgeMaxSteps > 1 && run.forgeStep === 2) {
+      return { id: "proof_loadout", label: "Proof Loadout" };
+    }
+    const upcomingWave = Number.isFinite(nextWave) ? nextWave : run.waveIndex + 2;
+    if (shouldRunArchitectureDraft({ nextWave: upcomingWave, finalForge: false })) {
+      return { id: "core_lock", label: "Core Lock" };
+    }
+    if (shouldUseCompactActBreakCache({ nextWave: upcomingWave, finalForge: false })) {
+      return { id: "chassis_break", label: "Chassis Break" };
+    }
+    if (shouldRunCatalystDraft({ nextWave: upcomingWave, finalForge: false }, run.build)) {
+      return { id: "late_form", label: "Late Form" };
+    }
+    if (shouldUseFieldGrant({ nextWave: upcomingWave, finalForge: false })) {
+      return upcomingWave >= LATE_BREAK_ARMORY_WAVE
+        ? { id: "proof_loadout", label: "Proof Loadout" }
+        : { id: "field_break", label: "Field Break" };
+    }
+    return upcomingWave >= LATE_BREAK_ARMORY_WAVE
+      ? { id: "late_form", label: "Late Form" }
+      : { id: "forge_break", label: "Forge Break" };
+  }
+
   function getBaseRouteForgeContractLabel(role, choice, riderStep = false) {
     if (riderStep) {
-      return "Next Proof";
+      return getBaseRouteForgeStage(state).label;
     }
-    return "Main Leap";
+    return getBaseRouteForgeStage(state).label;
   }
 
   function getBaseRouteForgeBannerLabel(run = state) {
-    if (!run) {
-      return "Main Leap";
-    }
-    if (run.pendingFinalForge) {
-      return "Current Form";
-    }
-    if (run.forgeMaxSteps > 1 && run.forgeStep === 2) {
-      return "Next Proof";
-    }
-    return "Main Leap";
+    return getBaseRouteForgeStage(run).label;
   }
 
   function getForgeDisplayModeLabel() {
     if (shouldUseBaseRouteForgeContract()) {
-      if (state.pendingFinalForge) {
-        return "Current Form";
-      }
-      if (state.forgeMaxSteps > 1 && state.forgeStep === 2) {
-        return "Next Proof";
-      }
-      return "Main Leap";
+      return getBaseRouteForgeStage(state).label;
     }
     return getActiveForgeModeLabel();
   }
@@ -19797,9 +19812,9 @@
         state.hazards = [];
         state.stats.wavesCleared = state.waveIndex + 1;
         const nextWave = state.waveIndex + 2;
-        const nextLateRouteBeat = getStandardLateRouteBeatSummary(state.build, nextWave);
         const enteringAfterburn =
           !CONSOLIDATED_12_WAVE_ROUTE && state.waveIndex >= MAX_WAVES - 1;
+        const nextBaseRouteForgeStage = getBaseRouteForgeStage(state, nextWave);
         const nextPhaseLabel = state.wave.completesRun
           ? "결과 패널"
           : CONSOLIDATED_12_WAVE_ROUTE
@@ -19809,9 +19824,7 @@
               shouldRunDoctrineLiveAscension(state.build, nextWave) ||
               shouldSkipOwnershipAdminStop(state.build, nextWave) ||
               shouldUseFieldGrant({ nextWave, finalForge: false })
-              ? nextLateRouteBeat
-                ? nextLateRouteBeat.label
-                : `Wave ${nextWave}`
+              ? nextBaseRouteForgeStage.label
               : "포지 브레이크"
             : enteringAfterburn
               ? "Act 4 · Afterburn"
@@ -19914,6 +19927,9 @@
     const waveConfig = state.wave || resolveWaveConfig(state.waveIndex, state.build);
     const activeForgeLabel = state.phase === "forge" ? getForgeDisplayModeLabel() : "";
     const baseRouteForgeActive = shouldUseBaseRouteForgeContract();
+    const baseRouteForgeStage = baseRouteForgeActive
+      ? getBaseRouteForgeStage(state, state.waveIndex + 2)
+      : null;
     const waveLabel =
       state.phase === "forge"
         ? `${waveConfig.label} · ${baseRouteForgeActive ? getBaseRouteForgeBannerLabel(state) : activeForgeLabel}`
@@ -20002,16 +20018,16 @@
         <div class="mini-pill-row">
           ${
             baseRouteForgeActive
-              ? createMiniPill("Current Form", dominantForm.label, "hot") +
-                createMiniPill("Main Leap", nextBreakpoint.label, "hot") +
-                createMiniPill("Next Proof", proofWindow.label, "cool")
+              ? createMiniPill("Route Beat", baseRouteForgeStage ? baseRouteForgeStage.label : "Forge Break", "hot") +
+                createMiniPill("Current Form", dominantForm.label, "hot") +
+                createMiniPill("Next Fight", proofWindow.label, "cool")
               : createMiniPill(getHeadlineFormTierLabel(getHeadlineFormTier(state.build)), headlineLabel, "hot") +
                 createMiniPill("Rider", supportTrack.label, "cool")
           }
         </div>
         <p class="summary-note">${
           baseRouteForgeActive
-            ? `Current Form은 ${dominantForm.label}다. Main Leap는 ${nextBreakpoint.label} 하나만 남기고, Next Proof는 ${proofWindow.label}로 곧바로 좁힌다.`
+            ? `${baseRouteForgeStage ? baseRouteForgeStage.label : "Forge Break"}. ${dominantForm.label}를 유지한 채 다음 싸움 ${proofWindow.label}만 먼저 읽게 만든다.`
             : `${nextBreakpoint.label}이 다음 monster-form jump다. ${supportTrack.label}는 rider로만 짧게 남기고, ${proofWindow.label}에서 바로 space ownership를 증명한다.`
         }</p>
       `;
@@ -20069,7 +20085,7 @@
         </div>
         <p class="summary-note">${
           baseRouteForgeActive
-            ? `${dominantForm.label} 다음 Main Leap는 ${nextBreakpoint.label}, Next Proof는 ${proofWindow.label}다. ${combatBand ? `${combatBand.headline}. ` : ""}${objectiveNote}`
+            ? `${baseRouteForgeStage ? baseRouteForgeStage.label : "Forge Break"} 이후 곧바로 ${proofWindow.label}를 증명한다. ${combatBand ? `${combatBand.headline}. ` : ""}${objectiveNote}`
             : `${nextBreakpoint.label} + ${supportTrack.label}. ${combatBand ? `${combatBand.headline}. ` : ""}${objectiveNote}`
         }</p>
       `;
@@ -20077,11 +20093,7 @@
 
     if (elements.liveReadout) {
       const forgeReadoutLabel = shouldUseBaseRouteForgeContract()
-        ? state.pendingFinalForge
-          ? "Current Form 봉인 중"
-          : state.forgeMaxSteps > 1 && state.forgeStep === 2
-            ? "Next Proof 준비 중"
-            : "Main Leap 선택 중"
+        ? `${getBaseRouteForgeStage(state, state.waveIndex + 2).label} 선택 중`
         : state.forgeDraftType === "architecture_draft"
           ? "Architecture Draft 선택 중"
           : state.forgeDraftType === "field_grant"
@@ -20153,12 +20165,11 @@
     const featuredChoice = featuredIndex >= 0 ? state.forgeChoices[featuredIndex] : null;
     const useBaseRouteContract = shouldUseBaseRouteForgeContract();
     const forgeModeLabel = getForgeDisplayModeLabel();
+    const baseRouteForgeStage = useBaseRouteContract
+      ? getBaseRouteForgeStage(state, state.waveIndex + 2)
+      : null;
     const focusEyebrow = useBaseRouteContract
-      ? state.pendingFinalForge
-        ? "Current Form"
-        : riderStep
-          ? "Next Proof"
-          : "Main Leap"
+      ? "Route Beat"
       : state.pendingFinalForge
         ? "Final Form"
         : riderStep
@@ -20173,21 +20184,17 @@
         : (featuredChoice && featuredChoice.title) || nextFormStep.label;
     const focusPrompt = useBaseRouteContract
       ? state.pendingFinalForge
-        ? `${dominantFormSummary.label}를 이번 런의 마지막 Current Form으로 봉인한다.`
+        ? `${baseRouteForgeStage ? baseRouteForgeStage.label : "Final Seal"}로 ${dominantFormSummary.label}를 이번 런의 마지막 실루엣으로 고정한다.`
         : riderStep
-          ? `${proofWindow.label} 전에 ${dominantFormSummary.label}를 오래 버티게 할 보조선 하나만 고른다.`
-          : `${dominantFormSummary.label} 다음 Main Leap 하나만 먼저 고른다.`
+          ? `${baseRouteForgeStage ? baseRouteForgeStage.label : "Proof Loadout"}에서는 ${proofWindow.label} 전에 버틸 rider 한 장만 얹는다.`
+          : `${baseRouteForgeStage ? baseRouteForgeStage.label : "Forge Break"}에서는 ${focusTitle} 하나만 먼저 고른다.`
       : state.pendingFinalForge
         ? `${dominantFormSummary.label}를 이번 12-wave spine의 최종 실루엣으로 봉인한다.`
         : riderStep
           ? `${dominantFormSummary.label} 위에 rider 한 장만 얹고 바로 다음 전투 ask를 버틴다.`
           : `${dominantFormSummary.label} 다음에 가장 크게 전장을 바꿀 변이 하나만 먼저 고른다.`;
     elements.forgeSubtitle.textContent = useBaseRouteContract
-      ? state.pendingFinalForge
-        ? `Current Form 봉인 · 고철 ${Math.round(state.resources.scrap)}`
-        : riderStep
-          ? `Next Proof 준비 · 고철 ${Math.round(state.resources.scrap)}`
-          : `Main Leap 선택 · 고철 ${Math.round(state.resources.scrap)}`
+      ? `${baseRouteForgeStage ? baseRouteForgeStage.label : "Forge Break"} · 고철 ${Math.round(state.resources.scrap)}`
       : state.pendingFinalForge
         ? `${forgeModeLabel} · ${focusTitle} · 고철 ${Math.round(state.resources.scrap)}`
         : riderStep
@@ -20203,36 +20210,34 @@
         <p>${focusPrompt}</p>
         <div class="status-list">
           ${createStatusRow(
-            useBaseRouteContract ? "Current Form" : "Headline Mutation",
+            useBaseRouteContract ? "Route Beat" : "Headline Mutation",
             useBaseRouteContract
-              ? dominantFormSummary.label
+              ? (baseRouteForgeStage ? baseRouteForgeStage.label : "Forge Break")
               : riderStep || state.pendingFinalForge
                 ? dominantFormSummary.label
                 : focusTitle
           )}
           ${createStatusRow(
             useBaseRouteContract
-              ? state.pendingFinalForge
-                ? "Current Form"
-                : "Main Leap"
+              ? "Current Form"
               : "Secondary Rider",
             useBaseRouteContract
-              ? focusTitle
+              ? dominantFormSummary.label
               : riderStep
                 ? focusTitle
                 : activeSupportTrack.label
           )}
-          ${createStatusRow(useBaseRouteContract ? "Next Proof" : "Immediate Ask", proofWindow.label)}
+          ${createStatusRow(useBaseRouteContract ? "Next Fight" : "Immediate Ask", proofWindow.label)}
         </div>
         <p class="forge-focus__proof"><span>${
-          useBaseRouteContract && state.pendingFinalForge ? "Current Form" : state.pendingFinalForge ? "Route Payoff" : "Next Proof"
+          useBaseRouteContract ? "Route Contract" : state.pendingFinalForge ? "Route Payoff" : "Next Proof"
         }</span>${
           useBaseRouteContract
             ? state.pendingFinalForge
-              ? `Current Form ${dominantFormSummary.label}를 이번 런의 마지막 실루엣으로 봉인한다.`
+              ? `${baseRouteForgeStage ? baseRouteForgeStage.label : "Final Seal"}로 ${dominantFormSummary.label}를 이번 런의 마지막 실루엣으로 봉인한다.`
               : riderStep
-                ? `Main Leap를 해치지 않는 선에서 ${focusTitle}를 얹고, ${proofWindow.label}에서 화면 점유 시간을 늘린다.`
-                : `${focusTitle}를 집는 즉시 Main Leap가 잠기고, ${proofWindow.label}에서 바로 전장 소유를 증명한다.`
+                ? `${baseRouteForgeStage ? baseRouteForgeStage.label : "Proof Loadout"}에서는 ${focusTitle}를 얹고, ${proofWindow.label}에서 화면 점유 시간을 늘린다.`
+                : `${baseRouteForgeStage ? baseRouteForgeStage.label : "Forge Break"}에서는 ${focusTitle}를 먼저 잠그고, ${proofWindow.label}에서 바로 전장 소유를 증명한다.`
             : state.pendingFinalForge
               ? `${dominantFormSummary.label}를 메인 12-wave route의 최종 실루엣으로 봉인한다.`
               : riderStep
@@ -20329,7 +20334,13 @@
             data-verb="${choice.verb}"
             ${state.resources.scrap < choice.cost ? "disabled" : ""}
           >
-            <span class="forge-card__badge">${useBaseRouteContract ? "Main Leap" : "Headline Mutation"}</span>
+            <span class="forge-card__badge">${
+              useBaseRouteContract && baseRouteForgeStage
+                ? baseRouteForgeStage.label
+                : useBaseRouteContract
+                  ? "Forge Break"
+                  : "Headline Mutation"
+            }</span>
             <div class="forge-card__hero forge-card__hero--${transformation.tone}">
               <span class="forge-card__hero-label">${contractLabel}</span>
               <h3>${choice.title}</h3>
