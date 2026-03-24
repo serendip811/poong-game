@@ -2744,10 +2744,11 @@
   const MAX_SUPPORT_SYSTEM_TIER = 3;
   const MAX_SUPPORT_BAYS = 2;
   const MAX_SUPPORT_BAY_LIMIT = 4;
+  const SUPPORT_SYSTEM_START_WAVE = 8;
   const SUPPORT_SYSTEM_DEFS = {
     ember_ring: {
       id: "ember_ring",
-      forgeWaveMin: 3,
+      forgeWaveMin: SUPPORT_SYSTEM_START_WAVE,
       forgeLane: "보조 시스템",
       tag: "SYSTEM",
       color: "#ffd166",
@@ -2834,7 +2835,7 @@
     },
     aegis_halo: {
       id: "aegis_halo",
-      forgeWaveMin: 3,
+      forgeWaveMin: SUPPORT_SYSTEM_START_WAVE,
       forgeLane: "보조 시스템",
       tag: "SYSTEM",
       color: "#8ae7ff",
@@ -2921,7 +2922,7 @@
     },
     kiln_sentry: {
       id: "kiln_sentry",
-      forgeWaveMin: 2,
+      forgeWaveMin: SUPPORT_SYSTEM_START_WAVE,
       forgeLane: "보조 시스템",
       tag: "SENTRY",
       color: "#ffb86b",
@@ -3041,7 +3042,7 @@
     },
     seeker_array: {
       id: "seeker_array",
-      forgeWaveMin: 4,
+      forgeWaveMin: SUPPORT_SYSTEM_START_WAVE,
       forgeLane: "공세 모듈",
       tag: "ORDNANCE",
       color: "#ff9b54",
@@ -3055,7 +3056,7 @@
           title: "Seeker Array",
           cost: 46,
           description:
-            "Wave 4 forge bracket부터 해금되는 추적 미사일 랙 1기를 설치한다. 멀리 벌어진 적에게 자동 사격을 꽂아 넓은 작업장에서 화력 회수를 돕는다.",
+            "Wave 8 Late Break Armory부터 해금되는 추적 미사일 랙 1기를 설치한다. 멀리 벌어진 적에게 자동 사격을 꽂아 열린 작업장에서 화력 회수를 돕는다.",
           slotText: "공세 모듈 설치 · 추적 미사일 랙",
           orbitCount: 1,
           orbitRadius: 76,
@@ -3128,7 +3129,7 @@
     },
     volt_drones: {
       id: "volt_drones",
-      forgeWaveMin: 4,
+      forgeWaveMin: SUPPORT_SYSTEM_START_WAVE,
       forgeLane: "공세 모듈",
       tag: "DRONE",
       color: "#7fffd4",

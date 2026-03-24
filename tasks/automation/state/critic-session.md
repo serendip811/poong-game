@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gates are `Progression` and `Builds`: the game still implies three scopes at once (`Wave 5`, `Wave 12`, `Afterburn`) while also front-loading too much system completeness before the player earns spectacle.
-- Repeated false solution: renaming the route contract or simplifying copy without deleting the extra ladder and delaying support/flex payoff; if `Afterburn` remains and the opening still advertises support bays/off-doctrine plans too early, the base run still feels unfinished and over-complete.
-- Keep pressure on [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md) until its balance guidance, failure model, and bracket mapping stop teaching a `5-wave` game.
-- Keep pressuring forge/HUD admin language. Strong references surface one appetizing mutation first; this project still over-explains with ladder/gate/draft/proof wording.
-- Keep calling out support-led late forms and early support spectacle. The next valuable pass is consolidation of appetite curve and readability, not another branch wrapper or extra subsystem.
+- The most fragile gates are `Builds` and `Progression`: the run still begins too complete, still teaches `Wave 5` / `Wave 12` / `Afterburn` at once, and still risks putting the true monster-form fantasy outside the replayed route.
+- Repeated false solution: copy cleanup without sequencing cleanup. If support systems stay available from `Wave 2-3`, `Wave 10` keeps adding greed/admin asks, or `Afterburn` still owns the final endform promise, the game remains prototype-wide even if the wording improves.
+- Keep pressure on [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md) until its balance curve, bracket mapping, and failure expectations stop teaching a `5-wave` game.
+- Keep pressuring forge/HUD brevity against strong references. One appetizing mutation should dominate the read; current screens still explain route logic and proof structure too explicitly.
+- Next valuable critique angle is consolidation, not more systems: sparse opening, delayed support divergence, and a self-contained `Wave 9-12` climax that does not hand the real payoff to post-capstone scaffolding.

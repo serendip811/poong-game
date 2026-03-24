@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: lock one lean `Wave 1-12` appetite curve by deleting stale `5-wave`/`Afterburn` scaffolding, delaying support/flex spectacle until after the core gun/body staircase is earned, and stripping forge/HUD/admin language down to one readable late-form payoff arc.
+- Immediate priority: protect a sparse `Wave 1-12` appetite curve by deleting stale `5-wave`/`Afterburn` scaffolding, removing early support/utility spectacle before the core gun/body staircase lands, and making `Wave 9-12` the actual climax instead of a handoff to future-game promises.
 
 ## Release Gates
 
@@ -48,6 +48,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 22:52:00 KST
+  Findings:
+  - Combat space is finally breathing more from `Wave 5` onward, but the run still starts too complete for a rerunnable roguelite. [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2747) keeps high-spectacle support systems online from `Wave 2-3`, and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L11938) / [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L11987) still frame early route value around future support bays, flex lanes, and side systems instead of letting the base gun/body staircase carry hunger first.
+  - The tuning bible is still teaching the wrong game length. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) sells a `12-wave` three-era run with `20-30 wave` headroom, but [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md) still maps biome brackets, power brackets, and full-synergy expectations to a `5-wave act curve`, which will keep balance compressed and fake any longer escalation.
+  - The shipped contract still leaks that the “real” monster form is after the clear. [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1314) preserves full `Afterburn I-VII`, and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1912) still keeps final chassis/endform rewards explicitly reserved for post-capstone play. A strong release-feeling run cannot tell the player the payoff they want sits outside the route they are actually replaying.
+  - `Wave 9-12` is closer to a real payoff band, but it still breaks focus too often with utility/greed administration. [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1046) makes `Wave 10 · Crownsplit Run` a caravan payout decision right when late-form ownership should be consolidating into a memorable domination arc, so the back half still feels like a designed exception tour rather than a system the player wants to master repeatedly.
+  - The forge/HUD is cleaner than before, but it still over-explains versus strong arena-roguelite references. [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20186) and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20448) still spend too much surface area on contract/proof/support narration. `Hades`, `Nova Drift`, and `Brotato` get more desire out of fewer words and stronger visual hierarchy than this screen currently does.
+  Top Priority: Re-sequence the shipped run so `Wave 1-5` is almost entirely core-weapon/body hunger, the first real support or greed divergence does not arrive until after the body break is already felt, and `Wave 9-12` contains the complete late-form payoff with no `Afterburn`-only fantasy left hanging outside it.
+  Why Now: Until the run starts smaller and finishes inside its own contract, extra systems and extra waves will read as dilution instead of depth.
+  Do Not Repeat: Do not answer this with another renamed forge wrapper, another early support option, or another late-wave side objective that interrupts the main domination arc.
+  Release Gate: Builds
 
 - 2026-03-24 22:25:00 KST
   Findings:
@@ -1899,6 +1911,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 16:46:26 KST
+  Changed: delayed every installable support family in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) to `Wave 8` by moving all `SUPPORT_SYSTEM_DEFS[*].forgeWaveMin` gates behind the Late Break breakpoint and updating the one support-specific missile description to match that contract. This removes orbital/turret/drone/missile spectacle from `Wave 1-5` forge and follow-up packages so the opening now stays on weapon/core/body hunger until after the `Wave 6` chassis break is already felt. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so smoke now locks the new `Wave 8` support unlock floor, expects early follow-up slots to fall back to defense/greed instead of systems, and still verifies that support installs and upgrades work once the late break window opens. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to make `Wave 1-5` almost entirely core gun/body hunger and to delay the first real support divergence until after the body break. The highest-value bounded interpretation was to change support availability itself, because that directly shrinks the opening silhouette without inventing another wrapper or rewriting the whole forge flow.
+  Follow-up risk: `Wave 4` follow-up packages can still surface `Smuggler Winch` as a utility-flavored `Support Rider`, so the run now avoids support spectacle early but still keeps one non-system side-rider exception before `Wave 8`. If critique still says the opening reads too branchy, the next bounded pass should retime that utility rider or collapse early package follow-ups further instead of adding new build content.
+  Release Gate: Builds
 
 - 2026-03-24 15:43:00 KST
   Changed: rewired the consolidated base-route reward read in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the main HUD and forge focus no longer foreground `Run Ladder`, `Next Gate`, or equal-weight `Headline / Rider / Proof` admin cards during normal `Wave 1-12` play. The active-form panel, compact contract card, combat objective, inspect ladder, and forge focus now collapse onto `Current Form`, `Main Leap`, and `Next Proof`, while support is demoted to a short rider note instead of competing with the core mutation as a co-headline reward. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
