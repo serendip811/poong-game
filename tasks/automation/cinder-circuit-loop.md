@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop expanding branch/system surface area and consolidate one readable `Wave 1-12` power arc where the base gun/body mutation is the clearest hunger, `Wave 12` is the visible apex, and forge/HUD only frame that climb.
+- Immediate priority: freeze new branch/passive/support expansion and consolidate one readable `Wave 8-12` climax where the shipped endform, late combat asks, and forge/HUD hierarchy land without `Afterburn`/`Dominion` leakage or extra explanation rows.
 
 ## Release Gates
 
@@ -48,6 +48,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 18:45:00 KST
+  Findings:
+  - [cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L27) through [cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L239) still spends more design energy on future rarity, affix, rune, and passive ladders than on whether the shipped `Wave 1-12` route already creates repeat-run hunger. For an `alpha consolidation` stage, the source-of-truth is still pointing the team toward expansion instead of proof.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L987) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1127) gives the late run more room, but `Wave 9-12` still mostly repeats one ownership grammar in four skins: open lane payoff, harder breach, victory lap gallery, final breach. That is cleaner than before, but it still does not imply a strong `20-30 wave` ceiling or create enough late-run movement variety for repeat hunger.
+  - The reward read is still too verbal at the exact moment it should feel electric. [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20319), [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20403), and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20555) still render `Current Form` / `Next Proof` or `Headline Mutation` / `Secondary Rider` / `Immediate Ask` rows instead of the appetite-first hierarchy strong references like `Hades`, `Nova Drift`, or `Brotato` use. The player is still reading the hierarchy instead of wanting the pick on sight.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1314) and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1902) still keep full `Afterburn` / `Dominion` apex language in the same implementation that ships the `12-wave` route, so the game continues to leak “the real monster form is later” even when `Wave 12` is supposed to be the rerunnable climax.
+  Top Priority: Freeze new expansion layers and do one ruthless `Wave 8-12` consolidation pass: one dominant endform presentation in forge/HUD, one tiny rider tag, and three genuinely different late proof asks before any more passive, rune, or `Afterburn`-style systems advance.
+  Why Now: If the shipped route still feels like a teaser for future depth, extra content will only lengthen setup and flatten replay desire.
+  Do Not Repeat: Do not answer this with another passive layer, support gadget, or source-doc feature import.
+  Release Gate: Rewards
 
 - 2026-03-24 18:00:44 KST
   Findings:
@@ -1944,6 +1955,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 18:42:05 KST
+  Changed: collapsed the default reward hierarchy in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the shipped `Wave 8-12` forge/HUD no longer present `Current Form / Main Leap / Next Proof` or `Headline Mutation / Secondary Rider / Immediate Ask` as equal-status rows. The base-route active form card, compact roadmap card, and forge focus now sell one oversized dominant form title first, show the next proof in a single capsule, and demote support to one small rider pill. The broader non-base headline/rider contract was trimmed the same way so reward pauses read as a mutation spike instead of a checklist. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the latest critique's `Top Priority` explicitly called for one dominant endform presentation in forge/HUD and only a tiny rider tag before adding any more systems. The highest-value bounded interpretation was to change the presentation primitives already reused across the reward surfaces, because that directly removes explanation-heavy rows from the rerunnable route without widening scope into new branches or balance churn. For reference direction, this pass stayed anchored to the appetite-first pause hierarchy seen in `Hades`, `Nova Drift`, and `Brotato`: one prize owns the screen, the supporting context trails behind it.
+  Follow-up risk: the reward read is cleaner now, but `Wave 9-12` combat still needs three more visibly distinct proof asks to fully satisfy the same critique. If the next pass stays on the same note, it should change late-wave asks or arena flow rather than adding more presentation language.
+  Release Gate: Rewards
 
 - 2026-03-24 23:59:30 KST
   Changed: retuned all four `Wave 8` late ascension endforms in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the core gun/chassis mutation now reads as complete before any support system helps it. `Crownsplitter Array`, `Slagburst Drive`, `Voltspine Lattice`, and `Anvil Prism` now ship with denser baseline firing geometry, fuller body-frame silhouettes, and copy that sells support uplinks as gap-filling riders instead of the thing that finishes the form. I also updated the late-ascension status line to remove `SUPPORT n` as the fantasy headline, and expanded [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so smoke now asserts a no-support late form still produces a substantial pattern and the new `CORE ENDFORM` contract copy. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

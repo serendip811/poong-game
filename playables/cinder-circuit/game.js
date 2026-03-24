@@ -8523,12 +8523,10 @@
         <span class="summary-chip ${options.hotChip ? "summary-chip--hot" : ""}">${chipLabel}</span>
       </div>
       <p class="summary-copy roadmap-card__path">지금은 headline form 하나와 rider 하나만 먼저 판다.</p>
-      <div class="status-list">
-        ${createStatusRow("Headline Mutation", nextBreakpoint.label)}
-        ${createStatusRow("Secondary Rider", supportTrack.label)}
-        ${createStatusRow("Immediate Ask", proofWindow.label)}
-      </div>
-      <p class="summary-note">${notePrefix} ${supportTrack.label}는 rider로만 남기고, 다음 증명은 ${proofWindow.label} 하나에만 걸어 둔다.</p>
+      <strong class="route-contract__title">${nextBreakpoint.label}</strong>
+      <div class="forge-focus__proof"><span>Immediate Ask</span>${proofWindow.label}</div>
+      <div class="mini-pill-row">${createMiniPill("Rider", supportTrack.label, "cool")}</div>
+      <p class="summary-note">${notePrefix} ${supportTrack.label}는 작은 rider 태그로만 남기고, 다음 증명은 ${proofWindow.label} 하나에만 건다.</p>
     `;
   }
 
@@ -8584,6 +8582,8 @@
     note = "",
     compact = false,
   }) {
+    const spotlightLabel = compact ? currentFormLabel : mainLeapLabel;
+    const spotlightVerb = compact ? "Current Form" : "Main Leap";
     return `
       <div class="summary-head">
         <strong>${eyebrow}</strong>
@@ -8594,17 +8594,9 @@
         }
       </div>
       <p class="summary-copy roadmap-card__path">${prompt}</p>
-      <strong class="route-contract__title">${title}</strong>
-      <div class="status-list">
-        ${createStatusRow("Current Form", currentFormLabel)}
-        ${createStatusRow("Main Leap", mainLeapLabel)}
-        ${createStatusRow("Next Proof", proofLabel)}
-      </div>
-      ${
-        supportLabel
-          ? `<p class="summary-copy roadmap-card__path">Support rider: ${supportLabel}</p>`
-          : ""
-      }
+      <strong class="route-contract__title">${spotlightLabel}</strong>
+      <div class="forge-focus__proof"><span>${compact ? "Next Proof" : spotlightVerb}</span>${compact ? proofLabel : `${mainLeapLabel}. ${proofLabel}에서 바로 증명한다.`}</div>
+      ${supportLabel ? `<div class="mini-pill-row">${createMiniPill("Rider", supportLabel, "cool")}</div>` : ""}
       ${note ? `<p class="summary-note">${note}</p>` : ""}
     `;
   }
@@ -20316,11 +20308,11 @@
         </div>
         ${
           minimalBaseRouteHud
-            ? `<div class="status-list">${createStatusRow("Current Form", dominantForm.label)}${createStatusRow("Next Proof", proofWindow.label)}</div><p class="summary-note">${dominantForm.label} 실루엣을 전면에 두고 ${proofWindow.label} 하나만 먼저 본다.</p>`
+            ? `<div class="forge-focus__proof"><span>Next Proof</span>${proofWindow.label}</div><p class="summary-note">${dominantForm.label} 실루엣을 전면에 두고 ${proofWindow.label} 하나만 먼저 본다.</p>`
             : `<div class="mini-pill-row">${
                 baseRouteForgeActive
-                  ? createMiniPill("Current Form", dominantForm.label, "hot") +
-                    createMiniPill("Next Proof", proofWindow.label, "cool")
+                  ? createMiniPill("Proof", proofWindow.label, "hot") +
+                    createMiniPill("Rider", supportTrack.label, "cool")
                   : createMiniPill(getHeadlineFormTierLabel(getHeadlineFormTier(state.build)), headlineLabel, "hot") +
                     createMiniPill("Rider", supportTrack.label, "cool")
               }</div>
@@ -20528,7 +20520,6 @@
           ${createBaseRouteFocusMarkup({
             eyebrow: focusEyebrow,
             chipLabel: baseRouteForgeStage ? baseRouteForgeStage.label : "Forge Break",
-            title: focusTitle,
             prompt: focusPrompt,
             currentFormLabel: dominantFormSummary.label,
             mainLeapLabel: riderStep ? dominantFormSummary.label : focusTitle,
@@ -20550,13 +20541,13 @@
           </div>
           <strong>${focusTitle}</strong>
           <p>${focusPrompt}</p>
-          <div class="status-list">
-            ${createStatusRow(
-              "Headline Mutation",
-              riderStep || state.pendingFinalForge ? dominantFormSummary.label : focusTitle
+          <div class="forge-focus__proof"><span>Next Proof</span>${proofWindow.label}</div>
+          <div class="mini-pill-row">
+            ${createMiniPill(
+              riderStep ? "Locked Form" : "Rider",
+              riderStep ? dominantFormSummary.label : activeSupportTrack.label,
+              riderStep ? "hot" : "cool"
             )}
-            ${createStatusRow("Secondary Rider", riderStep ? focusTitle : activeSupportTrack.label)}
-            ${createStatusRow("Immediate Ask", proofWindow.label)}
           </div>
           <p class="forge-focus__proof"><span>${
             state.pendingFinalForge ? "Route Payoff" : "Next Proof"
