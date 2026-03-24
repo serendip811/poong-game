@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: compress the shipped `Wave 1-12` read so `Tab`, forge, combat feed, and docs stop narrating systems and instead show one glanceable fantasy, one next proof, and one bill while preserving the newly differentiated late paths.
+- Immediate priority: freeze expansion scaffolding and collapse the shipped `Wave 1-12` contract to one appetite-first read: `headline leap`, `next test`, and `cost/tradeoff`, with no visible `Afterburn`/`Dominion`/support-bay admin leaking into the player-facing route.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-25 03:00:50 KST
+  Findings:
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8756) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8778) and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20695) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20795) still make `Tab` and the base HUD explain a schema `dominant form / next proof / support / bill` instead of behaving like a fast status board. Compared with strong pause/status reads in `Hades`, `Nova Drift`, or `Brotato`, the player is still parsing system slots before feeling desire.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20890) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21070) keeps the forge reward moment too verbose. `focus prompt`, `Next Proof`, `Locked Form/Rider`, proof text, preview rows, and side notes all compete with the headline card, so the pick reads like a briefing deck instead of a hungry snap decision.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12076) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12456) and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L16262) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L16300) still teach `support bay`, `flex lane`, `Late Break Armory`, `doctrine pursuit`, and other route wiring directly to the player. That is prototype-thinking: the run explains how growth is assembled instead of letting the player simply feel the next transformation.
+  - [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L225) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L231) and [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L198) through [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L313) still frame the shipped slice as a ramp toward `Afterburn`, rarity ladders, and extra passive layers. As long as the docs keep signaling "the real game is later," the implementation will keep overbuilding wrappers instead of proving repeat-play hunger now.
+  Top Priority: Do one shipping-contract consolidation pass that strips every shipped player-facing surface down to `headline leap`, `next test`, and `cost/tradeoff`, while hiding all post-route and route-admin concepts from the `Wave 1-12` contract.
+  Why Now: The run does not need more systems yet; it needs the current ones to read as one strong reason to pick and replay.
+  Do Not Repeat: Do not spend another loop softening copy while preserving the same board/card/feed structure.
+  Release Gate: Rewards
 
 - 2026-03-25 02:30:48 KST
   Findings:
@@ -2149,6 +2160,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-25 03:25:00 KST
+  Changed: collapsed the consolidated-route forge reward cards in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the default `Wave 1-12` reward read now obeys the latest critique's shipping contract more strictly. On the base route, featured, compact, and rider cards no longer spend space on preview grids, impact strips, or extra side-note rows; each card now sells one immediate leap line, one `다음 시험` line, and one `비용·대가` line. I also shortened the base-route forge focus prompt so the header card points straight at the next proof instead of restating route structure, added the small supporting layout rule in [styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css), and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new proof/bill markup helpers. This UI pass stayed anchored to the appetite-first reward hierarchy seen in `Hades`, `Nova Drift`, and `Brotato`: one prize sentence, one next test, one cost line.
+  Why: the newest critique's `Top Priority` said the shipped forge still reads like a briefing deck because too many rows compete with the headline card. The highest-value bounded interpretation was to tighten the reward cards themselves instead of merely renaming labels again.
+  Follow-up risk: the consolidated forge now snaps faster, but non-base-route reward states still keep older preview density and some HUD/feed strings still explain machinery outside this contract. If critique stays on the same issue, the next bounded pass should trim those remaining non-base-route or live-feed surfaces before adding new content.
+  Release Gate: Rewards
 
 - 2026-03-25 02:43:55 KST
   Changed: rebuilt the consolidated-route `Tab` inspect and compact forge-focus surfaces in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so they now read as one release contract instead of three explanatory lanes. `Tab` no longer prints separate `주력 변이 / 방호·보조 / 판돈·유틸` note cards; it now shows one headline form title, one `다음 시험` capsule, and one small pill row for support plus the current bill/resource line. The same contract now drives the compact base-route focus card and base-route forge context, which also picked up a visible `고철`/`판돈·유틸` line and shorter one-sentence prompts. I added the matching compact layout tweak in [styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new markup contract. This UI pass stayed anchored to the appetite-first pause/read hierarchy seen in `Hades`, `Nova Drift`, and `Brotato`: one dominant prize, one next test, one tiny bill. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

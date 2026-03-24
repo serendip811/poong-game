@@ -12,6 +12,7 @@ Keep this short and replace stale notes instead of endlessly appending.
 
 ## Current Memory
 
+- On the consolidated route, forge reward cards land better when the base three-card contract shows only `what changes now`, one `다음 시험`, and one `비용·대가` line; if compact or featured cards regrow preview grids, impact strips, or side notes, the reward snap has slipped back into briefing mode.
 - On the consolidated route, `Tab` inspect and compact forge focus land better as `headline title + next proof capsule + one bill/resource pill row`; do not let those pauses regress into three parallel lane notes or schema explanations.
 - On `ledger` late waves, greed only reads differently if missed vault/caravan cash-outs create immediate combat debt; keep `Debt Surge` tied to missed payout windows instead of passive text so `Wave 9-12` actually punishes over-chasing or botched exits.
 - On the consolidated route, wave-clear handoff copy and forge headers should always resolve to `주력 변이 / 방호·보조 / 마무리`; if a base-route banner/readout says `Core Lock`, `Late Form`, `Bastion Draft`, or `Live Ascension`, the player-facing contract has slipped back into admin language.

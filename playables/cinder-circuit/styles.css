@@ -1961,6 +1961,12 @@ body[data-overdrive="true"] .backdrop__glow--right {
   line-height: 1.48;
 }
 
+.forge-card__proof--compact {
+  margin-top: 2px;
+  padding: 8px 10px;
+  font-size: 0.8rem;
+}
+
 .forge-card__proof span {
   color: #ffd4b3;
   font-size: 0.68rem;
@@ -2078,6 +2084,11 @@ body[data-overdrive="true"] .backdrop__glow--right {
   padding-top: 2px;
   color: var(--muted);
   font-size: 0.82rem;
+}
+
+.forge-card__pivot--bill {
+  margin-top: auto;
+  padding-top: 0;
 }
 
 .forge-card__pivot span {

@@ -8715,6 +8715,22 @@
     `;
   }
 
+  function createBaseRouteForgeProofMarkup(proof) {
+    if (!proof) {
+      return "";
+    }
+    return `<p class="forge-card__proof forge-card__proof--compact"><span>다음 시험</span>${proof}</p>`;
+  }
+
+  function createBaseRouteForgeBillMarkup(slotLabel, accentLabel = "") {
+    return `
+      <p class="forge-card__pivot forge-card__pivot--bill">
+        <span>${accentLabel || "비용·대가"}</span>
+        <strong>${slotLabel}</strong>
+      </p>
+    `;
+  }
+
   function trimInspectNote(text, fallback) {
     const source = (text || fallback || "").replace(/\s+/g, " ").trim();
     if (!source) {
@@ -13950,6 +13966,8 @@
     getTabInspectGambleSummary,
     createTabInspectBoardMarkup,
     createBaseRouteFocusMarkup,
+    createBaseRouteForgeProofMarkup,
+    createBaseRouteForgeBillMarkup,
   };
 
   if (typeof module !== "undefined" && module.exports) {
@@ -20930,8 +20948,8 @@
       ? state.pendingFinalForge
         ? `${dominantFormSummary.label}로 이번 런을 닫는다.`
         : riderStep
-          ? `${proofWindow.label} 전에 버틸 보조선 한 줄만 얹는다.`
-          : `${focusTitle} 하나만 먼저 집고 바로 ${proofWindow.label}로 간다.`
+          ? `${proofWindow.label} 전까지 버티는 선 한 줄만 더한다.`
+          : `${focusTitle} 하나를 집고 바로 ${proofWindow.label}로 시험한다.`
       : state.pendingFinalForge
         ? `${dominantFormSummary.label}를 이번 12-wave spine의 최종 실루엣으로 봉인한다.`
         : riderStep
@@ -20959,11 +20977,7 @@
             tradeoffLabel: "고철",
             tradeoffValue: String(Math.round(state.resources.scrap)),
             tradeoffTone: state.resources.scrap >= 40 ? "accent" : "",
-            note: state.pendingFinalForge
-              ? `${dominantFormSummary.label}로 런을 마감한다.`
-              : riderStep
-                ? `${focusTitle}는 얇게 얹고 ${proofWindow.label}에서 버틴다.`
-                : `${proofWindow.label}에서 바로 본다.`,
+            note: "",
           })}
         </article>
       `
@@ -21027,6 +21041,12 @@
                     : "무료";
           const isFeaturedHeadline = !riderStep && index === featuredIndex;
           if (riderStep) {
+            const riderProofMarkup = useBaseRouteContract
+              ? createBaseRouteForgeProofMarkup(transformation.proof)
+              : "";
+            const riderBillMarkup = useBaseRouteContract
+              ? createBaseRouteForgeBillMarkup(slotLabel)
+              : "";
             return `
           <button
             type="button"
@@ -21041,12 +21061,18 @@
             <span class="forge-card__tag">${contractLabel}</span>
             <h3>${choice.title}</h3>
             <p class="forge-card__hero-copy">${transformation.promise}</p>
-            ${previewRows ? `<div class="forge-card__preview forge-card__preview--compact">${previewRows}</div>` : ""}
-            <span class="forge-card__slot">${slotLabel}</span>
+            ${useBaseRouteContract ? riderProofMarkup : previewRows ? `<div class="forge-card__preview forge-card__preview--compact">${previewRows}</div>` : ""}
+            ${useBaseRouteContract ? riderBillMarkup : `<span class="forge-card__slot">${slotLabel}</span>`}
           </button>
         `;
           }
           if (!isFeaturedHeadline) {
+            const compactProofMarkup = useBaseRouteContract
+              ? createBaseRouteForgeProofMarkup(transformation.proof)
+              : "";
+            const compactBillMarkup = useBaseRouteContract
+              ? createBaseRouteForgeBillMarkup(slotLabel)
+              : "";
             return `
           <button
             type="button"
@@ -21062,15 +21088,26 @@
             <h3>${choice.title}</h3>
             <p class="forge-card__hero-copy">${transformation.promise}</p>
             ${
-              compactPreviewRow
-                ? `<p class="forge-card__pivot"><span>${compactPreviewRow.label}</span><strong>${compactPreviewRow.value}</strong></p>`
-                : ""
+              useBaseRouteContract
+                ? compactProofMarkup + compactBillMarkup
+                : compactPreviewRow
+                  ? `<p class="forge-card__pivot"><span>${compactPreviewRow.label}</span><strong>${compactPreviewRow.value}</strong></p>`
+                  : ""
             }
-            <p class="forge-card__side-note">${transformation.proof}</p>
-            <span class="forge-card__slot">${slotLabel}</span>
+            ${useBaseRouteContract ? "" : `<p class="forge-card__side-note">${transformation.proof}</p>`}
+            ${useBaseRouteContract ? "" : `<span class="forge-card__slot">${slotLabel}</span>`}
           </button>
         `;
           }
+          const featuredProofMarkup = useBaseRouteContract
+            ? createBaseRouteForgeProofMarkup(transformation.proof)
+            : "";
+          const featuredBillMarkup = useBaseRouteContract
+            ? createBaseRouteForgeBillMarkup(
+                slotLabel,
+                compactPreviewRow ? compactPreviewRow.label : "비용·대가"
+              )
+            : "";
           return `
           <button
             type="button"
@@ -21094,10 +21131,14 @@
               <h3>${choice.title}</h3>
               <p class="forge-card__hero-copy">${transformation.promise}</p>
             </div>
-            <p class="forge-card__proof"><span>다음 시험</span>${transformation.proof}</p>
-            <div class="forge-card__preview">${previewRows}</div>
+            ${useBaseRouteContract ? featuredProofMarkup : `<p class="forge-card__proof"><span>다음 시험</span>${transformation.proof}</p>`}
             ${
-              showcase && showcase.choice === choice
+              useBaseRouteContract
+                ? featuredBillMarkup
+                : `<div class="forge-card__preview">${previewRows}</div>`
+            }
+            ${
+              !useBaseRouteContract && showcase && showcase.choice === choice
                 ? `<div class="forge-card__impact-strip">${showcase.rows
                     .map(
                       (row) => `
@@ -21110,7 +21151,7 @@
                     .join("")}</div>`
                 : ""
             }
-            <span class="forge-card__slot">${slotLabel}</span>
+            ${useBaseRouteContract ? "" : `<span class="forge-card__slot">${slotLabel}</span>`}
           </button>
         `;
         }

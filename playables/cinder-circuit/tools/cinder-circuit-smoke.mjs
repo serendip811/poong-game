@@ -142,6 +142,12 @@ const compactFocusMarkup = game.createBaseRouteFocusMarkup({
 });
 assert.ok(compactFocusMarkup.includes("판돈·유틸"));
 assert.ok(compactFocusMarkup.includes("고철 42"));
+const forgeProofMarkup = game.createBaseRouteForgeProofMarkup("Crownbreaker Lap에서 버틴다.");
+assert.ok(forgeProofMarkup.includes("다음 시험"));
+assert.ok(!forgeProofMarkup.includes("preview"));
+const forgeBillMarkup = game.createBaseRouteForgeBillMarkup("고철 18");
+assert.ok(forgeBillMarkup.includes("비용·대가"));
+assert.ok(forgeBillMarkup.includes("고철 18"));
 assert.equal(game.shouldUseFieldGrant({ nextWave: 6, finalForge: false, build: roadmapBuild }), false);
 const recurringWave3Choices = game.buildForgeChoices(roadmapBuild, Math.random, 40, {
   nextWave: 3,
