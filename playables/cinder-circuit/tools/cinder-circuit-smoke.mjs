@@ -73,7 +73,8 @@ const earlyRoadmap = game.getBuildRoadmap(roadmapBuild, game.computeWeaponStats(
 assert.equal(earlyRoadmap.steps.length, 3);
 assert.equal(earlyRoadmap.steps[0].title, "Twin Spine");
 assert.ok(earlyRoadmap.steps[1].title.includes("Sky Lance"));
-assert.ok(earlyRoadmap.steps[1].detail.includes("Wave 5 contraband salvage"));
+assert.ok(earlyRoadmap.steps[1].detail.includes("Wave 6 몸체 도약"));
+assert.ok(earlyRoadmap.steps[1].detail.includes("weapon/body leap"));
 assert.equal(earlyRoadmap.steps[2].title, "Crown Break");
 roadmapBuild.bastionDoctrineId = "storm_artillery";
 roadmapBuild.overcommitUnlocked = true;
@@ -82,7 +83,8 @@ assert.equal(primedRoadmap.steps[0].title, "Siege Frame");
 assert.equal(primedRoadmap.steps[0].state, "locked");
 assert.ok(primedRoadmap.steps[1].title.includes("Sky Lance Battery"));
 assert.equal(primedRoadmap.steps[1].state, "primed");
-assert.ok(primedRoadmap.steps[1].detail.includes("Field Cache"));
+assert.ok(primedRoadmap.steps[1].detail.includes("중반 도약"));
+assert.ok(!primedRoadmap.steps[1].detail.includes("Field Cache"));
 assert.equal(primedRoadmap.steps[2].title, "Crown Break");
 roadmapBuild.lateBreakProfileId = "mutation";
 const consolidatedLateRoadmap = game.getBuildRoadmap(
@@ -92,6 +94,7 @@ const consolidatedLateRoadmap = game.getBuildRoadmap(
 );
 assert.ok(consolidatedLateRoadmap.steps[2].detail.includes("Wave 9-12"));
 assert.ok(!consolidatedLateRoadmap.steps[2].detail.includes("Afterburn"));
+assert.ok(!consolidatedLateRoadmap.steps[2].detail.includes("live ascension"));
 const latePayoffSummary = game.getStandardLateRouteBeatSummary(roadmapBuild, 9);
 const lateProofSummary = game.getStandardLateRouteBeatSummary(roadmapBuild, 11);
 const lateFinaleSummary = game.getStandardLateRouteBeatSummary(roadmapBuild, 12);

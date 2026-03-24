@@ -7904,6 +7904,63 @@
     };
   }
 
+  function getShippingRouteCapstoneRoadmap(build, stageTwoTitle, boundedWave) {
+    if (build.doctrineCapstoneId) {
+      return {
+        detail: `${stageTwoTitle}이(가) 이미 잠겼다. Wave 9-10은 새 갈림길 없이 이 형태로 열린 lane을 먼저 먹고 crownline까지 밀어붙이는 구간이다.`,
+        state: "locked",
+      };
+    }
+    if (boundedWave >= 7) {
+      return {
+        detail: `${stageTwoTitle}만 남았다. Wave 9 open-lane에 들어가기 전까지 화망이나 몸체 리듬을 한 번 더 키워 crownline pressure를 정면으로 버틸 준비를 한다.`,
+        state: "live",
+      };
+    }
+    if (boundedWave >= 5) {
+      return {
+        detail: `중반 도약 뒤에는 ${stageTwoTitle} 하나만 크게 남는다. 다음 시험은 보조선보다 주포와 차체가 space ownership를 얼마나 오래 유지하느냐다.`,
+        state: "primed",
+      };
+    }
+    return {
+      detail: `Wave 6 몸체 도약을 넘기면 ${stageTwoTitle}이(가) 다음 큰 변이가 된다. 중후반은 추가 행정 절차가 아니라 더 큰 weapon/body leap 하나를 향해 수렴한다.`,
+      state: "planned",
+    };
+  }
+
+  function getShippingRouteLateFinaleRoadmap(build, currentWeapon, lateBreakHeadline, boundedWave) {
+    const stageThreeTitle =
+      (currentWeapon && currentWeapon.lateAscensionLabel) ||
+      (lateBreakHeadline && lateBreakHeadline.title) ||
+      "Crown Break";
+    if (build.lateAscensionId) {
+      return {
+        title: stageThreeTitle,
+        detail: `${stageThreeTitle}이(가) 이미 잠겼다. 남은 Wave 9-12는 새 예외 없이 이 실루엣 하나로 payoff, proof, refuge cadence, final stand를 끝까지 밀어붙이는 finale다.`,
+        state: "locked",
+      };
+    }
+    if (lateBreakHeadline) {
+      return {
+        title: stageThreeTitle,
+        detail: `${lateBreakHeadline.detail} Wave 9-12는 이 후반 판타지 하나만 증명하는 고정 finale다.`,
+        state:
+          boundedWave >= MAX_WAVES
+            ? "locked"
+            : boundedWave >= LATE_BREAK_ARMORY_WAVE
+              ? "live"
+              : "primed",
+      };
+    }
+    return {
+      title: stageThreeTitle,
+      detail:
+        "Wave 8에서 하나의 후반 형태를 고르면 Wave 9 payoff, Wave 10 proof, Wave 11 cadence, Wave 12 final stand로 바로 닫힌다.",
+      state: boundedWave >= LATE_BREAK_ARMORY_WAVE ? "primed" : "planned",
+    };
+  }
+
   function getBuildRoadmap(build, weapon = null, waveNumber = 1) {
     const boundedWave = clamp(Math.round(waveNumber || 1), 1, MAX_WAVES + POST_CAPSTONE_WAVE_COUNT);
     const doctrine = getBastionDoctrineDef(build);
@@ -7945,7 +8002,15 @@
       (doctrine ? `${doctrine.label} Apex` : "Midform Spike");
     let stageTwoDetail = "중반 marked elite를 따라 다음 weapon/body break를 강제로 연다.";
     let stageTwoState = "planned";
-    if (build.doctrineCapstoneId) {
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
+      const shippingCapstoneRoadmap = getShippingRouteCapstoneRoadmap(
+        build,
+        stageTwoTitle,
+        boundedWave
+      );
+      stageTwoDetail = shippingCapstoneRoadmap.detail;
+      stageTwoState = shippingCapstoneRoadmap.state;
+    } else if (build.doctrineCapstoneId) {
       stageTwoDetail = `${stageTwoTitle}이(가) 이미 잠겼다. Wave 9-12는 새 규칙 학습보다 이 중간 형태로 lane을 찢고 elite를 추적하는 구간이다.`;
       stageTwoState = "locked";
     } else if (build.doctrineChaseClaimed) {
@@ -7964,7 +8029,7 @@
       stageTwoDetail = `Wave 5 contraband salvage를 전부 회수하면 ${stageTwoTitle} pursuit가 열린다. 실패하면 중반 break는 뒤로 밀린다.`;
     }
 
-    const stageThreeTitle =
+    let stageThreeTitle =
       (CONSOLIDATED_12_WAVE_ROUTE
         ? (currentWeapon && currentWeapon.lateAscensionLabel) || null
         : (currentWeapon && currentWeapon.afterburnDominionLabel) ||
@@ -7979,22 +8044,25 @@
         : `${lateBreakHeadline.detail} Wave 8 이후에는 이 계단 하나만 남고 live ascension이나 Afterburn 예외는 열리지 않는다.`
       : "Wave 8 Late Break Armory에서 하나의 late-form staircase를 고르면 Wave 9-10 payoff band -> Wave 11 refuge run -> Wave 12 finale로 고정된다.";
     let stageThreeState = boundedWave >= LATE_BREAK_ARMORY_WAVE ? "primed" : "planned";
-    if (build.afterburnDominionId) {
-      stageThreeDetail = CONSOLIDATED_12_WAVE_ROUTE
-        ? `${stageThreeTitle}이(가) 이미 최종 형태로 잠겼다. 남은 Wave 9-12는 새 예외 없이 이 실루엣으로 space ownership를 증명하는 finale다.`
-        : `${stageThreeTitle}이(가) 이미 최종 지배 형태로 잠겼다. 남은 bracket은 판돈보다 압도감이 먼저 오는 victory lap이다.`;
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
+      const shippingLateFinale = getShippingRouteLateFinaleRoadmap(
+        build,
+        currentWeapon,
+        lateBreakHeadline,
+        boundedWave
+      );
+      stageThreeTitle = shippingLateFinale.title;
+      stageThreeDetail = shippingLateFinale.detail;
+      stageThreeState = shippingLateFinale.state;
+    } else if (build.afterburnDominionId) {
+      stageThreeDetail = `${stageThreeTitle}이(가) 이미 최종 지배 형태로 잠겼다. 남은 bracket은 판돈보다 압도감이 먼저 오는 victory lap이다.`;
       stageThreeState = "locked";
     } else if (build.afterburnOverdriveId) {
-      stageThreeDetail = CONSOLIDATED_12_WAVE_ROUTE
-        ? `${stageThreeTitle}이(가) 마지막 headline jump로 잠겼다. 남은 finale는 이 body/gun form이 열린 lane을 얼마나 오래 지키는지 증명하는 구간이다.`
-        : `${stageThreeTitle} overdrive가 켜졌다. 다음 Dominion Break만 회수하면 마지막 bracket 하나가 승리 랩으로 재편된다.`;
+      stageThreeDetail = `${stageThreeTitle} overdrive가 켜졌다. 다음 Dominion Break만 회수하면 마지막 bracket 하나가 승리 랩으로 재편된다.`;
       stageThreeState = "live";
     } else if (build.lateAscensionId) {
-      stageThreeDetail = CONSOLIDATED_12_WAVE_ROUTE
-        ? `${stageThreeTitle} body split이 잠겼다. 이제 남은 Wave 9-12는 추가 branch 없이 이 headline form을 바로 시험하는 고정 late staircase다.`
-        : `${stageThreeTitle} body split이 잠겼다. Afterburn elite cache로 남은 endurance를 overdrive 실루엣까지 더 밀 수 있다.`;
-      stageThreeState =
-        CONSOLIDATED_12_WAVE_ROUTE ? "locked" : boundedWave > MAX_WAVES ? "live" : "locked";
+      stageThreeDetail = `${stageThreeTitle} body split이 잠겼다. Afterburn elite cache로 남은 endurance를 overdrive 실루엣까지 더 밀 수 있다.`;
+      stageThreeState = boundedWave > MAX_WAVES ? "live" : "locked";
     } else if (lateBreakHeadline) {
       stageThreeState =
         boundedWave >= MAX_WAVES
