@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze new branch/system sprawl and consolidate one appetite-first `Wave 1-12` route by deleting remaining `5-wave` teaching, demoting branch/admin copy in forge/HUD, and widening `Wave 9-12` plus forge rewards into clearer core-form payoff with distinct greed/defense utility paths.
+- Immediate priority: lock the project to one shippable `Wave 1-12` contract by deleting remaining `5-wave` teaching, demoting `Afterburn`/draft/admin framing from the base route, and making late-wave rewards/HUD read as one craveable core-form ladder with real defense and greed branches.
 
 ## Release Gates
 
@@ -48,6 +48,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 14:30:34 KST
+  Findings:
+  - The project is still teaching two different scopes of game. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) sells a full `12-wave` three-era run that could later stretch toward `20-30 waves`, but [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md) still defines biome compression as a `5-wave act curve` with `Wave 1-5` power brackets, so the tuning bible still carries prototype-length assumptions.
+  - The base run still advertises a future game instead of cleanly closing the current one. [`POST_CAPSTONE_WAVE_COUNT`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1314) and [`POST_CAPSTONE_WAVE_LABELS`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1319) keep `Afterburn I-VII` alive in the shipped combat script, which weakens the feeling that `Wave 12` is already a complete rerunnable ladder.
+  - The HUD and forge layer still spend too much language on route administration. [`updateHUD()`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20105) and [`renderForgeOverlay()`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20356) still surface ladder, proof, rider, draft, cache, and contract framing together; against the appetite-first clarity of `Hades`, `Nova Drift`, or `Brotato`, the player is still reading system governance before feeling the mutation.
+  - Late combat pacing is healthier, but the payoff still gets partially buried under finale tax language. [`Wave 9 · Lockgrid`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L987) and [`Wave 11 · Starforge`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1069) finally create space, yet [`Wave 12 · Cinder Crown`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1110) still reads as "restore relay + ignition + binder pressure" rather than a final expression of the form the player spent the run building.
+  Top Priority: Remove `Afterburn` and other future-branch framing from the base route contract, then rewrite forge/HUD messaging so each stop sells one visible core-form leap first and only one secondary defense or greed ask second.
+  Why Now: If the run keeps implying the real game starts after the current ending, players will not treat repeated `Wave 1-12` clears as a satisfying destination.
+  Do Not Repeat: Do not answer this with more route labels, more branch exceptions, or more "future expansion" copy.
+  Release Gate: Rewards
 
 - 2026-03-24 14:01:07 KST
   Findings:
@@ -1853,6 +1864,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 20:35:00 KST
+  Changed: tightened the consolidated `Wave 1-12` route copy in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the base run now presents only shipping-beat labels and appetite-first promises at transition moments. `enterArchitectureDraft()`, `enterBastionDraft()`, `enterFieldGrant()`, `enterCatalystDraft()`, `getActiveForgeModeLabel()`, `maybeAdvancePhase()`, `updateHUD()`, and `renderForgeOverlay()` now speak in `Core Lock / Chassis Break / Field Break / Late Form / Forge Break / Final Seal` terms, while the consolidated combat-feed and forge/HUD notes stop leaking `Architecture Draft`, `Bastion Draft`, `Ownership Relay`, and `Live Ascension` as the primary read. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` asked to remove `Afterburn` and other future-branch framing from the base route contract, then make each stop sell one visible core-form leap first and only one secondary ask second. The highest-value bounded interpretation was to sanitize the live base-route surfaces the player rereads every clear and every forge, because those were still teaching route administration even after the earlier HUD simplification pass.
+  Follow-up risk: the standard route surfaces are cleaner now, but some deeper choice descriptions, roadmap text, and dormant post-capstone systems still contain `Afterburn` or draft/cache language under the hood. If critique still says the run feels like a prototype hub, the next bounded pass should strip those remaining base-route leaks or retire unused post-`Wave 12` scaffolding rather than add another branch. For reference direction, this hierarchy pass stayed aligned with `Hades` boon reveals and `Nova Drift` level-up screens: one dominant power promise first, secondary context second.
+  Release Gate: Rewards
 
 - 2026-03-24 14:12:48 KST
   Changed: tightened the `Wave 8` Late Break contract in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so each of the three shipping late-break cards now previews its actual `Wave 11` payoff band and `Wave 12` finale by name (`Crownbreaker Gallery` / `Cataclysm Crownline`, `Halo Refuge` / `Citadel Stand`, `Kingpin Vaultline` / `Grand Blackout Run`) instead of reading like a generic wrapper around headline/rider text. In the same bounded pass, I retuned the branch-specific `Wave 12` encounter profiles to cash out those lanes with lighter active caps, lower spawn budgets, and narrower hazard counts so the finale resolves the chosen lane identity instead of reintroducing every tax family at once. Validation passed with `node --check playables/cinder-circuit/game.js`, `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and one targeted `node` sanity check for late-break preview rows plus branch `Wave 12` overrides.

@@ -12341,11 +12341,11 @@
     state.forgeChoices = buildArchitectureDraftChoices(state.build);
     pushCombatFeed(
       CONSOLIDATED_12_WAVE_ROUTE
-        ? "Form Break 개시. 이번 정지에서는 세 장 중 하나만 골라 주포 실루엣을 먼저 잠그고, 차체는 Wave 6, support spectacle은 Wave 8로 미뤄 lean한 opening chassis를 유지한다."
+        ? "Core Lock 개시. 이번 정지에서는 주포 실루엣 하나만 먼저 잠근다. 차체 점프는 Wave 6, 더 큰 지원 연출은 Wave 8 이후로 미뤄 opening을 lean하게 유지한다."
         : "Architecture Draft 개시. 이제 Wave 3에서는 세 장기 교리 중 하나를 골라 주포 mutation만 먼저 잠근다. utility chassis는 Wave 6, support bay와 off-doctrine flex lane은 Wave 8 Late Break Armory에서 열려 opening run이 과하게 완성되지 않는다.",
       "ARCH"
     );
-    setBanner(CONSOLIDATED_12_WAVE_ROUTE ? "Form Break" : "Architecture Draft", 0.95);
+    setBanner(CONSOLIDATED_12_WAVE_ROUTE ? "Core Lock" : "Architecture Draft", 0.95);
     renderForgeOverlay();
     updateHUD();
   }
@@ -12363,8 +12363,8 @@
       shouldUseLateFieldCache(nextWave)
         ? CONSOLIDATED_12_WAVE_ROUTE
           ? isArsenalBreakpointWave(nextWave)
-            ? "Act 3 Forge 개시. 이번 정지에는 세 장만 뜬다: 화면을 넓게 먹는 main leap, 오래 버티게 하는 rider, 판돈을 키우는 gamble."
-            : "Field Break 개시. 세 장 중 하나만 집고 바로 다음 웨이브로 밀어붙인다. 큰 form jump가 먼저, rider와 gamble은 그 뒤다."
+            ? "Late Form 개시. 이번 정지에는 세 장만 뜬다. 화면을 넓게 먹는 main leap 하나, 오래 버티게 하는 rider 하나, 판돈을 키우는 gamble 하나뿐이다."
+            : "Field Break 개시. 세 장 중 하나만 집고 바로 다음 웨이브로 밀어붙인다. 큰 form jump가 먼저고, rider와 gamble은 그 다음이다."
           : isArsenalBreakpointWave(nextWave)
           ? `Arsenal Breakpoint 확보. 이번 Wave ${nextWave} 직전 캐시는 후반부 재상승 판돈으로 승격되어, 과격한 주포 변이, 생존형 halo, 금고 습격 계약 중 하나를 즉시 잠근다.`
           : "Arsenal Cache 확보. Wave 10 이후 짝수 late wave마다 대형 현장 패키지가 열려 주포 변이, 재충전 방어층, 즉시 raid를 여는 블랙마켓 계약 중 하나를 잠근다."
@@ -12382,7 +12382,7 @@
     setBanner(
       CONSOLIDATED_12_WAVE_ROUTE
         ? nextWave >= 9
-          ? "Act 3 Forge"
+          ? "Late Form"
           : "Field Break"
         : shouldUseLateFieldCache(nextWave)
         ? isArsenalBreakpointWave(nextWave)
@@ -12635,8 +12635,8 @@
     pushCombatFeed(
       CONSOLIDATED_12_WAVE_ROUTE
         ? wave6AscensionDraft
-          ? "Form Break 개시. 이번 정지는 Act 2에서 오래 끌 주력 form과 body plan을 고르는 순간이다. support bay와 off-doctrine lane은 아직 열지 않고, core gun/body만 먼저 굳혀 다음 몇 웨이브를 lean하게 증명하게 만든다."
-          : "Forge Break 개시. 이번 브레이크는 이미 키운 주력 위에 더 큰 leap 하나를 얹거나, 작은 rider로 숨통을 트이게 하거나, 판돈을 욕심내는 셋 중 하나만 고르게 한다."
+          ? "Chassis Break 개시. 이번 정지는 Act 2에서 오래 끌 body plan을 고르는 순간이다. support bay와 외도 lane은 아직 닫아 두고 core gun/body만 먼저 굳힌다."
+          : "Forge Break 개시. 이번 브레이크는 이미 키운 주력 위에 더 큰 leap 하나를 얹거나, 숨통을 틔울 rider 하나를 더하거나, 판돈을 욕심내는 셋 중 하나만 고르게 한다."
         : wave6AscensionDraft
           ? "Wave 6 Ascension Draft 개시. 세 장기 교리 중 하나를 irreversible form으로 잠그면 주포 mutation과 utility chassis까지만 먼저 굳힌다. support bay와 doctrine-free flex lane은 아직 열지 않고 Wave 8 Late Break Armory까지 늦춰 mid-run 실루엣을 lean하게 유지한다."
           : `Bastion Draft 개시. ${getBastionDraftIntroText(state.build)}`,
@@ -12645,7 +12645,7 @@
     setBanner(
       CONSOLIDATED_12_WAVE_ROUTE
         ? wave6AscensionDraft
-          ? "Form Break"
+          ? "Chassis Break"
           : "Forge Break"
         : wave6AscensionDraft
           ? "Ascension Draft"
@@ -12666,11 +12666,11 @@
     state.forgeChoices = buildCatalystDraftChoices(state.build);
     pushCombatFeed(
       CONSOLIDATED_12_WAVE_ROUTE
-        ? "Act 3 Forge 개시. 여기서 고르는 한 장이 남은 9-12웨이브의 주력 실루엣을 사실상 결정한다. 먼저 main leap를 보고, 곧바로 그 형태가 화면을 얼마나 먹는지 증명하게 만든다."
+        ? "Late Form 개시. 여기서 고르는 한 장이 남은 9-12웨이브의 주력 실루엣을 사실상 결정한다. 먼저 main leap를 고르고, 곧바로 그 형태가 화면을 얼마나 먹는지 증명한다."
         : "Catalyst Crucible 개시. 회수한 촉매를 지금 점화해 Act 3 본편을 괴물 형태로 싸울지, 안정화 회로로 남은 bracket을 운영형으로 비틀지 정한다.",
       "CAT"
     );
-    setBanner(CONSOLIDATED_12_WAVE_ROUTE ? "Act 3 Forge" : "Catalyst Crucible", 0.95);
+    setBanner(CONSOLIDATED_12_WAVE_ROUTE ? "Late Form" : "Catalyst Crucible", 0.95);
     renderForgeOverlay();
     updateHUD();
   }
@@ -12678,6 +12678,9 @@
   function getActiveForgeModeLabel() {
     if (state.pendingFinalForge) {
       return CONSOLIDATED_12_WAVE_ROUTE ? "Wave 12 Seal" : "Final Forge";
+    }
+    if (CONSOLIDATED_12_WAVE_ROUTE && state.phase === "forge") {
+      return getBaseRouteForgeStage(state).label;
     }
     if (state.forgeDraftType === "architecture_draft") {
       return "Architecture Draft";
@@ -20031,7 +20034,11 @@
                                 : "포지";
         setBanner("전장 정리", 0.9);
         pushCombatFeed(
-          `적 반응 정지. 남은 고철을 회수한 뒤 ${nextPhaseLabel}로 이어진다.`,
+          CONSOLIDATED_12_WAVE_ROUTE
+            ? state.wave.completesRun
+              ? "적 반응 정지. 남은 고철을 회수하면 이번 12-wave 계약의 결과가 열린다."
+              : `적 반응 정지. 남은 고철을 회수하면 ${nextPhaseLabel} 하나만 거친 뒤 바로 다음 증명으로 이어진다.`
+            : `적 반응 정지. 남은 고철을 회수한 뒤 ${nextPhaseLabel}로 이어진다.`,
           "CLEAR"
         );
         return;
@@ -20066,10 +20073,14 @@
           }
           pushCombatFeed(
             unlocked
-              ? state.build.auxiliaryJunctionLevel > 0
-                ? `Wave 8 돌파. Late Break Armory를 ${liveLabel} live ascension lane으로 교체했다. 네 번째 support bay와 추가 flex lane은 즉시 uplink되고, Wave 9 marked elite가 doctrine cache를 떨어뜨린다.`
-                : `Wave 8 돌파. Late Break Armory를 ${liveLabel} live ascension lane으로 교체했다. 세 번째 support bay와 교리 우회 flex lane은 즉시 uplink되고, Wave 9 marked elite가 doctrine cache를 떨어뜨린다.`
-              : `Wave 8 돌파. Late Break Armory를 건너뛰고 ${liveLabel} live ascension lane으로 진입한다. Wave 9 marked elite를 추적해 doctrine cache를 직접 회수해야 한다.`,
+              ? CONSOLIDATED_12_WAVE_ROUTE
+                ? `${liveLabel} 잠금 완료. 이번 정지 없이 Late Form이 즉시 연결되고, 다음 웨이브 marked elite가 남은 body splice를 떨어뜨린다.`
+                : state.build.auxiliaryJunctionLevel > 0
+                  ? `Wave 8 돌파. Late Break Armory를 ${liveLabel} live ascension lane으로 교체했다. 네 번째 support bay와 추가 flex lane은 즉시 uplink되고, Wave 9 marked elite가 doctrine cache를 떨어뜨린다.`
+                  : `Wave 8 돌파. Late Break Armory를 ${liveLabel} live ascension lane으로 교체했다. 세 번째 support bay와 교리 우회 flex lane은 즉시 uplink되고, Wave 9 marked elite가 doctrine cache를 떨어뜨린다.`
+              : CONSOLIDATED_12_WAVE_ROUTE
+                ? `${liveLabel} 추격 개시. Late Form 정지 없이 Wave 9로 밀어붙이고, marked elite를 잘라 body splice를 직접 회수해야 한다.`
+                : `Wave 8 돌파. Late Break Armory를 건너뛰고 ${liveLabel} live ascension lane으로 진입한다. Wave 9 marked elite를 추적해 doctrine cache를 직접 회수해야 한다.`,
             "ASCEND"
           );
           refreshDerivedStats(false);
@@ -20081,10 +20092,14 @@
           }
           pushCombatFeed(
             unlocked
-              ? state.build.auxiliaryJunctionLevel > 0
-                ? "Wave 8 돌파. Ownership Relay가 네 번째 support bay와 두 번째 교리 우회 flex lane을 전장 정지 없이 연결한다. Late Break Armory는 건너뛰고 Wave 9로 바로 진입한다."
-                : "Wave 8 돌파. Ownership Relay가 세 번째 support bay와 교리 우회 flex lane을 전장 정지 없이 연결한다. Late Break Armory는 건너뛰고 Wave 9로 바로 진입한다."
-              : "Wave 8 돌파. Late Break Armory를 생략하고 ownership bracket을 유지한 채 Wave 9로 바로 진입한다.",
+              ? CONSOLIDATED_12_WAVE_ROUTE
+                ? "Late Form uplink 완료. 추가 support bay가 즉시 연결됐고, 정지 없이 Wave 9 payoff 구간으로 바로 진입한다."
+                : state.build.auxiliaryJunctionLevel > 0
+                  ? "Wave 8 돌파. Ownership Relay가 네 번째 support bay와 두 번째 교리 우회 flex lane을 전장 정지 없이 연결한다. Late Break Armory는 건너뛰고 Wave 9로 바로 진입한다."
+                  : "Wave 8 돌파. Ownership Relay가 세 번째 support bay와 교리 우회 flex lane을 전장 정지 없이 연결한다. Late Break Armory는 건너뛰고 Wave 9로 바로 진입한다."
+              : CONSOLIDATED_12_WAVE_ROUTE
+                ? "Late Form 정지를 생략하고 Wave 9 payoff 구간으로 바로 진입한다."
+                : "Wave 8 돌파. Late Break Armory를 생략하고 ownership bracket을 유지한 채 Wave 9로 바로 진입한다.",
             "ARMORY"
           );
           refreshDerivedStats(false);
@@ -20212,7 +20227,7 @@
               }</div>
               <p class="summary-note">${
                 baseRouteForgeActive
-                  ? `${ladderFocus.title}. ${dominantForm.label}를 유지한 채 다음 관문 ${proofWindow.label}만 먼저 읽게 만든다.`
+                  ? `${ladderFocus.title}. ${dominantForm.label}를 전면에 두고 ${proofWindow.label}만 먼저 본다.`
                   : `${nextBreakpoint.label}이 다음 monster-form jump다. ${supportTrack.label}는 rider로만 짧게 남기고, ${proofWindow.label}에서 바로 space ownership를 증명한다.`
               }</p>`
         }
@@ -20256,7 +20271,7 @@
             title: dominantForm.label,
             prompt:
               state.phase === "forge"
-                ? `${baseRouteForgeStage ? baseRouteForgeStage.label : "Forge Break"}에서는 변이 하나를 먼저 잠그고 바로 다음 증명으로 복귀한다.`
+                ? `${baseRouteForgeStage ? baseRouteForgeStage.label : "Forge Break"}에서는 main leap 하나를 먼저 잠그고 바로 다음 증명으로 복귀한다.`
                 : `${ladderFocus.title} 구간이다. 지금은 현재 실루엣으로 전장을 점유하고 다음 관문만 본다.`,
             headlineLabel: dominantForm.label,
             riderLabel: supportTrack.label,
@@ -20421,7 +20436,7 @@
             proofLabel: proofWindow.label,
             note: state.pendingFinalForge
               ? `${dominantFormSummary.label}를 이번 런의 마지막 실루엣으로 봉인한다.`
-              : `${proofWindow.label}에서 바로 전장 소유 시간을 증명한다.`,
+              : `${proofWindow.label}에서 바로 전장 소유 시간을 증명한다. rider는 보조선으로만 남긴다.`,
           })}
         </article>
       `

@@ -12,9 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate has shifted to `Builds`: the game has more late-form content now, but the forge contract still does not create three craveable run lanes with visible future payoff.
-- Repeated false solution: adding another support spectacle, branch wrapper, or denser finale instead of making core-form, defense/support, and greed/utility paths read as distinct commitments.
-- Keep watching for stale prototype framing in docs, especially any `5-wave` pacing model or `Wave 1-5` table that undercuts the three-era `Wave 1-12` contract.
-- The next high-value critique should keep pressure on late-era choice structure: one unmistakable core leap, one real defensive or utility commitment, one greed route worth gambling on.
-- Act 3 is closer, but `Wave 12` still looks like "return every tax at once"; keep pushing for payoff-first escalation rather than a single overloaded final exam.
-- Keep pushing UI toward appetite-first hierarchy: one mutation fantasy first, admin/proof language second, and fewer words on the forge/HUD.
+- The most fragile gate is `Rewards`: the run still explains branch structure and future scope harder than it sells the next mutation.
+- Repeated false solution: answering clarity problems with more route labels, support spectacle, or future-expansion framing instead of making the base `Wave 1-12` loop feel complete.
+- Keep pressure on stale prototype framing in docs, especially the `5-wave` biome bracket and any `Wave 1-5` balance table that fights the three-era contract.
+- Keep watching `Afterburn`, draft, cache, and admin copy in the live HUD/forge contract; if those stay prominent, the player will read governance before desire.
+- Late combat is closer to a real payoff ladder, but `Wave 12` still risks reading like "all taxes return" instead of the final expression of the built form.

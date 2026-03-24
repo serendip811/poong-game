@@ -15,6 +15,7 @@ Keep this short and replace stale notes instead of endlessly appending.
 - Prefer one meaningful gameplay or readability improvement per run.
 - Avoid adding another named system if the same benefit could come from simplifying or deepening an existing one.
 - Validate every gameplay/UI change with the existing smoke test when relevant.
+- On the base `12-wave` route, prefer shipping-beat labels (`Core Lock`, `Chassis Break`, `Late Form`, `Proof Loadout`, `Final Seal`) and appetite-first promises over any draft/cache/relay/admin nouns in combat feed or forge copy.
 - On the consolidated route, the best readability move is now `one contract card + one threat card`; hide bench/upgrades/live telemetry by default and let inspect/pause carry the extra detail.
 - Standard `Wave 9-10` improvements are highest value when they create a clearly different movement ask with the same locked form; `Wave 10` can carry a mobile greed/breach split without adding a whole new progression system.
 - The fallback late shared pool must mirror the shipping cadence too: `Wave 9` should be an ownership/payoff lap, `Wave 10` a greed/breach split, `Wave 11` a low-tax domination lap, and only `Wave 12` the final lane-specific cash-out, not a dump of every hazard family at once.
