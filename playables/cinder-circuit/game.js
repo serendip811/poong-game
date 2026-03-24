@@ -8601,7 +8601,7 @@
     compact = false,
   }) {
     const spotlightLabel = compact ? currentFormLabel : mainLeapLabel;
-    const proofHeader = compact ? "다음 시험" : "메인 변이";
+    const proofHeader = compact ? "다음 시험" : "곧바로";
     return `
       <div class="summary-head">
         <strong>${eyebrow || title}</strong>
@@ -8613,7 +8613,7 @@
       </div>
       <p class="summary-copy roadmap-card__path">${prompt}</p>
       <strong class="route-contract__title">${spotlightLabel}</strong>
-      <div class="forge-focus__proof"><span>${proofHeader}</span>${compact ? proofLabel : `${mainLeapLabel}. ${proofLabel}에서 바로 증명한다.`}</div>
+      <div class="forge-focus__proof"><span>${proofHeader}</span>${compact ? proofLabel : `${mainLeapLabel} · ${proofLabel}`}</div>
       ${supportLabel ? `<div class="mini-pill-row">${createMiniPill("보조", supportLabel, "cool")}</div>` : ""}
       ${note ? `<p class="summary-note">${note}</p>` : ""}
     `;
@@ -12771,8 +12771,8 @@
     pushCombatFeed(
       CONSOLIDATED_12_WAVE_ROUTE
         ? wave6AscensionDraft
-          ? "Chassis Break 개시. 이번 정지는 Act 2에서 오래 끌 body plan을 고르는 순간이다. support bay와 외도 lane은 아직 닫아 두고 core gun/body만 먼저 굳힌다."
-          : "Forge Break 개시. 이번 브레이크는 이미 키운 주력 위에 더 큰 leap 하나를 얹거나, 숨통을 틔울 rider 하나를 더하거나, 판돈을 욕심내는 셋 중 하나만 고르게 한다."
+          ? "Chassis Break 개시. 이번 정지는 오래 끌 차체 하나만 고른다. 보조선은 아직 닫아 두고 몸과 주포만 먼저 굳힌다."
+          : "변이 선택 개시. 이번 정지는 크게 바꾸는 한 장, 버티는 한 장, 판돈을 거는 한 장 중 하나만 고른다."
         : wave6AscensionDraft
           ? "Wave 6 Ascension Draft 개시. 세 장기 교리 중 하나를 irreversible form으로 잠그면 주포 mutation과 utility chassis까지만 먼저 굳힌다. support bay와 doctrine-free flex lane은 아직 열지 않고 Wave 8 Late Break Armory까지 늦춰 mid-run 실루엣을 lean하게 유지한다."
           : `Bastion Draft 개시. ${getBastionDraftIntroText(state.build)}`,
@@ -12854,13 +12854,13 @@
 
   function getBaseRouteForgeStage(run = state, nextWave = null) {
     if (!run) {
-      return { id: "forge_break", label: "Forge Break" };
+      return { id: "forge_break", label: "변이 선택" };
     }
     if (run.pendingFinalForge) {
-      return { id: "final_seal", label: "Final Seal" };
+      return { id: "final_seal", label: "마무리" };
     }
     if (run.phase === "forge" && run.forgeMaxSteps > 1 && run.forgeStep === 2) {
-      return { id: "proof_loadout", label: "Proof Loadout" };
+      return { id: "proof_loadout", label: "보조 선택" };
     }
     const upcomingWave = Number.isFinite(nextWave) ? nextWave : run.waveIndex + 2;
     if (shouldRunArchitectureDraft({ nextWave: upcomingWave, finalForge: false })) {
@@ -12874,12 +12874,12 @@
     }
     if (shouldUseFieldGrant({ nextWave: upcomingWave, finalForge: false })) {
       return upcomingWave >= LATE_BREAK_ARMORY_WAVE
-        ? { id: "proof_loadout", label: "Proof Loadout" }
-        : { id: "field_break", label: "Field Break" };
+        ? { id: "proof_loadout", label: "보조 선택" }
+        : { id: "field_break", label: "현장 선택" };
     }
     return upcomingWave >= LATE_BREAK_ARMORY_WAVE
       ? { id: "late_form", label: "Late Form" }
-      : { id: "forge_break", label: "Forge Break" };
+      : { id: "forge_break", label: "변이 선택" };
   }
 
   function getBaseRouteForgeContractLabel(role, choice, riderStep = false) {
@@ -15980,26 +15980,23 @@
     state.supportDeployables = [];
     state.player.heat = Math.max(0, state.player.heat - 20);
     state.player.overheated = false;
-    const lateRoutePayoff = getStandardLateRouteBeatSummary(state.build, 9);
-    const lateRouteProof = getStandardLateRouteBeatSummary(state.build, 11);
-    const lateRouteFinale = getStandardLateRouteBeatSummary(state.build, 12);
     pushCombatFeed(
       isFinalForge
         ? CONSOLIDATED_12_WAVE_ROUTE
-          ? "최종 웨이브 정리 완료. 마지막 포지는 Current Form만 봉인하고 이번 12-wave run을 닫는다."
+          ? "최종 웨이브 정리 완료. 마지막 정지는 지금 실루엣만 다듬고 이번 12-wave run을 닫는다."
           : "최종 웨이브 정리 완료. 마지막 포지에서 최종 각인과 7연속 afterburn survival ladder의 시작 형태를 마감한다."
         : isLateBreakArmory(forgeOptions)
           ? CONSOLIDATED_12_WAVE_ROUTE
-            ? `Wave 8 돌파. 이번 포지는 Current Form 위에 Main Leap 하나만 크게 올린다. 이후 ${lateRoutePayoff ? lateRoutePayoff.label : "Payoff Band"}를 지나 ${lateRouteProof ? lateRouteProof.label : "Refuge Run"}, ${lateRouteFinale ? lateRouteFinale.label : "Finale"}로 곧장 꺾인다.`
+            ? "Wave 8 돌파. 이번 정지는 후반 실루엣 하나를 크게 고른다. 남은 런은 그 형태를 끝까지 밀어붙이는 구간이다."
             : state.build.auxiliaryJunctionLevel > 0
               ? "Wave 8 돌파. Late Break Armory를 단일 breakpoint로 재절단했다. 이제 정확히 세 장만 뜨며, Cataclysm Arsenal, Warplate Halo, Black Ledger Heist 중 하나를 고르면 Wave 9-10은 payoff band, Wave 11은 그 선택 전용 proof, Wave 12는 최종 finale로 꺾인다."
               : "Wave 8 돌파. Late Break Armory를 단일 breakpoint로 재절단했다. 이제 정확히 세 장만 뜨며, Cataclysm Arsenal, Warplate Halo, Black Ledger Heist 중 하나를 고르면 Wave 9-10은 payoff band, Wave 11은 그 선택 전용 proof, Wave 12는 최종 finale로 꺾인다."
           : draftType === "armory"
           ? CONSOLIDATED_12_WAVE_ROUTE
-            ? "Wave 4 돌파. 이번 브레이크는 Current Form을 확인하고 Main Leap 하나를 고른 뒤 바로 Next Proof로 밀어 넣는다."
+            ? "Wave 4 돌파. 이번 정지는 눈에 띄게 큰 한 장만 고르고 바로 다음 전투에서 시험한다."
             : "Wave 4 돌파. Act Break Armory는 이제 headline breakpoint 1장 뒤에 support/defense/greed rider 1장을 얹어, Act 2 빌드 정체성을 더 빨리 조립하게 만든다."
           : CONSOLIDATED_12_WAVE_ROUTE
-            ? "웨이브 종료. Current Form을 확인하고 Main Leap 하나를 고른 뒤 바로 Next Proof로 이어진다."
+            ? "웨이브 종료. 눈에 띄게 큰 한 장을 고른 뒤 바로 다음 전투로 이어진다."
             : "웨이브 종료. 먼저 headline 변신을 고르고, 이어서 작은 rider slot으로 support/defense/greed를 한 장 더 얹는다.",
       "FORGE"
     );
@@ -20337,7 +20334,7 @@
         </div>
         ${
           minimalBaseRouteHud
-            ? `<div class="forge-focus__proof"><span>다음 시험</span>${proofWindow.label}</div><p class="summary-note">${dominantForm.label} 실루엣을 전면에 두고 ${proofWindow.label} 하나만 먼저 본다.</p>`
+            ? `<div class="forge-focus__proof"><span>다음 시험</span>${proofWindow.label}</div><p class="summary-note">${dominantForm.label} 하나만 앞세우고 ${proofWindow.label}에서 바로 본다.</p>`
             : `<div class="mini-pill-row">${
                 baseRouteForgeActive
                   ? createMiniPill("Proof", proofWindow.label, "hot") +
@@ -20347,7 +20344,7 @@
               }</div>
               <p class="summary-note">${
                 baseRouteForgeActive
-                  ? `${ladderFocus.title}. ${dominantForm.label}를 전면에 두고 ${proofWindow.label}만 먼저 본다.`
+                  ? `${ladderFocus.title}. ${dominantForm.label} 하나만 앞세우고 ${proofWindow.label}만 먼저 본다.`
                   : `${nextBreakpoint.label}이 다음 monster-form jump다. ${supportTrack.label}는 rider로만 짧게 남기고, ${proofWindow.label}에서 바로 space ownership를 증명한다.`
               }</p>`
         }
@@ -20392,7 +20389,7 @@
             prompt:
               state.phase === "forge"
                 ? `이번 정비에서는 ${nextBreakpoint.label}처럼 크게 보이는 선택 하나만 먼저 집고 바로 전투로 돌아간다.`
-                : `${ladderFocus.title} 구간이다. 지금 실루엣으로 전장을 점유하며 ${proofWindow.label} 하나만 준비한다.`,
+                : `${ladderFocus.title} 구간이다. 지금 실루엣 하나로 전장을 점유하며 ${proofWindow.label} 하나만 준비한다.`,
             currentFormLabel: dominantForm.label,
             mainLeapLabel: nextBreakpoint.label,
             proofLabel: proofWindow.label,
@@ -20427,7 +20424,7 @@
           minimalBaseRouteHud
             ? `${proofWindow.label} 하나만 보면 된다. ${objectiveNote}`
             : baseRouteForgeActive
-              ? `${baseRouteForgeStage ? baseRouteForgeStage.label : "Forge Break"} 이후 곧바로 ${proofWindow.label}를 증명한다. ${combatBand ? `${combatBand.headline}. ` : ""}${objectiveNote}`
+              ? `${proofWindow.label}만 보면 된다. ${combatBand ? `${combatBand.headline}. ` : ""}${objectiveNote}`
               : `${nextBreakpoint.label} + ${supportTrack.label}. ${combatBand ? `${combatBand.headline}. ` : ""}${objectiveNote}`
         }</p>
       `;
@@ -20436,7 +20433,11 @@
     if (elements.liveReadout) {
       elements.liveReadout.classList.toggle("hidden", minimalBaseRouteHud);
       const forgeReadoutLabel = shouldUseBaseRouteForgeContract()
-        ? `${getBaseRouteForgeStage(state, state.waveIndex + 2).label} 선택 중`
+        ? state.pendingFinalForge
+          ? "마무리 선택 중"
+          : state.forgeMaxSteps > 1 && state.forgeStep === 2
+            ? "보조 선택 중"
+            : "주력 선택 중"
         : state.forgeDraftType === "architecture_draft"
           ? "Architecture Draft 선택 중"
           : state.forgeDraftType === "field_grant"
@@ -20515,7 +20516,7 @@
       ? riderStep
         ? "보조 선택"
         : state.pendingFinalForge
-          ? "최종 봉인"
+          ? "마무리"
           : "주력 변이"
       : state.pendingFinalForge
         ? "Final Form"
@@ -20559,7 +20560,7 @@
             proofLabel: proofWindow.label,
             supportLabel: riderStep ? focusTitle : activeSupportTrack.label,
             note: state.pendingFinalForge
-              ? `${dominantFormSummary.label}를 이번 런의 마지막 실루엣으로 봉인한다.`
+              ? `${dominantFormSummary.label}를 이번 런의 마지막 실루엣으로 남긴다.`
               : riderStep
                 ? `${focusTitle}는 보조선으로만 얹고 ${proofWindow.label}에서 바로 버티는지 본다.`
                 : `${proofWindow.label}에서 바로 전장 소유 시간을 증명한다. 보조선은 뒤로 물린다.`,

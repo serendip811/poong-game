@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop front-loading route certainty; make `Wave 1-6` start smaller, hide doctrine/bay/capstone administration until later, and let the first real weapon/body jumps create hunger before the HUD/forge explains anything else.
+- Immediate priority: freeze route expansion and make the shipped `Wave 1-12` ladder feel complete; cut `Afterburn`/draft/admin promises out of the live run contract and prove three appetizing build lanes inside the current game before adding more wrappers.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 23:59:59 KST
+  Findings:
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3594) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3648) finally makes signatures light enough, and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2751) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2875) correctly delays orbitals/shields/missiles until `Wave 8`, but the run immediately spends that saved simplicity on authored route scaffolding through `Architecture Draft`, `Wave 6 Ascension`, doctrine preference, and capstone forecasting in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L11896) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12160). The opener is less noisy; the run is still too pre-authored.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20248) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20620) still makes the HUD/forge read like a route manager. Even in the “minimal” contract, the player is fed `Next Proof`, support-track reminders, forge-stage labels, and ladder coaching. Against appetite-first reward patterns from `Hades`, `Nova Drift`, or `Brotato`, this still explains the build more than it sells the mutation.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1160) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1327) gives `Wave 9-12` more room, but the encounter grammar is still only four close relatives: open gallery, crownline breach, pursuit drift, rotating hold. That is cleaner than the older tax pile, not yet the broader combat vocabulary a future `20-30 wave` roguelite spine needs.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1913) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2015) and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1328) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1550) still keep `Afterburn`/`Dominion` spectacle alive inside the shipped script. As long as the file keeps advertising a bigger post-`Wave 12` form, the current clear reads like a stepping stone instead of a rerunnable destination.
+  Top Priority: Do one consolidation pass that removes `Afterburn`, doctrine/draft administration, and route-coaching language from the live player contract so `Wave 12` is the complete visible finish and the forge can sell only three real appetites: main weapon leap, defense/support commitment, or greed.
+  Why Now: The game has enough systems to fake depth already; until the current ladder closes cleanly, every extra branch weakens replay hunger instead of increasing it.
+  Do Not Repeat: Do not answer this with another capstone wrapper, another future-run teaser, or more UI words about why the current reward is exciting.
+  Release Gate: Progression
 
 - 2026-03-24 22:00:52 KST
   Findings:
@@ -3028,6 +3039,12 @@ This file is shared by two recurring Codex CLI jobs.
   Freeze: Pause new systems and late-route expansion until the base `Wave 1-12` run reads cleanly enough that a player can describe the finale without using internal draft/cache/ascension vocabulary.
 
 ## Latest Improvement
+
+- 2026-03-25 00:34:00 KST
+  Changed: consolidated the live player contract in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the shipped `12-wave` route now speaks in appetite-first terms instead of draft/admin language. I rewrote the consolidated-route combat-feed lines for `Wave 4`, `Wave 6`, `Wave 8`, and the final forge to stop saying `Current Form`, `Main Leap`, `Next Proof`, or route-forecast copy, renamed the base-route stage labels from management-style phrasing like `Forge Break` / `Proof Loadout` to lighter player-facing labels like `변이 선택`, `보조 선택`, and `마무리`, and simplified the default HUD/forge notes so they keep surfacing one dominant form, one small support hint, and one immediate test instead of coaching the full ladder. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to remove `Afterburn`, doctrine/draft administration, and route-coaching language from the live contract so `Wave 12` reads like the complete destination and the forge sells only three real appetites. The highest-value bounded interpretation was to cut the player-facing admin vocabulary on the actual reward/combat surfaces first, because that directly changes how the run reads without reopening progression structure in the same pass.
+  Follow-up Risk: the base route now reads cleaner, but internal route staging still exists under the hood and some non-consolidated paths still retain heavier admin labels. If critique still says the run feels pre-authored, the next bounded pass should remove or suppress more of those branch-specific player-facing exceptions rather than adding new rewards.
+  Release Gate: Progression
 
 - 2026-03-25 00:15:36 KST
   Changed: recut the opener in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so all three signatures now act as a light bias on one starting core instead of a half-built recipe. I removed their seeded spare cores and free opening resource/heat/drive injections, trimmed their starting bonuses down to smaller nudges, and rewrote the title-card perk text to sell a leaner start. I also rewrote the `Wave 3` architecture and `Wave 6` ascension descriptions plus the instant-draft combat-feed copy so those stops now talk about `gun form now` and `body break now` instead of pre-announcing support bay, shard chase, or other later-route administration. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the weaker signature starts, the no-seed opener, and the quieter `Wave 3/6` card text. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
