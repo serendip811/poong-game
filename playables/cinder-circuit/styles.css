@@ -443,6 +443,24 @@ body[data-overdrive="true"] .backdrop__glow--right {
   gap: 12px;
 }
 
+.micro-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--muted-strong);
+  font-size: 0.76rem;
+  letter-spacing: 0.06em;
+}
+
+.micro-chip--quiet {
+  background: rgba(255, 255, 255, 0.035);
+  color: var(--muted);
+}
+
 .signature-card__hotkey {
   display: inline-flex;
   align-items: center;
@@ -474,10 +492,11 @@ body[data-overdrive="true"] .backdrop__glow--right {
     0 12px 36px rgba(255, 124, 61, 0.16);
 }
 
-.signature-card__perk {
+.signature-card__bias {
   margin-top: auto !important;
   color: #ffd3b1 !important;
-  font-size: 0.91rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
 }
 
 #game-screen {

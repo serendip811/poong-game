@@ -15939,7 +15939,9 @@
     }
     elements.signatureCards.innerHTML = Object.values(SIGNATURE_DEFS)
       .map(
-        (signature, index) => `
+        (signature, index) => {
+          const startCore = CORE_DEFS[signature.startCoreId];
+          return `
           <button
             type="button"
             class="signature-card ${selectedSignatureId === signature.id ? "signature-card--active" : ""}"
@@ -15947,18 +15949,15 @@
             aria-pressed="${selectedSignatureId === signature.id ? "true" : "false"}"
           >
             <div class="signature-card__top">
-              <p class="signal-card__eyebrow">${signature.tag}</p>
               <span class="signature-card__hotkey">0${index + 1}</span>
+              <span class="micro-chip micro-chip--quiet">${startCore.short} 시작</span>
             </div>
             <h3>${signature.label}</h3>
             <p>${signature.description}</p>
-            <div class="signature-card__chips">
-              <span class="micro-chip">${signature.short}</span>
-              <span class="micro-chip">${summarizeBenchCoreIds(signature.seedCores)}</span>
-            </div>
-            <p class="signature-card__perk">${signature.perkText}</p>
+            <p class="signature-card__bias">${signature.short}</p>
           </button>
-        `
+        `;
+        }
       )
       .join("");
   }
@@ -16018,7 +16017,7 @@
     if (typeof signature.onRunStart === "function") {
       signature.onRunStart(state);
     }
-    pushCombatFeed(`${signature.label} 투입 승인. 제련 회로를 연다.`, "DROP");
+    pushCombatFeed(`${signature.label} 투입. ${CORE_DEFS[signature.startCoreId].label}로 시작한다.`, "DROP");
     showScreen("game");
     renderPauseOverlay();
     beginWave(0);
