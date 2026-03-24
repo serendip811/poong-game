@@ -342,7 +342,7 @@ const cataclysmChoice = mutationLateBreakChoices.find((choice) => choice.action 
 assert.ok(cataclysmChoice);
 assert.equal(cataclysmChoice.title, "Cataclysm Arsenal");
 assert.equal(cataclysmChoice.lateFieldMutationLevel, 4);
-assert.ok(cataclysmChoice.roadmapDetail.includes("Wave 9-10 payoff band"));
+assert.ok(cataclysmChoice.roadmapDetail.includes("Wave 9 open-lane"));
 const cataclysmRun = {
   build: mutationLateBandBuild,
   resources: { scrap: 999 },
@@ -2852,6 +2852,12 @@ const lateBreakGreed = lateBreakSmokeChoices.find((choice) => choice.title === "
 assert.equal(lateBreakMutation.laneLabel, "Main Weapon Mutation");
 assert.equal(lateBreakDefense.laneLabel, "Defense / Utility");
 assert.equal(lateBreakGreed.laneLabel, "Greed Contract");
+assert.ok(lateBreakMutation.slotText.includes("열린 lane 절단"));
+assert.ok(lateBreakDefense.slotText.includes("bastion hull"));
+assert.ok(lateBreakGreed.slotText.includes("twin tow fork"));
+const lateBreakGreedTransform = game.getForgeChoiceTransformation(lateBreakGreed);
+assert.ok(lateBreakGreedTransform.promise.includes("tow fork"));
+assert.ok(lateBreakGreedTransform.proof.includes("Wave 9 vaultline"));
 const lateBreakRun = {
   build: lateBreakSmokeBuild,
   resources: { scrap: 0 },
@@ -2861,6 +2867,11 @@ const lateBreakRun = {
 game.applyForgeChoice(lateBreakRun, lateBreakGreed);
 assert.equal(lateBreakRun.build.blackLedgerRaidWaves, 2);
 assert.equal(lateBreakRun.build.lateBreakProfileId, "ledger");
+const lateBreakLedgerWeapon = game.computeWeaponStats(lateBreakRun.build);
+assert.equal(lateBreakLedgerWeapon.headlineFormLabel, "Black Ledger Heist");
+assert.ok(lateBreakLedgerWeapon.lateBreakLedgerFirePattern);
+assert.ok(lateBreakLedgerWeapon.lateBreakStatusNote.includes("twin tow fork"));
+assert.ok(lateBreakLedgerWeapon.lateBreakStatusNote.includes("vaultline"));
 const lateBreakDebt = game.createBlackLedgerDebtState(lateBreakRun.build, 12);
 assert.ok(lateBreakDebt);
 assert.equal(lateBreakDebt.stacks, 0);

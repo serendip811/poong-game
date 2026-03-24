@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze expansion scaffolding and collapse the shipped `Wave 1-12` contract to one appetite-first read: `headline leap`, `next test`, and `cost/tradeoff`, with no visible `Afterburn`/`Dominion`/support-bay admin leaking into the player-facing route.
+- Immediate priority: replace the shipped `Wave 3-8` player contract with a weapon-first growth ladder plus one survival/utility layer, and hide doctrine/chassis/support-bay infrastructure until `Wave 1-12` feels rerunnable without future-run scaffolding.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-25 14:15:00 KST
+  Findings:
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L11929) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12480) still makes the real midgame contract `doctrine lock -> chassis break -> support bay/flex lane/admin stop`. That is infrastructure, not transformation. A rerunnable action roguelite needs the player to hunger for `what my gun/body becomes next`, not parse how the route assembly works.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20909) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21093) has cleaner forge cards than before, but the reward moment still depends on `proof`, `bill`, `support`, and contract-role framing because the picks themselves are not visually self-evident enough. In strong references like `Nova Drift`, `Hades`, or `Brotato`, the card can usually sell the leap on sight; here the UI is still compensating for build scaffolding.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20699) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20880) repeats the same route schema across active core, roadmap, wave objective, inspect board, and forge state. Even after simplification, the player is still being reminded how to think about the run instead of being left alone to feel it.
+  - [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L9) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L28) and [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L128) through [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L239) still teach the project to think in compressed source-systems, signatures, riders, rarity gaps, and future expansion layers. That keeps authoring pointed at system translation instead of one release-feeling 12-wave run with obvious, visible power spikes.
+  Top Priority: Recast `Wave 3`, `Wave 6`, and `Wave 8` so each stop sells one unmistakable weapon/body evolution first and only one secondary survival/utility commitment second, with doctrine/chassis/bay logic kept entirely backstage.
+  Why Now: Until midgame picks look like transformations instead of infrastructure, the run cannot build real anticipation for a longer escalation curve.
+  Do Not Repeat: Do not answer this with another copy trim that leaves doctrine, chassis, bay, and contract-role thinking as the actual build spine.
+  Release Gate: Builds
 
 - 2026-03-25 03:00:50 KST
   Findings:
@@ -2160,6 +2171,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-25 03:46:55 KST
+  Changed: recast the consolidated-route `Wave 8` late-break stop in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the three `Cataclysm Arsenal / Warplate Halo / Black Ledger Heist` cards now sell one immediate transformed form first and one next proof second instead of route-admin cadence. I rewrote their hero/proof copy around `weapon/body now -> Wave 9 test now`, shortened the consolidated `Wave 8` handoff/feed lines so they stop talking about `rider bay` or other backstage scaffolding, and made the chosen late-break form surface directly in the shipping HUD status note. The bounded gameplay payoff is that `Black Ledger Heist` no longer reads like pure economy infrastructure: it now opens a visible `twin tow fork` side-fire pattern immediately on pick, so the greed lane gets an actual raid-frame silhouette instead of waiting for text to explain the route. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new late-break copy and ledger fire-pattern state. This reward/readability pass stayed anchored to the appetite-first card hierarchy seen in `Nova Drift` and `Hades`: show the mutation on sight, then name the first proof.
+  Why: the newest critique's `Top Priority` was to make `Wave 3`, `Wave 6`, and `Wave 8` read as unmistakable weapon/body evolutions with only one secondary survival/utility commitment. The highest-value bounded interpretation was to fix the still-softest stop, `Wave 8`, where late-break picks were already structurally correct but still explained branch routing more strongly than the transformed form itself.
+  Follow-up risk: `Cataclysm`, `Warplate`, and `Ledger` now read more like real form picks, but `Wave 6` still leaks some chassis language and only `Ledger` gained a new immediate combat pattern this pass. If critique stays on the same issue, the next bounded move should either give `Wave 6` the same transformation-first treatment or add equally visible moment-one payoff hooks to the `mutation`/`aegis` lanes beyond copy and HUD surfacing.
+  Release Gate: Builds
 
 - 2026-03-25 03:25:00 KST
   Changed: collapsed the consolidated-route forge reward cards in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the default `Wave 1-12` reward read now obeys the latest critique's shipping contract more strictly. On the base route, featured, compact, and rider cards no longer spend space on preview grids, impact strips, or extra side-note rows; each card now sells one immediate leap line, one `다음 시험` line, and one `비용·대가` line. I also shortened the base-route forge focus prompt so the header card points straight at the next proof instead of restating route structure, added the small supporting layout rule in [styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css), and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new proof/bill markup helpers. This UI pass stayed anchored to the appetite-first reward hierarchy seen in `Hades`, `Nova Drift`, and `Brotato`: one prize sentence, one next test, one cost line.

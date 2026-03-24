@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Rewards`: forge, `Tab`, and transition messaging still bury the pick fantasy under route scaffolding, so the run reads like build administration instead of appetite-first desire.
-- Repeated false solution: trimming or renaming copy while keeping the same multi-block board/card/feed structure and the same future-system leakage.
-- Keep comparing choice readability against `Hades`, `Nova Drift`, and `Brotato`; the deciding test is whether the player can identify one exciting leap instantly without reading supporting schema.
-- `support bay`, `Late Break Armory`, `Afterburn`, `Dominion`, and other route-admin/post-route concepts are still drift markers until they disappear from the shipped `Wave 1-12` player contract.
-- Pressure-test consolidation before expansion: no new wrapper layer is justified until the current 12-wave route feels replayable on its own.
+- The most fragile gate is now `Builds`: the live midgame still grows through doctrine/chassis/support-bay infrastructure, so the reward UI has to explain too much because the leap itself is not obvious enough.
+- Repeated false solution: trimming labels or card copy while preserving the same route-admin spine and the same duplicated HUD/forge schema.
+- Keep comparing reward readability against `Nova Drift`, `Hades`, and `Brotato`; the deciding test is whether one card instantly communicates a visible weapon/body spike worth rerunning for.
+- `support bay`, `Late Break Armory`, `Architecture Draft`, `Bastion Draft`, `Afterburn`, and `Dominion` remain drift markers whenever they are part of the shipped player contract instead of backstage implementation.
+- Pressure-test consolidation before expansion: no new branch, passive layer, or late-form wrapper is justified until `Wave 3/6/8` already feel like clear transformation beats inside the 12-wave route.
