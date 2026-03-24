@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze new branch/passive/support expansion and consolidate one readable `Wave 8-12` climax where the shipped endform, late combat asks, and forge/HUD hierarchy land without `Afterburn`/`Dominion` leakage or extra explanation rows.
+- Immediate priority: collapse late-route variants and explanation-heavy reward surfaces into one readable `Wave 8-12` contract with three distinct proof asks, one shipped endform climax, and no `Afterburn`/`Dominion` leakage.
 
 ## Release Gates
 
@@ -48,6 +48,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 19:10:00 KST
+  Findings:
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L987) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1127) still sells `Wave 9-12` as payoff/proof/gallery/breach, but in play grammar it is still mostly the same lane-ownership exam repeated with slightly different hazard dressing. That is enough for one alpha clear, not enough to imply the `20-30 wave` ceiling the project keeps promising.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20178) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20201) still spends combat-feed real estate on `Live Ascension`, `support bay`, and route-admin exceptions around the exact handoff into the late game. The run keeps explaining how the route is wired instead of making `Wave 9` feel like the moment your machine has finally become scary.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20219) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20667) remains too contract-heavy for a reward surface that should behave more like strong reference patterns from `Hades`, `Nova Drift`, or `Brotato`: one dominant prize, one secondary hint, then back to play. `Next Proof`, `Rider`, `Locked Form`, stage labels, proof copy, and preview rows still make the forge feel like reading a design brief.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1902) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2001) still advertises `Cinder Dominion` and the post-`Wave 12` sovereign version of the fantasy more cleanly than the shipped route finale. As long as the loudest silhouette is explicitly reserved for later, the current clear will keep feeling like a pre-capstone demo.
+  - [cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L109) through [cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L239) still points toward bench/rarity/passive compression layers while the base route has not yet proven enough combat variety or appetite-first reward clarity. The source application doc is still giving expansion permission too early.
+  Top Priority: Rebuild `Wave 9-12` around three actually different late asks and one final shipped apex, then strip the forge/HUD handoff down to a single headline pick plus one tiny rider signal with no route-admin copy.
+  Why Now: A longer roguelite curve will fail if the shipped late band still feels like repeated proof homework wrapped in future-system promises.
+  Do Not Repeat: Do not answer this with another support bay, passive compression layer, or post-route endform tease.
+  Release Gate: Progression
 
 - 2026-03-24 18:45:00 KST
   Findings:
@@ -1955,6 +1967,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 20:25:00 KST
+  Changed: rebuilt the shipped base-route `Wave 11` in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from another open-lane gallery into `Wave 11 · Starforge Pursuit`, a bounded pursuit/refuge ask that sits cleanly between `Wave 10 · Crownhold Proof` and `Wave 12 · Cinder Crown`. The wave and shared late-act profile now use `pursuit` pressure, a larger `1760x1020` arena, lower active cap, faster/harder drift reentry, and a shrike/binder-heavy mix so the player has to cut one pursuit blob, rotate into a new refuge pocket, and prove movement cadence instead of repeating late-lane ownership for a third straight wave. I also updated the exported late-route summaries and [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the route now reads `Payoff Band -> Refuge Run -> Finale` and smoke locks the new wave contract. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the latest critique's `Top Priority` asked for three actually different late asks before the shipped apex. The highest-value bounded interpretation was to make `Wave 11` stop behaving like a second `Wave 9` with different dressing, because that directly improves the late-run grammar and better implies room for a future `20-30 wave` ladder without adding another system layer or widening the reward surface.
+  Follow-up risk: `Wave 9` and `Wave 10` are now more distinct from `Wave 11`, but the base-route forge/HUD handoff still carries more explanatory contract than a true appetite-first reward screen should. If the next pass stays on the same critique, it should trim the `Wave 8-12` reward handoff to one dominant headline pick plus one tiny rider signal rather than add another combat branch.
+  Release Gate: Progression
 
 - 2026-03-24 18:42:05 KST
   Changed: collapsed the default reward hierarchy in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the shipped `Wave 8-12` forge/HUD no longer present `Current Form / Main Leap / Next Proof` or `Headline Mutation / Secondary Rider / Immediate Ask` as equal-status rows. The base-route active form card, compact roadmap card, and forge focus now sell one oversized dominant form title first, show the next proof in a single capsule, and demote support to one small rider pill. The broader non-base headline/rider contract was trimmed the same way so reward pauses read as a mutation spike instead of a checklist. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
