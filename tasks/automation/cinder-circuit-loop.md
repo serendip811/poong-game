@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop adding route/admin subgames and rebuild the shipped ladder so `Wave 1-8` reads as `weak opener -> Wave 3 gun leap -> Wave 6 chassis/defense fork -> Wave 8 support/ordnance identity`, with a quieter start and `Wave 12` still reading as the full visible finish.
+- Immediate priority: strip the shipped route down to one glanceable reward/HUD grammar and a weaker opener so `Wave 1-3` stay quiet, `Wave 3/6/8` read as earned silhouette jumps, and no title/forge/`Tab` surface advertises admin or post-`Wave 12` futures.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-25 06:00:59 KST
+  Findings:
+  - [cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8) through [cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L29) still defines the run as `Signature -> Headline Form -> Survival Rider -> Proof Window`, which is clean on paper but still over-briefs the player before the run has earned hunger. A strong repeatable arena roguelite opens with a small readable chassis, not a schema.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L15977) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L16039) still spends title attention on `perkText`, `SEED CORE`, and `START` bonus detail. That front-loads both explanation and power fantasy, so the first real weapon leap has less room to feel dramatic.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20823) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21196) and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L14766) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L14804) still make HUD, forge, and `Tab` behave like a route document. Against the appetite-first reward/readout hierarchy of `Hades`, `Nova Drift`, or `Brotato`, the player is still asked to parse `proof`, stage labels, and side summaries before wanting the pick.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L878) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1137) gives the combat space more room, but `Wave 6-12` is still mostly one authored relay/proof/pocket language with renamed variants. The extra UI explanation is compensating for encounter sameness instead of supporting clearly different build destinies.
+  Top Priority: Rebuild the live title, HUD, forge, and `Tab` contract around one appetite-first read only: one obvious weapon/body leap, one defense-support commitment, one greed-utility gamble, each sold by visible silhouette and cost, while the opener starts with fewer effects and less starting identity.
+  Why Now: If the player feels briefed and visually complete before the first real spike, a longer wave ladder will only make the run feel busier, not more replayable.
+  Do Not Repeat: Do not answer this with renamed draft/admin labels or another live cache branch over the same reading load.
+  Release Gate: UX/UI
 
 - 2026-03-25 14:20:00 KST
   Findings:
@@ -2217,6 +2228,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-25 06:11:26 KST
+  Changed: trimmed the live signature-select contract in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the title screen now starts from a much quieter `pick a weak opener` read. Signature cards no longer spend a second line on description copy, the spotlight no longer renders `perk / SEED CORE / START` boxes or seed pills, and the opening combat feed now just announces the start core instead of a launch-brief sentence. The remaining title read is now `pick label + start core + one bias line`, following the appetite-first character/reward snap used by `Hades`, `Nova Drift`, and `Brotato` rather than briefing the route before movement begins. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` explicitly called out the live title contract for still spending attention on perk and seed/start admin details, and the current red flags say the opener is still too text-heavy. The highest-value bounded interpretation was to cut the first live read itself, because that is where the run was still feeling pre-briefed instead of under-equipped and curious.
+  Follow-up risk: the title/opening read is quieter now, but the in-run HUD/forge surfaces still carry some `다음 시험` and support phrasing after combat starts. If critique stays on the same issue, the next bounded move should trim one of those live boards rather than adding any new opener flavor back.
+  Release Gate: UX/UI
 
 - 2026-03-25 16:35:00 KST
   Changed: recut the consolidated `Wave 6` stop in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so runs that already took the `Wave 3` weapon leap no longer see another doctrine/ascension card stack at the first chassis breakpoint. If `architectureForecastId` is already set, `Wave 6` now offers chassis-only `bastion_bay_forge` cards, the forge/HUD stage label flips to `방호·보조`, and picking one silently adopts the forecasted doctrine behind the scenes while keeping support bays and pursuit/admin hooks closed until `Wave 8`. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new `Wave 3 gun first -> Wave 6 body only` path plus the fallback `Wave 6 ascension` behavior for unreachable no-forecast states. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

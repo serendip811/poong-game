@@ -15992,7 +15992,6 @@
               <span class="micro-chip micro-chip--quiet">${startCore.short} 시작</span>
             </div>
             <h3>${signature.label}</h3>
-            <p>${signature.description}</p>
             <p class="signature-card__bias">${signature.short}</p>
           </button>
         `;
@@ -16006,33 +16005,21 @@
       return;
     }
     const signature = getSignatureDef(selectedSignatureId);
-    const seededCore = CORE_DEFS[signature.seedCores[0]];
+    const startCore = CORE_DEFS[signature.startCoreId];
     elements.signatureSpotlight.innerHTML = `
       <div class="signature-spotlight__header">
         <div>
-          <p class="panel__eyebrow">${signature.tag}</p>
+          <p class="panel__eyebrow">시동 회로</p>
           <h3>${signature.label}</h3>
         </div>
-        <span class="summary-chip summary-chip--cool">${signature.short}</span>
+        <span class="summary-chip summary-chip--cool">${startCore.short} 시작</span>
       </div>
-      <p class="signature-spotlight__summary">${signature.perkText}</p>
-      <div class="signature-spotlight__grid">
-        <article class="signature-spotlight__card">
-          <p class="panel__eyebrow">SEED CORE</p>
-          <strong>${seededCore.label}</strong>
-          <p>${summarizeBenchCoreIds(signature.seedCores)}</p>
-        </article>
-        <article class="signature-spotlight__card">
-          <p class="panel__eyebrow">START</p>
-          <strong>초기 보너스</strong>
-          <p>${signature.description}</p>
-        </article>
-      </div>
-      <div class="mini-pill-row">
-        ${signature.seedCores
-          .map((coreId) => createMiniPill("보관", CORE_DEFS[coreId].short, "accent"))
-          .join("")}
-      </div>
+      <article class="signature-spotlight__card">
+        <p class="panel__eyebrow">시작 코어</p>
+        <strong>${startCore.label}</strong>
+        <p>${signature.description}</p>
+      </article>
+      <p class="signature-spotlight__summary">${signature.short}</p>
     `;
   }
 
@@ -16056,7 +16043,7 @@
     if (typeof signature.onRunStart === "function") {
       signature.onRunStart(state);
     }
-    pushCombatFeed(`${signature.label} 투입. ${CORE_DEFS[signature.startCoreId].label}로 시작한다.`, "DROP");
+    pushCombatFeed(`${CORE_DEFS[signature.startCoreId].label} 기동.`, "DROP");
     showScreen("game");
     renderPauseOverlay();
     beginWave(0);
