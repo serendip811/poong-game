@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze new branch wrappers and prove one scalable `Wave 1-12` spine where forge/HUD/`Tab` stay appetite-first, the opener stays quiet, and `Wave 9-12` cashes out three visibly different build destinies instead of hinting at future depth.
+- Immediate priority: strip route-admin wording and post-route apex promises out of the live `Wave 1-12` contract so forge/HUD/`Tab` sell one glanceable appetite-first run, the opener stays quiet, and late payoff is proven inside the shipped route instead of after it.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-25 01:30:36 KST
+  Findings:
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20375) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20474) still turns wave clear into route administration: `Architecture Draft`, `Bastion Draft`, `Catalyst Crucible`, `Live Ascension`, support-bay uplinks, and special-skip messaging all compete at the exact handoff where a strong roguelite should simply make the next power choice feel urgent.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20708) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20856) still frames the forge with `Secondary Rider`, `Next Proof`, route payoff copy, and 12-wave spine explanation. Against the reward snap of `Hades`, `Nova Drift`, or `Brotato`, this is still reading like a system brief instead of a hunger screen.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L14684) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L14837) shows the project is still inventing new late-run wrapper vocabulary through `Catalyst Crucible` live splice branches. That is more branch theater at the same moment the current red flags still say the opener, `Tab`, and reward surface are too wordy.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1343) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1564), [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1931) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2030), and [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L198) still keep `Afterburn` and `Dominion` as cleaner apex language than the shipped `Wave 12` finish. The run keeps leaking “the real form is later,” which directly weakens replay payoff now.
+  Top Priority: Collapse the live reward contract to one fixed three-choice read at every break `main leap / defense-support / greed`, and remove all draft/live-ascension/afterburn-admin wording from the player-facing `Wave 1-12` flow.
+  Why Now: Until the reward handoff is faster and cleaner, every new branch just hides the fantasy the player is supposed to replay for.
+  Do Not Repeat: Do not answer this with another named forge event, cache wrapper, or post-`Wave 12` teaser.
+  Release Gate: UX/UI
 
 - 2026-03-25 11:20:00 KST
   Findings:
@@ -2116,6 +2127,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-25 01:43:03 KST
+  Changed: stripped more route-admin wording out of the consolidated live handoff in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the shipped `Wave 1-12` route now surfaces `주력 변이 / 방호·보조 / 마무리` more consistently at the exact wave-clear and forge-focus moments the latest critique called out. Base-route banners and stage chips that still said `Core Lock`, `Chassis Break`, `Late Form`, or fallback `포지 브레이크` now collapse to `주력 변이`, the wave-clear handoff no longer re-derives route-exception labels before showing the next pause, and the remaining consolidated `live ascension` / `uplink` clear-feed lines were rewritten into generic player-facing payoff language like `주력 변이를 전장에 바로 고정했다` or `방호·보조선이 즉시 연결됐다`. I also tightened the base-route forge focus prompt so the overlay explicitly frames the fixed three-card read as `주력 변이 + 방호·보조 + 판돈·유틸` instead of implying a named stage wrapper above it. This UI pass stayed anchored to the appetite-first reward hierarchy seen in `Hades`, `Nova Drift`, and `Brotato`: one dominant pick, two subordinate lanes, no route-operator headline. Validation passed with `node --check playables/cinder-circuit/game.js` and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to collapse the live reward contract to one fixed three-choice read and remove draft/live-ascension/admin wording from the player-facing `Wave 1-12` flow. The highest-value bounded interpretation was not another system change, but a second consolidation pass over the handoff surfaces that still leaked internal stop names after the cards themselves had already been simplified.
+  Follow-up risk: the base-route handoff is cleaner now, but some non-consolidated and dormant late-path code still contains `Catalyst Crucible`, `Live Ascension`, and post-`Wave 12` apex wording. If critique stays on the same issue, the next bounded pass should either hide those surfaces completely from the shipped route or trim the remaining dormant player-facing copy before adding more progression breadth.
+  Release Gate: UX/UI
 
 - 2026-03-25 01:12:17 KST
   Changed: removed the remaining consolidated-route wrapper exceptions in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the shipped `Wave 1-12` spine no longer opens `overcommit` pursuit routing in Act 2 or `Catalyst Crucible` late-form detours in Act 3, and it no longer offers doctrine-chase contracts inside the recurring forge while the fixed route is active. On the consolidated route, `Wave 8` late-break picks now own the whole `Wave 9-12` ladder without a mid-band chase/cache wrapper hijacking the run. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

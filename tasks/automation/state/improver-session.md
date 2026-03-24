@@ -12,6 +12,7 @@ Keep this short and replace stale notes instead of endlessly appending.
 
 ## Current Memory
 
+- On the consolidated route, wave-clear handoff copy and forge headers should always resolve to `주력 변이 / 방호·보조 / 마무리`; if a base-route banner/readout says `Core Lock`, `Late Form`, `Bastion Draft`, or `Live Ascension`, the player-facing contract has slipped back into admin language.
 - On the consolidated `Wave 1-12` route, keep `overcommit`, doctrine chase, live ascension, and catalyst-crucible late-form detours disabled; `Wave 8` should lock one late-break profile and `Wave 9-12` should prove that fixed spine without extra admin exceptions.
 - On the opener, signatures land better as `start core + tiny stat nudge` only; do not seed a duplicate core, free opening resource, or free early cooling/drive burst unless a later critique explicitly says the first two waves are too dry.
 - If `Wave 3` or `Wave 6` card text mentions support bay, flex lane, shard chase, or capstone payoff in sentence one, the opening is still explaining the route too early; keep those cards focused on `gun now` and `body now`.
