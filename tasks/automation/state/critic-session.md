@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `UX/UI`: the forge/HUD still reads like route administration, so reward desire and combat readability are being buried under labels.
-- Repeated false solution: solving shallow rerun appetite with another draft/contract wrapper, another late-form teaser, or more explanatory copy instead of cutting the player-facing hierarchy down to one dominant reward.
-- Keep comparing reward moments against `Hades`, `Nova Drift`, and `Brotato`. If the player has to parse more than one obvious prize before choosing, the screen is still too verbose.
-- Keep pressure on encounter vocabulary after readability passes. More arena space is not enough if `Wave 9-12` still resolves into minor variations of lane ownership, pursuit, and hold.
-- Next valuable critique angle: after UI contraction, check whether the current `Wave 1-12` clear finally feels self-contained or still smells like prologue-to-Afterburn.
+- The most fragile gate is now `Builds`: the run still starts too solved, with signatures and early forge structure revealing too much future shape before the player has earned the first real transformation.
+- Repeated false solution: answering shallow rerun appetite with another draft/contract wrapper, doctrine teaser, bay promise, or explanatory label pass instead of cutting early certainty and letting one weapon/body leap carry desire.
+- Keep comparing reward moments against `Hades`, `Nova Drift`, and `Brotato`, but only after protecting the opener. A clean forge screen cannot save a run that begins half-built.
+- Keep pressure on encounter vocabulary after the opener is simplified. More arena space is not enough if `Wave 9-12` still resolves into variants of flank ownership, pursuit, and pocket hold.
+- Next valuable critique angle: once the opening half is leaner, re-check whether the current `Wave 1-12` route creates real anticipation for defense/utility/greed paths or still funnels the player into one authored recipe.

@@ -3597,17 +3597,14 @@
       label: "Relay Oath",
       tag: "RICOCHET",
       short: "반사·드라이브",
-      description: "벽 반사와 오버드라이브 회전을 빠르게 여는 시동 회로.",
-      perkText: "Ricochet 예비 x1 · Drive +18% · Overdrive +0.6s",
+      description: "반사 코어로 시작해 drive 회전을 살짝 앞당기는 약한 시동 회로.",
+      perkText: "Ricochet start · Drive +8% · Overdrive +0.2s",
       startCoreId: "ricochet",
       startAffixes: [],
-      seedCores: ["ricochet"],
+      seedCores: [],
       apply(build) {
-        build.driveGainBonus += 0.18;
-        build.overdriveDurationBonus += 0.6;
-      },
-      onRunStart(run) {
-        run.player.drive = 24;
+        build.driveGainBonus += 0.08;
+        build.overdriveDurationBonus += 0.2;
       },
     },
     scrap_pact: {
@@ -3615,18 +3612,15 @@
       label: "Salvage Pact",
       tag: "SALVAGE",
       short: "회수·지속",
-      description: "고철 회수와 근거리 압박을 안정적으로 여는 수거 회로.",
-      perkText: "Scatter 예비 x1 · 고철 +8% · Pickup +18",
+      description: "산탄 코어로 시작해 회수 동선을 조금 더 쉽게 잡는 약한 수거 회로.",
+      perkText: "Scatter start · 고철 +4% · Pickup +10 · Max HP +4",
       startCoreId: "scatter",
       startAffixes: [],
-      seedCores: ["scatter"],
+      seedCores: [],
       apply(build) {
-        build.scrapMultiplier += 0.08;
-        build.pickupBonus += 18;
-        build.maxHpBonus += 8;
-      },
-      onRunStart(run) {
-        run.resources.scrap += 10;
+        build.scrapMultiplier += 0.04;
+        build.pickupBonus += 10;
+        build.maxHpBonus += 4;
       },
     },
     rail_zeal: {
@@ -3634,17 +3628,14 @@
       label: "Rail Zeal",
       tag: "LANCE",
       short: "연쇄·냉각",
-      description: "관통탄에 연쇄 전류를 얹어 후반 돌파 라인을 여는 냉각 회로.",
-      perkText: "Lance 예비 x1 · Chain +1 · Cool +4",
+      description: "관통 코어로 시작해 냉각과 선형 화력을 살짝 앞당기는 약한 포격 회로.",
+      perkText: "Lance start · Damage +2 · Cool +3",
       startCoreId: "lance",
       startAffixes: [],
-      seedCores: ["lance"],
+      seedCores: [],
       apply(build) {
-        build.chainBonus += 1;
-        build.coolRateBonus += 4;
-      },
-      onRunStart(run) {
-        run.player.heat = Math.max(0, run.player.heat - 12);
+        build.damageBonus += 2;
+        build.coolRateBonus += 3;
       },
     },
   };
@@ -11936,7 +11927,7 @@
       verb: "승천",
       tag: ascensionDef.tag,
       title: ascensionDef.title,
-      description: `${ascensionDef.summary} ${doctrine.description} ${weaponChoice.title}을(를) 즉시 무료 접속하고 ${chassis ? chassis.title : "utility chassis"}까지 함께 잠가 mid-run body plan을 굳힌다. support bay 확장과 off-doctrine flex lane은 Wave 8 Late Break Armory까지 미뤄 초반 실루엣을 lean하게 유지한다.${autoPursuitReady ? " Wave 5 contraband salvage를 챙겼다면 Forge Pursuit도 여기서 즉시 점화된다." : ""}`,
+      description: `${ascensionDef.summary} ${weaponChoice.title}을(를) 즉시 무료 접속하고 ${chassis ? chassis.title : "utility chassis"}까지 함께 잠가 첫 진짜 body break를 만든다. 이번 선택은 주포와 차체 실루엣을 확정하는 데만 집중하며, 다른 rider 갈림길은 뒤로 미룬다.`,
       slotText: `${doctrine.label} · ${weaponChoice.title} · ${chassis ? chassis.title : "utility chassis"}`,
       cost: Math.max(0, Math.round((weaponChoice.cost || 0) * 0.48)),
       laneLabel: ascensionDef.laneLabel,
@@ -12014,7 +12005,6 @@
           doctrine.favoredCoreId
         )
       : null;
-    const lateCapstoneLabel = getDoctrineLateCapstoneLabel(doctrine);
     if (!weaponChoice || !ascensionDef) {
       return null;
     }
@@ -12026,14 +12016,14 @@
       tag: "ARCH",
       title: doctrine.label,
       description:
-        `${doctrine.description} Wave 3에서는 ${weaponChoice.title}만 먼저 무료 접속해 첫 주포 실루엣만 바꾼다. 이번 pick은 교리 lock도, chassis package도 아니다. ${chassis ? chassis.title : "Chassis Breakpoint"}와 실제 doctrine 채택은 Wave 6에서 함께 고르고, support bay headline은 Wave 8 Late Break Armory 이후에야 열린다.${lateCapstoneLabel ? ` 이후 Wave 6-8 marked elite shard를 모아 ${lateCapstoneLabel} 계열 후반 분기를 밀 수 있다.` : ""}`,
+        `${doctrine.description} Wave 3에서는 ${weaponChoice.title}만 먼저 무료 접속해 첫 주포 실루엣만 바꾼다. 이번 pick은 아직 doctrine lock도, chassis package도 아니다. ${chassis ? chassis.title : "Chassis Breakpoint"}와 실제 doctrine 채택은 Wave 6에서 함께 고른다.`,
       slotText: `core lock · ${weaponChoice.title}`,
       cost: 0,
       laneLabel: "Core Lock",
       forgeLaneLabel: "Core Lock",
       doctrineId: doctrine.id,
       doctrineLabel: doctrine.label,
-      doctrineCapstoneLabel: lateCapstoneLabel,
+      doctrineCapstoneLabel: getDoctrineLateCapstoneLabel(doctrine),
       weaponChoice,
       doctrineFormLabel: doctrineForm ? doctrineForm.label : doctrine.label,
       doctrineFormTrait: doctrineForm ? doctrineForm.traitLabel : null,
@@ -16727,15 +16717,15 @@
       pushCombatFeed(
         state.forgeDraftType === "architecture_draft"
           ? choice.action === "architecture_forecast"
-            ? `${choice.doctrineLabel} 잠금 적용. ${choice.weaponChoice ? choice.weaponChoice.title : "주포 mutation"}만 먼저 고정해 다음 웨이브부터 lean한 core form으로 싸운다. ${choice.breakpointLabel || "Wave 6 Chassis Break"}는 다음 form break에서, support bay와 flex lane은 Wave 8 Late Break Armory에서 늦게 열린다.`
+            ? `${choice.doctrineLabel} 방향 고정. ${choice.weaponChoice ? choice.weaponChoice.title : "주포 mutation"}만 먼저 붙여 다음 웨이브부터 lean한 core form으로 싸운다. ${choice.breakpointLabel || "Wave 6 Chassis Break"}는 다음 break에서 고른다.`
             : `${grantLabel} 적용. 아키텍처 방향을 기울인 채 다음 웨이브를 연다.`
         : state.forgeDraftType === "bastion_draft"
           ? choice.type === "fallback"
             ? `${grantLabel} 적용. Bastion Draft를 안정화로 넘기고 다음 웨이브를 바로 연다.`
             : choice.action === "bastion_pact"
               ? `${grantLabel} 적용. 최대 체력을 깎아 고철을 쥔 대신 3웨이브 Siege Debt를 떠안고 다음 웨이브를 연다.`
-              : choice.action === "wave6_ascension"
-                ? `${grantLabel} 적용. ${choice.doctrineLabel}를 irreversible form으로 잠가 ${choice.doctrineChoice ? choice.doctrineChoice.title : "주포 mutation"}과 ${choice.chassisTitle || "utility chassis"}까지만 먼저 켰다.${choice.autoPursuitReady ? " 준비된 contraband salvage도 즉시 pursuit로 점화된다." : ""} support bay와 off-doctrine flex lane은 아직 열지 않고 Wave 8 Late Break Armory까지 보류한다.`
+            : choice.action === "wave6_ascension"
+                ? `${grantLabel} 적용. ${choice.doctrineLabel}를 잠가 ${choice.doctrineChoice ? choice.doctrineChoice.title : "주포 mutation"}과 ${choice.chassisTitle || "utility chassis"}를 함께 켰다. 이번 break는 주포/차체 형태를 확정하는 데만 쓰고 다음 rider 갈림길은 뒤로 미룬다.`
                 : choice.action === "bastion_bay_forge"
                 ? !choice.bayUnlock && CONSOLIDATED_12_WAVE_ROUTE
                   ? `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}만 먼저 잠가 hold, dive, exit 리듬을 바꿨다. support rider와 flex lane은 아직 열지 않고 Wave 8 Late Break Armory까지 묶어 둔다.`

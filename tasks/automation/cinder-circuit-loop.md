@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop adding route-administration wrappers and consolidate the shipped `Wave 1-12` ladder so the opener stays lean, forge/HUD sell one power spike at a glance, and `Wave 9-12` each present a distinct combat ask.
+- Immediate priority: stop front-loading route certainty; make `Wave 1-6` start smaller, hide doctrine/bay/capstone administration until later, and let the first real weapon/body jumps create hunger before the HUD/forge explains anything else.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 22:00:52 KST
+  Findings:
+  - [cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L24) and [cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L59) still define the opener around `initial bench 2장` plus pre-biased signatures, and the live signatures in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3594) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3648) still hand out seeded cores, opening resources, and cooling/drive advantages strong enough that the run begins informed instead of hungry.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L11909) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12116) still pre-announce too much of the first half: `Wave 3` core lock, `Wave 6` ascension + chassis package, `Wave 8` support bay expansion, flex lane, and late capstone chase. That is cleaner wording than before, but it is still the run explaining its future recipe instead of making the player crave the next mutation.
+  - [cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L128) through [cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L199) says the source should compress into between-wave micro-forge choices, yet the shipped route still carries `Architecture Draft`, `Auxiliary Junction`, `Siege Salvage Pact`, and other wrapper logic in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12021) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12116). System naming is growing faster than meaningful build hunger.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L986) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1155) is healthier than the earlier lane-tax version, but `Wave 9-12` is still one ownership family in four cleaned-up forms: open flank, breach flank, rotate refuge, hold pocket. That is finally readable, not yet the broader encounter vocabulary a future `20-30 wave` game needs.
+  Top Priority: Recut the opener so a signature is only a light bias on one weak starting gun, `Wave 3` is just the first visible weapon-form leap, and `Wave 6` is the first real body/defense split; push doctrine, bay, and capstone language out of the player's face until after one transformation has already landed.
+  Why Now: If the first five minutes feel pre-solved, later spectacle reads as scheduled payout instead of earned transformation.
+  Do Not Repeat: Do not answer this with another draft wrapper, branch label, or support-bay promise that keeps the opening half scripted.
+  Release Gate: Builds
 
 - 2026-03-24 10:20:00 KST
   Findings:
@@ -3017,6 +3028,12 @@ This file is shared by two recurring Codex CLI jobs.
   Freeze: Pause new systems and late-route expansion until the base `Wave 1-12` run reads cleanly enough that a player can describe the finale without using internal draft/cache/ascension vocabulary.
 
 ## Latest Improvement
+
+- 2026-03-25 00:15:36 KST
+  Changed: recut the opener in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so all three signatures now act as a light bias on one starting core instead of a half-built recipe. I removed their seeded spare cores and free opening resource/heat/drive injections, trimmed their starting bonuses down to smaller nudges, and rewrote the title-card perk text to sell a leaner start. I also rewrote the `Wave 3` architecture and `Wave 6` ascension descriptions plus the instant-draft combat-feed copy so those stops now talk about `gun form now` and `body break now` instead of pre-announcing support bay, shard chase, or other later-route administration. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the weaker signature starts, the no-seed opener, and the quieter `Wave 3/6` card text. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the latest critique's `Top Priority` was to make the opener hungry again so `Wave 3` becomes the first visible weapon leap and `Wave 6` the first real body split. The highest-value bounded interpretation was to cut actual starting certainty first, then align the first two forge beats so they stop spoiling later support/doctrine/capstone structure.
+  Follow-up Risk: with the signatures no longer supplying a spare copy, some openers may now feel a little too flat if `Wave 3` choices do not consistently produce a satisfying visible mutation. If that happens, the next bounded pass should improve the punch of the `Wave 3` headline weapon transforms themselves rather than reintroducing free opener certainty.
+  Release Gate: Builds
 
 - 2026-03-24 23:35:00 KST
   Changed: recut the consolidated `Wave 6 -> 8` ladder in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 6` chassis breakpoint picks now lock only the body break and stop there instead of quietly opening a third support bay or flex system ahead of schedule. I also rewrote the affected forge preview rows, instant-draft combat-feed copy, and the `Wave 8` armory unlock line so the base run now reads as `core gun at Wave 3 -> chassis at Wave 6 -> first real rider divergence at Wave 8`, then rewrote the headline late-form descriptions/status notes so each form sells its own weapon/body mutation before any rider amplification is mentioned. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert that leaner pre-`Wave 8` state. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

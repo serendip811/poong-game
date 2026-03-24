@@ -1286,12 +1286,22 @@ assert.equal(game.MAX_APEX_MUTATION_LEVEL, 3);
 
 const signatureBuild = game.createInitialBuild("scrap_pact");
 assert.equal(signatureBuild.signatureId, "scrap_pact");
-assert.equal(signatureBuild.maxHpBonus, 8);
-assert.equal(signatureBuild.pickupBonus, 18);
-assert.equal(signatureBuild.scrapMultiplier, 1.08);
+assert.equal(signatureBuild.maxHpBonus, 4);
+assert.equal(signatureBuild.pickupBonus, 10);
+assert.equal(signatureBuild.scrapMultiplier, 1.04);
 assert.equal(signatureBuild.supportBayCap, 2);
 assert.equal(JSON.stringify(signatureBuild.affixes), JSON.stringify([]));
-assert.equal(JSON.stringify(signatureBuild.pendingCores), JSON.stringify(["scatter"]));
+assert.equal(JSON.stringify(signatureBuild.pendingCores), JSON.stringify([]));
+
+const relayStartBuild = game.createInitialBuild("relay_oath");
+assert.equal(relayStartBuild.driveGainBonus, 0.08);
+assert.equal(relayStartBuild.overdriveDurationBonus, 0.2);
+assert.equal(JSON.stringify(relayStartBuild.pendingCores), JSON.stringify([]));
+
+const railStartBuild = game.createInitialBuild("rail_zeal");
+assert.equal(railStartBuild.damageBonus, 2);
+assert.equal(railStartBuild.coolRateBonus, 3);
+assert.equal(JSON.stringify(railStartBuild.pendingCores), JSON.stringify([]));
 
 const build = game.createInitialBuild("scrap_pact");
 build.pendingCores = game.sanitizeBenchCoreIds(build.pendingCores.concat(["lance"]));
@@ -1299,13 +1309,10 @@ assert.equal(
   JSON.stringify(game.sanitizeBenchCoreIds(["scatter", "scatter", "scatter", "scatter", "scatter"])),
   JSON.stringify(["scatter", "scatter", "scatter", "scatter"])
 );
-assert.equal(game.getBenchCount(build, "scatter"), 1);
+assert.equal(game.getBenchCount(build, "scatter"), 0);
 assert.equal(
   JSON.stringify(game.getBenchEntries(build)),
-  JSON.stringify([
-    { coreId: "lance", copies: 1, syncLevel: 0 },
-    { coreId: "scatter", copies: 1, syncLevel: 0 },
-  ])
+  JSON.stringify([{ coreId: "lance", copies: 1, syncLevel: 0 }])
 );
 
 let rollIndex = 0;
@@ -1331,11 +1338,10 @@ assert.ok(choices.some((choice) => choice.contractRole === "rider"));
 assert.ok(choices.every((choice) => typeof choice.verb === "string" || choice.type === "fallback"));
 assert.ok(choices.every((choice) => typeof choice.cost === "number"));
 
-const scatterChoice = choices.find((choice) => choice.type === "core" && choice.coreId === "scatter");
-assert.ok(scatterChoice);
-assert.equal(scatterChoice.benchCopies, 1);
-assert.equal(scatterChoice.syncLevel, 1);
-assert.ok(scatterChoice.cost < game.CORE_DEFS.scatter.cost);
+const recycleChoice = choices.find((choice) => choice.action === "recycle");
+assert.ok(recycleChoice);
+assert.equal(recycleChoice.contractRole, "gamble");
+assert.equal(recycleChoice.cost, 0);
 
 const directPivotBuild = game.createInitialBuild("scrap_pact");
 directPivotBuild.pendingCores = game.sanitizeBenchCoreIds(["scatter"]);
@@ -1571,6 +1577,9 @@ const mirrorArchitectureChoice = game
   .buildArchitectureDraftChoices(doctrineCapstoneBuild)
   .find((choice) => choice.title === "Mirror Hunt Doctrine");
 assert.ok(mirrorArchitectureChoice);
+assert.ok(mirrorArchitectureChoice.description.includes("Wave 3에서는"));
+assert.ok(!mirrorArchitectureChoice.description.includes("support bay"));
+assert.ok(!mirrorArchitectureChoice.description.includes("marked elite shard"));
 game.applyForgeChoice(
   { build: doctrineCapstoneBuild, player: null, resources: { scrap: 999 }, stats: {} },
   mirrorArchitectureChoice
@@ -1650,6 +1659,9 @@ const artilleryAscensionChoice = game
   .buildBastionDraftChoices(artilleryDoctrineBuild, () => 0, 6)
   .find((choice) => choice.action === "wave6_ascension" && choice.doctrineId === "storm_artillery");
 assert.ok(artilleryAscensionChoice);
+assert.ok(artilleryAscensionChoice.description.includes("첫 진짜 body break"));
+assert.ok(!artilleryAscensionChoice.description.includes("support bay"));
+assert.ok(!artilleryAscensionChoice.description.includes("contraband salvage"));
 game.applyForgeChoice(
   { build: artilleryDoctrineBuild, player: null, resources: { scrap: 999 }, stats: {} },
   artilleryAscensionChoice
@@ -1659,7 +1671,7 @@ assert.equal(artilleryDoctrineBuild.doctrinePursuitCommitted, true);
 assert.equal(artilleryDoctrineBuild.doctrinePursuitProgress, 0);
 assert.equal(artilleryWaveFiveWeapon.doctrineFormLabel, "Siege Frame");
 assert.equal(artilleryWaveFiveWeapon.doctrineStage, 1);
-assert.equal(artilleryWaveFiveWeapon.chain, 1);
+assert.equal(artilleryWaveFiveWeapon.chain, 0);
 assert.equal(
   JSON.stringify(artilleryWaveFiveWeapon.doctrineFirePattern.offsets),
   JSON.stringify([-0.26, 0, 0.26])
@@ -2651,12 +2663,6 @@ const run = {
   },
 };
 
-game.applyForgeChoice(run, scatterChoice);
-assert.equal(run.build.coreId, "scatter");
-assert.equal(game.getBenchCount(run.build, "scatter"), 0);
-assert.equal(game.computeWeaponStats(run.build).attunedCopies, 2);
-assert.equal(game.computeWeaponStats(run.build).benchSyncLevel, 1);
-
 run.build.pendingCores = game.sanitizeBenchCoreIds(run.build.pendingCores.concat(["scatter"]));
 const sameCoreChoice = game.buildForgeChoices(run.build, rng, 180).find(
   (choice) => choice.type === "core" && choice.coreId === "scatter"
@@ -2664,6 +2670,16 @@ const sameCoreChoice = game.buildForgeChoices(run.build, rng, 180).find(
 assert.ok(sameCoreChoice);
 game.applyForgeChoice(run, sameCoreChoice);
 assert.equal(run.build.coreId, "scatter");
+assert.equal(run.build.attunedCopies, 2);
+assert.equal(game.computeWeaponStats(run.build).benchSyncLevel, 1);
+assert.equal(game.getBenchCount(run.build, "scatter"), 0);
+
+run.build.pendingCores = game.sanitizeBenchCoreIds(run.build.pendingCores.concat(["scatter"]));
+const secondScatterChoice = game.buildForgeChoices(run.build, rng, 180).find(
+  (choice) => choice.type === "core" && choice.coreId === "scatter"
+);
+assert.ok(secondScatterChoice);
+game.applyForgeChoice(run, secondScatterChoice);
 assert.equal(run.build.attunedCopies, 3);
 assert.equal(game.computeWeaponStats(run.build).benchSyncLevel, 2);
 assert.equal(game.getBenchCount(run.build, "scatter"), 0);
@@ -2756,8 +2772,8 @@ const playerStats = game.computePlayerStats(run.build);
 
 assert.ok(weapon.damage > 0);
 assert.equal(weapon.benchSyncLevel, 0);
-assert.equal(playerStats.pickupRadius, 60);
-assert.equal(playerStats.maxHp, 108);
+assert.equal(playerStats.pickupRadius, 52);
+assert.equal(playerStats.maxHp, 104);
 assert.ok(playerStats.maxHp >= 100);
 assert.ok(playerStats.overdriveDuration >= 5.5);
 assert.ok(Array.isArray(weapon.affixLabels));
