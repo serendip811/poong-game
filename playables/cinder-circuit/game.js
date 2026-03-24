@@ -8080,41 +8080,38 @@
     };
     return [
       {
+        label: "START",
+        title: "약한 시작",
+        state: boundedWave >= 3 ? "locked" : "live",
+        detail:
+          boundedWave >= 3
+            ? "빈 선체 구간은 끝났다. 이제 화면을 넓게 먹는 첫 무기 도약만 남겨 둔다."
+            : "처음 두 웨이브는 한 줄 화선으로 버틴다. 미사일과 보조 연출은 닫아 두고 Wave 3 무기 도약에 힘을 모은다.",
+      },
+      {
         label: "W3",
-        title: "Core Lock",
+        title: boundedWave >= 3 ? dominantForm.label : nextBreakpoint.label,
         state: stageState(3),
         detail:
           boundedWave >= 3
-            ? `${dominantForm.label}로 초반 주포 실루엣을 잠갔다.`
-            : `${nextBreakpoint.label} 한 장으로 초반 주포 실루엣을 먼저 고정한다.`,
+            ? `${dominantForm.label}이 첫 주포 도약으로 잠겼다. 지금부터는 이 화망이 화면을 얼마나 빨리 비우는지가 런의 기준이 된다.`
+            : `${nextBreakpoint.label} 한 장으로 첫 포문을 크게 벌린다. 이후 방호 선택 전까지는 이 무기 변화만 선명하게 읽히게 둔다.`,
       },
       {
         label: "W6",
-        title: "Chassis Break",
+        title: chassis ? chassis.label : "방호 약속",
         state: stageState(6),
         detail: chassis
-          ? `${chassis.label} 차체로 hold, dive, exit 리듬을 갈라 놓는다.`
-          : "Wave 6에서 첫 차체 break를 붙여 근접 압박을 버티는 몸을 만든다.",
+          ? `${chassis.label} 차체가 버티는 선을 맡는다. 이제 화력은 그대로 두고 dive, hold, exit 리듬만 몸으로 갈라 놓는다.`
+          : "Wave 6에서 몸체 하나를 골라 버티는 선을 만든다. 지원 하드웨어는 뒤로 밀고 방호 약속만 먼저 굳힌다.",
       },
       {
         label: "W8",
-        title: "Late Form",
+        title: lateBreakHeadline ? lateBreakHeadline.title : "후기 점화",
         state: stageState(8),
         detail: lateBreakHeadline
-          ? `${lateBreakHeadline.title} 하나만 크게 골라 후반 실루엣을 고정한다.`
-          : "Wave 8에서 oversized late-form 하나만 골라 후반 실루엣을 고정한다.",
-      },
-      {
-        label: "W9-10",
-        title: "Proof",
-        state: stageState(9, 10),
-        detail: "새 화망과 차체가 화면 점유 시간을 실제로 늘리는지 바로 증명한다.",
-      },
-      {
-        label: "W11-12",
-        title: "Finish",
-        state: stageState(11, 12),
-        detail: "같은 형태를 유지한 채 마지막 압박을 닫고 런을 봉인한다.",
+          ? `${lateBreakHeadline.title} 하나만 크게 점화해 후반 실루엣을 고정한다. Wave 9-12는 새 갈림길 없이 이 형태를 오래 누르는 구간이 된다.`
+          : "Wave 8에서 oversized late-form 하나만 점화한다. 이후 런은 새 행정 없이 그 형태를 끝까지 밀어붙인다.",
       },
     ];
   }
@@ -8135,10 +8132,10 @@
     const focus = getShippingLadderFocus(build, weapon, boundedWave);
     return `
       <div class="summary-head">
-        <strong>12-Wave Contract</strong>
+        <strong>런 실루엣</strong>
         <span class="summary-chip ${focus.state === "live" ? "summary-chip--hot" : ""}">${act.shortLabel}</span>
       </div>
-      <p class="summary-copy roadmap-card__path">Wave 3 core lock -> Wave 6 chassis break -> Wave 8 late form -> Wave 9-10 proof -> Wave 11-12 finish.</p>
+      <p class="summary-copy roadmap-card__path">약하게 시작하고 Wave 3, Wave 6, Wave 8 세 번만 크게 커진다.</p>
       <div class="roadmap-card__steps">
         ${steps
           .map(
@@ -8154,7 +8151,7 @@
           )
           .join("")}
       </div>
-      <p class="summary-note">${focus.title}: ${focus.detail}</p>
+      <p class="summary-note">${focus.label} ${focus.title}: ${focus.detail}</p>
     `;
   }
 
@@ -8724,7 +8721,8 @@
     chipLabel = "",
     title,
     currentFormLabel,
-    proofLabel,
+    spotlightLabel = "다음 점화",
+    spotlightValue = "",
     tradeoffLabel = "",
     tradeoffValue = "",
     tradeoffTone = "",
@@ -8741,7 +8739,11 @@
         }
       </div>
       <strong class="route-contract__title">${currentFormLabel || title}</strong>
-      <div class="forge-focus__proof"><span>다음 시험</span>${proofLabel}</div>
+      ${
+        spotlightValue
+          ? `<div class="forge-focus__proof"><span>${spotlightLabel}</span>${spotlightValue}</div>`
+          : ""
+      }
       ${
         tradeoffValue
           ? `<p class="forge-card__pivot forge-card__pivot--bill"><span>${billLabel}</span><strong>${tradeoffValue}</strong></p>`
@@ -8806,7 +8808,7 @@
 
   function createTabInspectBoardMarkup({
     dominantForm,
-    proofWindow,
+    spotlightValue,
     gambleSummary,
   }) {
     return `
@@ -8816,7 +8818,7 @@
       </div>
       <div class="inspect-board inspect-board--contract">
         <strong class="route-contract__title">${dominantForm.label}</strong>
-        <div class="forge-focus__proof"><span>다음 시험</span>${proofWindow.label}</div>
+        <div class="forge-focus__proof"><span>다음 점화</span>${spotlightValue}</div>
         <p class="forge-card__pivot forge-card__pivot--bill">
           <span>비용·대가</span>
           <strong>${gambleSummary.label}</strong>
@@ -20810,6 +20812,10 @@
     const proofWindow = getImmediateProofWindowSummary(state.build, state.waveIndex + 1);
     const supportTrack = getForgeSupportTrackSnapshot(state.build, state.supportSystem);
     const ladderFocus = getShippingLadderFocus(state.build, weapon, state.waveIndex + 1);
+    const ladderSteps = getShippingLadderSteps(state.build, weapon, state.waveIndex + 1);
+    const nextBeat =
+      ladderSteps.find((step) => step.state === "primed" || step.state === "planned") ||
+      ladderFocus;
     const headlineLabel = getPresentationHeadlineLabel(weapon, state.waveIndex + 1);
     const tabInspectBoardActive =
       CONSOLIDATED_12_WAVE_ROUTE && state.hudInspect && !state.paused;
@@ -20827,17 +20833,17 @@
         </div>
         ${
           minimalBaseRouteHud
-            ? `<div class="forge-focus__proof"><span>다음 시험</span>${proofWindow.label}</div><p class="summary-note">${dominantForm.label} 하나만 앞세우고 ${proofWindow.label}에서 바로 본다.</p>`
+            ? `<div class="forge-focus__proof"><span>다음 점화</span>${nextBeat.title}</div><p class="summary-note">${dominantForm.label} 하나만 앞세우고 ${nextBeat.title}까지 힘을 모은다.</p>`
             : `<div class="mini-pill-row">${
                 baseRouteForgeActive
-                  ? createMiniPill("다음 시험", proofWindow.label, "hot") +
+                  ? createMiniPill("다음 점화", nextBeat.title, "hot") +
                     createMiniPill("방호·보조", supportTrack.label, "cool")
                   : createMiniPill(getHeadlineFormTierLabel(getHeadlineFormTier(state.build)), headlineLabel, "hot") +
                     createMiniPill("보조", supportTrack.label, "cool")
               }</div>
               <p class="summary-note">${
                 baseRouteForgeActive
-                  ? `${ladderFocus.title}. ${dominantForm.label} 하나만 앞세우고 ${proofWindow.label}만 먼저 본다.`
+                  ? `${ladderFocus.title}. ${dominantForm.label} 하나만 앞세우고 ${nextBeat.title}까지 결을 유지한다.`
                   : `${nextBreakpoint.label}이 다음 monster-form jump다. ${supportTrack.label}는 rider로만 짧게 남기고, ${proofWindow.label}에서 바로 space ownership를 증명한다.`
               }</p>`
         }
@@ -20850,7 +20856,7 @@
         if (tabInspectBoardActive) {
           elements.pendingCores.innerHTML = createTabInspectBoardMarkup({
             dominantForm,
-            proofWindow,
+            spotlightValue: nextBeat.title,
             gambleSummary,
           });
       } else {
@@ -20889,7 +20895,8 @@
               chipLabel: ladderFocus.label,
               title: dominantForm.label,
               currentFormLabel: dominantForm.label,
-              proofLabel: proofWindow.label,
+              spotlightLabel: "다음 점화",
+              spotlightValue: nextBeat.title,
               tradeoffLabel: "판돈·유틸",
               tradeoffValue: gambleSummary.label,
               tradeoffTone: gambleSummary.label === "잠잠" ? "" : "accent",
@@ -20998,6 +21005,11 @@
     const dominantFormSummary = getDominantFormSummary(state.build, state.weapon, state.waveIndex + 2);
     const nextFormStep = getNextBreakpointSummary(state.build, state.weapon, state.waveIndex + 2);
     const proofWindow = getImmediateProofWindowSummary(state.build, state.waveIndex + 2);
+    const ladderFocus = getShippingLadderFocus(state.build, state.weapon, state.waveIndex + 2);
+    const ladderSteps = getShippingLadderSteps(state.build, state.weapon, state.waveIndex + 2);
+    const nextBeat =
+      ladderSteps.find((step) => step.state === "primed" || step.state === "planned") ||
+      ladderFocus;
     const riderStep = state.forgeMaxSteps > 1 && state.forgeStep === 2;
     const featuredForgeChoice = riderStep
       ? { showcase: null, featuredIndex: -1 }
@@ -21054,7 +21066,8 @@
             chipLabel: baseRouteForgeStage ? baseRouteForgeStage.label : "",
             title: focusTitle,
             currentFormLabel: dominantFormSummary.label,
-            proofLabel: proofWindow.label,
+            spotlightLabel: "다음 점화",
+            spotlightValue: nextBeat.title,
             tradeoffLabel: "고철",
             tradeoffValue: String(Math.round(state.resources.scrap)),
             tradeoffTone: state.resources.scrap >= 40 ? "accent" : "",

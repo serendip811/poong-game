@@ -12,6 +12,7 @@ Keep this short and replace stale notes instead of endlessly appending.
 
 ## Current Memory
 
+- On the consolidated route, the default HUD card, `Tab`, and forge focus should all sell the same four-beat spine `약한 시작 -> Wave 3 무기 도약 -> Wave 6 방호 약속 -> Wave 8 후기 점화`; if `proof`, `contract`, or `draft` retake those default surfaces, the shipped run has slipped back into route explanation instead of a closed 12-wave appetite loop.
 - On the opener, signature selection lands best when both the card and spotlight read as `label + start core + one bias line`, and the first combat feed is only `start core 기동`; if perk paragraphs, seed/start admin boxes, or launch-brief copy regrow, the opening has slipped back into admin mode before Wave 1.
 - On the consolidated route, the best `UX/UI` contract is now literal: wave-clear feed, `Tab`, and the forge focus card should each show only `현재 형태 / 다음 시험 / 비용·대가`; if support pills, roadmap prompts, or draft-stage names creep back onto those default surfaces, the shipped run has slipped back into briefing mode.
 - On the consolidated route, `Wave 3` lands better when the card, roadmap rung, and confirm feed all headline the immediate weapon leap `Prism Crown` / `Twin Spine` style rather than the backstage doctrine name; if the first stop reads `Doctrine`, `Forecast`, or `Core Lock` first, the opening growth beat has drifted back into scaffolding.

@@ -120,17 +120,19 @@ assert.equal(eraThreePlan[2].state, "live");
 assert.ok(eraThreePlan[2].proofLabel.length > 0);
 const inspectMarkup = game.createTabInspectBoardMarkup({
   dominantForm: { label: "Sky Lance" },
-  proofWindow: { label: "Crownbreaker Lap" },
+  spotlightValue: "Cataclysm Arsenal",
   gambleSummary: { label: "고철 42", note: "" },
 });
 assert.ok(inspectMarkup.includes("비용·대가"));
-assert.ok(inspectMarkup.includes("Crownbreaker Lap"));
+assert.ok(inspectMarkup.includes("다음 점화"));
+assert.ok(inspectMarkup.includes("Cataclysm Arsenal"));
 assert.ok(!inspectMarkup.includes("inspect-board__lane"));
 const compactFocusMarkup = game.createBaseRouteFocusMarkup({
   eyebrow: "현재 실루엣",
   title: "Sky Lance",
   currentFormLabel: "Sky Lance",
-  proofLabel: "Crownbreaker Lap",
+  spotlightLabel: "다음 점화",
+  spotlightValue: "Cataclysm Arsenal",
   tradeoffLabel: "판돈·유틸",
   tradeoffValue: "고철 42",
   tradeoffTone: "accent",
@@ -138,6 +140,7 @@ const compactFocusMarkup = game.createBaseRouteFocusMarkup({
 });
 assert.ok(compactFocusMarkup.includes("판돈·유틸"));
 assert.ok(compactFocusMarkup.includes("고철 42"));
+assert.ok(compactFocusMarkup.includes("Cataclysm Arsenal"));
 const forgeProofMarkup = game.createBaseRouteForgeProofMarkup("Crownbreaker Lap에서 버틴다.");
 assert.ok(forgeProofMarkup.includes("다음 시험"));
 assert.ok(!forgeProofMarkup.includes("preview"));

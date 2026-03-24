@@ -12,9 +12,9 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `UX/UI`; the build catalog is already broad enough that the larger failure is still appetite and readability on title, HUD, forge, and `Tab`, especially while the opener starts too informed and too visually complete.
-- Repeated false solution: compressing copy or renaming stages while still keeping title spotlight detail, `proof` framing, route/admin language, or live cache branches visible on the shipped route.
-- Keep comparing against `Nova Drift`, `Hades`, and `Brotato`; the test is whether the player can grasp the run state and reward appetite in a glance without being taught the route schema.
-- The late support catalogue is already strong enough: orbitals, shields, sentries, missiles, drones, and similar payoff layers should stay as earned later beats, not title-screen promises or Wave 3-6 infrastructure.
-- `Afterburn`, `Dominion`, `Architecture Draft`, `Bastion Draft`, shipping-ladder boards, start-screen briefing residue, and new debt/contract subgames are the main drift markers whenever they remain player-facing in the shipped `Wave 1-12` route.
-- Next critique bias: pressure consolidation over expansion until the opener is weaker and quieter, `Wave 3/6/8` become obvious silhouette jumps, and the reward/HUD surfaces can sell desire with fewer words than they currently use.
+- The most fragile gate is now `Progression`: the game still advertises post-`Wave 12` futures and route machinery, so the shipped ladder does not yet read as a complete rerunnable destination.
+- Repeated false solution: trimming copy or renaming stages while leaving `Afterburn`, `Dominion`, draft/admin terms, proof-window coaching, and support-bay logistics visible to the player.
+- Keep comparing against `Nova Drift`, `Hades`, and `Brotato`; the benchmark is whether reward screens and status reads sell one obvious appetite first instead of teaching the route schema.
+- The content ceiling is already high enough for now: orbitals, shields, sentries, missiles, drones, and other support spectacle should remain earned late beats, not opener promises or justification for more wrappers.
+- Main drift markers: any player-facing `Afterburn`/`Dominion` future, any `Architecture Draft`/`Bastion Draft`/doctrine board, and any screen that explains the run more than it sells the next power jump.
+- Next critique bias: keep forcing consolidation until `Wave 1-12` is the full visible contract, `Wave 3/6/8` are unmistakable transformation beats, and the forge/HUD/`Tab` grammar can stay to `current form`, `next test`, `cost/tradeoff`.
