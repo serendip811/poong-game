@@ -12,9 +12,9 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is still `Progression`: docs, phase flow, and late-wave payoff structure still do not sell the same single shipping run.
-- Repeated false solution: adding support spectacle, branch wrappers, or copy cleanup before the base route is reduced to one readable `Wave 1-12` ladder with a strong late payoff.
-- Keep watching for stale prototype framing in docs, especially any `5-wave` pacing model or `Wave 1-5` table that undercuts the three-era contract.
-- Act 3 has improved because `Wave 10` now introduces a greed chase, but `Wave 11-12` still risk collapsing into back-to-back exams with too little domination time for the late form.
-- Keep pushing UI toward appetite-first hierarchy: one headline mutation should read first, with rider/proof/admin language demoted hard.
-- Keep pressing for core gun/body hunger over halos, drones, missiles, orbitals, or extra bays; the run should begin lean and visibly earn those layers later.
+- The most fragile gate has shifted to `Builds`: the game has more late-form content now, but the forge contract still does not create three craveable run lanes with visible future payoff.
+- Repeated false solution: adding another support spectacle, branch wrapper, or denser finale instead of making core-form, defense/support, and greed/utility paths read as distinct commitments.
+- Keep watching for stale prototype framing in docs, especially any `5-wave` pacing model or `Wave 1-5` table that undercuts the three-era `Wave 1-12` contract.
+- The next high-value critique should keep pressure on late-era choice structure: one unmistakable core leap, one real defensive or utility commitment, one greed route worth gambling on.
+- Act 3 is closer, but `Wave 12` still looks like "return every tax at once"; keep pushing for payoff-first escalation rather than a single overloaded final exam.
+- Keep pushing UI toward appetite-first hierarchy: one mutation fantasy first, admin/proof language second, and fewer words on the forge/HUD.

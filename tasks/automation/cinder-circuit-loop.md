@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: unify one shipping `Wave 1-12` contract across docs, phase flow, and reward presentation by deleting `5-wave` teaching, hiding `Afterburn`/branch exceptions from the default route, and making `Wave 9-12` read as payoff -> greed test -> pursuit proof -> final breach.
+- Immediate priority: freeze new branch/system sprawl and consolidate one appetite-first `Wave 1-12` route by deleting remaining `5-wave` teaching, demoting branch/admin copy in forge/HUD, and widening `Wave 9-12` plus forge rewards into clearer core-form payoff with distinct greed/defense utility paths.
 
 ## Release Gates
 
@@ -48,6 +48,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 14:01:07 KST
+  Findings:
+  - The run is still not teaching one scale of game. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) sells a three-era `Wave 1-12` ladder that could grow toward `20-30 waves`, but [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md) still frames biomes as a `5-wave act curve` with `Wave 1-5` balance targets, so the project keeps inheriting prototype-length tuning assumptions.
+  - The forge layer is still too narrow to drive repeat-run hunger. The design claims `Headline Leap + Survival Rider + Greed/Utility Gamble`, but the live contract in [`renderForgeOverlay()`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20330) and [`updateHUD()`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20079) still orbits around headline/rider/proof/admin framing, so greed, defense, and utility read like secondary wrappers instead of real run-shaping lanes a player can chase.
+  - Core weapon evolution is stronger than before, but it is still too dependent on support scaffolding for spectacle. The late-form definitions in [`LATE_ASCENSION_DEFS`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L5288) repeatedly sell bigger silhouettes by saying `support bay가 많을수록`, which means the main gun/body fantasy still lands as "becomes exciting once accessories are online" instead of earning a fierce standalone transformation first.
+  - Act 3 breathes more on `Wave 9-11`, but [`Wave 12 · Cinder Crown`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1110) still spikes to `activeCap: 40` and restores relay, ignition, binder, lancer, and warden tax at once. That is a sharp finale exam, not the broader escalation grammar needed for a rerunnable ladder that could someday stretch to `20-30 waves`.
+  Top Priority: Rework the shipping forge contract so every late-era stop offers one unmistakable core-form leap, one real defense/support utility commitment, and one greed route with visible future payoff, then tune `Wave 12` to cash out that structure instead of reintroducing every tax at once.
+  Why Now: Until the player can anticipate distinct build lanes with a payoff beyond the next screen, the run will still feel like a polished prototype rather than a rerunnable roguelite.
+  Do Not Repeat: Do not answer this with another support module, another branch exception, or more finale density pretending to be depth.
+  Release Gate: Builds
 
 - 2026-03-24 19:10:00 KST
   Findings:
@@ -1842,6 +1853,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 14:12:48 KST
+  Changed: tightened the `Wave 8` Late Break contract in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so each of the three shipping late-break cards now previews its actual `Wave 11` payoff band and `Wave 12` finale by name (`Crownbreaker Gallery` / `Cataclysm Crownline`, `Halo Refuge` / `Citadel Stand`, `Kingpin Vaultline` / `Grand Blackout Run`) instead of reading like a generic wrapper around headline/rider text. In the same bounded pass, I retuned the branch-specific `Wave 12` encounter profiles to cash out those lanes with lighter active caps, lower spawn budgets, and narrower hazard counts so the finale resolves the chosen lane identity instead of reintroducing every tax family at once. Validation passed with `node --check playables/cinder-circuit/game.js`, `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and one targeted `node` sanity check for late-break preview rows plus branch `Wave 12` overrides.
+  Why: the newest critique's `Top Priority` asked for the shipping forge contract to present one real main leap, one defense/support commitment, and one greed route with visible future payoff, then to make `Wave 12` cash out that structure. The highest-value bounded interpretation was to make the three late-break cards advertise their future payoff windows directly and then make those exact finales less tax-stacked, because that improves both build anticipation and the payoff read without adding another system.
+  Follow-up risk: the branch finales are cleaner now, but the default base `Wave 12 · Cinder Crown` and older docs still teach a heavier all-tax exam than the branch-specific route wants. If critique still says the run feels prototype-short or branch-admin-heavy, the next bounded pass should align the base-route finale/docs with this lane-specific cash-out grammar rather than add more late content.
+  Release Gate: Builds
 
 - 2026-03-24 13:13:59 KST
   Changed: recut the default shared late-route `Wave 10` in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from a second relay/crossfire proof into `Wave 10 · Crownsplit Run`, a mobile caravan breach where the player chooses between chasing a moving payout lane or holding central ownership before `Wave 11` pursuit. I mirrored the same grammar shift into the base `WAVE_CONFIG` copy, updated the late-band summary copy so `Wave 10` now reads as a `Breakpoint Run` instead of another corridor breach, and refreshed [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new label, `caravan` hazard/pressure family, salvage payout, and late-band progression. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

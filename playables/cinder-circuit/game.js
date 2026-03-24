@@ -487,17 +487,17 @@
         bandId: "cataclysm_crownline",
         bandLabel: "Cataclysm Crownline",
         pressureFamily: "breach",
-        note: "무장 branch의 마지막 판은 relay corridor를 한 번만 다시 꺼내되, 반복 crown이 아니라 열린 crownline breach로 바꾼다. corridor 수를 줄이고 arena를 더 넓혀, 막 완성한 화망으로 직접 돌파 창을 찢게 만든다.",
+        note: "무장 branch의 마지막 판은 Wave 11 gallery에서 벌어 둔 ownership를 닫는 단일 crownline breach다. relay corridor만 남기고 binder·brander 세금을 줄여, 막 완성한 화망으로 직접 돌파 창을 찢는 결산으로 마무리한다.",
         directive:
           "cataclysm crownline. relay crown이 드문 대신 더 길게 열린다. 가장 얇은 corridor를 먼저 찢어 split fire로 양측 flank를 같이 억누르며 직접 breach window를 연장해야 한다.",
         arena: {
           width: 1840,
           height: 1030,
         },
-        activeCap: 39,
-        spawnBudget: 234,
-        baseSpawnInterval: 0.302,
-        spawnIntervalMin: 0.092,
+        activeCap: 35,
+        spawnBudget: 208,
+        baseSpawnInterval: 0.334,
+        spawnIntervalMin: 0.1,
         eliteEvery: 4,
         mix: {
           scuttler: 0.04,
@@ -505,24 +505,24 @@
           shrike: 0.12,
           skimmer: 0.12,
           lancer: 0.22,
-          brander: 0.12,
-          mortar: 0.08,
-          warden: 0.08,
+          brander: 0.08,
+          mortar: 0.06,
+          warden: 0.1,
         },
         mixWeight: 0.54,
         hazard: {
           label: "Cataclysm Crownline",
           type: "relay",
-          interval: 7,
-          count: 4,
+          interval: 7.8,
+          count: 2,
           radius: 90,
-          telegraph: 0.66,
-          duration: 5.3,
+          telegraph: 0.72,
+          duration: 5.1,
           damage: 16,
-          coreHp: 88,
+          coreHp: 80,
           coreRadius: 19,
-          relayRange: 560,
-          relayWidth: 32,
+          relayRange: 548,
+          relayWidth: 30,
           relayDamage: 15,
         },
       },
@@ -575,44 +575,44 @@
         bandId: "citadel_stand",
         bandLabel: "Citadel Stand",
         pressureFamily: "territory",
-        note: "방호 branch의 마지막 판은 반복 crown 대신 버틸 거점과 버릴 거점을 직접 고르는 stand-off다. 작은 bastion 코어가 회복 pocket을 잠깐 열어 주므로, plate와 복구를 어디에 쓸지 build 판단이 크게 드러난다.",
+        note: "방호 branch의 마지막 판은 Wave 11 refuge cadence를 결산하는 stand-off다. 작은 bastion 코어 두 곳만 잠깐 열어 두고 pursuit tax를 걷어, plate와 복구를 어디에 쓰는지 build 판단이 선명하게 드러나게 만든다.",
         directive:
           "citadel stand. 모든 거점을 지키려 하지 말고 한 pocket만 짧게 열어 체력과 dash를 회수한 뒤 바로 다른 flank로 갈아타야 한다. halo가 없는 정면 교환은 오래 버티지 못한다.",
         arena: {
           width: 1720,
           height: 1000,
         },
-        activeCap: 38,
-        spawnBudget: 228,
-        baseSpawnInterval: 0.314,
-        spawnIntervalMin: 0.094,
+        activeCap: 34,
+        spawnBudget: 204,
+        baseSpawnInterval: 0.338,
+        spawnIntervalMin: 0.102,
         eliteEvery: 4,
         mix: {
           scuttler: 0.04,
           brute: 0.2,
           shrike: 0.16,
           lancer: 0.12,
-          binder: 0.12,
-          mortar: 0.06,
+          binder: 0.1,
+          mortar: 0.04,
           warden: 0.12,
-          brander: 0.1,
+          brander: 0.08,
         },
         mixWeight: 0.5,
         hazard: {
           label: "Citadel Pocket",
           type: "territory",
-          interval: 7.3,
-          count: 3,
+          interval: 8.1,
+          count: 2,
           radius: 96,
-          telegraph: 0.76,
-          duration: 8.9,
+          telegraph: 0.82,
+          duration: 8.2,
           damage: 14,
-          coreHp: 82,
+          coreHp: 76,
           coreRadius: 18,
-          turretInterval: 0.9,
+          turretInterval: 0.96,
           turretDamage: 11,
           turretSpeed: 240,
-          enemyPullRadius: 162,
+          enemyPullRadius: 152,
         },
       },
     },
@@ -668,17 +668,17 @@
         bandId: "grand_blackout_run",
         bandLabel: "Grand Blackout Run",
         pressureFamily: "raid",
-        note: "탐욕 branch의 마지막 판은 crown corridor가 아니라 마지막 대형 caravan chase다. 거대한 contraband train이 lane 전체를 가로질러 도망치므로, cash-out을 끝까지 밀지 안전하게 털고 나올지 스스로 종결 타이밍을 정해야 한다.",
+        note: "탐욕 branch의 마지막 판은 Wave 11 vaultline을 키운 최종 caravan chase다. 거대한 contraband train 하나만 오래 열어 payout 판단을 밀어붙이게 하고, binder·mortar 세금은 덜어 cash-out 종결 타이밍을 스스로 정하게 만든다.",
         directive:
           "grand blackout run. caravan이 더 크고 더 오래 열린다. 끝까지 쫓으면 payout이 폭증하지만 escape lane도 함께 닫히므로, 언제 jackpot을 확정하고 언제 버릴지 마지막까지 직접 계산해야 한다.",
         arena: {
           width: 1820,
           height: 1020,
         },
-        activeCap: 39,
-        spawnBudget: 238,
-        baseSpawnInterval: 0.3,
-        spawnIntervalMin: 0.092,
+        activeCap: 35,
+        spawnBudget: 212,
+        baseSpawnInterval: 0.33,
+        spawnIntervalMin: 0.1,
         eliteEvery: 4,
         mix: {
           scuttler: 0.04,
@@ -687,26 +687,26 @@
           skimmer: 0.1,
           lancer: 0.18,
           brander: 0.18,
-          binder: 0.1,
-          mortar: 0.1,
+          binder: 0.08,
+          mortar: 0.06,
         },
         mixWeight: 0.56,
         hazard: {
           label: "Grand Blackout Caravan",
           type: "caravan",
-          interval: 6.9,
-          count: 4,
+          interval: 7.6,
+          count: 2,
           radius: 88,
-          telegraph: 0.7,
-          duration: 8.8,
+          telegraph: 0.76,
+          duration: 8.4,
           damage: 16,
-          coreHp: 112,
+          coreHp: 102,
           coreRadius: 20,
-          salvageScrap: 30,
-          salvageBurstCount: 8,
-          salvageBurstRadius: 76,
-          salvageDropLife: 9.8,
-          driftSpeed: 146,
+          salvageScrap: 34,
+          salvageBurstCount: 7,
+          salvageBurstRadius: 74,
+          salvageDropLife: 10.2,
+          driftSpeed: 138,
           driftOrbit: 0.26,
         },
       },
@@ -6822,6 +6822,22 @@
     return Boolean(choice && choice.finalePreview && !CONSOLIDATED_12_WAVE_ROUTE);
   }
 
+  function getLateBreakRoutePreview(choice) {
+    if (!choice || !choice.lateBreakProfileId) {
+      return [];
+    }
+    const wave11Profile = getLateBreakCrownProfile({ lateBreakProfileId: choice.lateBreakProfileId }, 10);
+    const wave12Profile = getLateBreakCrownProfile({ lateBreakProfileId: choice.lateBreakProfileId }, 11);
+    const routeRows = [];
+    if (wave11Profile) {
+      routeRows.push({ label: "Wave 11", value: wave11Profile.bandLabel || wave11Profile.label });
+    }
+    if (wave12Profile) {
+      routeRows.push({ label: "Wave 12", value: wave12Profile.bandLabel || wave12Profile.label });
+    }
+    return routeRows;
+  }
+
   function createForgePreviewRows(choice) {
     if (!choice) {
       return [];
@@ -6980,6 +6996,16 @@
               : `support ${choice.supportCount || 0}`,
         },
         ...finaleRows,
+      ];
+    }
+    if (
+      choice.type === "utility" &&
+      (choice.action === "field_mutation" || choice.action === "field_aegis" || choice.action === "field_greed") &&
+      choice.lateBreakProfileId
+    ) {
+      return [
+        { label: "분기", value: choice.forgeLaneLabel || choice.laneLabel || choice.title || "Late Break" },
+        ...getLateBreakRoutePreview(choice),
       ];
     }
     if (choice.type === "system") {
