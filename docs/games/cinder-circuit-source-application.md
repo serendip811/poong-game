@@ -174,9 +174,9 @@
 - The source uses 3 biome brackets.
 - `Cinder Circuit` already uses a single arena, so biome changes should become `wave acts`, not map swaps.
 - Recommended mapping:
-  - `Wave 1-2` = Burned Forest equivalent
-  - `Wave 3-4` = Scorched City equivalent
-  - `Wave 5` = Corrupted Lands equivalent
+  - `Wave 1-3` = Burned Forest equivalent
+  - `Wave 4-8` = Scorched City equivalent
+  - `Wave 9-12` = Corrupted Lands equivalent
 - That mapping should affect:
   - enemy composition
   - hazard pattern style
@@ -196,7 +196,7 @@
 | Recycle | break gear for Ash | salvage unwanted parts into Scrap | Keep verb |
 | Character | passive + active + weapon bias | one run-start signature | Compress |
 | Runes | permanent passive layer | small pre-run or mid-run passive package | Compress |
-| Biomes | 3 content brackets | 5-wave act curve | Compress |
+| Biomes | 3 content brackets | 12-wave act ladder | Compress |
 
 ## Current Gaps Between Source Logic and Our Prototype
 
@@ -248,21 +248,23 @@
 
 | Wave | Source Analogy | Target Build Feel | Player Expectation |
 | --- | --- | --- | --- |
-| 1 | Burned Forest early | Common / Uncommon | base core + first cheap improvement |
-| 2 | Burned Forest late | Uncommon / early Rare | first clear build direction and one meaningful paid choice |
-| 3 | Scorched City early | Rare | two-layer synergy should be online |
-| 4 | Scorched City late | Rare / Epic | offense plus sustain or mobility must both matter |
-| 5 | Corrupted Lands | Epic / pseudo-Legendary | full synergy package required for stable clear |
+| 1 | Burned Forest early | Common | base core only, one lean improvement at most |
+| 3 | Burned Forest late | Common / Uncommon | clear core lock and first real weapon identity |
+| 6 | Scorched City mid | Uncommon / Rare | chassis break plus one survival answer must be online |
+| 8 | Scorched City late | Rare / early Epic | one oversized late-form mutation should visibly change firing geometry |
+| 10 | Corrupted Lands early | Epic | late form owns space long enough to prove payoff, not just survive |
+| 12 | Corrupted Lands finale | Epic / pseudo-Legendary | shipped route should already feel complete without post-route forms |
 
 ## 2. Target Failure Pattern
 
 - A good run should not feel flat.
 - Failure should shift by wave:
   - `Wave 1`: mostly positioning mistakes
-  - `Wave 2`: greed on pickups or bad first purchase
-  - `Wave 3`: incomplete build package
-  - `Wave 4`: lack of sustain / mobility under stacked pressure
-  - `Wave 5`: missing endgame synergy or poor Overdrive timing
+  - `Wave 3`: greed on pickups or a weak core lock
+  - `Wave 6`: lack of sustain / mobility once chassis pressure arrives
+  - `Wave 8`: weak late-form choice or unreadable weapon geometry
+  - `Wave 10`: late-form payoff exists on paper but cannot hold a crownline lane
+  - `Wave 12`: missing finale-proof damage or poor Overdrive timing under breach pressure
 
 ## 3. Economy Reality Check
 
@@ -349,20 +351,21 @@ Current implementation note:
 ## 4. Overdrive Balance Targets
 
 - `Overdrive` should become ready:
-  - once by late Wave 2 for an average run
-  - two to four total times in a full clear
-- If players can ignore `Overdrive` and still clear Wave 5 comfortably, the endgame is too soft.
-- If players cannot reliably earn a first `Overdrive` until Wave 4, the meter is too stingy.
+  - once by late Wave 3 for an average run
+  - three to six total times in a full Wave 12 clear
+- If players can ignore `Overdrive` and still clear Wave 12 comfortably, the finale is too soft.
+- If players cannot reliably earn a first `Overdrive` until Wave 5, the meter is too stingy.
 
 ## 5. Hazard Balance Targets
 
 - Hazards should create route change, not pure denial.
 - Simultaneous active hazard count should stay readable:
   - `Wave 1`: `0`
-  - `Wave 2`: `1`
   - `Wave 3`: `1`
-  - `Wave 4`: `2`
-  - `Wave 5`: `2`
+  - `Wave 6`: `1-2`
+  - `Wave 8`: `2`
+  - `Wave 10`: `2`
+  - `Wave 12`: `2-3`, but only one dominant breach ask at a time
 - A player should usually see the telegraph, understand the danger, and still have one valid movement lane.
 - If hazards force blind damage more than once per wave in normal play, telegraph timing is too short.
 

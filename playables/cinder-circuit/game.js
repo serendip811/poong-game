@@ -1903,7 +1903,7 @@
       label: "Cinder Dominion",
       traitLabel: "sovereign crown",
       description:
-        "Afterburn 후반 전투에서만 뜯어낼 수 있는 최종 차체 각인이다. Ember 코어 위에 왕관 포문과 측면 열배기관을 붙여 주포가 넓은 지배 화망으로 한 번 더 점프한다.",
+        "Wave 12 이후 endurance 변형에서 뜯어낼 수 있는 dominion splice다. Ember 코어 위에 왕관 포문과 측면 열배기관을 붙여 주포가 더 넓은 지배 화망으로 다시 벌어진다.",
       slotText: "왕관 포문 +4 · 다음 웨이브 Dominion Run",
       bodyLabel: "Sovereign Crown Frame",
       bodyText: "전방 왕관 포문과 측면 열배기관이 동시에 열려 정면 압박을 밀어붙이는 endform 차체다.",
@@ -1916,7 +1916,7 @@
       label: "Shrapnel Dominion",
       traitLabel: "bloom throne",
       description:
-        "Afterburn 후반 전투에서만 뜯어낼 수 있는 최종 차체 각인이다. Scatter 코어 바깥에 bloom throne 포문을 더 붙여 근중거리 전체를 파편 왕관으로 덮는다.",
+        "Wave 12 이후 endurance 변형에서 뜯어낼 수 있는 dominion splice다. Scatter 코어 바깥에 bloom throne 포문을 더 붙여 근중거리 전체를 파편 왕관으로 덮는다.",
       slotText: "왕관 파편열 +5 · 다음 웨이브 Dominion Run",
       bodyLabel: "Bloom Throne Hull",
       bodyText: "양옆 bloom rack과 상부 파편 포문이 같이 벌어져 근접 지배 구간을 만들어 내는 endform 차체다.",
@@ -1929,7 +1929,7 @@
       label: "Vector Dominion",
       traitLabel: "fork throne",
       description:
-        "Afterburn 후반 전투에서만 뜯어낼 수 있는 최종 차체 각인이다. Lance 코어 앞에 fork throne 레일을 세워 직선 천공이 세 줄 dominance cut으로 바뀐다.",
+        "Wave 12 이후 endurance 변형에서 뜯어낼 수 있는 dominion splice다. Lance 코어 앞에 fork throne 레일을 세워 직선 천공이 세 줄 dominance cut으로 바뀐다.",
       slotText: "fork beam +2 · 다음 웨이브 Dominion Run",
       bodyLabel: "Fork Throne Frame",
       bodyText: "전방 삼중 레일과 측면 stabilizer spine이 자라 lane 하나를 통째로 지워 버리는 endform 차체다.",
@@ -1942,7 +1942,7 @@
       label: "Mirror Dominion",
       traitLabel: "lash throne",
       description:
-        "Afterburn 후반 전투에서만 뜯어낼 수 있는 최종 차체 각인이다. Ricochet 코어에 lash throne 송신기를 붙여 갈라진 탄들이 더 깊게 튀며 추적을 지배한다.",
+        "Wave 12 이후 endurance 변형에서 뜯어낼 수 있는 dominion splice다. Ricochet 코어에 lash throne 송신기를 붙여 갈라진 탄들이 더 깊게 튀며 추적을 지배한다.",
       slotText: "lash volley +3 · 다음 웨이브 Dominion Run",
       bodyLabel: "Lash Throne Frame",
       bodyText: "후미 송신기와 측면 거울판이 길게 뻗어 반사 탄막을 주인공 화력으로 끌어올리는 endform 차체다.",
@@ -7191,6 +7191,32 @@
     if (!weapon) {
       return "Unknown Form";
     }
+    return getPresentationHeadlineLabel(weapon);
+  }
+
+  function shouldUseShippingRoutePresentation(waveNumber = 1) {
+    const boundedWave = clamp(
+      Math.round(waveNumber || 1),
+      1,
+      MAX_WAVES + POST_CAPSTONE_WAVE_COUNT
+    );
+    return CONSOLIDATED_12_WAVE_ROUTE && boundedWave <= MAX_WAVES;
+  }
+
+  function getPresentationHeadlineLabel(weapon, waveNumber = 1) {
+    if (!weapon) {
+      return "Unknown Form";
+    }
+    if (shouldUseShippingRoutePresentation(waveNumber)) {
+      return (
+        weapon.headlineFormLabel ||
+        weapon.lateAscensionLabel ||
+        weapon.capstoneLabel ||
+        weapon.doctrineFormLabel ||
+        weapon.evolutionLabel ||
+        (weapon.core ? weapon.core.label : "Base Frame")
+      );
+    }
     return (
       weapon.headlineFormLabel ||
       weapon.afterburnDominionLabel ||
@@ -7201,6 +7227,34 @@
       weapon.doctrineFormLabel ||
       weapon.evolutionLabel ||
       (weapon.core ? weapon.core.label : "Base Frame")
+    );
+  }
+
+  function getPresentationFormDetail(build, weapon, waveNumber = 1) {
+    const activeCore = CORE_DEFS[build.coreId];
+    if (shouldUseShippingRoutePresentation(waveNumber)) {
+      return (
+        weapon.lateAscensionStatusNote ||
+        (getClaimedWildcardProtocolIds(build).includes("rogue_lattice")
+          ? weapon.lateFieldConvergenceStatusNote || weapon.lateFieldMutationStatusNote
+          : null) ||
+        weapon.capstoneStatusNote ||
+        weapon.doctrineStatusNote ||
+        weapon.evolutionStatusNote ||
+        `${activeCore.label} ${weapon.tierLabel} 프레임이 현재 주력이다.`
+      );
+    }
+    return (
+      weapon.afterburnDominionStatusNote ||
+      weapon.afterburnOverdriveStatusNote ||
+      weapon.lateAscensionStatusNote ||
+      (getClaimedWildcardProtocolIds(build).includes("rogue_lattice")
+        ? weapon.lateFieldConvergenceStatusNote || weapon.lateFieldMutationStatusNote
+        : null) ||
+      weapon.capstoneStatusNote ||
+      weapon.doctrineStatusNote ||
+      weapon.evolutionStatusNote ||
+      `${activeCore.label} ${weapon.tierLabel} 프레임이 현재 주력이다.`
     );
   }
 
@@ -7716,13 +7770,9 @@
     const doctrineForm = currentWeapon && currentWeapon.doctrineFormLabel ? currentWeapon.doctrineFormLabel : null;
     const lateBreakHeadline = getLateBreakHeadline(build && build.lateBreakProfileId);
     const activeForm =
-      (currentWeapon && currentWeapon.afterburnDominionLabel) ||
-      (currentWeapon && currentWeapon.afterburnOverdriveLabel) ||
-      (currentWeapon && currentWeapon.lateAscensionLabel) ||
+      getPresentationHeadlineLabel(currentWeapon, boundedWave) ||
       (currentWeapon && currentWeapon.lateFieldConvergenceLabel) ||
-      (currentWeapon && currentWeapon.capstoneLabel) ||
       doctrineForm ||
-      (currentWeapon && currentWeapon.evolutionLabel) ||
       CORE_DEFS[build.coreId].label;
     const activeBodyLabel = doctrineBodyForm ? doctrineBodyForm.label : null;
     const pathLabel = doctrine
@@ -13930,20 +13980,9 @@
     const doctrineBodyForm = getDoctrineBodyForm(build);
     const activeForm = roadmap.activeForm || activeCore.label;
     const dominantForm = doctrineBodyForm ? `${activeForm} / ${doctrineBodyForm.label}` : activeForm;
-    const formDetail =
-      weapon.afterburnDominionStatusNote ||
-      weapon.afterburnOverdriveStatusNote ||
-      weapon.lateAscensionStatusNote ||
-      (getClaimedWildcardProtocolIds(build).includes("rogue_lattice")
-        ? weapon.lateFieldConvergenceStatusNote || weapon.lateFieldMutationStatusNote
-        : null) ||
-      weapon.capstoneStatusNote ||
-      weapon.doctrineStatusNote ||
-      weapon.evolutionStatusNote ||
-      `${activeCore.label} ${weapon.tierLabel} 프레임이 현재 주력이다.`;
     return {
       label: dominantForm,
-      detail: formDetail,
+      detail: getPresentationFormDetail(build, weapon, waveNumber),
     };
   }
 
@@ -20250,14 +20289,7 @@
     const proofWindow = getImmediateProofWindowSummary(state.build, state.waveIndex + 1);
     const supportTrack = getForgeSupportTrackSnapshot(state.build, state.supportSystem);
     const ladderFocus = getShippingLadderFocus(state.build, weapon, state.waveIndex + 1);
-    const headlineLabel =
-      weapon.afterburnDominionLabel ||
-      weapon.afterburnOverdriveLabel ||
-      weapon.lateAscensionLabel ||
-      weapon.capstoneLabel ||
-      weapon.doctrineFormLabel ||
-      weapon.evolutionLabel ||
-      activeCore.label;
+    const headlineLabel = getPresentationHeadlineLabel(weapon, state.waveIndex + 1);
     if (elements.activeCore) {
       elements.activeCore.innerHTML = `
         <div class="summary-head">

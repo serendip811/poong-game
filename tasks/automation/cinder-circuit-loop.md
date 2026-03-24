@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: lock the shipping `Wave 1-12` contract by killing post-capstone `Afterburn` promises, cutting `Wave 10` greed/admin detours, and making the forge/HUD sell one dominant form jump at a time.
+- Immediate priority: lock the shipping `Wave 1-12` contract by removing `Afterburn`-exclusive endform promises, rewriting stale `5-wave` tuning doctrine, and making the forge/HUD sell one dominant form jump at a time.
 
 ## Release Gates
 
@@ -48,6 +48,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 17:30:45 KST
+  Findings:
+  - `Wave 10` is no longer the main structural offender, but the run still tells the player the real apex is elsewhere. [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1310) still keeps full `Afterburn I-VII` alive, and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1900) still reserves the cleanest `Dominion` endform language for `Afterburn`-only rewards. That keeps `Wave 12` feeling like a strong stop before the true monster form.
+  - The design doctrine is still balancing for a shorter prototype than the playable claims. [cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L171) still maps acts to a `Wave 1-5` bracket, and the same doc still frames failure, economy, hazard, and overdrive targets around `Wave 5` endgame assumptions. That makes any `20-30 wave` ambition fake because the source-of-truth tuning curve still peaks too early.
+  - The run is better about delaying support spectacle, but the fantasy is still too support-amplified once late forms arrive. [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L5295) keeps every late ascension selling its biggest payoff through `late rider bay` scaling, so the main gun/body mutation still reads as incomplete until auxiliaries pile on.
+  - HUD/forge readability is still over-managed versus strong references. [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20274) still renders `Current Form` plus `Next Proof`, and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20510) still keeps `Headline Mutation`, `Secondary Rider`, and `Immediate Ask` as equal-status rows. Compared with `Hades`, `Nova Drift`, or `Brotato`, the reward moment still explains the hierarchy instead of making one pick instantly desirable.
+  Top Priority: Remove `Afterburn`-exclusive apex copy from the shipped route and restate the docs/HUD around one complete `Wave 1-12` payoff ladder whose strongest visible form already lands by `Wave 12`.
+  Why Now: The loop should consolidate the fantasy it already has before chasing more branches, because replay hunger dies when the game implies the best transformation is still outside the rerun.
+  Do Not Repeat: Do not spend another pass renaming route beats or tweaking Wave 10 while `Afterburn` still owns the apex copy and the tuning docs still teach a 5-wave game.
+  Release Gate: Rewards
 
 - 2026-03-24 17:00:44 KST
   Findings:
@@ -1922,6 +1933,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 18:20:00 KST
+  Changed: rewired the shipped-route form presentation in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 1-12` HUD and roadmap summaries now stop elevating `Afterburn` dominion/overdrive labels above the actual shipped late-form ladder. I added base-route presentation helpers that, during the consolidated `Wave 1-12` clear, cap the visible headline/detail stack at the current doctrine/capstone/late-ascension form instead of post-capstone mutations; the active-core HUD card, dominant-form summary, and roadmap path now all read `Wave 12` as the visible payoff destination. In the same bounded pass, I rewrote the dominion reward descriptions to frame them as optional post-`Wave 12` endurance splices rather than the one true final body, and updated [cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md) so biome mapping, power brackets, failure pattern, overdrive targets, and hazard targets all anchor to a `12-wave` shipped ladder instead of the stale `5-wave` prototype curve. Validation passed with `node --check playables/cinder-circuit/game.js` and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to remove `Afterburn`-exclusive apex copy from the shipped route and restate the docs/HUD around one complete `Wave 1-12` payoff ladder. The highest-value bounded interpretation was to change the summary/doctrine source of truth itself, because that fixes the repeated player-facing lie that the real monster form still lives after the rerunnable clear. For reference direction, the HUD side of this pass stayed aligned with `Hades`/`Nova Drift`/`Brotato` reward hierarchy: one dominant mutation promise first, future branch detail quiet in the background.
+  Follow-up risk: the base route now reads much cleaner as a complete ladder, but `Afterburn I-VII` still exists as post-capstone content under the hood. If critique still says the current clear feels like a doorway to a larger game, the next bounded pass should hide, compress, or rethink that post-clear ladder itself rather than only sanding more copy.
+  Release Gate: Rewards
 
 - 2026-03-24 17:13:57 KST
   Changed: recut the shipped `Wave 10` contract in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from `Crownsplit Run` caravan greed into `Crownhold Proof`, a single-crown late-form ownership test. The base wave and shared late-act override now use one relay crown instead of a fleeing caravan, lighter binder/mortar tax, and copy that frames the ask as `hold the breach lane with your locked form` rather than `chase payout or play safe`. I also updated the late-route proof summaries and [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so smoke now locks the new `Wave 10` label, `breach` family, relay hazard, and shared-route expectations. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
