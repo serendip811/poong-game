@@ -2294,78 +2294,34 @@
     };
   }
 
+  function getDirectLateBreakWaveOverride(index, build) {
+    if (!build || !build.lateBreakProfileId) {
+      return null;
+    }
+    if (index === LATE_BREAK_ARMORY_WAVE - 1) {
+      return getLateBreakEncounterProfile(build);
+    }
+    if (index === LATE_BREAK_ARMORY_WAVE) {
+      return getLateBreakFollowthroughProfile(build);
+    }
+    if (index > LATE_BREAK_ARMORY_WAVE) {
+      return getLateBreakCrownProfile(build, index);
+    }
+    return null;
+  }
+
   function resolveWaveConfig(index, build = null) {
     const baseConfig = WAVE_CONFIG[clamp(index, 0, MAX_WAVES - 1)];
     if (!baseConfig || index < LATE_BREAK_ARMORY_WAVE - 1 || !build) {
       return applyEncounterPressureFamily(baseConfig);
     }
-    const override = SHARED_LATE_ACT_ENCOUNTER_POOL[index] || null;
+    const directLateBreakOverride = getDirectLateBreakWaveOverride(index, build);
+    const override =
+      directLateBreakOverride || SHARED_LATE_ACT_ENCOUNTER_POOL[index] || null;
     if (!override) {
       return applyEncounterPressureFamily(baseConfig);
     }
-    let config = {
-      ...baseConfig,
-      ...override,
-      mix: override.mix ? { ...override.mix } : { ...baseConfig.mix },
-      hazard: sanitizeHazardForType(
-        override.hazard
-          ? {
-              ...(baseConfig.hazard || {}),
-              ...override.hazard,
-            }
-          : baseConfig.hazard
-            ? { ...baseConfig.hazard }
-            : null
-      ),
-    };
-    if (index === LATE_BREAK_ARMORY_WAVE - 1) {
-      const lateBreakProfile = getLateBreakEncounterProfile(build);
-      if (lateBreakProfile) {
-        config = {
-          ...config,
-          ...lateBreakProfile,
-          arena: lateBreakProfile.arena || config.arena,
-          mix: lateBreakProfile.mix ? { ...lateBreakProfile.mix } : { ...config.mix },
-          hazard: sanitizeHazardForType(
-            lateBreakProfile.hazard
-              ? {
-                  ...(config.hazard || {}),
-                  ...lateBreakProfile.hazard,
-                }
-              : config.hazard
-                ? { ...config.hazard }
-                : null
-          ),
-        };
-      }
-    } else if (index === LATE_BREAK_ARMORY_WAVE) {
-      const lateBreakFollowthrough = getLateBreakFollowthroughProfile(build);
-      if (lateBreakFollowthrough) {
-        config = {
-          ...config,
-          ...lateBreakFollowthrough,
-          arena: lateBreakFollowthrough.arena || config.arena,
-          mix: lateBreakFollowthrough.mix
-            ? { ...lateBreakFollowthrough.mix }
-            : { ...config.mix },
-          hazard: sanitizeHazardForType(
-            lateBreakFollowthrough.hazard
-              ? {
-                  ...(config.hazard || {}),
-                  ...lateBreakFollowthrough.hazard,
-                }
-              : config.hazard
-                ? { ...config.hazard }
-            : null
-          ),
-        };
-      }
-    } else if (index > LATE_BREAK_ARMORY_WAVE) {
-      const lateBreakCrownProfile = getLateBreakCrownProfile(build, index);
-      if (lateBreakCrownProfile) {
-        config = applyEncounterOverride(config, lateBreakCrownProfile);
-      }
-    }
+    let config = applyEncounterOverride(baseConfig, override);
     const arsenalBreakpointProfile = getArsenalBreakpointEncounterProfile(build, index + 1);
     if (arsenalBreakpointProfile) {
       config = applyEncounterOverride(config, arsenalBreakpointProfile);
