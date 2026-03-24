@@ -26,3 +26,4 @@ Keep this short and replace stale notes instead of endlessly appending.
 - On the consolidated route, `Wave 6` chassis picks should stay chassis-only in both behavior and copy; if a smoke test assumes immediate bay uplink there, update the test because the release contract now expects the first real rider divergence at `Wave 8`.
 - Late-form card text should sell the weapon/body mutation in sentence one and mention rider/support amplification only as a secondary clause, otherwise support fantasy steals the anticipation again.
 - Support-system unlock timing is a high-leverage appetite control knob: if the opening feels too complete, move `SUPPORT_SYSTEM_DEFS[*].forgeWaveMin` and its smoke expectations together before adding or removing whole reward branches.
+- `Wave 10` on the shipping route is higher value as a single-crown ownership proof than as a caravan greed detour; if the late band still feels branchy, keep cutting payout/admin asks before adding new hazards.
