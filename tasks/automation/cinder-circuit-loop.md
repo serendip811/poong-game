@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: lock one shipping `Wave 1-12` ladder across docs, flow, HUD, and forge presentation by removing `5-wave`/post-`Wave 12`/branch-admin framing from the default route before adding more systems or variants.
+- Immediate priority: unify one shipping `Wave 1-12` contract across docs, phase flow, and reward presentation by deleting `5-wave` teaching, hiding `Afterburn`/branch exceptions from the default route, and making `Wave 9-12` read as payoff -> greed test -> pursuit proof -> final breach.
 
 ## Release Gates
 
@@ -48,6 +48,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 19:10:00 KST
+  Findings:
+  - The project is still balancing against two different games. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) sells a clean `12-wave` three-era run, but [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md) still teaches `Biomes -> 5-wave act curve` and a `Wave 1-5` power bracket, which keeps prototype pacing alive in the team’s source-of-truth docs.
+  - The default route still behaves like branch-aware scaffolding instead of a release ladder. [`maybeAdvancePhase()`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L19948) still carries `Live Ascension`, `Ownership Relay`, `Architecture Draft`, `Bastion Draft`, and `Afterburn` routing through the normal clear flow, so the run contract is still "special cases may replace your forge" instead of "clear wave, get a power jump, prove it."
+  - Act 3 is more distinct than before, but it still does not breathe like a rerunnable late-game arc. [`Wave 9 · Lockgrid`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L987) gives the needed ownership lap and [`Wave 10 · Crownsplit Run`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1022) adds a real greed chase, but [`Wave 11 · Starforge`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1069) and [`Wave 12 · Cinder Crown`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1110) collapse back into consecutive high-tax proof/breach exams before the late form gets a satisfying domination window.
+  - The HUD/forge layer still explains too much even in its "minimal" route. [`updateHUD()`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20079) and [`renderForgeOverlay()`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20330) still surface ladder, dominant form, rider, proof, threat, and progress copy together; compared with `Hades`, `Nova Drift`, or `Brotato`, the player is still asked to parse system hierarchy when the screen should first sell one irresistible mutation.
+  - Visible build payoff still leans too hard toward support silhouettes. [`SUPPORT_SYSTEM_DEFS`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2747) offers obvious orbital, shield, sentry, and missile escalation beats, while the core gun/body growth is still mostly described through route language and proof labels, which weakens the hunger to rerun for the next main-form transformation.
+  Top Priority: Cut the shipping route down to one appetite-first `Wave 1-12` spine: remove `5-wave` teaching from docs, suppress branch/Afterburn exceptions from the base flow and HUD copy, and retune `Wave 11-12` so the late form gets one clearer domination lap before the final breach.
+  Why Now: Until the base route feels like one coherent climb with a real late payoff, extra scale only magnifies confusion and fatigue.
+  Do Not Repeat: Do not answer this with another support spectacle upgrade or another naming cleanup while the default run still teaches multiple contracts.
+  Release Gate: Progression
 
 - 2026-03-24 14:00:00 KST
   Findings:
@@ -2722,4 +2734,8 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Improvement
 
-- Pending next improvement entry.
+- 2026-03-24 20:25:00 KST
+  Changed: retuned the default late-route `Wave 11-12` cadence in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 11 · Starforge` becomes a clearer domination lap instead of another pursuit exam. `Wave 11` now uses the larger payoff arena again, lighter spawn budget, a lower active cap, thinner binder/mortar tax, and a slower single `Starforge Drift`, while `Wave 12 · Cinder Crown` inherits the heavier breach spike with a slightly higher cap and budget. I also aligned the shared late-act fallback pool and the route-summary/forge roadmap text to call `Wave 11` a `Victory Lap` or `Starforge Gallery` instead of a proof rung, then updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock those expectations.
+  Why: the newest critique's top priority asked for `Wave 11-12` to stop reading like back-to-back exams and give the late form one real domination window before the final breach. The highest-value bounded interpretation was to move pressure out of `Wave 11` and into `Wave 12`, not to add another reward branch or support spectacle.
+  Follow-up Risk: the cadence is cleaner now, but the base route still leaks non-shipping branch/admin language in docs and some HUD/forge surfaces. If the next pass stays in gameplay, check whether `Wave 12`'s heavier breach spike still needs one more readability pass once players can actually breathe in `Wave 11`.
+  Release Gate: Combat

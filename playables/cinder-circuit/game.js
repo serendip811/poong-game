@@ -1067,42 +1067,42 @@
     {
       id: "starforge",
       label: "Wave 11 · Starforge",
-      pressureFamily: "pursuit",
-      duration: 98,
-      spawnBudget: 188,
-      activeCap: 32,
-      baseSpawnInterval: 0.362,
-      spawnIntervalMin: 0.108,
-      spawnAcceleration: 0.31,
+      pressureFamily: "crossfire",
+      duration: 96,
+      spawnBudget: 176,
+      activeCap: 30,
+      baseSpawnInterval: 0.386,
+      spawnIntervalMin: 0.116,
+      spawnAcceleration: 0.28,
       eliteEvery: 5,
       mix: {
         scuttler: 0.08,
-        brute: 0.18,
-        shrike: 0.18,
-        skimmer: 0.1,
-        lancer: 0.14,
-        brander: 0.2,
-        binder: 0.1,
-        mortar: 0.06,
+        brute: 0.14,
+        shrike: 0.16,
+        skimmer: 0.18,
+        lancer: 0.2,
+        brander: 0.12,
+        binder: 0.04,
+        mortar: 0.02,
         warden: 0.04,
       },
-      note: "두 웨이브 payoff band 뒤에 오는 첫 real pursuit proof wave다. 이제서야 drift pocket과 ignition pressure가 headline form을 추격선 위에 올려, 늦은 dominance가 실제 추격 덩어리를 얼마나 크게 꺾는지 처음으로 묻는다.",
+      note: "두 웨이브 payoff band 뒤의 숨 고르기 lap이다. drift furnace 하나만 남기고 binder·mortar 세금을 크게 걷어, headline late form이 열린 gallery를 실제로 오래 소유하는 시간을 먼저 준다.",
       directive:
-        "starforge ignition pursuit. drifting furnace가 쫓아오고 brander가 현재 pocket을 ignition ring으로 예고한다. 열린 band의 습관을 버리고 곧 폭발할 pocket을 먼저 버리며, locked form으로 pursuit 덩어리 자체를 크게 꺾어야 한다.",
-      driveGainFactor: 1.46,
-      arena: THIRD_ACT_PROOF_ARENA,
+        "starforge gallery. drifting furnace 하나가 lane 하나만 천천히 접는다. 가장 넓은 pocket을 먼저 먹고 split fire로 flank 둘을 오래 눌러, final breach 전에 late form의 sweep 폭을 마음껏 누려야 한다.",
+      driveGainFactor: 1.44,
+      arena: THIRD_ACT_PAYOFF_ARENA,
       ascensionCarrierType: "binder",
       hazard: {
-        label: "Starforge Pursuit",
+        label: "Starforge Drift",
         type: "drift",
-        interval: 9.4,
+        interval: 11.2,
         count: 1,
-        radius: 78,
-        telegraph: 0.82,
-        duration: 5,
-        damage: 14,
-        driftSpeed: 108,
-        driftOrbit: 0.34,
+        radius: 88,
+        telegraph: 0.88,
+        duration: 4.6,
+        damage: 13,
+        driftSpeed: 96,
+        driftOrbit: 0.24,
       },
     },
     {
@@ -1110,11 +1110,11 @@
       label: "Wave 12 · Cinder Crown",
       pressureFamily: "breach",
       duration: 104,
-      spawnBudget: 208,
-      activeCap: 39,
-      baseSpawnInterval: 0.322,
+      spawnBudget: 214,
+      activeCap: 40,
+      baseSpawnInterval: 0.316,
       spawnIntervalMin: 0.096,
-      spawnAcceleration: 0.34,
+      spawnAcceleration: 0.35,
       eliteEvery: 4,
       mix: {
         scuttler: 0.06,
@@ -1127,7 +1127,7 @@
         mortar: 0.04,
         warden: 0.08,
       },
-      note: "최종 전장은 Act 3에서 처음으로 진짜 full breach tax를 되돌린다. relay crown과 ignition ring이 같은 pocket을 닫고 lancer가 빈 각을 찌르므로, payoff band에서 벌어 둔 lane ownership를 마지막 돌파 창으로 직접 바꿔야 한다.",
+      note: "최종 전장은 Wave 11에서 비워 둔 tax를 한 번에 되돌린다. relay crown과 ignition ring이 같은 pocket을 닫고 lancer가 빈 각을 찌르므로, 방금 벌어 둔 lane ownership를 마지막 돌파 창으로 직접 바꿔야 한다.",
       directive:
         "cinder crown ignition breach. relay crown이 화염 회랑을 엮는 동안 brander가 회랑 안 pocket을 ignition ring으로 닫고 lancer가 빈 각을 찌른다. 먼 pylon만 보는 대신 ring 폭발 전에 pocket owner를 지워 실제 breach window를 직접 만들어야 한다.",
       driveGainFactor: 1.52,
@@ -1230,40 +1230,40 @@
       },
     },
     10: {
-      label: "Wave 11 · Starforge Pursuit",
-      bandId: "starforge_pursuit",
-      bandLabel: "Starforge Pursuit",
+      label: "Wave 11 · Starforge Gallery",
+      bandId: "starforge_gallery",
+      bandLabel: "Starforge Gallery",
       bandFocusId: "late_form",
-      pressureFamily: "pursuit",
-      note: "두 칸짜리 payoff band 뒤의 첫 real proof wave다. drift pocket을 읽는 추격 시험으로 꺾어, 방금 잠긴 chassis/weapon leap가 pursuit hook을 얼마나 크게 꺾는지 바로 증명하게 만든다.",
+      pressureFamily: "crossfire",
+      note: "두 칸짜리 payoff band 뒤의 domination lap이다. drift furnace 하나만 남기고 upkeep 세금을 크게 걷어, 방금 잠긴 chassis/weapon leap가 넓은 lane 둘을 오래 지우는 감각을 먼저 즐기게 만든다.",
       directive:
-        "starforge pursuit. brander ignition ring이 현재 pocket을 태우기 전에 한 lane을 비우고 크게 꺾어야 한다. 회랑 upkeep보다 새 form으로 pursuit 덩어리를 몇 초 만에 잘라내는지가 먼저 드러난다.",
-      driveGainFactor: 1.5,
-      arena: THIRD_ACT_PROOF_ARENA,
-      activeCap: 32,
-      spawnBudget: 186,
+        "starforge gallery. drifting furnace 하나가 lane 하나만 느리게 접는다. 가장 넓은 pocket을 먼저 먹고 split fire로 flank 둘을 오래 눌러, final crown breach 전에 새 form의 전장 점유 시간을 크게 벌어야 한다.",
+      driveGainFactor: 1.44,
+      arena: THIRD_ACT_PAYOFF_ARENA,
+      activeCap: 30,
+      spawnBudget: 176,
       mix: {
         scuttler: 0.08,
-        brute: 0.18,
-        shrike: 0.18,
-        skimmer: 0.1,
-        lancer: 0.14,
-        brander: 0.18,
-        binder: 0.1,
-        mortar: 0.06,
+        brute: 0.14,
+        shrike: 0.16,
+        skimmer: 0.18,
+        lancer: 0.2,
+        brander: 0.12,
+        binder: 0.04,
+        mortar: 0.02,
         warden: 0.04,
       },
       hazard: {
         label: "Starforge Drift",
         type: "drift",
-        interval: 9.4,
+        interval: 11.2,
         count: 1,
-        radius: 80,
-        telegraph: 0.82,
-        duration: 5,
-        damage: 15,
-        driftSpeed: 110,
-        driftOrbit: 0.32,
+        radius: 88,
+        telegraph: 0.88,
+        duration: 4.6,
+        damage: 13,
+        driftSpeed: 96,
+        driftOrbit: 0.24,
       },
     },
     11: {
@@ -2202,7 +2202,7 @@
     return {
       label: "Late Break cadence",
       detail:
-        "Wave 9는 payoff window, Wave 10은 breach proof, Wave 11은 victory lap, Wave 12는 escalation finale다.",
+        "Wave 9는 payoff window, Wave 10은 breach proof, Wave 11은 domination lap, Wave 12는 escalation finale다.",
     };
   }
 
@@ -7757,7 +7757,7 @@
       ? CONSOLIDATED_12_WAVE_ROUTE
         ? `${lateBreakHeadline.detail} Wave 9-12는 이 late staircase 하나만 증명하는 고정 finale다.`
         : `${lateBreakHeadline.detail} Wave 8 이후에는 이 계단 하나만 남고 live ascension이나 Afterburn 예외는 열리지 않는다.`
-      : "Wave 8 Late Break Armory에서 하나의 late-form staircase를 고르면 Wave 9-10 payoff band -> Wave 11 proof -> Wave 12 finale로 고정된다.";
+      : "Wave 8 Late Break Armory에서 하나의 late-form staircase를 고르면 Wave 9-10 payoff band -> Wave 11 domination lap -> Wave 12 finale로 고정된다.";
     let stageThreeState = boundedWave >= LATE_BREAK_ARMORY_WAVE ? "primed" : "planned";
     if (build.afterburnDominionId) {
       stageThreeDetail = CONSOLIDATED_12_WAVE_ROUTE
@@ -7918,7 +7918,7 @@
         <strong>12-Wave Ladder</strong>
         <span class="summary-chip ${focus.state === "live" ? "summary-chip--hot" : ""}">${act.shortLabel}</span>
       </div>
-      <p class="summary-copy roadmap-card__path">Wave 3 core lock -> Wave 6 chassis break -> Wave 8 late form -> Wave 9-10 proof -> Wave 11-12 finish.</p>
+      <p class="summary-copy roadmap-card__path">Wave 3 core lock -> Wave 6 chassis break -> Wave 8 late form -> Wave 9-10 payoff -> Wave 11 lap -> Wave 12 finish.</p>
       <div class="roadmap-card__steps">
         ${steps
           .map(
@@ -8586,31 +8586,31 @@
     }
     if (build && !build.doctrineCapstoneId) {
       return {
-        label: "Starforge Pursuit",
+        label: "Starforge Gallery",
         headline: capstoneTitle,
         detail:
-          "Wave 11은 반복 crown 대신 pursuit proof window다. doctrine capstone cache를 회수했다면 drift pocket을 크게 꺾으며 새 폼이 추격 덩어리를 얼마나 빨리 지우는지 먼저 증명하게 만든다.",
+          "Wave 11은 반복 crown 대신 gallery lap이다. doctrine capstone cache를 회수했다면 drift furnace 하나만 비껴 가며 새 폼이 열린 lane 둘을 얼마나 오래 지우는지 먼저 즐기게 만든다.",
       };
     }
     if (build && !build.lateAscensionId) {
       return {
-        label: boundedWave === 11 ? "Starforge Pursuit" : "Cinder Crown",
+        label: boundedWave === 11 ? "Starforge Gallery" : "Cinder Crown",
         headline: "Ascension Core",
         detail:
           boundedWave === 11
-            ? "Wave 11은 late ascension split을 바로 시험하는 pursuit window다. drift pocket을 크게 휘며 첫 elite split cache를 회수하고, headline body jump가 실제 회전 반경을 넓히는지 확인하게 만든다."
+            ? "Wave 11은 late ascension split 직후의 domination lap이다. drift furnace 하나만 비껴 돌며 첫 elite split cache를 회수하고, headline body jump가 열린 lane 소유 시간을 실제로 얼마나 늘리는지 먼저 느끼게 만든다."
             : "Wave 12는 headline target을 Ascension Core 하나로 좁힌 최종 crown breach다. relay corridor를 가르며 rider 생존축으로 돌파 시간을 직접 늘려야 한다.",
       };
     }
     if (boundedWave === 11) {
       return {
-        label: "Starforge Pursuit",
+        label: "Victory Lap",
         headline:
           (currentWeapon && currentWeapon.lateAscensionLabel) ||
           (currentWeapon && currentWeapon.capstoneLabel) ||
           "Late Form",
         detail:
-          "Wave 11은 반복 crown이 아니라 late-form proof window다. drift pocket과 ignition ring을 크게 꺾으며 방금 잠긴 body/gun leap가 추격 덩어리를 직접 찢는지 먼저 보여 준다.",
+          "Wave 11은 반복 crown이 아니라 late-form domination lap이다. drift furnace 하나만 비껴 가며 방금 잠긴 body/gun leap가 열린 lane 둘을 얼마나 오래 소유하는지 먼저 보여 준다.",
       };
     }
     return {
@@ -11417,8 +11417,8 @@
       tag: "ARSENAL",
       title: "Cataclysm Arsenal",
       description: `${CORE_DEFS[build.coreId].label}에 전면 cataclysm fan과 측면 브로드사이드 포드를 한 번에 잠가 support 없이도 주포 firing geometry를 monster form으로 갈아엎는다. 이번 pick의 rider는 보조 증폭일 뿐이고, 진짜 payoff는 Wave 9-10에서 주포가 열린 lane 둘을 동시에 잠그는 새 화망 자체다.`,
-      roadmapDetail: "Wave 9-10 payoff band -> Wave 11 proof -> Wave 12 final breach",
-      slotText: "cataclysm fan + 브로드사이드 포드 · 주포 우선 payoff band -> proof -> finale",
+      roadmapDetail: "Wave 9-10 payoff band -> Wave 11 domination lap -> Wave 12 final breach",
+      slotText: "cataclysm fan + 브로드사이드 포드 · 주포 우선 payoff band -> lap -> finale",
       cost: 34,
       laneLabel: "Main Weapon Mutation",
       forgeLaneLabel: "Main Weapon Mutation",
@@ -11443,9 +11443,9 @@
       tag: "HALO",
       title: "Warplate Halo",
       description:
-        "Act 3 진입 전에 재충전식 warplate를 두 겹까지 예열해 큰 한 방을 지우고, plate가 터질 때마다 주변 탄막과 추격선을 같이 뜯어낸다. Wave 9-10은 headline form이 전장을 먼저 먹는 payoff band로 유지되고, Wave 11은 Halo proof에서 방금 붙인 생존층이 pursuit 압박을 얼마나 더 길게 흘리는지 바로 요구한다. Wave 12에서만 Citadel final stand를 버티게 만든다.",
-      roadmapDetail: "Wave 9-10 payoff band -> Wave 11 Halo proof -> Wave 12 final stand",
-      slotText: `warplate ${getLateFieldAegisMaxCharges({ lateFieldAegisLevel: nextLevel })}충전 · payoff band -> proof -> finale`,
+        "Act 3 진입 전에 재충전식 warplate를 두 겹까지 예열해 큰 한 방을 지우고, plate가 터질 때마다 주변 탄막과 추격선을 같이 뜯어낸다. Wave 9-10은 headline form이 전장을 먼저 먹는 payoff band로 유지되고, Wave 11은 Halo refuge lap에서 방금 붙인 생존층으로 넓은 pocket을 얼마나 오래 지키는지 먼저 누리게 만든다. Wave 12에서만 Citadel final stand를 버티게 만든다.",
+      roadmapDetail: "Wave 9-10 payoff band -> Wave 11 Halo refuge lap -> Wave 12 final stand",
+      slotText: `warplate ${getLateFieldAegisMaxCharges({ lateFieldAegisLevel: nextLevel })}충전 · payoff band -> refuge lap -> finale`,
       cost: 26,
       laneLabel: "Defense / Utility",
       forgeLaneLabel: "Defense / Utility",
@@ -11466,9 +11466,9 @@
       tag: "LEDGER",
       title: "Black Ledger Heist",
       description:
-        "Act 3 개막 자금을 먼저 당겨 고철과 회수 효율을 크게 올린다. 대신 첫 두 rung은 headline form이 전장을 먹는 payoff band로 유지되고, Wave 11은 Jackpot proof에서 greed를 rider 위치에 묶은 채 pursuit 각을 한 판 더 누리게 하며, Wave 12에서만 blackout finale로 큰 payout 압박을 정면으로 받게 만든다.",
-      roadmapDetail: "Wave 9-10 payoff band -> Wave 11 Jackpot proof -> Wave 12 blackout finale",
-      slotText: "고철 +52 · 회수 +16% · payoff band -> proof -> finale · 2웨이브 Siege Debt",
+        "Act 3 개막 자금을 먼저 당겨 고철과 회수 효율을 크게 올린다. 대신 첫 두 rung은 headline form이 전장을 먹는 payoff band로 유지되고, Wave 11은 Kingpin cash-out lap에서 greed를 rider 위치에 묶은 채 넓은 vault line을 한 판 더 누리게 하며, Wave 12에서만 blackout finale로 큰 payout 압박을 정면으로 받게 만든다.",
+      roadmapDetail: "Wave 9-10 payoff band -> Wave 11 Kingpin cash-out lap -> Wave 12 blackout finale",
+      slotText: "고철 +52 · 회수 +16% · payoff band -> cash-out lap -> finale · 2웨이브 Siege Debt",
       cost: 0,
       scrapGain: 52,
       scrapMultiplierGain: 0.16,
@@ -13909,8 +13909,8 @@
     }
     if (boundedWave === 11) {
       return {
-        label: "Proof Rung",
-        detail: `${bandLabel}에서 locked form이 pursuit 압박을 실제로 버텨 내는지 증명한다.`,
+        label: "Victory Lap",
+        detail: `${bandLabel}에서 locked form이 열린 lane을 얼마나 오래 소유하는지 먼저 누리게 만든다.`,
       };
     }
     return {
@@ -15835,7 +15835,7 @@
           : "최종 웨이브 정리 완료. 마지막 포지에서 최종 각인과 7연속 afterburn survival ladder의 시작 형태를 마감한다."
         : isLateBreakArmory(forgeOptions)
           ? CONSOLIDATED_12_WAVE_ROUTE
-            ? `Wave 8 돌파. 이번 포지는 Current Form 위에 Main Leap 하나만 크게 올린다. 이후 ${lateRoutePayoff ? lateRoutePayoff.label : "Payoff Band"}를 지나 ${lateRouteProof ? lateRouteProof.label : "Proof Rung"}, ${lateRouteFinale ? lateRouteFinale.label : "Finale"}로 곧장 꺾인다.`
+            ? `Wave 8 돌파. 이번 포지는 Current Form 위에 Main Leap 하나만 크게 올린다. 이후 ${lateRoutePayoff ? lateRoutePayoff.label : "Payoff Band"}를 지나 ${lateRouteProof ? lateRouteProof.label : "Victory Lap"}, ${lateRouteFinale ? lateRouteFinale.label : "Finale"}로 곧장 꺾인다.`
             : state.build.auxiliaryJunctionLevel > 0
               ? "Wave 8 돌파. Late Break Armory를 단일 breakpoint로 재절단했다. 이제 정확히 세 장만 뜨며, Cataclysm Arsenal, Warplate Halo, Black Ledger Heist 중 하나를 고르면 Wave 9-10은 payoff band, Wave 11은 그 선택 전용 proof, Wave 12는 최종 finale로 꺾인다."
               : "Wave 8 돌파. Late Break Armory를 단일 breakpoint로 재절단했다. 이제 정확히 세 장만 뜨며, Cataclysm Arsenal, Warplate Halo, Black Ledger Heist 중 하나를 고르면 Wave 9-10은 payoff band, Wave 11은 그 선택 전용 proof, Wave 12는 최종 finale로 꺾인다."
