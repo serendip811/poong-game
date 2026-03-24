@@ -12,6 +12,8 @@ Keep this short and replace stale notes instead of endlessly appending.
 
 ## Current Memory
 
+- On the consolidated route, `Wave 3 Core Lock` should only forecast a doctrine and grant a visible gun mutation; do not let forecast state apply doctrine stats/fire geometry before `Wave 6 Ascension` actually locks the form.
+- Signature starts land better with `one spare copy and no free affix`; if the opener again feels half-solved, cut seeded certainty before adding more early reward wrappers.
 - On the consolidated route, `Wave 12` lands better as a rotating bastion stand than a second relay breach; keep `Wave 9-12` reading `open-lane payoff -> breach proof -> pursuit/refuge -> final stand`.
 - Prefer one meaningful gameplay or readability improvement per run.
 - Avoid adding another named system if the same benefit could come from simplifying or deepening an existing one.

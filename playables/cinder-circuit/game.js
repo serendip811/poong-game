@@ -3598,10 +3598,10 @@
       tag: "RICOCHET",
       short: "반사·드라이브",
       description: "벽 반사와 오버드라이브 회전을 빠르게 여는 시동 회로.",
-      perkText: "Ricochet 보관 x2 · Drive +18% · Overdrive +0.6s",
+      perkText: "Ricochet 예비 x1 · Drive +18% · Overdrive +0.6s",
       startCoreId: "ricochet",
-      startAffixes: ["phase_rounds"],
-      seedCores: ["ricochet", "ricochet"],
+      startAffixes: [],
+      seedCores: ["ricochet"],
       apply(build) {
         build.driveGainBonus += 0.18;
         build.overdriveDurationBonus += 0.6;
@@ -3616,10 +3616,10 @@
       tag: "SALVAGE",
       short: "회수·지속",
       description: "고철 회수와 근거리 압박을 안정적으로 여는 수거 회로.",
-      perkText: "Scatter 보관 x2 · 고철 +8% · Pickup +18",
+      perkText: "Scatter 예비 x1 · 고철 +8% · Pickup +18",
       startCoreId: "scatter",
-      startAffixes: ["salvage_link"],
-      seedCores: ["scatter", "scatter"],
+      startAffixes: [],
+      seedCores: ["scatter"],
       apply(build) {
         build.scrapMultiplier += 0.08;
         build.pickupBonus += 18;
@@ -3635,10 +3635,10 @@
       tag: "LANCE",
       short: "연쇄·냉각",
       description: "관통탄에 연쇄 전류를 얹어 후반 돌파 라인을 여는 냉각 회로.",
-      perkText: "Lance 보관 x2 · Chain +1 · Cool +4",
+      perkText: "Lance 예비 x1 · Chain +1 · Cool +4",
       startCoreId: "lance",
-      startAffixes: ["thermal_weave"],
-      seedCores: ["lance", "lance"],
+      startAffixes: [],
+      seedCores: ["lance"],
       apply(build) {
         build.chainBonus += 1;
         build.coolRateBonus += 4;
@@ -9330,7 +9330,7 @@
         catalystCapstone.applyWeapon(stats, build);
       }
     }
-    const doctrineWeaponForm = getDoctrineWeaponForm(build, core.id);
+    const doctrineWeaponForm = build && build.bastionDoctrineId ? getDoctrineWeaponForm(build, core.id) : null;
     if (doctrineWeaponForm) {
       stats.doctrineStage = doctrineWeaponForm.stage;
       stats.doctrineFormLabel = doctrineWeaponForm.label;
@@ -12026,11 +12026,11 @@
       tag: "ARCH",
       title: doctrine.label,
       description:
-        `${doctrine.description} Wave 3에서는 ${weaponChoice.title}만 먼저 무료 접속해 core gun lock을 고정한다. ${chassis ? chassis.title : "Chassis Breakpoint"}는 Wave 6에서 body plan만 더하고, support bay 확장과 자율 하드웨어 headline은 Wave 8 Late Break Armory 이후에야 열린다.${lateCapstoneLabel ? ` 이후 Wave 6-8 marked elite shard를 모아 ${lateCapstoneLabel} 계열 후반 분기를 밀 수 있다.` : ""}`,
-      slotText: `monster form lock · ${weaponChoice.title}`,
+        `${doctrine.description} Wave 3에서는 ${weaponChoice.title}만 먼저 무료 접속해 첫 주포 실루엣만 바꾼다. 이번 pick은 교리 lock도, chassis package도 아니다. ${chassis ? chassis.title : "Chassis Breakpoint"}와 실제 doctrine 채택은 Wave 6에서 함께 고르고, support bay headline은 Wave 8 Late Break Armory 이후에야 열린다.${lateCapstoneLabel ? ` 이후 Wave 6-8 marked elite shard를 모아 ${lateCapstoneLabel} 계열 후반 분기를 밀 수 있다.` : ""}`,
+      slotText: `core lock · ${weaponChoice.title}`,
       cost: 0,
-      laneLabel: "Monster Form Lock",
-      forgeLaneLabel: "Monster Form Lock",
+      laneLabel: "Core Lock",
+      forgeLaneLabel: "Core Lock",
       doctrineId: doctrine.id,
       doctrineLabel: doctrine.label,
       doctrineCapstoneLabel: lateCapstoneLabel,
@@ -13316,15 +13316,7 @@
         return choice;
       }
       run.build.architectureForecastId = doctrine.id;
-      run.build.bastionDoctrineId = doctrine.id;
-      run.build.doctrineCapstoneId = null;
-      run.build.afterburnAscensionOffered = false;
-      run.build.doctrineChaseClaimed = false;
-      run.build.doctrinePursuitCommitted = false;
-      run.build.doctrinePursuitProgress = 0;
-      run.build.doctrinePursuitExpired = false;
-      doctrine.apply(run.build, run);
-      run.build.upgrades.push(`Monster Form Lock: ${doctrine.label}`);
+      run.build.upgrades.push(`Core Lock Forecast: ${doctrine.label}`);
       if (choice.weaponChoice) {
         applyForgeChoice(run, choice.weaponChoice);
       }
