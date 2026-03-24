@@ -127,14 +127,15 @@ const inspectMarkup = game.createTabInspectBoardMarkup({
   gambleSummary: { label: "고철 42", note: "" },
 });
 assert.ok(inspectMarkup.includes("비용·대가"));
-assert.ok(inspectMarkup.includes("다음 점화"));
+assert.ok(inspectMarkup.includes("현재 형태"));
+assert.ok(inspectMarkup.includes("다음 전장"));
 assert.ok(inspectMarkup.includes("Cataclysm Arsenal"));
 assert.ok(!inspectMarkup.includes("inspect-board__lane"));
 const compactFocusMarkup = game.createBaseRouteFocusMarkup({
-  eyebrow: "현재 실루엣",
+  eyebrow: "현재 형태",
   title: "Sky Lance",
   currentFormLabel: "Sky Lance",
-  spotlightLabel: "다음 점화",
+  spotlightLabel: "다음 전장",
   spotlightValue: "Cataclysm Arsenal",
   tradeoffLabel: "판돈·유틸",
   tradeoffValue: "고철 42",
@@ -165,6 +166,8 @@ const minimalHudVisibility = game.getMinimalBaseRouteHudVisibility({
   paused: false,
 });
 assert.equal(minimalHudVisibility.minimal, true);
+assert.equal(minimalHudVisibility.showWave, false);
+assert.equal(minimalHudVisibility.showDash, false);
 assert.equal(minimalHudVisibility.showTimer, false);
 assert.equal(minimalHudVisibility.showScrap, false);
 assert.equal(minimalHudVisibility.showRoadmap, false);
@@ -173,6 +176,8 @@ const expandedHudVisibility = game.getMinimalBaseRouteHudVisibility({
   paused: false,
 });
 assert.equal(expandedHudVisibility.minimal, false);
+assert.equal(expandedHudVisibility.showWave, true);
+assert.equal(expandedHudVisibility.showDash, true);
 assert.equal(expandedHudVisibility.showTimer, true);
 assert.equal(expandedHudVisibility.showRoadmap, true);
 assert.equal(game.shouldUseFieldGrant({ nextWave: 6, finalForge: false, build: roadmapBuild }), false);

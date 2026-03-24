@@ -8837,12 +8837,12 @@
   }) {
     return `
       <div class="summary-head">
-        <strong>현재 실루엣</strong>
+        <strong>현재 형태</strong>
         <span class="summary-chip">TAB</span>
       </div>
       <div class="inspect-board inspect-board--contract">
         <strong class="route-contract__title">${dominantForm.label}</strong>
-        <div class="forge-focus__proof"><span>다음 점화</span>${spotlightValue}</div>
+        <div class="forge-focus__proof"><span>다음 전장</span>${spotlightValue}</div>
         <p class="forge-card__pivot forge-card__pivot--bill">
           <span>비용·대가</span>
           <strong>${gambleSummary.label}</strong>
@@ -8859,6 +8859,8 @@
     const minimal = shouldUseMinimalBaseRouteHud(run);
     return {
       minimal,
+      showWave: !minimal,
+      showDash: !minimal,
       showTimer: !minimal,
       showScrap: !minimal,
       showBench: !minimal,
@@ -8890,7 +8892,7 @@
           ? `<p class="forge-card__pivot forge-card__pivot--bill"><span>보유 고철</span><strong>${scrapValue}</strong></p>`
           : ""
       }
-      <p class="summary-note">이번 정지는 카드 세 장뿐이다. 하나를 고르고 바로 다음 전장으로 들어간다.</p>
+      <p class="summary-note">세 장 중 하나만 고르고 바로 다음 전장으로 들어간다.</p>
     `;
   }
 
@@ -20718,7 +20720,7 @@
         pushCombatFeed(
           CONSOLIDATED_12_WAVE_ROUTE
             ? state.wave.completesRun
-              ? "적 반응 정지. 남은 고철을 회수하면 이번 12-wave 계약의 결과가 열린다."
+              ? "적 반응 정지. 남은 고철을 회수하면 이번 런의 결과가 열린다."
               : `적 반응 정지. 남은 고철을 회수하면 ${nextPhaseLabel} 하나만 고른 뒤 바로 다음 시험으로 이어진다.`
             : `적 반응 정지. 남은 고철을 회수한 뒤 ${nextPhaseLabel}로 이어진다.`,
           "CLEAR"
@@ -20876,6 +20878,12 @@
     if (elements.scrapStat && elements.scrapStat.parentElement) {
       elements.scrapStat.parentElement.classList.toggle("hidden", !hudVisibility.showScrap);
     }
+    if (elements.waveLabel && elements.waveLabel.parentElement) {
+      elements.waveLabel.parentElement.classList.toggle("hidden", !hudVisibility.showWave);
+    }
+    if (elements.dashStat && elements.dashStat.parentElement) {
+      elements.dashStat.parentElement.classList.toggle("hidden", !hudVisibility.showDash);
+    }
 
     const activeCore = CORE_DEFS[state.build.coreId];
     const weapon = state.weapon;
@@ -20908,7 +20916,7 @@
             ? ""
             : `<div class="mini-pill-row">${
                 baseRouteForgeActive
-                  ? createMiniPill("다음 점화", nextBeat.title, "hot") +
+                  ? createMiniPill("다음 전장", nextBeat.title, "hot") +
                     createMiniPill("방호·보조", supportTrack.label, "cool")
                   : createMiniPill(getHeadlineFormTierLabel(getHeadlineFormTier(state.build)), headlineLabel, "hot") +
                     createMiniPill("보조", supportTrack.label, "cool")
@@ -20968,12 +20976,12 @@
         !hudVisibility.showRoadmap && !tabInspectBoardActive
           ? ""
           : minimalBaseRouteHud || tabInspectBoardActive
-          ? createBaseRouteFocusMarkup({
-              eyebrow: tabInspectBoardActive ? "현재 실루엣" : "",
+            ? createBaseRouteFocusMarkup({
+              eyebrow: tabInspectBoardActive ? "현재 형태" : "",
               chipLabel: ladderFocus.label,
               title: dominantForm.label,
               currentFormLabel: dominantForm.label,
-              spotlightLabel: "다음 점화",
+              spotlightLabel: "다음 전장",
               spotlightValue: nextBeat.title,
               tradeoffLabel: "판돈·유틸",
               tradeoffValue: gambleSummary.label,
@@ -20994,18 +21002,19 @@
       const objectiveNote = hazardStatus.note || (combatBand ? combatBand.detail : nextBreakpoint.detail);
       elements.waveObjective.innerHTML = `
         <div class="summary-head">
-          <strong>${waveConfig.label}</strong>
+          <strong>현재 전장</strong>
           <span class="summary-chip ${hazardStatus.tone}">
             ${hazardStatus.chipLabel}
           </span>
         </div>
+        <strong class="route-contract__title">${waveConfig.label}</strong>
         <div class="status-list">
-          ${createStatusRow("Immediate Threat", `${hazardStatus.detailLabel} ${hazardStatus.detailValue}`)}
-          ${createStatusRow(baseRouteForgeActive ? "다음 시험" : "Combat Ask", combatBand ? combatBand.label : proofWindow.label)}
+          ${createStatusRow("위협", `${hazardStatus.detailLabel} ${hazardStatus.detailValue}`)}
+          ${createStatusRow("요구", combatBand ? combatBand.label : proofWindow.label)}
         </div>
         <p class="summary-note">${
           minimalBaseRouteHud
-            ? `${proofWindow.label} 하나만 보면 된다. ${objectiveNote}`
+            ? `${combatBand ? combatBand.label : proofWindow.label} 하나만 보면 된다. ${objectiveNote}`
             : baseRouteForgeActive
               ? `${proofWindow.label}만 보면 된다. ${combatBand ? `${combatBand.headline}. ` : ""}${objectiveNote}`
               : `${nextBreakpoint.label} + ${supportTrack.label}. ${combatBand ? `${combatBand.headline}. ` : ""}${objectiveNote}`
@@ -21133,7 +21142,7 @@
         ? `${dominantFormSummary.label} 위에 rider 한 장만 얹고 바로 다음 전투 ask를 버틴다.`
           : `${dominantFormSummary.label} 다음에 가장 크게 전장을 바꿀 변이 하나만 먼저 고른다.`;
     elements.forgeSubtitle.textContent = useBaseRouteContract
-      ? `고철 ${Math.round(state.resources.scrap)} · 카드 하나를 고르면 바로 다음 웨이브로 들어간다.`
+      ? `고철 ${Math.round(state.resources.scrap)} · 세 장 중 하나를 고르면 바로 다음 웨이브로 들어간다.`
       : state.pendingFinalForge
         ? `${forgeModeLabel} · ${focusTitle} · 고철 ${Math.round(state.resources.scrap)}`
         : riderStep

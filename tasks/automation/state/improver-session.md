@@ -12,6 +12,7 @@ Keep this short and replace stale notes instead of endlessly appending.
 
 ## Current Memory
 
+- On the consolidated route, the minimal combat HUD should now hide both the top `Wave` chip and `Dash` chip; the current wave identity belongs in the single `현재 전장` threat card, not as extra top-strip telemetry beside the survival meters.
 - On the consolidated route, if `build.lateBreakProfileId` is set then `resolveWaveConfig` should jump straight from `WAVE_CONFIG` into the branch-owned `Wave 9-12` overrides instead of inheriting `SHARED_LATE_ACT_ENCOUNTER_POOL` first; otherwise offense/defense/greed finales drift back toward one shared staircase with renamed hazards.
 - On the consolidated route, the default combat HUD should now collapse to `wave + survival meters + one current-form card + one threat/ask card`; if timer, scrap, roadmap, bench chips, upgrade logs, or live readout panels come back during normal play, the shipped screen has slipped back into operator-dashboard mode.
 - On the consolidated route, the forge header lands better as one quiet context card `현재 형태 / 다음 전장 / 보유 고철` above the three appetite cards; if the base forge context grows another roadmap, support summary, or `다음 점화` coaching row, the reward pause has drifted back into route briefing.
