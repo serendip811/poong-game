@@ -1106,47 +1106,51 @@
       },
     },
     {
-      id: "cindercrown",
-      label: "Wave 12 · Cinder Crown",
-      pressureFamily: "breach",
+      id: "cinder_bastion",
+      label: "Wave 12 · Cinder Bastion",
+      pressureFamily: "hold",
       duration: 104,
-      spawnBudget: 190,
-      activeCap: 35,
-      baseSpawnInterval: 0.344,
-      spawnIntervalMin: 0.104,
-      spawnAcceleration: 0.31,
+      spawnBudget: 184,
+      activeCap: 33,
+      baseSpawnInterval: 0.356,
+      spawnIntervalMin: 0.108,
+      spawnAcceleration: 0.298,
       eliteEvery: 5,
       mix: {
         scuttler: 0.06,
-        brute: 0.18,
+        brute: 0.2,
         shrike: 0.16,
-        skimmer: 0.1,
-        lancer: 0.22,
-        brander: 0.1,
-        binder: 0.04,
+        skimmer: 0.06,
+        lancer: 0.14,
+        brander: 0.08,
+        binder: 0.1,
         mortar: 0.02,
-        warden: 0.06,
+        warden: 0.18,
       },
-      note: "최종 전장은 더 이상 tax return이 아니다. 긴 crownline corridor 하나만 남기고 binder·mortar upkeep를 크게 덜어, Wave 11에서 벌어 둔 lane ownership를 마지막 돌파 창으로 직접 결산하게 만든다.",
+      note: "최종 전장은 두 번째 breach가 아니라 rotating stand다. 작은 bastion pocket 두 곳만 짧게 열어 두고 relay tax를 걷어, Wave 11에서 익힌 refuge cadence를 마지막까지 이어 가며 어느 pocket을 열고 버릴지 직접 결산하게 만든다.",
       directive:
-        "cinder crown crownline breach. 가장 얇은 relay corridor를 먼저 찢고 lancer wedge를 흘리며 열린 pocket을 오래 지켜야 한다. 먼 pylon만 보는 대신 split fire로 양측 flank를 같이 눌러 breach window를 직접 연장해야 한다.",
+        "cinder bastion stand. 모든 거점을 붙들지 말고 가장 얇은 pocket 하나만 먼저 열어 체력과 space를 회수한 뒤, binder pinch가 닫히기 전에 다른 flank로 갈아타야 한다. 마지막 판의 ask는 corridor breach가 아니라 pocket rotation discipline이다.",
       driveGainFactor: 1.52,
-      arena: AFTERBURN_ENDURANCE_ARENA,
+      arena: {
+        width: 1680,
+        height: 980,
+      },
       ascensionCarrierType: "binder",
       hazard: {
-        label: "Cinder Crown Crownline",
-        type: "relay",
-        interval: 8.8,
-        count: 2,
-        radius: 84,
-        telegraph: 0.78,
-        duration: 4.8,
+        label: "Cinder Bastion Pocket",
+        type: "territory",
+        interval: 8.2,
+        count: 1,
+        radius: 98,
+        telegraph: 0.82,
+        duration: 7.8,
         damage: 15,
-        coreHp: 68,
-        coreRadius: 19,
-        relayRange: 536,
-        relayWidth: 32,
-        relayDamage: 14,
+        coreHp: 74,
+        coreRadius: 18,
+        turretInterval: 0.94,
+        turretDamage: 11,
+        turretSpeed: 246,
+        enemyPullRadius: 158,
       },
       completesRun: true,
     },
@@ -1267,42 +1271,46 @@
       },
     },
     11: {
-      pressureFamily: "breach",
-      label: "Wave 12 · Cinder Crown",
-      bandId: "cinder_crown_break",
-      bandLabel: "Cinder Crown",
+      pressureFamily: "hold",
+      label: "Wave 12 · Cinder Bastion",
+      bandId: "cinder_bastion_hold",
+      bandLabel: "Cinder Bastion",
       bandFocusId: "late_form",
-      note: "추격 시험 다음엔 최종 crown breach 한 판만 남긴다. 긴 relay corridor 하나만 남기고 upkeep tax를 덜어, headline form이 lane을 찢는 힘과 rider 축이 버티는 시간이 같은 전투 안에서 함께 드러나게 만든다.",
+      note: "추격 시험 다음엔 두 번째 crown breach가 아니라 final stand가 남는다. 작은 bastion pocket 둘만 짧게 열어 Wave 11에서 익힌 refuge cadence를 결산하게 하고, headline form이 pocket을 비우는 힘과 rider 축이 버티는 시간이 같은 전투 안에서 함께 드러나게 만든다.",
       directive:
-        "cinder crown crownline breach. relay pylon을 멀리서만 끊을 수는 없다. 가장 얇은 corridor를 직접 찢고 rider 생존축으로 열린 pocket을 오래 버텨 breach window를 연장해야 한다.",
+        "cinder bastion hold. 한 pocket을 짧게 열어 체력과 space를 회수한 뒤 binder pinch가 닫히기 전에 다른 flank로 갈아타야 한다. 마지막 판의 ask는 relay 파괴가 아니라 pocket rotation discipline이다.",
       driveGainFactor: 1.56,
-      arena: AFTERBURN_ENDURANCE_ARENA,
-      activeCap: 35,
-      spawnBudget: 190,
+      arena: {
+        width: 1680,
+        height: 980,
+      },
+      activeCap: 33,
+      spawnBudget: 184,
       mix: {
         scuttler: 0.08,
-        brute: 0.18,
+        brute: 0.2,
         shrike: 0.16,
-        lancer: 0.22,
+        lancer: 0.14,
         brander: 0.1,
-        binder: 0.04,
+        binder: 0.1,
         mortar: 0.02,
-        warden: 0.06,
+        warden: 0.18,
       },
       hazard: {
-        label: "Cinder Crown Crownline",
-        type: "relay",
-        interval: 8.8,
-        count: 2,
-        radius: 84,
-        telegraph: 0.78,
-        duration: 4.8,
+        label: "Cinder Bastion Pocket",
+        type: "territory",
+        interval: 8.2,
+        count: 1,
+        radius: 98,
+        telegraph: 0.82,
+        duration: 7.8,
         damage: 15,
-        coreHp: 68,
-        coreRadius: 19,
-        relayRange: 536,
-        relayWidth: 32,
-        relayDamage: 14,
+        coreHp: 74,
+        coreRadius: 18,
+        turretInterval: 0.94,
+        turretDamage: 11,
+        turretSpeed: 246,
+        enemyPullRadius: 158,
       },
     },
   };
@@ -2202,7 +2210,7 @@
     return {
       label: "Late Break cadence",
       detail:
-        "Wave 9는 payoff window, Wave 10은 breach proof, Wave 11은 pursuit/refuge run, Wave 12는 escalation finale다.",
+        "Wave 9는 payoff window, Wave 10은 breach proof, Wave 11은 pursuit/refuge run, Wave 12는 rotating final stand다.",
     };
   }
 
@@ -8694,12 +8702,12 @@
     }
     if (build && !build.lateAscensionId) {
       return {
-        label: boundedWave === 11 ? "Starforge Pursuit" : "Cinder Crown",
+        label: boundedWave === 11 ? "Starforge Pursuit" : "Cinder Bastion",
         headline: "Ascension Core",
         detail:
           boundedWave === 11
             ? "Wave 11은 late ascension split 직후의 pursuit/refuge run이다. drift furnace와 재진입 압박을 비껴 돌며 첫 elite split cache를 회수하고, headline body jump로 비운 pocket 사이를 얼마나 깔끔하게 갈아타는지 먼저 느끼게 만든다."
-            : "Wave 12는 headline target을 Ascension Core 하나로 좁힌 단일 crownline breach다. 가장 얇은 relay corridor를 직접 찢고 rider 생존축으로 열린 pocket을 오래 버텨야 한다.",
+            : "Wave 12는 headline target을 Ascension Core 하나로 좁힌 rotating final stand다. 작은 bastion pocket을 짧게 열고 binder pinch가 닫히기 전에 다른 refuge lane으로 갈아타야 한다.",
       };
     }
     if (boundedWave === 11) {
@@ -8714,13 +8722,13 @@
       };
     }
     return {
-      label: "Cinder Crown",
+      label: "Cinder Bastion",
       headline:
         (currentWeapon && currentWeapon.lateAscensionLabel) ||
         (currentWeapon && currentWeapon.capstoneLabel) ||
         "Late Form",
       detail:
-        "Wave 12는 headline late form의 최종 crownline breach다. 긴 relay corridor 하나만 남긴 결산 전투라, 방금 완성한 form과 rider 생존축이 전장 소유 시간을 얼마나 늘리는지 더 또렷하게 드러난다.",
+        "Wave 12는 headline late form의 rotating final stand다. 짧게 열리는 bastion pocket 사이를 갈아타며, 방금 완성한 form과 rider 생존축이 pocket 소유 시간을 얼마나 늘리는지 더 또렷하게 드러난다.",
     };
   }
 
@@ -14038,7 +14046,7 @@
     }
     return {
       label: "Finale",
-      detail: `${bandLabel}에서 이번 run의 마지막 breach를 닫는다.`,
+      detail: `${bandLabel}에서 이번 run의 마지막 pocket rotation과 stand discipline을 결산한다.`,
     };
   }
 

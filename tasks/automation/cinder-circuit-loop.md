@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: protect the early-to-mid growth ladder so `Wave 1-6` starts lean, sells one dominant core/chassis transformation first, and delays support spectacle and rider clutter until it feels earned.
+- Immediate priority: freeze new expansion branches and consolidate the shipped `Wave 1-12` spine into one lean core-first growth ladder, one appetite-first forge/HUD read, and a late band with clearly different movement asks.
 
 ## Release Gates
 
@@ -48,6 +48,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 23:15:00 KST
+  Findings:
+  - [cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L21) through [cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L213) still spends too much authority on source-scale rarity, affix, forge-verb, and passive layering while the shipped route has not yet proven that a player actually wants to rerun the current `Wave 1-12` ladder. This is still design energy pointed at expansion, not proof.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L11898) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12051) keeps the route contract talking about `monster form lock`, `body plan`, `support bay`, `flex lane`, and late capstone chase rules early enough that the run still feels pre-explained. Strong rerunnable arena roguelites let the player feel the first weapon/chassis break before they read the machine blueprint.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L987) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1127) is cleaner than before, but `Wave 9-12` still leans too hard on corridor ownership / breach variants. `Lockgrid`, `Crownhold Proof`, and `Cinder Crown` are all asking for related crownline lane control, so the late band still does not yet imply the broader encounter grammar needed for a future `20-30 wave` game.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20287) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20620) still gives too much screen hierarchy to `12-Wave Contract`, `Next Proof`, rider state, and explanatory note stacks. Compared with the reward readability patterns in `Hades`, `Nova Drift`, or `Brotato`, the forge/HUD still asks the player to parse structure before craving the pick.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2747) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3201) continues to give satellites, shields, missiles, sentries, and drones the clearest visible level-up fantasy in the run. As long as helper hardware owns the most legible spectacle jumps, the core chassis/weapon climb will keep feeling like setup instead of payoff.
+  Top Priority: Stop adding new source-inspired layers and do one ruthless shipping-spine consolidation pass that strips early route/admin copy, makes forge rewards read as one dominant main leap plus one tiny rider signal, and turns `Wave 9-12` into four genuinely different movement/combat asks.
+  Why Now: The game is close to polishing the wrong thing unless the current run proves repeat-play hunger before any more system breadth lands.
+  Do Not Repeat: Do not answer this with another support module, passive package, or terminology cleanup that leaves the late ask map and reward hierarchy structurally unchanged.
+  Release Gate: Progression
 
 - 2026-03-24 19:40:00 KST
   Findings:
@@ -1978,6 +1990,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 20:15:08 KST
+  Changed: recut the shipped standard-route finale in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from `Wave 12 · Cinder Crown` into `Wave 12 · Cinder Bastion`, a bounded `hold`/`territory` final stand instead of a second relay breach. The base wave and shared late-act profile now open short-lived bastion pockets in a `1680x980` arena with a lower `activeCap` (`33`), heavier brute/warden pressure, and rotation-focused directives so the player closes the run by opening one refuge pocket, harvesting space/health, and swapping flanks before binder pressure seals it. I also updated the standard late-route summary copy and [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so smoke now locks the new `open-lane payoff -> breach proof -> pursuit/refuge -> final stand` contract. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` asked for `Wave 9-12` to become four genuinely different movement/combat asks instead of looping back into crownline ownership. The highest-value bounded interpretation was to change only the standard-route `Wave 12` grammar, because `Wave 9` already reads as payoff, `Wave 10` already reads as breach proof, and `Wave 11` already reads as pursuit; the structural duplicate was the finale.
+  Follow-up risk: the standard late band is now more distinct, but the `Wave 8-12` forge/HUD handoff still spends more words on route explanation than a release-grade reward spike should. If the next pass stays on the same critique, it should trim the reward surface to one dominant leap plus one tiny rider signal rather than add another branch or late-system layer.
+  Release Gate: Progression
 
 - 2026-03-24 21:05:00 KST
   Changed: recut the early doctrine framing in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the shipped `Wave 3-6` route stops teaching support hardware as the opening fantasy. The three doctrine defs no longer advertise immediate drones, sentries, missiles, reserve lanes, or `support bay` rules in their core perk text, and the `Wave 3` doctrine / architecture cards now sell `core gun lock -> Wave 6 body plan -> Wave 8 support unlock` explicitly instead of describing helper routing as part of the first big pick. I also moved doctrine-specific support guidance onto actual support install descriptions after the unlock, so support preference still exists for build texture but only appears when those systems are truly live. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

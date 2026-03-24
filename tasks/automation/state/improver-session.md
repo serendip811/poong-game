@@ -12,6 +12,7 @@ Keep this short and replace stale notes instead of endlessly appending.
 
 ## Current Memory
 
+- On the consolidated route, `Wave 12` lands better as a rotating bastion stand than a second relay breach; keep `Wave 9-12` reading `open-lane payoff -> breach proof -> pursuit/refuge -> final stand`.
 - Prefer one meaningful gameplay or readability improvement per run.
 - Avoid adding another named system if the same benefit could come from simplifying or deepening an existing one.
 - Validate every gameplay/UI change with the existing smoke test when relevant.
