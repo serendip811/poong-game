@@ -15,3 +15,4 @@ Keep this short and replace stale notes instead of endlessly appending.
 - Prefer one meaningful gameplay or readability improvement per run.
 - Avoid adding another named system if the same benefit could come from simplifying or deepening an existing one.
 - Validate every gameplay/UI change with the existing smoke test when relevant.
+- Standard `Wave 9-10` improvements are highest value when they buy more lane-ownership time through lower caps and larger arenas, not when they add another late mechanic.

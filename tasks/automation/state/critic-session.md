@@ -12,6 +12,7 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The game has grown quickly; critique should keep asking whether new content increases replay desire or just adds named systems.
-- Main-weapon/chassis fantasy should stay louder than surrounding support modules.
-- Favor critique that strengthens long-run appetite, simpler reward readability, and cleaner combat asks.
+- The most fragile gate is now `Progression`: Act 3 still lacks one memorable late-form staircase that feels strong enough to scale toward `20-30` waves.
+- Repeated false solution: removing or renaming route/admin labels without changing the late-wave combat grammar underneath.
+- Main-weapon/chassis fantasy still has to beat halo/missile/drone/support desire in both wording and spectacle.
+- Favor critiques that push payoff band clarity, breathable movement asks, and fewer explanatory UI layers at reward moments.

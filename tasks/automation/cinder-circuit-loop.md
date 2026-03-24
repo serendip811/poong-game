@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: strip branch/admin scaffolding out of the standard-route forge/HUD flow so `Wave 8-12` reads as one canonical late-form staircase before any more route or support expansion.
+- Immediate priority: consolidate `Wave 9-12` into one craveable late-form staircase with two clear payoff fights, one real proof fight, and one finale, while stripping route/admin language out of every transition and forge beat.
 
 ## Release Gates
 
@@ -48,6 +48,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 23:10:00 KST
+  Findings:
+  - Act 3 is longer on paper, but the first two late waves still do not create enough emotional climb to justify a future `20-30 wave` ceiling. `Lockgrid` and `Scrapline` are both crossfire payoff fights at `activeCap 32 -> 33`, so the run stretches without adding a stronger new ask or a bigger visible power spike.
+  - The player-facing contract is still over-explained at the exact moment that should feel instinctive. `maybeAdvancePhase()`, `updateHUD()`, and `renderForgeOverlay()` still make the player read route handling, proof framing, and form labels instead of just wanting the next mutation and feeling it immediately.
+  - Support-side fantasy still lands faster than chassis fantasy. Wave 8 messaging and the broader support package advertise extra bays, halo, missiles, drones, and doctrine pivots more clearly than the late main-gun/body staircase, which keeps the build hunger pointed at accessories.
+  - Combat space breathes more than before, but `Wave 10-12` still slides back toward binder/brander/relay pocket maintenance. The arena should be asking for bold lane ownership and commit timing, not reintroducing closure tax so quickly after the late form arrives.
+  - The docs are still helping drift survive: [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md) still contains old `5-wave act curve` balance framing, which weakens discipline around the current `12-wave` release contract.
+  Top Priority: Recut the standard late route so `Wave 9` is a huge main-form payoff, `Wave 10` extends that dominance with only a light squeeze, `Wave 11` becomes the first real pursuit proof, and `Wave 12` is the only full breach tax, with all branch/admin wording removed from that route.
+  Why Now: If the back half does not create anticipation and payoff on its own, a longer run will feel padded instead of addictive.
+  Do Not Repeat: Do not spend the next pass on another support option, cache wrapper, or route label cleanup that leaves the late-wave combat grammar basically unchanged.
+  Release Gate: Progression
 
 - 2026-03-24 22:18:00 KST
   Findings:
@@ -1736,6 +1748,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 23:35:00 KST
+  Changed: recut the standard-route late combat staircase again in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the base `Wave 9-11` finally behaves like the critique's intended `huge payoff -> light squeeze -> first pursuit proof`. `Wave 9` now opens in a much larger payoff arena with a clearly reduced active cap and slower surge tax, `Wave 10` keeps that same open field but only adds one thinner relay corridor instead of jumping straight back to heavy closure work, and `Wave 11` becomes the first real pursuit ask in a slightly tighter proof arena rather than another crowded crossfire rinse. I mirrored the same curve into the shared late-act encounter pool so the standard late staircase and its shared override stop drifting apart, then extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new caps, arena sizes, and `Payoff Band -> Proof Rung -> Finale` summaries in place. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was still specifically about the late standard route not climbing emotionally hard enough on the actual battlefield. The highest-value bounded interpretation was to spend this run on combat space and pressure shape, not more wording, so the late form gets a real ownership lap before the first pursuit proof and only pays full breach tax at the finale.
+  Follow-up risk: the back half now breathes more cleanly, but the main-gun/body silhouette still depends on existing form mutations to feel visually monstrous during that longer payoff band. If critique still says support fantasy lands faster than chassis fantasy, the next bounded pass should make the locked late form itself render or fire more dramatically across `Wave 9-10` instead of tightening density again.
+  Release Gate: Progression
 
 - 2026-03-24 22:40:00 KST
   Changed: tightened the standard-route late-form contract in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the base Act 3 player-facing flow now names only the three remembered beats the critique asked for: `Payoff Band`, `Proof Rung`, and `Finale`. I added a shared late-route summary helper, then routed the standard `Wave 8` forge callout, the wave-clear transition copy, and the base-route `Next Proof` summary through it so `Wave 9-12` stops reading like internal band/admin labels first and instead reads like one clean late staircase with the underlying band name demoted into the detail line. I also extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert those late-route labels and the rewritten proof-window contract. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
