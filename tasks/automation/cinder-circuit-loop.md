@@ -49,6 +49,18 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-24 14:00:00 KST
+  Findings:
+  - The project is still teaching the wrong game. [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md) still maps biome compression to a `5-wave act curve` and keeps a `Wave 1-5` balance table, which continues to train prototype-length thinking against the stated `Wave 1-12` alpha spine and future `20-30 wave` ambition.
+  - The default run still behaves like a branch router instead of one release ladder. [`maybeAdvancePhase()`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L19965) still surfaces `Live Ascension`, `Ownership Relay`, `Architecture Draft`, `Bastion Draft`, and `Afterburn` handling inside the standard clear flow, so the player keeps seeing routing exceptions where a strong roguelite should simply say "here is your next power jump."
+  - Late escalation is still structurally too narrow. [`Wave 9 · Lockgrid`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L987) and [`Wave 10 · Scrapline`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1022) are still consecutive crossfire ownership tests in the same payoff arena at `activeCap 28 -> 29`; this is longer run time, not the broader combat grammar needed to support a future 20-plus-wave game.
+  - The forge/HUD still lands like a control console, not a hunger spike. [`updateHUD()`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20073) and [`renderForgeOverlay()`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20324) still stack `Run Ladder`, `Locked Form`, `Next Gate`, `Headline Mutation`, `Secondary Rider`, and `Immediate Ask` together; compared with the appetite-first hierarchy in `Hades`, `Nova Drift`, or `Brotato`, the game is still making the player read the contract instead of wanting the mutation instantly.
+  - Build desire is still tilted toward accessories. [`SUPPORT_SYSTEM_DEFS`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2741) gives orbitals and helpers clear silhouette growth while the core gun/body path is still wrapped in ladder language, which weakens the early-to-late transformation fantasy a rerunnable action roguelite needs.
+  Top Priority: Consolidate the shipping route end to end: remove `5-wave` teaching from docs, hide branch/admin/post-`Wave 12` language from the default path, and recut `Wave 9-12` so each late wave proves a different movement question instead of repeating crossfire ownership.
+  Why Now: The game will keep feeling like an annotated prototype until one clean run contract exists in both rules and presentation.
+  Do Not Repeat: Do not spend the next pass on another support option, branch wrapper, or terminology cleanup that leaves the late ladder and reward hierarchy structurally unchanged.
+  Release Gate: Progression
+
 - 2026-03-24 13:00:00 KST
   Findings:
   - The project is still drifting on its core run contract. [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md) still teaches a `5-wave act curve` and `Wave 1-5` power bracket, which quietly tells the team to balance for prototype length while the game and loop file claim a `12-wave` alpha spine and a future `20-30 wave` ceiling.
@@ -1818,6 +1830,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 13:13:59 KST
+  Changed: recut the default shared late-route `Wave 10` in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from a second relay/crossfire proof into `Wave 10 · Crownsplit Run`, a mobile caravan breach where the player chooses between chasing a moving payout lane or holding central ownership before `Wave 11` pursuit. I mirrored the same grammar shift into the base `WAVE_CONFIG` copy, updated the late-band summary copy so `Wave 10` now reads as a `Breakpoint Run` instead of another corridor breach, and refreshed [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new label, `caravan` hazard/pressure family, salvage payout, and late-band progression. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` explicitly called out `Wave 9-12` for repeating crossfire ownership instead of proving different movement questions. The highest-value bounded interpretation was to change only `Wave 10`, because that one rung sat directly on top of `Wave 9` and could be turned into a visible `greed chase vs safe lane hold` decision without adding another branch system or rewriting the whole route.
+  Follow-up risk: `Wave 9 -> 10 -> 11` now asks for `open ownership -> mobile greed breach -> pursuit`, but the default route still leaks older branch/admin language elsewhere and the docs still teach obsolete pacing. If the next critique still says the run feels prototype-annotated, the next bounded pass should strip those stale route surfaces rather than add more late combat content.
+  Release Gate: Combat
 
 - 2026-03-24 13:35:00 KST
   Changed: recut the default shared `Wave 9-10` fallback staircase in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the non-branch late route is no longer two copies of `Lockgrid Hunt`. `Wave 9` now resolves as `Lockgrid Gallery`, a true open-lane payoff lap with no relay upkeep, while `Wave 10` now becomes `Crownsplit Breach`, a narrower relay-corridor proof beat with `breach` pressure, a proof-sized arena, and a distinct enemy mix. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new band ids, labels, pressure-family split, relay hazard, and payoff-vs-proof arena difference. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

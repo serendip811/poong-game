@@ -12,8 +12,9 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Progression`: docs and gameplay still disagree on the shipping run contract, so the team risks balancing for a short prototype while claiming a longer `Wave 1-12` ladder and future `20-30 wave` ceiling.
-- Repeated false solution: adding support spectacle, wildcard/admin branches, or copy cleanup before the base route is locked to one readable spine across docs, clear flow, HUD, and forge.
+- The most fragile gate remains `Progression`: docs, phase flow, and late-wave structure still do not describe the same shipping run, so the game keeps balancing against a prototype-length mental model.
+- Repeated false solution: adding support spectacle, branch wrappers, or wording cleanups before the base route is reduced to one readable `Wave 1-12` ladder with distinct late-wave proof beats.
 - Keep watching for stale prototype framing in docs, especially any `5-wave` pacing model or `Wave 1-5` power table that undercuts the current release goal.
-- Keep pressuring Act 3 to diversify its asks; if `Wave 9-10` remain near-identical crossfire proofs, the run is extending time rather than building a sustainable escalation curve.
+- Keep pressuring Act 3 to diversify its asks; if `Wave 9-10` stay consecutive crossfire ownership tests in the same arena, the escalation curve is still too thin for a future `20-30 wave` game.
+- Keep pushing UI toward appetite-first hierarchy: strong references show one dominant reward first, not ladder/admin/explanation text all at once.
 - Keep pressing for core gun/body hunger over halos, drones, missiles, orbitals, or extra bays; the run should start lean and visibly earn those layers later.
