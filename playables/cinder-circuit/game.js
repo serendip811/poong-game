@@ -7941,10 +7941,10 @@
     const focus = getShippingLadderFocus(build, weapon, boundedWave);
     return `
       <div class="summary-head">
-        <strong>12-Wave Ladder</strong>
+        <strong>12-Wave Contract</strong>
         <span class="summary-chip ${focus.state === "live" ? "summary-chip--hot" : ""}">${act.shortLabel}</span>
       </div>
-      <p class="summary-copy roadmap-card__path">Wave 3 core lock -> Wave 6 chassis break -> Wave 8 late form -> Wave 9-10 payoff -> Wave 11 lap -> Wave 12 finish.</p>
+      <p class="summary-copy roadmap-card__path">Wave 3 core lock -> Wave 6 chassis break -> Wave 8 late form -> Wave 9-10 proof -> Wave 11-12 finish.</p>
       <div class="roadmap-card__steps">
         ${steps
           .map(
@@ -8523,6 +8523,43 @@
           <strong class="contract-strip__value">${proofLabel}</strong>
         </article>
       </div>
+      ${note ? `<p class="summary-note">${note}</p>` : ""}
+    `;
+  }
+
+  function createBaseRouteFocusMarkup({
+    eyebrow = "12-Wave Contract",
+    chipLabel = "",
+    title,
+    prompt,
+    currentFormLabel,
+    mainLeapLabel,
+    proofLabel,
+    supportLabel = "",
+    note = "",
+    compact = false,
+  }) {
+    return `
+      <div class="summary-head">
+        <strong>${eyebrow}</strong>
+        ${
+          chipLabel
+            ? `<span class="summary-chip ${compact ? "" : "summary-chip--hot"}">${chipLabel}</span>`
+            : ""
+        }
+      </div>
+      <p class="summary-copy roadmap-card__path">${prompt}</p>
+      <strong class="route-contract__title">${title}</strong>
+      <div class="status-list">
+        ${createStatusRow("Current Form", currentFormLabel)}
+        ${createStatusRow("Main Leap", mainLeapLabel)}
+        ${createStatusRow("Next Proof", proofLabel)}
+      </div>
+      ${
+        supportLabel
+          ? `<p class="summary-copy roadmap-card__path">Support rider: ${supportLabel}</p>`
+          : ""
+      }
       ${note ? `<p class="summary-note">${note}</p>` : ""}
     `;
   }
@@ -20216,12 +20253,11 @@
         </div>
         ${
           minimalBaseRouteHud
-            ? `<p class="summary-note">${dominantForm.label} 실루엣을 전면에 두고 ${proofWindow.label} 하나만 먼저 본다.</p>`
+            ? `<div class="status-list">${createStatusRow("Current Form", dominantForm.label)}${createStatusRow("Next Proof", proofWindow.label)}</div><p class="summary-note">${dominantForm.label} 실루엣을 전면에 두고 ${proofWindow.label} 하나만 먼저 본다.</p>`
             : `<div class="mini-pill-row">${
                 baseRouteForgeActive
-                  ? createMiniPill("Run Ladder", baseRouteForgeStage ? baseRouteForgeStage.label : "Forge Break", "hot") +
-                    createMiniPill("Locked Form", dominantForm.label, "hot") +
-                    createMiniPill("Next Gate", proofWindow.label, "cool")
+                  ? createMiniPill("Current Form", dominantForm.label, "hot") +
+                    createMiniPill("Next Proof", proofWindow.label, "cool")
                   : createMiniPill(getHeadlineFormTierLabel(getHeadlineFormTier(state.build)), headlineLabel, "hot") +
                     createMiniPill("Rider", supportTrack.label, "cool")
               }</div>
@@ -20265,7 +20301,7 @@
     if (elements.buildRoadmap) {
       elements.buildRoadmap.classList.toggle("roadmap-card--contract", minimalBaseRouteHud);
       elements.buildRoadmap.innerHTML = minimalBaseRouteHud
-        ? createRouteContractMarkup({
+        ? createBaseRouteFocusMarkup({
             eyebrow: "12-Wave Contract",
             chipLabel: ladderFocus.label,
             title: dominantForm.label,
@@ -20273,9 +20309,10 @@
               state.phase === "forge"
                 ? `${baseRouteForgeStage ? baseRouteForgeStage.label : "Forge Break"}에서는 main leap 하나를 먼저 잠그고 바로 다음 증명으로 복귀한다.`
                 : `${ladderFocus.title} 구간이다. 지금은 현재 실루엣으로 전장을 점유하고 다음 관문만 본다.`,
-            headlineLabel: dominantForm.label,
-            riderLabel: supportTrack.label,
+            currentFormLabel: dominantForm.label,
+            mainLeapLabel: nextBreakpoint.label,
             proofLabel: proofWindow.label,
+            supportLabel: supportTrack.label,
             note: `${supportTrack.label}는 보조선에만 남기고, 이번 읽기는 ${proofWindow.label} 하나에 묶는다.`,
             compact: true,
           })
@@ -20300,7 +20337,7 @@
         </div>
         <div class="status-list">
           ${createStatusRow("Immediate Threat", `${hazardStatus.detailLabel} ${hazardStatus.detailValue}`)}
-          ${createStatusRow("Combat Ask", combatBand ? combatBand.label : proofWindow.label)}
+          ${createStatusRow(baseRouteForgeActive ? "Next Proof" : "Combat Ask", combatBand ? combatBand.label : proofWindow.label)}
         </div>
         <p class="summary-note">${
           minimalBaseRouteHud
@@ -20391,7 +20428,7 @@
       ? getBaseRouteForgeStage(state, state.waveIndex + 2)
       : null;
     const focusEyebrow = useBaseRouteContract
-      ? "12-Wave Ladder"
+      ? "12-Wave Contract"
       : state.pendingFinalForge
         ? "Final Form"
         : riderStep
@@ -20425,18 +20462,20 @@
     elements.forgeContext.innerHTML = useBaseRouteContract
       ? `
         <article class="forge-focus forge-focus--${riderStep ? "rider" : "headline"} forge-context__card forge-context__card--span-two">
-          ${createRouteContractMarkup({
+          ${createBaseRouteFocusMarkup({
             eyebrow: focusEyebrow,
             chipLabel: baseRouteForgeStage ? baseRouteForgeStage.label : "Forge Break",
             title: focusTitle,
             prompt: focusPrompt,
-            headlineLabel:
-              state.pendingFinalForge || riderStep ? dominantFormSummary.label : focusTitle,
-            riderLabel: riderStep ? focusTitle : activeSupportTrack.label,
+            currentFormLabel: dominantFormSummary.label,
+            mainLeapLabel: riderStep ? dominantFormSummary.label : focusTitle,
             proofLabel: proofWindow.label,
+            supportLabel: riderStep ? focusTitle : activeSupportTrack.label,
             note: state.pendingFinalForge
               ? `${dominantFormSummary.label}를 이번 런의 마지막 실루엣으로 봉인한다.`
-              : `${proofWindow.label}에서 바로 전장 소유 시간을 증명한다. rider는 보조선으로만 남긴다.`,
+              : riderStep
+                ? `${focusTitle}는 보조 rider로만 얹고 ${proofWindow.label}에서 바로 버티는지 본다.`
+                : `${proofWindow.label}에서 바로 전장 소유 시간을 증명한다. rider는 보조선으로만 남긴다.`,
           })}
         </article>
       `

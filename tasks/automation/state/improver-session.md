@@ -17,6 +17,7 @@ Keep this short and replace stale notes instead of endlessly appending.
 - Validate every gameplay/UI change with the existing smoke test when relevant.
 - On the base `12-wave` route, prefer shipping-beat labels (`Core Lock`, `Chassis Break`, `Late Form`, `Proof Loadout`, `Final Seal`) and appetite-first promises over any draft/cache/relay/admin nouns in combat feed or forge copy.
 - On the consolidated route, the best readability move is now `one contract card + one threat card`; hide bench/upgrades/live telemetry by default and let inspect/pause carry the extra detail.
+- The base-route HUD/forge contract lands better when it speaks only `Current Form`, `Main Leap`, and `Next Proof`; support should read as a subordinate rider note, not a co-equal reward pillar.
 - Standard `Wave 9-10` improvements are highest value when they create a clearly different movement ask with the same locked form; `Wave 10` can carry a mobile greed/breach split without adding a whole new progression system.
 - The fallback late shared pool must mirror the shipping cadence too: `Wave 9` should be an ownership/payoff lap, `Wave 10` a greed/breach split, `Wave 11` a low-tax domination lap, and only `Wave 12` the final lane-specific cash-out, not a dump of every hazard family at once.
 - Base-route `Wave 12` lands better when it stays a single crownline breach with a slightly larger arena, lower active cap, and lighter binder/mortar tax; difficulty should come from holding one opened corridor, not restoring every closure family at once.
