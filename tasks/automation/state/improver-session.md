@@ -20,7 +20,7 @@ Keep this short and replace stale notes instead of endlessly appending.
 - Prefer one meaningful gameplay or readability improvement per run.
 - Avoid adding another named system if the same benefit could come from simplifying or deepening an existing one.
 - Validate every gameplay/UI change with the existing smoke test when relevant.
-- On the base `12-wave` route, prefer shipping-beat labels (`Core Lock`, `Chassis Break`, `Late Form`, `Proof Loadout`, `Final Seal`) and appetite-first promises over any draft/cache/relay/admin nouns in combat feed or forge copy.
+- On the base `12-wave` route, keep shipping-beat labels internal only; the player-facing forge/HUD should read with generic appetite-first Korean surfaces like `변이 선택`, `보조 선택`, `마무리`, plus the stable three-card grammar `주력 변이 / 방호/보조 / 판돈/유틸`.
 - On the consolidated route, the best readability move is now `one contract card + one threat card`; hide bench/upgrades/live telemetry by default and let inspect/pause carry the extra detail.
 - On the consolidated route, `Wave 1-8` should now stay on one recurring three-lane forge contract; do not reintroduce `Architecture Draft`, `Act Break Cache`, field-grant skips, or two-step package flow before `Wave 9`.
 - The base-route HUD/forge contract lands better when it speaks only `Current Form`, `Main Leap`, and `Next Proof`; support should read as a subordinate rider note, not a co-equal reward pillar.

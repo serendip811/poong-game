@@ -10916,7 +10916,7 @@
           "주력 변신"
         ),
         "headline",
-        "Headline Mutation"
+        "주력 변이"
       ),
       markForgeContract(
         takeFirstAvailableChoice(
@@ -10925,7 +10925,7 @@
           "보조/방호"
         ),
         "rider",
-        "Support / Defense Rider"
+        "방호/보조"
       ),
       markForgeContract(
         takeFirstAvailableChoice(
@@ -10939,14 +10939,14 @@
           "탐욕/유틸"
         ),
         "gamble",
-        "Greed / Utility Gamble"
+        "판돈/유틸"
       ),
     ].filter(Boolean);
 
     [
-      ["headline", "Headline Mutation", "주력 변신"],
-      ["rider", "Support / Defense Rider", "보조/방호"],
-      ["gamble", "Greed / Utility Gamble", "탐욕/유틸"],
+      ["headline", "주력 변이", "주력 변신"],
+      ["rider", "방호/보조", "보조/방호"],
+      ["gamble", "판돈/유틸", "탐욕/유틸"],
     ]
       .filter(([role]) => !choices.some((choice) => choice.contractRole === role))
       .forEach(([role, label, laneLabel], index) => {
@@ -10989,7 +10989,7 @@
           "탐욕/유틸"
         ),
         "gamble",
-        "Greed / Utility Gamble"
+        "판돈/유틸"
       );
     }
 
@@ -12296,10 +12296,10 @@
               choice,
               index === 0 ? "headline" : index === 1 ? "rider" : "gamble",
               index === 0
-                ? "Headline Mutation"
+                ? "주력 변이"
                 : index === 1
-                  ? "Support / Defense Rider"
-                  : "Greed / Utility Gamble"
+                  ? "방호/보조"
+                  : "판돈/유틸"
             )
           );
       }
@@ -12318,10 +12318,10 @@
             choice,
             index === 0 ? "headline" : index === 1 ? "rider" : "gamble",
             index === 0
-              ? "Headline Mutation"
+              ? "주력 변이"
               : index === 1
-                ? "Support / Defense Rider"
-                : "Greed / Utility Gamble"
+                ? "방호/보조"
+                : "판돈/유틸"
           )
         );
     }
@@ -12393,10 +12393,10 @@
           choice,
           index === 0 ? "headline" : index === 1 ? "rider" : "gamble",
           index === 0
-            ? "Headline Mutation"
+            ? "주력 변이"
             : index === 1
-              ? "Support / Defense Rider"
-              : "Greed / Utility Gamble"
+              ? "방호/보조"
+              : "판돈/유틸"
         )
       );
     return choices;
@@ -12864,35 +12864,35 @@
     }
     const upcomingWave = Number.isFinite(nextWave) ? nextWave : run.waveIndex + 2;
     if (shouldRunArchitectureDraft({ nextWave: upcomingWave, finalForge: false })) {
-      return { id: "core_lock", label: "Core Lock" };
+      return { id: "core_lock", label: "변이 선택" };
     }
     if (shouldUseCompactActBreakCache({ nextWave: upcomingWave, finalForge: false })) {
-      return { id: "chassis_break", label: "Chassis Break" };
+      return { id: "chassis_break", label: "변이 선택" };
     }
     if (shouldRunCatalystDraft({ nextWave: upcomingWave, finalForge: false }, run.build)) {
-      return { id: "late_form", label: "Late Form" };
+      return { id: "late_form", label: "변이 선택" };
     }
     if (shouldUseFieldGrant({ nextWave: upcomingWave, finalForge: false })) {
       return upcomingWave >= LATE_BREAK_ARMORY_WAVE
         ? { id: "proof_loadout", label: "보조 선택" }
-        : { id: "field_break", label: "현장 선택" };
+        : { id: "field_break", label: "변이 선택" };
     }
     return upcomingWave >= LATE_BREAK_ARMORY_WAVE
-      ? { id: "late_form", label: "Late Form" }
+      ? { id: "late_form", label: "변이 선택" }
       : { id: "forge_break", label: "변이 선택" };
   }
 
   function getBaseRouteForgeContractLabel(role, choice, riderStep = false) {
     if (riderStep) {
-      return "보조 선택";
+      return "방호/보조";
     }
     if (role === "headline") {
       return "주력 변이";
     }
     if (role === "gamble") {
-      return "판돈";
+      return "판돈/유틸";
     }
-    return "보조 선택";
+    return "방호/보조";
   }
 
   function getBaseRouteForgeBannerLabel(run = state) {
@@ -20337,8 +20337,8 @@
             ? `<div class="forge-focus__proof"><span>다음 시험</span>${proofWindow.label}</div><p class="summary-note">${dominantForm.label} 하나만 앞세우고 ${proofWindow.label}에서 바로 본다.</p>`
             : `<div class="mini-pill-row">${
                 baseRouteForgeActive
-                  ? createMiniPill("Proof", proofWindow.label, "hot") +
-                    createMiniPill("보조", supportTrack.label, "cool")
+                  ? createMiniPill("다음 시험", proofWindow.label, "hot") +
+                    createMiniPill("방호/보조", supportTrack.label, "cool")
                   : createMiniPill(getHeadlineFormTierLabel(getHeadlineFormTier(state.build)), headlineLabel, "hot") +
                     createMiniPill("보조", supportTrack.label, "cool")
               }</div>
@@ -20436,7 +20436,7 @@
         ? state.pendingFinalForge
           ? "마무리 선택 중"
           : state.forgeMaxSteps > 1 && state.forgeStep === 2
-            ? "보조 선택 중"
+            ? "방호/보조 선택 중"
             : "주력 선택 중"
         : state.forgeDraftType === "architecture_draft"
           ? "Architecture Draft 선택 중"
@@ -20514,7 +20514,7 @@
       : null;
     const focusEyebrow = useBaseRouteContract
       ? riderStep
-        ? "보조 선택"
+        ? "방호/보조"
         : state.pendingFinalForge
           ? "마무리"
           : "주력 변이"
@@ -20562,8 +20562,8 @@
             note: state.pendingFinalForge
               ? `${dominantFormSummary.label}를 이번 런의 마지막 실루엣으로 남긴다.`
               : riderStep
-                ? `${focusTitle}는 보조선으로만 얹고 ${proofWindow.label}에서 바로 버티는지 본다.`
-                : `${proofWindow.label}에서 바로 전장 소유 시간을 증명한다. 보조선은 뒤로 물린다.`,
+                ? `${focusTitle}는 방호/보조 한 줄로만 얹고 ${proofWindow.label}에서 바로 버티는지 본다.`
+                : `${proofWindow.label}에서 바로 전장 소유 시간을 증명한다. 방호/보조는 두 번째다.`,
           })}
         </article>
       `
@@ -20687,7 +20687,7 @@
                 ? "추천"
                 : useBaseRouteContract
                   ? "추천"
-                  : "Headline Mutation"
+                  : "주력 변이"
             }</span>
             <div class="forge-card__hero forge-card__hero--${transformation.tone}">
               <span class="forge-card__hero-label">${contractLabel}</span>

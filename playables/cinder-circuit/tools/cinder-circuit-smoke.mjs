@@ -129,6 +129,10 @@ assert.equal(
   recurringWave3Choices.map((choice) => choice.contractRole).join("|"),
   "headline|rider|gamble"
 );
+assert.equal(
+  recurringWave3Choices.map((choice) => choice.contractLabel).join("|"),
+  "주력 변이|방호/보조|판돈/유틸"
+);
 const recurringWave5Choices = game.buildForgeChoices(roadmapBuild, Math.random, 40, {
   nextWave: 5,
   finalForge: false,
@@ -154,6 +158,10 @@ assert.equal(actBreakCacheChoices.length, 3);
 assert.equal(
   actBreakCacheChoices.map((choice) => choice.contractRole).join("|"),
   "headline|rider|gamble"
+);
+assert.equal(
+  actBreakCacheChoices.map((choice) => choice.contractLabel).join("|"),
+  "주력 변이|방호/보조|판돈/유틸"
 );
 assert.ok(actBreakCacheChoices.some((choice) => choice.laneLabel === "Main Weapon Mutation"));
 assert.ok(actBreakCacheChoices.some((choice) => choice.laneLabel === "Defense / Utility"));
@@ -1328,9 +1336,9 @@ assert.equal(choices.length, 3);
 assert.equal(
   JSON.stringify(choices.map((choice) => choice.contractLabel)),
   JSON.stringify([
-    "Headline Mutation",
-    "Support / Defense Rider",
-    "Greed / Utility Gamble",
+    "주력 변이",
+    "방호/보조",
+    "판돈/유틸",
   ])
 );
 assert.ok(choices.some((choice) => choice.contractRole === "gamble"));
@@ -1796,9 +1804,9 @@ assert.equal(fieldGrantChoices.length, 3);
 assert.equal(
   JSON.stringify(fieldGrantChoices.map((choice) => choice.contractLabel)),
   JSON.stringify([
-    "Headline Mutation",
-    "Support / Defense Rider",
-    "Greed / Utility Gamble",
+    "주력 변이",
+    "방호/보조",
+    "판돈/유틸",
   ])
 );
 assert.ok(

@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Progression`: the opener is leaner, but the shipped `Wave 1-12` route still does not feel like a complete destination because `Afterburn`, doctrine/capstone scaffolding, and route-management copy keep implying the real game is later.
-- Repeated false solution: answering weak replay hunger with another draft, capstone wrapper, forecast label, or post-`Wave 12` promise instead of consolidating the current ladder and making three build appetites read instantly.
-- Keep comparing reward moments against `Hades`, `Nova Drift`, and `Brotato`, but now the comparison should focus on appetite-first payoff and screen discipline, not just opener cleanup.
-- Keep pressure on encounter vocabulary. More arena room helped, but `Wave 9-12` still leans on variations of gallery, breach, pursuit, and hold rather than a wider escalation grammar.
-- Next valuable critique angle: after the live contract is stripped back, re-check whether offense, defense/support, and greed each produce a visibly different `Wave 9-12` fantasy or still collapse into one authored route.
+- The most fragile gate is still `Progression`, but the next highest-leverage surface is `Rewards`: the player-facing between-wave contract still reads like route administration, so replay hunger dies before build depth can matter.
+- Repeated false solution: renaming or partially hiding draft/ascension/`Afterburn` wrappers while keeping the same multi-label HUD/forge hierarchy and the same promise that the real apex form is later.
+- Keep comparing reward readability against `Hades`, `Nova Drift`, and `Brotato`; the useful question now is whether one mutation immediately looks desirable, not whether the game can explain the ladder cleanly.
+- Keep pressure on encounter vocabulary, but only after the live `Wave 1-12` contract is visually and structurally closed. More combat bands will be wasted if all late builds still feel like one authored route wearing different names.
+- Next valuable critique angle: once the reward surface is reduced to offense vs defense/support vs greed, verify whether those three paths actually create different `Wave 9-12` silhouettes, pacing, and survival decisions instead of converging again.
