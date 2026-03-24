@@ -12,6 +12,7 @@ Keep this short and replace stale notes instead of endlessly appending.
 
 ## Current Memory
 
+- On the consolidated `Wave 1-12` route, keep `overcommit`, doctrine chase, live ascension, and catalyst-crucible late-form detours disabled; `Wave 8` should lock one late-break profile and `Wave 9-12` should prove that fixed spine without extra admin exceptions.
 - On the opener, signatures land better as `start core + tiny stat nudge` only; do not seed a duplicate core, free opening resource, or free early cooling/drive burst unless a later critique explicitly says the first two waves are too dry.
 - If `Wave 3` or `Wave 6` card text mentions support bay, flex lane, shard chase, or capstone payoff in sentence one, the opening is still explaining the route too early; keep those cards focused on `gun now` and `body now`.
 - On the consolidated route, `Wave 3 Core Lock` should only forecast a doctrine and grant a visible gun mutation; do not let forecast state apply doctrine stats/fire geometry before `Wave 6 Ascension` actually locks the form.

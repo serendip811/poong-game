@@ -1544,7 +1544,7 @@ assert.equal(
     { nextWave: game.ACT3_CATALYST_DRAFT_WAVE, finalForge: false },
     catalystBuild
   ),
-  true
+  false
 );
 const catalystDraftChoices = game.buildCatalystDraftChoices(catalystBuild);
 assert.equal(catalystDraftChoices.length, 3);

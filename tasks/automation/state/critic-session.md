@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate has shifted to `Builds`: the UI is still too document-like, but the bigger release risk is that late-run offense, defense/support, and greed still collapse into one combat shape with different wrapper text.
-- Repeated false solution: adding `live ascension`, `overcommit`, `pursuit`, or post-capstone branches instead of making the shipped `Wave 9-12` route itself produce distinct silhouettes and appetites.
-- Keep comparing reward readability against `Hades`, `Nova Drift`, and `Brotato`, but judge success by visible weapon/body transformation first; support hardware should read as reinforcement, not the star.
-- `Afterburn`/`Dominion` remaining as apex language is still a structural red flag because it tells the player the real payoff lives after the replayable contract.
-- Next valuable critique angle: once the base late-run payoff matrix is clarified, pressure-test whether each lane changes arena behavior enough to support future `20-30 wave` growth without adding more named systems.
+- The most fragile gate is now `Progression`: the project has enough branches, caches, and ladders to simulate depth, but the shipped `Wave 1-12` spine still does not prove a scalable escalation contract a player would want to rerun.
+- Repeated false solution: adding `live ascension`, `Catalyst Crucible`, doctrine pursuit, greed side contracts, or post-capstone promises instead of making fixed wave beats create distinct late-run fantasies.
+- Keep comparing reward readability against `Hades`, `Nova Drift`, and `Brotato`, but the decisive test is still visible weapon/body payoff; support hardware must reinforce the fantasy, not carry it.
+- `Afterburn`/`Dominion` and future rarity/passive ladders remain red flags because they imply the real game starts after the current route instead of inside it.
+- Next valuable critique angle: after the spine is simplified, pressure-test whether the opener is quiet enough and whether each late lane truly changes arena behavior rather than just retheming the same flank-clear rotation.

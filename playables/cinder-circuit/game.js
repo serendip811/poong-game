@@ -6553,6 +6553,9 @@
     if (!options || options.finalForge || !build) {
       return false;
     }
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
+      return false;
+    }
     const nextWave = options.nextWave || 0;
     return (
       nextWave >= ACT3_CATALYST_DRAFT_WAVE &&
@@ -10165,6 +10168,7 @@
 
   function shouldOfferDoctrineChase(build, options = null) {
     if (
+      CONSOLIDATED_12_WAVE_ROUTE ||
       !build ||
       !build.bastionDoctrineId ||
       build.doctrineCapstoneId ||
@@ -10181,6 +10185,9 @@
   }
 
   function shouldRunOvercommitTrial(build, waveNumber) {
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
+      return false;
+    }
     if (!build || !build.bastionDoctrineId || build.doctrineChaseClaimed || build.overcommitResolved) {
       return false;
     }

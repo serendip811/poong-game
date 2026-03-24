@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop adding wrapper logic and consolidate the shipped `Wave 1-12` contract until the forge/HUD/`Tab` read as one appetite-first reward surface, the opener stays lean, and `Wave 9-12` proves a complete payoff instead of a setup for later.
+- Immediate priority: freeze new branch wrappers and prove one scalable `Wave 1-12` spine where forge/HUD/`Tab` stay appetite-first, the opener stays quiet, and `Wave 9-12` cashes out three visibly different build destinies instead of hinting at future depth.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-25 11:20:00 KST
+  Findings:
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L14684) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L14837) and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L11896) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12116) still spend too much of the run on `Catalyst Crucible`, `live ascension`, doctrine pursuit, and overcommit-style exception routing. That is prototype depth theater: the player is being offered more branch administration than repeatable combat desire.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L980) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1185) widened the late arena and improved breathing room, but `Wave 9-12` still belongs to one movement sentence: clear the thinnest flank, hold a pocket, rotate before it closes. A strong rerun-driven action roguelite needs offense, defense/support, and greed to bend the arena into different endgame behaviors, not just different reasons for the same rotation discipline.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2700) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3250) gives satellites, shields, sentries, missiles, and drones immediate visual hierarchy, while the forge/HUD stack in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20530) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20849) still explains the main form through contract copy, proof labels, and helper notes. Compared with `Nova Drift` or `Brotato`, the helpers are still easier to feel than the core weapon/body leap.
+  - [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L198) and [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L198) through [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L280) still frame the shipped slice as a stepping stone toward `Afterburn`, rarity ladders, and more passive layering. That keeps the project pointed at expansion before the current 12-wave contract has proved it deserves 20-30 waves.
+  Top Priority: Replace the Act 2-3 wrapper stack with one fixed escalation spine that pays out at predictable beats and makes `main weapon/body`, `defense-support`, and `greed` each own a different `Wave 9-12` encounter grammar inside the shipped run.
+  Why Now: If the current route cannot create three endgame fantasies without exception systems, a longer wave ladder will only stretch prototype pacing thinner.
+  Do Not Repeat: Do not answer this with another cache type, another doctrine branch, or another future-facing doc section.
+  Release Gate: Progression
 
 - 2026-03-25 10:05:00 KST
   Findings:
@@ -2105,6 +2116,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-25 01:12:17 KST
+  Changed: removed the remaining consolidated-route wrapper exceptions in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the shipped `Wave 1-12` spine no longer opens `overcommit` pursuit routing in Act 2 or `Catalyst Crucible` late-form detours in Act 3, and it no longer offers doctrine-chase contracts inside the recurring forge while the fixed route is active. On the consolidated route, `Wave 8` late-break picks now own the whole `Wave 9-12` ladder without a mid-band chase/cache wrapper hijacking the run. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to replace the Act 2-3 wrapper stack with one fixed escalation spine that pays out at predictable beats and lets `main weapon/body`, `defense-support`, and `greed` own different late-run grammars. The highest-value bounded interpretation was to cut the leftover exception routing itself, because branch-specific `Wave 9-12` encounter profiles already existed but the run could still be interrupted by prototype-era admin systems.
+  Follow-up risk: the consolidated route is cleaner now, but the file still contains non-shipping `Afterburn` and other post-`Wave 12` structures that can keep the codebase mentally pointed past the current rerunnable clear. If critique stays on the same issue, the next bounded pass should trim remaining player-facing apex leakage or simplify the dormant wrapper code further before adding more late content.
+  Release Gate: Progression
 
 - 2026-03-25 10:40:00 KST
   Changed: recut the late-break payoff matrix in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 9-10` now diverge by build axis instead of mostly sharing the same payoff/proof silhouette. `Cataclysm Arsenal` still keeps the open-lane to crownline ownership route, but `Warplate Halo` now opens on `Halo Bastion` territory pockets before a `Halo Refuge` drift proof, and `Black Ledger Heist` now opens on `Ledger Vaultline` salvage pressure before a `Jackpot Caravan` chase. I also rewrote the late-route proof summaries and late-break card roadmap copy so the HUD/forge now names those distinct asks directly, and updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new branch labels, hazard families, and summaries. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
