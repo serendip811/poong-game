@@ -6922,11 +6922,7 @@
     }
     if (choice.type === "utility" && choice.action === "architecture_forecast") {
       return [
-        { label: "교리", value: choice.doctrineLabel || "아키텍처" },
-        {
-          label: "무기",
-          value: choice.weaponChoice ? choice.weaponChoice.title : "주무장 재배선",
-        },
+        { label: "주포", value: choice.weaponChoice ? choice.weaponChoice.title : "주무장 재배선" },
         {
           label: "형태",
           value: choice.doctrineFormTrait || choice.doctrineFormLabel || "monster form",
@@ -6935,26 +6931,22 @@
           label: "다음 몸체",
           value: choice.breakpointLabel || "Wave 6 Chassis Break",
         },
-        {
-          label: "support",
-          value: "Wave 8 Late Break Armory",
-        },
         ...finaleRows,
       ];
     }
     if (choice.type === "utility" && choice.action === "doctrine_chase") {
       return [
         {
-          label: "추격",
+          label: "판돈",
           value: choice.pursuitLabel || "Forge Pursuit",
-        },
-        {
-          label: "웨이브",
-          value: "Wave 6-8 marked elite",
         },
         {
           label: "목표",
           value: `${choice.pursuitGoal || 2} shards`,
+        },
+        {
+          label: "보상",
+          value: choice.capstoneLabel || choice.title || "late form splice",
         },
         ...finaleRows,
       ];
@@ -6962,16 +6954,20 @@
     if (choice.type === "utility" && choice.action === "bastion_bay_forge") {
       return [
         {
-          label: "섀시",
+          label: "버팀",
           value: choice.chassisTitle || "유틸리티 레이어",
         },
         {
-          label: "베이",
-          value: choice.bayUnlock ? "즉시 +1" : "Wave 8 rider",
+          label: "보조",
+          value: choice.systemChoice ? choice.systemChoice.title : choice.bayUnlock ? "빈 보조칸" : "후속 보조 선택",
         },
         {
-          label: "시스템",
-          value: choice.systemChoice ? choice.systemChoice.title : choice.bayUnlock ? "조기 해금" : "Wave 8 선택",
+          label: "효과",
+          value: choice.systemChoice
+            ? choice.systemChoice.slotText || choice.systemChoice.title
+            : choice.bayUnlock
+              ? "방호선 확장"
+              : "버티는 선 정비",
         },
         ...finaleRows,
       ];
@@ -6979,20 +6975,16 @@
     if (choice.type === "utility" && choice.action === "wave6_ascension") {
       return [
         {
-          label: "교리",
-          value: choice.doctrineLabel || "Ascension",
+          label: "주포",
+          value: choice.doctrineChoice ? choice.doctrineChoice.title : choice.title || "Ascension",
         },
         {
-          label: "변형",
+          label: "형태",
           value: choice.doctrineFormTrait || choice.doctrineFormLabel || "주포 변이",
         },
         {
-          label: "섀시",
+          label: "몸체",
           value: choice.chassisTitle || "utility chassis",
-        },
-        {
-          label: "support",
-          value: "Wave 8 Late Break Armory",
         },
         ...finaleRows,
       ];
@@ -7125,6 +7117,77 @@
         proof: "선택 직후 전장 규칙이 즉시 바뀐다.",
         riderLabel: "Defense / Utility",
         riderNote: "다음 전투 진입을 안전하게 다듬는다.",
+      };
+    }
+    if (choice.type === "utility" && choice.action === "architecture_forecast") {
+      const weaponTitle = choice.weaponChoice ? choice.weaponChoice.title : choice.title || "주포 변이";
+      const bodyTitle = choice.breakpointLabel || "다음 몸체 변형";
+      return {
+        laneLabel: choice.forgeLaneLabel || choice.laneLabel || "Forge Lane",
+        title: choice.title || choice.slotText || "Unnamed Shift",
+        tone: "main",
+        promise: `${weaponTitle}로 첫 주포 실루엣을 바로 바꾼다.`,
+        proof: `${bodyTitle}는 다음 변형으로 남고, 이번에는 주포 화선이 얼마나 넓어졌는지만 바로 본다.`,
+        riderLabel: "Defense / Utility",
+        riderNote: "커진 주포가 숨 쉴 공간을 다음 방호 선택이 받쳐 준다.",
+        accent: weaponTitle,
+      };
+    }
+    if (choice.type === "utility" && choice.action === "wave6_ascension") {
+      const bodyTitle = choice.chassisTitle || "utility chassis";
+      const formTitle = choice.doctrineFormTrait || choice.doctrineFormLabel || choice.title || "body break";
+      const weaponTitle = choice.doctrineChoice ? choice.doctrineChoice.title : choice.title || "주포 변이";
+      return {
+        laneLabel: choice.forgeLaneLabel || choice.laneLabel || "Forge Lane",
+        title: choice.title || choice.slotText || "Unnamed Shift",
+        tone: "main",
+        promise: `${weaponTitle}와 ${bodyTitle}를 한 번에 잠가 첫 body break를 완성한다.`,
+        proof: `${formTitle} 실루엣이 다음 전투에서 바로 드러나고, 방호·보조 갈림길은 그 뒤에 따라온다.`,
+        riderLabel: "Defense / Utility",
+        riderNote: "새 몸체가 자리 잡을 수 있게 바로 다음 선택은 생존선에 쓴다.",
+        accent: `${weaponTitle} + ${bodyTitle}`,
+      };
+    }
+    if (choice.type === "utility" && choice.action === "bastion_bay_forge") {
+      const defenseTitle = choice.chassisTitle || "방호 차체";
+      const supportTitle = choice.systemChoice ? choice.systemChoice.title : choice.bayUnlock ? "빈 보조칸" : "후속 보조 선택";
+      return {
+        laneLabel: choice.forgeLaneLabel || choice.laneLabel || "Forge Lane",
+        title: choice.title || choice.slotText || "Unnamed Shift",
+        tone: "defense",
+        promise: `${defenseTitle} 위에 ${supportTitle}를 얹어 버티는 선을 먼저 연다.`,
+        proof: choice.systemChoice
+          ? `${supportTitle}가 다음 전투의 생존선과 복귀 각을 바로 다듬는다.`
+          : "지금은 빈 보조칸만 열어 두고, 다음 전투에서 숨 쉴 공간부터 확보한다.",
+        riderLabel: "Support Rider",
+        riderNote: "버티는 선을 연 뒤 자동 화력이나 보호막을 얹어 전장을 넓힌다.",
+        accent: `${defenseTitle} · ${supportTitle}`,
+      };
+    }
+    if (choice.type === "utility" && choice.action === "doctrine_chase") {
+      const targetCount = choice.pursuitGoal || 2;
+      const rewardTitle = choice.capstoneLabel || choice.title || "late form splice";
+      return {
+        laneLabel: choice.forgeLaneLabel || choice.laneLabel || "Forge Lane",
+        title: choice.title || choice.slotText || "Unnamed Shift",
+        tone: "greed",
+        promise: `지금 판돈을 올리고 marked elite ${targetCount}개 조각으로 ${rewardTitle}를 당겨온다.`,
+        proof: "다음 몇 웨이브는 위험해지지만, 성공하면 늦게 올 변형을 더 빨리 꺼낼 수 있다.",
+        riderLabel: "Defense / Utility",
+        riderNote: "탐욕 계약 뒤에는 체력, 냉각, 대시 각을 바로 보강해야 한다.",
+        accent: rewardTitle,
+      };
+    }
+    if (choice.type === "utility" && choice.action === "bastion_pact") {
+      return {
+        laneLabel: choice.forgeLaneLabel || choice.laneLabel || "Forge Lane",
+        title: choice.title || choice.slotText || "Unnamed Shift",
+        tone: "greed",
+        promise: "고철을 크게 당겨 받아 다음 두 번의 변이를 더 빨리 연다.",
+        proof: "대신 체력과 3웨이브 빚을 즉시 짊어진다. 다음 전투는 버티는 선이 더 중요해진다.",
+        riderLabel: "Defense / Utility",
+        riderNote: "빚을 졌다면 다음 선택은 회복, 방호, 냉각 같은 생존선이 맞다.",
+        accent: choice.slotText || "고철 선당김",
       };
     }
     const descriptionSentences = splitForgeSentences(choice.description);
@@ -8614,7 +8677,7 @@
       <p class="summary-copy roadmap-card__path">${prompt}</p>
       <strong class="route-contract__title">${spotlightLabel}</strong>
       <div class="forge-focus__proof"><span>${proofHeader}</span>${compact ? proofLabel : `${mainLeapLabel} · ${proofLabel}`}</div>
-      ${supportLabel ? `<div class="mini-pill-row">${createMiniPill("보조", supportLabel, "cool")}</div>` : ""}
+      ${supportLabel ? `<div class="mini-pill-row">${createMiniPill("방호·보조", supportLabel, "cool")}</div>` : ""}
       ${note ? `<p class="summary-note">${note}</p>` : ""}
     `;
   }
@@ -10925,7 +10988,7 @@
           "보조/방호"
         ),
         "rider",
-        "방호/보조"
+        "방호·보조"
       ),
       markForgeContract(
         takeFirstAvailableChoice(
@@ -10939,14 +11002,14 @@
           "탐욕/유틸"
         ),
         "gamble",
-        "판돈/유틸"
+        "판돈·유틸"
       ),
     ].filter(Boolean);
 
     [
       ["headline", "주력 변이", "주력 변신"],
-      ["rider", "방호/보조", "보조/방호"],
-      ["gamble", "판돈/유틸", "탐욕/유틸"],
+      ["rider", "방호·보조", "보조/방호"],
+      ["gamble", "판돈·유틸", "탐욕/유틸"],
     ]
       .filter(([role]) => !choices.some((choice) => choice.contractRole === role))
       .forEach(([role, label, laneLabel], index) => {
@@ -10989,7 +11052,7 @@
           "탐욕/유틸"
         ),
         "gamble",
-        "판돈/유틸"
+        "판돈·유틸"
       );
     }
 
@@ -12298,8 +12361,8 @@
               index === 0
                 ? "주력 변이"
                 : index === 1
-                  ? "방호/보조"
-                  : "판돈/유틸"
+                  ? "방호·보조"
+                  : "판돈·유틸"
             )
           );
       }
@@ -12320,8 +12383,8 @@
             index === 0
               ? "주력 변이"
               : index === 1
-                ? "방호/보조"
-                : "판돈/유틸"
+                ? "방호·보조"
+                : "판돈·유틸"
           )
         );
     }
@@ -12395,8 +12458,8 @@
           index === 0
             ? "주력 변이"
             : index === 1
-              ? "방호/보조"
-              : "판돈/유틸"
+              ? "방호·보조"
+              : "판돈·유틸"
         )
       );
     return choices;
@@ -12860,7 +12923,7 @@
       return { id: "final_seal", label: "마무리" };
     }
     if (run.phase === "forge" && run.forgeMaxSteps > 1 && run.forgeStep === 2) {
-      return { id: "proof_loadout", label: "보조 선택" };
+      return { id: "proof_loadout", label: "방호·보조" };
     }
     const upcomingWave = Number.isFinite(nextWave) ? nextWave : run.waveIndex + 2;
     if (shouldRunArchitectureDraft({ nextWave: upcomingWave, finalForge: false })) {
@@ -12874,7 +12937,7 @@
     }
     if (shouldUseFieldGrant({ nextWave: upcomingWave, finalForge: false })) {
       return upcomingWave >= LATE_BREAK_ARMORY_WAVE
-        ? { id: "proof_loadout", label: "보조 선택" }
+        ? { id: "proof_loadout", label: "방호·보조" }
         : { id: "field_break", label: "변이 선택" };
     }
     return upcomingWave >= LATE_BREAK_ARMORY_WAVE
@@ -12884,15 +12947,15 @@
 
   function getBaseRouteForgeContractLabel(role, choice, riderStep = false) {
     if (riderStep) {
-      return "방호/보조";
+      return "방호·보조";
     }
     if (role === "headline") {
       return "주력 변이";
     }
     if (role === "gamble") {
-      return "판돈/유틸";
+      return "판돈·유틸";
     }
-    return "방호/보조";
+    return "방호·보조";
   }
 
   function getBaseRouteForgeBannerLabel(run = state) {
@@ -20338,7 +20401,7 @@
             : `<div class="mini-pill-row">${
                 baseRouteForgeActive
                   ? createMiniPill("다음 시험", proofWindow.label, "hot") +
-                    createMiniPill("방호/보조", supportTrack.label, "cool")
+                    createMiniPill("방호·보조", supportTrack.label, "cool")
                   : createMiniPill(getHeadlineFormTierLabel(getHeadlineFormTier(state.build)), headlineLabel, "hot") +
                     createMiniPill("보조", supportTrack.label, "cool")
               }</div>
@@ -20436,7 +20499,7 @@
         ? state.pendingFinalForge
           ? "마무리 선택 중"
           : state.forgeMaxSteps > 1 && state.forgeStep === 2
-            ? "방호/보조 선택 중"
+            ? "방호·보조 선택 중"
             : "주력 선택 중"
         : state.forgeDraftType === "architecture_draft"
           ? "Architecture Draft 선택 중"
@@ -20562,8 +20625,8 @@
             note: state.pendingFinalForge
               ? `${dominantFormSummary.label}를 이번 런의 마지막 실루엣으로 남긴다.`
               : riderStep
-                ? `${focusTitle}는 방호/보조 한 줄로만 얹고 ${proofWindow.label}에서 바로 버티는지 본다.`
-                : `${proofWindow.label}에서 바로 전장 소유 시간을 증명한다. 방호/보조는 두 번째다.`,
+                ? `${focusTitle}는 방호·보조 한 줄로만 얹고 ${proofWindow.label}에서 바로 버티는지 본다.`
+                : `${proofWindow.label}에서 바로 전장 소유 시간을 증명한다. 방호·보조는 두 번째다.`,
           })}
         </article>
       `

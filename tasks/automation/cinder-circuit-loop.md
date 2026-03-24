@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: lock the shipped game to one appetite-first `Wave 1-12` contract; strip `Afterburn`/route-admin language out of the live reward surfaces and prove three clearly different build fantasies before adding any new branch or escalation wrapper.
+- Immediate priority: collapse the shipped game to one appetite-first `Wave 1-12` reward contract where every stop reads as `main leap / defense-support / greed`, the HUD/forge stops speaking route-admin, and the main weapon-body jump is more desirable than support spectacle.
 
 ## Release Gates
 
@@ -61,6 +61,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 23:30:45 KST
+  Findings:
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20125) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20256) still makes wave clears speak in route-operator language: `Architecture Draft`, `Bastion Draft`, `Afterburn`, `Live Ascension`, bay uplinks, and skip logic. That keeps the run feeling administered instead of replayed.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20321) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20587) still asks the player to parse `Next Proof`, support-track labels, rider state, and forge mode labels at the reward moment. Against the appetite-first pick readability of `Hades`, `Nova Drift`, and `Brotato`, this screen is still explaining the contract instead of making one option instantly exciting.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2726) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3306) gives support systems the clearest visible growth ladder in the run: orbitals, shields, missiles, drones, and sentries all read as obvious power spikes. The main form ladder still depends on copy like `monster-form jump`, proof framing, and route context to sound important, which means build hunger is still pointed at accessories.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L11896) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12116) still treats the between-wave layer as authored structure first and desire second. Even after consolidation, the player is nudged through forecasts, doctrine logic, support bay expectations, and staged unlock framing instead of three blunt appetites with visible future consequences.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1328) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1549) and [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L198) still leave `Afterburn` alive as the place where extra spectacle and extension can happen. As long as the shipped file keeps hinting at a more complete machine after the clear, the current run will struggle to feel like the thing worth repeating.
+  Top Priority: Rebuild the live forge/HUD contract into one glanceable three-choice reward read where card one is always a visually dominant weapon-body leap, card two is a defense-support commitment, card three is a greed-utility gamble, and all route-admin / `Afterburn` / draft-stage wording is removed from the player-facing base run.
+  Why Now: If the player wants the helpers and labels more than the next body-gun mutation, a longer wave ladder will only make the run feel busier, not more replayable.
+  Do Not Repeat: Do not spend another pass polishing support modules or renaming route wrappers while the reward screen still hides the main fantasy behind explanation.
+  Release Gate: Rewards
 
 - 2026-03-24 23:00:29 KST
   Findings:
@@ -2070,6 +2082,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-25 01:05:00 KST
+  Changed: rewrote the player-facing reward card selling copy in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the recurring forge contract now reads as appetite-first choices instead of route-admin previews. `Architecture Forecast`, `Wave 6 Ascension`, defense/support installs, and greed chases now surface short hero-copy like `주포 실루엣을 바로 바꾼다`, `첫 body break를 완성한다`, or `판돈을 올리고 late form을 당겨온다`, while their preview rows were recast around `주포 / 형태 / 몸체 / 버팀 / 보조 / 판돈 / 보상` instead of doctrine/bay/support scheduling. I also normalized the stable contract labels to `주력 변이 / 방호·보조 / 판돈·유틸` across forge generation, HUD pills, and [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs). Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to make the three-choice reward read glanceable and desirable, with the weapon/body leap clearly owning card one while support and greed stay subordinate lanes. The highest-value bounded interpretation was to rewrite the actual card promise/proof language and first preview rows, because that changes what the player wants on sight without reopening progression flow or adding more systems. For reference direction, this pass stayed anchored to the one-prize-first reward readability of `Hades`, `Nova Drift`, and `Brotato`.
+  Follow-up risk: the recurring cards now read much faster, but some phase-transition/combat-feed strings still mention route-specific operations like `Architecture Draft`, `Bastion Draft`, or live uplinks outside the card surface itself. If critique remains on the same issue, the next bounded pass should finish stripping those remaining player-facing transition lines rather than add more reward branches.
+  Release Gate: Rewards
 
 - 2026-03-25 00:45:00 KST
   Changed: normalized the live `Wave 1-12` reward language in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the consolidated forge contract now reads as one stable three-choice appetite grammar instead of a stage router. Base-route stages that previously surfaced `Core Lock`, `Chassis Break`, `Late Form`, or field-stop naming on the player-facing HUD/forge now collapse to `변이 선택 / 보조 선택 / 마무리`, while the actual cards and HUD pills consistently read `주력 변이 / 방호/보조 / 판돈/유틸`. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so smoke now locks those contract labels for both recurring forge choices and field-grant cache choices. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
