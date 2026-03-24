@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: strip route-admin wording and post-route apex promises out of the live `Wave 1-12` contract so forge/HUD/`Tab` sell one glanceable appetite-first run, the opener stays quiet, and late payoff is proven inside the shipped route instead of after it.
+- Immediate priority: prove three distinct `Wave 9-12` endgame fantasies inside the shipped route `main leap / defense-support / greed`, and cut `Tab`/roadmap surfaces down to a glance board that reinforces those fantasies instead of re-explaining them.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-25 02:01:04 KST
+  Findings:
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1174) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1265) still makes `Wave 9-12` one shared late-act staircase `gallery -> proof -> pursuit -> hold`. It is cleaner than the older route-admin version, but it still reads like one ownership grammar with four beats, not three different endgame fantasies that would make offense, defense/support, and greed runs feel worth replaying.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8313) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8338) promises separate `Assault / Bulwark / Ledger` ladders, but the shipped late encounter pool is still mostly shared. Right now the UI can describe build identity more strongly than the combat space can prove it.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8741) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8792) and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8087) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8100) are improved, but `Tab` and the `12-Wave Contract` card still behave more like mini design docs than a release-style status board. Strong references use boards like this to confirm appetite and readiness in a glance, not to restate the ladder.
+  - [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L198) still keeps `Afterburn` validation alive as optional next-step ambition. That continues to give the project permission to think about expansion before the current finale proves distinct replay value.
+  Top Priority: Rebuild `Wave 9-12` so each late path owns a different encounter grammar inside the shipped run `offense = aggressive lane deletion`, `defense/support = refuge and sustain control`, `greed = moving payout chase under debt pressure`, then strip `Tab`/roadmap down to only the current form, next payoff, and current bill.
+  Why Now: If the late game still converges into one movement sentence, the run will not earn replay hunger no matter how clean the labels get.
+  Do Not Repeat: Do not answer this with more ladder cards, more branch naming, or more doc promises about future depth without changing the actual Act 3 asks.
+  Release Gate: Builds
 
 - 2026-03-25 01:30:36 KST
   Findings:
@@ -2127,6 +2138,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-25 02:25:00 KST
+  Changed: turned the `ledger` late path into an actual `moving payout chase under debt pressure` in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). `Wave 9-12` ledger runs now arm a per-wave `Debt Surge` state, and missing a vault/caravan cash-out window or letting its spawned payload scrap expire permanently escalates that wave's pressure: enemy move speed rises, player damage taken rises, active cap widens, and hazard cadence accelerates. I tied the trigger only to the shipped `Black Ledger Heist` late branch, surfaced the surge as a live side-bet readout, and tagged hazard payload bursts so the penalty comes from visible greed mistakes rather than hidden timers. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new debt-state helpers and stack scaling. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to make the shipped late paths prove three different combat grammars, with greed specifically reading as `moving payout chase under debt pressure`. The highest-value bounded interpretation was to deepen the existing ledger vault/caravan hazards instead of inventing a fourth wrapper: now the greed path punishes missed cash-outs with immediate combat consequences, so the player is forced to judge how long to chase, when to bail, and whether a jackpot is worth a harsher arena.
+  Follow-up risk: the greed branch now has sharper failure texture than before, but offense and defense still communicate their late-wave identity mostly through hazard family and arena shape rather than an equally explicit mistake-to-pressure conversion. If critique stays on the same issue, the next bounded pass should either give `aegis` and `mutation` comparably crisp branch-specific consequence loops or further tune `Debt Surge` numbers from playtest feel.
+  Release Gate: Builds
 
 - 2026-03-25 01:43:03 KST
   Changed: stripped more route-admin wording out of the consolidated live handoff in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the shipped `Wave 1-12` route now surfaces `주력 변이 / 방호·보조 / 마무리` more consistently at the exact wave-clear and forge-focus moments the latest critique called out. Base-route banners and stage chips that still said `Core Lock`, `Chassis Break`, `Late Form`, or fallback `포지 브레이크` now collapse to `주력 변이`, the wave-clear handoff no longer re-derives route-exception labels before showing the next pause, and the remaining consolidated `live ascension` / `uplink` clear-feed lines were rewritten into generic player-facing payoff language like `주력 변이를 전장에 바로 고정했다` or `방호·보조선이 즉시 연결됐다`. I also tightened the base-route forge focus prompt so the overlay explicitly frames the fixed three-card read as `주력 변이 + 방호·보조 + 판돈·유틸` instead of implying a named stage wrapper above it. This UI pass stayed anchored to the appetite-first reward hierarchy seen in `Hades`, `Nova Drift`, and `Brotato`: one dominant pick, two subordinate lanes, no route-operator headline. Validation passed with `node --check playables/cinder-circuit/game.js` and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

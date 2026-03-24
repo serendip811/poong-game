@@ -2831,6 +2831,15 @@ const lateBreakRun = {
 game.applyForgeChoice(lateBreakRun, lateBreakGreed);
 assert.equal(lateBreakRun.build.blackLedgerRaidWaves, 2);
 assert.equal(lateBreakRun.build.lateBreakProfileId, "ledger");
+const lateBreakDebt = game.createBlackLedgerDebtState(lateBreakRun.build, 12);
+assert.ok(lateBreakDebt);
+assert.equal(lateBreakDebt.stacks, 0);
+game.applyBlackLedgerDebtSurge(lateBreakDebt, "missed_caravan");
+game.applyBlackLedgerDebtSurge(lateBreakDebt, "missed_payload");
+assert.equal(lateBreakDebt.stacks, 2);
+assert.ok(lateBreakDebt.enemySpeedMultiplier > 1);
+assert.ok(lateBreakDebt.hazardRateMultiplier > 1);
+assert.ok(lateBreakDebt.activeCapBonus >= 4);
 
 console.log("cinder-circuit smoke ok");
 console.table(waveSummary);

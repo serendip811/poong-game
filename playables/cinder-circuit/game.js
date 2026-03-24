@@ -66,6 +66,12 @@
     binder: 0.08,
     mortar: 0.1,
   };
+  const BLACK_LEDGER_DEBT_SURGE_MAX_STACKS = 3;
+  const BLACK_LEDGER_DEBT_SPEED_STEP = 0.06;
+  const BLACK_LEDGER_DEBT_DAMAGE_STEP = 0.08;
+  const BLACK_LEDGER_DEBT_ACTIVE_CAP_STEP = 2;
+  const BLACK_LEDGER_DEBT_HAZARD_RATE_STEP = 0.12;
+  const BLACK_LEDGER_DEBT_SPAWN_INTERVAL_STEP = 0.05;
   const LATE_BREAK_ENCOUNTER_PROFILES = {
     mutation: {
       label: "Wave 9 · Breakpoint Overdrive",
@@ -11870,6 +11876,61 @@
     return nextConfig;
   }
 
+  function shouldEnableBlackLedgerDebt(build, waveNumber) {
+    return Boolean(
+      build &&
+        build.lateBreakProfileId === "ledger" &&
+        Number.isFinite(waveNumber) &&
+        waveNumber >= 9 &&
+        waveNumber <= 12
+    );
+  }
+
+  function refreshBlackLedgerDebtState(debt) {
+    if (!debt) {
+      return null;
+    }
+    const stacks = clamp(Math.round(debt.stacks || 0), 0, BLACK_LEDGER_DEBT_SURGE_MAX_STACKS);
+    debt.stacks = stacks;
+    debt.enemySpeedMultiplier = 1 + stacks * BLACK_LEDGER_DEBT_SPEED_STEP;
+    debt.damageTakenMultiplier = 1 + stacks * BLACK_LEDGER_DEBT_DAMAGE_STEP;
+    debt.activeCapBonus = stacks * BLACK_LEDGER_DEBT_ACTIVE_CAP_STEP;
+    debt.hazardRateMultiplier = 1 + stacks * BLACK_LEDGER_DEBT_HAZARD_RATE_STEP;
+    debt.spawnIntervalMultiplier = Math.max(
+      0.82,
+      1 - stacks * BLACK_LEDGER_DEBT_SPAWN_INTERVAL_STEP
+    );
+    return debt;
+  }
+
+  function createBlackLedgerDebtState(build, waveNumber) {
+    if (!shouldEnableBlackLedgerDebt(build, waveNumber)) {
+      return null;
+    }
+    return refreshBlackLedgerDebtState({
+      waveNumber,
+      stacks: 0,
+      missedWindows: 0,
+      lastTrigger: "",
+      expiredPayloadGroups: [],
+      enemySpeedMultiplier: 1,
+      damageTakenMultiplier: 1,
+      activeCapBonus: 0,
+      hazardRateMultiplier: 1,
+      spawnIntervalMultiplier: 1,
+    });
+  }
+
+  function applyBlackLedgerDebtSurge(debt, trigger) {
+    if (!debt) {
+      return null;
+    }
+    debt.missedWindows = Math.max(0, debt.missedWindows || 0) + 1;
+    debt.lastTrigger = trigger || "cashout_missed";
+    debt.stacks = Math.min(BLACK_LEDGER_DEBT_SURGE_MAX_STACKS, (debt.stacks || 0) + 1);
+    return refreshBlackLedgerDebtState(debt);
+  }
+
   function createBastionDraftSpikeChoice(build, rng, nextWave) {
     const random = typeof rng === "function" ? rng : Math.random;
     const spikePool = buildActBreakArmoryChoices(build, random, Number.POSITIVE_INFINITY, {
@@ -13888,6 +13949,8 @@
     isArsenalBreakpointWave,
     shouldRunCatalystDraft,
     applyBlackLedgerRaidConfig,
+    createBlackLedgerDebtState,
+    applyBlackLedgerDebtSurge,
     getDoctrineWeaponForm,
     getDoctrineBodyForm,
     getDoctrineCapstoneDef,
@@ -14389,6 +14452,18 @@
         note: combatCache.deployed
           ? "현장 cache 하나를 집으면 다음 웨이브가 포지 정지 없이 직결된다."
           : "이번 웨이브 첫 elite가 live cache를 떨어뜨린다.",
+      };
+    }
+    if (
+      currentState.phase === "wave" &&
+      currentState.wave &&
+      currentState.wave.blackLedgerDebt &&
+      currentState.wave.blackLedgerDebt.stacks > 0
+    ) {
+      return {
+        label: "Debt Surge",
+        status: `x${currentState.wave.blackLedgerDebt.stacks}`,
+        note: "놓친 vault, caravan, payload마다 적 속도와 hazard 템포가 더 빨라진다.",
       };
     }
     if (currentState.phase === "wave" && currentState.wave && currentState.wave.blackLedgerRaid) {
@@ -16007,6 +16082,7 @@
       hazard: config.hazard,
       hazardTimer: config.hazard ? config.hazard.interval * 0.8 : Number.POSITIVE_INFINITY,
       blackLedgerRaid: config.blackLedgerRaid || null,
+      blackLedgerDebt: createBlackLedgerDebtState(state.build, waveNumber),
       bastionPactDebt: pactDebtActive
         ? {
             wavesRemaining: Math.max(0, pactDebtWavesBefore - 1),
@@ -17165,14 +17241,24 @@
     wave.spawnTimer -= dt;
 
     const progress = wave.spawnBudget > 0 ? wave.spawned / wave.spawnBudget : 1;
+    const debtSpawnIntervalMultiplier =
+      wave.blackLedgerDebt && wave.blackLedgerDebt.stacks > 0
+        ? wave.blackLedgerDebt.spawnIntervalMultiplier || 1
+        : 1;
     const interval = wave.cleanupPhase
       ? 0.08
       : clamp(
-          wave.baseSpawnInterval - progress * wave.spawnAcceleration,
+          (wave.baseSpawnInterval - progress * wave.spawnAcceleration) * debtSpawnIntervalMultiplier,
           wave.spawnIntervalMin,
           wave.baseSpawnInterval
         );
-    const activeCap = wave.cleanupPhase ? wave.activeCap + 10 : wave.activeCap;
+    const debtActiveCapBonus =
+      wave.blackLedgerDebt && wave.blackLedgerDebt.stacks > 0
+        ? wave.blackLedgerDebt.activeCapBonus || 0
+        : 0;
+    const activeCap = wave.cleanupPhase
+      ? wave.activeCap + 10 + debtActiveCapBonus
+      : wave.activeCap + debtActiveCapBonus;
 
     if (
       wave.apexPredator &&
@@ -17217,7 +17303,11 @@
       return;
     }
 
-    state.wave.hazardTimer -= dt;
+    const debtHazardRate =
+      state.wave.blackLedgerDebt && state.wave.blackLedgerDebt.stacks > 0
+        ? state.wave.blackLedgerDebt.hazardRateMultiplier || 1
+        : 1;
+    state.wave.hazardTimer -= dt * debtHazardRate;
     while (state.wave.hazardTimer <= 0) {
       for (let count = 0; count < state.wave.hazard.count; count += 1) {
         spawnHazard(state.wave.hazard);
@@ -17491,6 +17581,11 @@
       orbitDirection: Math.random() < 0.5 ? -1 : 1,
       liveChoice: config.liveChoice || null,
       objectiveTag: config.objectiveTag || null,
+      blackLedgerDebtEligible: Boolean(
+        state.wave &&
+          state.wave.blackLedgerDebt &&
+          (config.type === "salvage" || config.type === "caravan")
+      ),
     });
   }
 
@@ -17512,12 +17607,13 @@
     });
   }
 
-  function spawnScrapBurst(x, y, totalValue, count = 3, radius = 36, life = 10) {
+  function spawnScrapBurst(x, y, totalValue, count = 3, radius = 36, life = 10, options = {}) {
     const dropCount = Math.max(1, Math.round(count || 1));
     const burstRadius = Math.max(0, radius || 0);
     const total = Math.max(0, Math.round(totalValue || 0));
     const baseValue = Math.floor(total / dropCount);
     let remainder = Math.max(0, total - baseValue * dropCount);
+    const debtGroupId = options.debtGroupId || null;
     for (let index = 0; index < dropCount; index += 1) {
       const angle = (index / dropCount) * Math.PI * 2 + Math.random() * 0.35;
       const distance = dropCount === 1 ? 0 : burstRadius * (0.35 + Math.random() * 0.65);
@@ -17529,8 +17625,27 @@
         y: y + Math.sin(angle) * distance,
         value,
         life,
+        debtGroupId,
       });
     }
+  }
+
+  function triggerBlackLedgerDebtSurge(trigger, label = "cash-out") {
+    if (
+      state.phase !== "wave" ||
+      !state.wave ||
+      !state.wave.blackLedgerDebt ||
+      state.wave.blackLedgerDebt.stacks >= BLACK_LEDGER_DEBT_SURGE_MAX_STACKS
+    ) {
+      return;
+    }
+    const debt = applyBlackLedgerDebtSurge(state.wave.blackLedgerDebt, trigger);
+    const sourceLabel = label || "cash-out";
+    pushCombatFeed(
+      `${sourceLabel} 청구서 점화. Debt Surge ${debt.stacks}단계로 적 속도, hazard 템포, 피격 리스크가 함께 올라간다.`,
+      "LEDGER"
+    );
+    setBanner(`Debt Surge ${debt.stacks}`, 0.9);
   }
 
   function destroyHazard(hazard, reason = "expired") {
@@ -17571,7 +17686,13 @@
           hazard.salvageScrap,
           hazard.salvageBurstCount,
           hazard.salvageBurstRadius,
-          hazard.salvageDropLife
+          hazard.salvageDropLife,
+          {
+            debtGroupId:
+              hazard.blackLedgerDebtEligible && state.wave && state.wave.blackLedgerDebt
+                ? `ledger-${state.wave.index + 1}-${Math.round(hazard.x)}-${Math.round(hazard.y)}-${state.stats.kills}`
+                : null,
+          }
         );
         hazard.salvageReleased = true;
         pushCombatFeed(
@@ -17685,6 +17806,19 @@
 
       if (isHazardCoreTarget(hazard) && hazard.coreHp <= 0 && hazard.activeTime > 0) {
         destroyHazard(hazard, "destroyed");
+      }
+
+      if (
+        hazard.blackLedgerDebtEligible &&
+        !hazard.salvageReleased &&
+        hazard.telegraphTime <= 0 &&
+        hazard.activeTime <= 0
+      ) {
+        triggerBlackLedgerDebtSurge(
+          hazard.type === "caravan" ? "missed_caravan" : "missed_vault",
+          hazard.label
+        );
+        hazard.blackLedgerDebtEligible = false;
       }
 
       if (hazard.telegraphTime > 0 || hazard.activeTime > 0) {
@@ -19463,7 +19597,16 @@
         state.wave && state.wave.bastionPactDebt
           ? state.wave.bastionPactDebt.enemySpeedMultiplier || 1
           : 1;
-      const speed = def.speed * (1 + state.waveIndex * 0.06) * speedMultiplier * pactSpeedMultiplier;
+      const ledgerDebtSpeedMultiplier =
+        state.wave && state.wave.blackLedgerDebt
+          ? state.wave.blackLedgerDebt.enemySpeedMultiplier || 1
+          : 1;
+      const speed =
+        def.speed *
+        (1 + state.waveIndex * 0.06) *
+        speedMultiplier *
+        pactSpeedMultiplier *
+        ledgerDebtSpeedMultiplier;
       enemy.x += Math.cos(angle) * speed * dt;
       enemy.y += Math.sin(angle) * speed * dt;
       enemy.contactCooldown = Math.max(0, enemy.contactCooldown - dt);
@@ -19584,10 +19727,14 @@
       state.wave && state.wave.bastionPactDebt
         ? amount * (state.wave.bastionPactDebt.damageTakenMultiplier || 1)
         : amount;
+    const ledgerAdjusted =
+      state.wave && state.wave.blackLedgerDebt
+        ? pactAdjusted * (state.wave.blackLedgerDebt.damageTakenMultiplier || 1)
+        : pactAdjusted;
     const hazardMitigated =
       source === "hazard"
-        ? pactAdjusted * (1 - state.player.hazardMitigation)
-        : pactAdjusted;
+        ? ledgerAdjusted * (1 - state.player.hazardMitigation)
+        : ledgerAdjusted;
     const chassisMitigation =
       getChassisBreakpointDef(state.build)?.id === "bulwark_treads" &&
       state.player.chassisAnchorActiveTime > 0
@@ -19995,6 +20142,12 @@
             "DOM"
           );
           state.wave.afterburnDominion.claimed = true;
+        }
+      } else if (drop.life <= 0 && drop.kind === "scrap" && drop.debtGroupId) {
+        const debt = state.wave && state.wave.blackLedgerDebt;
+        if (debt && !debt.expiredPayloadGroups.includes(drop.debtGroupId)) {
+          debt.expiredPayloadGroups.push(drop.debtGroupId);
+          triggerBlackLedgerDebtSurge("missed_payload", "payload");
         }
       } else if (drop.life > 0) {
         nextDrops.push(drop);
