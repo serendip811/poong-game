@@ -870,7 +870,8 @@ assert.equal(
   JSON.stringify(wave6ChassisPackages.map((choice) => choice.chassisId).sort()),
   JSON.stringify(["bulwark_treads", "salvage_winch", "vector_thrusters"])
 );
-assert.ok(wave6ChassisPackages.every((choice) => choice.skipNextAdminStop));
+assert.ok(wave6ChassisPackages.every((choice) => !choice.bayUnlock));
+assert.ok(wave6ChassisPackages.every((choice) => !choice.skipNextAdminStop));
 const initialMaxHpBonus = systemsForgeBuild.maxHpBonus;
 const pactRun = {
   build: systemsForgeBuild,
@@ -904,8 +905,8 @@ assert.equal(wave6AscensionRun.build.chassisId, fallbackWave6AscensionChoices[0]
 assert.equal(game.shouldSkipOwnershipAdminStop(wave6AscensionRun.build, 9), false);
 chassisRun.build.bastionDoctrineId = "kiln_bastion";
 game.applyForgeChoice(chassisRun, wave6ChassisPackages[0]);
-assert.ok(chassisRun.build.wave6ChassisBreakpoint);
-assert.ok(chassisRun.build.supportBayCap >= 3);
+assert.equal(chassisRun.build.wave6ChassisBreakpoint, false);
+assert.equal(chassisRun.build.supportBayCap, 2);
 assert.equal(chassisRun.build.chassisId, wave6ChassisPackages[0].chassisId);
 assert.equal(game.shouldSkipOwnershipAdminStop(chassisRun.build, 9), false);
 const predatorCacheChoices = game.buildFieldGrantChoices(predatorBaitRun.build, () => 0, 10);

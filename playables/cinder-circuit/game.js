@@ -5302,12 +5302,12 @@
       title: "Crownsplitter Array",
       traitLabel: "wing battery",
       description:
-        "주포 양옆에 분할 포대를 영구 증설해 발사마다 wing volley를 덧댄다. support bay가 많을수록 양날개 포문이 더 벌어지고 relay/warden 후열을 직접 찢기 쉬워진다.",
-      slotText: "주포 split volley · support가 wing lane 증폭",
+        "주포 양옆에 분할 포대를 영구 증설해 발사마다 wing volley를 덧댄다. late rider bay가 붙으면 양날개 포문이 더 벌어져 열린 회랑을 더 넓게 찢는다.",
+      slotText: "주포 split volley · late rider가 wing lane 확장",
       bodyLabel: "Split-Wing Chassis",
       bodyText: "측면 포대와 전방 가늠자가 붙어 주포가 직접 회랑을 찢는 추격 섀시다.",
       statusNote:
-        "주포가 split wing battery로 변해 정면 라인을 직접 찢는다. support 시스템은 자동 처리 대신 wing lane을 더 벌려 이 형태를 증폭한다.",
+        "주포가 split wing battery로 변해 정면 라인을 직접 찢는다. late rider는 자동 처리보다 이 날개 화망을 더 넓히는 쪽으로만 붙는다.",
       apply(build, run) {
         build.damageBonus += 4;
         build.pierceBonus += 1;
@@ -5351,12 +5351,12 @@
       title: "Slagburst Drive",
       traitLabel: "impact seed",
       description:
-        "주포에 slag seed를 박아 발사마다 폭압성 충격탄을 흘린다. support bay가 많을수록 추가 seed가 붙어 늦은 웨이브의 교전 지점을 직접 재단한다.",
-      slotText: "slag seed 장착 · support가 seed 수 증폭",
+        "주포에 slag seed를 박아 발사마다 폭압성 충격탄을 흘린다. late rider bay가 붙으면 추가 seed가 따라붙어 교전 지점을 더 두껍게 재단한다.",
+      slotText: "slag seed 장착 · late rider가 seed 수 증폭",
       bodyLabel: "Kiln-Drive Hull",
       bodyText: "복부 용광 코일이 달린 돌입 섀시로, 교전 지점에 직접 잔불 구획을 남긴다.",
       statusNote:
-        "주포가 slagburst drive로 바뀌어 발사 궤적 끝에 폭발과 잔불 구획을 남긴다. support 시스템은 seed 수를 늘려 이 몸체의 교전 장악력을 키운다.",
+        "주포가 slagburst drive로 바뀌어 발사 궤적 끝에 폭발과 잔불 구획을 남긴다. late rider는 seed 수만 보태 이 몸체의 교전 장악력을 키운다.",
       apply(build, run) {
         build.damageBonus += 2;
         build.maxHpBonus += 6;
@@ -5396,12 +5396,12 @@
       title: "Voltspine Lattice",
       traitLabel: "arc spine",
       description:
-        "동체 위로 전극 spine을 영구 전개해 발사마다 전방 lattice arc를 덧댄다. support bay가 많을수록 spine 수와 연쇄 길이가 늘어 후열 전체를 전도성 그물로 묶는다.",
-      slotText: "arc lattice salvo · support가 chain spine 증폭",
+        "동체 위로 전극 spine을 영구 전개해 발사마다 전방 lattice arc를 덧댄다. late rider bay가 붙으면 spine 수와 연쇄 길이가 늘어 후열 전체를 전도성 그물로 묶는다.",
+      slotText: "arc lattice salvo · late rider가 chain spine 증폭",
       bodyLabel: "Stormspine Hull",
       bodyText: "등뼈형 전극 spine과 측면 방전 깃이 자라 후열을 직접 감전시키는 전도 섀시다.",
       statusNote:
-        "주포가 voltspine lattice로 변해 전방 lattice arc를 흘리고 연쇄 범위가 크게 늘어난다. support uplink는 spine 수를 늘려 이 형태의 후열 절단력을 키운다.",
+        "주포가 voltspine lattice로 변해 전방 lattice arc를 흘리고 연쇄 범위가 크게 늘어난다. late rider는 spine 수를 더해 이 형태의 후열 절단력을 키운다.",
       apply(build, run) {
         build.damageBonus += 1;
         build.moveSpeedBonus += 6;
@@ -5443,12 +5443,12 @@
       title: "Anvil Prism",
       traitLabel: "breach ram",
       description:
-        "주포 하부에 삼중 breach ram을 박아 발사마다 두꺼운 prism salvo를 밀어 넣는다. support bay가 많을수록 ram이 늘어나 brute/warden 전열을 그대로 꿰뚫는 돌파 형태가 된다.",
-      slotText: "breach prism salvo · support가 ram 수 증폭",
+        "주포 하부에 삼중 breach ram을 박아 발사마다 두꺼운 prism salvo를 밀어 넣는다. late rider bay가 붙으면 ram이 늘어나 brute/warden 전열을 그대로 꿰뚫는다.",
+      slotText: "breach prism salvo · late rider가 ram 수 증폭",
       bodyLabel: "Anvil-Ram Hull",
       bodyText: "전면 ram prong과 복부 냉각 지느러미가 돌출된 정면 돌파 섀시다.",
       statusNote:
-        "주포가 anvil prism으로 바뀌어 짧고 두꺼운 breach salvo를 겹쳐 밀어 넣는다. support uplink는 ram 포문을 더 열어 전면 파쇄력을 끌어올린다.",
+        "주포가 anvil prism으로 바뀌어 짧고 두꺼운 breach salvo를 겹쳐 밀어 넣는다. late rider는 ram 포문만 더 열어 전면 파쇄력을 끌어올린다.",
       apply(build, run) {
         build.damageBonus += 5;
         build.maxHpBonus += 4;
@@ -6954,11 +6954,11 @@
         },
         {
           label: "베이",
-          value: choice.bayUnlock ? "즉시 +1" : "유지",
+          value: choice.bayUnlock ? "즉시 +1" : "Wave 8 rider",
         },
         {
           label: "시스템",
-          value: choice.systemChoice ? choice.systemChoice.title : "조기 해금",
+          value: choice.systemChoice ? choice.systemChoice.title : choice.bayUnlock ? "조기 해금" : "Wave 8 선택",
         },
         ...finaleRows,
       ];
@@ -12063,6 +12063,24 @@
     if (!build) {
       return [];
     }
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
+      return Object.values(CHASSIS_BREAKPOINT_DEFS).map((chassisDef) => ({
+        type: "utility",
+        action: "bastion_bay_forge",
+        id: `utility:bastion_chassis_break:${chassisDef.id}:lean`,
+        verb: "접합",
+        tag: chassisDef.tag,
+        title: chassisDef.title,
+        description: `${chassisDef.description} 이번 Wave 6은 차체 break만 잠그고 끝낸다. support rider와 flex lane은 아직 닫아 둔 채 Wave 8 Late Break Armory에서 첫 late divergence로 한 번에 연다.`,
+        slotText: `섀시 breakpoint · ${chassisDef.slotText}`,
+        cost: 0,
+        laneLabel: "섀시 breakpoint",
+        forgeLaneLabel: "섀시 breakpoint",
+        bayUnlock: false,
+        chassisId: chassisDef.id,
+        chassisTitle: chassisDef.title,
+      }));
+    }
     const random = typeof rng === "function" ? rng : Math.random;
     const doctrine = getBastionDoctrineDef(build);
     const preferredSystemIds = new Set(getDoctrinePreferredSystemIds(doctrine));
@@ -13148,6 +13166,9 @@
       if (choice.chassisId && applyChassisBreakpoint(run.build, choice.chassisId, run)) {
         const chassis = getChassisBreakpointDef(choice.chassisId);
         run.build.upgrades.push(`유틸리티 섀시: ${(chassis && chassis.label) || choice.chassisTitle || choice.chassisId}`);
+        if (!choice.bayUnlock && CONSOLIDATED_12_WAVE_ROUTE) {
+          run.build.upgrades.push("Chassis Breakpoint: support rider held for Wave 8");
+        }
       }
       if (choice.systemChoice) {
         applyForgeChoice(run, {
@@ -15867,7 +15888,7 @@
       );
       pushCombatFeed(
         CONSOLIDATED_12_WAVE_ROUTE
-          ? "Wave 8 돌파. 보조 rig가 자동 정렬되어 다음 브레이크부터 headline form 뒤에 rider 한 장을 더 안정적으로 붙일 수 있다."
+          ? "Wave 8 돌파. 이제 첫 rider bay가 열려 Late Form 뒤에 support, defense, greed 중 한 갈래를 처음으로 붙일 수 있다."
           : state.build.bastionDoctrineId
             ? state.build.auxiliaryJunctionLevel > 0
               ? "Wave 8 돌파. Late Break Armory가 열리며 네 번째 support bay와 추가 교리 우회 flex bay가 함께 해금된다."
@@ -16638,7 +16659,9 @@
               : choice.action === "wave6_ascension"
                 ? `${grantLabel} 적용. ${choice.doctrineLabel}를 irreversible form으로 잠가 ${choice.doctrineChoice ? choice.doctrineChoice.title : "주포 mutation"}과 ${choice.chassisTitle || "utility chassis"}까지만 먼저 켰다.${choice.autoPursuitReady ? " 준비된 contraband salvage도 즉시 pursuit로 점화된다." : ""} support bay와 off-doctrine flex lane은 아직 열지 않고 Wave 8 Late Break Armory까지 보류한다.`
                 : choice.action === "bastion_bay_forge"
-                ? wave6AscensionDraft || choice.skipNextAdminStop
+                ? !choice.bayUnlock && CONSOLIDATED_12_WAVE_ROUTE
+                  ? `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}만 먼저 잠가 hold, dive, exit 리듬을 바꿨다. support rider와 flex lane은 아직 열지 않고 Wave 8 Late Break Armory까지 묶어 둔다.`
+                  : wave6AscensionDraft || choice.skipNextAdminStop
                   ? `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}를 잠그고 세 번째 support bay를 flex lane으로 즉시 열어 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 장착했다. Wave 8에서는 정지 없이 네 번째 bay가 자동 uplink되어 Wave 6-9 bracket을 그대로 이어 간다.`
                   : `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}와 함께 세 번째 support bay를 즉시 열고 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 먼저 장착한 채, Wave 8 네 번째 bay까지 예약하고 다음 웨이브를 연다.`
                 : choice.action === "bastion_doctrine"

@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze new branch/system sprawl and consolidate one appetite-first `Wave 1-12` contract by deleting stale `5-wave`/`Afterburn` promises and stripping forge/HUD/admin language down to one readable late-form payoff arc.
+- Immediate priority: lock one lean `Wave 1-12` appetite curve by deleting stale `5-wave`/`Afterburn` scaffolding, delaying support/flex spectacle until after the core gun/body staircase is earned, and stripping forge/HUD/admin language down to one readable late-form payoff arc.
 
 ## Release Gates
 
@@ -48,6 +48,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 22:25:00 KST
+  Findings:
+  - The game still teaches three run scopes at once. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) sells a complete `Wave 1-12` run with future `20-30 wave` headroom, but [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md) still anchors balance to a `5-wave act curve`, and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1314) still keeps full `Afterburn I-VII` structure alive. That is still prototype/future-game overlap, not one replayable destination.
+  - The early growth curve is still too complete. [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L11938) already promises Wave 3 core lock plus Wave 6 chassis plus Wave 8 support spectacle and off-doctrine flex, and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12002) / [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12017) keep selling extra support bays as a headline midrun prize. A strong rerun should begin smaller and make the player hunger for orbit/shield/helper layers later, not read the whole machine blueprint by Wave 3-6.
+  - The late-form fantasy still depends too much on support count. [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L5305), [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L5354), [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L5399), and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L5446) all sell the main jump as stronger when `support bay` count rises, so the core weapon/body mutation still is not carrying anticipation on its own.
+  - The forge reward read is cleaner than before but still too managerial compared with strong arena-roguelite references. [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20424) still stacks `Headline Mutation`, `Secondary Rider`, and `Immediate Ask`, and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L15900) still narrates the run as payoff/proof/victory-lap/finale structure. `Hades`, `Nova Drift`, and `Brotato` win by making one mutation desirable at a glance and letting combat prove the rest.
+  - Act 3 pacing is healthier, but `Wave 9-12` is still spending too much effort explaining branch-specific route shape instead of creating a universally legible domination band that could scale toward `20-30` waves later. The run still reads as curated staging, not a system the player wants to master repeatedly.
+  Top Priority: Recut the shipped route so `Wave 1-8` protects a lean core staircase first: Wave 3 locks only the weapon identity, Wave 6 locks the body break, Wave 8 is the first real support/defense/greed divergence, and every late-form description must stand on its own before any support amplification is mentioned.
+  Why Now: Until the run starts small and earns spectacle in a cleaner order, repeat-play hunger stays flat even if the later content gets longer.
+  Do Not Repeat: Do not answer this with more branch-specific late labels, more support bays, or another wording pass that leaves the opening over-complete.
+  Release Gate: Builds
 
 - 2026-03-24 21:40:00 KST
   Findings:
@@ -2802,6 +2814,12 @@ This file is shared by two recurring Codex CLI jobs.
   Freeze: Pause new systems and late-route expansion until the base `Wave 1-12` run reads cleanly enough that a player can describe the finale without using internal draft/cache/ascension vocabulary.
 
 ## Latest Improvement
+
+- 2026-03-24 23:35:00 KST
+  Changed: recut the consolidated `Wave 6 -> 8` ladder in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 6` chassis breakpoint picks now lock only the body break and stop there instead of quietly opening a third support bay or flex system ahead of schedule. I also rewrote the affected forge preview rows, instant-draft combat-feed copy, and the `Wave 8` armory unlock line so the base run now reads as `core gun at Wave 3 -> chassis at Wave 6 -> first real rider divergence at Wave 8`, then rewrote the headline late-form descriptions/status notes so each form sells its own weapon/body mutation before any rider amplification is mentioned. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert that leaner pre-`Wave 8` state. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` asked for a leaner `Wave 1-8` staircase where `Wave 6` is body break only, `Wave 8` is the first true support/defense/greed split, and late forms stand on their own before support text appears. The highest-value bounded interpretation was to remove the actual early bay unlock and align the visible reward copy with that new timing, rather than do another wording-only pass.
+  Follow-up Risk: the opening curve is cleaner now, but `Wave 8` may still need one more simplification pass if the first rider choice reads too managerial compared with the now-leaner `Wave 6`. If critique still says support fantasy is stealing attention, the next bounded pass should simplify the `Wave 8` card set itself instead of reintroducing more early spectacle.
+  Release Gate: Builds
 
 - 2026-03-24 20:25:00 KST
   Changed: retuned the default late-route `Wave 11-12` cadence in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 11 · Starforge` becomes a clearer domination lap instead of another pursuit exam. `Wave 11` now uses the larger payoff arena again, lighter spawn budget, a lower active cap, thinner binder/mortar tax, and a slower single `Starforge Drift`, while `Wave 12 · Cinder Crown` inherits the heavier breach spike with a slightly higher cap and budget. I also aligned the shared late-act fallback pool and the route-summary/forge roadmap text to call `Wave 11` a `Victory Lap` or `Starforge Gallery` instead of a proof rung, then updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock those expectations.
