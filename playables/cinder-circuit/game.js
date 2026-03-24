@@ -8899,6 +8899,45 @@
     return Boolean(run && CONSOLIDATED_12_WAVE_ROUTE && !run.hudInspect && !run.paused);
   }
 
+  function getMinimalBaseRouteHudVisibility(run = state) {
+    const minimal = shouldUseMinimalBaseRouteHud(run);
+    return {
+      minimal,
+      showTimer: !minimal,
+      showScrap: !minimal,
+      showBench: !minimal,
+      showRoadmap: !minimal,
+      showUpgradeList: !minimal,
+      showLiveReadout: !minimal,
+    };
+  }
+
+  function createBaseRouteForgeContextMarkup({
+    chipLabel = "",
+    dominantFormLabel = "",
+    waveAskLabel = "",
+    scrapValue = "",
+  }) {
+    return `
+      <div class="summary-head">
+        <strong>현재 형태</strong>
+        ${chipLabel ? `<span class="summary-chip">${chipLabel}</span>` : ""}
+      </div>
+      <strong class="route-contract__title">${dominantFormLabel}</strong>
+      ${
+        waveAskLabel
+          ? `<div class="forge-focus__proof"><span>다음 전장</span>${waveAskLabel}</div>`
+          : ""
+      }
+      ${
+        scrapValue !== ""
+          ? `<p class="forge-card__pivot forge-card__pivot--bill"><span>보유 고철</span><strong>${scrapValue}</strong></p>`
+          : ""
+      }
+      <p class="summary-note">이번 정지는 카드 세 장뿐이다. 하나를 고르고 바로 다음 전장으로 들어간다.</p>
+    `;
+  }
+
   function getCombatBandState(build, weapon = null, waveNumber = 1) {
     const boundedWave = clamp(Math.round(waveNumber || 1), 1, MAX_WAVES + POST_CAPSTONE_WAVE_COUNT);
     if (boundedWave < 9 || boundedWave > MAX_WAVES) {
@@ -14144,6 +14183,8 @@
     getTabInspectGambleSummary,
     createTabInspectBoardMarkup,
     createBaseRouteFocusMarkup,
+    getMinimalBaseRouteHudVisibility,
+    createBaseRouteForgeContextMarkup,
     createBaseRouteForgeProofMarkup,
     createBaseRouteForgeBillMarkup,
   };
@@ -20809,7 +20850,8 @@
     const waveConfig = state.wave || resolveWaveConfig(state.waveIndex, state.build);
     const activeForgeLabel = state.phase === "forge" ? getForgeDisplayModeLabel() : "";
     const baseRouteForgeActive = shouldUseBaseRouteForgeContract();
-    const minimalBaseRouteHud = shouldUseMinimalBaseRouteHud(state);
+    const hudVisibility = getMinimalBaseRouteHudVisibility(state);
+    const minimalBaseRouteHud = hudVisibility.minimal;
     const baseRouteForgeStage = baseRouteForgeActive
       ? getBaseRouteForgeStage(state, state.waveIndex + 2)
       : null;
@@ -20872,6 +20914,12 @@
       elements.scrapStat.parentElement,
       state.resources.scrap >= 40 ? "ready" : "stable"
     );
+    if (elements.timerStat && elements.timerStat.parentElement) {
+      elements.timerStat.parentElement.classList.toggle("hidden", !hudVisibility.showTimer);
+    }
+    if (elements.scrapStat && elements.scrapStat.parentElement) {
+      elements.scrapStat.parentElement.classList.toggle("hidden", !hudVisibility.showScrap);
+    }
 
     const activeCore = CORE_DEFS[state.build.coreId];
     const weapon = state.weapon;
@@ -20892,7 +20940,7 @@
       elements.activeCore.innerHTML = `
         <div class="summary-head">
           <div>
-            <p class="forge-card__tag">${activeCore.tag}</p>
+            <p class="forge-card__tag">${minimalBaseRouteHud ? "현재 형태" : activeCore.tag}</p>
             <h3>${dominantForm.label}</h3>
           </div>
           <span class="summary-chip ${
@@ -20901,7 +20949,7 @@
         </div>
         ${
           minimalBaseRouteHud
-            ? `<div class="forge-focus__proof"><span>다음 점화</span>${nextBeat.title}</div><p class="summary-note">${dominantForm.label} 하나만 앞세우고 ${nextBeat.title}까지 힘을 모은다.</p>`
+            ? ""
             : `<div class="mini-pill-row">${
                 baseRouteForgeActive
                   ? createMiniPill("다음 점화", nextBeat.title, "hot") +
@@ -20920,7 +20968,7 @@
 
     const benchEntries = getBenchEntries(state.build);
     if (elements.pendingCores) {
-        elements.pendingCores.classList.toggle("hidden", minimalBaseRouteHud);
+        elements.pendingCores.classList.toggle("hidden", !hudVisibility.showBench);
         if (tabInspectBoardActive) {
           elements.pendingCores.innerHTML = createTabInspectBoardMarkup({
             dominantForm,
@@ -20945,7 +20993,10 @@
     }
 
     if (elements.upgradeList) {
-      elements.upgradeList.classList.toggle("hidden", minimalBaseRouteHud || tabInspectBoardActive);
+      elements.upgradeList.classList.toggle(
+        "hidden",
+        !hudVisibility.showUpgradeList || tabInspectBoardActive
+      );
       elements.upgradeList.innerHTML = state.build.upgrades.length
         ? state.build.upgrades
             .slice(-4)
@@ -20955,9 +21006,12 @@
     }
 
     if (elements.buildRoadmap) {
+      elements.buildRoadmap.classList.toggle("hidden", !hudVisibility.showRoadmap);
       elements.buildRoadmap.classList.toggle("roadmap-card--contract", minimalBaseRouteHud);
       elements.buildRoadmap.innerHTML =
-        minimalBaseRouteHud || tabInspectBoardActive
+        !hudVisibility.showRoadmap && !tabInspectBoardActive
+          ? ""
+          : minimalBaseRouteHud || tabInspectBoardActive
           ? createBaseRouteFocusMarkup({
               eyebrow: tabInspectBoardActive ? "현재 실루엣" : "",
               chipLabel: ladderFocus.label,
@@ -21004,7 +21058,10 @@
     }
 
     if (elements.liveReadout) {
-      elements.liveReadout.classList.toggle("hidden", minimalBaseRouteHud || tabInspectBoardActive);
+      elements.liveReadout.classList.toggle(
+        "hidden",
+        !hudVisibility.showLiveReadout || tabInspectBoardActive
+      );
       const forgeReadoutLabel = shouldUseBaseRouteForgeContract()
         ? state.pendingFinalForge
           ? "마무리 선택 중"
@@ -21117,10 +21174,10 @@
       : state.pendingFinalForge
         ? `${dominantFormSummary.label}를 이번 12-wave spine의 최종 실루엣으로 봉인한다.`
         : riderStep
-          ? `${dominantFormSummary.label} 위에 rider 한 장만 얹고 바로 다음 전투 ask를 버틴다.`
+        ? `${dominantFormSummary.label} 위에 rider 한 장만 얹고 바로 다음 전투 ask를 버틴다.`
           : `${dominantFormSummary.label} 다음에 가장 크게 전장을 바꿀 변이 하나만 먼저 고른다.`;
     elements.forgeSubtitle.textContent = useBaseRouteContract
-      ? `${baseRouteForgeStage ? baseRouteForgeStage.label : "주력 변이"} · 고철 ${Math.round(state.resources.scrap)}`
+      ? `고철 ${Math.round(state.resources.scrap)} · 카드 하나를 고르면 바로 다음 웨이브로 들어간다.`
       : state.pendingFinalForge
         ? `${forgeModeLabel} · ${focusTitle} · 고철 ${Math.round(state.resources.scrap)}`
         : riderStep
@@ -21129,16 +21186,11 @@
     elements.forgeContext.innerHTML = useBaseRouteContract
       ? `
         <article class="forge-focus forge-focus--${riderStep ? "rider" : "headline"} forge-context__card forge-context__card--span-two">
-          ${createBaseRouteFocusMarkup({
-            eyebrow: focusEyebrow,
+          ${createBaseRouteForgeContextMarkup({
             chipLabel: baseRouteForgeStage ? baseRouteForgeStage.label : "",
-            title: focusTitle,
-            currentFormLabel: dominantFormSummary.label,
-            spotlightLabel: "다음 점화",
-            spotlightValue: nextBeat.title,
-            tradeoffLabel: "고철",
-            tradeoffValue: String(Math.round(state.resources.scrap)),
-            tradeoffTone: state.resources.scrap >= 40 ? "accent" : "",
+            dominantFormLabel: dominantFormSummary.label,
+            waveAskLabel: proofWindow.label,
+            scrapValue: String(Math.round(state.resources.scrap)),
           })}
         </article>
       `

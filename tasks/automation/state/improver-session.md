@@ -12,6 +12,8 @@ Keep this short and replace stale notes instead of endlessly appending.
 
 ## Current Memory
 
+- On the consolidated route, the default combat HUD should now collapse to `wave + survival meters + one current-form card + one threat/ask card`; if timer, scrap, roadmap, bench chips, upgrade logs, or live readout panels come back during normal play, the shipped screen has slipped back into operator-dashboard mode.
+- On the consolidated route, the forge header lands better as one quiet context card `현재 형태 / 다음 전장 / 보유 고철` above the three appetite cards; if the base forge context grows another roadmap, support summary, or `다음 점화` coaching row, the reward pause has drifted back into route briefing.
 - On the consolidated `12-wave` route, `getBuildRoadmap` stage II/III copy should never mention `contraband salvage`, `pursuit`, `live ascension cache`, or `Afterburn`; the shipped roadmap lands better when it only points at `next big weapon/body leap` and the fixed `Wave 9-12` payoff/proof/cadence/finale arc.
 - On the consolidated route, the default HUD card, `Tab`, and forge focus should all sell the same four-beat spine `약한 시작 -> Wave 3 무기 도약 -> Wave 6 방호 약속 -> Wave 8 후기 점화`; if `proof`, `contract`, or `draft` retake those default surfaces, the shipped run has slipped back into route explanation instead of a closed 12-wave appetite loop.
 - On the opener, signature selection lands best when both the card and spotlight read as `label + start core + one bias line`, and the first combat feed is only `start core 기동`; if perk paragraphs, seed/start admin boxes, or launch-brief copy regrow, the opening has slipped back into admin mode before Wave 1.

@@ -144,12 +144,37 @@ const compactFocusMarkup = game.createBaseRouteFocusMarkup({
 assert.ok(compactFocusMarkup.includes("판돈·유틸"));
 assert.ok(compactFocusMarkup.includes("고철 42"));
 assert.ok(compactFocusMarkup.includes("Cataclysm Arsenal"));
+const forgeContextMarkup = game.createBaseRouteForgeContextMarkup({
+  chipLabel: "주력 변이",
+  dominantFormLabel: "Sky Lance",
+  waveAskLabel: "Crownbreaker Lap",
+  scrapValue: "42",
+});
+assert.ok(forgeContextMarkup.includes("현재 형태"));
+assert.ok(forgeContextMarkup.includes("다음 전장"));
+assert.ok(forgeContextMarkup.includes("보유 고철"));
+assert.ok(!forgeContextMarkup.includes("다음 점화"));
 const forgeProofMarkup = game.createBaseRouteForgeProofMarkup("Crownbreaker Lap에서 버틴다.");
 assert.ok(forgeProofMarkup.includes("다음 시험"));
 assert.ok(!forgeProofMarkup.includes("preview"));
 const forgeBillMarkup = game.createBaseRouteForgeBillMarkup("고철 18");
 assert.ok(forgeBillMarkup.includes("비용·대가"));
 assert.ok(forgeBillMarkup.includes("고철 18"));
+const minimalHudVisibility = game.getMinimalBaseRouteHudVisibility({
+  hudInspect: false,
+  paused: false,
+});
+assert.equal(minimalHudVisibility.minimal, true);
+assert.equal(minimalHudVisibility.showTimer, false);
+assert.equal(minimalHudVisibility.showScrap, false);
+assert.equal(minimalHudVisibility.showRoadmap, false);
+const expandedHudVisibility = game.getMinimalBaseRouteHudVisibility({
+  hudInspect: true,
+  paused: false,
+});
+assert.equal(expandedHudVisibility.minimal, false);
+assert.equal(expandedHudVisibility.showTimer, true);
+assert.equal(expandedHudVisibility.showRoadmap, true);
 assert.equal(game.shouldUseFieldGrant({ nextWave: 6, finalForge: false, build: roadmapBuild }), false);
 const recurringWave3Choices = game.buildForgeChoices(roadmapBuild, Math.random, 40, {
   nextWave: 3,

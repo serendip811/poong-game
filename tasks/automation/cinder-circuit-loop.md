@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: cut the project to one shipped `Wave 1-12` contract only, remove post-route/player-facing expansion scaffolding, and make `Wave 3/6/8` plus `Wave 9-12` read as one rerunnable growth arc with distinct late-run payoffs.
+- Immediate priority: strip player-facing route/admin scaffolding and collapse the title, HUD, and forge into one glanceable `Wave 1-12` contract before adding more branches or payoff wrappers.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-25 07:31:01 KST
+  Findings:
+  - [index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L45) through [index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L123) still opens combat with a dashboard-density read: six top chips, four lower status blocks, an upgrade log, a banner layer, and the forge shell. Even before enemy pressure matters, the screen is asking for operator parsing instead of clean dodge-and-fire focus.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20805) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21240) still makes the HUD and forge explain `next beat`, `proof window`, support track, roadmap, and contract state in parallel. Compared with the appetite-first reward hierarchy in `Hades`, `Nova Drift`, or `Brotato`, this is still too many simultaneous ideas for one between-wave decision.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20692) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20799) still branches around `Afterburn`, `Architecture Draft`, `Bastion Draft`, and live-ascension/admin logic. Even when the consolidated route is active, the player-facing layer cannot become ruthlessly simple while hidden prototype routing still owns the state machine.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2773) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3188) correctly delays orbitals, shields, sentries, missiles, and drones until `Wave 8`, but those support systems are still the clearest visible evolution ladder in the run. The core chassis/weapon fantasy is still sold by text framing more than by instantly legible body/gun transformation, which weakens rerun hunger.
+  Top Priority: Cut the live combat/HUD contract to survival resources + current wave ask + one current-form readout, and rebuild forge pauses into exactly three appetite-first cards with no roadmap/upgrades/proof-admin clutter while removing surfaced `Afterburn`/draft/ascension labels from the shipped route.
+  Why Now: Recent red flags still say the opening is too busy and too wordy, and until Waves 1-3 read cleanly the game will keep feeling administered instead of replayable.
+  Do Not Repeat: Do not answer this with copy trimming alone or another consolidation wrapper that leaves the same number of live panels and route terms on screen.
+  Release Gate: UX/UI
 
 - 2026-03-25 07:00:45 KST
   Findings:
@@ -2250,6 +2261,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-25 07:42:48 KST
+  Changed: trimmed the default consolidated combat contract in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the shipped non-`Tab` HUD now hides the timer chip, scrap chip, bench strip, roadmap card, upgrade log, and live readout during normal play. The baseline screen now resolves to `survival resources + current wave ask + one current-form card`, while the base-route forge header was recut to one quiet context card `현재 형태 / 다음 전장 / 보유 고철` above the existing three appetite-first cards instead of another `다음 점화` coaching block. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new minimal HUD visibility and forge-context markup, and validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`. This UI pass stayed anchored to the appetite-first combat/reward hierarchy seen in `Hades`, `Nova Drift`, and `Brotato`: the live fight should read like one hero state and one danger state, not a dashboard.
+  Why: the newest critique's `Top Priority` was to cut live combat down to survival resources, the current wave ask, and one current-form readout while keeping forge pauses to exactly three appetite-first cards. The highest-value bounded interpretation was to remove whole default panels from the shipped route instead of only trimming copy inside them.
+  Follow-up risk: the consolidated route now reads much cleaner in live play, but `dash` still remains as an extra top-strip survival chip and deeper non-shipping `Afterburn`/draft branches still exist behind the base route. If critique stays on the same issue, the next bounded move should either fold `dash` into the remaining survival meter contract or quarantine more dormant post-`Wave 12` branch labels from any shipped-facing surface.
+  Release Gate: UX/UI
 
 - 2026-03-25 18:05:00 KST
   Changed: rewrote the shipped-route roadmap logic in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `getBuildRoadmap` no longer uses `contraband salvage`, `pursuit`, `live ascension cache`, or hidden `Afterburn` progression to describe the active `Wave 1-12` run. On the consolidated path, Stage II now talks only about the next visible weapon/body leap, and Stage III now closes around one fixed late fantasy `Wave 9 payoff -> Wave 10 proof -> Wave 11 cadence -> Wave 12 final stand` instead of implying another ladder behind the shipped clear. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so roadmap assertions match the shipped route contract, and validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`. This UI/readability pass stayed anchored to the appetite-first run-state snap seen in `Hades`, `Nova Drift`, and `Brotato`: show the current form path, not backstage route administration.
