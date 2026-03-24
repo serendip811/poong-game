@@ -18,6 +18,7 @@ Working rules:
 - Focus on `playables/cinder-circuit/` and only touch files needed for the selected improvement.
 - Prefer the latest critique's `Top Priority` unless it is already clearly addressed.
 - Read `## Release Goal`, `## Current Stage`, `## Release Gates`, and `## Anti-Drift Rules` first and use them to avoid drifting into low-value work.
+- Read `tasks/automation/state/improver-session.md` first and update it after the change so this role keeps a practical implementation memory across runs.
 - After changing code, update `tasks/automation/cinder-circuit-loop.md` by prepending a new entry under `## Latest Improvement`.
 - Include what changed, why, and any new follow-up risk in that entry.
 - Run the existing smoke test if your change touches gameplay or UI logic.

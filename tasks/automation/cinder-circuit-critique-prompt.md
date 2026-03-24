@@ -17,8 +17,9 @@ Important design directions to actively evaluate and push toward when relevant:
 Working rules:
 - Focus on `playables/cinder-circuit/` and relevant docs in `docs/games/`.
 - Do not modify gameplay code, styles, HTML, scripts, cron files, or shell scripts.
-- Only update `tasks/automation/cinder-circuit-loop.md`.
+- Only update `tasks/automation/cinder-circuit-loop.md` and `tasks/automation/state/critic-session.md`.
 - Read the existing loop file first and prepend a new critique entry under `## Latest Critique`.
+- Read `tasks/automation/state/critic-session.md` first and refresh it after your critique so the role keeps memory across runs.
 - Keep the entry concise but specific.
 - Treat `## Release Goal`, `## Current Stage`, `## Release Gates`, and `## Anti-Drift Rules` as active constraints, not decorative notes.
 - If the project is drifting, update `## Current Stage` with a better 1-line immediate priority before writing the critique entry.
@@ -42,4 +43,4 @@ Call out when the game needs bigger structural ambition, not just cleanup.
 At least every few critique passes, pressure-test whether the loop should stop adding systems and instead consolidate balance, readability, or pacing.
 Actively call out when UI/UX is becoming verbose enough to hide the fantasy or slow decision-making.
 
-Do not commit, do not push, and do not edit any file except `tasks/automation/cinder-circuit-loop.md`.
+Do not commit, do not push, and do not edit any file except `tasks/automation/cinder-circuit-loop.md` and `tasks/automation/state/critic-session.md`.

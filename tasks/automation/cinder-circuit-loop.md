@@ -4,6 +4,14 @@ This file is shared by two recurring Codex CLI jobs.
 
 - `critique`: reviews the current state of `playables/cinder-circuit/` and writes sharp feedback.
 - `improve`: reads the latest critique, implements one bounded improvement, and records what changed.
+- `release-review`: periodically audits whether the loop is still moving toward a shippable game.
+
+## Agent Sessions
+
+- `tasks/automation/state/critic-session.md` keeps the critic's long-lived memory.
+- `tasks/automation/state/improver-session.md` keeps the improver's long-lived memory.
+- `tasks/automation/state/release-review-session.md` keeps the release-review agent's long-lived memory.
+- These files should stay short, current, and overwrite stale thinking instead of becoming logs.
 
 ## Release Goal
 
@@ -2557,3 +2565,12 @@ This file is shared by two recurring Codex CLI jobs.
 ## History
 
 - Loop initialized.
+- Pending next critique entry.
+
+## Latest Release Review
+
+- Pending first release review entry.
+
+## Latest Improvement
+
+- Pending next improvement entry.
