@@ -8723,25 +8723,14 @@
     eyebrow = "",
     chipLabel = "",
     title,
-    prompt,
     currentFormLabel,
-    mainLeapLabel,
     proofLabel,
-    supportLabel = "",
     tradeoffLabel = "",
     tradeoffValue = "",
     tradeoffTone = "",
-    note = "",
     compact = false,
   }) {
-    const spotlightLabel = compact ? currentFormLabel : mainLeapLabel;
-    const proofHeader = compact ? "다음 시험" : "곧바로";
-    const signalPills = [
-      supportLabel ? createMiniPill("방호·보조", supportLabel, "cool") : "",
-      tradeoffValue ? createMiniPill(tradeoffLabel || "현재 청구서", tradeoffValue, tradeoffTone) : "",
-    ]
-      .filter(Boolean)
-      .join("");
+    const billLabel = tradeoffLabel || "비용·대가";
     return `
       <div class="summary-head">
         <strong>${eyebrow || title}</strong>
@@ -8751,11 +8740,13 @@
             : ""
         }
       </div>
-      <p class="summary-copy roadmap-card__path">${prompt}</p>
-      <strong class="route-contract__title">${spotlightLabel}</strong>
-      <div class="forge-focus__proof"><span>${proofHeader}</span>${compact ? proofLabel : `${mainLeapLabel} · ${proofLabel}`}</div>
-      ${signalPills ? `<div class="mini-pill-row">${signalPills}</div>` : ""}
-      ${note ? `<p class="summary-note">${note}</p>` : ""}
+      <strong class="route-contract__title">${currentFormLabel || title}</strong>
+      <div class="forge-focus__proof"><span>다음 시험</span>${proofLabel}</div>
+      ${
+        tradeoffValue
+          ? `<p class="forge-card__pivot forge-card__pivot--bill"><span>${billLabel}</span><strong>${tradeoffValue}</strong></p>`
+          : ""
+      }
     `;
   }
 
@@ -8815,27 +8806,21 @@
 
   function createTabInspectBoardMarkup({
     dominantForm,
-    supportTrack,
     proofWindow,
     gambleSummary,
   }) {
-    const contractNote = trimInspectNote(
-      `${dominantForm.label} 하나만 밀고 ${proofWindow.label}에서 바로 본다.`,
-      `${proofWindow.label}에서 바로 본다.`
-    );
     return `
       <div class="summary-head">
-        <strong>변이 보드</strong>
+        <strong>현재 실루엣</strong>
         <span class="summary-chip">TAB</span>
       </div>
       <div class="inspect-board inspect-board--contract">
-        <p class="summary-copy roadmap-card__path">${contractNote}</p>
         <strong class="route-contract__title">${dominantForm.label}</strong>
         <div class="forge-focus__proof"><span>다음 시험</span>${proofWindow.label}</div>
-        <div class="mini-pill-row">
-          ${createMiniPill("방호·보조", supportTrack.label, "cool")}
-          ${createMiniPill("현재 청구서", gambleSummary.label, "accent")}
-        </div>
+        <p class="forge-card__pivot forge-card__pivot--bill">
+          <span>비용·대가</span>
+          <strong>${gambleSummary.label}</strong>
+        </p>
       </div>
     `;
   }
@@ -20642,7 +20627,7 @@
           CONSOLIDATED_12_WAVE_ROUTE
             ? state.wave.completesRun
               ? "적 반응 정지. 남은 고철을 회수하면 이번 12-wave 계약의 결과가 열린다."
-              : `적 반응 정지. 남은 고철을 회수하면 ${nextPhaseLabel} 하나만 거친 뒤 바로 다음 증명으로 이어진다.`
+              : `적 반응 정지. 남은 고철을 회수하면 ${nextPhaseLabel} 하나만 고른 뒤 바로 다음 시험으로 이어진다.`
             : `적 반응 정지. 남은 고철을 회수한 뒤 ${nextPhaseLabel}로 이어진다.`,
           "CLEAR"
         );
@@ -20836,14 +20821,13 @@
 
     const benchEntries = getBenchEntries(state.build);
     if (elements.pendingCores) {
-      elements.pendingCores.classList.toggle("hidden", minimalBaseRouteHud);
-      if (tabInspectBoardActive) {
-        elements.pendingCores.innerHTML = createTabInspectBoardMarkup({
-          dominantForm,
-          supportTrack,
-          proofWindow,
-          gambleSummary,
-        });
+        elements.pendingCores.classList.toggle("hidden", minimalBaseRouteHud);
+        if (tabInspectBoardActive) {
+          elements.pendingCores.innerHTML = createTabInspectBoardMarkup({
+            dominantForm,
+            proofWindow,
+            gambleSummary,
+          });
       } else {
         elements.pendingCores.innerHTML = benchEntries.length
           ? benchEntries
@@ -20879,21 +20863,11 @@
               eyebrow: tabInspectBoardActive ? "현재 실루엣" : "",
               chipLabel: ladderFocus.label,
               title: dominantForm.label,
-              prompt:
-                state.phase === "forge"
-                  ? `이번 정비는 ${nextBreakpoint.label} 하나만 먼저 집는다.`
-                  : `${dominantForm.label}로 밀고 ${proofWindow.label}만 준비한다.`,
               currentFormLabel: dominantForm.label,
-              mainLeapLabel: nextBreakpoint.label,
               proofLabel: proofWindow.label,
-              supportLabel: tabInspectBoardActive ? "" : supportTrack.label,
               tradeoffLabel: "판돈·유틸",
               tradeoffValue: gambleSummary.label,
               tradeoffTone: gambleSummary.label === "잠잠" ? "" : "accent",
-              note:
-                tabInspectBoardActive
-                  ? ""
-                  : `${supportTrack.label}는 얇게 남기고 ${proofWindow.label}만 본다.`,
               compact: true,
             })
           : createHeadlineRiderFocusMarkup(
@@ -21054,15 +21028,11 @@
             eyebrow: focusEyebrow,
             chipLabel: baseRouteForgeStage ? baseRouteForgeStage.label : "",
             title: focusTitle,
-            prompt: focusPrompt,
             currentFormLabel: dominantFormSummary.label,
-            mainLeapLabel: riderStep ? dominantFormSummary.label : focusTitle,
             proofLabel: proofWindow.label,
-            supportLabel: riderStep ? focusTitle : activeSupportTrack.label,
             tradeoffLabel: "고철",
             tradeoffValue: String(Math.round(state.resources.scrap)),
             tradeoffTone: state.resources.scrap >= 40 ? "accent" : "",
-            note: "",
           })}
         </article>
       `

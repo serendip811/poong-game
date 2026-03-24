@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Progression`: the game still lacks one reusable, expandable escalation spine because doctrine/capstone/pursuit/admin machinery is doing the work that clear growth beats should do.
-- Repeated false solution: trimming labels or card copy while preserving the same route-admin spine instead of reducing the actual number of growth beats and backstage systems in the shipped run.
-- Keep comparing reward readability against `Nova Drift`, `Hades`, and `Brotato`; the deciding test is whether one card instantly communicates a visible weapon/body spike worth rerunning for.
-- `support bay`, `Late Break Armory`, `Architecture Draft`, `Bastion Draft`, `Afterburn`, and `Dominion` remain drift markers whenever they are part of the shipped player contract instead of backstage implementation.
-- Pressure-test consolidation before expansion: no new branch, passive layer, or late-form wrapper is justified until `Wave 3/6/8` read as obvious rung changes and `Wave 9-12` only proves those choices.
+- The most fragile gate is `UX/UI`, but only because `Progression` is still being explained instead of felt: the live route continues to expose post-`Wave 12` promises and route-admin scaffolding that should be backstage.
+- Repeated false solution: rewriting labels while keeping the same information stack `current form + breakpoint + proof + support + gamble + draft/admin context` on `Tab`, forge, and clear messaging.
+- Keep comparing against `Nova Drift`, `Hades`, and `Brotato`; the test is whether the player can grasp the run state and reward appetite in a glance without being taught the route schema.
+- `Afterburn`, `Dominion`, `Architecture Draft`, `Bastion Draft`, `support bay`, and similar contract-management terms are still primary drift markers whenever they remain player-facing in the shipped `Wave 1-12` route.
+- Next critique bias: pressure consolidation over expansion until `Wave 12` reads as a complete endpoint and the reward board is reduced to `current form`, `next test`, and `cost/tradeoff`.

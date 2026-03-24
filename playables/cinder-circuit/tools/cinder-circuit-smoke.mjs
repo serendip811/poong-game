@@ -120,21 +120,17 @@ assert.equal(eraThreePlan[2].state, "live");
 assert.ok(eraThreePlan[2].proofLabel.length > 0);
 const inspectMarkup = game.createTabInspectBoardMarkup({
   dominantForm: { label: "Sky Lance" },
-  supportTrack: { label: "Aegis Halo" },
   proofWindow: { label: "Crownbreaker Lap" },
   gambleSummary: { label: "고철 42", note: "" },
 });
-assert.ok(inspectMarkup.includes("현재 청구서"));
+assert.ok(inspectMarkup.includes("비용·대가"));
 assert.ok(inspectMarkup.includes("Crownbreaker Lap"));
 assert.ok(!inspectMarkup.includes("inspect-board__lane"));
 const compactFocusMarkup = game.createBaseRouteFocusMarkup({
   eyebrow: "현재 실루엣",
   title: "Sky Lance",
-  prompt: "Sky Lance로 밀고 Crownbreaker Lap만 준비한다.",
   currentFormLabel: "Sky Lance",
-  mainLeapLabel: "Cataclysm Payoff",
   proofLabel: "Crownbreaker Lap",
-  supportLabel: "Aegis Halo",
   tradeoffLabel: "판돈·유틸",
   tradeoffValue: "고철 42",
   tradeoffTone: "accent",

@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze expansion scaffolding and prove one reusable `Wave 1-12` escalation spine `small opener -> weapon leap -> one survival/support fork -> late-form payoff`, with doctrine/afterburn/admin systems fully backstage.
+- Immediate priority: make `Wave 1-12` read as the complete shipped run by cutting post-`Wave 12` promises and route-admin residue from the live player contract, then prove one reusable escalation spine `small opener -> weapon leap -> one survival/support fork -> late-form payoff`.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-25 04:30:39 KST
+  Findings:
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1348) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2037) still ships `Afterburn` and `Dominion` as visible ladder content. That tells the player the real power fantasy lives after `Wave 12`, which directly weakens replay payoff for the route that actually exists today.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20612) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20645) still resolves wave clears in phase-manager language `Act 4`, `Bastion Draft`, `Architecture Draft`, `next proof`. A release-feeling roguelite should cash out a clear as momentum or reward, not as scheduling metadata.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20879) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20980) makes the `Tab` board behave like a run explainer instead of a status board. Current form, next breakpoint, proof window, support track, gamble note, combat ask, and hazard note are all competing for priority, so the player still has to read the structure instead of just feeling whether the build is working.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21014) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21060) keeps the forge in briefing mode. Even the “consolidated” version still stacks eyebrow, stage chip, title, prompt, current form, main leap, proof, support label, and tradeoff at once, which is the opposite of the appetite-first reward punch strong references rely on.
+  Top Priority: Strip the shipped player contract down to one glanceable release board across clear feed, `Tab`, and forge: `current form`, `next test`, `cost/tradeoff`, with every `Afterburn`/`Dominion`/draft/admin concept moved fully backstage or removed from the live route.
+  Why Now: Until the run stops advertising future machinery, players cannot read `Wave 12` as a satisfying endpoint worth rerunning.
+  Do Not Repeat: Do not spend another pass renaming wrappers while the same multi-row board and post-route promises remain on screen.
+  Release Gate: UX/UI
 
 - 2026-03-25 04:00:55 KST
   Findings:
@@ -2182,6 +2193,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-25 15:35:00 KST
+  Changed: tightened the shipped `Wave 1-12` release board in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the consolidated wave-clear feed, `Tab` inspect card, and base-route forge focus card now all resolve to the same three-line contract: `현재 형태`, `다음 시험`, `비용·대가`. `Tab` no longer shows the extra support lane row, the forge context no longer stacks prompt/support/main-leap scaffolding above the pick cards, and the wave-clear feed now cashes out as `pick one thing, go prove it` instead of routing through draft/admin stop names. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the leaner markup labels. This UI pass stayed anchored to the appetite-first pause/reward hierarchy seen in `Hades`, `Nova Drift`, and `Brotato`: one dominant state read, one next test, one bill line. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to stop shipping a run-explainer across clear feed, `Tab`, and forge and replace it with one glanceable release board. The highest-value bounded interpretation was to consolidate those three default surfaces instead of renaming more wrappers, because that directly removes the remaining briefing-mode hierarchy from the live `Wave 1-12` route.
+  Follow-up risk: the shipped board is much cleaner now, but the default HUD's non-`Tab` active-core card still keeps a small support hint and dormant non-consolidated paths still contain `Afterburn`/`Dominion` wording deeper in the file. If critique stays on the same issue, the next bounded move should trim the remaining default HUD support hint or hide more dormant post-route copy from any shipped-facing surface before adding content.
+  Release Gate: UX/UI
 
 - 2026-03-25 15:05:00 KST
   Changed: rewrote the consolidated-route `Wave 3` architecture stop in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the three opening picks now headline the immediate weapon leap the player actually gets right now instead of the backstage doctrine spine that will matter later. `Mirror Hunt Doctrine`/`Storm Artillery Doctrine` style cards now surface `Prism Crown`, `Twin Spine`, and the equivalent first-shot form names as the actual pick title, their copy sells `Wave 3 first gun jump now -> Wave 6 body break next`, the roadmap's first rung now previews that same weapon leap, and the selection confirm/feed plus upgrade log now echo `Wave 3 무기 도약` rather than `Core Lock Forecast`. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new Wave 3 titles, roadmap rung, and upgrade text. This readability pass stayed anchored to the appetite-first reward hierarchy seen in `Nova Drift`, `Hades`, and `Brotato`: show the weapon change on sight, keep the later route logic subordinate. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
