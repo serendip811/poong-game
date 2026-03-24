@@ -12,7 +12,7 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Progression`: Act 3 still lacks one memorable late-form staircase that feels strong enough to scale toward `20-30` waves.
-- Repeated false solution: removing or renaming route/admin labels without changing the late-wave combat grammar underneath.
-- Main-weapon/chassis fantasy still has to beat halo/missile/drone/support desire in both wording and spectacle.
-- Favor critiques that push payoff band clarity, breathable movement asks, and fewer explanatory UI layers at reward moments.
+- The most fragile gate is now `Builds`: support systems still advertise clearer desire and payoff than the main weapon/chassis ladder.
+- Repeated false solution: cleaning route/admin wording without making the core form evolution more visible, stronger, and easier to crave than the accessories.
+- Late-route structure is improved, but `Wave 9-10` still risks reading like one repeated crossfire ecology instead of a real power-climb showcase.
+- Watch for stale docs or balance notes that still frame the game like a `5-wave` prototype instead of a `12-wave` release slice with a longer-term escalation ceiling.

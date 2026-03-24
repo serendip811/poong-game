@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: consolidate `Wave 9-12` into one craveable late-form staircase with two clear payoff fights, one real proof fight, and one finale, while stripping route/admin language out of every transition and forge beat.
+- Immediate priority: re-center `Wave 8-12` on one visible primary weapon/chassis evolution ladder that clearly outranks support spectacle and admin wording, so the late run sells a craveable main-form payoff before any extra branch or utility layer.
 
 ## Release Gates
 
@@ -48,6 +48,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 23:55:00 KST
+  Findings:
+  - `Wave 9 · Lockgrid` and `Wave 10 · Scrapline` are cleaner than the old late squeeze, but they are still basically the same skimmer/lancer crossfire family at `activeCap 28 -> 29`. That stretches the run without proving a broader escalation grammar strong enough for a future `20-30 wave` game.
+  - The run still makes support growth easier to want than core form growth. `SUPPORT_SYSTEM_DEFS` gives halo, missiles, drones, sentries, and orbitals clean tiered silhouettes and obvious payoffs, while the main gun/body ladder is still mediated through `Current Form`, `Main Leap`, `Next Proof`, and route framing.
+  - `updateHUD()` and `renderForgeOverlay()` still over-explain the contract at the reward moment. Compared with the one-glance desirability of `Hades` boon picks, `Nova Drift` level-ups, or `Brotato` shops, this forge stack is still too wordy and too symmetric instead of forcing one obvious hunger spike.
+  - [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md) still carries stale `5-wave act curve` / `Wave 1-5` balance framing, which quietly keeps the project thinking in prototype-scale brackets while the playable is trying to become a `12-wave` release slice with room to scale further.
+  Top Priority: Rebuild the Wave 8 late-break forge around one oversized primary weapon/chassis mutation per path, demote support picks to clearly secondary rider choices, and make `Wave 9-10` show that mutation through visibly new firing geometry rather than two near-identical crossfire laps.
+  Why Now: If the player wants halos and drones more than the next main form, a longer run only amplifies the wrong fantasy.
+  Do Not Repeat: Do not answer this with another support module, route wrapper, or label cleanup that leaves the main-form payoff visually and functionally smaller than the accessories.
+  Release Gate: Builds
 
 - 2026-03-24 23:10:00 KST
   Findings:
@@ -1748,6 +1759,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 10:13:50 KST
+  Changed: rebuilt the `Wave 8` `Cataclysm Arsenal` payoff in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so it now creates an actual main-weapon monster form instead of just a larger generic late-field mutation. The late-break mutation card now explicitly sells a support-secondary contract, and choosing it grants a new support-independent cataclysm firing layer on top of the existing mutation package: `Wave 9-10` now read through a wider core-specific primary geometry with extra front fan shots, heavier core-specific stat spikes, and a larger rendered chassis silhouette that immediately changes how the player fills lanes before any support rider matters. I also extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new cataclysm fire pattern, the stronger late-break mutation trait read, and the lance-specific stat jump. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was no longer just more payoff space; it specifically called out that the late forge still made support fantasies easier to want than the next main form. The highest-value bounded interpretation was to deepen one existing late-break branch so the player immediately feels "my gun just became different" on `Wave 9-10`, rather than adding another rider or more wording around the same geometry.
+  Follow-up risk: `Cataclysm Arsenal` now lands much harder, but `Warplate Halo` and `Black Ledger Heist` can still read more like route/rider identities than equally screen-owning core-form mutations. If critique still says late build hunger is uneven, the next bounded pass should give those other Wave 8 branches their own visible primary weapon/body leap instead of adding more support spectacle. For reference direction, this silhouette-first payoff pass deliberately followed the immediate form-read hunger of `Nova Drift` level-ups, where the new firing shape is visible before any secondary system explanation.
+  Release Gate: Builds
 
 - 2026-03-24 23:35:00 KST
   Changed: recut the standard-route late combat staircase again in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the base `Wave 9-11` finally behaves like the critique's intended `huge payoff -> light squeeze -> first pursuit proof`. `Wave 9` now opens in a much larger payoff arena with a clearly reduced active cap and slower surge tax, `Wave 10` keeps that same open field but only adds one thinner relay corridor instead of jumping straight back to heavy closure work, and `Wave 11` becomes the first real pursuit ask in a slightly tighter proof arena rather than another crowded crossfire rinse. I mirrored the same curve into the shared late-act encounter pool so the standard late staircase and its shared override stop drifting apart, then extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new caps, arena sizes, and `Payoff Band -> Proof Rung -> Finale` summaries in place. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

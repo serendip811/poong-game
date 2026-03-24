@@ -8998,6 +8998,7 @@
       lateFieldMutationStatusNote: null,
       lateFieldMutationFirePattern: null,
       lateFieldBroadsideConfig: null,
+      lateBreakCataclysmFirePattern: null,
       lateFieldConvergenceId: null,
       lateFieldConvergenceLabel: null,
       lateFieldConvergenceTraitLabel: null,
@@ -9260,6 +9261,49 @@
         stats.chainRange = Math.max(stats.chainRange || 0, 172 + lateFieldMutationLevel * 10);
         if (lateFieldMutationLevel >= 3) {
           stats.bounce += 1;
+        }
+      }
+      if (build.lateBreakProfileId === "mutation" && lateFieldMutationLevel >= 4) {
+        const cataclysmOffsets =
+          core.id === "scatter"
+            ? [-0.34, -0.18, 0, 0.18, 0.34]
+            : core.id === "lance"
+              ? [-0.34, -0.18, 0, 0.18, 0.34]
+              : core.id === "ricochet"
+                ? [-0.58, -0.28, 0, 0.28, 0.58]
+                : [-0.62, -0.4, -0.18, 0.18, 0.4, 0.62];
+        stats.lateFieldMutationTraitLabel = `Cataclysm Arsenal · MK ${lateFieldMutationLevel}`;
+        stats.lateFieldMutationStatusNote =
+          `Wave 8 Cataclysm Arsenal이 주포 전면 갈퀴와 측면 포드를 한 번에 잠가 support 없이도 firing geometry가 바뀌었다. Wave 9-10 payoff band는 이 primary fan이 lane 둘을 동시에 오래 잠그는지 바로 증명한다.`;
+        stats.lateBreakCataclysmFirePattern = {
+          kind: "late_break_cataclysm",
+          offsets: cataclysmOffsets,
+          speedMultiplier: core.id === "lance" ? 1.26 : core.id === "ricochet" ? 1.1 : 1.14,
+          radius: core.id === "lance" ? 6.1 : core.id === "scatter" ? 5.2 : 5,
+          damageMultiplier:
+            core.id === "scatter"
+              ? 0.22 + lateFieldMutationLevel * 0.02
+              : 0.28 + lateFieldMutationLevel * 0.025,
+          life: core.id === "lance" ? 0.98 : 0.86,
+          pierceBonus: core.id === "lance" ? 1 : 0,
+          bounceBonus: core.id === "ricochet" ? 1 : 0,
+          chainBonus: core.id === "ricochet" ? 1 : 0,
+          color: "#fff0c9",
+        };
+        stats.damage += 4;
+        stats.cooldown = clamp(stats.cooldown * 0.94, 0.08, 0.4);
+        if (core.id === "ember") {
+          stats.projectileSpeed += 20;
+        } else if (core.id === "scatter") {
+          stats.pellets += 1;
+          stats.spread = round(stats.spread * 0.92, 3);
+        } else if (core.id === "lance") {
+          stats.pierce += 1;
+          stats.projectileSpeed += 28;
+        } else if (core.id === "ricochet") {
+          stats.chain += 1;
+          stats.bounce += 1;
+          stats.chainRange = Math.max(stats.chainRange || 0, 192);
         }
       }
     }
@@ -11216,9 +11260,9 @@
       verb: "변이",
       tag: "ARSENAL",
       title: "Cataclysm Arsenal",
-      description: `${CORE_DEFS[build.coreId].label}에 측면 배럴과 브로드사이드 포드를 한 번에 크게 증설해 Late Break 직후 실루엣을 바로 monster form으로 키운다. Wave 9-10은 열린 firing gallery payoff band로 lane sweep를 오래 즐기게 하고, Wave 11은 Crownbreaker proof로 pursuit 덩어리를 크게 꺾게 만들며, Wave 12에서만 final crownline breach를 직접 찢게 만든다.`,
+      description: `${CORE_DEFS[build.coreId].label}에 전면 cataclysm fan과 측면 브로드사이드 포드를 한 번에 잠가 support 없이도 주포 firing geometry를 monster form으로 갈아엎는다. 이번 pick의 rider는 보조 증폭일 뿐이고, 진짜 payoff는 Wave 9-10에서 주포가 열린 lane 둘을 동시에 잠그는 새 화망 자체다.`,
       roadmapDetail: "Wave 9-10 payoff band -> Wave 11 proof -> Wave 12 final breach",
-      slotText: `추가 배럴 +${barrelCount} · 브로드사이드 포드 확장 · payoff band -> proof -> finale`,
+      slotText: "cataclysm fan + 브로드사이드 포드 · 주포 우선 payoff band -> proof -> finale",
       cost: 34,
       laneLabel: "Main Weapon Mutation",
       forgeLaneLabel: "Main Weapon Mutation",
@@ -18292,6 +18336,7 @@
     fireWeaponPattern(weapon.afterburnOverdriveFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.afterburnDominionFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.lateFieldMutationFirePattern, weapon, baseAngle, driveActive);
+    fireWeaponPattern(weapon.lateBreakCataclysmFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.lateFieldConvergenceFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.illegalOverclockFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.riskMutationFirePattern, weapon, baseAngle, driveActive);
@@ -21685,6 +21730,63 @@
       context.lineTo(
         fin.x + Math.cos(facing) * (12 + level * 1.5),
         fin.y + Math.sin(facing) * (12 + level * 1.5)
+      );
+      context.stroke();
+    }
+    if (state.weapon.lateBreakCataclysmFirePattern) {
+      const cataclysmLanes = state.weapon.lateBreakCataclysmFirePattern.offsets || [];
+      cataclysmLanes.forEach((offset, index) => {
+        const lane = getOffsetPoint(
+          state.player.x,
+          state.player.y,
+          facing,
+          state.player.radius + 6,
+          offset * 34
+        );
+        if (state.weapon.core.id === "lance") {
+          context.fillStyle = `rgba(255, 240, 201, ${0.82 - index * 0.08})`;
+          context.fillRect(
+            lane.x - 2.8 - Math.sin(facing) * 6,
+            lane.y - 2.8 + Math.cos(facing) * 6,
+            5.6,
+            14 + level
+          );
+          return;
+        }
+        if (state.weapon.core.id === "ricochet") {
+          context.strokeStyle = `rgba(255, 238, 194, ${0.84 - index * 0.08})`;
+          context.lineWidth = 2;
+          context.beginPath();
+          context.arc(lane.x, lane.y, 4.5 + level * 0.25, 0, Math.PI * 2);
+          context.stroke();
+          return;
+        }
+        context.fillStyle = `rgba(255, 240, 201, ${0.8 - index * 0.06})`;
+        context.beginPath();
+        context.moveTo(
+          lane.x + Math.cos(facing) * (12 + level * 1.2),
+          lane.y + Math.sin(facing) * (12 + level * 1.2)
+        );
+        context.lineTo(
+          lane.x - Math.cos(facing) * 4 - Math.sin(facing) * 4 * Math.sign(offset || 1),
+          lane.y - Math.sin(facing) * 4 + Math.cos(facing) * 4 * Math.sign(offset || 1)
+        );
+        context.lineTo(
+          lane.x - Math.cos(facing) * 9 + Math.sin(facing) * 4 * Math.sign(offset || 1),
+          lane.y - Math.sin(facing) * 9 - Math.cos(facing) * 4 * Math.sign(offset || 1)
+        );
+        context.closePath();
+        context.fill();
+      });
+      context.strokeStyle = "rgba(255, 244, 214, 0.76)";
+      context.lineWidth = 2.2;
+      context.beginPath();
+      context.arc(
+        state.player.x,
+        state.player.y,
+        state.player.radius + 18 + Math.sin(performance.now() * 0.022) * 1.4,
+        facing - 0.92,
+        facing + 0.92
       );
       context.stroke();
     }
