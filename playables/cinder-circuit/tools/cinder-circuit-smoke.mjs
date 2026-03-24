@@ -228,6 +228,18 @@ assert.equal(lockgridEscalation.bandId, "lockgrid_hunt");
 assert.ok(lockgridPayoff.activeCap < lockgridEscalation.activeCap);
 assert.ok(lockgridPayoff.spawnBudget < lockgridEscalation.spawnBudget);
 assert.ok(lockgridPayoff.hazard.count <= lockgridEscalation.hazard.count);
+const lateRoutePayoffBeat = game.getStandardLateRouteBeatSummary(lateCacheBuild, 9);
+const lateRouteProofBeat = game.getStandardLateRouteBeatSummary(lateCacheBuild, 11);
+const lateRouteFinaleBeat = game.getStandardLateRouteBeatSummary(lateCacheBuild, 12);
+assert.equal(lateRoutePayoffBeat.label, "Payoff Band");
+assert.ok(lateRoutePayoffBeat.detail.includes("Lockgrid Hunt"));
+assert.equal(lateRouteProofBeat.label, "Proof Rung");
+assert.ok(lateRouteProofBeat.detail.includes("Starforge Pursuit"));
+assert.equal(lateRouteFinaleBeat.label, "Finale");
+assert.ok(lateRouteFinaleBeat.detail.includes("Cinder Crown"));
+const lateRouteProofWindow = game.getImmediateProofWindowSummary(lateCacheBuild, 11);
+assert.equal(lateRouteProofWindow.label, "Proof Rung");
+assert.ok(lateRouteProofWindow.detail.includes("Starforge Pursuit"));
 
 const mutationLateBandBuild = game.createInitialBuild("scrap_pact");
 const mutationLateBreakChoices = game.buildForgeChoices(mutationLateBandBuild, Math.random, 999, { nextWave: 9 });

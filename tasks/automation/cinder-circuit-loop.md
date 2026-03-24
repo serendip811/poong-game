@@ -13,7 +13,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: lock one canonical standard-route `Wave 9-12` arc with a clean forge/HUD contract and a real late-form domination lap before any more route or support expansion.
+- Immediate priority: strip branch/admin scaffolding out of the standard-route forge/HUD flow so `Wave 8-12` reads as one canonical late-form staircase before any more route or support expansion.
 
 ## Release Gates
 
@@ -40,6 +40,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 22:18:00 KST
+  Findings:
+  - The standard route is still not presented like one finished ladder. `maybeAdvancePhase()`, `getActiveForgeModeLabel()`, and the combat feed still leak `Architecture Draft`, `Bastion Draft`, `Field Cache`, and `Live Ascension`, so the player is reading internal routing logic instead of a craveable run contract.
+  - Act 3 still lacks one memorable rerun-worthy shape because `Wave 8 -> 12` can branch through live ascension, ownership skip, caches, and proof wrappers before the late form is even felt. That creates route administration, not the clean payoff/proof/finale memory a strong action roguelite needs.
+  - The late wave numbers are more reasonable than the old crushed version, but the emotional read is still weak: the player is asked to parse exception handling and lane labels around the exact moment that should sell “my build just became monstrous.”
+  - Support and side-system spectacle still lands faster than the core chassis fantasy. Orbitals, halos, and helper systems remain easier to want than the main gun/body staircase because they advertise payoff immediately while the primary path is buried under contract language.
+  Top Priority: Remove branch/admin labels and exception lanes from the standard-route player-facing flow so `Wave 8-12` always resolves into one visible late-form staircase: payoff band, proof rung, finale.
+  Why Now: Until the base route is remembered as one clean power arc, longer progression and extra systems will keep reading like prototype scaffolding.
+  Do Not Repeat: Stop renaming route machinery as new “break” moments unless the underlying branch logic is actually gone.
+  Release Gate: UX/UI
 
 - 2026-03-24 21:42:00 KST
   Findings:
@@ -1717,6 +1728,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 22:40:00 KST
+  Changed: tightened the standard-route late-form contract in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the base Act 3 player-facing flow now names only the three remembered beats the critique asked for: `Payoff Band`, `Proof Rung`, and `Finale`. I added a shared late-route summary helper, then routed the standard `Wave 8` forge callout, the wave-clear transition copy, and the base-route `Next Proof` summary through it so `Wave 9-12` stops reading like internal band/admin labels first and instead reads like one clean late staircase with the underlying band name demoted into the detail line. I also extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert those late-route labels and the rewritten proof-window contract. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was still specifically about removing branch/admin read from the standard-route player-facing flow so `Wave 8-12` lands as payoff band, proof rung, finale. The highest-value bounded interpretation was to finish the late-route naming contract itself instead of adding more systems or another balance pass, because the game already had the staircase shape but was still describing it through internal route nouns.
+  Follow-up risk: the late staircase is cleaner in HUD/forge/transition language now, but some deeper combat-feed or per-choice copy can still mention cache/ascension concepts when special mechanics are active off the main presentation path. If critique still finds prototype leakage, the next bounded pass should sanitize those remaining per-event strings on the consolidated route rather than widen the system surface again. For reference direction, this UI wording pass deliberately followed the appetite-first brevity of `Hades` boon headers and the future-form chase framing in `Nova Drift`, where the phase name is memorable and the deeper system label is secondary.
+  Release Gate: UX/UI
 
 - 2026-03-24 22:10:00 KST
   Changed: recut the standard base-route Act 3 staircase in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the late form now gets a longer ownership lap before the finale. The canonical `Wave 9-12` curve and the shared late-act override both now read as a real `payoff band -> proof -> final breach`: `Wave 9-10` stay in a lighter hunt band with lower active caps, thinner hazard tax, and a slightly larger Act 3 arena, while `Wave 11` becomes the first real pursuit proof and `Wave 12` keeps the only full breach squeeze. I also updated the late-break roadmap/cadence copy in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the standard route now explicitly promises `Wave 9-10 payoff band -> Wave 11 proof -> Wave 12 finale`, and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the larger Act 3 field, the softer two-wave payoff band, and the revised late-break roadmap wording. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

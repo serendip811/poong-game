@@ -13361,7 +13361,9 @@
     getDoctrineCapstoneDef,
     getBuildRoadmap,
     getForgeEraPlan,
+    getImmediateProofWindowSummary,
     getLateAscensionDef,
+    getStandardLateRouteBeatSummary,
     getDoctrinePursuitCapstoneDef,
     getCatalystCapstone,
     shouldOpenForgePackage,
@@ -13682,10 +13684,45 @@
 
   function getImmediateProofWindowSummary(build, waveNumber = 1) {
     const boundedWave = clamp(Math.round(waveNumber || 1), 1, MAX_WAVES);
+    const lateRouteBeat = getStandardLateRouteBeatSummary(build, boundedWave);
+    if (lateRouteBeat) {
+      return {
+        label: lateRouteBeat.label,
+        detail: lateRouteBeat.detail,
+      };
+    }
     const resolvedWave = resolveWaveConfig(boundedWave - 1, build);
     return {
       label: resolvedWave.bandLabel || resolvedWave.label,
       detail: resolvedWave.directive || resolvedWave.note || "다음 전투에서 변형이 바로 증명된다.",
+    };
+  }
+
+  function getStandardLateRouteBeatSummary(build, waveNumber = 1) {
+    if (!CONSOLIDATED_12_WAVE_ROUTE) {
+      return null;
+    }
+    const boundedWave = clamp(Math.round(waveNumber || 1), 1, MAX_WAVES);
+    if (boundedWave < 9 || boundedWave > 12) {
+      return null;
+    }
+    const resolvedWave = resolveWaveConfig(boundedWave - 1, build);
+    const bandLabel = resolvedWave.bandLabel || resolvedWave.label;
+    if (boundedWave <= 10) {
+      return {
+        label: "Payoff Band",
+        detail: `${bandLabel}에서 잠근 late form이 화면 점유와 greed line을 넓힌다.`,
+      };
+    }
+    if (boundedWave === 11) {
+      return {
+        label: "Proof Rung",
+        detail: `${bandLabel}에서 locked form이 pursuit 압박을 실제로 버텨 내는지 증명한다.`,
+      };
+    }
+    return {
+      label: "Finale",
+      detail: `${bandLabel}에서 이번 run의 마지막 breach를 닫는다.`,
     };
   }
 
@@ -15595,6 +15632,9 @@
     state.supportDeployables = [];
     state.player.heat = Math.max(0, state.player.heat - 20);
     state.player.overheated = false;
+    const lateRoutePayoff = getStandardLateRouteBeatSummary(state.build, 9);
+    const lateRouteProof = getStandardLateRouteBeatSummary(state.build, 11);
+    const lateRouteFinale = getStandardLateRouteBeatSummary(state.build, 12);
     pushCombatFeed(
       isFinalForge
         ? CONSOLIDATED_12_WAVE_ROUTE
@@ -15602,7 +15642,7 @@
           : "최종 웨이브 정리 완료. 마지막 포지에서 최종 각인과 7연속 afterburn survival ladder의 시작 형태를 마감한다."
         : isLateBreakArmory(forgeOptions)
           ? CONSOLIDATED_12_WAVE_ROUTE
-            ? "Wave 8 돌파. 이번 포지는 Current Form 위에 Main Leap 하나만 크게 올린다. Next Proof는 Wave 9-10 payoff band 뒤 Wave 11 proof, Wave 12 finale로 바로 이어진다."
+            ? `Wave 8 돌파. 이번 포지는 Current Form 위에 Main Leap 하나만 크게 올린다. 이후 ${lateRoutePayoff ? lateRoutePayoff.label : "Payoff Band"}를 지나 ${lateRouteProof ? lateRouteProof.label : "Proof Rung"}, ${lateRouteFinale ? lateRouteFinale.label : "Finale"}로 곧장 꺾인다.`
             : state.build.auxiliaryJunctionLevel > 0
               ? "Wave 8 돌파. Late Break Armory를 단일 breakpoint로 재절단했다. 이제 정확히 세 장만 뜨며, Cataclysm Arsenal, Warplate Halo, Black Ledger Heist 중 하나를 고르면 Wave 9-10은 payoff band, Wave 11은 그 선택 전용 proof, Wave 12는 최종 finale로 꺾인다."
               : "Wave 8 돌파. Late Break Armory를 단일 breakpoint로 재절단했다. 이제 정확히 세 장만 뜨며, Cataclysm Arsenal, Warplate Halo, Black Ledger Heist 중 하나를 고르면 Wave 9-10은 payoff band, Wave 11은 그 선택 전용 proof, Wave 12는 최종 finale로 꺾인다."
@@ -19734,6 +19774,7 @@
         state.hazards = [];
         state.stats.wavesCleared = state.waveIndex + 1;
         const nextWave = state.waveIndex + 2;
+        const nextLateRouteBeat = getStandardLateRouteBeatSummary(state.build, nextWave);
         const enteringAfterburn =
           !CONSOLIDATED_12_WAVE_ROUTE && state.waveIndex >= MAX_WAVES - 1;
         const nextPhaseLabel = state.wave.completesRun
@@ -19745,7 +19786,9 @@
               shouldRunDoctrineLiveAscension(state.build, nextWave) ||
               shouldSkipOwnershipAdminStop(state.build, nextWave) ||
               shouldUseFieldGrant({ nextWave, finalForge: false })
-              ? `Wave ${nextWave}`
+              ? nextLateRouteBeat
+                ? nextLateRouteBeat.label
+                : `Wave ${nextWave}`
               : "포지 브레이크"
             : enteringAfterburn
               ? "Act 4 · Afterburn"
