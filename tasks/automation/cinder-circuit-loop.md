@@ -49,6 +49,17 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-24 11:30:38 KST
+  Findings:
+  - The default run still is not a clean shipping ladder. [`maybeAdvancePhase()`](playables/cinder-circuit/game.js) continues to route the player through `Live Ascension`, `Ownership Relay`, `Architecture Draft`, `Bastion Draft`, field grants, and `Afterburn` carryover, so the base run still feels like branch administration instead of one rerunnable `Wave 1-12` contract.
+  - The project is still feeding itself prototype-scale pacing from the docs. [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md) still teaches a `5-wave act curve` and `Wave 1-5` balance table, which directly undermines the longer escalation discipline the release goal and current stage now demand.
+  - HUD and forge presentation are still too verbal at the moment that should create appetite. `updateHUD()` and `renderForgeOverlay()` stack `Route Beat`, `Current Form`, `Next Fight`, `Route Contract`, support track, and proof copy together; compared with the one-dominant-reward hierarchy in `Hades`, `Nova Drift`, or `Brotato`, this is still making the player parse the system before wanting the mutation.
+  - Core growth still is not the clearest rerun fantasy. `SUPPORT_SYSTEM_DEFS` and the surrounding route copy continue to advertise halos, drones, missiles, bays, and rider tracks more cleanly than the main gun/body silhouette jump, so the run still risks feeling front-loaded and accessory-led instead of starting lean and earning spectacle.
+  Top Priority: Remove all non-shipping route language from the default path and reward surfaces, then make the base run communicate only one ladder: `Wave 3 core lock -> Wave 6 chassis lock -> Wave 8 one oversized late-form pick -> Wave 9-10 proof -> Wave 11-12 finish`.
+  Why Now: Until the player can read one clean hunger curve without branch jargon, longer escalation will just magnify prototype debt.
+  Do Not Repeat: Do not spend the next pass on another support option, route exception, or wording pass that leaves the default run structurally branchy.
+  Release Gate: Progression
+
 - 2026-03-24 11:00:50 KST
   Findings:
   - The base route still is not a shipping route. [`maybeAdvancePhase()`](playables/cinder-circuit/game.js) continues to thread `Live Ascension`, `Ownership Relay`, `Architecture Draft`, `Bastion Draft`, field grants, and `Afterburn` awareness through the normal flow, so the run still reads like a branch router instead of one replayable ladder.
@@ -1783,6 +1794,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 11:42:30 KST
+  Changed: rebuilt the default-route HUD and forge contract in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) around one visible `12-Wave Ladder` instead of route-admin phrasing. The build roadmap card now always shows the shipping staircase `Wave 3 core lock -> Wave 6 chassis break -> Wave 8 late form -> Wave 9-10 proof -> Wave 11-12 finish`, while the active-core HUD pills and forge focus card were relabeled from `Route Beat / Current Form / Next Fight / Route Contract` to `Run Ladder / Locked Form / Next Gate / Run Contract` so the player reads one ladder and one current form before anything else. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to make the base run communicate one clean shipping ladder on reward surfaces instead of more branch jargon. The highest-value bounded interpretation was to collapse the main HUD/forge hierarchy onto that ladder, because those are the surfaces the player rereads every wave and they were still acting like a control console.
+  Follow-up risk: the main reward surface is cleaner now, but wave-clear feed text and some underlying choice descriptions can still leak `Architecture Draft`, `Bastion Draft`, `Ownership Relay`, or other prototype route nouns when special logic fires. If critique still says the route feels branchy, the next bounded pass should sanitize those remaining event strings on the consolidated path rather than add another system. For UI direction, this pass deliberately followed the single-dominant-reward hierarchy of `Hades` boon screens and `Nova Drift` level-up panels, where one promise owns the pause and the rest becomes supporting context.
+  Release Gate: Progression
 
 - 2026-03-24 11:14:53 KST
   Changed: tightened the consolidated-route presentation contract in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the default `Wave 1-12` run now names its forge beats through shipping-route milestones instead of generic or branch-facing wrappers. I added a shared base-route stage helper and routed wave-clear transitions, the forge banner/mode labels, the featured-card badge, the active-form HUD pills, and the forge focus card through it, so the player now reads `Core Lock`, `Chassis Break`, `Late Form`, `Proof Loadout`, and `Final Seal` where the old pass still said `Main Leap` / `Next Proof` or otherwise implied draft-style routing. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

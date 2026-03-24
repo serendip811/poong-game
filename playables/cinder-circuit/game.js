@@ -7829,6 +7829,102 @@
     `;
   }
 
+  function getShippingLadderSteps(build, weapon = null, waveNumber = 1) {
+    const boundedWave = clamp(Math.round(waveNumber || 1), 1, MAX_WAVES);
+    const currentWeapon = weapon || computeWeaponStats(build);
+    const dominantForm = getDominantFormSummary(build, currentWeapon, boundedWave);
+    const nextBreakpoint = getNextBreakpointSummary(build, currentWeapon, boundedWave);
+    const lateBreakHeadline = getLateBreakHeadline(build && build.lateBreakProfileId);
+    const chassis = getChassisBreakpointDef(build);
+    const stageState = (start, end = start) => {
+      if (boundedWave > end) {
+        return "locked";
+      }
+      if (boundedWave >= start) {
+        return "live";
+      }
+      return boundedWave + 1 >= start ? "primed" : "planned";
+    };
+    return [
+      {
+        label: "W3",
+        title: "Core Lock",
+        state: stageState(3),
+        detail:
+          boundedWave >= 3
+            ? `${dominantForm.label}로 초반 주포 실루엣을 잠갔다.`
+            : `${nextBreakpoint.label} 한 장으로 초반 주포 실루엣을 먼저 고정한다.`,
+      },
+      {
+        label: "W6",
+        title: "Chassis Break",
+        state: stageState(6),
+        detail: chassis
+          ? `${chassis.label} 차체로 hold, dive, exit 리듬을 갈라 놓는다.`
+          : "Wave 6에서 첫 차체 break를 붙여 근접 압박을 버티는 몸을 만든다.",
+      },
+      {
+        label: "W8",
+        title: "Late Form",
+        state: stageState(8),
+        detail: lateBreakHeadline
+          ? `${lateBreakHeadline.title} 하나만 크게 골라 후반 실루엣을 고정한다.`
+          : "Wave 8에서 oversized late-form 하나만 골라 후반 실루엣을 고정한다.",
+      },
+      {
+        label: "W9-10",
+        title: "Proof",
+        state: stageState(9, 10),
+        detail: "새 화망과 차체가 화면 점유 시간을 실제로 늘리는지 바로 증명한다.",
+      },
+      {
+        label: "W11-12",
+        title: "Finish",
+        state: stageState(11, 12),
+        detail: "같은 형태를 유지한 채 마지막 압박을 닫고 런을 봉인한다.",
+      },
+    ];
+  }
+
+  function getShippingLadderFocus(build, weapon = null, waveNumber = 1) {
+    const steps = getShippingLadderSteps(build, weapon, waveNumber);
+    return (
+      steps.find((step) => step.state === "live") ||
+      steps.find((step) => step.state === "primed") ||
+      steps[steps.length - 1]
+    );
+  }
+
+  function createShippingLadderMarkup(build, weapon = null, waveNumber = 1) {
+    const boundedWave = clamp(Math.round(waveNumber || 1), 1, MAX_WAVES);
+    const act = getActLabelForWave(boundedWave);
+    const steps = getShippingLadderSteps(build, weapon, boundedWave);
+    const focus = getShippingLadderFocus(build, weapon, boundedWave);
+    return `
+      <div class="summary-head">
+        <strong>12-Wave Ladder</strong>
+        <span class="summary-chip ${focus.state === "live" ? "summary-chip--hot" : ""}">${act.shortLabel}</span>
+      </div>
+      <p class="summary-copy roadmap-card__path">Wave 3 core lock -> Wave 6 chassis break -> Wave 8 late form -> Wave 9-10 proof -> Wave 11-12 finish.</p>
+      <div class="roadmap-card__steps">
+        ${steps
+          .map(
+            (step) => `
+              <article class="roadmap-step" data-state="${step.state}">
+                <span class="roadmap-step__state">${step.label}</span>
+                <div>
+                  <strong>${step.title}</strong>
+                  <p>${step.detail}</p>
+                </div>
+              </article>
+            `
+          )
+          .join("")}
+      </div>
+      <p class="summary-note">${focus.title}: ${focus.detail}</p>
+    `;
+  }
+
   function getNextLateFieldBreakpointWave(waveNumber, offset = 0) {
     let candidate = Math.max(
       LATE_FIELD_CACHE_START_WAVE,
@@ -8325,6 +8421,9 @@
     options = {}
   ) {
     const boundedWave = clamp(Math.round(waveNumber || 1), 1, MAX_WAVES);
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
+      return createShippingLadderMarkup(build, weapon, boundedWave);
+    }
     const currentWeapon = weapon || computeWeaponStats(build);
     const dominantForm = getDominantFormSummary(build, currentWeapon, boundedWave);
     const nextBreakpoint = getNextBreakpointSummary(build, currentWeapon, boundedWave);
@@ -19996,6 +20095,7 @@
     const nextBreakpoint = getNextBreakpointSummary(state.build, weapon, state.waveIndex + 1);
     const proofWindow = getImmediateProofWindowSummary(state.build, state.waveIndex + 1);
     const supportTrack = getForgeSupportTrackSnapshot(state.build, state.supportSystem);
+    const ladderFocus = getShippingLadderFocus(state.build, weapon, state.waveIndex + 1);
     const headlineLabel =
       weapon.afterburnDominionLabel ||
       weapon.afterburnOverdriveLabel ||
@@ -20018,16 +20118,16 @@
         <div class="mini-pill-row">
           ${
             baseRouteForgeActive
-              ? createMiniPill("Route Beat", baseRouteForgeStage ? baseRouteForgeStage.label : "Forge Break", "hot") +
-                createMiniPill("Current Form", dominantForm.label, "hot") +
-                createMiniPill("Next Fight", proofWindow.label, "cool")
+              ? createMiniPill("Run Ladder", baseRouteForgeStage ? baseRouteForgeStage.label : "Forge Break", "hot") +
+                createMiniPill("Locked Form", dominantForm.label, "hot") +
+                createMiniPill("Next Gate", proofWindow.label, "cool")
               : createMiniPill(getHeadlineFormTierLabel(getHeadlineFormTier(state.build)), headlineLabel, "hot") +
                 createMiniPill("Rider", supportTrack.label, "cool")
           }
         </div>
         <p class="summary-note">${
           baseRouteForgeActive
-            ? `${baseRouteForgeStage ? baseRouteForgeStage.label : "Forge Break"}. ${dominantForm.label}를 유지한 채 다음 싸움 ${proofWindow.label}만 먼저 읽게 만든다.`
+            ? `${ladderFocus.title}. ${dominantForm.label}를 유지한 채 다음 관문 ${proofWindow.label}만 먼저 읽게 만든다.`
             : `${nextBreakpoint.label}이 다음 monster-form jump다. ${supportTrack.label}는 rider로만 짧게 남기고, ${proofWindow.label}에서 바로 space ownership를 증명한다.`
         }</p>
       `;
@@ -20168,8 +20268,9 @@
     const baseRouteForgeStage = useBaseRouteContract
       ? getBaseRouteForgeStage(state, state.waveIndex + 2)
       : null;
+    const ladderFocus = getShippingLadderFocus(state.build, state.weapon, state.waveIndex + 2);
     const focusEyebrow = useBaseRouteContract
-      ? "Route Beat"
+      ? "12-Wave Ladder"
       : state.pendingFinalForge
         ? "Final Form"
         : riderStep
@@ -20210,7 +20311,7 @@
         <p>${focusPrompt}</p>
         <div class="status-list">
           ${createStatusRow(
-            useBaseRouteContract ? "Route Beat" : "Headline Mutation",
+            useBaseRouteContract ? "This Stop" : "Headline Mutation",
             useBaseRouteContract
               ? (baseRouteForgeStage ? baseRouteForgeStage.label : "Forge Break")
               : riderStep || state.pendingFinalForge
@@ -20219,7 +20320,7 @@
           )}
           ${createStatusRow(
             useBaseRouteContract
-              ? "Current Form"
+              ? "Locked Form"
               : "Secondary Rider",
             useBaseRouteContract
               ? dominantFormSummary.label
@@ -20227,17 +20328,17 @@
                 ? focusTitle
                 : activeSupportTrack.label
           )}
-          ${createStatusRow(useBaseRouteContract ? "Next Fight" : "Immediate Ask", proofWindow.label)}
+          ${createStatusRow(useBaseRouteContract ? "Next Gate" : "Immediate Ask", proofWindow.label)}
         </div>
         <p class="forge-focus__proof"><span>${
-          useBaseRouteContract ? "Route Contract" : state.pendingFinalForge ? "Route Payoff" : "Next Proof"
+          useBaseRouteContract ? "Run Contract" : state.pendingFinalForge ? "Route Payoff" : "Next Proof"
         }</span>${
           useBaseRouteContract
             ? state.pendingFinalForge
               ? `${baseRouteForgeStage ? baseRouteForgeStage.label : "Final Seal"}로 ${dominantFormSummary.label}를 이번 런의 마지막 실루엣으로 봉인한다.`
               : riderStep
                 ? `${baseRouteForgeStage ? baseRouteForgeStage.label : "Proof Loadout"}에서는 ${focusTitle}를 얹고, ${proofWindow.label}에서 화면 점유 시간을 늘린다.`
-                : `${baseRouteForgeStage ? baseRouteForgeStage.label : "Forge Break"}에서는 ${focusTitle}를 먼저 잠그고, ${proofWindow.label}에서 바로 전장 소유를 증명한다.`
+                : `${baseRouteForgeStage ? baseRouteForgeStage.label : "Forge Break"}에서는 ${focusTitle}를 먼저 잠그고, ${ladderFocus.title} 구간의 다음 관문 ${proofWindow.label}에서 바로 전장 소유를 증명한다.`
             : state.pendingFinalForge
               ? `${dominantFormSummary.label}를 메인 12-wave route의 최종 실루엣으로 봉인한다.`
               : riderStep

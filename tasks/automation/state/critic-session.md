@@ -12,7 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate remains `Progression`: the project still has not locked one default `Wave 1-12` shipping staircase, and critique is starting to loop because of it.
-- Repeated false solution: adding support spectacle, route variants, or label cleanup before the base run is reduced to `Wave 3 gun lock -> Wave 6 body lock -> Wave 8 late-form break -> Wave 9-10 distinct proof beats`.
-- Watch for stale design docs reintroducing prototype-scale framing, especially any `5-wave` bracket language that weakens the long-run escalation target.
-- Keep pressing for consolidation over expansion until the main weapon/body ladder is more desirable than orbitals, halos, missiles, or helper systems.
+- The most fragile gate is still `Progression`: the base route remains too branchy in flow, docs, and HUD language to read like one shipping `Wave 1-12` ladder.
+- Repeated false solution: adding support spectacle, route exceptions, or copy cleanup before the default run is reduced to `Wave 3 core lock -> Wave 6 chassis lock -> Wave 8 late-form break -> Wave 9-10 proof -> Wave 11-12 finish`.
+- Keep watching for stale prototype framing in docs, especially any `5-wave` pacing model or short-run balance table that weakens the long escalation target.
+- Keep pushing appetite-first presentation: if the player has to read `Route Beat`, `Current Form`, `Next Fight`, and rider/support taxonomy before wanting the reward, the UI is still below release-grade references.
+- Keep pressing for core gun/body hunger over halos, drones, missiles, orbitals, or extra bays; the run should start lean and visibly earn those layers later.
