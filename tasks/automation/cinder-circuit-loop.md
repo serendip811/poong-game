@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: lock the project to one shippable `Wave 1-12` contract by deleting remaining `5-wave` teaching, demoting `Afterburn`/draft/admin framing from the base route, and making late-wave rewards/HUD read as one craveable core-form ladder with real defense and greed branches.
+- Immediate priority: canonize one finished `Wave 1-12` shipping contract across docs and live presentation by deleting the stale `5-wave` tuning grammar, removing `Afterburn` from the base-run fantasy, and making Act 3 rewards/finale cash out one visible core-form ladder with real defense and greed branches.
 
 ## Release Gates
 
@@ -48,6 +48,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 15:00:41 KST
+  Findings:
+  - The project is still balancing two different endgames. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) defines a complete `Wave 1-12` run with room to grow toward `20-30 waves`, but [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md) still teaches a `Wave 1-5` bracket, `Wave 1-5` failure model, and `Wave 4-5` late-game balance targets, so the tuning reference is still prototype-short.
+  - The live game still tells the player that the real monster form lives after the current ending. [`POST_CAPSTONE_WAVE_COUNT`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1314), [`POST_CAPSTONE_WAVE_LABELS`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1319), and the `Afterburn` dominion text around late-body upgrades keep the most dramatic chassis promises outside the supposed shipped `Wave 12` contract.
+  - Act 3 spacing is better, but the payoff grammar is still uneven. [`Wave 9 · Lockgrid`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L987) and [`Wave 11 · Starforge`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1069) finally give the build room to breathe, then [`Wave 12 · Cinder Crown`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1110) jumps back to `activeCap: 40` with relay, ignition, lancer, binder, and brander pressure stacked together. That still reads like a tax pile, not a final expression of the form the player spent the run building.
+  - The forge/HUD contract is cleaner than before, but it still over-explains the run at the exact moment desire should land. [`updateHUD()`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20120) and [`renderForgeOverlay()`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20371) still lean on `12-Wave Ladder`, `Run Ladder`, `Next Gate`, `Immediate Ask`, and proof-contract phrasing. Strong references like `Hades`, `Nova Drift`, and `Brotato` win here by showing one appetizing mutation first and trusting combat to teach the rest.
+  - Late weapon forms still undersell their own independence. [`LATE_ASCENSION_DEFS`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L5288) repeatedly describes the payoff as stronger when `support bay` count rises, which keeps the support layer sounding like the real prize instead of the main gun/body transformation being enough to carry anticipation by itself.
+  Top Priority: Rewrite the source-application/tuning contract and the shipped late-form promise so `Wave 12` is the strongest visible payoff in the current game, not a doorway to `Afterburn`, and tune the finale around one readable breach test instead of a full tax return.
+  Why Now: Until the current clear feels like a complete destination, longer progression and richer builds will still read like promises for a future game.
+  Do Not Repeat: Do not answer this with more late-form labels, more proof-copy wrappers, or more support-dependent spectacle.
+  Release Gate: Progression
 
 - 2026-03-24 14:30:34 KST
   Findings:
@@ -1864,6 +1876,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 15:11:29 KST
+  Changed: retuned the shipped base-route finale in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 12 · Cinder Crown` now closes as one readable `crownline breach` instead of a full tax return. The base wave and shared late-act override both now use a slightly larger arena, a lower `activeCap` (`35` instead of `39-40`), thinner relay density, and much lighter `binder`/`mortar` pressure, while the late-band summary copy now describes `Wave 12` as a single corridor-cashout rather than `relay + ignition + everything` piled together. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so smoke locks the softer finale cap, larger finale arena, and reduced relay count. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` asked for the shipped late-form promise to end at `Wave 12` and for the finale to read as one readable breach test instead of a stacked tax exam. The highest-value bounded interpretation was to change the finale battlefield itself, because that directly improves the release-feeling payoff without widening scope into docs, HUD copy, or new systems.
+  Follow-up risk: `Wave 12` now cashes out more cleanly, but the broader run still keeps post-capstone `Afterburn` scaffolding and some stale source-application tuning references alive. If critique still says the current clear feels like a doorway to a future game, the next bounded pass should retire or hide those remaining post-`Wave 12` promises rather than adding another combat branch.
+  Release Gate: Progression
 
 - 2026-03-24 20:35:00 KST
   Changed: tightened the consolidated `Wave 1-12` route copy in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the base run now presents only shipping-beat labels and appetite-first promises at transition moments. `enterArchitectureDraft()`, `enterBastionDraft()`, `enterFieldGrant()`, `enterCatalystDraft()`, `getActiveForgeModeLabel()`, `maybeAdvancePhase()`, `updateHUD()`, and `renderForgeOverlay()` now speak in `Core Lock / Chassis Break / Field Break / Late Form / Forge Break / Final Seal` terms, while the consolidated combat-feed and forge/HUD notes stop leaking `Architecture Draft`, `Bastion Draft`, `Ownership Relay`, and `Live Ascension` as the primary read. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

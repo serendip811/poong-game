@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is `Rewards`: the run still explains branch structure and future scope harder than it sells the next mutation.
-- Repeated false solution: answering clarity problems with more route labels, support spectacle, or future-expansion framing instead of making the base `Wave 1-12` loop feel complete.
-- Keep pressure on stale prototype framing in docs, especially the `5-wave` biome bracket and any `Wave 1-5` balance table that fights the three-era contract.
-- Keep watching `Afterburn`, draft, cache, and admin copy in the live HUD/forge contract; if those stay prominent, the player will read governance before desire.
-- Late combat is closer to a real payoff ladder, but `Wave 12` still risks reading like "all taxes return" instead of the final expression of the built form.
+- The most fragile gate is `Progression`: the docs and live game still disagree on whether the shipped run ends at `Wave 5`, `Wave 12`, or after `Afterburn`.
+- Repeated false solution: cleaning wording without deleting the underlying future-run promise; if `Afterburn` still holds the strongest forms, the base clear still feels provisional.
+- Keep pressure on stale `Wave 1-5` tuning tables and failure targets in [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md); they quietly drag the game back toward prototype pacing.
+- Keep watching `Wave 12` pressure stacking. If the finale keeps restoring every tax at once, the run will end as an exam instead of a payoff.
+- Keep calling out support-led hunger when late-form descriptions depend on `support bay` count to sound exciting; the main chassis/weapon leap needs to sell itself first.
