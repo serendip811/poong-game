@@ -12,7 +12,7 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Builds`: support systems still advertise clearer desire and payoff than the main weapon/chassis ladder.
-- Repeated false solution: cleaning route/admin wording without making the core form evolution more visible, stronger, and easier to crave than the accessories.
-- Late-route structure is improved, but `Wave 9-10` still risks reading like one repeated crossfire ecology instead of a real power-climb showcase.
-- Watch for stale docs or balance notes that still frame the game like a `5-wave` prototype instead of a `12-wave` release slice with a longer-term escalation ceiling.
+- The most fragile gate is now `Progression`, with `Builds` tied to it: the base route still front-loads support/system spectacle and leaks branch/post-capstone exceptions before the main form ladder becomes craveable.
+- Repeated false solution: cleaning labels or adding another route variant without delaying early support-bay completeness and without cutting `Live Ascension` / `Ownership Relay` / `Afterburn` logic out of the shipping spine.
+- Watch for `Wave 3` and `Wave 8` handing out too much visual completeness too early; the run should earn helpers, orbitals, shields, and extra bays later.
+- Late-route structure still needs a wider escalation grammar than `Lockgrid` -> `Scrapline` crossfire repetition if the game wants a believable `20-30 wave` future.

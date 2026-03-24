@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: re-center `Wave 8-12` on one visible primary weapon/chassis evolution ladder that clearly outranks support spectacle and admin wording, so the late run sells a craveable main-form payoff before any extra branch or utility layer.
+- Immediate priority: strip standard-route branch/post-capstone exceptions and rebuild the `Wave 1-12` spine around a smaller opening chassis, one dominant main-form ladder, and a cleaner late payoff/proof/finale staircase.
 
 ## Release Gates
 
@@ -48,6 +48,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 23:59:00 KST
+  Findings:
+  - The shipping spine is still not actually locked. `maybeAdvancePhase()` keeps standard-route logic entangled with `Live Ascension`, ownership skip, `Architecture Draft`, `Bastion Draft`, field grants, and full `Afterburn` continuation, so the player-facing run still feels like a routing hub for future branches instead of one release-feeling `Wave 1-12` ladder.
+  - The run starts too system-complete for the fantasy it wants. `Wave 3` doctrine lock can already hand out a weapon mutation, chassis, third support bay flex lane, and even an off-doctrine system, which front-loads spectacle and management before the player has earned later orbit/shield/helper layers.
+  - Build hunger is still inverted versus strong repeat-run references. `SUPPORT_SYSTEM_DEFS` gives satellites, shield halos, drones, and missile-style helpers clear tier silhouettes and immediate visible payoff, while the core weapon/chassis staircase still leans on roadmap copy and contract framing to explain why the player should care.
+  - `Wave 9 · Lockgrid` and `Wave 10 · Scrapline` still share almost the same crossfire family, arena, and `activeCap 28 -> 29`, so the longer late route is structurally too narrow to prove a future `20-30 wave` ceiling. It extends time more than it expands combat grammar.
+  - `updateHUD()` and `renderForgeOverlay()` still read closer to a control console than to a craveable reward spike. Compared with the hierarchy in `Hades`, `Nova Drift`, or `Brotato`, too many labels survive on-screen at once, so desire lands after explanation instead of before it.
+  Top Priority: Recut the standard run so `Wave 1-8` locks core gun/body growth first and delays extra support-bay/off-doctrine spectacle until after the late-form break, while hiding all live-ascension/ownership/Afterburn exceptions from the base route presentation.
+  Why Now: If the player starts busy and the core ladder is never the clearest hunger target, a longer run will only feel flatter and more administrated.
+  Do Not Repeat: Do not answer this with another support module, another branch wrapper, or another wording pass that leaves the opening too complete and the late staircase too samey.
+  Release Gate: Progression
 
 - 2026-03-24 23:55:00 KST
   Findings:
@@ -1760,6 +1772,12 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Improvement
 
+- 2026-03-24 23:59:00 KST
+  Changed: restaged the standard early doctrine ladder in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 3-6` no longer hands out a near-finished machine before the late break. `Architecture Draft` now locks only the core gun/doctrine form at `Wave 3`, while `Wave 6 Ascension` upgrades that path into a weapon-plus-chassis break without also opening a third support bay, flex lane, or off-doctrine system. I updated the affected forge-preview rows and instant-draft combat-feed copy to sell the new `gun first -> chassis second -> support spectacle at Wave 8` contract, then extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so it asserts the leaner pre-`Wave 8` state and the delayed bay unlock. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to recut the standard run so `Wave 1-8` locks core gun/body growth first and delays extra support-bay/off-doctrine spectacle until after the late-form break. The highest-value bounded interpretation was to fix the two early lock points that were front-loading too much identity at once, instead of adding another late system or another wording-only pass.
+  Follow-up risk: the opening chassis is cleaner now, but `Wave 6` still delivers a visible body break while the later `Wave 8` armory remains the first support spectacle moment. If critique still says the opening feels too complete, the next bounded pass should trim the wave-6 body break presentation or power further rather than reopening early flex lanes.
+  Release Gate: Progression
+
 - 2026-03-24 10:13:50 KST
   Changed: rebuilt the `Wave 8` `Cataclysm Arsenal` payoff in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so it now creates an actual main-weapon monster form instead of just a larger generic late-field mutation. The late-break mutation card now explicitly sells a support-secondary contract, and choosing it grants a new support-independent cataclysm firing layer on top of the existing mutation package: `Wave 9-10` now read through a wider core-specific primary geometry with extra front fan shots, heavier core-specific stat spikes, and a larger rendered chassis silhouette that immediately changes how the player fills lanes before any support rider matters. I also extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new cataclysm fire pattern, the stronger late-break mutation trait read, and the lance-specific stat jump. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
   Why: the newest critique's `Top Priority` was no longer just more payoff space; it specifically called out that the late forge still made support fantasies easier to want than the next main form. The highest-value bounded interpretation was to deepen one existing late-break branch so the player immediately feels "my gun just became different" on `Wave 9-10`, rather than adding another rider or more wording around the same geometry.
@@ -2604,7 +2622,14 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Release Review
 
-- Pending first release review entry.
+- 2026-03-24 10:20:43 KST
+  Release Risk:
+  - `Wave 8-12` is still presented through branch/admin language (`Architecture Draft`, `Bastion Draft`, `Field Cache`, `Live Ascension`, `Afterburn`) instead of one fixed late-run contract, so the run still reads like a prototype with routing exceptions.
+  - Forge/HUD wording still asks the player to parse `Current Form`, `Main Leap`, and `Next Proof` at the reward moment, which means the game is explaining the payoff instead of selling it at a glance.
+  - Late-content surface area is already ahead of release readability: multiple Wave 9-12 route families and `Act 4 · Afterburn` scaffolding are visible before the base 12-wave route feels clean, balanced, and memorable.
+  Focus Gate: UX/UI
+  Directive: For the next few loops, favor removing or hiding route/admin presentation and sharpening one obvious late-form reward-to-proof cadence before adding any new branches, support layers, or post-12 content.
+  Freeze: Pause new systems and late-route expansion until the base `Wave 1-12` run reads cleanly enough that a player can describe the finale without using internal draft/cache/ascension vocabulary.
 
 ## Latest Improvement
 

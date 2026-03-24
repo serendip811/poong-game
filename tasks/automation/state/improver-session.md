@@ -16,4 +16,4 @@ Keep this short and replace stale notes instead of endlessly appending.
 - Avoid adding another named system if the same benefit could come from simplifying or deepening an existing one.
 - Validate every gameplay/UI change with the existing smoke test when relevant.
 - Standard `Wave 9-10` improvements are highest value when they buy more lane-ownership time through lower caps and larger arenas, not when they add another late mechanic.
-- Late `Cataclysm Arsenal` work lands better when the primary gun mutation becomes support-independent and visibly reshapes firing geometry; support should amplify uptime, not define the late-form silhouette.
+- Early `Wave 3-6` staging now has more leverage than new branches: lock the core gun first, add chassis second, and keep support bay/off-doctrine spectacle behind `Wave 8` unless a later critique proves the base ladder is starving.
