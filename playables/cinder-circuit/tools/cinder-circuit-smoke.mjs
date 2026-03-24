@@ -830,8 +830,15 @@ headlineAscensionBuild.supportSystems = [
 ];
 const headlineAscensionWeapon = game.computeWeaponStats(headlineAscensionBuild);
 assert.equal(headlineAscensionWeapon.headlineFormLabel, "FORM 2 · Crownsplitter Array");
-assert.match(headlineAscensionWeapon.lateAscensionTraitLabel, /^FORM 2 · /);
+assert.match(headlineAscensionWeapon.lateAscensionTraitLabel, /^FORM 2 · .* · CORE ENDFORM$/);
 assert.ok(headlineAscensionWeapon.lateAscensionFirePattern.offsets.length >= 6);
+assert.match(headlineAscensionWeapon.lateAscensionStatusNote, /보조선/);
+const unsupportedAscensionBuild = game.createInitialBuild("rail_zeal");
+unsupportedAscensionBuild.lateAscensionId = "crownsplitter_array";
+const unsupportedAscensionWeapon = game.computeWeaponStats(unsupportedAscensionBuild);
+assert.equal(unsupportedAscensionWeapon.lateAscensionFirePattern.kind, "split_wing");
+assert.ok(unsupportedAscensionWeapon.lateAscensionFirePattern.offsets.length >= 6);
+assert.match(unsupportedAscensionWeapon.lateAscensionStatusNote, /support uplink 없이도 완성형/);
 const systemsForgeBuild = game.createInitialBuild("scrap_pact");
 const architectureChoices = game.buildArchitectureDraftChoices(systemsForgeBuild);
 assert.equal(architectureChoices.length, 3);
@@ -1049,7 +1056,7 @@ game.applyForgeChoice(voltspineRun, voltspineChoice);
 const voltspineWeapon = game.computeWeaponStats(voltspineRun.build);
 assert.equal(voltspineWeapon.lateAscensionLabel, "Voltspine Lattice");
 assert.equal(voltspineWeapon.lateAscensionFirePattern.kind, "split_wing");
-assert.ok(voltspineWeapon.lateAscensionFirePattern.offsets.length >= 7);
+assert.ok(voltspineWeapon.lateAscensionFirePattern.offsets.length >= 8);
 assert.ok(voltspineWeapon.chain >= 2);
 const anvilRun = {
   build: game.createInitialBuild("scrap_pact"),

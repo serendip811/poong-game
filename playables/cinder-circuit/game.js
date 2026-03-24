@@ -5297,12 +5297,12 @@
       title: "Crownsplitter Array",
       traitLabel: "wing battery",
       description:
-        "주포 양옆에 분할 포대를 영구 증설해 발사마다 wing volley를 덧댄다. late rider bay가 붙으면 양날개 포문이 더 벌어져 열린 회랑을 더 넓게 찢는다.",
-      slotText: "주포 split volley · late rider가 wing lane 확장",
+        "주포 양옆에 분할 포대를 영구 증설해 발사마다 wing volley를 덧댄다. 기본 실루엣만으로도 열린 회랑 둘을 직접 찢고, support uplink는 이미 열린 날개의 빈틈만 다듬는다.",
+      slotText: "주포 split volley · 완성형 wing battery",
       bodyLabel: "Split-Wing Chassis",
       bodyText: "측면 포대와 전방 가늠자가 붙어 주포가 직접 회랑을 찢는 추격 섀시다.",
       statusNote:
-        "주포가 split wing battery로 변해 정면 라인을 직접 찢는다. late rider는 자동 처리보다 이 날개 화망을 더 넓히는 쪽으로만 붙는다.",
+        "주포가 split wing battery로 변해 support 없이도 넓은 정면 라인을 직접 찢는다. 추가 rider는 자동 처리보다 이 날개 화망의 틈을 메우는 보조선으로만 붙는다.",
       apply(build, run) {
         build.damageBonus += 4;
         build.pierceBonus += 1;
@@ -5314,22 +5314,22 @@
         }
       },
       getFirePattern(supportLevel) {
-        const offsets = [-0.34, -0.12, 0.12, 0.34];
+        const offsets = [-0.62, -0.28, -0.1, 0.1, 0.28, 0.62];
         if (supportLevel >= 2) {
-          offsets.unshift(-0.58);
-          offsets.push(0.58);
+          offsets.unshift(-0.94);
+          offsets.push(0.94);
         }
         if (supportLevel >= 3) {
-          offsets.unshift(-0.82);
-          offsets.push(0.82);
+          offsets.unshift(-1.24);
+          offsets.push(1.24);
         }
         return {
           kind: "split_wing",
           offsets,
           speedMultiplier: 1.08,
           radius: 4.6,
-          damageMultiplier: 0.39 + supportLevel * 0.035,
-          life: 0.96,
+          damageMultiplier: 0.34 + supportLevel * 0.03,
+          life: 1,
           pierceBonus: supportLevel >= 2 ? 1 : 0,
           bounceBonus: 0,
           chainBonus: 0,
@@ -5346,12 +5346,12 @@
       title: "Slagburst Drive",
       traitLabel: "impact seed",
       description:
-        "주포에 slag seed를 박아 발사마다 폭압성 충격탄을 흘린다. late rider bay가 붙으면 추가 seed가 따라붙어 교전 지점을 더 두껍게 재단한다.",
-      slotText: "slag seed 장착 · late rider가 seed 수 증폭",
+        "주포에 slag seed를 박아 발사마다 폭압성 충격탄을 흘린다. 기본 포문만으로도 교전 지점에 폭발과 잔불 구획을 깔고, support uplink는 그 압착 폭만 더 두껍게 만든다.",
+      slotText: "slag seed 장착 · 완성형 impact seed",
       bodyLabel: "Kiln-Drive Hull",
       bodyText: "복부 용광 코일이 달린 돌입 섀시로, 교전 지점에 직접 잔불 구획을 남긴다.",
       statusNote:
-        "주포가 slagburst drive로 바뀌어 발사 궤적 끝에 폭발과 잔불 구획을 남긴다. late rider는 seed 수만 보태 이 몸체의 교전 장악력을 키운다.",
+        "주포가 slagburst drive로 바뀌어 support 없이도 발사 궤적 끝에 폭발과 잔불 구획을 남긴다. 추가 rider는 seed 수와 잔불 폭만 더해 이 몸체의 교전 장악력을 다듬는다.",
       apply(build, run) {
         build.damageBonus += 2;
         build.maxHpBonus += 6;
@@ -5365,18 +5365,18 @@
       getFirePattern(supportLevel) {
         return {
           kind: "slag_seed",
-          count: 2 + Math.floor((supportLevel + 1) / 2),
+          count: 3 + Math.floor(supportLevel / 2),
           spread: 0.24,
           speedMultiplier: 0.84,
           radius: 5.4,
-          damageMultiplier: 0.34 + supportLevel * 0.03,
-          life: 0.92,
-          blastRadius: 42 + supportLevel * 4,
-          blastDamageMultiplier: 0.32 + supportLevel * 0.03,
-          poolRadius: 38 + supportLevel * 3,
-          poolDuration: 2.8 + supportLevel * 0.28,
+          damageMultiplier: 0.31 + supportLevel * 0.025,
+          life: 0.98,
+          blastRadius: 46 + supportLevel * 4,
+          blastDamageMultiplier: 0.34 + supportLevel * 0.025,
+          poolRadius: 42 + supportLevel * 3,
+          poolDuration: 3 + supportLevel * 0.28,
           poolTickInterval: 0.34,
-          poolDamageMultiplier: 0.12 + supportLevel * 0.02,
+          poolDamageMultiplier: 0.14 + supportLevel * 0.018,
           poolColor: "#ff9f59",
           color: "#ffd6a8",
         };
@@ -5391,12 +5391,12 @@
       title: "Voltspine Lattice",
       traitLabel: "arc spine",
       description:
-        "동체 위로 전극 spine을 영구 전개해 발사마다 전방 lattice arc를 덧댄다. late rider bay가 붙으면 spine 수와 연쇄 길이가 늘어 후열 전체를 전도성 그물로 묶는다.",
-      slotText: "arc lattice salvo · late rider가 chain spine 증폭",
+        "동체 위로 전극 spine을 영구 전개해 발사마다 전방 lattice arc를 덧댄다. 기본 lattice만으로도 후열을 전도성 그물로 묶고, support uplink는 그물의 길이와 밀도만 더 늘린다.",
+      slotText: "arc lattice salvo · 완성형 arc spine",
       bodyLabel: "Stormspine Hull",
       bodyText: "등뼈형 전극 spine과 측면 방전 깃이 자라 후열을 직접 감전시키는 전도 섀시다.",
       statusNote:
-        "주포가 voltspine lattice로 변해 전방 lattice arc를 흘리고 연쇄 범위가 크게 늘어난다. late rider는 spine 수를 더해 이 형태의 후열 절단력을 키운다.",
+        "주포가 voltspine lattice로 변해 support 없이도 전방 lattice arc와 연쇄 범위로 후열을 직접 절단한다. 추가 rider는 spine 밀도와 연쇄 길이만 더 키운다.",
       apply(build, run) {
         build.damageBonus += 1;
         build.moveSpeedBonus += 6;
@@ -5411,20 +5411,20 @@
       getFirePattern(supportLevel) {
         const offsets =
           supportLevel >= 3
-            ? [-0.54, -0.34, -0.16, 0, 0.16, 0.34, 0.54]
+            ? [-0.72, -0.5, -0.28, -0.08, 0.08, 0.28, 0.5, 0.72]
             : supportLevel >= 2
-              ? [-0.4, -0.18, 0, 0.18, 0.4]
-              : [-0.28, -0.08, 0.08, 0.28];
+              ? [-0.6, -0.34, -0.12, 0.12, 0.34, 0.6]
+              : [-0.48, -0.22, 0, 0.22, 0.48];
         return {
           kind: "split_wing",
           offsets,
           speedMultiplier: 1.18,
           radius: 4.7,
-          damageMultiplier: 0.29 + supportLevel * 0.03,
-          life: 0.88,
+          damageMultiplier: 0.27 + supportLevel * 0.028,
+          life: 0.94,
           pierceBonus: 0,
           bounceBonus: 0,
-          chainBonus: 1 + Math.floor(supportLevel / 2),
+          chainBonus: 1 + Math.floor((supportLevel + 1) / 2),
           color: "#95b8ff",
         };
       },
@@ -5438,12 +5438,12 @@
       title: "Anvil Prism",
       traitLabel: "breach ram",
       description:
-        "주포 하부에 삼중 breach ram을 박아 발사마다 두꺼운 prism salvo를 밀어 넣는다. late rider bay가 붙으면 ram이 늘어나 brute/warden 전열을 그대로 꿰뚫는다.",
-      slotText: "breach prism salvo · late rider가 ram 수 증폭",
+        "주포 하부에 breach ram을 박아 발사마다 두꺼운 prism salvo를 밀어 넣는다. 기본 ram만으로도 brute/warden 전열을 비집고, support uplink는 열린 돌파선만 더 두껍게 고정한다.",
+      slotText: "breach prism salvo · 완성형 breach ram",
       bodyLabel: "Anvil-Ram Hull",
       bodyText: "전면 ram prong과 복부 냉각 지느러미가 돌출된 정면 돌파 섀시다.",
       statusNote:
-        "주포가 anvil prism으로 바뀌어 짧고 두꺼운 breach salvo를 겹쳐 밀어 넣는다. late rider는 ram 포문만 더 열어 전면 파쇄력을 끌어올린다.",
+        "주포가 anvil prism으로 바뀌어 support 없이도 짧고 두꺼운 breach salvo를 겹쳐 밀어 넣는다. 추가 rider는 ram 포문과 관통 여유만 더 열어 전면 파쇄력을 보조한다.",
       apply(build, run) {
         build.damageBonus += 5;
         build.maxHpBonus += 4;
@@ -5457,17 +5457,17 @@
       getFirePattern(supportLevel) {
         const offsets =
           supportLevel >= 3
-            ? [-0.42, -0.28, -0.14, 0, 0.14, 0.28, 0.42]
+            ? [-0.56, -0.38, -0.2, 0, 0.2, 0.38, 0.56]
             : supportLevel >= 2
-              ? [-0.28, -0.12, 0, 0.12, 0.28]
-              : [-0.18, 0, 0.18];
+              ? [-0.46, -0.22, 0, 0.22, 0.46]
+              : [-0.36, -0.16, 0, 0.16, 0.36];
         return {
           kind: "split_wing",
           offsets,
           speedMultiplier: 0.94,
           radius: 5.8,
-          damageMultiplier: 0.38 + supportLevel * 0.045,
-          life: 0.78,
+          damageMultiplier: 0.32 + supportLevel * 0.04,
+          life: 0.88,
           pierceBonus: supportLevel >= 2 ? 1 : 0,
           bounceBonus: 0,
           chainBonus: 0,
@@ -8834,6 +8834,16 @@
     return clamp(getInstalledSupportSystems(build).length, 0, MAX_SUPPORT_BAY_LIMIT);
   }
 
+  function getLateAscensionSupportStatusNote(lateAscension, supportLevel, headlineTierLabel) {
+    if (!lateAscension) {
+      return "";
+    }
+    if (supportLevel <= 0) {
+      return `${lateAscension.statusNote} 현재 ${headlineTierLabel} ascension form은 support uplink 없이도 완성형으로 고정되어 있다.`;
+    }
+    return `${lateAscension.statusNote} 현재 support uplink ${supportLevel}칸은 ${headlineTierLabel} ascension form의 빈틈을 메우는 보조선으로만 붙어 있다.`;
+  }
+
   function getHeadlineFormTier(build) {
     if (!build) {
       return 0;
@@ -9331,14 +9341,17 @@
     if (lateAscension) {
       const supportLevel = getLateAscensionSupportLevel(build);
       const headlineTier = Math.max(2, getHeadlineFormTier(build));
+      const headlineTierLabel = getHeadlineFormTierLabel(headlineTier);
       stats.lateAscensionId = lateAscension.id;
       stats.lateAscensionLabel = lateAscension.label;
-      stats.lateAscensionTraitLabel =
-        `${getHeadlineFormTierLabel(headlineTier)} · ${lateAscension.traitLabel} · SUPPORT ${supportLevel}`;
-      stats.lateAscensionStatusNote =
-        `${lateAscension.statusNote} 현재 support uplink ${supportLevel}칸이 ${getHeadlineFormTierLabel(headlineTier)} ascension form을 밀어 올리고 있다.`;
+      stats.lateAscensionTraitLabel = `${headlineTierLabel} · ${lateAscension.traitLabel} · CORE ENDFORM`;
+      stats.lateAscensionStatusNote = getLateAscensionSupportStatusNote(
+        lateAscension,
+        supportLevel,
+        headlineTierLabel
+      );
       stats.headlineFormTier = headlineTier;
-      stats.headlineFormLabel = `${getHeadlineFormTierLabel(headlineTier)} · ${lateAscension.label}`;
+      stats.headlineFormLabel = `${headlineTierLabel} · ${lateAscension.label}`;
       stats.lateAscensionFirePattern =
         typeof lateAscension.getFirePattern === "function"
           ? lateAscension.getFirePattern(supportLevel, build, core)
@@ -22212,10 +22225,10 @@
     if (state.weapon.lateAscensionId === "crownsplitter_array") {
       const wingLanes =
         supportLevel >= 3
-          ? [-1.6, -1.05, -0.5, 0.5, 1.05, 1.6]
+          ? [-1.95, -1.45, -0.9, -0.35, 0.35, 0.9, 1.45, 1.95]
           : supportLevel >= 2
-            ? [-1.25, -0.55, 0.55, 1.25]
-            : [-0.95, 0.95];
+            ? [-1.55, -0.9, -0.35, 0.35, 0.9, 1.55]
+            : [-1.3, -0.75, -0.28, 0.28, 0.75, 1.3];
       wingLanes.forEach((lane) => {
         const wing = getOffsetPoint(state.player.x, state.player.y, facing, 5, 17 * lane);
         context.fillStyle = "rgba(159, 231, 255, 0.9)";
@@ -22240,7 +22253,7 @@
       return;
     }
     if (state.weapon.lateAscensionId === "slagburst_drive") {
-      const coilCount = 2 + Math.max(0, supportLevel - 1);
+      const coilCount = 3 + Math.max(0, supportLevel - 1);
       for (let index = 0; index < coilCount; index += 1) {
         const angle = facing + Math.PI + ((index / Math.max(1, coilCount - 1)) * 2 - 1) * 0.45;
         context.strokeStyle = `rgba(255, 180, 116, ${0.8 - index * 0.08})`;
@@ -22270,7 +22283,7 @@
       return;
     }
     if (state.weapon.lateAscensionId === "voltspine_lattice") {
-      const spineCount = 2 + supportLevel;
+      const spineCount = 5 + supportLevel;
       for (let index = 0; index < spineCount; index += 1) {
         const lateral = ((index / Math.max(1, spineCount - 1)) * 2 - 1) * 11;
         const base = getOffsetPoint(state.player.x, state.player.y, facing + Math.PI / 2, 0, lateral);
@@ -22296,7 +22309,13 @@
       return;
     }
     if (state.weapon.lateAscensionId === "anvil_prism") {
-      [-0.95, 0, 0.95].forEach((lane, index) => {
+      const ramLanes =
+        supportLevel >= 3
+          ? [-1.35, -0.7, -0.2, 0.2, 0.7, 1.35]
+          : supportLevel >= 2
+            ? [-1.05, -0.45, 0, 0.45, 1.05]
+            : [-0.82, -0.28, 0.28, 0.82];
+      ramLanes.forEach((lane, index) => {
         const ram = getOffsetPoint(state.player.x, state.player.y, facing, state.player.radius + 3, lane * 8);
         context.fillStyle = `rgba(255, 141, 115, ${0.88 - index * 0.12})`;
         context.beginPath();

@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: lock the shipping `Wave 1-12` contract by removing `Afterburn`-exclusive endform promises, rewriting stale `5-wave` tuning doctrine, and making the forge/HUD sell one dominant form jump at a time.
+- Immediate priority: stop expanding branch/system surface area and consolidate one readable `Wave 1-12` power arc where the base gun/body mutation is the clearest hunger, `Wave 12` is the visible apex, and forge/HUD only frame that climb.
 
 ## Release Gates
 
@@ -48,6 +48,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 18:00:44 KST
+  Findings:
+  - The run still asks the player to want accessories more than forms. [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L5300) and nearby late ascension defs keep selling the main mutation through `late rider bay` amplification, while support visuals already have cleaner shield/missile/drone silhouettes in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2742) and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21223). That inverts the fantasy: the player is waiting for helpers to complete the build instead of feeling the gun/chassis become monstrous first.
+  - `Wave 9-12` now has more breathing room, but the pressure grammar is still too narrow for repeat-run hunger. [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1000) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1145) keep the whole final band inside slight variants of skimmer/lancer lane ownership plus relay breach. That is enough for one clean alpha finish, not enough to imply a future `20-30 wave` ladder with genuinely new asks.
+  - The docs still advertise layered depth the run does not cash out yet. [cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L210) still leans on missing rarity/affix/passive ladders, while the actual forge/HUD stack in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20282) and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20533) keeps compensating with more explanation rows. Strong references win this moment with desire-first hierarchy; this build is still reading like system intent notes.
+  - `Wave 12` remains structurally undermined by visible post-route supremacy. [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1902) still frames `Cinder Dominion` as the true sovereign splice after the clear, so the rerunnable route still ends one transformation before the loudest fantasy.
+  Top Priority: Rebuild the shipped late-game contract around one unmistakable rule: by `Wave 8` the player chooses a core gun/chassis endform that already looks complete on its own, and `Wave 9-12` exists to prove that form across more varied combat asks instead of waiting for support-bay amplification or post-route dominion copy.
+  Why Now: Until the base route itself creates hunger and payoff, every extra module or future-wave promise makes reruns feel like setup instead of reward.
+  Do Not Repeat: Do not answer this with another support module, another branch label pass, or another “future depth” doc section that leaves the shipped form ladder visually second-place.
+  Release Gate: Builds
 
 - 2026-03-24 17:30:45 KST
   Findings:
@@ -1933,6 +1944,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 23:59:30 KST
+  Changed: retuned all four `Wave 8` late ascension endforms in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the core gun/chassis mutation now reads as complete before any support system helps it. `Crownsplitter Array`, `Slagburst Drive`, `Voltspine Lattice`, and `Anvil Prism` now ship with denser baseline firing geometry, fuller body-frame silhouettes, and copy that sells support uplinks as gap-filling riders instead of the thing that finishes the form. I also updated the late-ascension status line to remove `SUPPORT n` as the fantasy headline, and expanded [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so smoke now asserts a no-support late form still produces a substantial pattern and the new `CORE ENDFORM` contract copy. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to make the `Wave 8` choice a core gun/chassis endform that already looks complete on its own, with `Wave 9-12` proving that form instead of waiting for support-bay amplification. The highest-value bounded interpretation was to deepen the existing late ascension package itself, because that improves visible power identity and build hunger without adding another system branch or another UI wrapper.
+  Follow-up risk: the late forms now read much more self-sufficient on paper, but their baseline damage coverage is also meaningfully higher. If critique or playtesting says `Wave 9` stops asking enough of the player, the next bounded pass should trim late-wave enemy spacing/caps or specific base damage multipliers rather than reintroduce support-led dependency.
+  Release Gate: Builds
 
 - 2026-03-24 18:20:00 KST
   Changed: rewired the shipped-route form presentation in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 1-12` HUD and roadmap summaries now stop elevating `Afterburn` dominion/overdrive labels above the actual shipped late-form ladder. I added base-route presentation helpers that, during the consolidated `Wave 1-12` clear, cap the visible headline/detail stack at the current doctrine/capstone/late-ascension form instead of post-capstone mutations; the active-core HUD card, dominant-form summary, and roadmap path now all read `Wave 12` as the visible payoff destination. In the same bounded pass, I rewrote the dominion reward descriptions to frame them as optional post-`Wave 12` endurance splices rather than the one true final body, and updated [cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md) so biome mapping, power brackets, failure pattern, overdrive targets, and hazard targets all anchor to a `12-wave` shipped ladder instead of the stale `5-wave` prototype curve. Validation passed with `node --check playables/cinder-circuit/game.js` and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
