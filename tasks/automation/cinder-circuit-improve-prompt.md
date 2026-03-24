@@ -12,6 +12,7 @@ Important design directions to actively use when relevant:
 - Make weapon growth visible and exciting. Prefer upgrades that change how the weapon looks or behaves, such as extra barrels, projectile count increases, split shots, wider volleys, chained fire, helper drones, or periodic autonomous attacks.
 - Favor upgrades that create "I want to see what this becomes next" momentum.
 - When touching UI/UX, HUDs, forge screens, reward screens, readability, or interaction flow, first look at concrete references from strong game UI examples and use them deliberately. Do not do generic cleanup in a vacuum; anchor the change in at least one identifiable reference direction.
+- Favor simplicity, hierarchy, and restraint. Prefer fewer words, fewer simultaneous panels, fewer repeated labels, and clearer dominant actions. The player should feel the fantasy quickly instead of reading a systems dashboard.
 
 Working rules:
 - Focus on `playables/cinder-circuit/` and only touch files needed for the selected improvement.
@@ -31,6 +32,7 @@ Constraints:
 - Prefer improvements that create visible power growth, stronger run variety, or better long-run pacing over tiny numerical tweaks.
 - If the last few loops already added major systems, prefer one consolidation pass that improves readability, balance, or pacing instead of adding another branch.
 - Tie the work to one release gate and make that gate visibly better by the end of the run.
+- If the game is becoming too wordy or over-explained, prioritize simplification passes that remove redundant explanation and make reward moments faster to parse.
 
 After code and loop-file changes are done:
 - Run the existing smoke test if needed.
