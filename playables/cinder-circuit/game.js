@@ -105,53 +105,61 @@
       },
     },
     aegis: {
-      label: "Wave 9 · Halo Run",
-      bandId: "halo_run",
-      bandLabel: "Halo Run",
-      pressureFamily: "crossfire",
-      note: "Warplate Halo를 집었더라도 첫 late bracket의 주연은 여전히 headline form이어야 한다. 첫 판은 open-lane payoff로 유지하고, halo는 깊게 밀어 넣을 때 한 번 더 오래 사선을 소유하게 만드는 rider로만 작동한다.",
+      label: "Wave 9 · Halo Bastion",
+      bandId: "halo_bastion",
+      bandLabel: "Halo Bastion",
+      pressureFamily: "territory",
+      note: "Warplate Halo를 골랐다면 첫 late bracket부터 정면 교환 대신 pocket ownership이 달라져야 한다. 열린 lane kill race를 반복하지 말고, 작은 bastion core 하나만 잠깐 열어 plate로 진입-정착-이탈 타이밍을 먼저 증명하게 만든다.",
       directive:
-        "halo run. 열린 외곽 lane을 먼저 먹고 lancer charge를 흘린 뒤, plate를 터뜨려 한 번 더 깊게 밀어 넣어야 한다. halo는 주포가 먹은 공간을 잠깐 더 길게 버티게 만드는 rider다.",
+        "halo bastion. bastion pocket 하나만 짧게 열린다. plate를 믿고 전열 한 줄을 비운 뒤 체력과 dash를 회수하고, 적 점유가 두꺼워지기 전에 곧바로 외곽 refuge로 빠져야 한다.",
       arena: {
-        width: 1740,
-        height: 990,
+        width: 1680,
+        height: 980,
       },
-      activeCap: 23,
-      spawnBudget: 140,
-      baseSpawnInterval: 0.446,
-      spawnIntervalMin: 0.128,
+      activeCap: 22,
+      spawnBudget: 138,
+      baseSpawnInterval: 0.454,
+      spawnIntervalMin: 0.13,
       eliteEvery: 4,
       mix: {
-        scuttler: 0.06,
-        brute: 0.16,
-        shrike: 0.18,
-        skimmer: 0.2,
-        lancer: 0.22,
-        binder: 0.06,
+        scuttler: 0.04,
+        brute: 0.18,
+        shrike: 0.14,
+        skimmer: 0.08,
+        lancer: 0.14,
+        binder: 0.1,
         mortar: 0.04,
-        warden: 0.08,
+        warden: 0.18,
+        brander: 0.1,
       },
-      mixWeight: 0.58,
+      mixWeight: 0.56,
       hazard: {
-        label: "Halo Surge",
-        interval: 10.8,
+        label: "Halo Bastion",
+        type: "territory",
+        interval: 9.4,
         count: 1,
-        radius: 70,
-        telegraph: 0.88,
-        duration: 3.8,
+        radius: 92,
+        telegraph: 0.84,
+        duration: 7.8,
         damage: 14,
+        coreHp: 70,
+        coreRadius: 18,
+        turretInterval: 1.02,
+        turretDamage: 10,
+        turretSpeed: 236,
+        enemyPullRadius: 148,
       },
     },
     ledger: {
-      label: "Wave 9 · Ledger Heist",
-      bandId: "ledger_heist",
-      bandLabel: "Ledger Heist",
-      pressureFamily: "crossfire",
-      note: "Black Ledger 계약을 집었더라도 첫 late bracket은 greed 운영보다 headline form payoff가 먼저여야 한다. 첫 판은 open-lane kill race로 유지하고, ledger는 deeper dive를 허용하는 greed rider로만 남겨 주무기 변신이 화면을 먼저 먹게 만든다.",
+      label: "Wave 9 · Ledger Vaultline",
+      bandId: "ledger_vaultline",
+      bandLabel: "Ledger Vaultline",
+      pressureFamily: "raid",
+      note: "Black Ledger 계약을 골랐다면 첫 late bracket부터 greed line이 전투 ask를 바꿔야 한다. 열린 lane kill race 대신 넓은 contraband vaultline을 먼저 던져, 주포로 퇴로를 연 뒤 어디까지 cash-out하고 언제 버릴지 직접 가르게 만든다.",
       directive:
-        "ledger heist. 열린 lane에서 marked elite와 skimmer sweep를 먼저 찢고, payout 욕심은 비워 낸 사선 안에서만 짧게 챙겨야 한다. greed는 화망이 연 공간을 넓히는 rider이지 main ask가 아니다.",
+        "ledger vaultline. 중앙과 외곽에 열린 vault 중 하나만 길게 챙길 수 있다. 먼저 퇴로를 비우고 짧은 cash-out window를 고른 뒤, binder와 brander가 닫기 전에 빠져야 한다.",
       arena: {
-        width: 1780,
+        width: 1820,
         height: 1000,
       },
       activeCap: 24,
@@ -160,25 +168,32 @@
       spawnIntervalMin: 0.124,
       eliteEvery: 4,
       mix: {
-        scuttler: 0.06,
-        brute: 0.14,
-        shrike: 0.16,
-        skimmer: 0.24,
-        lancer: 0.2,
-        brander: 0.08,
-        binder: 0.06,
-        mortar: 0.04,
-        warden: 0.02,
+        scuttler: 0.04,
+        brute: 0.12,
+        shrike: 0.14,
+        skimmer: 0.14,
+        lancer: 0.16,
+        brander: 0.18,
+        binder: 0.08,
+        mortar: 0.08,
+        warden: 0.06,
       },
       mixWeight: 0.58,
       hazard: {
-        label: "Ledger Surge",
-        interval: 10.5,
-        count: 1,
-        radius: 70,
-        telegraph: 0.86,
-        duration: 3.9,
+        label: "Ledger Vaults",
+        type: "salvage",
+        interval: 9.2,
+        count: 2,
+        radius: 84,
+        telegraph: 0.82,
+        duration: 7,
         damage: 14,
+        coreHp: 86,
+        coreRadius: 19,
+        salvageScrap: 22,
+        salvageBurstCount: 6,
+        salvageBurstRadius: 64,
+        salvageDropLife: 8.6,
       },
     },
   };
@@ -229,93 +244,93 @@
       },
     },
     aegis: {
-      label: "Wave 10 · Halo Breach",
-      bandId: "halo_breach",
-      bandLabel: "Halo Breach",
-      pressureFamily: "breach",
-      note: "Warplate Halo를 골랐다면 두 번째 판도 halo upkeep가 아니라 late-form breach proof여야 한다. relay corridor가 한 줄만 늦게 닫히는 동안 plate를 믿고 한 번 깊게 파고들어, 주포가 연 창을 rider가 얼마나 오래 붙잡는지 바로 보여 준다.",
+      label: "Wave 10 · Halo Refuge",
+      bandId: "halo_refuge_proof",
+      bandLabel: "Halo Refuge",
+      pressureFamily: "pursuit",
+      note: "Warplate Halo를 골랐다면 두 번째 판은 corridor upkeep보다 refuge cadence proof여야 한다. drift wake가 retreat lane을 비틀어, plate를 믿고 한 pocket을 비운 뒤 바로 다른 refuge로 갈아타는지 즉시 드러나게 만든다.",
       directive:
-        "halo breach. relay crown이 닫히기 전에 plate를 태워 corridor 한 줄을 밀고, 오래 욕심내지 말고 비워 낸 pocket으로 짧게 갈아타야 한다. halo는 정면 교환이 아니라 breach 시간을 늘리는 rider다.",
+        "halo refuge. drift wake가 retreat pocket을 밀어낸다. plate를 태워 한 줄을 비운 뒤 오래 서지 말고 비워 낸 refuge로 짧게 갈아타야 한다. halo는 정면 교환보다 retreat timing을 늘리는 rider다.",
       arena: {
-        width: 1840,
-        height: 1040,
+        width: 1780,
+        height: 1020,
       },
-      activeCap: 26,
-      spawnBudget: 154,
-      baseSpawnInterval: 0.414,
+      activeCap: 25,
+      spawnBudget: 152,
+      baseSpawnInterval: 0.418,
       spawnIntervalMin: 0.122,
       eliteEvery: 4,
       mix: {
         scuttler: 0.04,
-        brute: 0.2,
+        brute: 0.16,
         shrike: 0.18,
-        skimmer: 0.06,
-        lancer: 0.16,
-        binder: 0.1,
+        skimmer: 0.08,
+        lancer: 0.12,
+        binder: 0.12,
         mortar: 0.04,
         warden: 0.12,
-        brander: 0.1,
+        brander: 0.14,
       },
-      mixWeight: 0.56,
+      mixWeight: 0.54,
       hazard: {
-        label: "Halo Crown",
-        type: "relay",
-        interval: 9.4,
+        label: "Halo Refuge Drift",
+        type: "drift",
+        interval: 8.8,
         count: 1,
-        radius: 88,
-        telegraph: 0.84,
-        duration: 5.5,
+        radius: 92,
+        telegraph: 0.82,
+        duration: 5.9,
         damage: 14,
-        coreHp: 64,
-        coreRadius: 18,
-        relayRange: 506,
-        relayWidth: 28,
-        relayDamage: 13,
+        driftSpeed: 124,
+        driftOrbit: 0.3,
       },
     },
     ledger: {
-      label: "Wave 10 · Jackpot Breach",
-      bandId: "jackpot_breach",
-      bandLabel: "Jackpot Breach",
-      pressureFamily: "breach",
-      note: "Black Ledger Heist를 골랐다면 두 번째 판도 greed chase의 반복이 아니라 breach proof여야 한다. relay corridor가 payout pocket 하나만 잠그는 동안, 먼저 주포로 탈출구를 만든 뒤 그 안에서만 짧게 cash-out하도록 강제해 greed를 rider 위치에 묶는다.",
+      label: "Wave 10 · Jackpot Caravan",
+      bandId: "jackpot_caravan",
+      bandLabel: "Jackpot Caravan",
+      pressureFamily: "caravan",
+      note: "Black Ledger Heist를 골랐다면 두 번째 판은 greed line을 moving chase로 더 밀어야 한다. moving caravan이 외곽 lane을 따라 도망치므로, payout을 끝까지 쫓을지 중간에 끊고 살아남을지 판단이 headline form breach보다 먼저 전투 실루엣을 바꾼다.",
       directive:
-        "jackpot breach. relay crown이 payout pocket을 좁히고 brander가 뒤를 태운다. 먼저 corridor를 찢어 살아남을 창을 만든 뒤, 그 안에서만 greed line을 짧게 챙겨야 한다.",
+        "jackpot caravan. contraband caravan이 외곽 pocket을 따라 도주한다. chase를 오래 걸면 payout은 커지지만 binder와 brander가 escape lane을 먼저 닫으므로, 언제 jackpot을 확정하고 언제 버릴지 직접 정해야 한다.",
       arena: {
-        width: 1900,
+        width: 1880,
         height: 1040,
       },
       activeCap: 27,
       spawnBudget: 160,
-      baseSpawnInterval: 0.406,
+      baseSpawnInterval: 0.404,
       spawnIntervalMin: 0.12,
       eliteEvery: 4,
       mix: {
         scuttler: 0.04,
-        brute: 0.12,
+        brute: 0.1,
         shrike: 0.14,
-        skimmer: 0.12,
+        skimmer: 0.1,
         lancer: 0.18,
-        brander: 0.16,
-        binder: 0.1,
-        mortar: 0.06,
-        warden: 0.08,
+        brander: 0.22,
+        binder: 0.08,
+        mortar: 0.08,
+        warden: 0.06,
       },
       mixWeight: 0.58,
       hazard: {
-        label: "Jackpot Crown",
-        type: "relay",
-        interval: 9,
+        label: "Jackpot Caravan",
+        type: "caravan",
+        interval: 8.6,
         count: 1,
         radius: 88,
-        telegraph: 0.82,
-        duration: 5.6,
+        telegraph: 0.8,
+        duration: 8.2,
         damage: 15,
-        coreHp: 68,
-        coreRadius: 18,
-        relayRange: 520,
-        relayWidth: 28,
-        relayDamage: 14,
+        coreHp: 92,
+        coreRadius: 20,
+        salvageScrap: 28,
+        salvageBurstCount: 6,
+        salvageBurstRadius: 70,
+        salvageDropLife: 9.4,
+        driftSpeed: 132,
+        driftOrbit: 0.24,
       },
     },
   };
@@ -2197,14 +2212,14 @@
       return {
         label: "Warplate cadence",
         detail:
-          "Wave 9는 open-lane payoff, Wave 10은 Halo breach proof, Wave 11은 Halo refuge lap, Wave 12는 Citadel final stand다.",
+          "Wave 9는 Halo bastion pocket, Wave 10은 Halo refuge proof, Wave 11은 Halo refuge lap, Wave 12는 Citadel final stand다.",
       };
     }
     if (profileId === "ledger") {
       return {
         label: "Ledger cadence",
         detail:
-          "Wave 9는 open-lane payoff, Wave 10은 Jackpot breach proof, Wave 11은 Kingpin cash-out lap, Wave 12는 blackout finale다.",
+          "Wave 9는 Ledger vaultline, Wave 10은 Jackpot caravan chase, Wave 11은 Kingpin cash-out lap, Wave 12는 blackout finale다.",
       };
     }
     return {
@@ -2226,14 +2241,14 @@
       return {
         title: "Warplate Halo",
         detail:
-          "Wave 9는 open-lane payoff, Wave 10은 Halo breach proof, Wave 11은 Halo refuge lap, Wave 12는 Citadel final stand로 고정된다.",
+          "Wave 9는 Halo bastion pocket, Wave 10은 Halo refuge proof, Wave 11은 Halo refuge lap, Wave 12는 Citadel final stand로 고정된다.",
       };
     }
     if (profileId === "ledger") {
       return {
         title: "Black Ledger Heist",
         detail:
-          "Wave 9는 open-lane payoff, Wave 10은 Jackpot breach proof, Wave 11은 Kingpin cash-out lap, Wave 12는 blackout finale로 고정된다.",
+          "Wave 9는 Ledger vaultline, Wave 10은 Jackpot caravan chase, Wave 11은 Kingpin cash-out lap, Wave 12는 blackout finale로 고정된다.",
       };
     }
     return null;
@@ -11742,9 +11757,9 @@
       tag: "HALO",
       title: "Warplate Halo",
       description:
-        "Act 3 진입 전에 재충전식 warplate를 두 겹까지 예열해 큰 한 방을 지우고, plate가 터질 때마다 주변 탄막과 추격선을 같이 뜯어낸다. Wave 9-10은 headline form이 전장을 먼저 먹는 payoff band로 유지되고, Wave 11은 Halo refuge lap에서 방금 붙인 생존층으로 넓은 pocket을 얼마나 오래 지키는지 먼저 누리게 만든다. Wave 12에서만 Citadel final stand를 버티게 만든다.",
-      roadmapDetail: "Wave 9-10 payoff band -> Wave 11 Halo refuge lap -> Wave 12 final stand",
-      slotText: `warplate ${getLateFieldAegisMaxCharges({ lateFieldAegisLevel: nextLevel })}충전 · payoff band -> refuge lap -> finale`,
+        "Act 3 진입 전에 재충전식 warplate를 두 겹까지 예열해 큰 한 방을 지우고, plate가 터질 때마다 주변 탄막과 추격선을 같이 뜯어낸다. Wave 9부터는 작은 bastion pocket을 열고 버티는 ask가 바로 붙고, Wave 10-11은 refuge cadence를 계속 밀어 plate timing과 이탈 판단이 late-run 실루엣 자체를 바꾸게 만든다. Wave 12에서만 Citadel final stand를 버티게 만든다.",
+      roadmapDetail: "Wave 9 Halo bastion -> Wave 10 refuge proof -> Wave 11 refuge lap -> Wave 12 final stand",
+      slotText: `warplate ${getLateFieldAegisMaxCharges({ lateFieldAegisLevel: nextLevel })}충전 · bastion -> refuge -> finale`,
       cost: 26,
       laneLabel: "Defense / Utility",
       forgeLaneLabel: "Defense / Utility",
@@ -11765,9 +11780,9 @@
       tag: "LEDGER",
       title: "Black Ledger Heist",
       description:
-        "Act 3 개막 자금을 먼저 당겨 고철과 회수 효율을 크게 올린다. 대신 첫 두 rung은 headline form이 전장을 먹는 payoff band로 유지되고, Wave 11은 Kingpin cash-out lap에서 greed를 rider 위치에 묶은 채 넓은 vault line을 한 판 더 누리게 하며, Wave 12에서만 blackout finale로 큰 payout 압박을 정면으로 받게 만든다.",
-      roadmapDetail: "Wave 9-10 payoff band -> Wave 11 Kingpin cash-out lap -> Wave 12 blackout finale",
-      slotText: "고철 +52 · 회수 +16% · payoff band -> cash-out lap -> finale · 2웨이브 Siege Debt",
+        "Act 3 개막 자금을 먼저 당겨 고철과 회수 효율을 크게 올린다. 대신 Wave 9부터 넓은 vaultline raid가 열리고, Wave 10은 moving caravan chase로 greed routing을 한 번 더 비틀어 headline form과 payout 판단이 동시에 run 실루엣을 바꾸게 만든다. Wave 11은 Kingpin cash-out lap, Wave 12는 blackout finale로 닫는다.",
+      roadmapDetail: "Wave 9 vaultline -> Wave 10 caravan chase -> Wave 11 cash-out lap -> Wave 12 blackout finale",
+      slotText: "고철 +52 · 회수 +16% · vaultline -> caravan -> finale · 2웨이브 Siege Debt",
       cost: 0,
       scrapGain: 52,
       scrapMultiplierGain: 0.16,
@@ -14211,6 +14226,79 @@
     }
     const resolvedWave = resolveWaveConfig(boundedWave - 1, build);
     const bandLabel = resolvedWave.bandLabel || resolvedWave.label;
+    const profileId = build && build.lateBreakProfileId;
+    if (profileId === "mutation") {
+      if (boundedWave === 9) {
+        return {
+          label: "Cataclysm Payoff",
+          detail: `${bandLabel}에서 잠근 주포 실루엣으로 열린 flank 둘을 동시에 잠그는 시간부터 먼저 벌어야 한다.`,
+        };
+      }
+      if (boundedWave === 10) {
+        return {
+          label: "Crownline Proof",
+          detail: `${bandLabel}에서 split fire로 relay corridor를 직접 찢고 breach hold를 길게 유지하는지 본다.`,
+        };
+      }
+      if (boundedWave === 11) {
+        return {
+          label: "Crownbreaker Lap",
+          detail: `${bandLabel}에서 corridor 하나가 아니라 전장 폭 전체를 얼마나 오래 소유하는지 결산한다.`,
+        };
+      }
+      return {
+        label: "Cataclysm Finale",
+        detail: `${bandLabel}에서 crownline 하나를 직접 열어 무장 branch의 최종 breach를 닫는다.`,
+      };
+    }
+    if (profileId === "aegis") {
+      if (boundedWave === 9) {
+        return {
+          label: "Halo Bastion",
+          detail: `${bandLabel}에서 plate를 믿고 bastion pocket 하나를 열고 버리는 cadence를 먼저 증명한다.`,
+        };
+      }
+      if (boundedWave === 10) {
+        return {
+          label: "Refuge Proof",
+          detail: `${bandLabel}에서 drift wake를 끊고 한 pocket을 비운 뒤 다음 refuge로 짧게 갈아타는지 본다.`,
+        };
+      }
+      if (boundedWave === 11) {
+        return {
+          label: "Refuge Run",
+          detail: `${bandLabel}에서 locked form으로 pursuit 덩어리를 먼저 찢고 refuge pocket 사이를 갈아타는 cadence를 증명한다.`,
+        };
+      }
+      return {
+        label: "Citadel Stand",
+        detail: `${bandLabel}에서 어느 bastion pocket을 열고 버릴지 직접 결산하며 final stand를 닫는다.`,
+      };
+    }
+    if (profileId === "ledger") {
+      if (boundedWave === 9) {
+        return {
+          label: "Vaultline Raid",
+          detail: `${bandLabel}에서 주포로 퇴로를 열고 어떤 contraband vault까지 cash-out할지 먼저 고른다.`,
+        };
+      }
+      if (boundedWave === 10) {
+        return {
+          label: "Caravan Chase",
+          detail: `${bandLabel}에서 moving jackpot을 끝까지 쫓을지 중간에 끊고 살아남을지 판단이 갈린다.`,
+        };
+      }
+      if (boundedWave === 11) {
+        return {
+          label: "Cash-Out Lap",
+          detail: `${bandLabel}에서 흩어진 vaultline 중 어디까지 greed를 밟고 언제 이탈할지 한 판 더 증명한다.`,
+        };
+      }
+      return {
+        label: "Blackout Finale",
+        detail: `${bandLabel}에서 거대한 contraband chase를 끝까지 밀지 말지 이번 run의 마지막 greed 판단을 닫는다.`,
+      };
+    }
     if (boundedWave <= 10) {
       return {
         label: "Payoff Band",

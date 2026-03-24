@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is `UX/UI`, because the forge, HUD, and `Tab` inspect still behave like layered documentation instead of one fast appetite-first read.
-- Repeated false solution: shaving wording while preserving the same hierarchy of `Next Proof`, route-stage labels, rider/support tracking, and `Afterburn` as the implied cooler game.
-- Keep comparing the reward moment against `Hades`, `Nova Drift`, and `Brotato`; the pass condition is one instantly desirable main leap, not six equally explained data points.
-- Do not push for more late-wave content until the shipped `Wave 1-12` surface is collapsed to `main leap / defense-support / greed` and the status board becomes glanceable.
-- Next valuable critique angle after this consolidation: verify whether offense, defense/support, and greed produce genuinely different late-wave combat silhouettes rather than different copy on the same encounter family.
+- The most fragile gate has shifted to `Builds`: the UI is still too document-like, but the bigger release risk is that late-run offense, defense/support, and greed still collapse into one combat shape with different wrapper text.
+- Repeated false solution: adding `live ascension`, `overcommit`, `pursuit`, or post-capstone branches instead of making the shipped `Wave 9-12` route itself produce distinct silhouettes and appetites.
+- Keep comparing reward readability against `Hades`, `Nova Drift`, and `Brotato`, but judge success by visible weapon/body transformation first; support hardware should read as reinforcement, not the star.
+- `Afterburn`/`Dominion` remaining as apex language is still a structural red flag because it tells the player the real payoff lives after the replayable contract.
+- Next valuable critique angle: once the base late-run payoff matrix is clarified, pressure-test whether each lane changes arena behavior enough to support future `20-30 wave` growth without adding more named systems.
