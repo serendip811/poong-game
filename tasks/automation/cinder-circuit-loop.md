@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: strip route-forecast scaffolding out of title/HUD/forge and make `Wave 1-8` read as `weak opener -> Wave 3 gun leap -> Wave 6 body/defense fork -> Wave 8 support/ordnance commitment`, while `Wave 12` remains the full visible finish.
+- Immediate priority: stop adding route/admin subgames and rebuild the shipped ladder so `Wave 1-8` reads as `weak opener -> Wave 3 gun leap -> Wave 6 chassis/defense fork -> Wave 8 support/ordnance identity`, with a quieter start and `Wave 12` still reading as the full visible finish.
 
 ## Release Gates
 
@@ -61,6 +61,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-25 14:20:00 KST
+  Findings:
+  - [cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8) through [cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L29) and [cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L57) through [cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L62) still define the run around `Signature -> Headline Form -> Survival Rider -> Proof Window`. That contract starts the player too informed and too specialized for a strong rerunnable opener; it reads like a build plan before it feels like survival.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L15936) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L15997) still makes the title screen sell perk text, seed cores, and starting bonus detail up front. That directly weakens the desired early curve where the first minute should feel under-equipped and leave room to earn visible barrels, helpers, shields, or orbitals later.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12365) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12458) plus [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12220) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12334) still spend Wave 3-8 growth on doctrine, chassis breakpoint, support bay, and late divergence wrappers. That is too much infrastructure before the base gun/body transformation cadence is satisfying on its own.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L11842) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L11934) adds `Black Ledger` debt/raid logic on top of the same short route. This raises bookkeeping faster than replay hunger; the run needs cleaner build appetite and broader combat asks before it needs subcontracts.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L877) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1153) gives the arena more room and better pressure families, but it is still mostly one authored lane/corridor/pocket language stretched across the back half. That is not yet the reusable escalation spine a 20-30 wave roguelite wants, and the UI is still compensating for that complexity in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20780) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21035).
+  Top Priority: Freeze new debt/forecast/admin layers and re-author the shipped ladder around one repeatable growth grammar only: weak starting gun, Wave 3 visible weapon leap, Wave 6 chassis-defense commitment, Wave 8 support-ordnance identity, with each beat producing a clear on-screen silhouette change.
+  Why Now: Until the run earns its spectacle instead of briefing it, repeat-run desire will flatten no matter how many late labels or side systems get added.
+  Do Not Repeat: Do not answer this with another named contract, debt state, or forge wrapper around the same front-loaded build plan.
+  Release Gate: Builds
 
 - 2026-03-25 05:15:00 KST
   Findings:
@@ -2205,6 +2217,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-25 16:35:00 KST
+  Changed: recut the consolidated `Wave 6` stop in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so runs that already took the `Wave 3` weapon leap no longer see another doctrine/ascension card stack at the first chassis breakpoint. If `architectureForecastId` is already set, `Wave 6` now offers chassis-only `bastion_bay_forge` cards, the forge/HUD stage label flips to `방호·보조`, and picking one silently adopts the forecasted doctrine behind the scenes while keeping support bays and pursuit/admin hooks closed until `Wave 8`. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new `Wave 3 gun first -> Wave 6 body only` path plus the fallback `Wave 6 ascension` behavior for unreachable no-forecast states. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to rebuild the shipped ladder around one repeatable growth grammar `weak start -> Wave 3 visible weapon leap -> Wave 6 chassis-defense commitment -> Wave 8 support identity`. The highest-value bounded interpretation was to stop making `Wave 6` re-explain doctrine/admin structure after `Wave 3` had already sold the gun leap, because that was flattening the body-break beat into another planning screen instead of a clean silhouette commitment.
+  Follow-up risk: `Wave 6` now reads much closer to a true chassis-defense fork, but the hidden doctrine adoption means some deeper non-consolidated systems still depend on backstage doctrine state after the player-facing card has stopped naming it. If critique stays on this issue, the next bounded move should trim later `doctrine/pursuit` copy from any remaining shipped-facing surface rather than reintroducing it at `Wave 6`.
+  Release Gate: Builds
 
 - 2026-03-25 16:05:00 KST
   Changed: trimmed the opener's live selection read in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), [index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html), and [styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) so the title screen now behaves more like a fast mutation draft than a route briefing. Signature cards no longer stack tag chips, perk lines, or seed/start admin boxes; each card now shows only the pick name, the weak starting core, and one short bias line, while the title eyebrow and the opening combat feed were cut down to a quieter `start core` read instead of launch-approval copy. This UI pass stayed anchored to the appetite-first character/select reward snap seen in `Hades`, `Nova Drift`, and `Brotato`: one clear starter identity, no pre-run document. Validation passed with `node --check playables/cinder-circuit/game.js` and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

@@ -12261,6 +12261,17 @@
     return choices;
   }
 
+  function shouldUseConsolidatedWave6ChassisDraft(build, nextWave) {
+    return Boolean(
+      CONSOLIDATED_12_WAVE_ROUTE &&
+        build &&
+        !build.bastionDoctrineId &&
+        build.architectureForecastId &&
+        Number.isFinite(nextWave) &&
+        nextWave === 6
+    );
+  }
+
   function createArchitectureDoctrineWeaponChoice(build, doctrine) {
     if (!build || !doctrine || !doctrine.favoredCoreId || !CORE_DEFS[doctrine.favoredCoreId]) {
       return null;
@@ -12549,6 +12560,9 @@
   }
 
   function buildBastionDraftChoices(build, rng, nextWave) {
+    if (shouldUseConsolidatedWave6ChassisDraft(build, nextWave)) {
+      return buildWave6ChassisBreakpointChoices(build, rng, nextWave);
+    }
     if (nextWave === 6 && build && !build.bastionDoctrineId) {
       return buildWave6AscensionChoices(build, nextWave);
     }
@@ -13062,7 +13076,9 @@
     const wave6AscensionDraft =
       nextWave === 6 &&
       state.build &&
-      !state.build.bastionDoctrineId;
+      !state.build.bastionDoctrineId &&
+      !shouldUseConsolidatedWave6ChassisDraft(state.build, nextWave);
+    const wave6ChassisDraft = shouldUseConsolidatedWave6ChassisDraft(state.build, nextWave);
     state.phase = "forge";
     state.pendingFinalForge = false;
     state.forgeStep = 1;
@@ -13071,8 +13087,10 @@
     state.forgeChoices = buildBastionDraftChoices(state.build, Math.random, nextWave);
     pushCombatFeed(
       CONSOLIDATED_12_WAVE_ROUTE
-        ? wave6AscensionDraft
-          ? "주력 변이 선택 개시. 이번 정지는 오래 끌 몸체 하나만 고른다. 보조선은 아직 닫아 두고 몸과 주포만 먼저 굳힌다."
+        ? wave6ChassisDraft
+          ? "방호·보조 선택 개시. 이번 정지는 몸체 하나만 고른다. Wave 3에서 먼저 키운 주포 위에 버티는 선만 덧대고, 보조선은 계속 Wave 8까지 닫아 둔다."
+          : wave6AscensionDraft
+            ? "주력 변이 선택 개시. 이번 정지는 오래 끌 몸체 하나만 고른다. 보조선은 아직 닫아 두고 몸과 주포만 먼저 굳힌다."
           : "변이 선택 개시. 이번 정지는 크게 바꾸는 한 장, 버티는 한 장, 판돈을 거는 한 장 중 하나만 고른다."
         : wave6AscensionDraft
           ? "Wave 6 Ascension Draft 개시. 세 장기 교리 중 하나를 irreversible form으로 잠그면 주포 mutation과 utility chassis까지만 먼저 굳힌다. support bay와 doctrine-free flex lane은 아직 열지 않고 Wave 8 Late Break Armory까지 늦춰 mid-run 실루엣을 lean하게 유지한다."
@@ -13081,7 +13099,9 @@
     );
     setBanner(
       CONSOLIDATED_12_WAVE_ROUTE
-        ? "주력 변이"
+        ? wave6ChassisDraft
+          ? "방호·보조"
+          : "주력 변이"
         : wave6AscensionDraft
           ? "Ascension Draft"
           : "Bastion Draft",
@@ -13164,6 +13184,9 @@
     const upcomingWave = Number.isFinite(nextWave) ? nextWave : run.waveIndex + 2;
     if (shouldRunArchitectureDraft({ nextWave: upcomingWave, finalForge: false })) {
       return { id: "core_lock", label: "주력 변이" };
+    }
+    if (shouldUseConsolidatedWave6ChassisDraft(run.build, upcomingWave)) {
+      return { id: "chassis_break", label: "방호·보조" };
     }
     if (shouldUseCompactActBreakCache({ nextWave: upcomingWave, finalForge: false })) {
       return { id: "chassis_break", label: "주력 변이" };
@@ -13537,7 +13560,32 @@
       return choice;
     }
 
+    const adoptBastionDoctrine = (doctrineId, { recordUpgrade = true } = {}) => {
+      const doctrine = getBastionDoctrineDef(doctrineId || run.build);
+      if (!doctrine || run.build.bastionDoctrineId === doctrine.id) {
+        return doctrine;
+      }
+      run.build.bastionDoctrineId = doctrine.id;
+      run.build.architectureForecastId = doctrine.id;
+      run.build.doctrineCapstoneId = null;
+      run.build.afterburnAscensionOffered = false;
+      run.build.doctrineChaseClaimed = false;
+      doctrine.apply(run.build, run);
+      if (recordUpgrade) {
+        run.build.upgrades.push(`교리 채택: ${doctrine.label}`);
+      }
+      return doctrine;
+    };
+
     if (choice.type === "utility" && choice.action === "bastion_bay_forge") {
+      if (
+        CONSOLIDATED_12_WAVE_ROUTE &&
+        !choice.bayUnlock &&
+        !run.build.bastionDoctrineId &&
+        run.build.architectureForecastId
+      ) {
+        adoptBastionDoctrine(run.build.architectureForecastId, { recordUpgrade: false });
+      }
       if (choice.bayUnlock) {
         applyAuxiliaryJunction(run.build);
         run.build.upgrades.push(
@@ -13589,16 +13637,7 @@
     }
 
     if (choice.type === "utility" && choice.action === "bastion_doctrine") {
-      const doctrine = getBastionDoctrineDef(choice.doctrineId || run.build);
-      if (doctrine && run.build.bastionDoctrineId !== doctrine.id) {
-        run.build.bastionDoctrineId = doctrine.id;
-        run.build.architectureForecastId = doctrine.id;
-        run.build.doctrineCapstoneId = null;
-        run.build.afterburnAscensionOffered = false;
-        run.build.doctrineChaseClaimed = false;
-        doctrine.apply(run.build, run);
-        run.build.upgrades.push(`교리 채택: ${doctrine.label}`);
-      }
+      adoptBastionDoctrine(choice.doctrineId || run.build);
       if (choice.doctrineChoice) {
         applyForgeChoice(run, choice.doctrineChoice);
       }

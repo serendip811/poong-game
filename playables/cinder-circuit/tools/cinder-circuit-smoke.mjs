@@ -936,7 +936,9 @@ assert.equal(game.getSupportBayCapacity(architecturePreviewRun.build), 2);
 assert.equal(architecturePreviewRun.build.supportSystems.length, 0);
 const wave6DoctrineChoices = game.buildBastionDraftChoices(architecturePreviewRun.build, () => 0, 6);
 assert.equal(wave6DoctrineChoices.length, 3);
-assert.ok(wave6DoctrineChoices.every((choice) => choice.action === "wave6_ascension"));
+assert.ok(wave6DoctrineChoices.every((choice) => choice.action === "bastion_bay_forge"));
+assert.ok(wave6DoctrineChoices.every((choice) => !choice.bayUnlock));
+assert.ok(wave6DoctrineChoices.every((choice) => choice.chassisId));
 systemsForgeBuild.bastionDoctrineId = "kiln_bastion";
 const systemsForgeChoices = game.buildBastionDraftChoices(systemsForgeBuild, () => 0, 6);
 const siegePactChoice = systemsForgeChoices.find((choice) => choice.action === "bastion_pact");
@@ -1522,18 +1524,20 @@ const bastionOvercommitChoices = game.buildBastionDraftChoices(
   6
 );
 assert.equal(bastionOvercommitChoices.length, 3);
-assert.ok(bastionOvercommitChoices.every((choice) => choice.action === "wave6_ascension"));
+assert.ok(bastionOvercommitChoices.every((choice) => choice.action === "bastion_bay_forge"));
+assert.ok(bastionOvercommitChoices.every((choice) => !choice.bayUnlock));
 game.applyForgeChoice(architectureRun, bastionOvercommitChoices[0]);
 assert.equal(game.getSupportBayCapacity(architectureRun.build), 2);
 assert.equal(architectureRun.build.auxiliaryJunctionLevel, 0);
 assert.equal(architectureRun.build.wave6ChassisBreakpoint, false);
 assert.equal(architectureRun.build.supportSystems.length, 0);
-assert.equal(architectureRun.build.doctrinePursuitCommitted, true);
+assert.equal(architectureRun.build.bastionDoctrineId, architectureRun.build.architectureForecastId);
+assert.equal(architectureRun.build.doctrinePursuitCommitted, false);
 assert.equal(architectureRun.build.doctrinePursuitProgress, 0);
 assert.equal(architectureRun.build.doctrineChaseClaimed, false);
 assert.ok(
   architectureRun.build.upgrades.some((upgrade) =>
-    upgrade.startsWith("Ascension Relay:")
+    upgrade.startsWith("유틸리티 섀시:")
   )
 );
 assert.ok(
@@ -1703,9 +1707,9 @@ assert.equal(artilleryWaveThreeWeapon.doctrineFirePattern, null);
 Object.assign(artilleryDoctrineBuild, { overcommitUnlocked: true, overcommitResolved: true });
 const artilleryAscensionChoice = game
   .buildBastionDraftChoices(artilleryDoctrineBuild, () => 0, 6)
-  .find((choice) => choice.action === "wave6_ascension" && choice.doctrineId === "storm_artillery");
+  .find((choice) => choice.action === "bastion_bay_forge" && choice.chassisId === "vector_thrusters");
 assert.ok(artilleryAscensionChoice);
-assert.ok(artilleryAscensionChoice.description.includes("첫 진짜 body break"));
+assert.ok(artilleryAscensionChoice.description.includes("이번 Wave 6은 차체 break만 잠그고 끝낸다"));
 assert.ok(!artilleryAscensionChoice.description.includes("support bay"));
 assert.ok(!artilleryAscensionChoice.description.includes("contraband salvage"));
 game.applyForgeChoice(
@@ -1713,7 +1717,8 @@ game.applyForgeChoice(
   artilleryAscensionChoice
 );
 const artilleryWaveFiveWeapon = game.computeWeaponStats(artilleryDoctrineBuild);
-assert.equal(artilleryDoctrineBuild.doctrinePursuitCommitted, true);
+assert.equal(artilleryDoctrineBuild.bastionDoctrineId, "storm_artillery");
+assert.equal(artilleryDoctrineBuild.doctrinePursuitCommitted, false);
 assert.equal(artilleryDoctrineBuild.doctrinePursuitProgress, 0);
 assert.equal(artilleryWaveFiveWeapon.doctrineFormLabel, "Siege Frame");
 assert.equal(artilleryWaveFiveWeapon.doctrineStage, 1);
