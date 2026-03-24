@@ -8684,11 +8684,20 @@
     mainLeapLabel,
     proofLabel,
     supportLabel = "",
+    tradeoffLabel = "",
+    tradeoffValue = "",
+    tradeoffTone = "",
     note = "",
     compact = false,
   }) {
     const spotlightLabel = compact ? currentFormLabel : mainLeapLabel;
     const proofHeader = compact ? "다음 시험" : "곧바로";
+    const signalPills = [
+      supportLabel ? createMiniPill("방호·보조", supportLabel, "cool") : "",
+      tradeoffValue ? createMiniPill(tradeoffLabel || "현재 청구서", tradeoffValue, tradeoffTone) : "",
+    ]
+      .filter(Boolean)
+      .join("");
     return `
       <div class="summary-head">
         <strong>${eyebrow || title}</strong>
@@ -8701,7 +8710,7 @@
       <p class="summary-copy roadmap-card__path">${prompt}</p>
       <strong class="route-contract__title">${spotlightLabel}</strong>
       <div class="forge-focus__proof"><span>${proofHeader}</span>${compact ? proofLabel : `${mainLeapLabel} · ${proofLabel}`}</div>
-      ${supportLabel ? `<div class="mini-pill-row">${createMiniPill("방호·보조", supportLabel, "cool")}</div>` : ""}
+      ${signalPills ? `<div class="mini-pill-row">${signalPills}</div>` : ""}
       ${note ? `<p class="summary-note">${note}</p>` : ""}
     `;
   }
@@ -8746,54 +8755,27 @@
 
   function createTabInspectBoardMarkup({
     dominantForm,
-    nextBreakpoint,
     supportTrack,
     proofWindow,
     gambleSummary,
   }) {
-    const lanes = [
-      {
-        tone: "main",
-        label: "주력 변이",
-        value: nextBreakpoint.label,
-        note: trimInspectNote(
-          `${proofWindow.label}에서 바로 드러난다. ${nextBreakpoint.detail}`,
-          `${proofWindow.label}에서 바로 드러난다.`
-        ),
-      },
-      {
-        tone: "support",
-        label: "방호·보조",
-        value: supportTrack.label,
-        note: trimInspectNote(
-          `${dominantForm.label} 뒤에 붙는 보조선이다. ${supportTrack.detail}`,
-          `${dominantForm.label} 뒤에 붙는 보조선이다.`
-        ),
-      },
-      {
-        tone: "gamble",
-        label: "판돈·유틸",
-        value: gambleSummary.label,
-        note: trimInspectNote(gambleSummary.note, "판돈 축은 아직 조용하다."),
-      },
-    ];
+    const contractNote = trimInspectNote(
+      `${dominantForm.label} 하나만 밀고 ${proofWindow.label}에서 바로 본다.`,
+      `${proofWindow.label}에서 바로 본다.`
+    );
     return `
       <div class="summary-head">
         <strong>변이 보드</strong>
         <span class="summary-chip">TAB</span>
       </div>
-      <div class="inspect-board">
-        ${lanes
-          .map(
-            (lane) => `
-              <article class="inspect-board__lane inspect-board__lane--${lane.tone}">
-                <span class="inspect-board__label">${lane.label}</span>
-                <strong>${lane.value}</strong>
-                <p>${lane.note}</p>
-              </article>
-            `
-          )
-          .join("")}
+      <div class="inspect-board inspect-board--contract">
+        <p class="summary-copy roadmap-card__path">${contractNote}</p>
+        <strong class="route-contract__title">${dominantForm.label}</strong>
+        <div class="forge-focus__proof"><span>다음 시험</span>${proofWindow.label}</div>
+        <div class="mini-pill-row">
+          ${createMiniPill("방호·보조", supportTrack.label, "cool")}
+          ${createMiniPill("현재 청구서", gambleSummary.label, "accent")}
+        </div>
       </div>
     `;
   }
@@ -13965,6 +13947,9 @@
     getForgeHeadlineShowcase,
     createForgePreviewRows,
     getForgeChoiceTransformation,
+    getTabInspectGambleSummary,
+    createTabInspectBoardMarkup,
+    createBaseRouteFocusMarkup,
   };
 
   if (typeof module !== "undefined" && module.exports) {
@@ -20752,7 +20737,6 @@
       if (tabInspectBoardActive) {
         elements.pendingCores.innerHTML = createTabInspectBoardMarkup({
           dominantForm,
-          nextBreakpoint,
           supportTrack,
           proofWindow,
           gambleSummary,
@@ -20794,15 +20778,19 @@
               title: dominantForm.label,
               prompt:
                 state.phase === "forge"
-                  ? `이번 정비에서는 ${nextBreakpoint.label}처럼 크게 보이는 선택 하나만 먼저 집고 바로 전투로 돌아간다.`
-                  : `${ladderFocus.title} 구간이다. 지금 실루엣 하나로 전장을 점유하며 ${proofWindow.label} 하나만 준비한다.`,
+                  ? `이번 정비는 ${nextBreakpoint.label} 하나만 먼저 집는다.`
+                  : `${dominantForm.label}로 밀고 ${proofWindow.label}만 준비한다.`,
               currentFormLabel: dominantForm.label,
               mainLeapLabel: nextBreakpoint.label,
               proofLabel: proofWindow.label,
               supportLabel: tabInspectBoardActive ? "" : supportTrack.label,
-              note: tabInspectBoardActive
-                ? `${dominantForm.label} 하나만 먼저 본다. 다음 시험은 ${proofWindow.label}다.`
-                : `${supportTrack.label}는 작은 보조 신호로만 남기고, 시선은 ${proofWindow.label} 하나에 묶는다.`,
+              tradeoffLabel: "판돈·유틸",
+              tradeoffValue: gambleSummary.label,
+              tradeoffTone: gambleSummary.label === "잠잠" ? "" : "accent",
+              note:
+                tabInspectBoardActive
+                  ? ""
+                  : `${supportTrack.label}는 얇게 남기고 ${proofWindow.label}만 본다.`,
               compact: true,
             })
           : createHeadlineRiderFocusMarkup(
@@ -20940,10 +20928,10 @@
         : (featuredChoice && featuredChoice.title) || nextFormStep.label;
     const focusPrompt = useBaseRouteContract
       ? state.pendingFinalForge
-        ? `${dominantFormSummary.label}를 이번 런의 마지막 실루엣으로 고정한다.`
+        ? `${dominantFormSummary.label}로 이번 런을 닫는다.`
         : riderStep
-          ? `${proofWindow.label} 전에 버틸 보조선 한 장만 얹는다.`
-          : `${focusTitle}처럼 전장을 크게 바꿀 주력 변이 하나를 먼저 고른다. 나머지 두 장은 방호·보조와 판돈·유틸이다.`
+          ? `${proofWindow.label} 전에 버틸 보조선 한 줄만 얹는다.`
+          : `${focusTitle} 하나만 먼저 집고 바로 ${proofWindow.label}로 간다.`
       : state.pendingFinalForge
         ? `${dominantFormSummary.label}를 이번 12-wave spine의 최종 실루엣으로 봉인한다.`
         : riderStep
@@ -20962,16 +20950,20 @@
           ${createBaseRouteFocusMarkup({
             eyebrow: focusEyebrow,
             chipLabel: baseRouteForgeStage ? baseRouteForgeStage.label : "",
+            title: focusTitle,
             prompt: focusPrompt,
             currentFormLabel: dominantFormSummary.label,
             mainLeapLabel: riderStep ? dominantFormSummary.label : focusTitle,
             proofLabel: proofWindow.label,
             supportLabel: riderStep ? focusTitle : activeSupportTrack.label,
+            tradeoffLabel: "고철",
+            tradeoffValue: String(Math.round(state.resources.scrap)),
+            tradeoffTone: state.resources.scrap >= 40 ? "accent" : "",
             note: state.pendingFinalForge
-              ? `${dominantFormSummary.label}를 이번 런의 마지막 실루엣으로 남긴다.`
+              ? `${dominantFormSummary.label}로 런을 마감한다.`
               : riderStep
-                ? `${focusTitle}는 방호·보조 한 줄로만 얹고 ${proofWindow.label}에서 바로 버티는지 본다.`
-                : `${proofWindow.label}에서 바로 전장 소유 시간을 증명한다. 방호·보조는 두 번째다.`,
+                ? `${focusTitle}는 얇게 얹고 ${proofWindow.label}에서 버틴다.`
+                : `${proofWindow.label}에서 바로 본다.`,
           })}
         </article>
       `

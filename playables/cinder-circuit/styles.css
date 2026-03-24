@@ -703,6 +703,18 @@ body[data-overdrive="true"] .backdrop__glow--right {
   margin-top: 10px;
 }
 
+.inspect-board--contract {
+  gap: 10px;
+}
+
+.inspect-board--contract .summary-copy {
+  margin: 0;
+}
+
+.inspect-board--contract .route-contract__title {
+  margin-top: 0;
+}
+
 .inspect-board__lane {
   display: grid;
   gap: 4px;

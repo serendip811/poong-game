@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: prove three distinct `Wave 9-12` endgame fantasies inside the shipped route `main leap / defense-support / greed`, and cut `Tab`/roadmap surfaces down to a glance board that reinforces those fantasies instead of re-explaining them.
+- Immediate priority: compress the shipped `Wave 1-12` read so `Tab`, forge, combat feed, and docs stop narrating systems and instead show one glanceable fantasy, one next proof, and one bill while preserving the newly differentiated late paths.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-25 02:30:48 KST
+  Findings:
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L77) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L692) now gives `Wave 9-12` genuinely different combat asks for offense, defense/support, and greed. That means the main drift has moved: the game no longer most needs another late-path rewrite, it needs the surrounding player-facing language to stop smothering the differentiation it already earned.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20702) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21005) still makes HUD `Tab` inspect and forge context behave like a miniature design brief. Even after the cleanup, the player is still reading `dominant form / next breakpoint / proof / rider / route payoff` relationships instead of instantly seeing the one fantasy to chase. Strong references use this pause to sharpen appetite, not explain the schema.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L16281) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L16322) and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L19880) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20340) still push too much route-admin and future-system vocabulary into combat feed and transition messaging `Late Break Armory`, `rider bay`, `Act 3 변환 각인`, `Afterburn`, `Dominion`, caches, pursuits. For a release-feeling run, this is fantasy dilution: the game keeps naming machinery the player cannot cash out cleanly inside the shipped route.
+  - [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L198) and [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L224) through [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L239) still grant permission to think in `Afterburn`, `Reforge`, rarity fusion, and other expansion layers while the current red flags remain about opener noise and over-explanation. The docs are still subtly steering the project toward breadth instead of shipping clarity.
+  Top Priority: Strip the shipped route's player-facing language to a hard release contract `one headline fantasy, one next proof, one resource/tradeoff line` across `Tab`, forge, combat feed, and docs, and hide every `Afterburn`/`Dominion`/cache/admin concept that does not materially resolve inside `Wave 1-12`.
+  Why Now: The combat path split has improved enough that text density is now the bigger reason the run still feels like a prototype briefing instead of a rerunnable action game.
+  Do Not Repeat: Do not answer this with another terminology pass that merely renames the same multi-row explanations.
+  Release Gate: UX/UI
 
 - 2026-03-25 02:01:04 KST
   Findings:
@@ -2138,6 +2149,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-25 02:43:55 KST
+  Changed: rebuilt the consolidated-route `Tab` inspect and compact forge-focus surfaces in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so they now read as one release contract instead of three explanatory lanes. `Tab` no longer prints separate `주력 변이 / 방호·보조 / 판돈·유틸` note cards; it now shows one headline form title, one `다음 시험` capsule, and one small pill row for support plus the current bill/resource line. The same contract now drives the compact base-route focus card and base-route forge context, which also picked up a visible `고철`/`판돈·유틸` line and shorter one-sentence prompts. I added the matching compact layout tweak in [styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) and extended [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new markup contract. This UI pass stayed anchored to the appetite-first pause/read hierarchy seen in `Hades`, `Nova Drift`, and `Brotato`: one dominant prize, one next test, one tiny bill. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` explicitly called out `Tab` inspect and forge context for still behaving like a miniature design brief. The highest-value bounded interpretation was to collapse those default pause surfaces to `one headline fantasy, one next proof, one resource/tradeoff line` without reopening reward generation or adding another UI wrapper.
+  Follow-up risk: the compact pause surfaces are now much faster to parse, but some combat-feed and transition copy still name route machinery outside this contract. If critique stays on the same issue, the next bounded pass should trim those live feed strings or the remaining non-compact forge wording before touching new content.
+  Release Gate: UX/UI
 
 - 2026-03-25 02:25:00 KST
   Changed: turned the `ledger` late path into an actual `moving payout chase under debt pressure` in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). `Wave 9-12` ledger runs now arm a per-wave `Debt Surge` state, and missing a vault/caravan cash-out window or letting its spawned payload scrap expire permanently escalates that wave's pressure: enemy move speed rises, player damage taken rises, active cap widens, and hazard cadence accelerates. I tied the trigger only to the shipped `Black Ledger Heist` late branch, surfaced the surge as a live side-bet readout, and tagged hazard payload bursts so the penalty comes from visible greed mistakes rather than hidden timers. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new debt-state helpers and stack scaling. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Builds`: the base route contract is cleaner, but `Wave 9-12` still do not prove three meaningfully different endgame fantasies strongly enough.
-- Repeated false solution: solving weak combat differentiation with more ladder cards, roadmap copy, branch labels, or future-facing doc promises instead of changing the actual late-wave asks.
-- Keep comparing readability against `Hades`, `Nova Drift`, and `Brotato`, but the deciding test has shifted: does the build choice make the next late-wave behavior visibly different, or is the UI just narrating the same run in new words.
-- `Tab` and the `12-Wave Contract` card are still worth watching because they remain slightly too document-like for an action game, even after the broader reward cleanup.
-- `Afterburn`/`Dominion` are still red flags in docs and dormant code paths because they keep implying the shipped finale is rehearsal instead of destination.
+- The most fragile gate is now `UX/UI`: late-path combat differentiation is finally improving, but the shipped run still explains itself too much through HUD, forge, combat-feed, and docs.
+- Repeated false solution: responding to verbosity with softer wording or renamed labels while keeping the same multi-row explanation structure and future-system leakage.
+- Keep comparing readability against `Hades`, `Nova Drift`, and `Brotato`; the deciding test is now whether the screen shows one appetite-first fantasy at a glance or asks the player to parse system relationships.
+- `Tab`, forge context, and transition/combat-feed messaging are the main pressure points because they still turn each beat into route administration.
+- `Afterburn`/`Dominion` and other post-route/admin concepts remain red flags until they are hidden from the shipped `Wave 1-12` player contract or fully paid off inside it.

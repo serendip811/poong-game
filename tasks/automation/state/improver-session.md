@@ -12,6 +12,7 @@ Keep this short and replace stale notes instead of endlessly appending.
 
 ## Current Memory
 
+- On the consolidated route, `Tab` inspect and compact forge focus land better as `headline title + next proof capsule + one bill/resource pill row`; do not let those pauses regress into three parallel lane notes or schema explanations.
 - On `ledger` late waves, greed only reads differently if missed vault/caravan cash-outs create immediate combat debt; keep `Debt Surge` tied to missed payout windows instead of passive text so `Wave 9-12` actually punishes over-chasing or botched exits.
 - On the consolidated route, wave-clear handoff copy and forge headers should always resolve to `주력 변이 / 방호·보조 / 마무리`; if a base-route banner/readout says `Core Lock`, `Late Form`, `Bastion Draft`, or `Live Ascension`, the player-facing contract has slipped back into admin language.
 - On the consolidated `Wave 1-12` route, keep `overcommit`, doctrine chase, live ascension, and catalyst-crucible late-form detours disabled; `Wave 8` should lock one late-break profile and `Wave 9-12` should prove that fixed spine without extra admin exceptions.
