@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gates are now `Progression` and `Rewards`: `Wave 9-12` still repeats one lane-ownership exam with different dressing, while reward surfaces still explain the route more than they sell hunger.
-- Repeated false solution: importing source-style rarity, affix, rune, passive, support-bay, or post-route apex layers before the shipped late band has three distinct proof asks and one self-sufficient `Wave 12` climax.
-- Keep pressure on [cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L27) when it drifts into future-system promises that the current alpha cannot visibly cash out.
-- Keep comparing forge/HUD hierarchy against `Hades`, `Nova Drift`, and `Brotato`. If forge/HUD still need multiple contract rows, route-admin labels, or proof paragraphs to explain why a pick matters, the hierarchy is not solved.
-- Next valuable critique angle after late-band consolidation: pressure-test whether early growth is still too visually complete or too support-led, weakening the feeling of later transformation.
+- The most fragile gates are now `Builds` and `Rewards`: the run still frames identity through support hardware and rider/admin language too early, so the core gun/chassis climb does not own the player's anticipation.
+- Repeated false solution: adding more support tiers, doctrine wrappers, passives, or post-route apex promises before the shipped route proves a lean early game and visibly earns autonomous spectacle later.
+- Keep comparing forge/HUD hierarchy against `Hades`, `Nova Drift`, and `Brotato`. If the main leap does not dominate the reward read on sight, the hierarchy is still prototype-grade.
+- Keep pressure on [cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L27) when it gives expansion permission before the current 12-wave route proves hunger, clarity, and transformation.
+- Next valuable critique angle after early-growth cleanup: re-check whether the late band now has enough distinct movement asks and arena breathing room to justify a future 20-30 wave ceiling.

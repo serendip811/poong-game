@@ -3649,16 +3649,14 @@
       tag: "HUNT",
       short: "추적 미사일 · 드라이브 압박",
       branchFamilyLabel: "추적 드론",
-      starterSystemId: "volt_drones",
       description:
-        "반사 코어를 추적 압박 회로에 묶는다. Act 2부터 외곽 정리와 드라이브 순환을 함께 밀어붙이는 사냥형 운영을 강제한다.",
-      perkText: "Drive +12% · Move +14 · Volt Drones 즉시 설치 · 이후 포지가 추적/연쇄 라인을 먼저 민다.",
+        "반사 코어를 넓은 릴레이 절단 회로로 고정한다. Act 2부터 직접 각을 잡아 외곽 정리와 드라이브 순환을 함께 밀어붙이는 사냥형 운영을 강제한다.",
+      perkText: "Drive +12% · Move +14 · Ricochet 주력 고정 · 이후 포지가 추적/연쇄 라인을 먼저 민다.",
       preferredSystemIds: ["seeker_array", "volt_drones"],
       preferredModIds: ["drive_sync", "arc_array", "step_servos"],
       preferredAffixIds: ["arc_link", "overclock"],
-      reservedLane: "공세 모듈",
-      reserveText:
-        "초반 두 support bay는 공세 모듈 쪽으로 강하게 기울고, Late Break Armory에서 열린 마지막 bay 1칸만 방호/거점 시스템까지 우회 장착할 수 있다.",
+      supportDoctrineText:
+        "Late Break Armory 이후 열린 베이는 추적/공세 하드웨어를 우선 받아 pursuit form을 두껍게 만든다.",
       favoredCoreId: "ricochet",
       lateCapstoneId: "relay_storm_lattice",
       apply(build) {
@@ -3673,16 +3671,14 @@
       tag: "FORT",
       short: "전방 포탑 · 회수 거점",
       branchFamilyLabel: "전방 포탑",
-      starterSystemId: "kiln_sentry",
       description:
-        "수거 회로를 전방 거점 운영으로 굳힌다. Kiln Sentry가 머무를 이유가 있는 회수 거점을 펼쳐, 같은 구역을 다시 밟으며 밀린 전열을 되찾는 운영을 요구한다.",
-      perkText: "Max HP +14 · Hazard Mitigation +8% · Kiln Sentry 거점장 즉시 설치 · 이후 포지가 포탑/방호 라인을 먼저 민다.",
+        "수거 회로를 전방 회수 전열로 굳힌다. Scatter와 무거운 차체로 pocket 입구를 오래 붙잡으며 같은 구역을 다시 밟아 밀린 전열을 되찾는 운영을 요구한다.",
+      perkText: "Max HP +14 · Hazard Mitigation +8% · Scatter 전면 장악 · 이후 포지가 포탑/방호 라인을 먼저 민다.",
       preferredSystemIds: ["kiln_sentry", "aegis_halo"],
       preferredModIds: ["armor_mesh", "magnet_rig", "reactor_cap"],
       preferredAffixIds: ["salvage_link", "thermal_weave"],
-      reservedLane: "보조 시스템",
-      reserveText:
-        "초반 두 support bay는 포탑/방호 쪽으로 강하게 기울고, Late Break Armory에서 열린 마지막 bay 1칸만 공세 모듈까지 우회 장착할 수 있다.",
+      supportDoctrineText:
+        "Late Break Armory 이후 열린 베이는 포탑/방호 회로를 우선 받아 pocket 유지력을 더 오래 끌어낸다.",
       favoredCoreId: "scatter",
       lateCapstoneId: "bulwark_foundry",
       apply(build) {
@@ -3697,16 +3693,14 @@
       tag: "SIEGE",
       short: "돌파 포격 · 냉각 압박",
       branchFamilyLabel: "추적 포격",
-      starterSystemId: "seeker_array",
       description:
-        "관통 냉각 회로를 장거리 포격 교리로 고정한다. 관통/연쇄 보강과 자율 포격을 더 자주 밀어 올려 긴 사선을 끝까지 유지하게 만든다.",
-      perkText: "Damage +4 · Cool +6 · Seeker Array 즉시 설치 · 이후 포지가 관통/포격 라인을 먼저 민다.",
+        "관통 냉각 회로를 장거리 포격 교리로 고정한다. Lance 본체의 관통/연쇄 보강을 더 자주 밀어 올려 긴 사선을 끝까지 유지하게 만든다.",
+      perkText: "Damage +4 · Cool +6 · Lance 포격선 고정 · 이후 포지가 관통/포격 라인을 먼저 민다.",
       preferredSystemIds: ["seeker_array", "ember_ring"],
       preferredModIds: ["rail_sleeve", "arc_array", "heat_sink"],
       preferredAffixIds: ["phase_rounds", "arc_link"],
-      reservedLane: "공세 모듈",
-      reserveText:
-        "초반 두 support bay는 포격 모듈 쪽으로 강하게 기울고, Late Break Armory에서 열린 마지막 bay 1칸만 방호/거점 시스템까지 우회 장착할 수 있다.",
+      supportDoctrineText:
+        "Late Break Armory 이후 열린 베이는 포격/근접 방호 보강을 우선 받아 긴 사선을 끝까지 유지하게 만든다.",
       favoredCoreId: "lance",
       lateCapstoneIds: ["sky_lance_battery", "stormspire_needle"],
       apply(build) {
@@ -6415,7 +6409,7 @@
           title: tierDef.title,
           description:
             installedSystems.length > 0
-              ? `${tierDef.description} 기존 ${installedSystems.map((entry) => SUPPORT_SYSTEM_DEFS[entry.id].tiers[entry.tier].label).join(" + ")}와 병렬 베이에 탑재된다.${doctrine ? ` ${doctrine.reserveText}` : ""}`
+              ? `${tierDef.description} 기존 ${installedSystems.map((entry) => SUPPORT_SYSTEM_DEFS[entry.id].tiers[entry.tier].label).join(" + ")}와 병렬 베이에 탑재된다.${doctrine && doctrine.supportDoctrineText ? ` ${doctrine.supportDoctrineText}` : ""}`
               : tierDef.description,
           slotText:
             installedSystems.length > 0
@@ -9060,8 +9054,7 @@
     }
     return Array.from(
       new Set(
-        [doctrine.starterSystemId, ...(Array.isArray(doctrine.preferredSystemIds) ? doctrine.preferredSystemIds : [])]
-          .filter(Boolean)
+        (Array.isArray(doctrine.preferredSystemIds) ? doctrine.preferredSystemIds : []).filter(Boolean)
       )
     );
   }
@@ -9942,10 +9935,7 @@
     const installedSystems = getInstalledSupportSystems(build);
     const supportBayCap = getSupportBayCapacity(build);
     const installedMap = new Map(installedSystems.map((entry) => [entry.id, entry]));
-    const preferredSystemIds = [
-      doctrine.starterSystemId,
-      ...(Array.isArray(doctrine.preferredSystemIds) ? doctrine.preferredSystemIds : []),
-    ].filter(Boolean);
+    const preferredSystemIds = getDoctrinePreferredSystemIds(doctrine);
     for (const systemId of preferredSystemIds) {
       const installed = installedMap.get(systemId);
       if (installed && installed.tier < 2) {
@@ -11758,7 +11748,8 @@
       return 520;
     }
     if (choice.type === "system") {
-      const index = doctrine.preferredSystemIds.indexOf(choice.systemId);
+      const preferredSystemIds = getDoctrinePreferredSystemIds(doctrine);
+      const index = preferredSystemIds.indexOf(choice.systemId);
       return index >= 0 ? 320 - index * 24 + (choice.systemTier || 1) * 6 : 0;
     }
     if (choice.type === "mod") {
@@ -11827,8 +11818,8 @@
       tag: "DOCTRINE",
       title: doctrine.label,
       description:
-        `${doctrine.description} 즉시 ${weaponChoice.title}을(를) 할인 장착하고, ${doctrine.reserveText} 이어지는 Chassis Breakpoint가 flex bay를 열어 진짜 body plan까지 잠근다.${forecastConfirmed ? " Wave 3 forecast와 맞아 더 싸게 확정된다." : ""}${lateCapstoneLabel ? ` 이후 Wave 6-8 marked elite shard를 모으는 장기 forge pursuit가 열리고, 완성 시 ${lateCapstoneLabel} 계열 교리 monster form이 즉시 잠긴다.` : ""}`,
-      slotText: `교리 채택 · ${weaponChoice.title} · ${doctrine.short} · ${doctrine.reservedLane}`,
+        `${doctrine.description} 즉시 ${weaponChoice.title}을(를) 할인 장착해 core gun lock을 먼저 굳히고, 이어지는 Chassis Breakpoint에서 body plan만 추가로 잠근다. support bay와 자율 하드웨어 headline은 Wave 8 Late Break Armory까지 뒤로 민다.${forecastConfirmed ? " Wave 3 forecast와 맞아 더 싸게 확정된다." : ""}${lateCapstoneLabel ? ` 이후 Wave 6-8 marked elite shard를 모으는 장기 forge pursuit가 열리고, 완성 시 ${lateCapstoneLabel} 계열 교리 monster form이 즉시 잠긴다.` : ""}`,
+      slotText: `교리 채택 · ${weaponChoice.title} · core lock`,
       cost: Math.max(0, Math.round((weaponChoice.cost || 0) * (forecastConfirmed ? 0.45 : 0.72))),
       laneLabel: "교리 채택",
       forgeLaneLabel: "교리 채택",
@@ -11991,7 +11982,7 @@
       tag: "ARCH",
       title: doctrine.label,
       description:
-        `${doctrine.description} Wave 3에서는 ${weaponChoice.title}만 먼저 무료 접속해 core gun lock을 고정한다. ${chassis ? chassis.title : "Chassis Breakpoint"}와 support bay 확장, off-doctrine flex lane은 뒤로 미뤄 Wave 6에서 body plan, Wave 8 Late Break Armory에서 support spectacle이 차례로 열리게 만든다.${lateCapstoneLabel ? ` 이후 Wave 6-8 marked elite shard를 모아 ${lateCapstoneLabel} 계열 후반 분기를 밀 수 있다.` : ""}`,
+        `${doctrine.description} Wave 3에서는 ${weaponChoice.title}만 먼저 무료 접속해 core gun lock을 고정한다. ${chassis ? chassis.title : "Chassis Breakpoint"}는 Wave 6에서 body plan만 더하고, support bay 확장과 자율 하드웨어 headline은 Wave 8 Late Break Armory 이후에야 열린다.${lateCapstoneLabel ? ` 이후 Wave 6-8 marked elite shard를 모아 ${lateCapstoneLabel} 계열 후반 분기를 밀 수 있다.` : ""}`,
       slotText: `monster form lock · ${weaponChoice.title}`,
       cost: 0,
       laneLabel: "Monster Form Lock",
