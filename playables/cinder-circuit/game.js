@@ -8682,6 +8682,98 @@
     `;
   }
 
+  function trimInspectNote(text, fallback) {
+    const source = (text || fallback || "").replace(/\s+/g, " ").trim();
+    if (!source) {
+      return fallback || "";
+    }
+    if (source.length <= 78) {
+      return source;
+    }
+    return `${source.slice(0, 75).trimEnd()}...`;
+  }
+
+  function getTabInspectGambleSummary(currentState = state) {
+    const liveBet = getLiveSideBetSummary(currentState);
+    if (liveBet) {
+      return {
+        label: liveBet.label,
+        note: trimInspectNote(liveBet.note, "판돈 축이 이미 돌고 있다."),
+      };
+    }
+    const greedPressure = getLateFieldGreedPressure(currentState.build);
+    if (greedPressure > 0) {
+      return {
+        label: `청구서 ${greedPressure}웨이브`,
+        note: "판돈 라인이 열려 있다. 다음 선택은 안정성보다 회수 리듬을 먼저 흔든다.",
+      };
+    }
+    if ((currentState.resources && currentState.resources.scrap) >= 40) {
+      return {
+        label: `고철 ${Math.round(currentState.resources.scrap)}`,
+        note: "고철이 넉넉하다. 다음 정비에서 유틸이나 리롤로 런 결을 비틀 여지가 있다.",
+      };
+    }
+    return {
+      label: "잠잠",
+      note: "아직 판돈 라인은 조용하다. 주력 변이와 방호를 먼저 굳힐 타이밍이다.",
+    };
+  }
+
+  function createTabInspectBoardMarkup({
+    dominantForm,
+    nextBreakpoint,
+    supportTrack,
+    proofWindow,
+    gambleSummary,
+  }) {
+    const lanes = [
+      {
+        tone: "main",
+        label: "주력 변이",
+        value: nextBreakpoint.label,
+        note: trimInspectNote(
+          `${proofWindow.label}에서 바로 드러난다. ${nextBreakpoint.detail}`,
+          `${proofWindow.label}에서 바로 드러난다.`
+        ),
+      },
+      {
+        tone: "support",
+        label: "방호·보조",
+        value: supportTrack.label,
+        note: trimInspectNote(
+          `${dominantForm.label} 뒤에 붙는 보조선이다. ${supportTrack.detail}`,
+          `${dominantForm.label} 뒤에 붙는 보조선이다.`
+        ),
+      },
+      {
+        tone: "gamble",
+        label: "판돈·유틸",
+        value: gambleSummary.label,
+        note: trimInspectNote(gambleSummary.note, "판돈 축은 아직 조용하다."),
+      },
+    ];
+    return `
+      <div class="summary-head">
+        <strong>변이 보드</strong>
+        <span class="summary-chip">TAB</span>
+      </div>
+      <div class="inspect-board">
+        ${lanes
+          .map(
+            (lane) => `
+              <article class="inspect-board__lane inspect-board__lane--${lane.tone}">
+                <span class="inspect-board__label">${lane.label}</span>
+                <strong>${lane.value}</strong>
+                <p>${lane.note}</p>
+              </article>
+            `
+          )
+          .join("")}
+      </div>
+    `;
+  }
+
   function shouldUseMinimalBaseRouteHud(run = state) {
     return Boolean(run && CONSOLIDATED_12_WAVE_ROUTE && !run.hudInspect && !run.paused);
   }
@@ -20384,6 +20476,9 @@
     const supportTrack = getForgeSupportTrackSnapshot(state.build, state.supportSystem);
     const ladderFocus = getShippingLadderFocus(state.build, weapon, state.waveIndex + 1);
     const headlineLabel = getPresentationHeadlineLabel(weapon, state.waveIndex + 1);
+    const tabInspectBoardActive =
+      CONSOLIDATED_12_WAVE_ROUTE && state.hudInspect && !state.paused;
+    const gambleSummary = getTabInspectGambleSummary(state);
     if (elements.activeCore) {
       elements.activeCore.innerHTML = `
         <div class="summary-head">
@@ -20417,23 +20512,33 @@
     const benchEntries = getBenchEntries(state.build);
     if (elements.pendingCores) {
       elements.pendingCores.classList.toggle("hidden", minimalBaseRouteHud);
-      elements.pendingCores.innerHTML = benchEntries.length
-        ? benchEntries
-            .map(
-              (entry) => `
-                <span class="chip ${entry.coreId === state.build.coreId ? "chip--active" : ""}">
-                  <strong>${CORE_DEFS[entry.coreId].short}</strong>
-                  <span class="chip__count">x${entry.copies}</span>
-                  <span class="chip__sync">${formatSyncLabel(entry.syncLevel)}</span>
-                </span>
-              `
-            )
-            .join("")
-        : `<span class="chip">없음</span>`;
+      if (tabInspectBoardActive) {
+        elements.pendingCores.innerHTML = createTabInspectBoardMarkup({
+          dominantForm,
+          nextBreakpoint,
+          supportTrack,
+          proofWindow,
+          gambleSummary,
+        });
+      } else {
+        elements.pendingCores.innerHTML = benchEntries.length
+          ? benchEntries
+              .map(
+                (entry) => `
+                  <span class="chip ${entry.coreId === state.build.coreId ? "chip--active" : ""}">
+                    <strong>${CORE_DEFS[entry.coreId].short}</strong>
+                    <span class="chip__count">x${entry.copies}</span>
+                    <span class="chip__sync">${formatSyncLabel(entry.syncLevel)}</span>
+                  </span>
+                `
+              )
+              .join("")
+          : `<span class="chip">없음</span>`;
+      }
     }
 
     if (elements.upgradeList) {
-      elements.upgradeList.classList.toggle("hidden", minimalBaseRouteHud);
+      elements.upgradeList.classList.toggle("hidden", minimalBaseRouteHud || tabInspectBoardActive);
       elements.upgradeList.innerHTML = state.build.upgrades.length
         ? state.build.upgrades
             .slice(-4)
@@ -20444,28 +20549,31 @@
 
     if (elements.buildRoadmap) {
       elements.buildRoadmap.classList.toggle("roadmap-card--contract", minimalBaseRouteHud);
-      elements.buildRoadmap.innerHTML = minimalBaseRouteHud
-        ? createBaseRouteFocusMarkup({
-            eyebrow: "",
-            chipLabel: ladderFocus.label,
-            title: dominantForm.label,
-            prompt:
-              state.phase === "forge"
-                ? `이번 정비에서는 ${nextBreakpoint.label}처럼 크게 보이는 선택 하나만 먼저 집고 바로 전투로 돌아간다.`
-                : `${ladderFocus.title} 구간이다. 지금 실루엣 하나로 전장을 점유하며 ${proofWindow.label} 하나만 준비한다.`,
-            currentFormLabel: dominantForm.label,
-            mainLeapLabel: nextBreakpoint.label,
-            proofLabel: proofWindow.label,
-            supportLabel: supportTrack.label,
-            note: `${supportTrack.label}는 작은 보조 신호로만 남기고, 시선은 ${proofWindow.label} 하나에 묶는다.`,
-            compact: true,
-          })
-        : createHeadlineRiderFocusMarkup(
-            state.build,
-            state.weapon,
-            state.supportSystem,
-            state.waveIndex + 1
-          );
+      elements.buildRoadmap.innerHTML =
+        minimalBaseRouteHud || tabInspectBoardActive
+          ? createBaseRouteFocusMarkup({
+              eyebrow: tabInspectBoardActive ? "현재 실루엣" : "",
+              chipLabel: ladderFocus.label,
+              title: dominantForm.label,
+              prompt:
+                state.phase === "forge"
+                  ? `이번 정비에서는 ${nextBreakpoint.label}처럼 크게 보이는 선택 하나만 먼저 집고 바로 전투로 돌아간다.`
+                  : `${ladderFocus.title} 구간이다. 지금 실루엣 하나로 전장을 점유하며 ${proofWindow.label} 하나만 준비한다.`,
+              currentFormLabel: dominantForm.label,
+              mainLeapLabel: nextBreakpoint.label,
+              proofLabel: proofWindow.label,
+              supportLabel: tabInspectBoardActive ? "" : supportTrack.label,
+              note: tabInspectBoardActive
+                ? `${dominantForm.label} 하나만 먼저 본다. 다음 시험은 ${proofWindow.label}다.`
+                : `${supportTrack.label}는 작은 보조 신호로만 남기고, 시선은 ${proofWindow.label} 하나에 묶는다.`,
+              compact: true,
+            })
+          : createHeadlineRiderFocusMarkup(
+              state.build,
+              state.weapon,
+              state.supportSystem,
+              state.waveIndex + 1
+            );
     }
 
     const enemiesLeft = Math.max(0, state.wave ? state.wave.spawnBudget - state.wave.spawned : 0);
@@ -20494,7 +20602,7 @@
     }
 
     if (elements.liveReadout) {
-      elements.liveReadout.classList.toggle("hidden", minimalBaseRouteHud);
+      elements.liveReadout.classList.toggle("hidden", minimalBaseRouteHud || tabInspectBoardActive);
       const forgeReadoutLabel = shouldUseBaseRouteForgeContract()
         ? state.pendingFinalForge
           ? "마무리 선택 중"

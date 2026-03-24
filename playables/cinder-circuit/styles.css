@@ -697,6 +697,55 @@ body[data-overdrive="true"] .backdrop__glow--right {
   letter-spacing: -0.03em;
 }
 
+.inspect-board {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.inspect-board__lane {
+  display: grid;
+  gap: 4px;
+  padding: 11px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.inspect-board__lane--main {
+  border-color: rgba(255, 166, 102, 0.28);
+  background:
+    linear-gradient(180deg, rgba(255, 145, 88, 0.12), transparent 100%),
+    rgba(255, 255, 255, 0.04);
+}
+
+.inspect-board__lane--support {
+  border-color: rgba(121, 213, 223, 0.22);
+}
+
+.inspect-board__lane--gamble {
+  border-color: rgba(255, 216, 133, 0.18);
+}
+
+.inspect-board__label {
+  color: var(--muted);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.inspect-board__lane strong {
+  font-size: 0.94rem;
+  line-height: 1.24;
+}
+
+.inspect-board__lane p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.42;
+}
+
 .contract-strip {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -797,6 +846,11 @@ body[data-overdrive="true"] .backdrop__glow--right {
 .chip-list--overlay {
   max-width: 360px;
   padding: 0;
+}
+
+.chip-list--overlay > .summary-head,
+.chip-list--overlay > .inspect-board {
+  width: min(100%, 360px);
 }
 
 .chip-list--overlay .chip {

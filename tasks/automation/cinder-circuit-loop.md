@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: collapse the shipped game to one appetite-first `Wave 1-12` reward contract where every stop reads as `main leap / defense-support / greed`, the HUD/forge stops speaking route-admin, and the main weapon-body jump is more desirable than support spectacle.
+- Immediate priority: stop adding wrapper logic and consolidate the shipped `Wave 1-12` contract until the forge/HUD/`Tab` read as one appetite-first reward surface, the opener stays lean, and `Wave 9-12` proves a complete payoff instead of a setup for later.
 
 ## Release Gates
 
@@ -61,6 +61,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-25 09:15:00 KST
+  Findings:
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20202) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20290) still routes wave clears through `Act 4 · Afterburn`, `Architecture Draft`, `Bastion Draft`, live ascension lanes, and bay uplink messaging. The run is still framed like a control panel, so the player exits combat into administration instead of hunger.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20374) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20650) keeps the HUD and forge speaking in parallel layers: dominant form, next breakpoint, proof window, support track, ladder focus, forge mode, and `Next Proof`. Compared with the reward hierarchy in `Hades`, `Nova Drift`, or `Brotato`, this still makes the player read six ideas before wanting one.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L14759) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L14837) and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22784) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22827) show that the `Tab` inspect layer is still a document-first status dump, not a quick board. That directly violates the current red flag: strong action roguelites let the player glance for build state, they do not ask for a second reading mode during pressure.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1160) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1273) gives `Wave 9-12` more room than before, but the back half is still one family of asks: open lane, crown breach, pursuit pocket, hold pocket. That is enough for a solid alpha lane check, not enough encounter contrast to sustain the stated `20-30 wave` ambition or make different builds crave different late proofs.
+  - [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L198) still treats `Afterburn` as the place where extra spectacle gets validated. As long as the spec keeps pointing to a cooler game after the clear, the shipped route will keep feeling like rehearsal.
+  Top Priority: Collapse the live HUD, forge, and `Tab` inspect into one ruthless information hierarchy where each break presents exactly three appetites `main leap / defense-support / greed`, removes route-admin naming entirely, and leaves the detailed build sheet out of the moment-to-moment run.
+  Why Now: Until the player can want the next pick at a glance, more waves or more systems will only compound fatigue.
+  Do Not Repeat: Do not spend another pass adding late-wave variants or polishing support spectacle while the reward surface and `Tab` board are still asking the player to study the run.
+  Release Gate: UX/UI
 
 - 2026-03-24 23:30:45 KST
   Findings:
@@ -2082,6 +2094,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-25 09:35:00 KST
+  Changed: rewrote the consolidated-route `Tab` inspect surface in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so holding `Tab` no longer expands into bench chips, upgrade log, roadmap prose, and live telemetry at once. On that inspect path, the HUD now swaps in a compact three-lane board `주력 변이 / 방호·보조 / 판돈·유틸`, each with one short value and one trimmed note, while the companion card only keeps the current silhouette and next proof. I added the supporting inspect-board styling in [styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) and kept the default non-`Tab` HUD unchanged. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` explicitly called out `Tab` as a document-first status dump that breaks the quick-board behavior strong action roguelites rely on. The highest-value bounded interpretation was to fix only the inspect layer, because that directly removes low-value reading from moment-to-moment play without reopening forge generation or adding more reward wrapper logic. For reference direction, this pass stayed anchored to the glanceable build-state hierarchy of `Hades`, `Nova Drift`, and `Brotato`: one dominant current form, three appetites, no secondary sheet in the middle of pressure.
+  Follow-up risk: `Tab` is now much leaner, but the default forge/HUD and some transition/feed strings still carry route-admin labels and more proof narration than the latest critique wants. If critique stays on the same issue, the next bounded pass should finish collapsing those remaining live reward surfaces instead of touching encounter breadth.
+  Release Gate: UX/UI
 
 - 2026-03-25 01:05:00 KST
   Changed: rewrote the player-facing reward card selling copy in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the recurring forge contract now reads as appetite-first choices instead of route-admin previews. `Architecture Forecast`, `Wave 6 Ascension`, defense/support installs, and greed chases now surface short hero-copy like `주포 실루엣을 바로 바꾼다`, `첫 body break를 완성한다`, or `판돈을 올리고 late form을 당겨온다`, while their preview rows were recast around `주포 / 형태 / 몸체 / 버팀 / 보조 / 판돈 / 보상` instead of doctrine/bay/support scheduling. I also normalized the stable contract labels to `주력 변이 / 방호·보조 / 판돈·유틸` across forge generation, HUD pills, and [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs). Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
