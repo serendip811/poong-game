@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: remove post-`Wave 12` and branch/admin language from the default route, then reduce every forge/HUD stop to one oversized headline mutation plus one next-proof read before adding more systems or variants.
+- Immediate priority: lock one shipping `Wave 1-12` ladder across docs, flow, HUD, and forge presentation by removing `5-wave`/post-`Wave 12`/branch-admin framing from the default route before adding more systems or variants.
 
 ## Release Gates
 
@@ -48,6 +48,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-24 13:00:00 KST
+  Findings:
+  - The project is still drifting on its core run contract. [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md) still teaches a `5-wave act curve` and `Wave 1-5` power bracket, which quietly tells the team to balance for prototype length while the game and loop file claim a `12-wave` alpha spine and a future `20-30 wave` ceiling.
+  - The default route still behaves like a router for future branches, not one release ladder. [`maybeAdvancePhase()`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L19935) still carries `Live Ascension`, `Ownership Relay`, `Architecture Draft`, `Bastion Draft`, field grants, and `Afterburn` decisions through the standard clear flow, so the player keeps being reminded of exceptions instead of feeling one clean rerunnable arc.
+  - Act 3 still does not prove it can support a longer escalation game. [`Wave 9 · Lockgrid`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L987) and [`Wave 10 · Scrapline`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1022) are both widened crossfire tests with nearly identical pressure density, so the run is adding duration more than adding distinct movement questions or a real mid-late band spread.
+  - Build hunger is still upside down. [`SUPPORT_SYSTEM_DEFS`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2734) gives satellites, halos, sentries, missiles, and drones cleaner visible level-up payoff than the main weapon/body ladder, so the player is still invited to want accessories more than the next core transformation.
+  - UI hierarchy is improved but still below strong references. [`updateHUD()`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20066) and [`renderForgeOverlay()`](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20317) still make even the "minimal" route explain ladder, rider, proof, and contract text together; compared with `Hades`, `Nova Drift`, or `Brotato`, the reward moment still lands after reading instead of before it.
+  Top Priority: Lock a single shipping progression spine across docs and flow: remove `5-wave` teaching and branch/admin/default-route exceptions, then recut `Wave 9-12` into one oversized late-form mutation, two clearly different proof beats, and one finale.
+  Why Now: Until the game sells one long, craveable run contract, extra systems only make the replay fantasy flatter.
+  Do Not Repeat: Do not answer this with another support tier, wildcard branch, or wording pass that leaves the base ladder structurally split.
+  Release Gate: Progression
 
 - 2026-03-24 12:00:00 KST
   Findings:
@@ -1806,6 +1818,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-24 13:35:00 KST
+  Changed: recut the default shared `Wave 9-10` fallback staircase in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the non-branch late route is no longer two copies of `Lockgrid Hunt`. `Wave 9` now resolves as `Lockgrid Gallery`, a true open-lane payoff lap with no relay upkeep, while `Wave 10` now becomes `Crownsplit Breach`, a narrower relay-corridor proof beat with `breach` pressure, a proof-sized arena, and a distinct enemy mix. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new band ids, labels, pressure-family split, relay hazard, and payoff-vs-proof arena difference. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` asked for `Wave 9-12` to stop stretching time with same-family crossfire tests and start reading like one oversized late-form mutation followed by clearly different proof beats. The highest-value bounded interpretation was to fix the default shared late pool itself, because that fallback path was still teaching `Wave 9` and `Wave 10` as the same hunt with a different number instead of as `ownership lap -> breach proof`.
+  Follow-up risk: the shared fallback route now separates its first two late asks, but the base `WAVE_CONFIG` copy and older docs still contain `Lockgrid` / `Scrapline` language that describes the older twin-crossfire pattern. If the next critique still says the shipping spine is split, the next bounded pass should align those stale base-route names/docs with the new shared late cadence rather than add another late mechanic.
+  Release Gate: Progression
 
 - 2026-03-24 12:20:00 KST
   Changed: recut the consolidated-route HUD and forge pause in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and [styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) around one appetite-first contract card. The default `Wave 1-12` route now collapses its main read to `Headline / Rider / Proof`, hides bench chips, upgrade history, and live telemetry unless the player expands HUD detail, and turns the forge header into one oversized mutation contract instead of stacked roadmap/proof/admin rows. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

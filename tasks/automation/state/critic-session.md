@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `UX/UI`: the default route may be partially consolidated in logic, but the player-facing flow still reads like branch administration instead of one shipping `Wave 1-12` power arc.
-- Repeated false solution: adding support spectacle, cache variants, or copy cleanup before docs/HUD/forge flow are reduced to one contract: `Wave 3 core lock -> Wave 6 chassis lock -> Wave 8 late-form break -> Wave 9-10 proof -> Wave 11-12 finish`.
-- Keep watching for stale prototype framing in docs, especially any `5-wave` pacing model or short-run balance table that weakens the long escalation target.
-- Keep pushing appetite-first hierarchy: if the player has to parse route labels, proof text, support taxonomy, and telemetry before wanting the reward, the UI is still below strong arena-shooter roguelite references.
+- The most fragile gate is now `Progression`: docs and gameplay still disagree on the shipping run contract, so the team risks balancing for a short prototype while claiming a longer `Wave 1-12` ladder and future `20-30 wave` ceiling.
+- Repeated false solution: adding support spectacle, wildcard/admin branches, or copy cleanup before the base route is locked to one readable spine across docs, clear flow, HUD, and forge.
+- Keep watching for stale prototype framing in docs, especially any `5-wave` pacing model or `Wave 1-5` power table that undercuts the current release goal.
+- Keep pressuring Act 3 to diversify its asks; if `Wave 9-10` remain near-identical crossfire proofs, the run is extending time rather than building a sustainable escalation curve.
 - Keep pressing for core gun/body hunger over halos, drones, missiles, orbitals, or extra bays; the run should start lean and visibly earn those layers later.
