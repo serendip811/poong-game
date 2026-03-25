@@ -161,8 +161,11 @@ const forgeContextMarkup = game.createBaseRouteForgeContextMarkup({
 assert.ok(forgeContextMarkup.includes("현재 형태"));
 assert.ok(forgeContextMarkup.includes("다음 전장"));
 assert.ok(forgeContextMarkup.includes("보유 고철"));
-assert.ok(forgeContextMarkup.includes("forge-focus__proof"));
-assert.ok(forgeContextMarkup.includes("forge-card__pivot--bill"));
+assert.ok(forgeContextMarkup.includes("forge-contract-strip"));
+assert.ok(forgeContextMarkup.includes("forge-contract-strip__item--hot"));
+assert.ok(forgeContextMarkup.includes("forge-contract-strip__item--bill"));
+assert.ok(!forgeContextMarkup.includes("forge-focus__proof"));
+assert.ok(!forgeContextMarkup.includes("forge-card__pivot--bill"));
 assert.ok(!forgeContextMarkup.includes("주력 변이"));
 assert.ok(!forgeContextMarkup.includes("다음 점화"));
 assert.ok(!forgeContextMarkup.includes("세 장 중 하나만"));

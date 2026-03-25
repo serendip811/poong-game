@@ -9374,16 +9374,28 @@
     scrapValue = "",
   }) {
     return `
-      <div class="summary-head">
-        <strong>현재 형태</strong>
+      <div class="forge-contract-strip">
+        <article class="forge-contract-strip__item">
+          <span>현재 형태</span>
+          <strong>${dominantFormLabel || "-"}</strong>
+        </article>
+        ${
+          waveAskLabel
+            ? `<article class="forge-contract-strip__item forge-contract-strip__item--hot">
+                <span>다음 전장</span>
+                <strong>${waveAskLabel}</strong>
+              </article>`
+            : ""
+        }
+        ${
+          scrapValue !== ""
+            ? `<article class="forge-contract-strip__item forge-contract-strip__item--bill">
+                <span>보유 고철</span>
+                <strong>${scrapValue}</strong>
+              </article>`
+            : ""
+        }
       </div>
-      <strong class="route-contract__title">${dominantFormLabel}</strong>
-      ${waveAskLabel ? `<div class="forge-focus__proof"><span>다음 전장</span>${waveAskLabel}</div>` : ""}
-      ${
-        scrapValue !== ""
-          ? `<p class="forge-card__pivot forge-card__pivot--bill"><span>보유 고철</span><strong>${scrapValue}</strong></p>`
-          : ""
-      }
     `;
   }
 
@@ -14834,6 +14846,8 @@
     waveObjective: document.getElementById("wave-objective"),
     liveReadout: document.getElementById("live-readout"),
     forgeOverlay: document.getElementById("forge-overlay"),
+    forgePanel: document.getElementById("forge-panel"),
+    forgeHeader: document.getElementById("forge-header"),
     forgeEyebrow: document.getElementById("forge-eyebrow"),
     forgeSubtitle: document.getElementById("forge-subtitle"),
     forgeContext: document.getElementById("forge-context"),
@@ -21863,6 +21877,18 @@
         : riderStep
         ? `${dominantFormSummary.label} 위에 rider 한 장만 얹고 바로 다음 전투 ask를 버틴다.`
           : `${dominantFormSummary.label} 다음에 가장 크게 전장을 바꿀 변이 하나만 먼저 고른다.`;
+    if (elements.forgePanel) {
+      elements.forgePanel.classList.toggle("forge-overlay__panel--contract", useBaseRouteContract);
+    }
+    if (elements.forgeHeader) {
+      elements.forgeHeader.classList.toggle("hidden", useBaseRouteContract);
+    }
+    if (elements.forgeContext) {
+      elements.forgeContext.classList.toggle("forge-context--contract", useBaseRouteContract);
+    }
+    if (elements.forgeCards) {
+      elements.forgeCards.classList.toggle("forge-cards--contract", useBaseRouteContract);
+    }
     if (elements.forgeEyebrow) {
       elements.forgeEyebrow.classList.toggle("hidden", useBaseRouteContract);
     }

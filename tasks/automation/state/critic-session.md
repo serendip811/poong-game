@@ -12,9 +12,9 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Progression`: the shipped route is cleaner, but its meaningful growth still reads as a short fixed staircase instead of a rerunnable appetite curve.
-- Repeated false solution: trimming HUD/card copy while leaving the same `W3 gun / W6 body / W8 support` cadence and late-locked support fantasies intact.
+- The most fragile gate is now `Rewards`: the shipped route still presents combat and forge like admin boards, and post-`Wave 12` language keeps implying the real payoff lives later.
+- Repeated false solution: asking for more branches or more mid-run wrappers before removing `Afterburn`/`Dominion`, roadmap clutter, and proof/bill-heavy forge framing from the player path.
 - Keep comparing against `Nova Drift`, `Hades`, and `Brotato`; the target is immediate build hunger, visible power spikes, and one dominant screen priority at a time.
 - Preserve this constraint: the opener should stay small and readable. Do not front-load full spectacle into `Wave 1-3`, but do start visible secondary growth before `Wave 8`.
-- Main drift markers: support systems are still too late, the forge still explains state before desire, the default HUD still over-stacks boards, and `Afterburn` still implies the real ceiling lives outside the shipped run.
-- Next critique bias: pressure the team to add mid-run visible transformation steps only if they simplify the shipped ladder and make `Wave 12` feel complete, not like setup for a better future mode.
+- Main drift markers: the default HUD still over-stacks boards, the forge still explains state before desire, support fantasies are still staged like administration, and `Afterburn` still makes `Wave 12` feel like setup instead of closure.
+- Next critique bias: pressure consolidation first. Only push for more visible mid-run mutations if they replace future-mode tease and make the existing `12-wave` route feel complete, readable, and worth rerunning now.
