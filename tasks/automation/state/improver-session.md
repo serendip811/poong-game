@@ -12,6 +12,7 @@ Keep this short and replace stale notes instead of endlessly appending.
 
 ## Current Memory
 
+- On the consolidated route, base forge cards should stay three equal appetite tiles with the same `tag -> title -> immediate change -> 다음 시험 -> cost` stack; if a shipped `Wave 1-12` reward reintroduces `추천`, featured double-width treatment, impact strips, or asymmetric preview scaffolding, the reward snap has drifted back into prototype briefing.
 - On the consolidated route, the player-facing `런 실루엣` ladder should stay a four-beat appetite template only `약한 시작 -> 도약 -> 방호 -> 점화`; keep the `Wave 5` micro-forge real in progression, but do not advertise it as a separate public rung on HUD/inspect/forge summary cards or the run regains its short predetermined feel.
 - On the consolidated route, `Tab` inspect and the forge context should now share the same quiet contract `현재 형태 / 다음 전장 / 보유 고철`, and inspect should hide the spare bench panel instead of opening a second bookkeeping board; if `비용·대가`, stage chips, or side-bet/admin summaries retake those default surfaces, the shipped route has drifted back into briefing mode.
 - On the consolidated route, base forge cards should now derive their hero copy from one visible preview row plus one next-fight proof, not from the underlying admin description text; if `doctrine`, `forecast`, `ascension`, `armory`, `bay`, `Afterburn`, or similar backstage nouns reappear in the default `Wave 1-12` card body, the shipped reward snap has leaked back into route administration.

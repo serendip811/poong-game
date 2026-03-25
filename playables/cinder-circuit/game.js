@@ -8854,7 +8854,7 @@
       baseTransformation.accent ||
       (choice && choice.title) ||
       "실루엣";
-    const promise =
+    const rawPromise =
       tone === "defense"
         ? `${previewValue}로 버티는 선을 두껍게 만든다.`
         : tone === "greed"
@@ -8871,11 +8871,12 @@
       !BASE_ROUTE_FORGE_ADMIN_LEAK_PATTERN.test(baseTransformation.proof)
         ? baseTransformation.proof
         : fallbackProof;
+    const promise = trimInspectNote(rawPromise, rawPromise);
     return {
       ...baseTransformation,
       tone,
       promise,
-      proof,
+      proof: trimInspectNote(proof, fallbackProof),
       previewLabel,
       previewValue,
     };
@@ -8892,10 +8893,10 @@
     if (!proof) {
       return "";
     }
-    return `<p class="forge-card__proof forge-card__proof--compact">${proof}</p>`;
+    return `<p class="forge-card__proof forge-card__proof--compact"><span>다음 시험</span>${proof}</p>`;
   }
 
-  function createBaseRouteForgeBillMarkup(slotLabel, accentLabel = "") {
+  function createBaseRouteForgeBillMarkup(slotLabel) {
     return `<span class="forge-card__slot">${slotLabel}</span>`;
   }
 
@@ -21342,20 +21343,32 @@
                   : choice.type === "fallback"
                     ? "보류"
                     : "무료";
+          if (useBaseRouteContract) {
+            return `
+          <button
+            type="button"
+            class="forge-card forge-card--contract forge-card--${choice.tag.toLowerCase()}"
+            data-kind="${kind}"
+            data-contract="${choice.contractRole || (riderStep ? "rider" : "open")}"
+            data-index="${index}"
+            data-tone="${transformation.tone}"
+            data-verb="${choice.verb}"
+            ${state.resources.scrap < choice.cost ? "disabled" : ""}
+          >
+            <span class="forge-card__tag">${contractLabel}</span>
+            <h3>${choice.title}</h3>
+            <p class="forge-card__hero-copy">${transformation.promise}</p>
+            ${createBaseRouteForgePreviewMarkup(
+              transformation.previewLabel,
+              transformation.previewValue
+            )}
+            ${createBaseRouteForgeProofMarkup(transformation.proof)}
+            ${createBaseRouteForgeBillMarkup(slotLabel)}
+          </button>
+        `;
+          }
           const isFeaturedHeadline = !riderStep && index === featuredIndex;
           if (riderStep) {
-            const riderPreviewMarkup = useBaseRouteContract
-              ? createBaseRouteForgePreviewMarkup(
-                  transformation.previewLabel,
-                  transformation.previewValue
-                )
-              : "";
-            const riderProofMarkup = useBaseRouteContract
-              ? createBaseRouteForgeProofMarkup(transformation.proof)
-              : "";
-            const riderBillMarkup = useBaseRouteContract
-              ? createBaseRouteForgeBillMarkup(slotLabel)
-              : "";
             return `
           <button
             type="button"
@@ -21370,25 +21383,12 @@
             <span class="forge-card__tag">${contractLabel}</span>
             <h3>${choice.title}</h3>
             <p class="forge-card__hero-copy">${transformation.promise}</p>
-            ${riderPreviewMarkup}
-            ${useBaseRouteContract ? riderProofMarkup : previewRows ? `<div class="forge-card__preview forge-card__preview--compact">${previewRows}</div>` : ""}
-            ${useBaseRouteContract ? riderBillMarkup : `<span class="forge-card__slot">${slotLabel}</span>`}
+            ${previewRows ? `<div class="forge-card__preview forge-card__preview--compact">${previewRows}</div>` : ""}
+            <span class="forge-card__slot">${slotLabel}</span>
           </button>
         `;
           }
           if (!isFeaturedHeadline) {
-            const compactPreviewMarkup = useBaseRouteContract
-              ? createBaseRouteForgePreviewMarkup(
-                  transformation.previewLabel,
-                  transformation.previewValue
-                )
-              : "";
-            const compactProofMarkup = useBaseRouteContract
-              ? createBaseRouteForgeProofMarkup(transformation.proof)
-              : "";
-            const compactBillMarkup = useBaseRouteContract
-              ? createBaseRouteForgeBillMarkup(slotLabel)
-              : "";
             return `
           <button
             type="button"
@@ -21404,26 +21404,15 @@
             <h3>${choice.title}</h3>
             <p class="forge-card__hero-copy">${transformation.promise}</p>
             ${
-              useBaseRouteContract
-                ? compactPreviewMarkup + compactProofMarkup + compactBillMarkup
-                : compactPreviewRow
-                  ? `<p class="forge-card__pivot"><span>${compactPreviewRow.label}</span><strong>${compactPreviewRow.value}</strong></p>`
-                  : ""
+              compactPreviewRow
+                ? `<p class="forge-card__pivot"><span>${compactPreviewRow.label}</span><strong>${compactPreviewRow.value}</strong></p>`
+                : ""
             }
-            ${useBaseRouteContract ? "" : `<p class="forge-card__side-note">${transformation.proof}</p>`}
-            ${useBaseRouteContract ? "" : `<span class="forge-card__slot">${slotLabel}</span>`}
+            <p class="forge-card__side-note">${transformation.proof}</p>
+            <span class="forge-card__slot">${slotLabel}</span>
           </button>
         `;
           }
-          const featuredProofMarkup = useBaseRouteContract
-            ? createBaseRouteForgeProofMarkup(transformation.proof)
-            : "";
-          const featuredBillMarkup = useBaseRouteContract
-            ? createBaseRouteForgeBillMarkup(
-                slotLabel,
-                compactPreviewRow ? compactPreviewRow.label : "비용·대가"
-              )
-            : "";
           return `
           <button
             type="button"
@@ -21436,25 +21425,17 @@
             ${state.resources.scrap < choice.cost ? "disabled" : ""}
           >
             <span class="forge-card__badge">${
-              useBaseRouteContract && baseRouteForgeStage
-                ? "추천"
-                : useBaseRouteContract
-                  ? "추천"
-                  : "주력 변이"
+              "주력 변이"
             }</span>
             <div class="forge-card__hero forge-card__hero--${transformation.tone}">
               <span class="forge-card__hero-label">${contractLabel}</span>
               <h3>${choice.title}</h3>
               <p class="forge-card__hero-copy">${transformation.promise}</p>
             </div>
-            ${useBaseRouteContract ? featuredProofMarkup : `<p class="forge-card__proof"><span>다음 시험</span>${transformation.proof}</p>`}
+            <p class="forge-card__proof"><span>다음 시험</span>${transformation.proof}</p>
+            <div class="forge-card__preview">${previewRows}</div>
             ${
-              useBaseRouteContract
-                ? featuredBillMarkup
-                : `<div class="forge-card__preview">${previewRows}</div>`
-            }
-            ${
-              !useBaseRouteContract && showcase && showcase.choice === choice
+              showcase && showcase.choice === choice
                 ? `<div class="forge-card__impact-strip">${showcase.rows
                     .map(
                       (row) => `
@@ -21467,7 +21448,7 @@
                     .join("")}</div>`
                 : ""
             }
-            ${useBaseRouteContract ? "" : `<span class="forge-card__slot">${slotLabel}</span>`}
+            <span class="forge-card__slot">${slotLabel}</span>
           </button>
         `;
         }

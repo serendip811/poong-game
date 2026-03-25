@@ -1820,6 +1820,12 @@ body[data-overdrive="true"] .backdrop__glow--right {
     background 140ms ease;
 }
 
+.forge-card--contract {
+  min-height: 0;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
 .forge-card:hover {
   border-color: rgba(255, 175, 108, 0.34);
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22);
@@ -1984,6 +1990,11 @@ body[data-overdrive="true"] .backdrop__glow--right {
   margin-top: 2px;
   padding: 8px 10px;
   font-size: 0.8rem;
+}
+
+.forge-card__proof--compact span {
+  display: block;
+  margin-bottom: 4px;
 }
 
 .forge-card__proof span {
