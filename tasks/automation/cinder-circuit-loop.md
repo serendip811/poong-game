@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze system growth and consolidate the shipped `Wave 1-12` contract so combat, HUD, and forge sell one complete apex now instead of previewing a later game.
+- Immediate priority: rebuild the shipped `Wave 1-12` contract into a clean transformation ladder with more visible mid-run payoff, more breathable combat space, and zero backstage/admin leakage.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-25 14:20:00 KST
+  Findings:
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8089) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8167) explicitly sells the shipped run as "start weak, then grow big only at Wave 3, Wave 6, and Wave 8." That is a prototype ladder, not a rerun-hungry roguelite arc. If the core contract only contains three real spikes, the current build cannot honestly support the longer 20-30 wave ambition the design doc claims.
+  - [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L14) and [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L104) promise transformation hunger every few waves and a structure extensible to `20-30웨이브`, but [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L740) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L835) still cram Act I into a `960x540` room that reaches `32` active enemies and double surges by Wave 4. The opener is still more about surviving compression than learning expressive lane control, so later arena expansion feels like relief from early cramped tuning instead of earned escalation.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12399) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12529) keeps support growth framed as `support bay`, `flex lane`, and `junction` administration. Meanwhile the actual support fantasies already exist in code as visible shield, missile, and drone satellites in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2753) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3186) and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21868) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21921). Strong rerun games make those layers feel like hungry branch picks; here they still read like infrastructure stapled onto the real build.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L878) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L977) and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1174) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1309) show a better instinct for bigger arenas and differentiated late-wave asks, but the shipped route still spends too much of its limited length on proof windows for only a few giant forms. The run needs more intermediate payoffs, not more explanation of why the existing peaks matter.
+  Top Priority: Replace the current `Wave 3 / Wave 6 / Wave 8` three-spike ladder with a denser visible growth cadence inside `Wave 1-12`: one early weapon leap, one small shot-pattern or economy mutation, one chassis/defense lock, one support module branch, one late-form ignition, and one final capstone augment that cashes out the chosen path.
+  Why Now: Until the shipped run contains enough visible steps to sustain anticipation on its own, every extra branch or post-clear promise will keep feeling like scaffolding around a too-short arc.
+  Do Not Repeat: Do not answer this with more Afterburn/endform variants or more forge language cleanup while the main run still only has three real growth beats.
+  Release Gate: Progression
 
 - 2026-03-25 09:00:50 KST
   Findings:
@@ -2294,6 +2305,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-25 15:05:00 KST
+  Changed: added one bounded extra growth beat to the shipped base route in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) by opening a real `Wave 5` micro-forge pause after `Wave 4` on the consolidated path. Instead of jumping straight from the `Wave 3` gun leap to the `Wave 6` chassis lock, the run now stops once for exactly one small mutation card `주력 변이 / 방호·보조 / 판돈·유틸`, letting the player bend the new gun through shot-pattern tuning, early survival shaping, or a greed pact before the body commitment arrives. I also rewrote the shipped ladder card so it no longer says the run only grows at `Wave 3 / 6 / 8`; it now exposes the denser `Wave 3 -> Wave 5 -> Wave 6 -> Wave 8` cadence directly. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` explicitly called out the shipped route for still being a three-spike prototype ladder. The highest-value bounded interpretation was to add one visible mid-step inside `Wave 1-12` without breaking the current lean opener or pulling support spectacle forward, because that gives the run one more anticipation beat right where the ladder previously went flat.
+  Follow-up risk: `Wave 5` now adds a real pattern/economy mutation beat, but the shipped route still compresses the first support-branch and late-form ignition into the same `Wave 8` stop. If critique stays on the same issue, the next bounded progression move should separate those later payoffs instead of adding more early spectacle.
+  Release Gate: Progression
 
 - 2026-03-25 09:12:13 KST
   Changed: rebuilt the shipped base-route forge presentation in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the default `Wave 1-12` reward pause no longer frames one card as `추천` or labels every footer row as `다음 시험` / `비용·대가`. On the consolidated path, the context card now collapses to `현재 형태 / 다음 전장 / 고철`, the three forge cards render at equal weight instead of one featured-plus-two secondary layout, and each card now sells its immediate mutation promise with only an unlabeled next-ask line plus the raw cost tag underneath. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the leaner base-route markup contract. This UI pass stayed anchored to the appetite-first reward snap seen in `Hades`, `Nova Drift`, and `Brotato`: three visible appetites, minimal wrapper language.

@@ -12,6 +12,7 @@ Keep this short and replace stale notes instead of endlessly appending.
 
 ## Current Memory
 
+- On the consolidated route, `Wave 4` should now open one bounded `Wave 5` micro-forge pause before the chassis lock: exactly one `주력 변이 / 방호·보조 / 판돈·유틸` pick that bends the freshly earned gun without unlocking support spectacle early. If `Wave 5` falls back to a plain wave transition or regrows combat-cache/admin framing, the mid-run ladder has thinned out again.
 - On the consolidated route, the base forge pause lands better when all three cards share equal weight and the context card only shows `현재 형태 / 다음 전장 / 고철`; if `추천`, labeled `다음 시험`, or labeled `비용·대가` rows come back on the default three-card reward read, the reward moment has drifted back into briefing mode.
 - On the consolidated route, the minimal combat HUD should now hide both the top `Wave` chip and `Dash` chip; the current wave identity belongs in the single `현재 전장` threat card, not as extra top-strip telemetry beside the survival meters.
 - On the consolidated route, if `build.lateBreakProfileId` is set then `resolveWaveConfig` should jump straight from `WAVE_CONFIG` into the branch-owned `Wave 9-12` overrides instead of inheriting `SHARED_LATE_ACT_ENCOUNTER_POOL` first; otherwise offense/defense/greed finales drift back toward one shared staircase with renamed hazards.

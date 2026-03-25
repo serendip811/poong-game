@@ -4161,6 +4161,7 @@
 
   const DEFAULT_SIGNATURE_ID = "relay_oath";
   const ARCHITECTURE_DRAFT_WAVE = 3;
+  const EARLY_MUTATION_FORGE_WAVE = 5;
   const FORGE_PACKAGE_START_WAVE = 3;
   const ACT_BREAK_ARMORY_WAVE = 5;
   const LATE_BREAK_ARMORY_WAVE = 9;
@@ -6545,6 +6546,13 @@
     );
   }
 
+  function shouldUseConsolidatedEarlyMutationForge(options) {
+    if (!options || options.finalForge || !CONSOLIDATED_12_WAVE_ROUTE) {
+      return false;
+    }
+    return (options.nextWave || 0) === EARLY_MUTATION_FORGE_WAVE;
+  }
+
   function shouldUseLateFieldCache(nextWave) {
     return (
       Number.isFinite(nextWave) &&
@@ -6754,6 +6762,9 @@
     }
     if (shouldRunCatalystDraft(options, options.build)) {
       return "catalyst_draft";
+    }
+    if (shouldUseConsolidatedEarlyMutationForge(options)) {
+      return "field_grant";
     }
     if (shouldForceForgePackage(options)) {
       return "package";
@@ -8122,6 +8133,15 @@
             : `${nextBreakpoint.label} 한 장으로 첫 포문을 크게 벌린다. 이후 방호 선택 전까지는 이 무기 변화만 선명하게 읽히게 둔다.`,
       },
       {
+        label: "W5",
+        title: boundedWave >= 5 ? "사격 조율" : "작은 변이",
+        state: stageState(5),
+        detail:
+          boundedWave >= 5
+            ? "Wave 5 작은 변이가 붙어 주포 패턴, 버팀선, 판돈 중 한 축이 한 번 더 꺾였다. 이제 Act 2는 몸체 잠금 전에도 다른 리듬으로 읽힌다."
+            : "Wave 5에서는 얇은 추가 변이 한 장으로 방금 열린 주포를 다시 비튼다. 큰 차체 잠금 전까지는 패턴, 생존, 판돈 중 하나를 먼저 기울인다.",
+      },
+      {
         label: "W6",
         title: chassis ? chassis.label : "방호 약속",
         state: stageState(6),
@@ -8159,7 +8179,7 @@
         <strong>런 실루엣</strong>
         <span class="summary-chip ${focus.state === "live" ? "summary-chip--hot" : ""}">${act.shortLabel}</span>
       </div>
-      <p class="summary-copy roadmap-card__path">약하게 시작하고 Wave 3, Wave 6, Wave 8 세 번만 크게 커진다.</p>
+      <p class="summary-copy roadmap-card__path">약하게 시작한 뒤 Wave 3 주포 도약, Wave 5 작은 변이, Wave 6 차체 잠금, Wave 8 후기 점화로 더 자주 커진다.</p>
       <div class="roadmap-card__steps">
         ${steps
           .map(
@@ -12861,6 +12881,10 @@
   function enterFieldGrant() {
     const nextWave = state.waveIndex + 2;
     const wildcardProtocol = getWildcardProtocolForWave(nextWave);
+    const earlyMutationForge = shouldUseConsolidatedEarlyMutationForge({
+      nextWave,
+      finalForge: false,
+    });
     state.phase = "forge";
     state.pendingFinalForge = false;
     state.forgeStep = 1;
@@ -12868,7 +12892,9 @@
     state.forgeDraftType = "field_grant";
     state.forgeChoices = buildFieldGrantChoices(state.build, Math.random, nextWave);
     pushCombatFeed(
-      shouldUseLateFieldCache(nextWave)
+      earlyMutationForge
+        ? "Wave 4 돌파. 이번 정지는 Wave 3에 붙인 주포를 한 번 더 비튼다. 주포 패턴, 버팀선, 판돈 중 하나만 집고 Wave 5 payoff window를 바로 연다."
+        : shouldUseLateFieldCache(nextWave)
         ? CONSOLIDATED_12_WAVE_ROUTE
           ? isArsenalBreakpointWave(nextWave)
             ? "주력 변이 선택 개시. 이번 정지에는 세 장만 뜬다. 화면을 넓게 먹는 주력 변이 하나, 오래 버티게 하는 방호·보조 하나, 판돈을 키우는 판돈·유틸 하나뿐이다."
@@ -13242,6 +13268,9 @@
     }
     if (shouldUseConsolidatedWave6ChassisDraft(run.build, upcomingWave)) {
       return { id: "chassis_break", label: "방호·보조" };
+    }
+    if (shouldUseConsolidatedEarlyMutationForge({ nextWave: upcomingWave, finalForge: false })) {
+      return { id: "field_break", label: "주력 변이" };
     }
     if (shouldUseCompactActBreakCache({ nextWave: upcomingWave, finalForge: false })) {
       return { id: "chassis_break", label: "주력 변이" };
@@ -17171,6 +17200,9 @@
       state.build &&
       !state.build.bastionDoctrineId &&
       state.waveIndex + 2 === 6;
+    const earlyMutationForge =
+      state.forgeDraftType === "field_grant" &&
+      shouldUseConsolidatedEarlyMutationForge({ nextWave: state.waveIndex + 2, finalForge: false });
     const instantDraft =
       state.forgeDraftType === "architecture_draft" ||
       state.forgeDraftType === "field_grant" ||
@@ -17214,6 +17246,12 @@
               : choice.action === "catalyst_reforge"
                 ? `${choice.capstoneLabel} 점화. 남은 Act 3 웨이브를 촉매 괴물 형태로 바로 연다.`
                 : `${choice.supportLabel || choice.title} 안정화. 남은 Act 3 웨이브를 이 회로 운영으로 먼저 시험한다.`
+          : earlyMutationForge
+            ? choice.type === "fallback"
+              ? `${grantLabel} 적용. 작은 변이는 보류하고 상태만 정리한 채 Wave 5를 연다.`
+              : choice.action === "field_greed"
+                ? `${grantLabel} 적용. 고철과 회수 효율을 먼저 당겨 Wave 5 판돈을 키웠다. 대신 다음 전투는 바로 청구서가 붙은 채 열린다.`
+                : `${grantLabel} 적용. ${choice.title}로 Wave 3 주포를 한 번 더 비틀어 Wave 5 payoff window를 연다.`
           : choice.type === "fallback"
             ? `${grantLabel} 현장 보급 적용. 고철은 아낀 채 ${choice.title}로 상태만 정리하고 다음 웨이브를 즉시 연다.`
             : choice.action === "field_convergence"
@@ -20780,6 +20818,8 @@
           enterArchitectureDraft();
         } else if (shouldRunBastionDraft({ nextWave: state.waveIndex + 2, finalForge: false })) {
           enterBastionDraft();
+        } else if (shouldUseConsolidatedEarlyMutationForge({ nextWave: state.waveIndex + 2, finalForge: false })) {
+          enterFieldGrant();
         } else if (shouldUseFieldGrant({ nextWave: state.waveIndex + 2, finalForge: false })) {
           beginWave(state.waveIndex + 1);
         } else {
