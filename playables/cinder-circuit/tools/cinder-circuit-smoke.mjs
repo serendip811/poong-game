@@ -231,6 +231,17 @@ assert.equal(
   recurringWave5Choices.map((choice) => choice.contractRole).join("|"),
   "headline|rider|gamble"
 );
+const shippingLadderWave4 = game.getShippingLadderSteps(roadmapBuild, null, 4);
+assert.equal(shippingLadderWave4.length, 4);
+assert.equal(shippingLadderWave4.map((step) => step.label).join("|"), "START|도약|방호|점화");
+assert.ok(
+  !shippingLadderWave4.some(
+    (step) => /Wave 5|작은 변이|사격 조율/i.test(`${step.label} ${step.title} ${step.detail}`)
+  )
+);
+const shippingLadderFocusWave4 = game.getShippingLadderFocus(roadmapBuild, null, 4);
+assert.equal(shippingLadderFocusWave4.label, "방호");
+assert.ok(/Wave 6|몸체|방호/.test(shippingLadderFocusWave4.detail));
 const recurringWave6Choices = game.buildForgeChoices(roadmapBuild, Math.random, 40, {
   nextWave: 6,
   finalForge: false,

@@ -8121,7 +8121,6 @@
     const boundedWave = clamp(Math.round(waveNumber || 1), 1, MAX_WAVES);
     const currentWeapon = weapon || computeWeaponStats(build);
     const dominantForm = getDominantFormSummary(build, currentWeapon, boundedWave);
-    const nextBreakpoint = getNextBreakpointSummary(build, currentWeapon, boundedWave);
     const lateBreakHeadline = getLateBreakHeadline(build && build.lateBreakProfileId);
     const chassis = getChassisBreakpointDef(build);
     const stageState = (start, end = start) => {
@@ -8140,42 +8139,33 @@
         state: boundedWave >= 3 ? "locked" : "live",
         detail:
           boundedWave >= 3
-            ? "빈 선체 구간은 끝났다. 이제 화면을 넓게 먹는 첫 무기 도약만 남겨 둔다."
+            ? "빈 선체 구간은 끝났다. 이제 런의 큰 약속은 몸체 잠금과 후기 점화만 남는다."
             : "처음 두 웨이브는 한 줄 화선으로 버틴다. 미사일과 보조 연출은 닫아 두고 Wave 3 무기 도약에 힘을 모은다.",
       },
       {
-        label: "W3",
-        title: boundedWave >= 3 ? dominantForm.label : nextBreakpoint.label,
+        label: "도약",
+        title: boundedWave >= 3 ? dominantForm.label : "첫 무기 도약",
         state: stageState(3),
         detail:
           boundedWave >= 3
-            ? `${dominantForm.label}이 첫 주포 도약으로 잠겼다. 지금부터는 이 화망이 화면을 얼마나 빨리 비우는지가 런의 기준이 된다.`
-            : `${nextBreakpoint.label} 한 장으로 첫 포문을 크게 벌린다. 이후 방호 선택 전까지는 이 무기 변화만 선명하게 읽히게 둔다.`,
+            ? `${dominantForm.label}이 첫 주포 도약으로 잠겼다. 이 화망이 런의 기준이 되며, 다음 큰 약속은 Wave 6 몸체 잠금이다.`
+            : "Wave 3 한 장으로 첫 포문을 크게 벌린다. 작은 조율은 뒤로 숨기고 이 무기 변화만 먼저 또렷하게 읽히게 둔다.",
       },
       {
-        label: "W5",
-        title: boundedWave >= 5 ? "사격 조율" : "작은 변이",
-        state: stageState(5),
-        detail:
-          boundedWave >= 5
-            ? "Wave 5 작은 변이가 붙어 주포 패턴, 버팀선, 판돈 중 한 축이 한 번 더 꺾였다. 이제 Act 2는 몸체 잠금 전에도 다른 리듬으로 읽힌다."
-            : "Wave 5에서는 얇은 추가 변이 한 장으로 방금 열린 주포를 다시 비튼다. 큰 차체 잠금 전까지는 패턴, 생존, 판돈 중 하나를 먼저 기울인다.",
-      },
-      {
-        label: "W6",
+        label: "방호",
         title: chassis ? chassis.label : "방호 약속",
         state: stageState(6),
         detail: chassis
-          ? `${chassis.label} 차체가 버티는 선을 맡는다. 이제 화력은 그대로 두고 dive, hold, exit 리듬만 몸으로 갈라 놓는다.`
-          : "Wave 6에서 몸체 하나를 골라 버티는 선을 만든다. 지원 하드웨어는 뒤로 밀고 방호 약속만 먼저 굳힌다.",
+          ? `${chassis.label} 차체가 첫 방호 약속으로 잠긴다. 여기서 처음으로 dive, hold, exit 리듬이 몸체 선택에 따라 갈라진다.`
+          : "Wave 6에서 몸체 하나를 골라 버티는 선을 만든다. 지원 하드웨어는 뒤로 밀고 첫 방호 약속만 먼저 굳힌다.",
       },
       {
-        label: "W8",
+        label: "점화",
         title: lateBreakHeadline ? lateBreakHeadline.title : "후기 점화",
         state: stageState(8),
         detail: lateBreakHeadline
-          ? `${lateBreakHeadline.title} 하나만 크게 점화해 후반 실루엣을 고정한다. Wave 9-12는 새 갈림길 없이 이 형태를 오래 누르는 구간이 된다.`
-          : "Wave 8에서 oversized late-form 하나만 점화한다. 이후 런은 새 행정 없이 그 형태를 끝까지 밀어붙인다.",
+          ? `${lateBreakHeadline.title} 하나만 크게 점화해 후반 실루엣을 고정한다. Wave 9-12는 새 갈림길 없이 이 후기 형태를 오래 누르는 구간이 된다.`
+          : "Wave 8에서 oversized late-form 하나만 점화한다. 이후 런은 새 갈림길 없이 그 후기 형태를 끝까지 밀어붙인다.",
       },
     ];
   }
@@ -8185,6 +8175,7 @@
     return (
       steps.find((step) => step.state === "live") ||
       steps.find((step) => step.state === "primed") ||
+      steps.find((step) => step.state === "planned") ||
       steps[steps.length - 1]
     );
   }
@@ -8199,7 +8190,7 @@
         <strong>런 실루엣</strong>
         <span class="summary-chip ${focus.state === "live" ? "summary-chip--hot" : ""}">${act.shortLabel}</span>
       </div>
-      <p class="summary-copy roadmap-card__path">약하게 시작한 뒤 Wave 3 주포 도약, Wave 5 작은 변이, Wave 6 차체 잠금, Wave 8 후기 점화로 더 자주 커진다.</p>
+      <p class="summary-copy roadmap-card__path">약한 시작 뒤 첫 무기 도약, 첫 방호 약속, 후기 점화만 크게 드러내고 중간 조율은 전부 백그라운드로 숨긴다.</p>
       <div class="roadmap-card__steps">
         ${steps
           .map(
@@ -8215,7 +8206,7 @@
           )
           .join("")}
       </div>
-      <p class="summary-note">${focus.label} ${focus.title}: ${focus.detail}</p>
+      <p class="summary-note">${focus.title}: ${focus.detail}</p>
     `;
   }
 
@@ -14246,6 +14237,8 @@
     getDoctrineCapstoneDef,
     getBuildRoadmap,
     getForgeEraPlan,
+    getShippingLadderSteps,
+    getShippingLadderFocus,
     getImmediateProofWindowSummary,
     getLateAscensionDef,
     getStandardLateRouteBeatSummary,
