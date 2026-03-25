@@ -12,6 +12,7 @@ Keep this short and replace stale notes instead of endlessly appending.
 
 ## Current Memory
 
+- On the opener, `Wave 1-4` should now breathe through stepped arena growth `1080x620 -> 1160x660 -> 1220x700 -> 1260x720` with softer active caps `16 / 19 / 23 / 28` and only one `Meltdown Surge` lane at `Wave 4`; if the first act shrinks back to the default `960x540`, restores `32` active enemies, or reintroduces double-surge overlap before the `Wave 5` pause, the run has slipped back into prototype compression.
 - On the consolidated route, `Wave 4` should now open one bounded `Wave 5` micro-forge pause before the chassis lock: exactly one `주력 변이 / 방호·보조 / 판돈·유틸` pick that bends the freshly earned gun without unlocking support spectacle early. If `Wave 5` falls back to a plain wave transition or regrows combat-cache/admin framing, the mid-run ladder has thinned out again.
 - On the consolidated route, the base forge pause lands better when all three cards share equal weight and the context card only shows `현재 형태 / 다음 전장 / 고철`; if `추천`, labeled `다음 시험`, or labeled `비용·대가` rows come back on the default three-card reward read, the reward moment has drifted back into briefing mode.
 - On the consolidated route, the minimal combat HUD should now hide both the top `Wave` chip and `Dash` chip; the current wave identity belongs in the single `현재 전장` threat card, not as extra top-strip telemetry beside the survival meters.
