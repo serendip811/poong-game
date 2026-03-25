@@ -868,16 +868,14 @@ const afterburnTransitionRun = {
   },
 };
 const afterburnTransition = game.applyFinalCashoutTransition(afterburnTransitionRun);
-assert.equal(afterburnTransitionRun.phase, "wave");
-assert.equal(afterburnTransitionRun.pendingFinalForge, false);
-assert.equal(afterburnTransitionRun.waveIndex, game.MAX_WAVES);
-assert.equal(afterburnTransitionRun.postCapstone.active, true);
-assert.equal(afterburnTransitionRun.postCapstone.total, 7);
-assert.ok(afterburnTransitionRun.wave.finaleMutation);
-assert.equal(afterburnTransitionRun.wave.finaleMutation.deployed, false);
-assert.ok(afterburnTransitionRun.wave.finaleMutation.choices.length >= 1);
-assert.ok(afterburnTransitionRun.wave.activeCap < game.WAVE_CONFIG[11].activeCap);
-assert.ok(afterburnTransition.clearProjectiles);
+assert.equal(afterburnTransition, null);
+assert.equal(afterburnTransitionRun.phase, "forge");
+assert.equal(afterburnTransitionRun.pendingFinalForge, true);
+assert.equal(afterburnTransitionRun.waveIndex, game.MAX_WAVES - 1);
+assert.equal(afterburnTransitionRun.postCapstone.active, false);
+assert.equal(afterburnTransitionRun.postCapstone.total, 0);
+assert.equal(afterburnTransitionRun.wave, null);
+assert.equal(afterburnTransitionRun.projectiles.length, 1);
 const afterburnOne = game.createPostCapstoneWave(0, afterburnTransitionRun.build);
 const afterburnTwo = game.createPostCapstoneWave(1, afterburnTransitionRun.build);
 const afterburnThree = game.createPostCapstoneWave(2, afterburnTransitionRun.build);
@@ -939,35 +937,26 @@ const overdriveBuild = game.createInitialBuild("rail_zeal");
 overdriveBuild.catalystCapstoneId = "storm_rail";
 const overdriveChoices = game.getAfterburnOverdriveChoices(overdriveBuild);
 const overdriveWave = game.createPostCapstoneWave(3, overdriveBuild);
-assert.equal(overdriveChoices.length, 3);
-assert.ok(overdriveWave.afterburnOverdrive);
-assert.equal(overdriveWave.afterburnOverdrive.choices.length, 3);
-assert.equal(overdriveWave.afterburnOverdrive.choices[0].action, "afterburn_overdrive");
-const overdriveRun = {
+assert.equal(overdriveChoices.length, 0);
+assert.equal(overdriveWave.afterburnOverdrive, null);
+overdriveBuild.afterburnOverdriveId = "cataclysm_crown";
+const overdriveWeapon = game.computeWeaponStats(overdriveBuild);
+const overdrivePlayer = game.computePlayerStats(overdriveBuild);
+assert.equal(overdriveBuild.afterburnOverdriveId, "cataclysm_crown");
+assert.equal(overdriveWeapon.afterburnOverdriveLabel, "Cataclysm Crown");
+assert.match(overdriveWeapon.afterburnOverdriveTraitLabel, /^FORM 3 · /);
+assert.ok(overdriveWeapon.afterburnOverdriveFirePattern.offsets.length >= 2);
+assert.ok(overdrivePlayer.moveSpeed > 248);
+const dominionWave = game.createPostCapstoneWave(4, overdriveBuild);
+assert.equal(dominionWave.afterburnDominion, null);
+const dominionRun = {
   build: overdriveBuild,
   resources: { scrap: 0 },
   stats: { scrapCollected: 0, scrapSpent: 0 },
   player: { hp: 84, maxHp: 100, heat: 36, overheated: true },
 };
-game.applyForgeChoice(overdriveRun, overdriveChoices[0]);
-const overdriveWeapon = game.computeWeaponStats(overdriveRun.build);
-const overdrivePlayer = game.computePlayerStats(overdriveRun.build);
-assert.equal(overdriveRun.build.afterburnOverdriveId, overdriveChoices[0].afterburnOverdriveId);
-assert.equal(overdriveWeapon.afterburnOverdriveLabel, "Cataclysm Crown");
-assert.match(overdriveWeapon.afterburnOverdriveTraitLabel, /^FORM 3 · /);
-assert.ok(overdriveWeapon.afterburnOverdriveFirePattern.offsets.length >= 2);
-assert.ok(overdrivePlayer.moveSpeed > 248);
-const dominionWave = game.createPostCapstoneWave(4, overdriveRun.build);
-assert.ok(dominionWave.afterburnDominion);
-assert.equal(dominionWave.afterburnDominion.choices.length, 1);
-assert.equal(dominionWave.afterburnDominion.choices[0].action, "afterburn_dominion");
-const dominionRun = {
-  build: overdriveRun.build,
-  resources: { scrap: 0 },
-  stats: { scrapCollected: 0, scrapSpent: 0 },
-  player: { hp: 72, maxHp: 100, heat: 48, overheated: true, invulnerableTime: 0 },
-};
-game.applyForgeChoice(dominionRun, dominionWave.afterburnDominion.choices[0]);
+dominionRun.build.afterburnDominionId = "lance";
+dominionRun.build.afterburnDominionVictoryLapWaves = 1;
 assert.equal(dominionRun.build.afterburnDominionId, "lance");
 assert.equal(dominionRun.build.afterburnDominionVictoryLapWaves, 1);
 const dominionWeapon = game.computeWeaponStats(dominionRun.build);
@@ -1403,7 +1392,7 @@ assert.ok(game.ENEMY_DEFS.mortar.scrap >= game.ENEMY_DEFS.shrike.scrap);
 assert.ok(game.ENEMY_DEFS.mortar.speed < game.ENEMY_DEFS.shrike.speed);
 assert.ok(game.ENEMY_DEFS.skimmer.speed > game.ENEMY_DEFS.shrike.speed);
 assert.ok(game.ENEMY_DEFS.lancer.hp > game.ENEMY_DEFS.skimmer.hp);
-assert.equal(game.createFinalCashoutWave().arena.width, 1560);
+assert.equal(game.createFinalCashoutWave().arena.width, game.WAVE_CONFIG[11].arena.width);
 const afterburnBuild = game.createInitialBuild("relay_oath");
 const afterburnWaveOne = game.createPostCapstoneWave(0, afterburnBuild);
 const afterburnWaveThree = game.createPostCapstoneWave(2, afterburnBuild);
@@ -1868,78 +1857,13 @@ const artilleryCapstoneChoices = artilleryLateArmoryChoices.filter(
 );
 assert.equal(artilleryCapstoneChoices.length, 0);
 const artilleryAfterburnWave = game.createPostCapstoneWave(0, artilleryDoctrineBuild);
-assert.ok(artilleryAfterburnWave.afterburnAscension);
-assert.equal(artilleryAfterburnWave.afterburnAscension.choices.length, 2);
-assert.ok(artilleryAfterburnWave.finaleMutation);
-const batteryCapstoneChoice = artilleryAfterburnWave.afterburnAscension.choices.find(
-  (choice) => choice.doctrineCapstoneId === "sky_lance_battery"
-);
-const needleCapstoneChoice = artilleryAfterburnWave.afterburnAscension.choices.find(
-  (choice) => choice.doctrineCapstoneId === "stormspire_needle"
-);
-assert.ok(batteryCapstoneChoice);
-assert.ok(needleCapstoneChoice);
-game.applyForgeChoice(
-  { build: artilleryDoctrineBuild, player: null, resources: { scrap: 999 }, stats: {} },
-  batteryCapstoneChoice
-);
-const artilleryWaveNineWeapon = game.computeWeaponStats(artilleryDoctrineBuild);
-const artilleryBatteryPlayer = game.computePlayerStats(artilleryDoctrineBuild);
-assert.equal(artilleryWaveNineWeapon.doctrineFormLabel, "Sky Lance Battery");
-assert.equal(artilleryWaveNineWeapon.doctrineStage, 3);
-assert.ok(artilleryWaveNineWeapon.cooldown < artilleryWaveSevenWeapon.cooldown);
-assert.ok(artilleryWaveNineWeapon.chainRange > artilleryWaveSevenWeapon.chainRange);
-assert.equal(artilleryBatteryPlayer.dashMax, 3);
-assert.ok(artilleryBatteryPlayer.moveSpeed > 248);
-assert.equal(
-  JSON.stringify(artilleryWaveNineWeapon.doctrineFirePattern.offsets),
-  JSON.stringify([-0.36, -0.22, -0.08, 0.08, 0.22, 0.36])
-);
-const artilleryNeedleBuild = game.createInitialBuild("rail_zeal");
-artilleryNeedleBuild.pendingCores = [];
-const artilleryNeedleArchitectureChoice = game
-  .buildArchitectureDraftChoices(artilleryNeedleBuild)
-  .find((choice) => choice.title === "Twin Spine");
-assert.ok(artilleryNeedleArchitectureChoice);
-game.applyForgeChoice(
-  { build: artilleryNeedleBuild, player: null, resources: { scrap: 999 }, stats: {} },
-  artilleryNeedleArchitectureChoice
-);
-artilleryNeedleBuild.bastionDoctrineId = "storm_artillery";
-artilleryNeedleBuild.doctrineChaseClaimed = true;
-game.applyForgeChoice(
-  { build: artilleryNeedleBuild, player: null, resources: { scrap: 999 }, stats: {} },
-  needleCapstoneChoice
-);
-const artilleryNeedleWeapon = game.computeWeaponStats(artilleryNeedleBuild);
-assert.equal(artilleryNeedleWeapon.doctrineFormLabel, "Stormspire Needle");
-assert.equal(artilleryNeedleWeapon.doctrineStage, 3);
-assert.ok(artilleryNeedleWeapon.damage > 0);
-assert.ok(artilleryNeedleWeapon.pierce >= artilleryWaveNineWeapon.pierce);
-assert.equal(artilleryNeedleWeapon.doctrineOnHit.kind, "stormspire_branch");
-assert.equal(
-  JSON.stringify(artilleryNeedleWeapon.doctrineFirePattern.offsets),
-  JSON.stringify([-0.08, 0.08])
-);
+assert.equal(artilleryAfterburnWave.afterburnAscension, null);
+assert.equal(artilleryAfterburnWave.finaleMutation, null);
 const recurringFinaleBuild = game.createInitialBuild("relay_oath");
 const afterburnStageOne = game.createPostCapstoneWave(0, recurringFinaleBuild);
 const afterburnStageTwo = game.createPostCapstoneWave(1, recurringFinaleBuild);
-assert.ok(afterburnStageOne.finaleMutation);
-assert.ok(afterburnStageTwo.finaleMutation);
-assert.equal(
-  afterburnStageOne.finaleMutation.choices.length,
-  afterburnStageTwo.finaleMutation.choices.length
-);
-const recurringFinaleChoice = afterburnStageOne.finaleMutation.choices.find(
-  (choice) => choice.action === "cashout_support" || choice.action === "cashout_failsoft"
-);
-assert.ok(recurringFinaleChoice);
-game.applyForgeChoice(
-  { build: recurringFinaleBuild, player: null, resources: { scrap: 999 }, stats: {} },
-  recurringFinaleChoice
-);
-const lockedAfterburnStage = game.createPostCapstoneWave(1, recurringFinaleBuild);
-assert.equal(lockedAfterburnStage.finaleMutation, null);
+assert.equal(afterburnStageOne.finaleMutation, null);
+assert.equal(afterburnStageTwo.finaleMutation, null);
 const fortressDoctrineBuild = game.createInitialBuild("scrap_pact");
 fortressDoctrineBuild.pendingCores = [];
 const fortressDoctrineChoice = game
@@ -2331,11 +2255,11 @@ assert.equal(
 assert.equal(emberFailSoftFinalChoices[0].action, "cashout_failsoft");
 assert.equal(emberFailSoftFinalChoices[0].cost, 18);
 assert.equal(emberFailSoftFinalChoices[0].failSoftLabel, "Ember Wake");
-assert.ok(emberFailSoftFinalChoices[0].finalePreview.label.includes("Ember Wake Trial"));
+assert.equal(emberFailSoftFinalChoices[0].finalePreview.label, game.WAVE_CONFIG[11].label);
 assert.equal(emberFailSoftFinalChoices[1].action, "cashout_support");
 assert.equal(emberFailSoftFinalChoices[1].cost, 0);
-assert.ok(emberFailSoftFinalChoices[1].finalePreview.label.includes("Pilot Light Trial"));
-assert.notEqual(
+assert.equal(emberFailSoftFinalChoices[1].finalePreview.label, game.WAVE_CONFIG[11].label);
+assert.equal(
   emberFailSoftFinalChoices[0].finalePreview.hazard,
   emberFailSoftFinalChoices[1].finalePreview.hazard
 );
@@ -2367,10 +2291,10 @@ assert.equal(emberFinalChoices[0].recipeLabel, "Crown Pyre");
 assert.equal(emberFinalChoices[0].affixId, "hotshot");
 assert.equal(emberFinalChoices[1].action, "catalyst_reforge");
 assert.equal(emberFinalChoices[1].capstoneLabel, "Sear Halo");
-assert.ok(emberFinalChoices[1].finalePreview.label.includes("Sear Halo Trial"));
+assert.equal(emberFinalChoices[1].finalePreview.label, game.WAVE_CONFIG[11].label);
 assert.equal(emberFinalChoices[2].action, "cashout_support");
 assert.equal(emberFinalChoices[2].supportLabel, "Pilot Light");
-assert.equal(emberFinalChoices[2].finalePreview.hazard, "Pilot Rings x2");
+assert.ok(emberFinalChoices[2].finalePreview.hazard.includes(game.WAVE_CONFIG[11].hazard.label));
 game.applyForgeChoice(
   { build: emberBuild, player: null, resources: { scrap: 999 }, stats: {} },
   emberFinalChoices[0]
@@ -2468,15 +2392,15 @@ assert.equal(
 assert.ok(finalForgeChoices.every((choice) => choice.finalePreview));
 assert.ok(!finalForgeChoices.some((choice) => choice.action === "reforge" || choice.action === "affix_reforge"));
 assert.equal(finalForgeChoices[0].affixId, "hotshot");
-assert.ok(finalForgeChoices[0].finalePreview.label.includes("Afterburn I"));
+assert.equal(finalForgeChoices[0].finalePreview.label, game.WAVE_CONFIG[11].label);
 assert.equal(finalForgeChoices[1].action, "catalyst_reforge");
-assert.ok(finalForgeChoices[1].finalePreview.label.includes("Flash Temper Trial"));
+assert.equal(finalForgeChoices[1].finalePreview.label, game.WAVE_CONFIG[11].label);
 assert.equal(finalForgeChoices[2].action, "cashout_support");
 assert.equal(finalForgeChoices[2].supportLabel, "Quench Loop");
 assert.equal(finalForgeChoices[2].cost, 0);
-assert.ok(finalForgeChoices[2].finalePreview.label.includes("Quench Loop Trial"));
-assert.equal(finalForgeChoices[2].finalePreview.hazard, "Quench Lanes x1");
-assert.ok(finalForgeChoices[2].finalePreview.tempo.includes("7연전"));
+assert.equal(finalForgeChoices[2].finalePreview.label, game.WAVE_CONFIG[11].label);
+assert.ok(finalForgeChoices[2].finalePreview.hazard.includes(game.WAVE_CONFIG[11].hazard.label));
+assert.ok(finalForgeChoices[2].finalePreview.tempo.includes("Wave 12 최종전"));
 const finalForgePreviewRows = game.createForgePreviewRows(finalForgeChoices[0]);
 assert.ok(finalForgePreviewRows.every((row) => row.label !== "시험" && row.label !== "압박"));
 const finalForgeTransformation = game.getForgeChoiceTransformation(finalForgeChoices[0]);
@@ -2504,12 +2428,12 @@ assert.equal(missedCatalystFinalChoices[0].action, "cashout_failsoft");
 assert.equal(missedCatalystFinalChoices[0].cost, 18);
 assert.equal(missedCatalystFinalChoices[0].laneLabel, "비상 점화");
 assert.equal(missedCatalystFinalChoices[0].failSoft, true);
-assert.ok(missedCatalystFinalChoices[0].finalePreview.label.includes("Slag Burst Trial"));
+assert.equal(missedCatalystFinalChoices[0].finalePreview.label, game.WAVE_CONFIG[11].label);
 assert.equal(missedCatalystFinalChoices[1].action, "cashout_support");
 assert.equal(missedCatalystFinalChoices[1].cost, 0);
 assert.equal(missedCatalystFinalChoices[1].laneLabel, "안정화");
 assert.equal(missedCatalystFinalChoices[1].failSoft, true);
-assert.ok(missedCatalystFinalChoices[1].finalePreview.label.includes("Quench Loop Trial"));
+assert.equal(missedCatalystFinalChoices[1].finalePreview.label, game.WAVE_CONFIG[11].label);
 assert.ok(
   !missedCatalystFinalChoices.some(
     (choice) => choice.action === "reforge" || choice.action === "affix_reforge"
@@ -2621,7 +2545,7 @@ assert.equal(capstonePivotBuild.catalystCapstoneId, null);
 
 assert.equal(
   game.shouldFinishAfterForge({ pendingFinalForge: true, waveIndex: game.MAX_WAVES - 1 }),
-  true
+  false
 );
 assert.equal(
   game.shouldFinishAfterForge({ pendingFinalForge: false, waveIndex: game.MAX_WAVES - 1 }),
@@ -2631,15 +2555,16 @@ assert.equal(
   game.shouldFinishAfterForge({ pendingFinalForge: true, waveIndex: game.MAX_WAVES - 2 }),
   false
 );
+const finalCashoutBaseWave = game.resolveWaveConfig(game.MAX_WAVES - 1);
 const finalCashoutWave = game.createFinalCashoutWave(game.MAX_WAVES - 1);
-assert.equal(finalCashoutWave.timeLeft, game.WAVE_CONFIG[8].duration + 6);
-assert.equal(finalCashoutWave.completesRun, false);
-assert.equal(finalCashoutWave.awaitingForge, false);
+assert.equal(finalCashoutWave.duration, finalCashoutBaseWave.duration);
+assert.equal(finalCashoutWave.completesRun, true);
+assert.equal(finalCashoutWave.awaitingForge, undefined);
 assert.ok(finalCashoutWave.spawnBudget > 0);
-assert.ok(finalCashoutWave.activeCap < game.WAVE_CONFIG[11].activeCap);
-assert.ok(finalCashoutWave.hazard.interval < game.WAVE_CONFIG[9].hazard.interval);
-assert.ok(finalCashoutWave.label.includes("Afterburn I"));
-assert.equal(finalCashoutWave.postCapstoneTotal, game.POST_CAPSTONE_WAVE_COUNT);
+assert.equal(finalCashoutWave.activeCap, finalCashoutBaseWave.activeCap);
+assert.equal(finalCashoutWave.hazard.interval, finalCashoutBaseWave.hazard.interval);
+assert.equal(finalCashoutWave.label, finalCashoutBaseWave.label);
+assert.equal(finalCashoutWave.postCapstoneTotal, undefined);
 
 const finalAfterburnWave = game.createPostCapstoneWave(game.POST_CAPSTONE_WAVE_COUNT - 1, catalystPivotBuild);
 assert.equal(finalAfterburnWave.completesRun, true);
@@ -2647,47 +2572,49 @@ assert.equal(finalAfterburnWave.postCapstoneStage, game.POST_CAPSTONE_WAVE_COUNT
 assert.ok(finalAfterburnWave.label.includes("Afterburn VII"));
 
 const temperCashoutWave = game.createFinalCashoutWave(game.MAX_WAVES - 1, flashTemperChoice ? catalystPivotBuild : null);
-assert.equal(temperCashoutWave.label.includes("Temper Trial"), true);
-assert.equal(temperCashoutWave.bannerLabel, "Flash Temper Trial · Afterburn I");
-assert.equal(temperCashoutWave.hazard.count, 1);
-assert.ok(temperCashoutWave.mix.brute > finalCashoutWave.mix.brute);
-assert.ok(temperCashoutWave.activeCap < game.WAVE_CONFIG[11].activeCap);
+assert.equal(
+  temperCashoutWave.label,
+  game.resolveWaveConfig(game.MAX_WAVES - 1, flashTemperChoice ? catalystPivotBuild : null).label
+);
+assert.equal(temperCashoutWave.completesRun, true);
 
 const railCashoutWave = game.createFinalCashoutWave(game.MAX_WAVES - 1, stormRailBuild);
-assert.equal(railCashoutWave.label.includes("Rail Trial"), true);
-assert.equal(railCashoutWave.hazard.count, 3);
-assert.ok(railCashoutWave.mix.scuttler > finalCashoutWave.mix.scuttler);
-assert.ok(railCashoutWave.activeCap >= finalCashoutWave.activeCap - 1);
+assert.equal(
+  railCashoutWave.label,
+  game.resolveWaveConfig(game.MAX_WAVES - 1, stormRailBuild).label
+);
+assert.equal(railCashoutWave.completesRun, true);
 
 const mirrorCashoutWave = game.createFinalCashoutWave(game.MAX_WAVES - 1, mirrorSpiralBuild);
-assert.equal(mirrorCashoutWave.label.includes("Mirror Trial"), true);
-assert.equal(mirrorCashoutWave.hazard.label, "Mirror Crossfire");
-assert.ok(mirrorCashoutWave.mix.shrike > finalCashoutWave.mix.shrike);
-assert.ok(mirrorCashoutWave.baseSpawnInterval <= railCashoutWave.baseSpawnInterval);
+assert.equal(
+  mirrorCashoutWave.label,
+  game.resolveWaveConfig(game.MAX_WAVES - 1, mirrorSpiralBuild).label
+);
+assert.equal(mirrorCashoutWave.completesRun, true);
 
 const quenchCashoutWave = game.createFinalCashoutWave(game.MAX_WAVES - 1, supportBuild);
-assert.equal(quenchCashoutWave.label.includes("Quench Trial"), true);
-assert.equal(quenchCashoutWave.bannerLabel, "Quench Loop Trial · Afterburn I");
-assert.equal(quenchCashoutWave.hazard.label, "Quench Lanes");
+assert.equal(
+  quenchCashoutWave.label,
+  game.resolveWaveConfig(game.MAX_WAVES - 1, supportBuild).label
+);
 assert.ok(quenchCashoutWave.activeCap > 0);
-assert.ok(quenchCashoutWave.hazard.telegraph >= finalCashoutWave.hazard.telegraph);
 assert.equal(game.getFinalCashoutTransitionProfile(supportBuild).preserveArenaState, true);
 assert.equal(game.getFinalCashoutTransitionProfile(supportBuild).refillDash, false);
 
 const emberHaloCashoutWave = game.createFinalCashoutWave(game.MAX_WAVES - 1, emberCapstoneBuild);
-assert.equal(emberHaloCashoutWave.label.includes("Halo Trial"), true);
-assert.equal(emberHaloCashoutWave.bannerLabel, "Sear Halo Trial · Afterburn I");
-assert.equal(emberHaloCashoutWave.hazard.count, 3);
-assert.ok(emberHaloCashoutWave.mix.scuttler > finalCashoutWave.mix.scuttler);
+assert.equal(
+  emberHaloCashoutWave.label,
+  game.resolveWaveConfig(game.MAX_WAVES - 1, emberCapstoneBuild).label
+);
 
 assert.equal(game.getFinalCashoutTransitionProfile(emberCapstoneBuild).preserveArenaState, false);
 assert.equal(game.getFinalCashoutTransitionProfile(emberCapstoneBuild).refillDash, true);
 
 const emberPilotCashoutWave = game.createFinalCashoutWave(game.MAX_WAVES - 1, emberSupportBuild);
-assert.equal(emberPilotCashoutWave.label.includes("Pilot Trial"), true);
-assert.equal(emberPilotCashoutWave.bannerLabel, "Pilot Light Trial · Afterburn I");
-assert.equal(emberPilotCashoutWave.hazard.label, "Pilot Rings");
-assert.ok(emberPilotCashoutWave.hazard.telegraph > finalCashoutWave.hazard.telegraph);
+assert.equal(
+  emberPilotCashoutWave.label,
+  game.resolveWaveConfig(game.MAX_WAVES - 1, emberSupportBuild).label
+);
 
 const supportTransitionRun = {
   build: supportBuild,
@@ -2713,19 +2640,19 @@ const supportTransitionRun = {
   },
 };
 const supportTransition = game.applyFinalCashoutTransition(supportTransitionRun);
-assert.equal(supportTransition.preserveArenaState, true);
-assert.equal(supportTransitionRun.phase, "wave");
-assert.equal(supportTransitionRun.pendingFinalForge, false);
-assert.equal(supportTransitionRun.waveIndex, game.MAX_WAVES);
-assert.equal(supportTransitionRun.postCapstone.active, true);
+assert.equal(supportTransition, null);
+assert.equal(supportTransitionRun.phase, "forge");
+assert.equal(supportTransitionRun.pendingFinalForge, true);
+assert.equal(supportTransitionRun.waveIndex, game.MAX_WAVES - 1);
+assert.equal(supportTransitionRun.postCapstone, undefined);
 assert.equal(supportTransitionRun.enemies.length, 1);
 assert.equal(supportTransitionRun.drops.length, 1);
 assert.equal(supportTransitionRun.hazards.length, 1);
-assert.equal(supportTransitionRun.projectiles.length, 0);
-assert.equal(supportTransitionRun.particles.length, 0);
+assert.equal(supportTransitionRun.projectiles.length, 1);
+assert.equal(supportTransitionRun.particles.length, 1);
 assert.equal(supportTransitionRun.player.x, 180);
 assert.equal(supportTransitionRun.player.y, 220);
-assert.equal(supportTransitionRun.player.heat, 44);
+assert.equal(supportTransitionRun.player.heat, 52);
 assert.equal(supportTransitionRun.player.dashCharges, 0);
 assert.equal(supportTransitionRun.player.dashCooldownTimer, 1.1);
 
@@ -2753,19 +2680,19 @@ const capstoneTransitionRun = {
   },
 };
 const capstoneTransition = game.applyFinalCashoutTransition(capstoneTransitionRun);
-assert.equal(capstoneTransition.preserveArenaState, false);
-assert.equal(capstoneTransitionRun.waveIndex, game.MAX_WAVES);
-assert.equal(capstoneTransitionRun.postCapstone.active, true);
-assert.equal(capstoneTransitionRun.enemies.length, 0);
-assert.equal(capstoneTransitionRun.drops.length, 0);
-assert.equal(capstoneTransitionRun.hazards.length, 0);
-assert.equal(capstoneTransitionRun.projectiles.length, 0);
-assert.equal(capstoneTransitionRun.particles.length, 0);
-assert.equal(capstoneTransitionRun.player.x, 780);
-assert.equal(capstoneTransitionRun.player.y, 450);
-assert.equal(capstoneTransitionRun.player.heat, 17);
-assert.equal(capstoneTransitionRun.player.dashCharges, 3);
-assert.equal(capstoneTransitionRun.player.dashCooldownTimer, 0);
+assert.equal(capstoneTransition, null);
+assert.equal(capstoneTransitionRun.waveIndex, game.MAX_WAVES - 1);
+assert.equal(capstoneTransitionRun.postCapstone, undefined);
+assert.equal(capstoneTransitionRun.enemies.length, 1);
+assert.equal(capstoneTransitionRun.drops.length, 1);
+assert.equal(capstoneTransitionRun.hazards.length, 1);
+assert.equal(capstoneTransitionRun.projectiles.length, 1);
+assert.equal(capstoneTransitionRun.particles.length, 1);
+assert.equal(capstoneTransitionRun.player.x, 120);
+assert.equal(capstoneTransitionRun.player.y, 140);
+assert.equal(capstoneTransitionRun.player.heat, 33);
+assert.equal(capstoneTransitionRun.player.dashCharges, 0);
+assert.equal(capstoneTransitionRun.player.dashCooldownTimer, 2.4);
 
 const affixBuild = game.createInitialBuild("relay_oath");
 game.applyForgeChoice(

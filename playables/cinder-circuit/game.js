@@ -2017,6 +2017,7 @@
 
   function shouldOfferAfterburnDominion(build, stageIndex) {
     if (
+      CONSOLIDATED_12_WAVE_ROUTE ||
       !build ||
       build.afterburnDominionId ||
       !Number.isFinite(stageIndex) ||
@@ -7962,7 +7963,11 @@
   }
 
   function getBuildRoadmap(build, weapon = null, waveNumber = 1) {
-    const boundedWave = clamp(Math.round(waveNumber || 1), 1, MAX_WAVES + POST_CAPSTONE_WAVE_COUNT);
+    const boundedWave = clamp(
+      Math.round(waveNumber || 1),
+      1,
+      CONSOLIDATED_12_WAVE_ROUTE ? MAX_WAVES : MAX_WAVES + POST_CAPSTONE_WAVE_COUNT
+    );
     const doctrine = getBastionDoctrineDef(build);
     const pursuit = getDoctrineForgePursuitDef(doctrine || build);
     const currentWeapon = weapon || computeWeaponStats(build);
@@ -9145,6 +9150,9 @@
   }
 
   function shouldOfferStormArtilleryAfterburnAscension(build) {
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
+      return false;
+    }
     return Boolean(
       build &&
       build.bastionDoctrineId === "storm_artillery" &&
@@ -9202,6 +9210,7 @@
 
   function shouldOfferAfterburnOverdrive(build, stageIndex) {
     if (
+      CONSOLIDATED_12_WAVE_ROUTE ||
       !build ||
       build.afterburnOverdriveId ||
       !Number.isFinite(stageIndex) ||
@@ -10829,7 +10838,9 @@
       label: wave.bannerLabel || wave.label,
       directive: wave.directive,
       hazard: wave.hazard ? `${wave.hazard.label} x${wave.hazard.count}` : "Hazard 없음",
-      tempo: `${POST_CAPSTONE_WAVE_COUNT}연전 시작 · 적 상한 ${wave.activeCap}`,
+      tempo: CONSOLIDATED_12_WAVE_ROUTE
+        ? `Wave 12 최종전 · 적 상한 ${wave.activeCap}`
+        : `${POST_CAPSTONE_WAVE_COUNT}연전 시작 · 적 상한 ${wave.activeCap}`,
     };
   }
 
@@ -10894,7 +10905,7 @@
   }
 
   function shouldOfferFinaleMutation(build) {
-    return Boolean(build && !getSelectedFinaleVariant(build));
+    return Boolean(!CONSOLIDATED_12_WAVE_ROUTE && build && !getSelectedFinaleVariant(build));
   }
 
   function buildFinaleMutationChoices(build) {
@@ -14924,7 +14935,7 @@
       postCapstone: {
         active: false,
         stageIndex: 0,
-        total: POST_CAPSTONE_WAVE_COUNT,
+        total: CONSOLIDATED_12_WAVE_ROUTE ? 0 : POST_CAPSTONE_WAVE_COUNT,
       },
       enemies: [],
       projectiles: [],
@@ -15424,11 +15435,13 @@
     const currentAct = getActLabelForWave(currentWaveNumber);
     const totalTrackWaves =
       MAX_WAVES +
-      (state.postCapstone && state.postCapstone.active
-        ? state.postCapstone.total
-        : state.phase === "result" && state.stats.wavesCleared > MAX_WAVES
-          ? POST_CAPSTONE_WAVE_COUNT
-          : 0);
+      (CONSOLIDATED_12_WAVE_ROUTE
+        ? 0
+        : state.postCapstone && state.postCapstone.active
+          ? state.postCapstone.total
+          : state.phase === "result" && state.stats.wavesCleared > MAX_WAVES
+            ? POST_CAPSTONE_WAVE_COUNT
+            : 0);
     const label =
       state.phase === "forge"
         ? `Forge Stop · ${currentAct.shortLabel} · Wave ${state.waveIndex + 1}`
@@ -16734,7 +16747,12 @@
   }
 
   function shouldFinishAfterForge(run) {
-    return Boolean(run && run.pendingFinalForge && run.waveIndex >= MAX_WAVES - 1);
+    return Boolean(
+      run &&
+      !CONSOLIDATED_12_WAVE_ROUTE &&
+      run.pendingFinalForge &&
+      run.waveIndex >= MAX_WAVES - 1
+    );
   }
 
   function getFinalCashoutCapstoneVariant(build) {
@@ -17131,6 +17149,9 @@
   }
 
   function createFinalCashoutWave(index = MAX_WAVES - 1, build = null) {
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
+      return resolveWaveConfig(MAX_WAVES - 1, build);
+    }
     return createPostCapstoneWave(0, build);
   }
 
@@ -17157,6 +17178,9 @@
 
   function applyFinalCashoutTransition(run) {
     if (!run) {
+      return null;
+    }
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
       return null;
     }
     const profile = getFinalCashoutTransitionProfile(run.build);
@@ -17200,6 +17224,10 @@
   }
 
   function beginFinalCashout() {
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
+      finishRun(true);
+      return;
+    }
     const transition = applyFinalCashoutTransition(state);
     syncArenaCanvas();
     pushCombatFeed(`Wave 12 crown 붕괴. 포지 정지 없이 ${state.wave.note}`, "LAST");

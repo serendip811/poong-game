@@ -12,6 +12,7 @@ Keep this short and replace stale notes instead of endlessly appending.
 
 ## Current Memory
 
+- On the consolidated `12-wave` route, any finale preview, roadmap clamp, or wave-track summary must stop at `Wave 12`; if forge previews say `7연전 시작`, the track grows an `Act 4`, or any shipped guard re-allows `Afterburn/Dominion/finale mutation` offers, the run is implying its real climax still lives after the clear.
 - On the consolidated `12-wave` route, a doctrine's support follow-up should now stay one primary amplifier family only; if `Wave 8+` ever re-exposes the doctrine's second preferred system or any wildcard support install on the shipped path, the support layer has widened back into a parallel identity tree.
 - On the consolidated route, `Wave 6` chassis picks land better when the chosen body posture is immediately live for the first seconds of the next fight; if body breaks only change hidden stats and wait for later support/payoff layers to become visible, the `weapon leap -> body commitment` rung still feels theoretical.
 - On the consolidated route, the default combat HUD should now demote `현재 형태` fully into `Tab`/forge and leave live combat with only survival meters plus one `현재 전장` card; if the left build panel, roadmap, or upgrade recap reappears during normal waves, the arena has drifted back into dashboard mode.

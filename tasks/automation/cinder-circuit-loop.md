@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: strip post-`Wave 12`/admin scaffolds out of the shipped contract and compress the visible build surface to a simple `Wave 3/6/8` mutation spine before support layers and route terminology compete for attention.
+- Immediate priority: stop widening the route with doctrine/live-ascension/support-bay side ladders and collapse the shipped `Wave 1-12` path into one readable mutation spine that makes `Wave 3/6/8/12` feel like escalating player-owned payoffs.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 00:20:00 KST
+  Findings:
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2700) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3850) still stack too many parallel build ladders for a run this short: support systems, wildcard protocols, Wave 6 ascensions, doctrines, doctrine pursuits, illegal overclocks, and doctrine capstones all compete to be the "real" growth path. That kills anticipation because the player is managing frameworks instead of craving the next form.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20850) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21553) still make combat HUD, `Tab`, and forge explain proof windows, rider tracks, roadmap state, and multiple choice roles in parallel. Compared with the one-priority readability of `Nova Drift`, the reward snap of `Hades`, or the low-reading shop clarity of `Brotato`, this is still too much structure on screen for an action run that needs immediate hunger.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1370) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1591) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1958) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2057) still keep `Afterburn` and `Dominion` as live reward logic after the supposed run end. That continues to tell the player the coolest payoff is after the shipped slice, which makes `Wave 12` feel like a checkpoint instead of a climax worth rerunning.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L759) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1174) gives the arena more room than earlier passes, but the encounter script is still heavily narrated with `note` and `directive` text about ownership, proof, pursuit, and pockets. If the wave identity still needs that much author explanation, the enemy ecology and weapon silhouette are not yet carrying replayable clarity by themselves.
+  Top Priority: Freeze the shipped game to one main ladder only `early gun leap -> chassis commitment -> late-form payoff -> Wave 12 climax`, and demote every other system to either hidden tuning or a later expansion after that spine feels complete.
+  Why Now: The run will not earn repeated play while every mid/late beat is split across competing progression wrappers.
+  Do Not Repeat: Do not spend another pass adding or renaming ladders if the player still needs HUD text to understand what their build actually became.
+  Release Gate: Progression
 
 - 2026-03-25 23:55:00 KST
   Findings:
@@ -2426,6 +2437,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-26 00:40:00 KST
+  Changed: hardened the shipped `Wave 1-12` climax contract in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so consolidated-route previews and progress helpers now stop at `Wave 12` instead of leaking a second `Afterburn` game behind the clear. `getBuildRoadmap` and the wave track now clamp to the shipped route, final-fight previews now read `Wave 12 최종전` instead of `7연전 시작`, and the consolidated path now hard-gates `Afterburn Ascension`, `Afterburn Overdrive`, `Dominion`, and `finale mutation` offers even if a later refactor accidentally touches those helpers. I also added a safety stop so if the shipped route ever reaches the old post-capstone transition code, it finishes the run instead of opening `Wave 13+`. Validation passed with `node --check playables/cinder-circuit/game.js` and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to freeze the shipped game to one main ladder only and stop telling the player that the coolest payoff is after `Wave 12`. The highest-value bounded interpretation was to close the last player-facing and phase-manager leaks that still framed `Wave 12` as a checkpoint, because that directly strengthens the current release slice without adding more systems.
+  Follow-up risk: this removes a major false promise, but the codebase still physically contains the unused post-capstone content tables for future expansion. If critique stays on this issue, the next bounded pass should prune or isolate more of that backstage content rather than reopening any new surfaced ladder.
+  Release Gate: Progression
 
 - 2026-03-25 23:59:00 KST
   Changed: narrowed the shipped consolidated support lane in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so each doctrine now exposes only one primary amplifier family once the `Wave 8+` support layer opens. On the shipped `12-wave` route, `Mirror Hunt` now points only at `Seeker Array`, `Kiln Bastion` only at `Kiln Sentry`, and `Storm Artillery` only at `Seeker Array`; secondary preferred systems and wildcard installs no longer appear as parallel identity branches while the run is still trying to sell its weapon/body spine. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new visibility and install rules for shipped-route doctrine builds. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
