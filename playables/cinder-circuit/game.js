@@ -4780,61 +4780,62 @@
     ember: {
       id: "ember_crownfire",
       title: "Crownflare Turbine",
-      traitLabel: "삼중 점화 편대",
-      previewText: "측면 점화 편대 3줄",
+      traitLabel: "오중 점화 편대",
+      previewText: "측면 점화 편대 5줄",
       description:
-        "Wave 6에서 잠근 차체 위에 점화 터빈을 더 얹어 주탄 양옆에 삼중 점화 편대를 연다. 정면만 미는 대신 열린 측면 둘까지 함께 태워 mid-run ownership를 크게 벌린다.",
+        "Wave 6에서 잠근 차체 위에 점화 터빈을 더 얹어 주탄 양옆에 오중 점화 편대를 연다. 정면만 미는 대신 열린 측면 둘과 그 바깥 pocket까지 함께 태워 mid-run ownership를 크게 벌린다.",
       statusNote:
-        "Crownflare Turbine이 주탄 양옆에 삼중 점화 편대를 붙여 열린 lane sweep를 더 길게 유지한다.",
-      slotText: "중반 과열 도약 · 삼중 점화 편대",
+        "Crownflare Turbine이 주탄 양옆에 오중 점화 편대를 붙여 열린 lane sweep를 화면 폭까지 더 길게 유지한다.",
+      slotText: "중반 과열 도약 · 오중 점화 편대",
       cost: 36,
       firePattern: {
-        offsets: [-0.32, -0.16, 0.16, 0.32],
-        damageMultiplier: 0.28,
-        speedMultiplier: 1.12,
+        offsets: [-0.42, -0.26, -0.1, 0.1, 0.26, 0.42],
+        damageMultiplier: 0.26,
+        speedMultiplier: 1.14,
         radius: 4,
-        life: 1.12,
+        life: 1.16,
         pierceBonus: 0,
         bounceBonus: 0,
         chainBonus: 0,
         color: "#ffd28a",
       },
       applyWeapon(stats) {
-        stats.cooldown = clamp(stats.cooldown * 0.9, 0.08, 0.4);
-        stats.projectileSpeed += 16;
+        stats.cooldown = clamp(stats.cooldown * 0.86, 0.08, 0.4);
+        stats.projectileSpeed += 24;
       },
     },
     scatter: {
       id: "scatter_crownfire",
       title: "Kiln Cycler",
-      traitLabel: "외곽 산탄 벨트",
-      previewText: "외곽 펠릿 +4",
+      traitLabel: "외곽 산탄 환형 벨트",
+      previewText: "외곽 펠릿 +6",
       description:
-        "산탄 외곽에 회전 벨트를 덧대 양쪽 산탄 열을 더 길게 뿜어낸다. 전방 파쇄를 유지하면서도 side pocket 정리가 붙어 open-lane 교전이 한 단계 커진다.",
+        "산탄 외곽에 회전 벨트를 덧대 양쪽 산탄 열을 더 길게 뿜어낸다. 전방 파쇄를 유지하면서도 외곽 pocket까지 긁는 환형 벨트가 붙어 open-lane 교전이 한 단계 크게 커진다.",
       statusNote:
-        "Kiln Cycler가 외곽 산탄 벨트를 더해 열린 측면과 전방 돌파를 동시에 두껍게 만든다.",
-      slotText: "중반 과열 도약 · 외곽 펠릿 +4",
+        "Kiln Cycler가 외곽 산탄 환형 벨트를 더해 열린 측면과 전방 돌파를 동시에 화면 폭으로 두껍게 만든다.",
+      slotText: "중반 과열 도약 · 외곽 펠릿 +6",
       cost: 36,
       applyWeapon(stats) {
-        stats.pellets += 4;
-        stats.spread = round(stats.spread * 1.08, 3);
-        stats.damage += 3;
+        stats.pellets += 6;
+        stats.spread = round(stats.spread * 1.1, 3);
+        stats.damage += 4;
+        stats.cooldown = clamp(stats.cooldown * 0.92, 0.08, 0.4);
       },
     },
     lance: {
       id: "lance_crownfire",
       title: "Sky Splitter",
       traitLabel: "측선 절개 레일",
-      previewText: "측선 레일 4줄",
+      previewText: "측선 레일 6줄",
       description:
-        "직선 절개 옆에 네 갈래 측선 레일을 더 깔아 관통선 하나를 lane sweep 프레임으로 바꾼다. Wave 6 몸체 break 뒤 첫 open-lane 교전이 훨씬 더 공격적으로 열린다.",
+        "직선 절개 옆에 여섯 갈래 측선 레일을 더 깔아 관통선 하나를 lane sweep 프레임으로 바꾼다. Wave 6 몸체 break 뒤 첫 open-lane 교전이 훨씬 더 공격적으로 열린다.",
       statusNote:
-        "Sky Splitter가 측선 절개 레일을 더해 관통선 하나를 넓은 lane sweep로 바꾼다.",
+        "Sky Splitter가 측선 절개 레일을 여섯 줄까지 넓혀 관통선 하나를 화면 폭 lane sweep로 바꾼다.",
       slotText: "중반 과열 도약 · 측선 절개 레일",
       cost: 36,
       firePattern: {
-        offsets: [-0.22, -0.08, 0.08, 0.22],
-        damageMultiplier: 0.34,
+        offsets: [-0.32, -0.2, -0.08, 0.08, 0.2, 0.32],
+        damageMultiplier: 0.3,
         speedMultiplier: 1.16,
         radius: 5,
         life: 1.14,
@@ -4844,24 +4845,24 @@
         color: "#d9fbff",
       },
       applyWeapon(stats) {
-        stats.projectileSpeed += 42;
-        stats.pierce += 1;
+        stats.projectileSpeed += 54;
+        stats.pierce += 2;
       },
     },
     ricochet: {
       id: "ricochet_crownfire",
       title: "Mirror Fan",
-      traitLabel: "사중 분광 부채",
-      previewText: "분광탄 4갈래 추가",
+      traitLabel: "육중 분광 부채",
+      previewText: "분광탄 6갈래 추가",
       description:
-        "중심 분광탄 바깥에 사중 분광 부채를 더 깔아 반사 진입선 자체를 전장 폭으로 넓힌다. 벽을 스칠 때마다 여러 복귀각이 한꺼번에 열려 open-lane crossfire를 더 쉽게 비운다.",
+        "중심 분광탄 바깥에 육중 분광 부채를 더 깔아 반사 진입선 자체를 전장 폭으로 넓힌다. 벽을 스칠 때마다 여러 복귀각이 한꺼번에 열려 open-lane crossfire를 더 쉽게 비운다.",
       statusNote:
-        "Mirror Fan이 사중 분광 부채를 더해 반사 진입선과 복귀 화선을 동시에 넓힌다.",
-      slotText: "중반 과열 도약 · 사중 분광 부채",
+        "Mirror Fan이 육중 분광 부채를 더해 반사 진입선과 복귀 화선을 동시에 화면 폭으로 넓힌다.",
+      slotText: "중반 과열 도약 · 육중 분광 부채",
       cost: 36,
       firePattern: {
-        offsets: [-0.26, -0.12, 0.12, 0.26],
-        damageMultiplier: 0.42,
+        offsets: [-0.34, -0.2, -0.08, 0.08, 0.2, 0.34],
+        damageMultiplier: 0.38,
         speedMultiplier: 1.06,
         radius: 4.1,
         life: 1.18,
@@ -4871,8 +4872,9 @@
         color: "#f7e8ff",
       },
       applyWeapon(stats) {
-        stats.chain += 1;
-        stats.chainRange = Math.max(stats.chainRange || 0, 180);
+        stats.chain += 2;
+        stats.bounce += 1;
+        stats.chainRange = Math.max(stats.chainRange || 0, 196);
       },
     },
   };

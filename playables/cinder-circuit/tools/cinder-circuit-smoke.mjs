@@ -520,6 +520,7 @@ const crownfireWave7Headline =
   crownfireWave7Choices[0];
 assert.equal(crownfireWave7Headline.action, "crownfire_overdrive");
 assert.equal(crownfireWave7Headline.title, "Sky Splitter");
+assert.equal(crownfireWave7Headline.previewText, "측선 레일 6줄");
 const crownfireWave7Transform = game.getBaseRouteForgeChoiceTransformation(crownfireWave7Headline);
 assert.equal(crownfireWave7Transform.previewLabel, "형태");
 assert.ok(/측선 레일|open-lane|절개/.test(crownfireWave7Transform.promise));
@@ -527,7 +528,11 @@ assert.ok(/Wave 6 몸체 break|open-lane 교전|공격적으로/.test(crownfireW
 game.applyForgeChoice({ build: crownfireBuild, player: null }, crownfireWave7Headline);
 const crownfireWeapon = game.computeWeaponStats(crownfireBuild);
 assert.equal(crownfireWeapon.crownfireOverdriveLabel, "Sky Splitter");
-assert.deepEqual(Array.from(crownfireWeapon.crownfireOverdriveFirePattern.offsets), [-0.22, -0.08, 0.08, 0.22]);
+assert.deepEqual(
+  Array.from(crownfireWeapon.crownfireOverdriveFirePattern.offsets),
+  [-0.32, -0.2, -0.08, 0.08, 0.2, 0.32]
+);
+assert.equal(crownfireWeapon.pierce >= 4, true);
 const crownfireWave8Choices = game.buildForgeChoices(crownfireBuild, () => 0.1, 999, {
   nextWave: 8,
   finalForge: false,
