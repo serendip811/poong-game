@@ -12261,6 +12261,9 @@
   }
 
   function createWildcardProtocolChoice(build, nextWave) {
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
+      return null;
+    }
     const protocol = getWildcardProtocolForWave(nextWave);
     if (!build || !protocol) {
       return null;

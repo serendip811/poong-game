@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze post-`Wave 12` promise and extra progression wrappers, then rebuild the shipped `Wave 1-12` route into a six-beat escalation with earlier visible mutations, simpler encounter grammar, and quieter player-facing UI.
+- Immediate priority: collapse the shipped `Wave 1-12` build surface into three obvious gun/body destinies plus one light rider layer, while hiding wildcard/pursuit/post-`Wave 12` branches and stripping HUD/forge reads back to one appetite and one immediate combat test.
 
 ## Release Gates
 
@@ -61,6 +61,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-25 23:00:49 KST
+  Findings:
+  - [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L9) and [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L84) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L90) still frame the shipped run around a standing three-lane contract `Headline Form / Survival Rider / Greed-Utility`. For a 12-wave slice that is supposed to earn repeat runs, that is still too much parallel structure and not enough hunger for one unmistakable transformation spine.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2748) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3095) already expose orbitals, shield halos, sentries, and missile racks, with `Ember Ring` and `Aegis Halo` available from `Wave 7`. That means the run is still handing out visually complete side hardware before the main gun/body ladder has finished making the player crave its next leap.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3342) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3447) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3837) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3870) still pile `Wildcard Protocol`, `Ascension Draft`, and shard-based `Forge Pursuit` exceptions onto `Wave 4 / 6 / 7 / 10`. That is prototype routing logic, not the kind of clean repeatable build hunger a strong arena roguelite lives on.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3782) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3833) plus [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1941) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2045) keep doctrine capstones and `Dominion` endforms ready behind the shipped route. Even when consolidated-path players do not see them directly, the game is still designed like multiple future fantasies are equally important now, which weakens the identity of the run that is actually playable.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21753) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22038) still dedicate HUD and forge focus to `방호·보조`, `판돈·유틸`, `다음 전장`, and support-track framing alongside the main form. Compared with the faster appetite hierarchy in `Hades`, `Nova Drift`, or `Brotato`, the game is still making the player sort build categories instead of instantly wanting one card and feeling one imminent combat payoff.
+  Top Priority: Reduce the shipped route to three clearly advertised gun/body destinies with one optional rider layer, and defer wildcard protocols, shard pursuits, and most support branches until the core transformation ladder is strong enough to carry repeat runs by itself.
+  Why Now: A longer `20-30` wave future only works if the first `12` already make players chase the next visible form instead of managing a branch catalog.
+  Do Not Repeat: Do not answer this with another text pass while `Wave 4 / 6 / 7 / 10` exception systems and broad support hardware still compete with the main build spine.
+  Release Gate: Builds
 
 - 2026-03-26 01:15:00 KST
   Findings:
@@ -2594,6 +2606,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-26 01:40:00 KST
+  Changed: removed one bounded prototype exception from the shipped route in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so consolidated `Wave 1-12` runs no longer generate `Wildcard Protocol` offers at `Wave 4 / 7 / 10`. Gamble slots on the shipped path now stay inside the existing greed/utility contract instead of hijacking the run into `Smuggler Winch`, `Nullplate Halo`, or `Rogue Lattice` chassis-support detours. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock that field-grant choices keep a greed contract available while wildcard protocols stay hidden on the consolidated route.
+  Why: the latest critique's `Top Priority` explicitly called out `Wave 4 / 6 / 7 / 10` exception systems as prototype routing logic undermining the core `weapon leap -> chassis commitment -> late-form capstone` spine. The highest-value bounded interpretation was to remove the shipped route's most obvious off-spine exception branch first, because it immediately makes the advertised build ladder cleaner without widening support spectacle or adding another wrapper.
+  Follow-up risk: `Forge Pursuit` and other shard-based exception layers still exist behind the same route, so a later consolidation pass should trim or defer those as well if the shipped run still reads like a branch catalog after this cleanup.
+  Release Gate: Builds
 
 - 2026-03-25 22:42:44 KST
   Changed: tightened one bounded piece of the shipped `Tab` inspect flow in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css), and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the consolidated route no longer reuses the old compact roadmap/focus card when the player opens `Tab`. Inspect now resolves to one hero status card `현재 형태 + 다음 전장 + 보유 고철` plus three short snapshot lanes `주력 변이 / 방호·보조 / 판돈·유틸`, while bench, upgrade recap, and live telemetry stay hidden. I updated smoke coverage to lock the new inspect markup contract. This UI pass was anchored to the large-hero-plus-quick-rows hierarchy of `Hades` boon/status reads and the fast scan rhythm of `Brotato`'s pause/shop surfaces: one dominant card, three terse lanes, no roadmap admin competing with the build.
