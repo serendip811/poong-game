@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gates are now `Combat` and `Builds`: bigger arenas alone did not create breathing room because scripted hazards, dense mixes, and side systems still crowd the run.
-- Current drift is still structural: the game keeps layering primers, support hardware, wildcard pivots, and field caches before the primary gun/chassis ladder has earned a clean takeover arc.
-- Repeated false solution: more content branches, copy trims, or HUD reshuffles without first proving that `Wave 1-10` is fun with mostly one weapon ladder and 2-3 reusable encounter grammars.
-- Keep using `Nova Drift`, `Brotato`, and `Hades` as reference checks for appetite and hierarchy, but pressure-test movement space too: the player should have room to choose lanes, not just kite through stacked asks.
-- Protect the growth curve: opener stays smaller and quieter, rider/support enters later, forge sells desire faster than explanation, and no post-finale or in-combat progression wrapper should distract from the base run.
+- The most fragile gates are now `Rewards` and `Combat`: the run still interrupts clean anticipation with field caches, live ascension bypasses, and too much on-screen route framing.
+- Current drift is still structural: support catalogs, wildcard pivots, and in-combat progression wrappers keep surviving around a core ladder that has not yet earned a full `small -> strong -> dominant` takeover.
+- Repeated false solution: more systems, more exceptions, or more copy trimming without first proving a forge-only default route where `Wave 1-10` is fun on one main weapon/body ladder and a later rider lane.
+- Keep using `Nova Drift`, `Brotato`, and `Hades` as reference checks for appetite and hierarchy, but pressure-test the reward cadence too: the player should finish a wave wanting the next pick, not processing another admin branch.
+- Protect the growth curve: opener stays smaller and quieter, mid-run combat keeps breathing room, forge sells visible payoff first, and major build-shaping choices should not happen via live pickups on the default route.

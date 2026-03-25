@@ -1845,6 +1845,30 @@ assert.ok(!postChaseChoices.some((choice) => choice.type === "utility" && choice
 assert.equal(game.shouldUseFieldGrant({ nextWave: 5, finalForge: false }), false);
 assert.equal(game.shouldUseFieldGrant({ nextWave: 9, finalForge: false }), false);
 assert.equal(game.shouldUseConsolidatedLateFormForge({ nextWave: 9, finalForge: false }), true);
+const lateFormTransition = game.getBaseRoutePostWaveTransition(
+  {
+    waveIndex: 7,
+    wave: { completesRun: false },
+    build: {
+      ...architectureRun.build,
+      wave6ChassisBreakpoint: true,
+      doctrineChaseClaimed: true,
+    },
+  },
+  9
+);
+assert.equal(lateFormTransition.action, "forge");
+assert.equal(lateFormTransition.label, "마무리");
+const earlyMutationTransition = game.getBaseRoutePostWaveTransition(
+  {
+    waveIndex: 3,
+    wave: { completesRun: false },
+    build: architectureRun.build,
+  },
+  5
+);
+assert.equal(earlyMutationTransition.action, "field_grant");
+assert.equal(earlyMutationTransition.label, "주력 변이");
 assert.equal(game.shouldUseFieldGrant({ nextWave: 12, finalForge: true }), false);
 const bastionDoctrineBuild = game.createInitialBuild("relay_oath");
 bastionDoctrineBuild.pendingCores = [];

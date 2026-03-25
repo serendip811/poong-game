@@ -14504,6 +14504,25 @@
     return getBaseRouteForgeStage(run).label;
   }
 
+  function getBaseRoutePostWaveTransition(run = state, nextWave = null) {
+    const upcomingWave = Number.isFinite(nextWave) ? nextWave : run ? run.waveIndex + 2 : 0;
+    if (run && run.wave && run.wave.completesRun) {
+      return { id: "result_panel", label: "결과 패널", action: "result" };
+    }
+    if (shouldUseConsolidatedEarlyMutationForge({ nextWave: upcomingWave, finalForge: false })) {
+      return {
+        id: "field_break",
+        label: getBaseRouteForgeStage(run, upcomingWave).label,
+        action: "field_grant",
+      };
+    }
+    return {
+      id: "forge_break",
+      label: getBaseRouteForgeStage(run, upcomingWave).label,
+      action: "forge",
+    };
+  }
+
   function getForgeDisplayModeLabel() {
     if (shouldUseBaseRouteForgeContract()) {
       return getBaseRouteForgeStage(state).label;
@@ -15411,6 +15430,7 @@
     getBaseRouteCombatAsk,
     getMinimalBaseRouteHudVisibility,
     getBaseRouteForgeStage,
+    getBaseRoutePostWaveTransition,
     createBaseRouteForgeContextMarkup,
     getBaseRouteForgeChoiceTransformation,
     createBaseRouteForgePreviewMarkup,
@@ -22043,11 +22063,11 @@
         const nextWave = state.waveIndex + 2;
         const enteringAfterburn =
           !CONSOLIDATED_12_WAVE_ROUTE && state.waveIndex >= MAX_WAVES - 1;
-        const nextBaseRouteForgeStage = getBaseRouteForgeStage(state, nextWave);
+        const nextBaseRouteTransition = getBaseRoutePostWaveTransition(state, nextWave);
         const nextPhaseLabel = state.wave.completesRun
           ? "결과 패널"
           : CONSOLIDATED_12_WAVE_ROUTE
-            ? nextBaseRouteForgeStage.label
+            ? nextBaseRouteTransition.label
             : enteringAfterburn
               ? "Act 4 · Afterburn"
               : shouldUseCompactActBreakCache({ nextWave, finalForge: false })
@@ -22085,6 +22105,13 @@
       if (state.waveClearTimer <= 0) {
         if (state.wave.completesRun) {
           finishRun(true);
+        } else if (CONSOLIDATED_12_WAVE_ROUTE) {
+          const nextBaseRouteTransition = getBaseRoutePostWaveTransition(state, state.waveIndex + 2);
+          if (nextBaseRouteTransition.action === "field_grant") {
+            enterFieldGrant();
+          } else {
+            enterForge();
+          }
         } else if (state.waveIndex >= MAX_WAVES - 1) {
           beginFinalCashout();
         } else if (shouldUseCompactActBreakCache({ nextWave: state.waveIndex + 2, finalForge: false })) {
