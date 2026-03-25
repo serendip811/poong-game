@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: collapse the shipped `Wave 1-12` build surface into three obvious gun/body destinies plus one light rider layer, while hiding wildcard/pursuit/post-`Wave 12` branches and stripping HUD/forge reads back to one appetite and one immediate combat test.
+- Immediate priority: stop expanding the route and prove one readable `Wave 1-12` spine in motion by cutting player-facing admin `proof/route/support/gamble` reads, keeping one headlining gun/body appetite plus one light rider layer, and making each wave ask legible from enemy geometry and space alone.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 09:35:00 KST
+  Findings:
+  - [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L7) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L31) still define the shipped run through `Headline Form`, `Survival Rider`, `Proof Window`, and `세 시대 계약` language. That keeps the live product pitched like a framework the player must understand, not a run they can feel and replay.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L760) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1180) still author `Wave 5-12` with long `note` and `directive` copy for every beat. If the encounter needs designer narration like `ownership`, `proof`, `corridor`, and `pocket rotation` to explain itself, the enemy ecology and arena pressure are still not carrying clarity strongly enough for repeat runs or a future `20-30 wave` curve.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21671) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22059) still push `다음 전장`, `방호·보조`, `판돈·유틸`, `Next Proof`, and `Route Payoff` across HUD, `Tab`, and forge even in the supposed consolidated route. Against the hierarchy discipline of `Hades`, `Nova Drift`, and `Brotato`, this is still too much reading and category sorting before the player can simply want the next form.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22732) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22848) and the support systems already exposed in the shipped route keep shield halos, missiles, drones, and orbit visuals live while the core gun/body ladder is still being explained. That front-loads the machine fantasy and weakens the late-run sense that the chassis truly transformed into something newly dangerous.
+  Top Priority: Strip the player-facing `Wave 1-12` experience to one headline reward read and one short combat ask per stop, then retune `Wave 5-12` so the encounters prove that ask through spacing, flank pressure, and visible weapon payoff instead of route vocabulary.
+  Why Now: The loop is starting to repeat the same structural complaint, and the next gain has to come from making the shipped spine readable and satisfying in motion.
+  Do Not Repeat: Do not answer this with more naming cleanup or another hidden framework while the player still sees a text-heavy wave script and admin-heavy forge/HUD.
+  Release Gate: UX/UI
 
 - 2026-03-25 23:00:49 KST
   Findings:
@@ -2606,6 +2617,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-26 10:05:00 KST
+  Changed: tightened one bounded piece of the shipped `Wave 5-12` combat read in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the player-facing route now leads with one short battlefield ask instead of a paragraph of route narration. `Wave 5-12` directives were collapsed into terse action lines, the combat HUD `현재 전장`, wave-start feed, and wave track now surface that short ask first, and `Wave 6-8` enemy mixes were retuned toward a cleaner `single relay breach -> open-lane sweep -> final breach` rhythm by trimming mortar/binder clutter and pushing lancer/skimmer flank pressure harder. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to reduce each stop to one headline reward read plus one short combat ask, then make `Wave 5-12` prove that ask through spacing and flank pressure rather than route vocabulary. The highest-value bounded interpretation was to change the actual shipped ask source and one midrun encounter band together, because copy cleanup alone would have left the same crowded Wave 6-8 ecology underneath.
+  Follow-up risk: `Wave 9-12` now read more tersely, but their underlying labels and some hazard summaries still carry branch vocabulary like `Crownhold Proof` and `Starforge Pursuit`. If critique stays on readability, the next bounded pass should simplify those late-wave surface names or hazard summaries without reopening the HUD into a larger briefing.
+  Release Gate: Combat
 
 - 2026-03-26 01:40:00 KST
   Changed: removed one bounded prototype exception from the shipped route in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so consolidated `Wave 1-12` runs no longer generate `Wildcard Protocol` offers at `Wave 4 / 7 / 10`. Gamble slots on the shipped path now stay inside the existing greed/utility contract instead of hijacking the run into `Smuggler Winch`, `Nullplate Halo`, or `Rogue Lattice` chassis-support detours. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock that field-grant choices keep a greed contract available while wildcard protocols stay hidden on the consolidated route.

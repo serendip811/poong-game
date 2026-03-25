@@ -874,8 +874,7 @@
         shrike: 0.46,
       },
       note: "첫 Armory 직후의 payoff window. 넓어진 작업장과 느슨한 bastion anchor 하나만 남겨, 막 커진 차체와 주포가 외곽 회전선 전체를 바로 먹는 시간을 먼저 준다.",
-      directive:
-        "afterglow window. 점거 코어를 오래 관리하기보다 얇은 anchor를 빠르게 찢고 넓어진 외곽 lane을 길게 점유해야 한다. 새 form이 한 번에 얼마나 넓게 space를 소유하는지 먼저 증명하는 판이다.",
+      directive: "열린 외곽을 먼저 먹고 얇은 anchor는 지나가며 끊는다.",
       driveGainFactor: 1.22,
       arena: SECOND_ACT_ARENA,
       hazard: {
@@ -900,25 +899,23 @@
       label: "Wave 6 · Breakline",
       pressureFamily: "breach",
       duration: 80,
-      spawnBudget: 132,
-      activeCap: 29,
-      baseSpawnInterval: 0.486,
+      spawnBudget: 128,
+      activeCap: 27,
+      baseSpawnInterval: 0.492,
       spawnIntervalMin: 0.14,
       spawnAcceleration: 0.28,
       eliteEvery: 7,
       mix: {
-        scuttler: 0.12,
-        brute: 0.18,
-        shrike: 0.22,
-        skimmer: 0.14,
-        lancer: 0.18,
-        binder: 0.08,
-        mortar: 0.02,
-        warden: 0.06,
+        scuttler: 0.14,
+        brute: 0.14,
+        shrike: 0.2,
+        skimmer: 0.18,
+        lancer: 0.24,
+        binder: 0.06,
+        warden: 0.04,
       },
       note: "Act 2 staircase의 두 번째 판은 더 이상 같은 domination 반복이 아니다. 열린 lane으로 맛본 ownership를 얇은 relay corridor 위에서 바로 다시 밀어붙이게 만들어, headline midform이 실제 breach window를 얼마나 오래 버는지 시험한다.",
-      directive:
-        "breakline breach. relay crown이 가장 얇은 corridor 하나만 길게 잠근다. skimmer sweep보다 먼저 찢을 회랑을 고르고, 새 form으로 flank 둘을 같이 눌러 돌파 창을 직접 길게 유지해야 한다.",
+      directive: "가장 먼 relay를 먼저 끊고 열린 회랑 하나를 길게 붙든다.",
       driveGainFactor: 1.24,
       arena: {
         width: 1400,
@@ -927,16 +924,16 @@
       hazard: {
         label: "Breakline Crown",
         type: "relay",
-        interval: 9.8,
+        interval: 10.2,
         count: 1,
         radius: 82,
         telegraph: 0.86,
         duration: 5.6,
         damage: 11,
-        coreHp: 46,
+        coreHp: 42,
         coreRadius: 17,
-        relayRange: 448,
-        relayWidth: 28,
+        relayRange: 432,
+        relayWidth: 26,
         relayDamage: 12,
       },
     },
@@ -953,14 +950,13 @@
       eliteEvery: 7,
       mix: {
         scuttler: 0.12,
-        brute: 0.16,
-        shrike: 0.24,
-        skimmer: 0.28,
-        lancer: 0.2,
+        brute: 0.14,
+        shrike: 0.28,
+        skimmer: 0.24,
+        lancer: 0.22,
       },
       note: "Act 2 후반의 세 번째 판은 hazard remix가 아니라 더 거친 open-lane sweep이다. 구조물과 drift를 걷어내고 측면 재진입만 빠르게 돌려, 방금 커진 form이 열린 lane 둘을 실제로 오래 들고 미는지 바로 드러나게 만든다.",
-      directive:
-        "crownfire gallery. 구조물 upkeep 없이 skimmer sweep와 lancer wedge가 양측 flank를 번갈아 찌른다. 중앙 정리보다 가장 넓은 측면을 먼저 비우고 새 form의 split fire로 열린 lane 둘을 오래 붙잡아, 마지막 breach 전에 space ownership를 크게 벌어야 한다.",
+      directive: "넓은 측면 하나를 먼저 비우고 그 lane을 오래 돌린다.",
       driveGainFactor: 1.28,
       arena: {
         width: 1500,
@@ -972,24 +968,23 @@
       label: "Wave 8 · Forgecross",
       pressureFamily: "breach",
       duration: 90,
-      spawnBudget: 150,
-      activeCap: 30,
+      spawnBudget: 148,
+      activeCap: 28,
       baseSpawnInterval: 0.432,
       spawnIntervalMin: 0.124,
       spawnAcceleration: 0.29,
       eliteEvery: 6,
       mix: {
         scuttler: 0.08,
-        brute: 0.2,
-        shrike: 0.2,
-        lancer: 0.24,
-        binder: 0.08,
-        mortar: 0.02,
-        warden: 0.08,
+        brute: 0.18,
+        shrike: 0.22,
+        skimmer: 0.1,
+        lancer: 0.28,
+        binder: 0.04,
+        warden: 0.1,
       },
       note: "Act 2 결산은 이제 maintenance stack이 아니라 단일 hard breach다. Crownfire에서 벌어 둔 space ownership 위에 늦게 닫히는 relay crown 하나만 다시 얹어, 열린 lane 지배를 마지막 한 번의 돌파 각으로 바꾸게 만든다.",
-      directive:
-        "forgecross breach. relay crown 하나가 늦게 but hard하게 corridor를 닫고, lancer wedge와 warden wall이 탈출각을 시험한다. 먼저 찢을 lane을 스스로 고른 뒤 짧은 burst로 문을 열고 바로 빠져나와 Late Break Armory 직전 돌파를 완성해야 한다.",
+      directive: "가장 얇은 입구를 짧게 찢고 바로 열린 lane으로 빠진다.",
       driveGainFactor: 1.34,
       arena: {
         width: 1500,
@@ -998,15 +993,15 @@
       hazard: {
         label: "Forgecross Relay Crown",
         type: "relay",
-        interval: 8.7,
+        interval: 9.2,
         count: 1,
         radius: 108,
         telegraph: 0.9,
         duration: 6.4,
         damage: 12,
-        coreHp: 56,
+        coreHp: 52,
         coreRadius: 18,
-        relayRange: 516,
+        relayRange: 500,
         relayWidth: 30,
         relayDamage: 14,
       },
@@ -1032,8 +1027,7 @@
         warden: 0.1,
       },
       note: "Late Breakpoint 직후의 첫 payoff window는 이제 진짜 domination lap으로 열린다. arena를 더 크게 벌리고 active cap을 크게 낮춰, 방금 완성한 late chassis/weapon form이 열린 lane 둘을 길게 점유하는 시간이 먼저 보이게 만든다.",
-      directive:
-        "lockgrid crossfire. skimmer가 외곽 회전선에 쐐기를 박고 lancer가 직선 돌진으로 중앙을 꿰뚫지만, 이번 판의 ask는 upkeep가 아니라 lane ownership이다. 후열 청소보다 먼저 넓은 측면을 비우고 charge 각을 흘려 headline form의 sweep 폭을 오래 유지해야 한다.",
+      directive: "넓은 측면부터 비우고 열린 두 lane을 오래 유지한다.",
       driveGainFactor: 1.38,
       arena: THIRD_ACT_PAYOFF_ARENA,
       hazard: {
@@ -1069,8 +1063,7 @@
         warden: 0.08,
       },
       note: "Act 3 두 번째 rung은 caravan greed detour 대신 single crownline proof로 붙인다. relay crown 하나만 더 크게 열어, Wave 9에서 벌어 둔 lane ownership를 같은 late form으로 직접 찢고 오래 지키는지 즉시 확인하게 만든다.",
-      directive:
-        "crownhold proof. relay crown 하나가 넓은 측면 pocket을 늦게 but hard하게 조인다. skimmer sweep와 lancer wedge가 열린 복도를 흔들기 전에 가장 얇은 flank를 먼저 찢고, headline form의 sweep 폭으로 breach lane을 오래 고정해야 한다.",
+      directive: "가장 먼 pylon을 먼저 끊고 뚫린 복도를 오래 지킨다.",
       driveGainFactor: 1.42,
       arena: THIRD_ACT_PROOF_ARENA,
       ascensionCarrierType: "binder",
@@ -1113,8 +1106,7 @@
         warden: 0.1,
       },
       note: "두 웨이브 payoff/proof 뒤의 세 번째 ask는 더 이상 gallery 반복이 아니다. 넓어진 arena에서 빠른 drift furnace 하나가 계속 재진입 각을 비틀어, headline late form으로 lane 하나를 먹은 뒤 바로 다른 refuge pocket으로 갈아타는 cadence를 요구한다.",
-      directive:
-        "starforge pursuit. drifting furnace가 retreat pocket을 밀어내고 shrike 재진입과 binder pinch가 바깥 flank를 다시 접는다. 오래 고정 사격하지 말고 가장 얇은 pursuit 덩어리를 먼저 찢은 뒤, 비워 낸 refuge lane으로 짧게 갈아타며 final breach 전 생존 cadence를 증명해야 한다.",
+      directive: "얇은 추격 덩어리를 자르고 빈 pocket으로 짧게 갈아탄다.",
       driveGainFactor: 1.44,
       arena: {
         width: 1760,
@@ -1157,8 +1149,7 @@
         warden: 0.18,
       },
       note: "최종 전장은 두 번째 breach가 아니라 rotating stand다. 작은 bastion pocket 두 곳만 짧게 열어 두고 relay tax를 걷어, Wave 11에서 익힌 refuge cadence를 마지막까지 이어 가며 어느 pocket을 열고 버릴지 직접 결산하게 만든다.",
-      directive:
-        "cinder bastion stand. 모든 거점을 붙들지 말고 가장 얇은 pocket 하나만 먼저 열어 체력과 space를 회수한 뒤, binder pinch가 닫히기 전에 다른 flank로 갈아타야 한다. 마지막 판의 ask는 corridor breach가 아니라 pocket rotation discipline이다.",
+      directive: "한 pocket만 열고 닫히기 전에 다음 pocket으로 갈아탄다.",
       driveGainFactor: 1.52,
       arena: {
         width: 1680,
@@ -16049,7 +16040,7 @@
       waveNumber: index + 1,
       act: getPlayerFacingActLabelForWave(index + 1),
       id: wave.id.toUpperCase(),
-      note: wave.note,
+      note: wave.directive || wave.note,
     }));
     for (let index = 0; index < totalTrackWaves - MAX_WAVES; index += 1) {
       const waveNumber = MAX_WAVES + index + 1;
@@ -17075,6 +17066,7 @@
       spawnTimer: 0.45,
       label: config.label,
       note: config.note,
+      directive: config.directive,
       activeCap: config.activeCap,
       baseSpawnInterval: config.baseSpawnInterval,
       spawnIntervalMin: config.spawnIntervalMin,
@@ -17230,7 +17222,7 @@
     state.player.fireCooldown = 0;
     state.player.dashCharges = state.player.dashMax;
     state.player.dashCooldownTimer = 0;
-    pushCombatFeed(`${config.label} 진입. ${config.note}`, `W${index + 1}`);
+    pushCombatFeed(`${config.label} 진입. ${config.directive || config.note}`, `W${index + 1}`);
     if (blackLedgerRaidActive) {
       setBanner("Black Ledger Raid", 0.9);
     }
@@ -21897,7 +21889,12 @@
     const enemiesLeft = Math.max(0, state.wave ? state.wave.spawnBudget - state.wave.spawned : 0);
     if (elements.waveObjective) {
       const combatBand = getCombatBandState(state.build, state.weapon, state.waveIndex + 1);
-      const objectiveNote = hazardStatus.note || (combatBand ? combatBand.detail : nextBreakpoint.detail);
+      const waveAsk =
+        state.wave && state.wave.directive
+          ? state.wave.directive
+          : combatBand
+            ? combatBand.detail
+            : hazardStatus.note || nextBreakpoint.detail;
       elements.waveObjective.innerHTML = `
         <div class="summary-head">
           <strong>현재 전장</strong>
@@ -21912,10 +21909,10 @@
         </div>
         <p class="summary-note">${
           minimalBaseRouteHud
-            ? `${combatBand ? combatBand.label : proofWindow.label} 하나만 보면 된다. ${objectiveNote}`
+            ? waveAsk
             : baseRouteForgeActive
-              ? `${proofWindow.label}만 보면 된다. ${combatBand ? `${combatBand.headline}. ` : ""}${objectiveNote}`
-              : `${nextBreakpoint.label} + ${supportTrack.label}. ${combatBand ? `${combatBand.headline}. ` : ""}${objectiveNote}`
+              ? `${proofWindow.label}만 보면 된다. ${combatBand ? `${combatBand.headline}. ` : ""}${waveAsk}`
+              : `${nextBreakpoint.label} + ${supportTrack.label}. ${combatBand ? `${combatBand.headline}. ` : ""}${waveAsk}`
         }</p>
       `;
     }
