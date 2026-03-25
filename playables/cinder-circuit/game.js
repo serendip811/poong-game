@@ -6488,10 +6488,17 @@
       return false;
     }
     const nextWave = options.nextWave || 0;
-    if (CONSOLIDATED_12_WAVE_ROUTE && nextWave === ACT_BREAK_ARMORY_WAVE) {
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
       return false;
     }
     return nextWave === ACT_BREAK_ARMORY_WAVE || nextWave === LATE_BREAK_ARMORY_WAVE;
+  }
+
+  function shouldUseConsolidatedLateFormForge(options) {
+    if (!options || options.finalForge || !CONSOLIDATED_12_WAVE_ROUTE) {
+      return false;
+    }
+    return (options.nextWave || 0) === LATE_BREAK_ARMORY_WAVE;
   }
 
   function shouldUseCompactActBreakCache(options) {
@@ -6770,6 +6777,9 @@
   function getForgeDraftType(options) {
     if (options && options.finalForge) {
       return "final";
+    }
+    if (shouldUseConsolidatedLateFormForge(options)) {
+      return "late_form";
     }
     if (shouldRunActBreakArmory(options)) {
       return "armory";
@@ -11088,6 +11098,9 @@
         return finalChoices;
       }
     }
+    if (shouldUseConsolidatedLateFormForge(options)) {
+      return buildActBreakArmoryChoices(build, rng, scrapBank, options);
+    }
     if (shouldRunActBreakArmory(options)) {
       return buildActBreakArmoryChoices(build, rng, scrapBank, options);
     }
@@ -13310,6 +13323,9 @@
     if (CONSOLIDATED_12_WAVE_ROUTE && state.phase === "forge") {
       return getBaseRouteForgeStage(state).label;
     }
+    if (state.forgeDraftType === "late_form") {
+      return "Late Form";
+    }
     if (state.forgeDraftType === "architecture_draft") {
       return "Architecture Draft";
     }
@@ -13363,6 +13379,9 @@
     }
     if (shouldUseConsolidatedEarlyMutationForge({ nextWave: upcomingWave, finalForge: false })) {
       return { id: "field_break", label: "주력 변이" };
+    }
+    if (shouldUseConsolidatedLateFormForge({ nextWave: upcomingWave, finalForge: false })) {
+      return { id: "late_form", label: "마무리" };
     }
     if (shouldUseCompactActBreakCache({ nextWave: upcomingWave, finalForge: false })) {
       return { id: "chassis_break", label: "주력 변이" };
@@ -14227,6 +14246,7 @@
     doctrineAllowsSystemInstall,
     unlockLateSupportBay,
     shouldSkipOwnershipAdminStop,
+    shouldUseConsolidatedLateFormForge,
     shouldUseFieldGrant,
     isArsenalBreakpointWave,
     shouldRunCatalystDraft,
@@ -14253,6 +14273,7 @@
     createTabInspectBoardMarkup,
     createBaseRouteFocusMarkup,
     getMinimalBaseRouteHudVisibility,
+    getBaseRouteForgeStage,
     createBaseRouteForgeContextMarkup,
     getBaseRouteForgeChoiceTransformation,
     createBaseRouteForgePreviewMarkup,
@@ -16552,21 +16573,21 @@
     state.forgeMaxSteps = startsPackage ? 2 : 1;
     state.forgeDraftType = draftType;
     if (!isFinalForge && isLateBreakArmory(forgeOptions) && unlockLateSupportBay(state.build)) {
-      state.build.upgrades.push(
-        state.build.auxiliaryJunctionLevel > 0 ? "Aux Bay Uplink: support bay +1" : "Aux Bay Uplink"
-      );
-      pushCombatFeed(
-        CONSOLIDATED_12_WAVE_ROUTE
-          ? "Wave 8 돌파. 이제 후반 변신 뒤에 붙는 작은 방호·보조선이 처음 열린다."
-          : state.build.bastionDoctrineId
+      if (!CONSOLIDATED_12_WAVE_ROUTE) {
+        state.build.upgrades.push(
+          state.build.auxiliaryJunctionLevel > 0 ? "Aux Bay Uplink: support bay +1" : "Aux Bay Uplink"
+        );
+        pushCombatFeed(
+          state.build.bastionDoctrineId
             ? state.build.auxiliaryJunctionLevel > 0
               ? "Wave 8 돌파. Late Break Armory가 열리며 네 번째 support bay와 추가 교리 우회 flex bay가 함께 해금된다."
               : "Wave 8 돌파. Late Break Armory가 열리며 세 번째 support bay와 교리 우회 베이 1칸이 함께 해금된다."
             : state.build.auxiliaryJunctionLevel > 0
               ? "Wave 8 돌파. Late Break Armory가 열리며 네 번째 support bay가 해금된다."
               : "Wave 8 돌파. Late Break Armory가 열리며 세 번째 support bay가 해금된다.",
-        "ARMORY"
-      );
+          "ARMORY"
+        );
+      }
     }
     state.forgeChoices = buildForgeChoices(
       state.build,
@@ -16588,7 +16609,7 @@
           : "최종 웨이브 정리 완료. 마지막 포지에서 최종 각인과 7연속 afterburn survival ladder의 시작 형태를 마감한다."
         : isLateBreakArmory(forgeOptions)
           ? CONSOLIDATED_12_WAVE_ROUTE
-            ? "Wave 8 돌파. 이번 정지는 후반 실루엣 하나를 크게 고르고, 나머지는 작은 버팀선으로만 따라붙는다."
+            ? "Wave 8 돌파. 이번 정지는 런의 마지막 큰 형태 하나를 고른다. Wave 9-12는 새 관리 단계 없이 그 형태를 끝까지 증명하는 구간이다."
             : state.build.auxiliaryJunctionLevel > 0
               ? "Wave 8 돌파. Late Break Armory를 단일 breakpoint로 재절단했다. 이제 정확히 세 장만 뜨며, Cataclysm Arsenal, Warplate Halo, Black Ledger Heist 중 하나를 고르면 Wave 9-10은 payoff band, Wave 11은 그 선택 전용 proof, Wave 12는 최종 finale로 꺾인다."
               : "Wave 8 돌파. Late Break Armory를 단일 breakpoint로 재절단했다. 이제 정확히 세 장만 뜨며, Cataclysm Arsenal, Warplate Halo, Black Ledger Heist 중 하나를 고르면 Wave 9-10은 payoff band, Wave 11은 그 선택 전용 proof, Wave 12는 최종 finale로 꺾인다."

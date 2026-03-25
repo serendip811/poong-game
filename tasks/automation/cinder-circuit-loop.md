@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop adding route/admin/future branches and cut the shipped `Wave 1-12` slice down to one quiet opener, one readable growth ladder, and one satisfying `Wave 12` finish before any more system expansion.
+- Immediate priority: make the shipped `Wave 1-12` slice feel like a complete rerunnable spine by deleting admin/future-route scaffolding and re-authoring the wave/reward ladder around four clean transformation spikes before any more expansion.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-25 19:20:00 KST
+  Findings:
+  - [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L46) still define the run around `12 waves / 12-15 minutes / three-era contract / proof window`, while the mission now demands a spine that could honestly grow toward `20-30 waves`. The current design is still spending too many beats on naming the ladder instead of building a longer-feeling escalation grammar players would actually want to revisit.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L780) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1450) shows a lot of authored combat language, but it is still a heavily briefed route of named asks instead of a reusable escalation machine. A release-feeling arena roguelite earns replayability from stronger encounter ecology and cleaner power brackets, not from more wave-by-wave narration.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L11800) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12750) still anchors key growth around `doctrine`, `bastion`, `late break armory`, `auxiliary junction`, and `black ledger` wrappers. That is fake long-run depth: the run looks busier, but the player is still not chasing a much stronger set of visible transformations.
+  - [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L90) through [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L106) plus [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21040) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21435) still keep roadmap, objective, live readout, upgrade log, proof text, preview rows, and tradeoff copy competing for the same attention. Compared with the one-priority readability of `Nova Drift`, `Hades`, or `Brotato`, this still makes the player parse the run more than feel the run.
+  Top Priority: Re-author the shipped route into one honest four-step escalation spine `small opener -> visible weapon leap -> body/defense commitment -> finale form payoff`, and delete every player-facing admin, roadmap, or future-route layer that does not directly strengthen those four beats.
+  Why Now: Until the current 12-wave slice feels complete and hungry on its own, talk of longer escalation is only paper ambition.
+  Do Not Repeat: Do not answer this with more label compression, more branch nouns, or another wrapper that still leaves the same fake depth on screen.
+  Release Gate: Progression
 
 - 2026-03-25 18:05:00 KST
   Findings:
@@ -2360,6 +2371,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-25 19:45:00 KST
+  Changed: recut the consolidated `Wave 8 -> Wave 9` handoff in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the shipped route now treats that stop as a dedicated `late form` payoff beat instead of routing it through the generic `Late Break Armory` draft/admin layer. The shipped path still uses the same three late-form picks, but `Aux Bay Uplink` and `Late Break Armory` messaging no longer surface when the stop opens; the support-cap unlock stays backstage while the feed/HUD frame the moment as `pick the run's last big form, then prove it through Wave 9-12`. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert that `Wave 9` is recognized as the shipped route's explicit `마무리` beat, and validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to make the shipped route read as one honest four-step escalation spine and delete player-facing admin layers that do not strengthen those beats. The highest-value bounded interpretation was to make the fourth rung an actual visible finale-form stop rather than another backstage `armory/bay` wrapper, because that directly strengthens the shipped spine `small opener -> weapon leap -> body commitment -> finale payoff`.
+  Follow-up risk: the late support-cap unlock is now intentionally silent on the consolidated route, so a later balance/readability pass should verify that `Wave 9-12` defense/support payoff still reads strongly enough from combat behavior alone and does not need a separate surfaced support moment.
+  Release Gate: Progression
 
 - 2026-03-25 12:12:10 KST
   Changed: simplified the shipped base-route forge in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and [styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) so `Wave 1-12` reward cards now always render as three equal appetite-first picks instead of one featured recommendation plus secondary cards. On the consolidated route, every forge card now follows the same short stack `lane tag -> title -> immediate change -> 다음 시험 -> raw cost`, and the base-route proof/promise copy is trimmed so the pick reads as `bigger gun form / survival layer / greed utility` with less framework text. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new proof label expectation, and validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

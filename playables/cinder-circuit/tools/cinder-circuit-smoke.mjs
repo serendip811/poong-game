@@ -191,6 +191,21 @@ assert.equal(expandedHudVisibility.showWave, true);
 assert.equal(expandedHudVisibility.showDash, true);
 assert.equal(expandedHudVisibility.showTimer, true);
 assert.equal(expandedHudVisibility.showRoadmap, true);
+assert.equal(
+  game.shouldUseConsolidatedLateFormForge({ nextWave: 9, finalForge: false }),
+  true
+);
+assert.equal(
+  game.shouldUseConsolidatedLateFormForge({ nextWave: 5, finalForge: false }),
+  false
+);
+assert.equal(
+  game.getBaseRouteForgeStage(
+    { phase: "wave", pendingFinalForge: false, waveIndex: 7, build: roadmapBuild },
+    9
+  ).label,
+  "마무리"
+);
 assert.equal(game.shouldUseFieldGrant({ nextWave: 6, finalForge: false, build: roadmapBuild }), false);
 const recurringWave3Choices = game.buildForgeChoices(roadmapBuild, Math.random, 40, {
   nextWave: 3,
@@ -1634,7 +1649,8 @@ const postChaseChoices = game.buildForgeChoices(
 );
 assert.ok(!postChaseChoices.some((choice) => choice.type === "utility" && choice.action === "doctrine_chase"));
 assert.equal(game.shouldUseFieldGrant({ nextWave: 5, finalForge: false }), false);
-assert.equal(game.shouldUseFieldGrant({ nextWave: 9, finalForge: false }), false);
+assert.equal(game.shouldUseFieldGrant({ nextWave: 9, finalForge: false }), true);
+assert.equal(game.shouldUseConsolidatedLateFormForge({ nextWave: 9, finalForge: false }), true);
 assert.equal(game.shouldUseFieldGrant({ nextWave: 12, finalForge: true }), false);
 const bastionDoctrineBuild = game.createInitialBuild("relay_oath");
 bastionDoctrineBuild.pendingCores = [];
