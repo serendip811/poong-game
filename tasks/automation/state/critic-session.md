@@ -12,9 +12,9 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Progression`, with `Rewards` and `UX/UI` attached: the shipped `Wave 1-12` spine still feels like a narrated prototype route, not a complete rerunnable escalation ladder.
-- Repeated false solution: compressing or renaming the same HUD/forge/route/admin scaffolding instead of deleting it and strengthening the actual four-beat transformation cadence.
+- The most fragile gate is now `UX/UI`, with `Rewards` attached: the run still explains itself too hard in the opener, HUD, `Tab`, and forge, so the transformation ladder feels narrated before it feels desirable.
+- Repeated false solution: softening or renaming the same panels and copy instead of deleting panels, reducing read burden, and preserving room for later spectacle spikes.
 - Keep comparing against `Nova Drift`, `Hades`, and `Brotato`; the benchmark is one obvious combat priority and one obvious reward read, not a well-explained ladder.
 - Good change to preserve: early support spectacle is still delayed. Keep missiles, orbitals, shields, and helpers out of the opener; later they should land as visible form spikes, not forecast text.
-- Main drift markers: active post-`Wave 12` leakage (`Afterburn`, `Dominion`), authored wave narration substituting for reusable escalation, forge cards still explaining proof/bill/process instead of visible payoff, and build paths still framed as doctrine/bay/armory administration instead of transformations players would chase.
-- Next critique bias: pressure consolidation over expansion and punish fake depth. Keep forcing the team to make the current 12-wave route feel complete before entertaining more systems or future brackets.
+- Main drift markers: signature perk text still briefs too much at start, live HUD still stacks roadmap/objective/readout/log together, `Tab` still behaves like a contract card, and forge still duplicates promise/proof/preview instead of selling one visible payoff.
+- Next critique bias: pressure readability and pacing consolidation over expansion. Keep punishing over-labeled screens, front-loaded power, and any solution that adds copy instead of restoring appetite and tactical clarity.

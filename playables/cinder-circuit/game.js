@@ -8988,6 +8988,21 @@
     };
   }
 
+  function syncMinimalCombatHud(isMinimal) {
+    if (elements.hudBottomOverlay) {
+      elements.hudBottomOverlay.classList.toggle("hud-overlay--bottom-minimal", isMinimal);
+    }
+    if (elements.hudBuildPanelLeft) {
+      elements.hudBuildPanelLeft.classList.toggle("hidden", isMinimal);
+    }
+    if (elements.hudBuildPanelRight) {
+      elements.hudBuildPanelRight.classList.toggle("hud-build-panel--solo", isMinimal);
+    }
+    if (elements.activeCore) {
+      elements.activeCore.classList.toggle("hidden", isMinimal);
+    }
+  }
+
   function createBaseRouteForgeContextMarkup({
     dominantFormLabel = "",
     waveAskLabel = "",
@@ -14315,6 +14330,9 @@
     driveFill: document.getElementById("drive-fill"),
     timerStat: document.getElementById("timer-stat"),
     scrapStat: document.getElementById("scrap-stat"),
+    hudBottomOverlay: document.querySelector(".hud-overlay--bottom"),
+    hudBuildPanelLeft: document.querySelector(".build-panel--left"),
+    hudBuildPanelRight: document.querySelector(".build-panel--right"),
     activeCore: document.getElementById("active-core"),
     pendingCores: document.getElementById("pending-cores"),
     upgradeList: document.getElementById("upgrade-list"),
@@ -20955,6 +20973,7 @@
     const baseRouteForgeActive = shouldUseBaseRouteForgeContract();
     const hudVisibility = getMinimalBaseRouteHudVisibility(state);
     const minimalBaseRouteHud = hudVisibility.minimal;
+    syncMinimalCombatHud(minimalBaseRouteHud);
     const baseRouteForgeStage = baseRouteForgeActive
       ? getBaseRouteForgeStage(state, state.waveIndex + 2)
       : null;

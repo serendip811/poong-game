@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: make the shipped `Wave 1-12` slice feel like a complete rerunnable spine by deleting admin/future-route scaffolding and re-authoring the wave/reward ladder around four clean transformation spikes before any more expansion.
+- Immediate priority: strip the opener, HUD, `Tab`, and forge down to one-priority reads and rebalance `Wave 1-3` so the run starts smaller, quieter, and leaves room for four real transformation spikes.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-25 20:05:00 KST
+  Findings:
+  - [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L17) through [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L29) plus [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3591) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3629) still front-load the run with signature identity and perk text. That weakens the Wave 3 leap before combat has earned it. Strong rerunable references open with a smaller fantasy and let the first real mutation create appetite.
+  - [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L93) through [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L105) plus [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21033) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21168) still make live combat read like a dashboard: current form, roadmap, objective, readout, and upgrade log all compete at once. In an arena shooter this should collapse to `survive now` plus one current ask, otherwise movement reads and enemy pressure never get full screen priority.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8951) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L9006) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21117) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21137) still make `Tab` behave like a tiny contract briefing instead of a quick status board. Compared with the snap-read pause/status patterns in `Nova Drift`, `Hades`, or `Brotato`, this is still documentation, not tactical clarity.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21313) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21456) still asks the forge cards to carry promise text, proof text, preview rows, and cost all together. That is too much reading for a reward moment. A strong forge choice should lead with visible form change, one payoff line, and one bill.
+  Top Priority: Collapse the live run presentation into one hierarchy: combat HUD = survival meters plus one current threat/ask, `Tab` = quick form/scrap/liability board, forge = silhouette/power spike/cost only.
+  Why Now: If the opening and reward beats still feel busy and pre-explained, later transformations cannot create hunger.
+  Do Not Repeat: Do not answer this with softer wording while keeping the same number of panels, proof rows, or preview blocks.
+  Release Gate: UX/UI
 
 - 2026-03-25 19:20:00 KST
   Findings:
@@ -2371,6 +2382,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-25 20:40:00 KST
+  Changed: collapsed the shipped combat HUD in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) so the consolidated route's normal wave view now drops the entire left build panel instead of showing `현재 형태` beside `현재 전장`. During live combat the player now gets survival meters plus one right-side threat/ask card, while the form summary stays reserved for `Tab` and forge pauses. This UI pass was anchored to the snap-read combat hierarchy seen in `Nova Drift` and `Brotato`: fight space first, one tactical ask second. Validation passed with `node --check playables/cinder-circuit/game.js` and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` explicitly said the combat HUD should collapse to survival meters plus one current threat/ask. The highest-value bounded interpretation was to remove the last co-equal bottom HUD card in live waves, because as long as `현재 형태` remained on screen the arena still read like a two-panel dashboard instead of a shooter.
+  Follow-up risk: combat is cleaner now, but `Tab` and forge still need one more pass to fully match the same hard hierarchy `quick form/scrap/liability board` and `silhouette/power spike/cost only` without drifting back into briefing rows.
+  Release Gate: UX/UI
 
 - 2026-03-25 19:45:00 KST
   Changed: recut the consolidated `Wave 8 -> Wave 9` handoff in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the shipped route now treats that stop as a dedicated `late form` payoff beat instead of routing it through the generic `Late Break Armory` draft/admin layer. The shipped path still uses the same three late-form picks, but `Aux Bay Uplink` and `Late Break Armory` messaging no longer surface when the stop opens; the support-cap unlock stays backstage while the feed/HUD frame the moment as `pick the run's last big form, then prove it through Wave 9-12`. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert that `Wave 9` is recognized as the shipped route's explicit `마무리` beat, and validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
