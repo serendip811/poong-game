@@ -2287,21 +2287,21 @@
       return {
         label: "Cataclysm cadence",
         detail:
-          "Wave 9는 열린 firing gallery payoff, Wave 10은 light breach proof, Wave 11은 Crownbreaker victory lap, Wave 12는 final crownline breach다.",
+          "Wave 9는 열린 firing gallery payoff, Wave 10은 light breach proof, Wave 11은 shared pursuit run, Wave 12는 rotating final stand다.",
       };
     }
     if (profileId === "aegis") {
       return {
         label: "Warplate cadence",
         detail:
-          "Wave 9는 Halo bastion pocket, Wave 10은 Halo crownproof, Wave 11은 Halo refuge lap, Wave 12는 Citadel final stand다.",
+          "Wave 9는 Halo bastion pocket, Wave 10은 Halo crownproof, Wave 11은 shared pursuit run, Wave 12는 rotating final stand다.",
       };
     }
     if (profileId === "ledger") {
       return {
         label: "Ledger cadence",
         detail:
-          "Wave 9는 Ledger vaultline, Wave 10은 Jackpot crownproof, Wave 11은 Kingpin cash-out lap, Wave 12는 blackout finale다.",
+          "Wave 9는 Ledger vaultline, Wave 10은 Jackpot crownproof, Wave 11은 shared pursuit run, Wave 12는 rotating final stand다.",
       };
     }
     return {
@@ -2316,21 +2316,21 @@
       return {
         title: "Cataclysm Arsenal",
         detail:
-          "Wave 9는 열린 firing gallery payoff, Wave 10은 light breach proof, Wave 11은 Crownbreaker victory lap, Wave 12는 final crownline breach로 고정된다.",
+          "Wave 9는 열린 firing gallery payoff, Wave 10은 light breach proof, Wave 11은 shared pursuit run, Wave 12는 rotating final stand로 고정된다.",
       };
     }
     if (profileId === "aegis") {
       return {
         title: "Warplate Halo",
         detail:
-          "Wave 9는 Halo bastion pocket, Wave 10은 Halo crownproof, Wave 11은 Halo refuge lap, Wave 12는 Citadel final stand로 고정된다.",
+          "Wave 9는 Halo bastion pocket, Wave 10은 Halo crownproof, Wave 11은 shared pursuit run, Wave 12는 rotating final stand로 고정된다.",
       };
     }
     if (profileId === "ledger") {
       return {
         title: "Black Ledger Heist",
         detail:
-          "Wave 9는 Ledger vaultline, Wave 10은 Jackpot crownproof, Wave 11은 Kingpin cash-out lap, Wave 12는 blackout finale로 고정된다.",
+          "Wave 9는 Ledger vaultline, Wave 10은 Jackpot crownproof, Wave 11은 shared pursuit run, Wave 12는 rotating final stand로 고정된다.",
       };
     }
     return null;
@@ -2379,9 +2379,6 @@
     }
     if (index === LATE_BREAK_ARMORY_WAVE) {
       return getLateBreakFollowthroughProfile(build);
-    }
-    if (index > LATE_BREAK_ARMORY_WAVE) {
-      return getLateBreakCrownProfile(build, index);
     }
     return null;
   }
@@ -7377,8 +7374,9 @@
     if (!choice || !choice.lateBreakProfileId) {
       return [];
     }
-    const wave11Profile = getLateBreakCrownProfile({ lateBreakProfileId: choice.lateBreakProfileId }, 10);
-    const wave12Profile = getLateBreakCrownProfile({ lateBreakProfileId: choice.lateBreakProfileId }, 11);
+    const previewBuild = { lateBreakProfileId: choice.lateBreakProfileId };
+    const wave11Profile = resolveWaveConfig(10, previewBuild);
+    const wave12Profile = resolveWaveConfig(11, previewBuild);
     const routeRows = [];
     if (wave11Profile) {
       routeRows.push({ label: "Wave 11", value: wave11Profile.bandLabel || wave11Profile.label });
@@ -9859,37 +9857,21 @@
           };
     }
     if (build && build.lateBreakProfileId) {
-      if (build.lateBreakProfileId === "mutation") {
+      if (boundedWave >= 11) {
         return {
-          label: boundedWave === 11 ? "Crownbreaker Lap" : "Cataclysm Crownline",
+          label: boundedWave === 11 ? "Refuge Run" : "Cinder Bastion",
           headline:
             (currentWeapon && currentWeapon.headlineFormLabel) ||
             (currentWeapon && currentWeapon.capstoneLabel) ||
-            "Cataclysm Arsenal",
+            (build.lateBreakProfileId === "aegis"
+              ? "Warplate Halo"
+              : build.lateBreakProfileId === "ledger"
+                ? "Black Ledger"
+                : "Cataclysm Arsenal"),
           detail:
             boundedWave === 11
-              ? "Wave 11은 반복 crown이 아니라 domination lap이다. 열린 gallery에서 lane 폭을 먼저 먹고 split volley가 전장 폭 전체를 얼마나 오래 잠그는지 즐기게 만든다."
-              : "Wave 12는 Cataclysm branch의 최종 crownline breach다. Wave 11에서 벌어 둔 lane ownership를 실제 돌파 창으로 바꾸며 마지막 corridor를 직접 찢어야 한다.",
-        };
-      }
-      if (build.lateBreakProfileId === "aegis") {
-        return {
-          label: boundedWave === 11 ? "Halo Refuge" : "Citadel Stand",
-          headline: "Warplate Halo",
-          detail:
-            boundedWave === 11
-              ? "Wave 11은 refuge lap이다. drift pocket에서 회복 창을 캐며 plate timing과 짧은 retreat cadence로 넓은 pocket을 오래 버티게 만든다."
-              : "Wave 12는 최종 Citadel stand다. Wave 11에서 벌어 둔 회복 리듬을 바탕으로 어느 거점을 잠깐 열고 버릴지 마지막으로 결정해야 한다.",
-        };
-      }
-      if (build.lateBreakProfileId === "ledger") {
-        return {
-          label: boundedWave === 11 ? "Kingpin Vaultline" : "Grand Blackout Run",
-          headline: "Black Ledger",
-          detail:
-            boundedWave === 11
-              ? "Wave 11은 cash-out lap이다. 분산 vault를 넓게 찢으며 chase line과 이탈 타이밍을 greed 판단으로 한 번 더 벌 수 있다."
-              : "Wave 12는 blackout finale다. 대형 caravan chase가 payout과 퇴로를 동시에 흔드므로, 직전에 벌어 둔 greed 리듬을 끝까지 유지해야 한다.",
+              ? "Wave 11은 late-break 분기라도 shared pursuit/refuge run으로 접힌다. branch마다 pressure seasoning은 남기되, headline form으로 pursuit 덩어리를 먼저 찢고 다음 refuge pocket으로 갈아타는 리듬 자체가 전면에 남아야 한다."
+              : "Wave 12는 late-break 분기라도 rotating final stand로 닫힌다. branch flavor는 남겨도 마지막 결산은 한 pocket을 열고 버리며 방금 완성한 form이 점유 시간을 얼마나 늘리는지 보여 주는 데 집중한다.",
         };
       }
     }
@@ -13063,7 +13045,7 @@
       tag: "ARSENAL",
       title: "Cataclysm Arsenal",
       description: `${CORE_DEFS[build.coreId].label}에 전면 cataclysm fan과 측면 브로드사이드 포드를 한 번에 잠가 support 없이도 주포 firing geometry를 monster form으로 갈아엎는다. 이번 pick의 rider는 보조 증폭일 뿐이고, 진짜 payoff는 Wave 9-10에서 주포가 열린 lane 둘을 동시에 잠그는 새 화망 자체다.`,
-      roadmapDetail: "Wave 9 open-lane -> Wave 10 breach proof -> Wave 11 domination lap -> Wave 12 final breach",
+      roadmapDetail: "Wave 9 open-lane -> Wave 10 breach proof -> Wave 11 pursuit run -> Wave 12 final stand",
       slotText: "cataclysm fan + 브로드사이드 포드 · 열린 lane 절단",
       cost: 34,
       laneLabel: "Main Weapon Mutation",
@@ -13090,7 +13072,7 @@
       title: "Warplate Halo",
       description:
         "Act 3 진입 전에 재충전식 warplate를 두 겹까지 예열해 큰 한 방을 지우고, plate가 터질 때마다 주변 탄막과 추격선을 같이 뜯어낸다. 이 선택의 headline은 support가 아니라 몸체 자체가 bastion hull로 바뀌는 점이고, 다음 proof는 작은 pocket에 얼마나 깊게 들어갔다가 살아 나오는지다.",
-      roadmapDetail: "Wave 9 bastion pocket -> Wave 10 crownproof -> Wave 11 refuge lap -> Wave 12 final stand",
+      roadmapDetail: "Wave 9 bastion pocket -> Wave 10 crownproof -> Wave 11 pursuit run -> Wave 12 final stand",
       slotText: `warplate ${getLateFieldAegisMaxCharges({ lateFieldAegisLevel: nextLevel })}충전 · bastion hull`,
       cost: 26,
       laneLabel: "Defense / Utility",
@@ -13113,7 +13095,7 @@
       title: "Black Ledger Heist",
       description:
         "Act 3 개막 자금을 먼저 당겨 고철과 회수 효율을 크게 올리고, 주포 양옆에 twin tow fork를 열어 payout lane을 긁는 raid frame으로 바꾼다. 대신 Wave 9 vaultline에서 더 오래 cash-out할수록 청구서도 같이 커져, greed 판단이 바로 몸의 움직임과 사격 각을 바꾸게 만든다.",
-      roadmapDetail: "Wave 9 vaultline -> Wave 10 crownproof -> Wave 11 cash-out lap -> Wave 12 blackout finale",
+      roadmapDetail: "Wave 9 vaultline -> Wave 10 crownproof -> Wave 11 pursuit run -> Wave 12 final stand",
       slotText: "고철 +52 · 회수 +16% · twin tow fork · 2웨이브 Siege Debt",
       cost: 0,
       scrapGain: 52,
@@ -15785,13 +15767,13 @@
       }
       if (boundedWave === 11) {
         return {
-          label: "Crownbreaker Lap",
-          detail: `${bandLabel}에서 corridor 하나가 아니라 전장 폭 전체를 얼마나 오래 소유하는지 결산한다.`,
+          label: "Refuge Run",
+          detail: `${bandLabel}에서 cataclysm form으로 pursuit 덩어리를 먼저 찢고, 비워 낸 refuge pocket 사이를 갈아타는 cadence를 증명한다.`,
         };
       }
       return {
-        label: "Cataclysm Finale",
-        detail: `${bandLabel}에서 crownline 하나를 직접 열어 무장 branch의 최종 breach를 닫는다.`,
+        label: "Final Stand",
+        detail: `${bandLabel}에서 cataclysm form이 한 pocket을 열고 버리며 final stand 점유 시간을 얼마나 늘리는지 결산한다.`,
       };
     }
     if (profileId === "aegis") {
@@ -15814,8 +15796,8 @@
         };
       }
       return {
-        label: "Citadel Stand",
-        detail: `${bandLabel}에서 어느 bastion pocket을 열고 버릴지 직접 결산하며 final stand를 닫는다.`,
+        label: "Final Stand",
+        detail: `${bandLabel}에서 warplate hull로 어느 bastion pocket을 열고 버릴지 직접 결산하며 final stand를 닫는다.`,
       };
     }
     if (profileId === "ledger") {
@@ -15833,13 +15815,13 @@
       }
       if (boundedWave === 11) {
         return {
-          label: "Cash-Out Lap",
-          detail: `${bandLabel}에서 흩어진 vaultline 중 어디까지 greed를 밟고 언제 이탈할지 한 판 더 증명한다.`,
+          label: "Refuge Run",
+          detail: `${bandLabel}에서 raid frame으로 pursuit 덩어리를 먼저 찢고, greed line을 짧게 긁은 뒤 refuge pocket으로 이탈하는 cadence를 증명한다.`,
         };
       }
       return {
-        label: "Blackout Finale",
-        detail: `${bandLabel}에서 거대한 contraband chase를 끝까지 밀지 말지 이번 run의 마지막 greed 판단을 닫는다.`,
+        label: "Final Stand",
+        detail: `${bandLabel}에서 raid frame이 마지막 pocket rotation 안에서도 greed line을 얼마나 오래 지키는지 결산한다.`,
       };
     }
     if (boundedWave <= 10) {

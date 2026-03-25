@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop expansion and consolidate the shipped spine: quiet `Wave 1-3`, remove in-combat progression wrappers from the default route, and prove `Wave 4-10` with one headline weapon/body ladder, one later rider lane, and one clean reward read.
+- Immediate priority: freeze new branches and prove a quiet forge-only default route: `Wave 1-3` stay small and readable, `Wave 4-10` earn one visible weapon/body takeover plus one later rider lane, and live caches/route-admin text stop interrupting the reward cadence.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 19:40:00 KST
+  Findings:
+  - [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L35) still define the shipped game around a `12-wave` contract, drop economy, and `Headline Form / Survival Rider / Proof Window` grammar. That is still a managed run script, not a rerun-hungry skeleton that can honestly grow toward `20-30 waves`.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L807) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1217) still give `Wave 5-12` a bespoke hazard/cell ask almost every round. Even with larger arenas, the player is still solving authored event grammar instead of enjoying breathing combat space where weapon form, enemy flow, and movement decisions can carry repeat-play fun.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2815) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3525) still keep a huge late catalog of satellites, shields, sentries, drones, missiles, preview primers, wildcard hijacks, and instant ascensions alive around the base route. The ceiling is not the issue now; the problem is that the run still promises too many side fantasies before one main gun/body line has earned a memorable takeover arc.
+  - [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L93) through [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L105) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22044) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22680) still stack roadmap, combat ask, telemetry, upgrade log, `Next Proof`, and `Route Payoff` framing around the arena and forge. Compared with the hierarchy discipline of `Nova Drift`, `Hades`, or `Brotato`, the screen is still teaching the run instead of making the next transformation feel urgent.
+  Top Priority: Consolidate the shipped route into longer, repeatable combat bands by cutting most bespoke `Wave 5-12` event grammar and using the freed space to make one weapon/body ladder visibly evolve from modest opener to dominant mid-run form before rider/support spectacle arrives.
+  Why Now: Until the base route is fun with less scripting and less explanation, more modules only make repeated runs feel busier rather than deeper.
+  Do Not Repeat: Do not answer this with another support branch, wildcard, cache exception, or HUD wording trim while the core wave spine still needs authored narration to stay interesting.
+  Release Gate: Progression
 
 - 2026-03-26 19:10:00 KST
   Findings:
@@ -2806,6 +2817,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-26 08:44:43 KST
+  Changed: consolidated one bounded piece of the shipped late-run combat spine in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so late-break branches no longer retake `Wave 11-12` with bespoke finales. `mutation`, `aegis`, and `ledger` now keep their distinct payoff/proof flavor at `Wave 9-10`, but all three funnel into the shared `Wave 11 · Starforge Pursuit` and `Wave 12 · Cinder Bastion` cells. I updated route-preview, cadence-summary, and late beat/HUD copy to describe that shared `pursuit -> final stand` closure instead of `Crownbreaker / Halo Refuge / Kingpin` branch-specific endings, and refreshed [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new late-run expectations. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to cut more bespoke `Wave 5-12` event grammar and let one weapon/body ladder carry repeated combat bands longer before side fantasies take over. The highest-value concrete interpretation was to collapse the last authored late-break finale layer, because `Wave 9-10` already carry enough branch identity while `Wave 11-12` were still spending the end of the run on three different mini-scenarios instead of proving one locked late form through reusable pursuit and stand asks.
+  Follow-up risk: the old `LATE_BREAK_CROWN_PROFILES` data still exists in the file even though the shipped consolidated route no longer uses it for `Wave 11-12`. If a future pass wants to reduce maintenance debt further, the next bounded cleanup should either delete or quarantine those unused finale profiles rather than letting them silently drift out of sync with the shipped path.
+  Release Gate: Progression
 
 - 2026-03-26 19:30:00 KST
   Changed: hardened one bounded piece of the shipped reward cadence in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) by adding a consolidated-route post-wave transition helper and routing every default `Wave 1-12` clear through it. The base route now explicitly allows only one early `field_grant` stop at `Wave 5`; every later non-final clear, including `Wave 8 -> 9`, resolves straight into a forge beat instead of falling through old `live ascension` or ownership-skip exception branches. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock that the shipped late-form handoff returns `마무리` with `action === "forge"` even if stale chase/breakpoint flags exist, while the early mutation stop still routes through the one intended `field_grant`. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
