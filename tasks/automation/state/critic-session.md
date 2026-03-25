@@ -12,9 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gates are still `Progression` and `Builds`: the shipped route behaves like a framework, and the main gun/chassis ladder still does not own the run strongly enough.
-- Current drift is structural: authored wave scripts, field caches, wildcard beats, primers, and early support hardware are all competing with the one growth spine that should create rerun hunger.
-- Repeated false solution: copy cleanup, UI shuffling, or another branch/cache/support layer while the default run still asks the player to administer categories instead of chase one visible transformation.
-- Keep using `Nova Drift`, `Brotato`, and `Hades` as hierarchy checks: one urgent combat read, one exciting reward read, minimal explanation, and visible power spikes that arrive in a clean order.
-- Protect the growth curve: opener stays quiet, early screen ownership belongs to the primary weapon/chassis only, rider/support comes later, and long-run/post-finale ambition stays hidden until `Wave 1-10` is genuinely repeatable.
-- Next useful pressure test: collapse the shipped path to one primary weapon ladder plus one delayed rider layer, then see if 2-3 reusable encounter grammars can carry replayable fun without scripted notes or in-combat progression drops.
+- The most fragile gates are now `Combat` and `Builds`: bigger arenas alone did not create breathing room because scripted hazards, dense mixes, and side systems still crowd the run.
+- Current drift is still structural: the game keeps layering primers, support hardware, wildcard pivots, and field caches before the primary gun/chassis ladder has earned a clean takeover arc.
+- Repeated false solution: more content branches, copy trims, or HUD reshuffles without first proving that `Wave 1-10` is fun with mostly one weapon ladder and 2-3 reusable encounter grammars.
+- Keep using `Nova Drift`, `Brotato`, and `Hades` as reference checks for appetite and hierarchy, but pressure-test movement space too: the player should have room to choose lanes, not just kite through stacked asks.
+- Protect the growth curve: opener stays smaller and quieter, rider/support enters later, forge sells desire faster than explanation, and no post-finale or in-combat progression wrapper should distract from the base run.

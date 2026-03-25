@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop adding mid-combat cache layers and post-finale promise, then prove one replayable `Wave 1-10` spine first: one headline weapon/body ladder, one delayed rider layer, and one default HUD/forge read that sells combat urgency plus reward desire.
+- Immediate priority: freeze new systems and prove one replayable `Wave 1-10` spine first: one headline weapon/body ladder, one delayed rider layer, wider breathing combat, and one default HUD/forge read that sells urgency plus reward desire.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 18:40:00 KST
+  Findings:
+  - [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L37) still define the shipped game around a `12웨이브 / 세 시대 계약 / Proof Window` framework and mid-wave drop economy, so the design target is still a controlled alpha script rather than a run skeleton that could honestly scale into `20-30 waves`.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L807) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1217) make `Wave 5-12` larger on paper, but the player is still being hit with relay/territory/drift set pieces, dense enemy mixes, and authored directives almost every wave. That is not breathing combat space in the `Nova Drift` sense; it is a busier script inside a bigger rectangle.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2815) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3495) still front-load primers, satellites, shield halos, sentries, drones, missiles, wildcard hijacks, and chassis side fantasies before the primary gun/body ladder has earned a true `small -> strong -> dominant` transformation arc.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21804) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21964) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22247) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22600) still ask the player to process cache pickups, route framing, proof language, live telemetry, and forge context together. Compared with `Hades` reward rooms or `Brotato` shop beats, the game still explains the run harder than it sells desire.
+  Top Priority: Stop adding content branches and rebalance the shipped `Wave 1-10` route around one primary weapon/chassis ladder, lower encounter clutter, and later rider/support entry so movement choices and visible weapon takeover carry the fun.
+  Why Now: Until the base run breathes and escalates cleanly, more systems only make repeat runs feel more authored and less replayable.
+  Do Not Repeat: Do not answer this with another module, cache, wildcard, or naming pass before the default route is fun with mostly one gun and one arena grammar set.
+  Release Gate: Combat
 
 - 2026-03-26 18:05:00 KST
   Findings:
@@ -2784,6 +2795,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-26 19:05:00 KST
+  Changed: delayed one bounded piece of the shipped route's support spectacle in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so standalone support systems no longer enter the recurring forge contract at `Wave 8`. `SUPPORT_SYSTEM_START_WAVE` and all shipped support `forgeWaveMin` values now resolve to `9`, `getVisibleSupportOfferSystemIds(build, 8)` now hard-returns `[]`, and the `Wave 8` contract stays on headline weapon/body growth plus defense/utility instead of immediately adding drones/halos/orbitals. I also updated the related player-facing forge copy to match that leaner staging, and refreshed [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so doctrine and non-doctrine runs both lock the new timing. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` explicitly asked for later rider/support entry so the shipped `Wave 1-10` route can breathe around one primary weapon/chassis ladder. The highest-value concrete interpretation was to keep `Wave 8` as the last clean weapon/body escalation beat before the late-form handoff, because the previous support timing was still letting standalone side hardware steal screen ownership one fight too early.
+  Follow-up risk: this makes the core ladder cleaner, but it also means the shipped route now relies even more on the `Wave 9` late-form picks to carry the defense/support fantasy. If a future critique says the route lost too much rider identity, the next bounded pass should strengthen the `aegis` late-form payoff or add a quieter post-lock support refinement instead of reopening `Wave 8` standalone installs.
+  Release Gate: Combat
 
 - 2026-03-26 18:30:00 KST
   Changed: strengthened one bounded part of the shipped main-form spine in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 7` `crownfire_overdrive` now reads like a real screen-taking weapon leap before `Wave 8` rider systems appear. Each core's overdrive now adds a visibly larger fire-pattern/body payoff: `ember` widens into five flank ignition lanes, `scatter` grows a six-pellet outer ring, `lance` expands `Sky Splitter` to six side rails with extra pierce, and `ricochet` opens a six-way prism fan with stronger chain/bounce follow-through. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the enlarged `Wave 7` lance preview and live fire-pattern offsets. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

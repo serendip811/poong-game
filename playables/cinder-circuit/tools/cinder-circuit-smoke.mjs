@@ -275,7 +275,8 @@ midrunSupportBuild.architectureForecastId = "mirror_hunt";
 midrunSupportBuild.bastionDoctrineId = "mirror_hunt";
 midrunSupportBuild.chassisId = "vector_thrusters";
 assert.deepEqual(Array.from(game.getVisibleSupportOfferSystemIds(midrunSupportBuild, 7)), []);
-assert.deepEqual(Array.from(game.getVisibleSupportOfferSystemIds(midrunSupportBuild, 8)), ["volt_drones"]);
+assert.deepEqual(Array.from(game.getVisibleSupportOfferSystemIds(midrunSupportBuild, 8)), []);
+assert.deepEqual(Array.from(game.getVisibleSupportOfferSystemIds(midrunSupportBuild, 9)), ["seeker_array"]);
 const wave7ForgeChoices = game.buildForgeChoices(midrunSupportBuild, () => 0.1, 999, {
   nextWave: 7,
   finalForge: false,
@@ -296,8 +297,7 @@ assert.ok(
 );
 const wave8RiderChoice = wave8ForgeChoices.find((choice) => choice.contractRole === "rider");
 assert.ok(wave8RiderChoice);
-assert.equal(wave8RiderChoice.type, "system");
-assert.equal(wave8RiderChoice.systemId, "volt_drones");
+assert.notEqual(wave8RiderChoice.type, "system");
 const driftFallbackAsk = game.getBaseRouteCombatAsk({
   waveIndex: 10,
   wave: { directive: "", hazard: { type: "drift" } },
@@ -448,17 +448,10 @@ const mirrorWave8Choices = game.buildForgeChoices(mirrorPrimerRun.build, Math.ra
 const mirrorWave8RiderChoice =
   mirrorWave8Choices.find((choice) => choice.contractRole === "rider") || mirrorWave8Choices[1];
 assert.ok(mirrorWave8RiderChoice);
-assert.equal(mirrorWave8RiderChoice.type, "system");
-assert.equal(mirrorWave8RiderChoice.systemId, "volt_drones");
-assert.equal(mirrorWave8RiderChoice.systemTier, 1);
-assert.ok(!mirrorWave8RiderChoice.primerCompletion);
-assert.equal(mirrorWave8RiderChoice.title, "Volt Drones");
-assert.equal(mirrorWave8RiderChoice.cost, 44);
+assert.notEqual(mirrorWave8RiderChoice.type, "system");
 game.applyForgeChoice(mirrorPrimerRun, mirrorWave8RiderChoice);
 const mirrorWave8SupportStats = game.computeSupportSystemStats(mirrorPrimerRun.build);
-assert.ok(mirrorWave8SupportStats);
-assert.equal(mirrorWave8SupportStats.orbitCount, 2);
-assert.equal(mirrorWave8SupportStats.shotCooldown, 1.08);
+assert.equal(mirrorWave8SupportStats, null);
 assert.equal(mirrorPrimerRun.build.previewSupportSystemId ?? null, null);
 assert.equal(game.getPreviewSupportFrameProfile(mirrorPrimerRun.build), null);
 const shippingLadderWave4 = game.getShippingLadderSteps(roadmapBuild, null, 4);
@@ -1599,11 +1592,11 @@ assert.equal(
   JSON.stringify(Object.keys(game.SUPPORT_SYSTEM_DEFS).sort()),
   JSON.stringify(["aegis_halo", "ember_ring", "kiln_sentry", "seeker_array", "volt_drones"])
 );
-assert.equal(game.SUPPORT_SYSTEM_DEFS.aegis_halo.forgeWaveMin, 8);
-assert.equal(game.SUPPORT_SYSTEM_DEFS.ember_ring.forgeWaveMin, 8);
-assert.equal(game.SUPPORT_SYSTEM_DEFS.volt_drones.forgeWaveMin, 8);
-assert.equal(game.SUPPORT_SYSTEM_DEFS.kiln_sentry.forgeWaveMin, 8);
-assert.equal(game.SUPPORT_SYSTEM_DEFS.seeker_array.forgeWaveMin, 8);
+assert.equal(game.SUPPORT_SYSTEM_DEFS.aegis_halo.forgeWaveMin, 9);
+assert.equal(game.SUPPORT_SYSTEM_DEFS.ember_ring.forgeWaveMin, 9);
+assert.equal(game.SUPPORT_SYSTEM_DEFS.volt_drones.forgeWaveMin, 9);
+assert.equal(game.SUPPORT_SYSTEM_DEFS.kiln_sentry.forgeWaveMin, 9);
+assert.equal(game.SUPPORT_SYSTEM_DEFS.seeker_array.forgeWaveMin, 9);
 assert.equal(
   JSON.stringify(Object.keys(game.CHASSIS_BREAKPOINT_DEFS).sort()),
   JSON.stringify(["bulwark_treads", "salvage_winch", "vector_thrusters"])
@@ -1830,13 +1823,13 @@ assert.equal(game.shouldSkipOwnershipAdminStop(architectureRun.build, 9), false)
 assert.equal(game.unlockLateSupportBay(architectureRun.build), true);
 assert.equal(game.getSupportBayCapacity(architectureRun.build), 3);
 assert.equal(game.doctrineAllowsSystemInstall(architectureRun.build, "seeker_array", 8), false);
-assert.ok(game.doctrineAllowsSystemInstall(architectureRun.build, "volt_drones", 8));
+assert.equal(game.doctrineAllowsSystemInstall(architectureRun.build, "volt_drones", 8), false);
 assert.equal(game.doctrineAllowsSystemInstall(architectureRun.build, "aegis_halo"), false);
 assert.equal(game.doctrineAllowsSystemInstall(architectureRun.build, "ember_ring", 8), false);
 assert.ok(game.doctrineAllowsSystemInstall(architectureRun.build, "seeker_array", 9));
 assert.equal(
   JSON.stringify(game.getVisibleSupportOfferSystemIds(architectureRun.build, 8).sort()),
-  JSON.stringify(["volt_drones"])
+  JSON.stringify([])
 );
 assert.equal(
   JSON.stringify(game.getVisibleSupportOfferSystemIds(architectureRun.build, 9).sort()),
@@ -1920,8 +1913,8 @@ const doctrineWave8Choices = game.buildForgeChoices(
   { nextWave: 8, finalForge: false }
 );
 assert.ok(
-  doctrineWave8Choices.some(
-    (choice) => choice.type === "system" && choice.systemId === "volt_drones"
+  !doctrineWave8Choices.some(
+    (choice) => choice.type === "system"
   )
 );
 const doctrineFollowupChoices = game.buildForgeFollowupChoices(
@@ -2000,7 +1993,7 @@ assert.equal(doctrineCapstoneSystemStats.doctrineCapstoneLabel, "Relay Storm Lat
 assert.ok(doctrineCapstoneSystemStats.statusNote.includes("Relay Storm Lattice"));
 assert.equal(
   JSON.stringify(game.getVisibleSupportOfferSystemIds(doctrineCapstoneBuild, 8).sort()),
-  JSON.stringify(["volt_drones"])
+  JSON.stringify([])
 );
 assert.equal(
   JSON.stringify(game.getVisibleSupportOfferSystemIds(doctrineCapstoneBuild, 9).sort()),
@@ -2038,11 +2031,11 @@ game.applyForgeChoice(
   artilleryAscensionChoice
 );
 assert.equal(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "seeker_array", 8), false);
-assert.ok(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "ember_ring", 8));
+assert.equal(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "ember_ring", 8), false);
 assert.ok(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "seeker_array", 9));
 assert.equal(
   JSON.stringify(game.getVisibleSupportOfferSystemIds(artilleryDoctrineBuild, 8).sort()),
-  JSON.stringify(["ember_ring"])
+  JSON.stringify([])
 );
 assert.equal(
   JSON.stringify(game.getVisibleSupportOfferSystemIds(artilleryDoctrineBuild, 9).sort()),

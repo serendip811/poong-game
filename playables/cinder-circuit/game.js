@@ -2812,7 +2812,7 @@
   const MAX_SUPPORT_SYSTEM_TIER = 3;
   const MAX_SUPPORT_BAYS = 2;
   const MAX_SUPPORT_BAY_LIMIT = 4;
-  const SUPPORT_SYSTEM_START_WAVE = 8;
+  const SUPPORT_SYSTEM_START_WAVE = 9;
   const BASE_ROUTE_MIDRUN_SUPPORT_WAVE = SUPPORT_SYSTEM_START_WAVE;
   const PREVIEW_SUPPORT_PRIMER_CREDIT = 10;
   const SUPPORT_SYSTEM_DEFS = {
@@ -10356,8 +10356,8 @@
     ) {
       return allSystemIds;
     }
-    // Keep the Wave 7 rider lane as a chassis-defense/utility payoff so the first
-    // visible support silhouette still lands after the mid-run weapon/body spike.
+    // Keep the shipped route on weapon/body payoff through Wave 8 so standalone
+    // support hardware does not steal the late mid-run takeover.
     if (nextWave < SUPPORT_SYSTEM_START_WAVE) {
       return [];
     }
@@ -13410,7 +13410,7 @@
       tag: "DOCTRINE",
       title: doctrine.label,
       description:
-        `${doctrine.description} 즉시 ${weaponChoice.title}을(를) 할인 장착해 core gun lock을 먼저 굳히고, 이어지는 Chassis Breakpoint에서 body plan만 추가로 잠근다. 작은 지원 실루엣은 mid-run부터 한 장씩 열고, 더 큰 ordnance headline은 Wave 8 이후에 남긴다.${forecastConfirmed ? " Wave 3 forecast와 맞아 더 싸게 확정된다." : ""}${lateCapstoneLabel ? ` 이후 Wave 6-8 marked elite shard를 모으는 장기 forge pursuit가 열리고, 완성 시 ${lateCapstoneLabel} 계열 교리 monster form이 즉시 잠긴다.` : ""}`,
+        `${doctrine.description} 즉시 ${weaponChoice.title}을(를) 할인 장착해 core gun lock을 먼저 굳히고, 이어지는 Chassis Breakpoint에서 body plan만 추가로 잠근다. 별도 support 하드웨어는 late-form lock 직전까지 숨기고, opening과 mid-run은 주포 각과 차체 리듬이 먼저 화면을 먹게 둔다.${forecastConfirmed ? " Wave 3 forecast와 맞아 더 싸게 확정된다." : ""}${lateCapstoneLabel ? ` 이후 Wave 6-8 marked elite shard를 모으는 장기 forge pursuit가 열리고, 완성 시 ${lateCapstoneLabel} 계열 교리 monster form이 즉시 잠긴다.` : ""}`,
       slotText: `교리 채택 · ${weaponChoice.title} · core lock`,
       cost: Math.max(0, Math.round((weaponChoice.cost || 0) * (forecastConfirmed ? 0.45 : 0.72))),
       laneLabel: "교리 채택",
@@ -13727,7 +13727,7 @@
         verb: "접합",
         tag: chassisDef.tag,
         title: chassisDef.title,
-        description: `${chassisDef.description} 이번 Wave 6은 차체 break만 잠그고 끝낸다. 작은 support 실루엣은 다음 mid-run 포지에서나 열고, 큰 late divergence는 여전히 Wave 8 이후에 남긴다.`,
+        description: `${chassisDef.description} 이번 Wave 6은 차체 break만 잠그고 끝낸다. 별도 support 하드웨어는 late-form lock 직전까지 숨기고, 다음 두 번의 포지는 주포와 몸체가 더 오래 화면을 먹게 둔다.`,
         slotText: `섀시 breakpoint · ${chassisDef.slotText}`,
         cost: 0,
         laneLabel: "섀시 breakpoint",
@@ -14056,8 +14056,8 @@
     state.forgeChoices = buildArchitectureDraftChoices(state.build);
     pushCombatFeed(
       CONSOLIDATED_12_WAVE_ROUTE
-        ? "주력 변이 선택 개시. 이번 정지에서는 전장을 가장 크게 바꿀 한 장만 먼저 고른다. 차체 점프는 Wave 6에, 작은 지원 실루엣은 mid-run에 한 장씩 열고, 더 큰 지원 연출은 Wave 8 이후로 미뤄 opening을 lean하게 유지한다."
-        : "Architecture Draft 개시. 이제 Wave 3에서는 세 장기 교리 중 하나를 골라 주포 mutation만 먼저 잠근다. utility chassis는 Wave 6, support bay와 off-doctrine flex lane은 Wave 8 Late Break Armory에서 열려 opening run이 과하게 완성되지 않는다.",
+        ? "주력 변이 선택 개시. 이번 정지에서는 전장을 가장 크게 바꿀 한 장만 먼저 고른다. 차체 점프는 Wave 6에 붙이고, 별도 support 하드웨어는 late-form lock까지 숨겨 opening과 mid-run을 lean하게 유지한다."
+        : "Architecture Draft 개시. 이제 Wave 3에서는 세 장기 교리 중 하나를 골라 주포 mutation만 먼저 잠근다. utility chassis는 Wave 6에 붙이고, support 하드웨어는 late-form lock 이후에나 열어 opening run이 과하게 완성되지 않게 둔다.",
       "ARCH"
     );
     setBanner(CONSOLIDATED_12_WAVE_ROUTE ? "주력 변이" : "Architecture Draft", 0.95);
@@ -14367,7 +14367,7 @@
             ? "주력 변이 선택 개시. 이번 정지는 오래 끌 몸체 하나만 고른다. 보조선은 아직 닫아 두고 몸과 주포만 먼저 굳힌다."
           : "변이 선택 개시. 이번 정지는 크게 바꾸는 한 장, 버티는 한 장, 판돈을 거는 한 장 중 하나만 고른다."
         : wave6AscensionDraft
-          ? "Wave 6 Ascension Draft 개시. 세 장기 교리 중 하나를 irreversible form으로 잠그면 주포 mutation과 utility chassis까지만 먼저 굳힌다. support bay와 doctrine-free flex lane은 아직 열지 않고 Wave 8 Late Break Armory까지 늦춰 mid-run 실루엣을 lean하게 유지한다."
+          ? "Wave 6 Ascension Draft 개시. 세 장기 교리 중 하나를 irreversible form으로 잠그면 주포 mutation과 utility chassis까지만 먼저 굳힌다. 별도 support 하드웨어는 아직 열지 않고 late-form lock 이후로 미뤄 mid-run 실루엣을 lean하게 유지한다."
           : `Bastion Draft 개시. ${getBastionDraftIntroText(state.build)}`,
       "DRAFT"
     );
@@ -18547,7 +18547,7 @@
       pushCombatFeed(
         state.forgeDraftType === "architecture_draft"
           ? choice.action === "architecture_forecast"
-            ? `${choice.weaponChoice ? choice.weaponChoice.title : choice.title} 장착. Wave 3부터 주포 발사각이 바로 꺾인다. ${choice.breakpointLabel || "Wave 6 차체 break"}는 다음 정지에서 붙이고, 작은 보조 실루엣은 mid-run에, 큰 보조 연출은 Wave 8 이후에 남긴다.`
+            ? `${choice.weaponChoice ? choice.weaponChoice.title : choice.title} 장착. Wave 3부터 주포 발사각이 바로 꺾인다. ${choice.breakpointLabel || "Wave 6 차체 break"}는 다음 정지에서 붙이고, 별도 보조 하드웨어는 late-form lock 직전까지 숨겨 주포와 차체가 먼저 화면을 먹게 둔다.`
             : `${grantLabel} 적용. 아키텍처 방향을 기울인 채 다음 웨이브를 연다.`
         : state.forgeDraftType === "bastion_draft"
           ? choice.type === "fallback"
