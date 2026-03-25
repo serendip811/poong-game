@@ -91,13 +91,13 @@
   const BLACK_LEDGER_DEBT_SPAWN_INTERVAL_STEP = 0.05;
   const LATE_BREAK_ENCOUNTER_PROFILES = {
     mutation: {
-      label: "Wave 9 · Breakpoint Overdrive",
+      label: "Wave 9 · Payoff Sweep+",
       bandId: "breakpoint_overdrive",
-      bandLabel: "Breakpoint Overdrive",
+      bandLabel: "Overdrive Payoff",
       pressureFamily: "crossfire",
-      note: "Late Break에서 주포 변이를 집었다면 첫 late bracket은 단일 open-lane payoff rung로 열려야 한다. 전장을 더 크게 벌리고 구조물 upkeep를 걷어내, 방금 증설한 배럴과 보조 포문이 열린 lane 둘 이상을 얼마나 깊게 찢는지 먼저 즐기게 만든다.",
+      note: "Late Break 직후 첫 칸도 shared payoff sweep grammar 위에서 놀아야 한다. mutation lane은 전장을 더 크게 벌리고 upkeep 구조물을 걷어내, 방금 증설한 배럴과 broadside pod가 열린 lane 둘 이상을 얼마나 깊게 찢는지 먼저 즐기게 만든다.",
       directive:
-        "overdrive gallery. 구조물 코어보다 열린 사선과 marked elite 절개가 우선이다. skimmer 훑기를 얇게 만든 뒤 lancer charge를 정면 화망으로 자르며 새 주포 실루엣을 바로 시험해야 한다.",
+        "overdrive payoff sweep. 구조물 코어보다 열린 사선과 marked elite 절개가 우선이다. skimmer 훑기를 얇게 만든 뒤 lancer charge를 정면 화망으로 자르며 새 주포 실루엣을 바로 시험해야 한다.",
       arena: {
         width: 1820,
         height: 1020,
@@ -128,13 +128,13 @@
       },
     },
     aegis: {
-      label: "Wave 9 · Halo Bastion",
+      label: "Wave 9 · Payoff Sweep+",
       bandId: "halo_bastion",
-      bandLabel: "Halo Bastion",
-      pressureFamily: "territory",
-      note: "Warplate Halo를 골랐다면 첫 late bracket부터 정면 교환 대신 pocket ownership이 달라져야 한다. 열린 lane kill race를 반복하지 말고, 작은 bastion core 하나만 잠깐 열어 plate로 진입-정착-이탈 타이밍을 먼저 증명하게 만든다.",
+      bandLabel: "Halo Payoff",
+      pressureFamily: "crossfire",
+      note: "Late Break 직후 첫 칸도 shared payoff sweep grammar를 유지해야 한다. aegis lane은 작은 bastion pocket 하나만 punctuation처럼 열어, plate를 믿고 열린 lane을 먼저 비운 뒤 진입-정착-이탈 타이밍을 증명하게 만든다.",
       directive:
-        "halo bastion. bastion pocket 하나만 짧게 열린다. plate를 믿고 전열 한 줄을 비운 뒤 체력과 dash를 회수하고, 적 점유가 두꺼워지기 전에 곧바로 외곽 refuge로 빠져야 한다.",
+        "halo payoff sweep. bastion pocket 하나만 짧게 punctuation처럼 열린다. plate를 믿고 전열 한 줄을 비운 뒤 체력과 dash를 회수하고, 적 점유가 두꺼워지기 전에 곧바로 외곽 refuge로 빠져야 한다.",
       arena: {
         width: 1680,
         height: 980,
@@ -174,13 +174,13 @@
       },
     },
     ledger: {
-      label: "Wave 9 · Ledger Vaultline",
+      label: "Wave 9 · Payoff Sweep+",
       bandId: "ledger_vaultline",
-      bandLabel: "Ledger Vaultline",
-      pressureFamily: "raid",
-      note: "Black Ledger 계약을 골랐다면 첫 late bracket부터 greed line이 전투 ask를 바꿔야 한다. 열린 lane kill race 대신 넓은 contraband vaultline을 먼저 던져, 주포로 퇴로를 연 뒤 어디까지 cash-out하고 언제 버릴지 직접 가르게 만든다.",
+      bandLabel: "Vaultline Payoff",
+      pressureFamily: "crossfire",
+      note: "Late Break 직후 첫 칸도 shared payoff sweep grammar를 벗어나면 안 된다. ledger lane은 contraband vaultline을 열린 lane 한복판에 얹어, 먼저 퇴로를 비운 뒤 어디까지 cash-out하고 언제 버릴지 greed 판단이 payoff 안에서 드러나게 만든다.",
       directive:
-        "ledger vaultline. 중앙과 외곽에 열린 vault 중 하나만 길게 챙길 수 있다. 먼저 퇴로를 비우고 짧은 cash-out window를 고른 뒤, binder와 brander가 닫기 전에 빠져야 한다.",
+        "vaultline payoff sweep. 중앙과 외곽에 열린 vault 중 하나만 길게 챙길 수 있다. 먼저 퇴로를 비우고 짧은 cash-out window를 고른 뒤, binder와 brander가 닫기 전에 빠져야 한다.",
       arena: {
         width: 1820,
         height: 1000,
@@ -222,13 +222,13 @@
   };
   const LATE_BREAK_FOLLOWTHROUGH_PROFILES = {
     mutation: {
-      label: "Wave 10 · Overdrive Breach",
+      label: "Wave 10 · Crown Proof+",
       bandId: "overdrive_breach",
-      bandLabel: "Overdrive Breach",
+      bandLabel: "Overdrive Proof",
       pressureFamily: "breach",
-      note: "Cataclysm Arsenal을 골랐다면 두 번째 판은 여전히 breach proof지만, 아직 victory lap의 결을 끊으면 안 된다. corridor는 하나만 늦게 닫고 arena를 더 크게 벌려, 방금 증설한 포문이 열린 flank 둘을 오래 누른 뒤 마지막 한 줄만 직접 찢게 만든다.",
+      note: "Wave 10도 shared crown proof grammar를 그대로 이어야 한다. mutation lane은 corridor 하나만 늦게 닫고 arena를 더 크게 벌려, 방금 증설한 포문이 열린 flank 둘을 오래 누른 뒤 마지막 한 줄만 직접 찢게 만든다.",
       directive:
-        "overdrive breach. relay crown이 얇은 corridor 하나만 늦게 잠근다. 가장 넓은 pocket을 먼저 잡고 split volley로 flank 둘을 오래 눌러 지배 시간을 만든 뒤, 닫히는 회랑 한 줄만 마지막에 찢어 breach 창을 직접 늘려야 한다.",
+        "overdrive crown proof. relay crown이 얇은 corridor 하나만 늦게 잠근다. 가장 넓은 pocket을 먼저 잡고 split volley로 flank 둘을 오래 눌러 지배 시간을 만든 뒤, 닫히는 회랑 한 줄만 마지막에 찢어 breach 창을 직접 늘려야 한다.",
       arena: {
         width: 2020,
         height: 1140,
@@ -267,13 +267,13 @@
       },
     },
     aegis: {
-      label: "Wave 10 · Halo Crownproof",
+      label: "Wave 10 · Crown Proof+",
       bandId: "halo_crownproof",
-      bandLabel: "Halo Crownproof",
+      bandLabel: "Halo Proof",
       pressureFamily: "breach",
-      note: "Warplate Halo를 골랐다면 두 번째 판도 다른 장르로 새지 말고 single crownline proof로 붙어야 한다. bastion pocket에서 plate timing으로 벌어 둔 진입 창을 그대로 들고 와, relay crown 하나를 짧게 찢고 그 복도를 얼마나 오래 지키는지 바로 드러나게 만든다.",
+      note: "Wave 10도 shared crown proof grammar를 그대로 이어야 한다. aegis lane은 bastion pocket에서 plate timing으로 벌어 둔 진입 창을 그대로 들고 와, relay crown 하나를 짧게 찢고 그 복도를 얼마나 오래 지키는지 바로 드러나게 만든다.",
       directive:
-        "halo crownproof. relay crown 하나만 늦게 닫힌다. plate를 믿고 가장 얇은 입구를 먼저 뚫은 뒤, 비워 낸 breach lane을 오래 붙잡아 다음 refuge lap으로 이어질 버티는 선을 만든다.",
+        "halo crown proof. relay crown 하나만 늦게 닫힌다. plate를 믿고 가장 얇은 입구를 먼저 뚫은 뒤, 비워 낸 breach lane을 오래 붙잡아 다음 refuge lap으로 이어질 버티는 선을 만든다.",
       arena: {
         width: 1760,
         height: 1000,
@@ -312,13 +312,13 @@
       },
     },
     ledger: {
-      label: "Wave 10 · Jackpot Crownproof",
+      label: "Wave 10 · Crown Proof+",
       bandId: "jackpot_crownproof",
-      bandLabel: "Jackpot Crownproof",
+      bandLabel: "Jackpot Proof",
       pressureFamily: "breach",
-      note: "Black Ledger Heist를 골랐다면 두 번째 판도 chase 예외로 새기보다 single crownline proof로 붙여야 한다. Wave 9 vaultline에서 벌어 둔 payout lane을 그대로 들고 와, relay crown 하나를 언제 찢고 언제 끊어 살아남을지 greed 판단이 breach hold 안에서 바로 드러나게 만든다.",
+      note: "Wave 10도 shared crown proof grammar를 그대로 이어야 한다. ledger lane은 Wave 9 vaultline에서 벌어 둔 payout lane을 그대로 들고 와, relay crown 하나를 언제 찢고 언제 끊어 살아남을지 greed 판단이 breach hold 안에서 바로 드러나게 만든다.",
       directive:
-        "jackpot crownproof. relay crown 하나와 payout 잔재가 같이 남는다. 먼저 퇴로를 비우고 짧은 cash-out window를 만든 뒤, binder와 brander가 닫기 전에 breach lane을 버릴지 더 긁을지 직접 정해야 한다.",
+        "jackpot crown proof. relay crown 하나와 payout 잔재가 같이 남는다. 먼저 퇴로를 비우고 짧은 cash-out window를 만든 뒤, binder와 brander가 닫기 전에 breach lane을 버릴지 더 긁을지 직접 정해야 한다.",
       arena: {
         width: 1860,
         height: 1020,

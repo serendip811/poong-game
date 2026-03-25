@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze new support/wildcard/future-route branches and turn `Wave 5-10` into one repeatable `main-form payoff -> pressure variant -> forge fork` cell with quieter HUD/reward hierarchy, so the shipped route proves replay hunger before any further expansion.
+- Immediate priority: stop route expansion and prove one replayable shipped skeleton first: collapse `Wave 5-10` into a reusable `main-form payoff -> pressure variant -> forge fork` loop, delay support spectacle until after that payoff lands, and strip HUD/reward admin down to one combat read and one reward read.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 15:32:00 KST
+  Findings:
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L932) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1120) still run the heart of the game as authored named beats `Afterglow`, `Breakline`, `Crownfire`, `Forgecross`, `Lockgrid`, `Crownhold`. Arena size is healthier, but the pressure grammar is still bespoke wave scripting, not the kind of repeatable combat cell that could stay fun across `20-30 waves`.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2812) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3361) still front-load the machine fantasy. Orbitals, shield halos, sentries, missiles, drones, and even primers are all defined as mid-run expectations, so by `Wave 7-8` the player is already visually decorated before one weapon/chassis leap has fully taken over the run.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22027) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22460) still make the run feel administered. Clear-state banners, live ascension/armory branching, roadmap, support track, gamble summary, wave ask, and live readout all compete on screen. Against the hierarchy discipline of `Nova Drift`, `Brotato`, or `Hades`, this still feels closer to reading a route board than chasing a craveable power spike.
+  - [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L36) still define the game most clearly as a `12-wave`, `3-era` contract. That keeps implementation biased toward filling scheduled slots instead of proving a run skeleton that can breathe, remix, and scale.
+  Top Priority: Recut the shipped route so `Wave 5-10` behaves like one reusable escalation cell with a single dominant weapon/chassis payoff first, one delayed secondary lane after that, and no support primers or admin wrappers stealing the screen before the main form owns it.
+  Why Now: Until one run cell is genuinely replayable, longer progression and extra branches are just better-organized prototype content.
+  Do Not Repeat: Do not answer this with more named drafts/caches/ascensions or another `Tab` wording cleanup while the midgame still behaves like scripted content plus a side-system catalog.
+  Release Gate: Progression
 
 - 2026-03-26 15:05:00 KST
   Findings:
@@ -2727,6 +2738,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-26 16:40:00 KST
+  Changed: consolidated one bounded piece of the late mid-run/finale bridge in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so late-break branches no longer retake `Wave 9-10` with bespoke wave headers and separate encounter grammar. `mutation`, `aegis`, and `ledger` now all present the same player-facing shared cell names `Wave 9 · Payoff Sweep+` and `Wave 10 · Crown Proof+`, while their identity stays in band labels, enemy mixes, and hazard punctuation instead of replacing the main rung outright. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new shared headers and the adjusted branch expectations. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to make `Wave 5-10` behave like one reusable escalation cell instead of drifting back into authored scenario tourism. The highest-value bounded interpretation was to finish that consolidation at the last leak point: the shared helper already owned the route backbone, but late-break branches were still renaming `Wave 9-10` into bespoke stops, which made the run read broader and more scripted than it played.
+  Follow-up risk: this pass unifies the visible rung names and encounter framing, but `aegis` and `ledger` still keep stronger hazard punctuation than the offense lane on `Wave 9`. If the same critique repeats, the next bounded pass should trim those branches one step further so their special hazards feel more like payoff modifiers inside the shared cell than mini-scenarios of their own.
+  Release Gate: Progression
 
 - 2026-03-26 04:43:48 KST
   Changed: consolidated one bounded piece of the shipped combat spine in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) by replacing the authored `Wave 5-10` naming/description ladder with a shared recurring-cell helper. `Wave 5-8` and the shared late `Wave 9-10` pool now pull their labels, pressure identity, note, and directive from four reusable cells `Payoff Run / Crown Breach / Payoff Sweep / Crown Proof`, so the route reads more like one repeatable `payoff -> breach -> payoff remix -> proof` ladder than six bespoke scenario stops. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
