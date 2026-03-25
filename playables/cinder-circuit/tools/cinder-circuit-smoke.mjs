@@ -203,6 +203,21 @@ assert.equal(
   recurringWave3Choices.map((choice) => choice.contractLabel).join("|"),
   "주력 변이|방호·보조|판돈·유틸"
 );
+const recurringWave3HeadlineTransform =
+  game.getBaseRouteForgeChoiceTransformation(recurringWave3Choices[0]);
+assert.ok(recurringWave3HeadlineTransform.previewValue.length > 0);
+assert.ok(recurringWave3HeadlineTransform.promise.includes("실루엣"));
+assert.ok(
+  !/afterburn|dominion|ascension|forecast|draft|doctrine|교리|승천|예보|초안/i.test(
+    recurringWave3HeadlineTransform.promise
+  )
+);
+const recurringWave3PreviewMarkup = game.createBaseRouteForgePreviewMarkup(
+  recurringWave3HeadlineTransform.previewLabel,
+  recurringWave3HeadlineTransform.previewValue
+);
+assert.ok(recurringWave3PreviewMarkup.includes(recurringWave3HeadlineTransform.previewLabel));
+assert.ok(recurringWave3PreviewMarkup.includes(recurringWave3HeadlineTransform.previewValue));
 const recurringWave5Choices = game.buildForgeChoices(roadmapBuild, Math.random, 40, {
   nextWave: 5,
   finalForge: false,
@@ -222,6 +237,12 @@ const wave6DefenseChoice = recurringWave6Choices.find((choice) => choice.contrac
 assert.ok(wave6DefenseChoice);
 assert.equal(wave6DefenseChoice.action, "bastion_bay_forge");
 assert.equal(wave6DefenseChoice.bayUnlock, false);
+const wave6DefenseTransform = game.getBaseRouteForgeChoiceTransformation(wave6DefenseChoice);
+assert.ok(wave6DefenseTransform.previewLabel.length > 0);
+assert.ok(wave6DefenseTransform.promise.includes("버티는 선"));
+assert.ok(
+  !/armory|bay|junction|uplink|무기고|정션|업링크/i.test(wave6DefenseTransform.proof)
+);
 const actBreakCacheBuild = game.createInitialBuild("rail_zeal");
 const actBreakCacheChoices = game.getCombatCacheChoicesForWave(actBreakCacheBuild, 5, 12);
 assert.equal(actBreakCacheChoices.length, 3);

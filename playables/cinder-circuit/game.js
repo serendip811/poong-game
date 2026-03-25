@@ -8816,6 +8816,87 @@
     `;
   }
 
+  const BASE_ROUTE_FORGE_ADMIN_LEAK_PATTERN =
+    /(afterburn|dominion|ascension|forecast|draft|doctrine|armory|junction|uplink|cache|교리|승천|예보|초안|무기고|정션|업링크|캐시)/i;
+
+  function getBaseRouteForgePreviewRow(choice) {
+    const previewRows = createForgePreviewRows(choice).filter(
+      (row) =>
+        row &&
+        row.label &&
+        row.value &&
+        !["분기", "Wave 11", "Wave 12", "시험", "압박"].includes(row.label)
+    );
+    if (previewRows.length === 0) {
+      return null;
+    }
+    const priorityByRole =
+      choice && choice.contractRole === "rider"
+        ? ["버팀", "보조", "효과", "몸체", "형태"]
+        : choice && choice.contractRole === "gamble"
+          ? ["획득", "판돈", "보상", "목표", "효과"]
+          : ["주포", "형태", "무기", "진화", "몸체", "효과"];
+    for (const label of priorityByRole) {
+      const matchedRow = previewRows.find((row) => row.label === label);
+      if (matchedRow) {
+        return matchedRow;
+      }
+    }
+    return previewRows[0];
+  }
+
+  function getBaseRouteForgeChoiceTransformation(choice) {
+    const baseTransformation = getForgeChoiceTransformation(choice);
+    const previewRow = getBaseRouteForgePreviewRow(choice);
+    const contractRole = choice && choice.contractRole ? choice.contractRole : "";
+    const tone =
+      contractRole === "rider"
+        ? "defense"
+        : contractRole === "gamble"
+          ? "greed"
+          : baseTransformation.tone;
+    const previewLabel =
+      (previewRow && previewRow.label) ||
+      (tone === "defense" ? "버팀" : tone === "greed" ? "판돈" : "형태");
+    const previewValue =
+      (previewRow && previewRow.value) ||
+      baseTransformation.accent ||
+      (choice && choice.title) ||
+      "실루엣";
+    const promise =
+      tone === "defense"
+        ? `${previewValue}로 버티는 선을 두껍게 만든다.`
+        : tone === "greed"
+          ? `${previewValue}로 판돈과 회수 리듬을 비튼다.`
+          : `${previewValue}로 주력 실루엣을 바로 바꾼다.`;
+    const fallbackProof =
+      tone === "defense"
+        ? `${previewValue}가 다음 전투에서 버티는 선을 얼마나 오래 여는지 바로 드러난다.`
+        : tone === "greed"
+          ? `${previewValue}로 더 긁을지 끊고 빠질지 다음 전장에서 바로 갈라진다.`
+          : `${previewValue}가 다음 전투에서 화면을 얼마나 넓게 여는지 바로 본다.`;
+    const proof =
+      baseTransformation.proof &&
+      !BASE_ROUTE_FORGE_ADMIN_LEAK_PATTERN.test(baseTransformation.proof)
+        ? baseTransformation.proof
+        : fallbackProof;
+    return {
+      ...baseTransformation,
+      tone,
+      promise,
+      proof,
+      previewLabel,
+      previewValue,
+    };
+  }
+
+  function createBaseRouteForgePreviewMarkup(label, value) {
+    if (!value) {
+      return "";
+    }
+    return `<p class="forge-card__pivot"><span>${label || "형태"}</span><strong>${value}</strong></p>`;
+  }
+
   function createBaseRouteForgeProofMarkup(proof) {
     if (!proof) {
       return "";
@@ -14180,6 +14261,8 @@
     createBaseRouteFocusMarkup,
     getMinimalBaseRouteHudVisibility,
     createBaseRouteForgeContextMarkup,
+    getBaseRouteForgeChoiceTransformation,
+    createBaseRouteForgePreviewMarkup,
     createBaseRouteForgeProofMarkup,
     createBaseRouteForgeBillMarkup,
   };
@@ -21239,7 +21322,9 @@
         (choice, index) => {
           const kind =
             choice.type === "utility" ? choice.action || "utility" : choice.type || "choice";
-          const transformation = getForgeChoiceTransformation(choice);
+          const transformation = useBaseRouteContract
+            ? getBaseRouteForgeChoiceTransformation(choice)
+            : getForgeChoiceTransformation(choice);
           const contractLabel = useBaseRouteContract
             ? getBaseRouteForgeContractLabel(choice.contractRole, choice, riderStep)
             : choice.contractLabel || transformation.laneLabel;
@@ -21267,6 +21352,12 @@
                     : "무료";
           const isFeaturedHeadline = !riderStep && index === featuredIndex;
           if (riderStep) {
+            const riderPreviewMarkup = useBaseRouteContract
+              ? createBaseRouteForgePreviewMarkup(
+                  transformation.previewLabel,
+                  transformation.previewValue
+                )
+              : "";
             const riderProofMarkup = useBaseRouteContract
               ? createBaseRouteForgeProofMarkup(transformation.proof)
               : "";
@@ -21287,12 +21378,19 @@
             <span class="forge-card__tag">${contractLabel}</span>
             <h3>${choice.title}</h3>
             <p class="forge-card__hero-copy">${transformation.promise}</p>
+            ${riderPreviewMarkup}
             ${useBaseRouteContract ? riderProofMarkup : previewRows ? `<div class="forge-card__preview forge-card__preview--compact">${previewRows}</div>` : ""}
             ${useBaseRouteContract ? riderBillMarkup : `<span class="forge-card__slot">${slotLabel}</span>`}
           </button>
         `;
           }
           if (!isFeaturedHeadline) {
+            const compactPreviewMarkup = useBaseRouteContract
+              ? createBaseRouteForgePreviewMarkup(
+                  transformation.previewLabel,
+                  transformation.previewValue
+                )
+              : "";
             const compactProofMarkup = useBaseRouteContract
               ? createBaseRouteForgeProofMarkup(transformation.proof)
               : "";
@@ -21315,7 +21413,7 @@
             <p class="forge-card__hero-copy">${transformation.promise}</p>
             ${
               useBaseRouteContract
-                ? compactProofMarkup + compactBillMarkup
+                ? compactPreviewMarkup + compactProofMarkup + compactBillMarkup
                 : compactPreviewRow
                   ? `<p class="forge-card__pivot"><span>${compactPreviewRow.label}</span><strong>${compactPreviewRow.value}</strong></p>`
                   : ""

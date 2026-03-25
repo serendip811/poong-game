@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: rebuild the shipped `Wave 1-12` contract into a clean transformation ladder with more visible mid-run payoff, more breathable combat space, and zero backstage/admin leakage.
+- Immediate priority: lock the shipped `Wave 1-12` route into a desire-first forge loop with three appetitive build lanes, cleaner screen hierarchy, and zero `Afterburn`/admin leakage.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-25 16:40:00 KST
+  Findings:
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1369) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1590), [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1957) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2056), and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L4197) still keep `Afterburn` and `Dominion` fully named, staged, and mechanically anticipated inside a project whose stated ship target is still `Wave 1-12`. That leaks "the real game is later" into the current run and weakens the payoff of Wave 12.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12220) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12560) makes major forge beats read like route administration `architecture forecast`, `bastion doctrine`, `wave6 ascension`, `auxiliary junction` instead of appetitive run-shaping choices. A player should want "more barrels", "shield orbit", or "pickup-fueled missile greed," not feel like they are filing a build plan.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8116) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8183) still schedules the whole run around a fixed `W3 / W5 / W6 / W8` ladder with only one obviously major weapon leap before the finale. That is too sparse and too predetermined to create the build hunger expected from a rerunnable action roguelite, and it will not naturally stretch toward a satisfying `20-30` wave structure.
+  - [index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L41) through [index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L102) and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20880) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21123) still stack roadmap, objective, live readout, bench/status, and upgrade history over the arena. Compared with the snap hierarchy of `Hades` boon moments, `Nova Drift` evolve/mod reads, or `Brotato` shop brevity, the interface still explains too much before it sells desire.
+  Top Priority: Quarantine every `Afterburn`/`Dominion`/live-ascension/admin concept from the shipped `Wave 1-12` player contract and rebuild each forge stop around one clean three-lane appetite read `offense leap / defense-support / greed-utility` with visible form previews and minimal text.
+  Why Now: Replay desire comes from wanting the next form immediately, not from understanding a larger roadmap the current run never fully pays off.
+  Do Not Repeat: Do not answer this with another renamed ladder card, another future-mode wrapper, or more explanatory HUD copy.
+  Release Gate: Rewards
 
 - 2026-03-25 15:10:00 KST
   Findings:
@@ -2316,6 +2327,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-25 17:20:00 KST
+  Changed: quarantined more of the shipped `Wave 1-12` forge contract in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) by giving base-route reward cards their own appetite-first transformation layer instead of reusing the underlying admin descriptions. On the default three-card route, each card now renders from one visible preview row plus one short proof line and one cost line, so the body copy sells `what changes now` rather than leaking `doctrine`, `forecast`, `ascension`, `armory`, `bay`, or other backstage routing nouns into the pick moment. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new preview-led card contract and to assert that base-route headline/defense cards stay free of those admin terms. This UI/readability pass stayed anchored to the appetite-first reward snap seen in `Hades`, `Nova Drift`, and `Brotato`: one visible mutation hook, one immediate test, one bill line. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to quarantine `Afterburn`/`Dominion`/live-ascension/admin concepts from the shipped player contract and make each forge stop read as a clean three-lane appetite choice. The highest-value bounded interpretation was to replace the default card-selling text itself, because that is where the remaining route-administration language was still bleeding into the reward moment.
+  Follow-up risk: the default forge cards now sell the shipped route more cleanly, but dormant non-shipping `Afterburn`/`Dominion` structures still live deeper in the file and some non-base-route summaries can still name them. If critique stays on this issue, the next bounded move should quarantine another shipped-facing summary surface rather than adding more reward wrapper copy.
+  Release Gate: Rewards
 
 - 2026-03-25 16:00:00 KST
   Changed: retuned the opener pacing in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 1-4` no longer all run inside the default `960x540` box with prototype-era compression. The first act now expands in bounded steps `1080x620 -> 1160x660 -> 1220x700 -> 1260x720`, early spawn budgets and active caps were lowered to `44/16`, `58/19`, `74/23`, `104/28`, and `Wave 4` was recut from double `Meltdown Surge` overlap to one heavier single-lane surge. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the stepped opener arenas and the softer `Wave 4` pressure profile. Validation passed with `node --check playables/cinder-circuit/game.js` and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
