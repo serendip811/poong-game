@@ -12,9 +12,9 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `UX/UI`, with `Rewards` attached: the run still explains itself too hard in the opener, HUD, `Tab`, and forge, so the transformation ladder feels narrated before it feels desirable.
-- Repeated false solution: softening or renaming the same panels and copy instead of deleting panels, reducing read burden, and preserving room for later spectacle spikes.
+- The most fragile gate is now `Builds`: the game has cleaner readability than before, but the actual build ladder is still too scaffold-heavy, so support/admin layers are eating the hunger that should belong to weapon/body transformation spikes.
+- Repeated false solution: trimming copy or polishing contract panels while leaving doctrines, wildcard routes, support-bay ladders, and side systems competing with the main mutation beats.
 - Keep comparing against `Nova Drift`, `Hades`, and `Brotato`; the benchmark is one obvious combat priority and one obvious reward read, not a well-explained ladder.
-- Good change to preserve: early support spectacle is still delayed. Keep missiles, orbitals, shields, and helpers out of the opener; later they should land as visible form spikes, not forecast text.
-- Main drift markers: signature perk text still briefs too much at start, live HUD still stacks roadmap/objective/readout/log together, `Tab` still behaves like a contract card, and forge still duplicates promise/proof/preview instead of selling one visible payoff.
-- Next critique bias: pressure readability and pacing consolidation over expansion. Keep punishing over-labeled screens, front-loaded power, and any solution that adds copy instead of restoring appetite and tactical clarity.
+- Good change to preserve: early support spectacle is still delayed. Keep missiles, orbitals, shields, and helpers out of the opener, and keep late support systems subordinate to the player chassis instead of becoming the real build fantasy.
+- Main drift markers: too many parallel growth wrappers remain live `doctrine`, `wildcard`, `ascension`, `support bay`, `late armory`, and route jargon, so the player still reads about power architecture more than feeling a clean sequence of earned transformations.
+- Next critique bias: keep pressuring consolidation over expansion. Favor fewer, bigger mutation payoffs and more reusable combat/ecology pressure; punish any solution that keeps the same scaffolding and merely re-labels or compresses it.

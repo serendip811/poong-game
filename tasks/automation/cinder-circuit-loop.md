@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: strip the opener, HUD, `Tab`, and forge down to one-priority reads and rebalance `Wave 1-3` so the run starts smaller, quieter, and leaves room for four real transformation spikes.
+- Immediate priority: freeze doctrine/wildcard/support-bay scaffolding and rebuild `Wave 3/6/8/10` around player-owned weapon/body leaps, with support layers only amplifying those locked forms after they land.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-25 21:15:00 KST
+  Findings:
+  - [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L7) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L53) still define the run around `Headline Form + Survival Rider + Proof Window` across a `12-wave` contract. That is a clean document frame, but it is still not the stronger rerun fantasy of `small gun -> visible mutation -> body commitment -> apex form` that could honestly scale toward `20-30` waves.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2728) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3210) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3220) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3790) still spend too much of the build ceiling on support bays, wildcard protocols, ascensions, doctrines, and side lanes. Missiles, drones, halos, sentries, rogue lattices, and doctrine frames are all individually flavorful, but together they dilute the main hunger because the player is still choosing wrappers around power instead of chasing one unmistakable gun/body transformation at each breakpoint.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L756) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1322) now give the arena more room, but the back half is still authored like a named route tour of `breakline`, `forgecross`, `proof`, `pursuit`, and `bastion` beats rather than a reusable escalation ecology. A release-feeling action roguelite needs the player to feel enemy pressure and form payoff first, not remember contract vocabulary.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20840) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21490) plus [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8600) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L9025) still make the HUD/`Tab`/forge explain `next battlefield`, `ask`, `proof`, `bill`, and route state. Compared with `Nova Drift`, `Hades`, or `Brotato`, the game is still compensating for build ambiguity with wording instead of letting one obvious mutation silhouette carry the reward moment.
+  Top Priority: Rebuild the live ladder so each major stop offers one dominant player-owned mutation first `weapon leap, body break, apex form`, and only then lets support systems show up as narrower amplifiers of that locked identity.
+  Why Now: Until the core transformation ladder creates appetite by itself, adding more support modules only makes the run feel busier, not deeper.
+  Do Not Repeat: Do not answer this with another cleaner contract panel or renamed branch if the player is still shopping parallel scaffolds instead of one decisive form spike.
+  Release Gate: Builds
 
 - 2026-03-25 20:05:00 KST
   Findings:
@@ -2382,6 +2393,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-25 21:35:00 KST
+  Changed: tightened the consolidated `Wave 6` body-commitment beat in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so chassis-only picks now ignite their own visible posture as soon as the choice is made instead of waiting for later support layers to sell the form. `Vector Thrusters` now starts with an immediate wedge surge, `Bulwark Treads` starts with an instant anchor window, and `Salvage Winch` starts with an immediate tow-fork burst window; the wave-clear feed was updated to tell the player that the chosen body pose is already online for the next fight. Validation passed with `node --check playables/cinder-circuit/game.js` and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to make each major stop read as one dominant player-owned mutation first `weapon leap, body break, apex form`, with support arriving later as amplification. The highest-value bounded interpretation was to make `Wave 6` body picks visibly self-sufficient on their own, because the old chassis lock could still feel like backstage setup unless the player later noticed the posture during combat.
+  Follow-up risk: this makes the `Wave 6` payoff read faster, but the opening seconds of the next wave may now favor `Bulwark Treads` a bit too much if the free anchor window trivializes the first spawn pocket. If critique shifts toward balance, the next bounded pass should retune per-chassis surge length rather than adding another growth wrapper.
+  Release Gate: Builds
 
 - 2026-03-25 20:40:00 KST
   Changed: collapsed the shipped combat HUD in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) so the consolidated route's normal wave view now drops the entire left build panel instead of showing `현재 형태` beside `현재 전장`. During live combat the player now gets survival meters plus one right-side threat/ask card, while the form summary stays reserved for `Tab` and forge pauses. This UI pass was anchored to the snap-read combat hierarchy seen in `Nova Drift` and `Brotato`: fight space first, one tactical ask second. Validation passed with `node --check playables/cinder-circuit/game.js` and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

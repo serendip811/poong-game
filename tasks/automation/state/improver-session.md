@@ -12,6 +12,7 @@ Keep this short and replace stale notes instead of endlessly appending.
 
 ## Current Memory
 
+- On the consolidated route, `Wave 6` chassis picks land better when the chosen body posture is immediately live for the first seconds of the next fight; if body breaks only change hidden stats and wait for later support/payoff layers to become visible, the `weapon leap -> body commitment` rung still feels theoretical.
 - On the consolidated route, the default combat HUD should now demote `현재 형태` fully into `Tab`/forge and leave live combat with only survival meters plus one `현재 전장` card; if the left build panel, roadmap, or upgrade recap reappears during normal waves, the arena has drifted back into dashboard mode.
 - On the consolidated route, `Wave 8 -> Wave 9` should surface as one explicit `마무리` beat, not as `Late Break Armory`, `Aux Bay Uplink`, or any other admin unlock; late support capacity can move backstage, but the player-facing handoff must read as `pick one finale form, then prove it through Wave 9-12`.
 - On the consolidated route, base forge cards should stay three equal appetite tiles with the same `tag -> title -> immediate change -> 다음 시험 -> cost` stack; if a shipped `Wave 1-12` reward reintroduces `추천`, featured double-width treatment, impact strips, or asymmetric preview scaffolding, the reward snap has drifted back into prototype briefing.

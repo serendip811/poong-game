@@ -70,6 +70,7 @@
   const APEX_PREDATOR_SPAWN_DELAY = 12;
   const WAVE6_ASCENSION_SURGE_DURATION = 4.6;
   const WAVE6_ASCENSION_ONLINE_SURGE_DURATION = 7.4;
+  const WAVE6_CHASSIS_BREAK_SURGE_DURATION = 2.4;
   const LATE_FIELD_CACHE_START_WAVE = 10;
   const LATE_FIELD_CACHE_INTERVAL = 2;
   const MAX_LATE_FIELD_MUTATION_LEVEL = 7;
@@ -13812,6 +13813,7 @@
         run.build.upgrades.push(`유틸리티 섀시: ${(chassis && chassis.label) || choice.chassisTitle || choice.chassisId}`);
         if (!choice.bayUnlock && CONSOLIDATED_12_WAVE_ROUTE) {
           run.build.upgrades.push("Chassis Breakpoint: support rider held for Wave 8");
+          activateChassisBreakpointSurge(run, choice.chassisId);
         }
       }
       if (choice.systemChoice) {
@@ -15712,6 +15714,50 @@
     return profile;
   }
 
+  function activateChassisBreakpointSurge(
+    run = state,
+    chassisOrId = null,
+    duration = WAVE6_CHASSIS_BREAK_SURGE_DURATION
+  ) {
+    if (!run || !run.player || duration <= 0) {
+      return null;
+    }
+    const chassis = getChassisBreakpointDef(chassisOrId || run.build);
+    if (!chassis) {
+      return null;
+    }
+
+    let color = "#d5fbff";
+    if (chassis.id === "vector_thrusters") {
+      run.player.dashCharges = Math.min(run.player.dashMax, (run.player.dashCharges || 0) + 1);
+      run.player.chassisVectorTime = Math.max(run.player.chassisVectorTime || 0, duration);
+      run.player.invulnerableTime = Math.max(run.player.invulnerableTime || 0, 0.12);
+      color = "#9fe7ff";
+    } else if (chassis.id === "bulwark_treads") {
+      run.player.chassisAnchorCharge = 1;
+      run.player.chassisAnchorActiveTime = Math.max(run.player.chassisAnchorActiveTime || 0, duration);
+      run.player.invulnerableTime = Math.max(run.player.invulnerableTime || 0, 0.18);
+      color = "#fff0c9";
+    } else if (chassis.id === "salvage_winch") {
+      run.player.chassisSalvageBurstTime = Math.max(
+        run.player.chassisSalvageBurstTime || 0,
+        duration
+      );
+      run.player.chassisPickupPulseCooldown = 0;
+      color = "#9fffcf";
+    } else {
+      return null;
+    }
+
+    if (Array.isArray(run.particles)) {
+      for (let index = 0; index < 8; index += 1) {
+        run.particles.push(createParticle(run.player.x, run.player.y, color, 0.85));
+      }
+    }
+    run.shake = Math.max(run.shake || 0, 4);
+    return chassis;
+  }
+
   function fireWave6AscensionVolley(weapon, baseAngle, driveActive) {
     const profile = getWave6AscensionProfile();
     if (!state.player || !profile) {
@@ -17368,7 +17414,7 @@
                 ? `${grantLabel} 적용. ${choice.doctrineLabel}를 잠가 ${choice.doctrineChoice ? choice.doctrineChoice.title : "주포 mutation"}과 ${choice.chassisTitle || "utility chassis"}를 함께 켰다. 이번 break는 주포/차체 형태를 확정하는 데만 쓰고 다음 rider 갈림길은 뒤로 미룬다.`
                 : choice.action === "bastion_bay_forge"
                 ? !choice.bayUnlock && CONSOLIDATED_12_WAVE_ROUTE
-                  ? `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}만 먼저 잠가 hold, dive, exit 리듬을 바꿨다. support rider와 flex lane은 아직 열지 않고 Wave 8 Late Break Armory까지 묶어 둔다.`
+                  ? `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}만 먼저 잠가 hold, dive, exit 리듬을 바꿨다. 다음 웨이브 시작부터 해당 차체 포즈가 바로 켜지고, support rider와 flex lane은 아직 열지 않은 채 Wave 8 Late Break Armory까지 묶어 둔다.`
                   : wave6AscensionDraft || choice.skipNextAdminStop
                   ? `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}를 잠그고 세 번째 support bay를 flex lane으로 즉시 열어 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 장착했다. Wave 8에서는 정지 없이 네 번째 bay가 자동 uplink되어 Wave 6-9 bracket을 그대로 이어 간다.`
                   : `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}와 함께 세 번째 support bay를 즉시 열고 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 먼저 장착한 채, Wave 8 네 번째 bay까지 예약하고 다음 웨이브를 연다.`
