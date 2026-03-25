@@ -36,6 +36,8 @@ assert.equal(game.getPlayerFacingActLabelForWave(9).shortLabel, "Act 3");
 assert.equal(game.getPlayerFacingActLabelForWave(13).shortLabel, "Act 3");
 assert.equal(game.getPlayerFacingActLabelForWave(19).shortLabel, "Act 3");
 assert.equal(game.POST_CAPSTONE_WAVE_COUNT, 7);
+assert.equal(game.shouldUseFieldGrant({ nextWave: 9, finalForge: false }), false);
+assert.equal(game.getCombatCacheChoicesForWave(game.createInitialBuild("rail_zeal"), 9).length, 0);
 assert.equal(game.getCombatCacheChoicesForWave(game.createInitialBuild("rail_zeal"), 14).length, 0);
 assert.ok(game.WAVE_CONFIG[0].spawnBudget < game.WAVE_CONFIG[2].spawnBudget);
 assert.equal(game.WAVE_CONFIG[0].arena.width, 1080);
@@ -1843,7 +1845,7 @@ const postChaseChoices = game.buildForgeChoices(
 );
 assert.ok(!postChaseChoices.some((choice) => choice.type === "utility" && choice.action === "doctrine_chase"));
 assert.equal(game.shouldUseFieldGrant({ nextWave: 5, finalForge: false }), false);
-assert.equal(game.shouldUseFieldGrant({ nextWave: 9, finalForge: false }), true);
+assert.equal(game.shouldUseFieldGrant({ nextWave: 9, finalForge: false }), false);
 assert.equal(game.shouldUseConsolidatedLateFormForge({ nextWave: 9, finalForge: false }), true);
 assert.equal(game.shouldUseFieldGrant({ nextWave: 12, finalForge: true }), false);
 const bastionDoctrineBuild = game.createInitialBuild("relay_oath");
@@ -3135,6 +3137,8 @@ assert.ok(actTwoLadder[3].note.includes("shared proof cell"));
 
 const lateBreakSmokeBuild = game.createInitialBuild("scrap_pact");
 lateBreakSmokeBuild.bastionDoctrineId = "kiln_bastion";
+assert.equal(game.shouldUseFieldGrant({ nextWave: 10, finalForge: false }), false);
+assert.equal(game.getCombatCacheChoicesForWave(lateBreakSmokeBuild, 10).length, 0);
 const lateBreakSmokeChoices = game.buildForgeChoices(lateBreakSmokeBuild, () => 0, 999, {
   nextWave: 9,
   finalForge: false,

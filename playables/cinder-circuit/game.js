@@ -6985,10 +6985,10 @@
     if (!options || options.finalForge) {
       return false;
     }
-    const nextWave = options.nextWave || 0;
-    if (CONSOLIDATED_12_WAVE_ROUTE && nextWave < LATE_BREAK_ARMORY_WAVE) {
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
       return false;
     }
+    const nextWave = options.nextWave || 0;
     return (
       nextWave >= FORGE_PACKAGE_START_WAVE &&
       !shouldRunArchitectureDraft(options) &&
@@ -14113,7 +14113,10 @@
   }
 
   function getCombatCacheChoicesForWave(build, nextWave, scrapBank = Number.POSITIVE_INFINITY) {
-    if (CONSOLIDATED_12_WAVE_ROUTE && nextWave > MAX_WAVES) {
+    if (
+      CONSOLIDATED_12_WAVE_ROUTE &&
+      (nextWave >= LATE_BREAK_ARMORY_WAVE || nextWave > MAX_WAVES)
+    ) {
       return [];
     }
     if (shouldUseCompactActBreakCache({ nextWave, finalForge: false })) {

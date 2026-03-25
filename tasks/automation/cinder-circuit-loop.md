@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze new branch spectacle and prove one replayable shipped spine first: make `Wave 1-10` read as `main-form payoff -> harder remix -> delayed rider fork`, hide support/wildcard previews from the default path, and cut the default HUD/forge to one combat ask and one reward desire.
+- Immediate priority: stop adding mid-combat cache layers and post-finale promise, then prove one replayable `Wave 1-10` spine first: one headline weapon/body ladder, one delayed rider layer, and one default HUD/forge read that sells combat urgency plus reward desire.
 
 ## Release Gates
 
@@ -61,6 +61,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 17:20:00 KST
+  Findings:
+  - [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L36) still sell the shipped game as a `12웨이브 / 세 시대 계약 / Headline Form + Survival Rider + Proof Window` product. That is still a framework promise, not a run spine a player would replay for fun or that can honestly stretch toward `20-30 waves`.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L760) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1120) keep `Wave 5-10` inside authored `payoff / breach / sweep / proof` cells with long `note` and `directive` narration, then [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1121) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1230) jump again into bespoke `pursuit` and `hold` finales. The arena is larger, but the combat grammar still does not breathe long enough for the player to simply enjoy mastering one build.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2815) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3457) still front-load the toy box: support systems open at `Wave 8`, primers still preview orbitals and shields, and wildcard beats still hit `4 / 7 / 10`. The run is showing satellites, drones, halos, and illegal branch fantasies before one primary gun/body transformation has fully owned the screen.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21801) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21961) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1424) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1645) still inject `combat_cache`, `late_ascension_cache`, and multiple `Afterburn`/`Dominion` pickup ladders into the live arena. That turns the run into a conveyor belt of new rule deliveries instead of letting between-wave choices create anticipation and payoff.
+  - [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L93) through [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L104) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22260) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22597) still stack `build-roadmap`, `wave-objective`, `live-readout`, `upgrade-list`, `현재 형태`, `다음 변화`, `방호·보조`, `판돈·유틸`, `Next Proof`, and `Route Payoff`. Compared with the hierarchy discipline of `Hades`, `Nova Drift`, or `Brotato`, the game is still asking the player to administer the run rather than chase the next visible power spike.
+  Top Priority: Cut player-facing `combat cache` and `Afterburn/Dominion` progression from the shipped path and make `Wave 1-10` live or die on between-wave headline upgrades plus one delayed rider layer.
+  Why Now: Until the run stops introducing new ladders in the arena itself, it cannot build clean anticipation or repeated-build hunger.
+  Do Not Repeat: Do not answer this with another cache type, another branch label, or another UI wording pass.
+  Release Gate: Progression
 
 - 2026-03-26 16:10:00 KST
   Findings:
@@ -2760,6 +2772,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-26 17:55:00 KST
+  Changed: removed one bounded late-run progression leak from the shipped route in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so consolidated `Wave 8-12` runs no longer arm `Field Cache`/`combat_cache` handoffs at all. `shouldUseFieldGrant(...)` now hard-returns `false` on the shipped path, and `getCombatCacheChoicesForWave(build, 9+)` now fails closed as `[]`, forcing late growth to come only from the between-wave forge instead of live arena drops. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock that `Wave 9+` no longer advertise field caches while late forge picks still remain available. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` explicitly asked to cut player-facing `combat cache` progression from the shipped path so `Wave 1-10` live or die on between-wave headline upgrades plus one delayed rider layer. The highest-value concrete interpretation was to close the remaining late base-route field-cache branch, because it was still reintroducing arena-delivered progression right where the run should be building desire for the next forge stop.
+  Follow-up risk: this removes a progression wrapper more than it adds a new payoff. `Wave 9-12` now depend even more on late forge cards and encounter payoff doing the selling, so a future pass should strengthen one visible late rider or finisher mutation rather than reopening field-drop progression.
+  Release Gate: Progression
 
 - 2026-03-26 17:35:00 KST
   Changed: hardened one bounded piece of the shipped `Wave 1-10` build spine in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so consolidated runs now fail closed on future-hardware helpers instead of merely hiding the offers. `getClaimedWildcardProtocolIds(...)` now collapses to `[]` on the shipped route, preview-support resolution now hard-returns `null`, and applying a `wildcard_protocol` choice is inert under consolidation. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock that `Wave 4 / 7 / 10` never surface wildcard choices, `Wave 5` forge pools never leak `preview_support`, and even legacy `previewSupportSystemId` / `wildcardProtocolIds` state no longer revives helper hardware on the shipped path. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
