@@ -2356,6 +2356,13 @@
     return act || ACT_LABELS[ACT_LABELS.length - 1];
   }
 
+  function getPlayerFacingActLabelForWave(waveNumber) {
+    const boundedWave = CONSOLIDATED_12_WAVE_ROUTE
+      ? clamp(Math.round(waveNumber || 1), 1, MAX_WAVES)
+      : waveNumber;
+    return getActLabelForWave(boundedWave);
+  }
+
   function isHazardCoreTarget(hazard) {
     return Boolean(
       hazard &&
@@ -8546,7 +8553,7 @@
 
   function createShippingLadderMarkup(build, weapon = null, waveNumber = 1) {
     const boundedWave = clamp(Math.round(waveNumber || 1), 1, MAX_WAVES);
-    const act = getActLabelForWave(boundedWave);
+    const act = getPlayerFacingActLabelForWave(boundedWave);
     const steps = getShippingLadderSteps(build, weapon, boundedWave);
     const focus = getShippingLadderFocus(build, weapon, boundedWave);
     return `
@@ -9040,7 +9047,7 @@
       eras.find((era) => era.state === "live") ||
       eras.find((era) => era.state === "primed") ||
       eras[eras.length - 1];
-    const act = getActLabelForWave(clamp(Math.round(waveNumber || 1), 1, MAX_WAVES));
+    const act = getPlayerFacingActLabelForWave(clamp(Math.round(waveNumber || 1), 1, MAX_WAVES));
     return `
       <div class="summary-head">
         <strong>12-Wave Contract</strong>
@@ -14821,6 +14828,7 @@
     createInitialBuild,
     getSignatureDef,
     getActLabelForWave,
+    getPlayerFacingActLabelForWave,
     computePlayerStats,
     computeWeaponStats,
     computeSupportSystemStats,
@@ -15993,7 +16001,7 @@
       return;
     }
     const currentWaveNumber = Math.max(1, state.waveIndex + 1);
-    const currentAct = getActLabelForWave(currentWaveNumber);
+    const currentAct = getPlayerFacingActLabelForWave(currentWaveNumber);
     const totalTrackWaves =
       MAX_WAVES +
       (CONSOLIDATED_12_WAVE_ROUTE
@@ -16012,7 +16020,7 @@
     elements.runTrackLabel.textContent = label;
     const trackEntries = WAVE_CONFIG.map((wave, index) => ({
       waveNumber: index + 1,
-      act: getActLabelForWave(index + 1),
+      act: getPlayerFacingActLabelForWave(index + 1),
       id: wave.id.toUpperCase(),
       note: wave.note,
     }));
@@ -16020,7 +16028,7 @@
       const waveNumber = MAX_WAVES + index + 1;
       trackEntries.push({
         waveNumber,
-        act: getActLabelForWave(waveNumber),
+        act: getPlayerFacingActLabelForWave(waveNumber),
         id: POST_CAPSTONE_WAVE_LABELS[index].toUpperCase(),
         note: "최종 포지 이후 relay, pursuit, bastion, surge grammar가 다시 섞이며 완성형 빌드가 실제 전장을 더 오래 점유하는 post-capstone afterburn ladder.",
       });

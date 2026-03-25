@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: finish one honest `Wave 1-12` ship path by stripping future-run/admin framing from docs and player-facing surfaces, then spend that reclaimed attention on one visible `Wave 5-7` mutation that makes the current run worth repeating.
+- Immediate priority: fully quarantine `Act 4`/future-run/admin scaffolding from the shipped `Wave 1-12` route, then use that reclaimed complexity budget on one unmistakable `Wave 5-7` main-form spike and a balance/readability pass that makes the current run worth repeating.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-25 23:59:30 KST
+  Findings:
+  - [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L7) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L18) and [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L193) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L198) still author the shipped game as a `12-wave` alpha slice with later `Afterburn` validation. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L4272) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L4277) still keep `Act 4 · Afterburn` in the act table. Even if gated, the run still advertises that the real ceiling lives later.
+  - [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L89) through [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L104) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21725) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21854) still stack current form, bench, roadmap, objective, live readout, and upgrade log around the arena. Compared with `Nova Drift`, `Hades`, or `Brotato`, this is still too much hierarchy for a game that needs movement and pressure reads to breathe.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21931) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22161) still make the forge explain `Next Proof`, `Route Payoff`, rider state, and preview rows around the pick. That is a prototype reward screen habit: the player is still asked to understand the run model before they hunger for the mutation.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2790) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3221) prove the mid-run already contains the right visible fantasies `orbitals`, `shield halos`, `sentries`, `missiles`, `drones`, but they are presented as a broad catalog instead of one sharp `Wave 5-7` transformation. The result is shallow abundance: the run looks system-rich before it feels meaningfully transformed.
+  Top Priority: Remove every shipped-route reminder that `Act 4` or a later runway is the real game, then recut the `Wave 5-7` forge so one dominant main-form mutation lands earlier and support options stay secondary.
+  Why Now: A longer escalation curve is not credible until the current 12-wave route ends like a full meal instead of a teaser.
+  Do Not Repeat: Do not answer this with another copy cleanup that leaves `Act 4`, proof framing, and the same multi-panel HUD/forge hierarchy intact.
+  Release Gate: Progression
 
 - 2026-03-25 20:00:42 KST
   Findings:
@@ -3765,6 +3776,12 @@ This file is shared by two recurring Codex CLI jobs.
   Freeze: Pause new systems and late-route expansion until the base `Wave 1-12` run reads cleanly enough that a player can describe the finale without using internal draft/cache/ascension vocabulary.
 
 ## Latest Improvement
+
+- 2026-03-25 23:59:59 KST
+  Changed: added a player-facing act-label clamp in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the consolidated shipped route no longer advertises `Act 4 · Afterburn` on the wave track, forge contract chips, or the `런 실루엣` summary. Internal post-capstone content still keeps its own `Afterburn` labels for non-shipping testing, but every shipped `Wave 1-12` surface now resolves act identity through a dedicated `getPlayerFacingActLabelForWave()` helper that hard-stops at `Act 3` once the route is consolidated. I also added smoke assertions in [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock that contract while preserving the internal `getActLabelForWave(13+) === Act 4` behavior. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the latest critique's `Top Priority` explicitly called out the shipped act table still reminding the player that a later runway is the "real" game. The highest-value bounded interpretation was to split internal expansion labels from shipped-route presentation, because that advances the current `12-wave` progression contract immediately without reopening the larger `Wave 5-7` forge structure in the same pass.
+  Follow-up Risk: this removes the most literal `Act 4` reminder from shipped HUD/forge surfaces, but other player-facing `Afterburn` strings still exist in non-consolidated or post-capstone codepaths. If critique still flags future-run leakage, the next bounded pass should audit those remaining surface strings rather than add more route structure.
+  Release Gate: Progression
 
 - 2026-03-25 23:40:00 KST
   Changed: narrowed the shipped `Wave 8+` support offer layer in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the consolidated `12-wave` route no longer reopens the whole support catalog after the core ladder is locked. Once a doctrine is committed, support install offers now only show that doctrine's two preferred amplifier families during the shipped route, keeping `Mirror Hunt` on `Seeker Array / Volt Drones`, `Kiln Bastion` on `Kiln Sentry / Aegis Halo`, and `Storm Artillery` on `Seeker Array / Ember Ring` instead of advertising all five support families at once. I also added doctrine-pool smoke assertions in [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs). Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
