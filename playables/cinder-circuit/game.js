@@ -9479,6 +9479,14 @@
     );
   }
 
+  function getDoctrinePrimarySupportSystemId(buildOrDoctrine) {
+    const doctrine =
+      buildOrDoctrine && buildOrDoctrine.id ? buildOrDoctrine : getBastionDoctrineDef(buildOrDoctrine);
+    const preferredSystemIds = getDoctrinePreferredSystemIds(doctrine);
+    const primarySystemId = preferredSystemIds[0];
+    return primarySystemId && SUPPORT_SYSTEM_DEFS[primarySystemId] ? primarySystemId : null;
+  }
+
   function getDoctrineWildcardSystemAllowance(build) {
     if (!build || !build.bastionDoctrineId) {
       return 0;
@@ -9507,6 +9515,9 @@
     if (!doctrine || preferredSystemIds.length === 0) {
       return true;
     }
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
+      return systemId === getDoctrinePrimarySupportSystemId(doctrine);
+    }
     if (preferredSystemIds.includes(systemId)) {
       return true;
     }
@@ -9527,10 +9538,8 @@
     ) {
       return allSystemIds;
     }
-    const preferredSystemIds = getDoctrinePreferredSystemIds(getBastionDoctrineDef(build)).filter(
-      (systemId) => SUPPORT_SYSTEM_DEFS[systemId]
-    );
-    return preferredSystemIds.length > 0 ? preferredSystemIds : allSystemIds;
+    const primarySystemId = getDoctrinePrimarySupportSystemId(build);
+    return primarySystemId ? [primarySystemId] : allSystemIds;
   }
 
   function doctrineAllowsModChoice(build, modId) {

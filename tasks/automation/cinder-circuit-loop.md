@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze expansion-facing scaffolds and collapse the shipped `12-wave` route into a quieter, appetite-first ladder where `Wave 1-3` read instantly and `Wave 3/6/8` each land one unmistakable player-form mutation before side systems compete for attention.
+- Immediate priority: strip post-`Wave 12`/admin scaffolds out of the shipped contract and compress the visible build surface to a simple `Wave 3/6/8` mutation spine before support layers and route terminology compete for attention.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-25 23:55:00 KST
+  Findings:
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L731) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1380) still author nearly every wave with `note` and `directive` prose about `proof`, `ownership`, `pocket`, `pursuit`, and `bastion` cadence. A strong rerun-driven arena shooter teaches these asks through enemy shape and space pressure, not through a designer paragraph per wave.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1368) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1605) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20896) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21017) still keep `Afterburn`, `Dominion`, live ascension, and ownership-skip admin logic active in the shipped codepath. Even if the run ends at `Wave 12`, the implementation is still mentally balanced around a second game.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2737) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3371) still expose a release-sized support surface `orbitals, shield halos, sentries, missiles, drones, wildcard protocols`, and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3642) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3811) still build doctrines around those support preferences. That is too much side hardware for a run that still has not made its main gun/body ladder feel inevitable.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21332) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21545) and [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L7) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L53) still present the forge as a contract with `proof`, ladder framing, and multi-part context instead of the appetite-first reward snap seen in stronger references like `Hades`, `Nova Drift`, and `Brotato`. The player is still reading the run structure when they should be instantly wanting the mutation.
+  Top Priority: Cut the shipped run down to three clearly advertised build destinies driven by visible weapon/chassis mutations, and demote support systems to a narrow follow-up amplifier layer instead of a parallel identity tree.
+  Why Now: As long as support breadth and future-route scaffolds are louder than the core transformation spine, repeated runs will feel administrated rather than craved.
+  Do Not Repeat: Do not spend another pass “simplifying” by trimming copy while the same support catalog and post-`Wave 12` scaffolds still define the real game.
+  Release Gate: Builds
 
 - 2026-03-25 23:10:00 KST
   Findings:
@@ -2415,6 +2426,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-25 23:59:00 KST
+  Changed: narrowed the shipped consolidated support lane in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so each doctrine now exposes only one primary amplifier family once the `Wave 8+` support layer opens. On the shipped `12-wave` route, `Mirror Hunt` now points only at `Seeker Array`, `Kiln Bastion` only at `Kiln Sentry`, and `Storm Artillery` only at `Seeker Array`; secondary preferred systems and wildcard installs no longer appear as parallel identity branches while the run is still trying to sell its weapon/body spine. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new visibility and install rules for shipped-route doctrine builds. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to cut the shipped run down to a few obvious build destinies and demote support systems into a narrow follow-up amplifier layer. The highest-value bounded interpretation was to stop the base route from advertising two support families per doctrine, because that second branch kept support shopping louder than the main `Wave 3/6/8` mutation spine.
+  Follow-up risk: this makes the shipped route cleaner, but it also reduces late-run support variance until the main ladder and encounter asks carry more replay hunger by themselves. If critique stays on build variety, the next bounded pass should deepen the visible behavior growth inside each doctrine's single support family rather than reopening a wide support catalog.
+  Release Gate: Builds
 
 - 2026-03-25 22:05:00 KST
   Changed: tightened the shipped base-route forge in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the consolidated `Wave 1-12` reward pause now reads closer to one craving snap than a briefing card. The forge header was reduced to the same quiet status contract as `Tab` `현재 형태 / 다음 전장 / 보유 고철`, the base-route subtitle now collapses to scrap only, and the default three forge cards no longer render a separate `다음 시험` block. On the shipped route each card now stops at `lane tag -> title -> immediate mutation sell -> one visible preview row -> raw cost`, and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks that the context stays chip-light and the default base-route card markup stays free of proof rows. This UI/readability pass was anchored to the appetite-first reward snap in `Hades`, `Nova Drift`, and `Brotato`: let the pick itself sell the desire, not the wrapper text. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

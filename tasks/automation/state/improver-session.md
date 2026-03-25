@@ -12,6 +12,7 @@ Keep this short and replace stale notes instead of endlessly appending.
 
 ## Current Memory
 
+- On the consolidated `12-wave` route, a doctrine's support follow-up should now stay one primary amplifier family only; if `Wave 8+` ever re-exposes the doctrine's second preferred system or any wildcard support install on the shipped path, the support layer has widened back into a parallel identity tree.
 - On the consolidated route, `Wave 6` chassis picks land better when the chosen body posture is immediately live for the first seconds of the next fight; if body breaks only change hidden stats and wait for later support/payoff layers to become visible, the `weapon leap -> body commitment` rung still feels theoretical.
 - On the consolidated route, the default combat HUD should now demote `현재 형태` fully into `Tab`/forge and leave live combat with only survival meters plus one `현재 전장` card; if the left build panel, roadmap, or upgrade recap reappears during normal waves, the arena has drifted back into dashboard mode.
 - On the consolidated route, `Wave 8 -> Wave 9` should surface as one explicit `마무리` beat, not as `Late Break Armory`, `Aux Bay Uplink`, or any other admin unlock; late support capacity can move backstage, but the player-facing handoff must read as `pick one finale form, then prove it through Wave 9-12`.
