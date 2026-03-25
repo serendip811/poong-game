@@ -4254,12 +4254,18 @@
   const OVERCOMMIT_TRIAL_WAVE = 5;
   const OVERCOMMIT_SALVAGE_REQUIRED = 3;
   const OVERCOMMIT_SALVAGE_LIFE = 7.5;
-  const ACT_LABELS = [
-    { start: 1, end: 4, label: "Act 1 · Ignition", shortLabel: "Act 1" },
-    { start: 5, end: 8, label: "Act 2 · Bastion Run", shortLabel: "Act 2" },
-    { start: 9, end: 12, label: "Act 3 · Crown Siege", shortLabel: "Act 3" },
-    { start: 13, end: 19, label: "Act 4 · Afterburn", shortLabel: "Act 4" },
-  ];
+  const ACT_LABELS = CONSOLIDATED_12_WAVE_ROUTE
+    ? [
+        { start: 1, end: 4, label: "Act 1 · Ignition", shortLabel: "Act 1" },
+        { start: 5, end: 8, label: "Act 2 · Bastion Run", shortLabel: "Act 2" },
+        { start: 9, end: 12, label: "Act 3 · Crown Siege", shortLabel: "Act 3" },
+      ]
+    : [
+        { start: 1, end: 4, label: "Act 1 · Ignition", shortLabel: "Act 1" },
+        { start: 5, end: 8, label: "Act 2 · Bastion Run", shortLabel: "Act 2" },
+        { start: 9, end: 12, label: "Act 3 · Crown Siege", shortLabel: "Act 3" },
+        { start: 13, end: 19, label: "Act 4 · Afterburn", shortLabel: "Act 4" },
+      ];
   const FIELD_GRANT_MAX_COST = 48;
   const FIELD_GRANT_DISCOUNT_MULTIPLIER = 0.65;
   const FIELD_GRANT_MIN_COST = 10;
@@ -13644,6 +13650,9 @@
   }
 
   function getCombatCacheChoicesForWave(build, nextWave, scrapBank = Number.POSITIVE_INFINITY) {
+    if (CONSOLIDATED_12_WAVE_ROUTE && nextWave > MAX_WAVES) {
+      return [];
+    }
     if (shouldUseCompactActBreakCache({ nextWave, finalForge: false })) {
       return buildCompactActBreakCacheChoices(build, Math.random, scrapBank);
     }
@@ -15346,6 +15355,9 @@
   }
 
   function getLiveSideBetSummary(currentState = state) {
+    if (CONSOLIDATED_12_WAVE_ROUTE && currentState.waveIndex + 1 >= MAX_WAVES) {
+      return null;
+    }
     const pursuit = getDoctrineForgePursuitDef(currentState.build);
     if (currentState.catalystCrucible.active) {
       return {
@@ -17955,7 +17967,7 @@
       ? "회로 봉인 성공"
       : "회로 붕괴";
     elements.resultCopy.textContent = victory
-      ? "최종 폭주 구간을 넘기고 회로를 닫았다. 최종 코어와 보강 조합은 아래에 기록된다."
+      ? "Wave 12 최종 방어선을 버티고 이번 런을 닫았다. 마지막 형태와 보강 조합은 아래에 기록된다."
       : "열과 밀도를 버티지 못했다. 이동 경로와 포지 선택을 다시 정리해야 한다.";
     elements.resultStats.innerHTML = [
       createResultStat("Waves", String(state.result.wavesCleared)),
@@ -17967,7 +17979,7 @@
       createResultStat("Core", state.result.core),
     ].join("");
     elements.resultBuild.innerHTML = `
-      <p class="panel__eyebrow">FINAL LOADOUT</p>
+      <p class="panel__eyebrow">FINAL FORM</p>
       <div class="result-build__grade">${grade.grade}</div>
       <strong>${signature.label} / ${CORE_DEFS[state.build.coreId].label} / ${state.weapon.tierLabel}</strong>
       <p>${grade.note}</p>

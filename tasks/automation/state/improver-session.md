@@ -12,6 +12,7 @@ Keep this short and replace stale notes instead of endlessly appending.
 
 ## Current Memory
 
+- On the consolidated shipped route, any player-facing act label, late cache helper, or side-bet summary must hard-clamp to `Wave 12`; if `getActLabelForWave(13+)` returns `Act 4`, `getCombatCacheChoicesForWave(..., 14+)` surfaces post-capstone choices, or end-of-run copy hints at a later escalation, the current release path is still advertising a cooler game after the clear.
 - On the consolidated route, the default combat HUD should now stay a literal two-card read: left `현재 형태` headline card with one `다음 도약` proof band, right `현재 전장` ask card; `build-roadmap`, `live-readout`, `upgrade-list`, and bench chips belong to `Tab`/pause only. If the left card disappears again in live combat or roadmap/live telemetry re-enter the default wave view, the shipped HUD has drifted back toward dashboard mode.
 - On the consolidated route, `Wave 5-12` battlefield reads should now pull from one terse directive line, not the long authored `note`; keep the HUD `현재 전장`, wave-start feed, and wave track on that short ask or the shipped run drifts back into narrated route vocabulary instead of readable combat pressure.
 - On the consolidated shipped route, `Wildcard Protocol` should no longer surface at `Wave 4 / 7 / 10`; if field grants or gamble slots reintroduce `Smuggler Winch`, `Nullplate Halo`, or `Rogue Lattice` before the main late-form lock, the run has drifted back toward exception shopping instead of three clear gun/body destinies plus one light rider.

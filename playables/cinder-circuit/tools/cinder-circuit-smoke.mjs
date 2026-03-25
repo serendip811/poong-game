@@ -30,12 +30,13 @@ assert.equal(game.ACT3_CATALYST_DRAFT_WAVE, 10);
 assert.equal(game.getActLabelForWave(4).shortLabel, "Act 1");
 assert.equal(game.getActLabelForWave(5).shortLabel, "Act 2");
 assert.equal(game.getActLabelForWave(9).shortLabel, "Act 3");
-assert.equal(game.getActLabelForWave(13).shortLabel, "Act 4");
-assert.equal(game.getActLabelForWave(19).shortLabel, "Act 4");
+assert.equal(game.getActLabelForWave(13).shortLabel, "Act 3");
+assert.equal(game.getActLabelForWave(19).shortLabel, "Act 3");
 assert.equal(game.getPlayerFacingActLabelForWave(9).shortLabel, "Act 3");
 assert.equal(game.getPlayerFacingActLabelForWave(13).shortLabel, "Act 3");
 assert.equal(game.getPlayerFacingActLabelForWave(19).shortLabel, "Act 3");
 assert.equal(game.POST_CAPSTONE_WAVE_COUNT, 7);
+assert.equal(game.getCombatCacheChoicesForWave(game.createInitialBuild("rail_zeal"), 14).length, 0);
 assert.ok(game.WAVE_CONFIG[0].spawnBudget < game.WAVE_CONFIG[2].spawnBudget);
 assert.equal(game.WAVE_CONFIG[0].arena.width, 1080);
 assert.equal(game.WAVE_CONFIG[1].arena.width, 1160);
@@ -627,65 +628,7 @@ assert.ok(
 assert.ok(lateBreakArmoryChoices.every((choice) => choice.roadmapDetail?.includes("Wave 11")));
 assert.ok(lateBreakArmoryChoices.every((choice) => choice.roadmapDetail?.includes("Wave 12")));
 const afterburnBreakpointChoices = game.getCombatCacheChoicesForWave(lateCacheBuild, 14);
-assert.equal(afterburnBreakpointChoices.length, 3);
-assert.equal(
-  JSON.stringify(afterburnBreakpointChoices.map((choice) => choice.laneLabel)),
-  JSON.stringify(["Main Weapon Mutation", "Defense / Utility", "Greed Contract"])
-);
-const afterburnMutationChoice = afterburnBreakpointChoices.find(
-  (choice) => choice.laneLabel === "Main Weapon Mutation"
-);
-const afterburnAegisChoice = afterburnBreakpointChoices.find(
-  (choice) => choice.laneLabel === "Defense / Utility"
-);
-const afterburnGreedChoice = afterburnBreakpointChoices.find(
-  (choice) => choice.laneLabel === "Greed Contract"
-);
-const afterburnMutationBuild = game.createInitialBuild("relay_oath");
-afterburnMutationBuild.chassisId = "vector_thrusters";
-game.applyForgeChoice(
-  {
-    build: afterburnMutationBuild,
-    resources: { scrap: 999 },
-    stats: { scrapCollected: 0, scrapSpent: 0 },
-    player: { hp: 100, maxHp: 100, heat: 24, overheated: false, fieldAegisCharge: 0, fieldAegisCooldown: 0, invulnerableTime: 0 },
-  },
-  afterburnMutationChoice
-);
-assert.equal(afterburnMutationBuild.arsenalBreakpointProfileId, "mutation");
-const afterburnWaveFourteenMutation = game.createPostCapstoneWave(1, afterburnMutationBuild);
-assert.equal(afterburnWaveFourteenMutation.hazard.type, "drift");
-assert.equal(afterburnWaveFourteenMutation.hazard.label, "Arsenal Crossfire");
-assert.ok(afterburnWaveFourteenMutation.arena.width >= 1800);
-const afterburnAegisBuild = game.createInitialBuild("scrap_pact");
-afterburnAegisBuild.chassisId = "bulwark_treads";
-game.applyForgeChoice(
-  {
-    build: afterburnAegisBuild,
-    resources: { scrap: 999 },
-    stats: { scrapCollected: 0, scrapSpent: 0 },
-    player: { hp: 100, maxHp: 100, heat: 24, overheated: false, fieldAegisCharge: 0, fieldAegisCooldown: 0, invulnerableTime: 0 },
-  },
-  afterburnAegisChoice
-);
-assert.equal(afterburnAegisBuild.arsenalBreakpointProfileId, "aegis");
-const afterburnWaveFourteenAegis = game.createPostCapstoneWave(1, afterburnAegisBuild);
-assert.equal(afterburnWaveFourteenAegis.hazard.type, "drift");
-const afterburnGreedBuild = game.createInitialBuild("rail_zeal");
-afterburnGreedBuild.chassisId = "vector_thrusters";
-game.applyForgeChoice(
-  {
-    build: afterburnGreedBuild,
-    resources: { scrap: 999 },
-    stats: { scrapCollected: 0, scrapSpent: 0 },
-    player: { hp: 100, maxHp: 100, heat: 24, overheated: false, invulnerableTime: 0 },
-  },
-  afterburnGreedChoice
-);
-assert.equal(afterburnGreedBuild.arsenalBreakpointProfileId, "ledger");
-const afterburnWaveFourteenGreed = game.createPostCapstoneWave(1, afterburnGreedBuild);
-assert.equal(afterburnWaveFourteenGreed.hazard.type, "salvage");
-assert.ok(afterburnWaveFourteenGreed.hazard.salvageScrap >= 30);
+assert.equal(afterburnBreakpointChoices.length, 0);
 const crownWindowBuild = game.createInitialBuild("scrap_pact");
 crownWindowBuild.bastionDoctrineId = "bulwark";
 const crownWindowPayoff = game.resolveWaveConfig(10, crownWindowBuild);
@@ -1025,9 +968,7 @@ assert.ok(afterburnTwo.combatCache);
 assert.equal(afterburnSeven.combatCache, null);
 assert.equal(afterburnOne.afterburnOverdrive, null);
 assert.equal(afterburnThree.afterburnOverdrive, null);
-assert.ok(
-  afterburnOne.combatCache.choices.some((choice) => choice && choice.action === "field_mutation")
-);
+assert.equal(afterburnOne.combatCache.choices.length, 0);
 const overdriveBuild = game.createInitialBuild("rail_zeal");
 overdriveBuild.catalystCapstoneId = "storm_rail";
 const overdriveChoices = game.getAfterburnOverdriveChoices(overdriveBuild);
