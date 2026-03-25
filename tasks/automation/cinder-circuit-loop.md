@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze the shipped `Wave 1-12` route around one readable ladder `early gun leap -> Wave 5-8 main-form spike -> Wave 9-12 payoff`, and hide support/admin/future-run surfaces until that spine reads in one glance.
+- Immediate priority: strip the shipped `Wave 5-12` route down to a clearer combat ladder with fewer authored hazard grammars, more breathing room, and one dominant weapon/body payoff per act before widening support or future-run structure again.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-25 23:58:00 KST
+  Findings:
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L773) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1120) still script nearly every shipped mid/late wave around a named hazard grammar `territory`, `relay`, `drift`, `crossfire`, `pursuit`, `hold`, each with dense `note` and `directive` framing. That is too much authored encounter language for a run that is supposed to become replayable through enemy geometry, movement lanes, and obvious weapon-form spikes.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L816) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1004) gives Act 2 more room than before, but `Wave 5-8` still alternates between bastion anchors, relay crowns, drift pockets, wardens, binders, and mortars in quick succession. Compared with the cleaner escalation in `Nova Drift`, the player is still adapting to scenario scripts more than mastering one build’s power across readable enemy pressure.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1058) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1120) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1370) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1591) still keep the late game mentally tuned around `proof`, `victory lap`, and `Afterburn` endurance families instead of one finished `Wave 9-12` climax. That weakens the feeling that the current route is already worth repeating on its own.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21755) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21949) still asks the HUD to summarize `current form`, `next beat`, `support track`, `hazard detail`, and combat-band logic at once. Even with cleaner labels, this is still solving encounter readability with explanation instead of by making the combat asks simpler and more visually self-evident.
+  Top Priority: Rebuild the shipped `Wave 5-12` encounter ladder around fewer recurring combat asks `open payoff -> single breach test -> harder remix`, using larger arenas and enemy compositions as the main escalation while demoting special hazards to rare punctuation.
+  Why Now: Until the combat can breathe without constant authored context, more build depth or reward polish will still land on top of a prototype-feeling fight loop.
+  Do Not Repeat: Do not answer this with another HUD copy pass if the wave scripts still need notes, directives, and multiple hazard families to explain why each fight is different.
+  Release Gate: Combat
 
 - 2026-03-26 00:45:00 KST
   Findings:
@@ -3810,6 +3821,12 @@ This file is shared by two recurring Codex CLI jobs.
   Freeze: Pause new systems and late-route expansion until the base `Wave 1-12` run reads cleanly enough that a player can describe the finale without using internal draft/cache/ascension vocabulary.
 
 ## Latest Improvement
+
+- 2026-03-26 01:10:00 KST
+  Changed: recut the shipped Act 2 encounter ladder in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 5-8` now stays on one clearer combat spine instead of touring hazard grammars every wave. `Wave 5` now opens with a lighter single bastion anchor, `Wave 6` stays the only early relay breach proof, `Wave 7` drops the old drift furnace entirely for a larger open-lane `Crownfire` crossfire remix, and `Wave 8` closes the act with one harder relay breach in the same widened arena. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new `territory -> relay -> none -> relay` hazard cadence and the lower-pressure `Wave 7` payoff window. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to rebuild shipped `Wave 5-12` around fewer recurring asks `open payoff -> single breach test -> harder remix`, with arena size and enemy geometry doing more of the escalation than constant special hazards. The highest-value bounded interpretation was to simplify Act 2 first, because that is where the route was still asking players to relearn hazard grammar before they had fully enjoyed the new midform.
+  Follow-up Risk: `Wave 9-12` still carries more authored family language than this cleaner Act 2 spine, so the back half may now feel structurally busier by comparison. If critique keeps flagging combat readability after this, the next bounded combat pass should mirror the same simplification in late waves rather than adding another reward/UI layer.
+  Release Gate: Combat
 
 - 2026-03-25 23:59:59 KST
   Changed: added a player-facing act-label clamp in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the consolidated shipped route no longer advertises `Act 4 · Afterburn` on the wave track, forge contract chips, or the `런 실루엣` summary. Internal post-capstone content still keeps its own `Afterburn` labels for non-shipping testing, but every shipped `Wave 1-12` surface now resolves act identity through a dedicated `getPlayerFacingActLabelForWave()` helper that hard-stops at `Act 3` once the route is consolidated. I also added smoke assertions in [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock that contract while preserving the internal `getActLabelForWave(13+) === Act 4` behavior. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

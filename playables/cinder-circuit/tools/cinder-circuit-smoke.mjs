@@ -489,16 +489,16 @@ const crownfireSpike = game.resolveWaveConfig(6, act2WindowBuild);
 const forgecrossSpike = game.resolveWaveConfig(7, act2WindowBuild);
 assert.equal(afterglowWindow.hazard.type, "territory");
 assert.equal(breaklineFollowthrough.hazard.type, "relay");
-assert.equal(crownfireSpike.hazard.type, "drift");
+assert.equal(crownfireSpike.pressureFamily, "crossfire");
+assert.equal(crownfireSpike.hazard, undefined);
 assert.equal(forgecrossSpike.hazard.type, "relay");
 assert.ok(afterglowWindow.activeCap < breaklineFollowthrough.activeCap);
 assert.ok(crownfireSpike.activeCap < breaklineFollowthrough.activeCap);
 assert.ok(crownfireSpike.activeCap < forgecrossSpike.activeCap);
 assert.ok(breaklineFollowthrough.hazard.count <= afterglowWindow.hazard.count + 1);
 assert.ok(afterglowWindow.arena.width < breaklineFollowthrough.arena.width);
-assert.equal(crownfireSpike.hazard.count, forgecrossSpike.hazard.count);
-assert.equal(crownfireSpike.arena.width, forgecrossSpike.arena.width);
-assert.ok(crownfireSpike.mix.binder > 0);
+assert.ok(crownfireSpike.arena.width >= forgecrossSpike.arena.width);
+assert.ok(crownfireSpike.mix.skimmer > crownfireSpike.mix.brute);
 assert.ok(forgecrossSpike.mix.warden > 0);
 const lateCacheBuild = game.createInitialBuild("relay_oath");
 lateCacheBuild.chassisId = "vector_thrusters";
@@ -3013,6 +3013,21 @@ const waveSummary = game.WAVE_CONFIG.map((wave) => ({
   activeCap: wave.activeCap,
   hazard: wave.hazard ? wave.hazard.label : "none",
 }));
+
+const actTwoLadder = game.WAVE_CONFIG.slice(4, 8);
+assert.equal(
+  actTwoLadder.map((wave) => wave.pressureFamily).join("|"),
+  "domination|breach|crossfire|breach"
+);
+assert.equal(
+  actTwoLadder.map((wave) => (wave.hazard ? wave.hazard.type : "none")).join("|"),
+  "territory|relay|none|relay"
+);
+assert.ok(actTwoLadder[2].arena.width >= actTwoLadder[1].arena.width);
+assert.ok(actTwoLadder[2].arena.height >= actTwoLadder[1].arena.height);
+assert.ok(actTwoLadder[2].activeCap < actTwoLadder[3].activeCap);
+assert.ok(actTwoLadder[2].note.includes("open-lane"));
+assert.ok(actTwoLadder[3].note.includes("hard breach"));
 
 const lateBreakSmokeBuild = game.createInitialBuild("scrap_pact");
 lateBreakSmokeBuild.bastionDoctrineId = "kiln_bastion";
