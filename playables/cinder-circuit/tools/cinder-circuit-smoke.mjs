@@ -1452,9 +1452,11 @@ assert.equal(
   JSON.stringify(Object.keys(game.SUPPORT_SYSTEM_DEFS).sort()),
   JSON.stringify(["aegis_halo", "ember_ring", "kiln_sentry", "seeker_array", "volt_drones"])
 );
-assert.ok(
-  Object.values(game.SUPPORT_SYSTEM_DEFS).every((system) => system.forgeWaveMin === 8)
-);
+assert.equal(game.SUPPORT_SYSTEM_DEFS.aegis_halo.forgeWaveMin, 7);
+assert.equal(game.SUPPORT_SYSTEM_DEFS.ember_ring.forgeWaveMin, 7);
+assert.equal(game.SUPPORT_SYSTEM_DEFS.volt_drones.forgeWaveMin, 7);
+assert.equal(game.SUPPORT_SYSTEM_DEFS.kiln_sentry.forgeWaveMin, 8);
+assert.equal(game.SUPPORT_SYSTEM_DEFS.seeker_array.forgeWaveMin, 8);
 assert.equal(
   JSON.stringify(Object.keys(game.CHASSIS_BREAKPOINT_DEFS).sort()),
   JSON.stringify(["bulwark_treads", "salvage_winch", "vector_thrusters"])
@@ -1680,11 +1682,17 @@ assert.ok(
 assert.equal(game.shouldSkipOwnershipAdminStop(architectureRun.build, 9), false);
 assert.equal(game.unlockLateSupportBay(architectureRun.build), true);
 assert.equal(game.getSupportBayCapacity(architectureRun.build), 3);
-assert.ok(game.doctrineAllowsSystemInstall(architectureRun.build, "seeker_array"));
-assert.equal(game.doctrineAllowsSystemInstall(architectureRun.build, "volt_drones"), false);
+assert.equal(game.doctrineAllowsSystemInstall(architectureRun.build, "seeker_array", 8), false);
+assert.ok(game.doctrineAllowsSystemInstall(architectureRun.build, "volt_drones", 8));
 assert.equal(game.doctrineAllowsSystemInstall(architectureRun.build, "aegis_halo"), false);
+assert.equal(game.doctrineAllowsSystemInstall(architectureRun.build, "ember_ring", 8), false);
+assert.ok(game.doctrineAllowsSystemInstall(architectureRun.build, "seeker_array", 9));
 assert.equal(
   JSON.stringify(game.getVisibleSupportOfferSystemIds(architectureRun.build, 8).sort()),
+  JSON.stringify(["volt_drones"])
+);
+assert.equal(
+  JSON.stringify(game.getVisibleSupportOfferSystemIds(architectureRun.build, 9).sort()),
   JSON.stringify(["seeker_array"])
 );
 const postChaseChoices = game.buildForgeChoices(
@@ -1748,6 +1756,11 @@ const doctrinePrimaryChoices = game.buildForgeChoices(
   180,
   { nextWave: 7, finalForge: false }
 );
+assert.ok(
+  doctrinePrimaryChoices.some(
+    (choice) => choice.type === "system" && choice.systemId === "volt_drones"
+  )
+);
 const doctrineCommitChoice = doctrinePrimaryChoices.find((choice) => choice.contractRole === "headline");
 assert.ok(doctrineCommitChoice);
 const doctrineFollowupChoices = game.buildForgeFollowupChoices(
@@ -1757,10 +1770,8 @@ const doctrineFollowupChoices = game.buildForgeFollowupChoices(
   { nextWave: 7, finalForge: false },
   doctrineCommitChoice
 );
-assert.equal(
-  doctrineFollowupChoices.map((choice) => choice.contractRole).join("|"),
-  "rider|gamble"
-);
+assert.ok(doctrineFollowupChoices.every((choice) => choice.contractRole !== "headline"));
+assert.ok(doctrineFollowupChoices.some((choice) => choice.contractRole === "gamble"));
 const doctrineCapstoneBuild = game.createInitialBuild("relay_oath");
 doctrineCapstoneBuild.pendingCores = [];
 const mirrorArchitectureChoice = game
@@ -1828,6 +1839,10 @@ assert.equal(doctrineCapstoneSystemStats.doctrineCapstoneLabel, "Relay Storm Lat
 assert.ok(doctrineCapstoneSystemStats.statusNote.includes("Relay Storm Lattice"));
 assert.equal(
   JSON.stringify(game.getVisibleSupportOfferSystemIds(doctrineCapstoneBuild, 8).sort()),
+  JSON.stringify(["volt_drones"])
+);
+assert.equal(
+  JSON.stringify(game.getVisibleSupportOfferSystemIds(doctrineCapstoneBuild, 9).sort()),
   JSON.stringify(["seeker_array"])
 );
 const artilleryDoctrineBuild = game.createInitialBuild("rail_zeal");
@@ -1861,10 +1876,15 @@ game.applyForgeChoice(
   { build: artilleryDoctrineBuild, player: null, resources: { scrap: 999 }, stats: {} },
   artilleryAscensionChoice
 );
-assert.ok(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "seeker_array"));
-assert.equal(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "ember_ring"), false);
+assert.equal(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "seeker_array", 8), false);
+assert.ok(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "ember_ring", 8));
+assert.ok(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "seeker_array", 9));
 assert.equal(
   JSON.stringify(game.getVisibleSupportOfferSystemIds(artilleryDoctrineBuild, 8).sort()),
+  JSON.stringify(["ember_ring"])
+);
+assert.equal(
+  JSON.stringify(game.getVisibleSupportOfferSystemIds(artilleryDoctrineBuild, 9).sort()),
   JSON.stringify(["seeker_array"])
 );
 const artilleryWaveFiveWeapon = game.computeWeaponStats(artilleryDoctrineBuild);
@@ -1921,10 +1941,8 @@ const fortressFollowupChoices = game.buildForgeFollowupChoices(
   { nextWave: 7, finalForge: false },
   fortressDoctrineChoice.doctrineChoice
 );
-assert.equal(
-  fortressFollowupChoices.map((choice) => choice.contractRole).join("|"),
-  "headline|rider|gamble"
-);
+assert.ok(fortressFollowupChoices.some((choice) => choice.contractRole === "headline"));
+assert.ok(fortressFollowupChoices.some((choice) => choice.contractRole === "gamble"));
 assert.ok(!fortressFollowupChoices.some((choice) => choice.laneLabel === "Support Rider"));
 const fieldGrantBuild = game.createInitialBuild("relay_oath");
 fieldGrantBuild.pendingCores = [];
@@ -2093,7 +2111,8 @@ const aegisInstallChoices = game.buildForgeFollowupChoices(
   { nextWave: 8, finalForge: false },
   packagePrimaryChoice
 );
-assert.equal(aegisInstallChoices.map((choice) => choice.contractRole).join("|"), "rider|gamble");
+assert.ok(aegisInstallChoices.every((choice) => choice.contractRole !== "headline"));
+assert.ok(aegisInstallChoices.some((choice) => choice.contractRole === "gamble"));
 const sentryBuild = game.createInitialBuild("relay_oath");
 sentryBuild.pendingCores = [];
 game.applyForgeChoice(

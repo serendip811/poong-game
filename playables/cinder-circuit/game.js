@@ -2752,10 +2752,11 @@
   const MAX_SUPPORT_BAYS = 2;
   const MAX_SUPPORT_BAY_LIMIT = 4;
   const SUPPORT_SYSTEM_START_WAVE = 8;
+  const BASE_ROUTE_MIDRUN_SUPPORT_WAVE = 7;
   const SUPPORT_SYSTEM_DEFS = {
     ember_ring: {
       id: "ember_ring",
-      forgeWaveMin: SUPPORT_SYSTEM_START_WAVE,
+      forgeWaveMin: BASE_ROUTE_MIDRUN_SUPPORT_WAVE,
       forgeLane: "보조 시스템",
       tag: "SYSTEM",
       color: "#ffd166",
@@ -2842,7 +2843,7 @@
     },
     aegis_halo: {
       id: "aegis_halo",
-      forgeWaveMin: SUPPORT_SYSTEM_START_WAVE,
+      forgeWaveMin: BASE_ROUTE_MIDRUN_SUPPORT_WAVE,
       forgeLane: "보조 시스템",
       tag: "SYSTEM",
       color: "#8ae7ff",
@@ -3136,7 +3137,7 @@
     },
     volt_drones: {
       id: "volt_drones",
-      forgeWaveMin: SUPPORT_SYSTEM_START_WAVE,
+      forgeWaveMin: BASE_ROUTE_MIDRUN_SUPPORT_WAVE,
       forgeLane: "공세 모듈",
       tag: "DRONE",
       color: "#7fffd4",
@@ -6554,7 +6555,7 @@
           visibleSystemIds.has(systemId) &&
           !installedMap.has(systemId) &&
           isSupportSystemUnlocked(systemId, nextWave) &&
-          doctrineAllowsSystemInstall(build, systemId)
+          doctrineAllowsSystemInstall(build, systemId, nextWave)
       ),
       random
     )
@@ -9852,6 +9853,14 @@
     return primarySystemId && SUPPORT_SYSTEM_DEFS[primarySystemId] ? primarySystemId : null;
   }
 
+  function getDoctrineMidrunSupportSystemId(buildOrDoctrine) {
+    const doctrine =
+      buildOrDoctrine && buildOrDoctrine.id ? buildOrDoctrine : getBastionDoctrineDef(buildOrDoctrine);
+    const preferredSystemIds = getDoctrinePreferredSystemIds(doctrine);
+    const midrunSystemId = preferredSystemIds[1] || preferredSystemIds[0];
+    return midrunSystemId && SUPPORT_SYSTEM_DEFS[midrunSystemId] ? midrunSystemId : null;
+  }
+
   function getDoctrineWildcardSystemAllowance(build) {
     if (!build || !build.bastionDoctrineId) {
       return 0;
@@ -9874,14 +9883,14 @@
     );
   }
 
-  function doctrineAllowsSystemInstall(build, systemId) {
+  function doctrineAllowsSystemInstall(build, systemId, nextWave = SUPPORT_SYSTEM_START_WAVE) {
     const doctrine = build && build.bastionDoctrineId ? getBastionDoctrineDef(build) : null;
     const preferredSystemIds = getDoctrinePreferredSystemIds(doctrine);
     if (!doctrine || preferredSystemIds.length === 0) {
       return true;
     }
     if (CONSOLIDATED_12_WAVE_ROUTE) {
-      return systemId === getDoctrinePrimarySupportSystemId(doctrine);
+      return getVisibleSupportOfferSystemIds(build, nextWave).includes(systemId);
     }
     if (preferredSystemIds.includes(systemId)) {
       return true;
@@ -9897,11 +9906,15 @@
         build &&
         build.bastionDoctrineId &&
         Number.isFinite(nextWave) &&
-        nextWave >= SUPPORT_SYSTEM_START_WAVE &&
+        nextWave >= BASE_ROUTE_MIDRUN_SUPPORT_WAVE &&
         nextWave <= MAX_WAVES
       )
     ) {
       return allSystemIds;
+    }
+    if (nextWave < LATE_BREAK_ARMORY_WAVE) {
+      const midrunSystemId = getDoctrineMidrunSupportSystemId(build);
+      return midrunSystemId ? [midrunSystemId] : allSystemIds;
     }
     const primarySystemId = getDoctrinePrimarySupportSystemId(build);
     return primarySystemId ? [primarySystemId] : allSystemIds;
@@ -11561,7 +11574,7 @@
     const greedContractChoice = createFieldGreedContractChoice(build, nextWave);
     const previewSupportChoice = createPreviewSupportChoice(build, nextWave);
     const supportSystemChoices =
-      recurringBaseRouteContract && nextWave < LATE_BREAK_ARMORY_WAVE
+      recurringBaseRouteContract && nextWave < BASE_ROUTE_MIDRUN_SUPPORT_WAVE
         ? []
         : shouldOfferSupportSystem(build, options)
           ? createSupportSystemChoices(build, random, options)
@@ -11756,45 +11769,36 @@
     }
 
     const takenIds = new Set();
+    const reserveMidrunSupportForRider =
+      recurringBaseRouteContract &&
+      nextWave >= BASE_ROUTE_MIDRUN_SUPPORT_WAVE &&
+      supportSystemChoices.length > 0;
     const defensePool =
       recurringBaseRouteContract && nextWave === 6
         ? [...chassisBreakpointChoices, ...subsystemCandidates, ...sustainCandidates]
         : [...subsystemCandidates, ...sustainCandidates];
+    const headlinePool = reserveMidrunSupportForRider
+      ? [...evolutionCandidates, ...commitCandidates, ...pivotCandidates]
+      : [...evolutionCandidates, ...commitCandidates, ...offensiveModuleCandidates, ...pivotCandidates];
+    const riderPool = reserveMidrunSupportForRider
+      ? [...supportSystemChoices, ...defensePool]
+      : defensePool;
+    const gamblePool = reserveMidrunSupportForRider
+      ? [...gambleCandidates, ...pivotCandidates, ...sustainCandidates]
+      : [...gambleCandidates, ...pivotCandidates, ...sustainCandidates, ...offensiveModuleCandidates];
     const choices = [
       markForgeContract(
-        takeFirstAvailableChoice(
-          [
-            ...evolutionCandidates,
-            ...commitCandidates,
-            ...offensiveModuleCandidates,
-            ...pivotCandidates,
-          ],
-          takenIds,
-          "주력 변신"
-        ),
+        takeFirstAvailableChoice(headlinePool, takenIds, "주력 변신"),
         "headline",
         "주력 변이"
       ),
       markForgeContract(
-        takeFirstAvailableChoice(
-          defensePool,
-          takenIds,
-          "보조/방호"
-        ),
+        takeFirstAvailableChoice(riderPool, takenIds, "보조/방호"),
         "rider",
         "방호·보조"
       ),
       markForgeContract(
-        takeFirstAvailableChoice(
-          [
-            ...gambleCandidates,
-            ...pivotCandidates,
-            ...sustainCandidates,
-            ...offensiveModuleCandidates,
-          ],
-          takenIds,
-          "탐욕/유틸"
-        ),
+        takeFirstAvailableChoice(gamblePool, takenIds, "탐욕/유틸"),
         "gamble",
         "판돈·유틸"
       ),
@@ -12807,7 +12811,7 @@
       tag: "DOCTRINE",
       title: doctrine.label,
       description:
-        `${doctrine.description} 즉시 ${weaponChoice.title}을(를) 할인 장착해 core gun lock을 먼저 굳히고, 이어지는 Chassis Breakpoint에서 body plan만 추가로 잠근다. support bay와 자율 하드웨어 headline은 Wave 8 Late Break Armory까지 뒤로 민다.${forecastConfirmed ? " Wave 3 forecast와 맞아 더 싸게 확정된다." : ""}${lateCapstoneLabel ? ` 이후 Wave 6-8 marked elite shard를 모으는 장기 forge pursuit가 열리고, 완성 시 ${lateCapstoneLabel} 계열 교리 monster form이 즉시 잠긴다.` : ""}`,
+        `${doctrine.description} 즉시 ${weaponChoice.title}을(를) 할인 장착해 core gun lock을 먼저 굳히고, 이어지는 Chassis Breakpoint에서 body plan만 추가로 잠근다. 작은 지원 실루엣은 mid-run부터 한 장씩 열고, 더 큰 ordnance headline은 Wave 8 이후에 남긴다.${forecastConfirmed ? " Wave 3 forecast와 맞아 더 싸게 확정된다." : ""}${lateCapstoneLabel ? ` 이후 Wave 6-8 marked elite shard를 모으는 장기 forge pursuit가 열리고, 완성 시 ${lateCapstoneLabel} 계열 교리 monster form이 즉시 잠긴다.` : ""}`,
       slotText: `교리 채택 · ${weaponChoice.title} · core lock`,
       cost: Math.max(0, Math.round((weaponChoice.cost || 0) * (forecastConfirmed ? 0.45 : 0.72))),
       laneLabel: "교리 채택",
@@ -13124,7 +13128,7 @@
         verb: "접합",
         tag: chassisDef.tag,
         title: chassisDef.title,
-        description: `${chassisDef.description} 이번 Wave 6은 차체 break만 잠그고 끝낸다. support rider와 flex lane은 아직 닫아 둔 채 Wave 8 Late Break Armory에서 첫 late divergence로 한 번에 연다.`,
+        description: `${chassisDef.description} 이번 Wave 6은 차체 break만 잠그고 끝낸다. 작은 support 실루엣은 다음 mid-run 포지에서나 열고, 큰 late divergence는 여전히 Wave 8 이후에 남긴다.`,
         slotText: `섀시 breakpoint · ${chassisDef.slotText}`,
         cost: 0,
         laneLabel: "섀시 breakpoint",
@@ -13453,7 +13457,7 @@
     state.forgeChoices = buildArchitectureDraftChoices(state.build);
     pushCombatFeed(
       CONSOLIDATED_12_WAVE_ROUTE
-        ? "주력 변이 선택 개시. 이번 정지에서는 전장을 가장 크게 바꿀 한 장만 먼저 고른다. 차체 점프는 Wave 6, 더 큰 지원 연출은 Wave 8 이후로 미뤄 opening을 lean하게 유지한다."
+        ? "주력 변이 선택 개시. 이번 정지에서는 전장을 가장 크게 바꿀 한 장만 먼저 고른다. 차체 점프는 Wave 6에, 작은 지원 실루엣은 mid-run에 한 장씩 열고, 더 큰 지원 연출은 Wave 8 이후로 미뤄 opening을 lean하게 유지한다."
         : "Architecture Draft 개시. 이제 Wave 3에서는 세 장기 교리 중 하나를 골라 주포 mutation만 먼저 잠근다. utility chassis는 Wave 6, support bay와 off-doctrine flex lane은 Wave 8 Late Break Armory에서 열려 opening run이 과하게 완성되지 않는다.",
       "ARCH"
     );
@@ -13753,7 +13757,7 @@
     pushCombatFeed(
       CONSOLIDATED_12_WAVE_ROUTE
         ? wave6ChassisDraft
-          ? "방호·보조 선택 개시. 이번 정지는 몸체 하나만 고른다. Wave 3에서 먼저 키운 주포 위에 버티는 선만 덧대고, 보조선은 계속 Wave 8까지 닫아 둔다."
+          ? "방호·보조 선택 개시. 이번 정지는 몸체 하나만 고른다. Wave 3에서 먼저 키운 주포 위에 버티는 선만 덧대고, 작은 보조선은 다음 mid-run 포지까지 늦춘다."
           : wave6AscensionDraft
             ? "주력 변이 선택 개시. 이번 정지는 오래 끌 몸체 하나만 고른다. 보조선은 아직 닫아 두고 몸과 주포만 먼저 굳힌다."
           : "변이 선택 개시. 이번 정지는 크게 바꾸는 한 장, 버티는 한 장, 판돈을 거는 한 장 중 하나만 고른다."
@@ -14299,7 +14303,7 @@
         const chassis = getChassisBreakpointDef(choice.chassisId);
         run.build.upgrades.push(`유틸리티 섀시: ${(chassis && chassis.label) || choice.chassisTitle || choice.chassisId}`);
         if (!choice.bayUnlock && CONSOLIDATED_12_WAVE_ROUTE) {
-          run.build.upgrades.push("Chassis Breakpoint: support rider held for Wave 8");
+          run.build.upgrades.push("Chassis Breakpoint: small support held for mid-run forge");
           activateChassisBreakpointSurge(run, choice.chassisId);
         }
       }
@@ -17909,7 +17913,7 @@
       pushCombatFeed(
         state.forgeDraftType === "architecture_draft"
           ? choice.action === "architecture_forecast"
-            ? `${choice.weaponChoice ? choice.weaponChoice.title : choice.title} 장착. Wave 3부터 주포 발사각이 바로 꺾인다. ${choice.breakpointLabel || "Wave 6 차체 break"}는 다음 정지에서 붙이고, 큰 보조 연출은 Wave 8까지 미룬다.`
+            ? `${choice.weaponChoice ? choice.weaponChoice.title : choice.title} 장착. Wave 3부터 주포 발사각이 바로 꺾인다. ${choice.breakpointLabel || "Wave 6 차체 break"}는 다음 정지에서 붙이고, 작은 보조 실루엣은 mid-run에, 큰 보조 연출은 Wave 8 이후에 남긴다.`
             : `${grantLabel} 적용. 아키텍처 방향을 기울인 채 다음 웨이브를 연다.`
         : state.forgeDraftType === "bastion_draft"
           ? choice.type === "fallback"
@@ -17920,7 +17924,7 @@
                 ? `${grantLabel} 적용. ${choice.doctrineLabel}를 잠가 ${choice.doctrineChoice ? choice.doctrineChoice.title : "주포 mutation"}과 ${choice.chassisTitle || "utility chassis"}를 함께 켰다. 이번 break는 주포/차체 형태를 확정하는 데만 쓰고 다음 rider 갈림길은 뒤로 미룬다.`
                 : choice.action === "bastion_bay_forge"
                 ? !choice.bayUnlock && CONSOLIDATED_12_WAVE_ROUTE
-                  ? `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}만 먼저 잠가 hold, dive, exit 리듬을 바꿨다. 다음 웨이브 시작부터 해당 차체 포즈가 바로 켜지고, support rider와 flex lane은 아직 열지 않은 채 Wave 8 Late Break Armory까지 묶어 둔다.`
+                  ? `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}만 먼저 잠가 hold, dive, exit 리듬을 바꿨다. 다음 웨이브 시작부터 해당 차체 포즈가 바로 켜지고, 작은 support 실루엣은 다음 mid-run 포지에서만 열리게 묶어 둔다.`
                   : wave6AscensionDraft || choice.skipNextAdminStop
                   ? `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}를 잠그고 세 번째 support bay를 flex lane으로 즉시 열어 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 장착했다. Wave 8에서는 정지 없이 네 번째 bay가 자동 uplink되어 Wave 6-9 bracket을 그대로 이어 간다.`
                   : `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}와 함께 세 번째 support bay를 즉시 열고 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 먼저 장착한 채, Wave 8 네 번째 bay까지 예약하고 다음 웨이브를 연다.`
