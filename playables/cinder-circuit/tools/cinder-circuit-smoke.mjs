@@ -250,16 +250,25 @@ const recurringWave3CardMarkup = `
 `;
 assert.ok(!recurringWave3CardMarkup.includes("다음 시험"));
 assert.ok(!recurringWave3CardMarkup.includes("forge-card__proof"));
-const recurringWave5Choices = game.buildForgeChoices(roadmapBuild, Math.random, 40, {
+const wave5MutationBuild = game.createInitialBuild("relay_oath");
+wave5MutationBuild.pendingCores = [];
+const recurringWave5Choices = game.buildForgeChoices(wave5MutationBuild, Math.random, 40, {
   nextWave: 5,
   finalForge: false,
-  build: roadmapBuild,
+  build: wave5MutationBuild,
 });
 assert.equal(recurringWave5Choices.length, 3);
 assert.equal(
   recurringWave5Choices.map((choice) => choice.contractRole).join("|"),
   "headline|rider|gamble"
 );
+const recurringWave5HeadlineChoice =
+  recurringWave5Choices.find((choice) => choice.contractRole === "headline") ||
+  recurringWave5Choices[0];
+assert.equal(recurringWave5HeadlineChoice.action, "afterglow_mutation");
+const recurringWave5Transform = game.getBaseRouteForgeChoiceTransformation(recurringWave5HeadlineChoice);
+assert.ok(/프리즘탄|날개|레일|산탄/.test(recurringWave5Transform.promise));
+assert.ok(/반사|lane|빈틈|전투/.test(recurringWave5Transform.proof));
 const shippingLadderWave4 = game.getShippingLadderSteps(roadmapBuild, null, 4);
 assert.equal(shippingLadderWave4.length, 4);
 assert.equal(shippingLadderWave4.map((step) => step.label).join("|"), "START|도약|방호|점화");
@@ -1929,6 +1938,22 @@ assert.ok(
     .filter((choice) => choice.type !== "fallback" && choice.cost > 0)
     .every((choice) => (choice.originalCost || 0) === 0 || choice.originalCost > choice.cost)
 );
+const afterglowGrantBuild = game.createInitialBuild("relay_oath");
+afterglowGrantBuild.pendingCores = [];
+const afterglowGrantChoices = game.buildFieldGrantChoices(afterglowGrantBuild, () => 0, 5);
+const afterglowGrantHeadline =
+  afterglowGrantChoices.find((choice) => choice.contractRole === "headline") ||
+  afterglowGrantChoices[0];
+assert.equal(afterglowGrantHeadline.action, "afterglow_mutation");
+game.applyForgeChoice(
+  { build: afterglowGrantBuild, player: null, resources: { scrap: 999 }, stats: {} },
+  afterglowGrantHeadline
+);
+const afterglowWeapon = game.computeWeaponStats(afterglowGrantBuild);
+assert.equal(afterglowWeapon.afterglowMutationLabel, "Afterglow Prism");
+assert.equal(afterglowWeapon.afterglowMutationTraitLabel, "중심 반사 프리즘");
+assert.ok(afterglowWeapon.afterglowMutationFirePattern);
+assert.equal(afterglowWeapon.chain, 1);
 
 const evolutionBuild = game.createInitialBuild("relay_oath");
 const evolutionChoice = game.buildForgeChoices(evolutionBuild, () => 0, 180, { nextWave: 3 }).find(

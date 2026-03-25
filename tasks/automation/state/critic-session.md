@@ -12,9 +12,9 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `UX/UI`, but only because progression bloat is still being surfaced directly to the player. The real issue remains too many visible ladders for one short run.
-- Repeated false solution: compressing copy, adding another compact panel, or polishing forge presentation while leaving doctrines/ascensions/support ladders/post-`Wave 12` promises live in the shipped path.
-- Keep comparing against `Nova Drift`, `Hades`, and `Brotato`; the target is one obvious combat read and one obvious reward read, not a well-labeled system stack.
-- Good change to preserve: early combat has more room and early support spectacle is still delayed. Keep the opener visually small and let missiles, shields, orbitals, and helpers feel earned much later.
-- Main drift markers: permanent HUD density, forge cards that still explain too much, wave asks that still rely on designer prose, and `Afterburn`/expansion language that weakens `Wave 12` finality.
-- Next critique bias: stop asking for more systems. Push screen hierarchy, payoff clarity, and self-explanatory combat until the current `12-wave` route can stand on its own as a repeatable run.
+- The most fragile gate is `Progression`: the run still has too few earned payoff beats, so UI/admin language keeps compensating for a spine that does not transform often enough.
+- Repeated false solution: trimming copy or polishing forge presentation without changing the underlying cadence of growth across `Wave 1-12`.
+- Keep comparing against `Nova Drift`, `Hades`, and `Brotato`; the target is immediate desire, one-priority reads, and visible build hunger, not a clearly documented route contract.
+- Good change to preserve: the opener has more room and support spectacle is still delayed. Keep `Wave 1-3` visually small, then earn satellites, shields, missiles, and drones as later form spikes.
+- Main drift markers: wave asks still rely on prose, forge cards still sell explanation before fantasy, and the current route still feels like three big jumps padded by system framing.
+- Next critique bias: keep pressuring the team to consolidate around a denser transformation spine and self-explanatory encounters before proposing any new branch, wrapper, or future-run system.

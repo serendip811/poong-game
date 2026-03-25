@@ -4535,6 +4535,103 @@
       },
     },
   };
+  const AFTERGLOW_MUTATION_DEFS = {
+    ember: {
+      id: "ember_afterglow",
+      title: "Afterglow Fork",
+      traitLabel: "외곽 점화 날개",
+      previewText: "외곽 점화 2갈래",
+      description:
+        "주포 바깥쪽에 얇은 점화 날개를 덧댄다. Wave 3에서 연 화선을 한 번 더 벌려 정면만 보던 순간에도 바깥 lane을 함께 긁는다.",
+      statusNote:
+        "Afterglow Fork가 주포 바깥 점화 날개를 열어 빈 lane 둘을 더 오래 긁는다.",
+      slotText: "작은 변이 · 외곽 점화 날개",
+      cost: 24,
+      firePattern: {
+        offsets: [-0.24, 0.24],
+        damageMultiplier: 0.22,
+        speedMultiplier: 1.08,
+        radius: 4,
+        life: 1.06,
+        pierceBonus: 0,
+        bounceBonus: 0,
+        chainBonus: 0,
+        color: "#ffd580",
+      },
+      applyWeapon(stats) {
+        stats.cooldown = clamp(stats.cooldown * 0.92, 0.08, 0.4);
+      },
+    },
+    scatter: {
+      id: "scatter_afterglow",
+      title: "Afterglow Choke",
+      traitLabel: "중앙 산탄 다발",
+      previewText: "중앙 펠릿 +2",
+      description:
+        "산탄 중앙에 짧은 choke collar를 끼워 핵심 펠릿 두 발을 더 붙인다. 전방 압박을 더 두껍게 밀어 근접 청소 순간이 확실해진다.",
+      statusNote:
+        "Afterglow Choke가 중앙 산탄을 두껍게 묶어 전방 돌파 순간을 더 또렷하게 만든다.",
+      slotText: "작은 변이 · 중앙 펠릿 +2",
+      cost: 24,
+      applyWeapon(stats) {
+        stats.pellets += 2;
+        stats.spread = round(stats.spread * 0.92, 3);
+      },
+    },
+    lance: {
+      id: "lance_afterglow",
+      title: "Afterglow Fins",
+      traitLabel: "가이드 레일 핀",
+      previewText: "가이드 레일 2줄",
+      description:
+        "주 레일 바깥에 얇은 가이드 핀을 덧댄다. 직선 절개가 옆 lane까지 번져 엘리트 주변 전열도 함께 찢는다.",
+      statusNote:
+        "Afterglow Fins가 보조 레일 핀을 더해 얇은 전열 여러 줄을 같이 찢는다.",
+      slotText: "작은 변이 · 가이드 레일 핀",
+      cost: 24,
+      firePattern: {
+        offsets: [-0.14, 0.14],
+        damageMultiplier: 0.3,
+        speedMultiplier: 1.12,
+        radius: 5.1,
+        life: 1.12,
+        pierceBonus: 1,
+        bounceBonus: 0,
+        chainBonus: 0,
+        color: "#d8fbff",
+      },
+      applyWeapon(stats) {
+        stats.projectileSpeed += 36;
+      },
+    },
+    ricochet: {
+      id: "ricochet_afterglow",
+      title: "Afterglow Prism",
+      traitLabel: "중심 반사 프리즘",
+      previewText: "중심 분광탄 + 반사",
+      description:
+        "양갈래 사이에 중심 프리즘탄을 끼워 넣는다. 반사 시작각이 쉬워지고, 벽을 스친 뒤 다시 돌아오는 빈틈 메우기가 빨라진다.",
+      statusNote:
+        "Afterglow Prism이 중심 분광탄을 더해 벽 반사 시작각과 복귀 화선을 함께 안정시킨다.",
+      slotText: "작은 변이 · 중심 분광탄",
+      cost: 24,
+      firePattern: {
+        offsets: [0],
+        damageMultiplier: 0.52,
+        speedMultiplier: 1.03,
+        radius: 4.1,
+        life: 1.16,
+        pierceBonus: 0,
+        bounceBonus: 1,
+        chainBonus: 0,
+        color: "#f7e6ff",
+      },
+      applyWeapon(stats) {
+        stats.chain += 1;
+        stats.chainRange = Math.max(stats.chainRange || 0, 168);
+      },
+    },
+  };
   const FINISHER_RECIPE_DEFS = {
     ember: {
       label: "Crown Pyre",
@@ -5247,6 +5344,7 @@
     illegalOverclockId: null,
     illegalOverclockOffered: false,
     illegalOverclockMutationLevel: 0,
+    afterglowMutationId: null,
     riskMutationLevel: 0,
     riskMutationQueuedLevel: 0,
     apexMutationLevel: 0,
@@ -6827,6 +6925,51 @@
     return sanitizeWeaponEvolutionState(build.weaponEvolutions)[coreId] || 0;
   }
 
+  function getAfterglowMutationDef(buildOrId) {
+    const mutationId =
+      typeof buildOrId === "string"
+        ? buildOrId
+        : buildOrId && buildOrId.afterglowMutationId
+          ? buildOrId.afterglowMutationId
+          : null;
+    if (!mutationId) {
+      return null;
+    }
+    return Object.values(AFTERGLOW_MUTATION_DEFS).find((def) => def.id === mutationId) || null;
+  }
+
+  function createAfterglowMutationChoice(build, nextWave) {
+    if (
+      !build ||
+      !Number.isFinite(nextWave) ||
+      nextWave !== EARLY_MUTATION_FORGE_WAVE ||
+      build.afterglowMutationId ||
+      getWeaponEvolutionTier(build, build.coreId) >= 2
+    ) {
+      return null;
+    }
+    const mutation = AFTERGLOW_MUTATION_DEFS[build.coreId];
+    if (!mutation) {
+      return null;
+    }
+    return {
+      type: "utility",
+      action: "afterglow_mutation",
+      id: `utility:afterglow_mutation:${mutation.id}:${nextWave}`,
+      verb: "변이",
+      tag: "MUTATE",
+      title: mutation.title,
+      description: `${mutation.description} 다음 전투는 새 날개나 중심탄이 실제로 빈 lane을 얼마나 더 오래 비우는지 바로 보여 준다.`,
+      slotText: mutation.slotText,
+      cost: mutation.cost,
+      laneLabel: "Main Weapon Mutation",
+      forgeLaneLabel: "Main Weapon Mutation",
+      afterglowMutationId: mutation.id,
+      previewText: mutation.previewText,
+      traitLabel: mutation.traitLabel,
+    };
+  }
+
   function createWeaponEvolutionChoice(build, options) {
     if (!build || !WEAPON_EVOLUTION_DEFS[build.coreId] || (options && options.finalForge)) {
       return null;
@@ -6956,6 +7099,13 @@
           label: "다음 몸체",
           value: choice.breakpointLabel || "Wave 6 Chassis Break",
         },
+        ...finaleRows,
+      ];
+    }
+    if (choice.type === "utility" && choice.action === "afterglow_mutation") {
+      return [
+        { label: "형태", value: choice.previewText || choice.title || "작은 변이" },
+        { label: "효과", value: choice.traitLabel || choice.slotText || "사격 조율" },
         ...finaleRows,
       ];
     }
@@ -7173,6 +7323,19 @@
         accent: `${weaponTitle} + ${bodyTitle}`,
       };
     }
+    if (choice.type === "utility" && choice.action === "afterglow_mutation") {
+      const accent = choice.previewText || choice.traitLabel || choice.title || "작은 변이";
+      return {
+        laneLabel: choice.forgeLaneLabel || choice.laneLabel || "Forge Lane",
+        title: choice.title || accent,
+        tone: "main",
+        promise: `${accent}를 붙여 Wave 3에서 잠근 주포를 한 번 더 비튼다.`,
+        proof: "바로 다음 전투에서 열린 화선이 더 오래 버티는지 즉시 드러난다.",
+        riderLabel: "Defense / Utility",
+        riderNote: "살아남는 선 한 줄만 더하면 새 화선이 실제 공간으로 바뀐다.",
+        accent,
+      };
+    }
     if (choice.type === "utility" && choice.action === "bastion_bay_forge") {
       const defenseTitle = choice.chassisTitle || "방호 차체";
       const supportTitle = choice.systemChoice ? choice.systemChoice.title : choice.bayUnlock ? "빈 보조칸" : "후속 보조 선택";
@@ -7367,6 +7530,7 @@
       weapon.lateFieldConvergenceLabel ||
       weapon.capstoneLabel ||
       weapon.doctrineFormLabel ||
+      weapon.afterglowMutationLabel ||
       weapon.evolutionLabel ||
       (weapon.core ? weapon.core.label : "Base Frame")
     );
@@ -7379,10 +7543,11 @@
         weapon.lateAscensionStatusNote ||
         weapon.lateBreakStatusNote ||
         (getClaimedWildcardProtocolIds(build).includes("rogue_lattice")
-          ? weapon.lateFieldConvergenceStatusNote || weapon.lateFieldMutationStatusNote
-          : null) ||
+        ? weapon.lateFieldConvergenceStatusNote || weapon.lateFieldMutationStatusNote
+        : null) ||
         weapon.capstoneStatusNote ||
         weapon.doctrineStatusNote ||
+        weapon.afterglowMutationStatusNote ||
         weapon.evolutionStatusNote ||
         `${activeCore.label} ${weapon.tierLabel} 프레임이 현재 주력이다.`
       );
@@ -7421,7 +7586,11 @@
         : 0,
       weapon.afterburnDominionFirePattern &&
       Array.isArray(weapon.afterburnDominionFirePattern.offsets)
-        ? weapon.afterburnDominionFirePattern.offsets.length
+      ? weapon.afterburnDominionFirePattern.offsets.length
+        : 0,
+      weapon.afterglowMutationFirePattern &&
+      Array.isArray(weapon.afterglowMutationFirePattern.offsets)
+        ? weapon.afterglowMutationFirePattern.offsets.length
         : 0,
     ];
     return Math.max(...patternCounts, 0);
@@ -9778,6 +9947,11 @@
       evolutionTraitLabel: null,
       evolutionStatusNote: null,
       evolutionFirePattern: null,
+      afterglowMutationId: null,
+      afterglowMutationLabel: null,
+      afterglowMutationTraitLabel: null,
+      afterglowMutationStatusNote: null,
+      afterglowMutationFirePattern: null,
       doctrineStage: 0,
       doctrineFormLabel: null,
       doctrineTraitLabel: null,
@@ -9849,6 +10023,17 @@
       stats.evolutionTraitLabel = evolutionDef.traitLabel;
       stats.evolutionStatusNote = evolutionDef.statusNote;
       stats.evolutionFirePattern = evolutionDef.firePattern;
+    }
+    const afterglowMutation = getAfterglowMutationDef(build);
+    if (afterglowMutation) {
+      stats.afterglowMutationId = afterglowMutation.id;
+      stats.afterglowMutationLabel = afterglowMutation.title;
+      stats.afterglowMutationTraitLabel = afterglowMutation.traitLabel;
+      stats.afterglowMutationStatusNote = afterglowMutation.statusNote;
+      stats.afterglowMutationFirePattern = afterglowMutation.firePattern || null;
+      if (typeof afterglowMutation.applyWeapon === "function") {
+        afterglowMutation.applyWeapon(stats, build);
+      }
     }
     const catalystCapstone = getCatalystCapstone(build, core.id);
     if (catalystCapstone) {
@@ -11272,6 +11457,7 @@
     const nextWave = options && Number.isFinite(options.nextWave) ? options.nextWave : 0;
     const recurringBaseRouteContract =
       CONSOLIDATED_12_WAVE_ROUTE && Number.isFinite(nextWave) && nextWave < LATE_BREAK_ARMORY_WAVE;
+    const afterglowMutationChoice = createAfterglowMutationChoice(build, nextWave);
     const catalystReforgeChoice = createCatalystReforgeChoice(build);
     const recycleChoice = createRecycleChoice(build);
     const reforgeChoice = catalystReforgeChoice || createReforgeChoice(build, random);
@@ -11296,6 +11482,7 @@
       ? createGuaranteedChaseChoice(build)
       : null;
     const packagePrimary = shouldForceForgePackage(options) && (options.packageStep || 1) === 1;
+    pushChoiceIfOpen(evolutionCandidates, afterglowMutationChoice, choiceCatalog);
     pushChoiceIfOpen(evolutionCandidates, weaponEvolutionChoice, choiceCatalog);
     pushChoiceIfOpen(commitCandidates, doctrineChaseChoice, choiceCatalog);
     pushChoiceIfOpen(commitCandidates, guaranteedMidrunChase || finisherChoice, choiceCatalog);
@@ -12990,6 +13177,7 @@
         return (right.cost || 0) - (left.cost || 0);
       });
     const dominantMutationChoice =
+      createAfterglowMutationChoice(build, nextWave) ||
       createDominantMutationChoice(build, nextWave) ||
       pool.find(
         (choice) =>
@@ -13670,6 +13858,20 @@
       );
       run.build.weaponEvolutions = nextWeaponEvolutions;
       run.build.upgrades.push(`주무장 진화: ${choice.title}`);
+      return choice;
+    }
+
+    if (choice.type === "utility" && choice.action === "afterglow_mutation") {
+      const mutation = getAfterglowMutationDef(choice.afterglowMutationId);
+      if (!mutation) {
+        return null;
+      }
+      run.build.afterglowMutationId = mutation.id;
+      run.build.upgrades.push(`Afterglow Mutation: ${mutation.title}`);
+      if (run.player) {
+        run.player.heat = Math.max(0, run.player.heat - 10);
+        run.player.overheated = false;
+      }
       return choice;
     }
 
@@ -19535,6 +19737,7 @@
     }
 
     fireWeaponPattern(weapon.evolutionFirePattern, weapon, baseAngle, driveActive);
+    fireWeaponPattern(weapon.afterglowMutationFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.doctrineFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.lateAscensionFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.afterburnOverdriveFirePattern, weapon, baseAngle, driveActive);

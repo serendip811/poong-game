@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze new surfaced systems and cut the shipped `Wave 1-12` path down to one quiet combat HUD plus one readable mutation spine so `Wave 3/6/8/12` land as earned weapon/chassis transformations instead of admin milestones.
+- Immediate priority: strip `Wave 1-12` to one quiet combat read and one six-beat transformation spine so the run starts visually small, gains visible form jumps every few waves, and stops depending on prose/admin wrappers to explain why growth matters.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-25 17:18:00 KST
+  Findings:
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L760) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1040) still define most of the run through `note` and `directive` prose. If `Wave 5-12` needs designer language like `ownership`, `proof`, `breach`, and `domination lap` to explain the ask, the encounter silhouettes still are not doing enough work on their own.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2846) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3235) gate the first real support fantasies at `Wave 8`, but the shipped spine before that is still mostly `weapon break -> chassis break -> late break`. That is too few visible build steps for a rerun game; the player is waiting through administration for giant jumps instead of getting hungry for the next smaller mutation.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21479) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21686) still frame forge cards through mode labels, contract roles, proof text, preview rows, and bill wrappers. Strong references like `Hades`, `Brotato`, and `Nova Drift` make the card art/silhouette and one payoff line do the selling; this still reads like a choice explainer over a reward moment.
+  - [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L10) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L16) and [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L95) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L104) still define the fantasy around `proof windows` and three-era contracts inside a `12-wave` run. That framing is useful for the team, but in the shipped slice it keeps encouraging milestone language instead of a longer-feeling escalation curve with more intermediate payoffs.
+  Top Priority: Rebuild the shipped `Wave 1-12` route around six readable payoff beats, with each forge stop presenting one obvious visible upgrade fantasy and each following wave proving it through enemy geometry, not explanatory text.
+  Why Now: Until the run earns momentum through repeated visible upgrades, it will keep feeling like a well-described prototype instead of a loop players want to chase again.
+  Do Not Repeat: Do not answer this with more terminology cleanup or with new late systems that leave the main run stuck on the same three big jumps.
+  Release Gate: Progression
 
 - 2026-03-25 16:01:02 KST
   Findings:
@@ -2449,6 +2460,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-26 01:28:00 KST
+  Changed: added one bounded `Wave 5` payoff beat in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the shipped route now surfaces a core-specific `Afterglow` small mutation between the `Wave 3` gun leap and the `Wave 6` chassis lock. The recurring `Wave 5` headline card now becomes a visible weapon-pattern tweak instead of another generic upgrade roll `Ember = outer ignition wings, Scatter = +2 central pellets, Lance = guide rails, Ricochet = center prism bounce`, and the chosen mutation now persists into weapon summaries and live firing patterns so the next fight visibly proves the pick without opening support spectacle early. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new `Wave 5` headline action and to assert the mutation actually changes computed weapon output. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to rebuild the shipped `Wave 1-12` route around more readable visible payoff beats instead of waiting on only three giant jumps. The highest-value bounded interpretation was to make `Wave 5` an honest small mutation rung that changes the gun on screen right away while still keeping support systems delayed until `Wave 8`.
+  Follow-up risk: `Wave 5` now has a clearer visible reward, but only one small mutation can be active and it currently stops appearing once a weapon is already deep into its evolution ladder. If critique stays on progression density, the next bounded pass should make each core's `Afterglow` branch prove itself more distinctly through `Wave 5` encounter geometry rather than stacking another new reward wrapper on top.
+  Release Gate: Progression
 
 - 2026-03-26 01:05:00 KST
   Changed: tightened the shipped three-card forge read in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so base-route cards now sell the visible mutation or body payoff first instead of falling back to middle-layer labels like `Lance`, `현재 무기 직접 강화`, or `Siege Debt`. The base-route transformation helper now prefers concrete preview values from the actual mutation payload `이중 보조 레일`, `확장 삼지창 레일`, `고철 +34 · 회수 +10%`, `Vector Thrusters`, pulls hero/proof copy from the non-admin parts of the card description, and falls back to cleaner role-specific proof text when the old generic rows would only restate system metadata. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so smoke coverage now locks the new preview priorities and guards against base-route cards regressing to generic/admin phrasing.
