@@ -539,7 +539,7 @@ body[data-overdrive="true"] .backdrop__glow--right {
 }
 
 .hud-overlay--bottom-minimal {
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(220px, 0.82fr) minmax(240px, 1fr);
 }
 
 .hud-strip {
@@ -934,7 +934,7 @@ body[data-overdrive="true"] .backdrop__glow--right {
 
 .arena-stage:not(.arena-stage--hud-detail) .core-summary--overlay,
 .arena-stage:not(.arena-stage--hud-detail) .status-card--overlay {
-  width: min(100%, 220px);
+  width: min(100%, 250px);
   padding: 8px 10px;
 }
 
@@ -1009,6 +1009,20 @@ body[data-overdrive="true"] .backdrop__glow--right {
 
 .arena-stage:not(.arena-stage--hud-detail) .contract-strip__value {
   font-size: 0.78rem;
+}
+
+.hud-overlay--bottom-minimal .build-panel--left {
+  justify-items: start;
+}
+
+.hud-overlay--bottom-minimal .build-panel--right {
+  justify-items: end;
+}
+
+.hud-overlay--bottom-minimal .core-summary--overlay .forge-focus__proof,
+.hud-overlay--bottom-minimal .status-card--overlay .forge-focus__proof {
+  margin-top: 10px;
+  padding: 8px 10px;
 }
 
 .stat-chip[data-state="warning"] {

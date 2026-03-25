@@ -9455,13 +9455,10 @@
       elements.hudBottomOverlay.classList.toggle("hud-overlay--bottom-minimal", isMinimal);
     }
     if (elements.hudBuildPanelLeft) {
-      elements.hudBuildPanelLeft.classList.toggle("hidden", isMinimal);
+      elements.hudBuildPanelLeft.classList.remove("hidden");
     }
     if (elements.hudBuildPanelRight) {
-      elements.hudBuildPanelRight.classList.toggle("hud-build-panel--solo", isMinimal);
-    }
-    if (elements.activeCore) {
-      elements.activeCore.classList.toggle("hidden", isMinimal);
+      elements.hudBuildPanelRight.classList.remove("hud-build-panel--solo");
     }
   }
 
@@ -21762,6 +21759,7 @@
     const gambleSummary = getTabInspectGambleSummary(state);
     const scrapSummaryLabel = `고철 ${Math.round(state.resources.scrap)}`;
     if (elements.activeCore) {
+      elements.activeCore.classList.toggle("hidden", tabInspectBoardActive);
       elements.activeCore.innerHTML = `
         <div class="summary-head">
           <div>
@@ -21774,7 +21772,7 @@
         </div>
         ${
           minimalBaseRouteHud
-            ? ""
+            ? `<div class="forge-focus__proof"><span>다음 도약</span>${nextBreakpoint.label}</div>`
             : `<div class="mini-pill-row">${
                 baseRouteForgeActive
                   ? createMiniPill("다음 전장", nextBeat.title, "hot") +

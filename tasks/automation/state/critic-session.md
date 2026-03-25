@@ -12,9 +12,9 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `UX/UI` in service of the run spine: the shipped route still makes the player read framework language and category admin before combat, reward desire, and weapon payoff are obvious.
-- Repeated false solution: renaming, hiding, or compacting labels without removing the underlying player-facing route logic `proof/next battlefield/support/gamble` and the authored wave-script prose carrying encounter clarity.
-- Keep comparing against `Nova Drift`, `Hades`, and `Brotato`; the benchmark is one immediate appetite, one readable combat ask, and very little text standing between the player and the payoff.
-- Preserve these constraints: the opener must stay small, one visible mutation should land before `Wave 8`, and support hardware should arrive after the main gun/body ladder already feels worth protecting.
-- Main drift markers: docs still present the run as a contract model, `Wave 5-12` still depend on `note/directive` narration, HUD/Tab/forge still surface multiple categories at once, and orbitals/missiles/shields make the machine look too complete too early.
-- Next critique bias: keep pushing consolidation over expansion and pressure-test whether the next pass should remove player-facing explanation before touching balance numbers.
+- The most fragile gate remains `UX/UI`, but specifically the default player-facing layer: combat and forge still behave like route dashboards instead of appetite-first action screens.
+- Repeated false solution: trimming wording or hiding labels without deleting the underlying `roadmap/live-readout/upgrade-list/proof` structure and without making encounters readable from geometry alone.
+- Keep comparing against `Nova Drift`, `Hades`, and `Brotato`; the benchmark is one dominant reward read, one short combat ask, and no extra panel competing with the arena.
+- Preserve these constraints: the opener must stay quiet, the main gun/body ladder must earn spectacle before support hardware blooms, and the shipped 12-wave slice must feel complete without post-run promises.
+- Main drift markers: design docs still describe a contract model, `Wave 5-12` still need prose narration, HUD/Tab/forge still surface too many categories, and orbitals/shields/missiles arrive before the chassis has finished transforming.
+- Next critique bias: keep pressuring consolidation and reward readability; do not spend another pass on system expansion unless the default combat/forge view is materially simpler.

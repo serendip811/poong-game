@@ -12,6 +12,7 @@ Keep this short and replace stale notes instead of endlessly appending.
 
 ## Current Memory
 
+- On the consolidated route, the default combat HUD should now stay a literal two-card read: left `현재 형태` headline card with one `다음 도약` proof band, right `현재 전장` ask card; `build-roadmap`, `live-readout`, `upgrade-list`, and bench chips belong to `Tab`/pause only. If the left card disappears again in live combat or roadmap/live telemetry re-enter the default wave view, the shipped HUD has drifted back toward dashboard mode.
 - On the consolidated route, `Wave 5-12` battlefield reads should now pull from one terse directive line, not the long authored `note`; keep the HUD `현재 전장`, wave-start feed, and wave track on that short ask or the shipped run drifts back into narrated route vocabulary instead of readable combat pressure.
 - On the consolidated shipped route, `Wildcard Protocol` should no longer surface at `Wave 4 / 7 / 10`; if field grants or gamble slots reintroduce `Smuggler Winch`, `Nullplate Halo`, or `Rogue Lattice` before the main late-form lock, the run has drifted back toward exception shopping instead of three clear gun/body destinies plus one light rider.
 - On the consolidated route, `Tab` inspect should now be a quick status board: one hero card `현재 형태 + 다음 전장 + 보유 고철`, then exactly three short lanes `주력 변이 / 방호·보조 / 판돈·유틸`; if inspect falls back to the old compact focus card, reopens bench/live telemetry, or drops back to equal-weight roadmap/admin rows, shipped readability has drifted back toward a document instead of a glanceable board.
