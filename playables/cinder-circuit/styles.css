@@ -731,6 +731,7 @@ body[data-overdrive="true"] .backdrop__glow--right {
 }
 
 .inspect-board--contract {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
 }
 
@@ -740,6 +741,25 @@ body[data-overdrive="true"] .backdrop__glow--right {
 
 .inspect-board--contract .route-contract__title {
   margin-top: 0;
+}
+
+.inspect-board__hero {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 10px;
+  padding: 14px 15px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 174, 109, 0.18);
+  background:
+    linear-gradient(180deg, rgba(255, 145, 88, 0.12), transparent 80%),
+    rgba(255, 255, 255, 0.04);
+}
+
+.inspect-board__hero-label {
+  color: var(--muted);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .inspect-board__lane {
@@ -783,6 +803,12 @@ body[data-overdrive="true"] .backdrop__glow--right {
   color: var(--muted);
   font-size: 0.8rem;
   line-height: 1.42;
+}
+
+@media (max-width: 720px) {
+  .inspect-board--contract {
+    grid-template-columns: 1fr;
+  }
 }
 
 .contract-strip {

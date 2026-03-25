@@ -12,9 +12,9 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Combat`: the shipped run still depends on too many authored hazard families and wave scripts, so movement decisions feel scenario-managed instead of emerging from enemy geometry and a dominant build spike.
-- Repeated false solution: trimming HUD/forge wording while leaving the same `note`/`directive` heavy encounter ladder, mixed hazard grammar, and visible post-`Wave 12` tuning assumptions in place.
-- Keep comparing against `Nova Drift`, `Hades`, and `Brotato`; the benchmark is simple readable combat asks, appetite-first rewards, and secondary status surfaces rather than explanatory combat wrappers.
-- Preserve this constraint: the opener must stay small, and `Wave 5-12` should read as a few recurring asks with clear escalation `payoff -> breach -> remix`, not a tour of many one-off scenario concepts.
-- Main drift markers: docs still frame release as a short alpha plus later `Afterburn`; shipped waves still rely on notes/directives plus multiple hazard families; HUD continues summarizing systems that should be legible in the arena itself; post-`Wave 12` structure still weakens finality.
-- Next critique bias: keep pressuring consolidation and encounter ecology. If the run still needs text to explain its fights, push simpler wave grammar and spacing before asking for more build branches or UI polish.
+- The most fragile gate is now `Progression`: the shipped route still feels like a teaser because visible mutations are too back-loaded, while `Afterburn`/`Dominion` and other post-`Wave 12` ladders keep implying the real payoff lives later.
+- Repeated false solution: trimming labels or compacting HUD/forge copy without changing the actual growth ladder `Wave 3 / Wave 6 / Wave 8 / post-clear`, the `SUPPORT_SYSTEM_START_WAVE = 8` gate, or the note/directive-heavy encounter script.
+- Keep comparing against `Nova Drift`, `Hades`, and `Brotato`; the benchmark is simple combat asks, appetite-first rewards, and a run that feels complete before it advertises future structure.
+- Preserve these constraints: the opener must stay small, the player should see one meaningful visible mutation before `Wave 8`, and `Wave 5-12` should read as a few recurring combat asks rather than a tour of named scenarios.
+- Main drift markers: docs still sell a short alpha plus later expansion, midgame still explains support bays/uplinks before delivering enough spectacle, HUD/forge still foreground proof-roadmap administration, and post-`Wave 12` systems still weaken `Wave 12` finality.
+- Next critique bias: pressure the team to stop widening systems and instead consolidate the current 12-wave route into a six-beat escalation with earlier visible payoffs, simpler wave grammar, and less player-facing administration.

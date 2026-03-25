@@ -9405,19 +9405,37 @@
     dominantForm,
     spotlightValue,
     scrapValue,
+    mainSummary = null,
+    supportSummary = null,
+    gambleSummary = null,
   }) {
     return `
       <div class="summary-head">
-        <strong>현재 형태</strong>
+        <strong>상태 보드</strong>
         <span class="summary-chip">TAB</span>
       </div>
       <div class="inspect-board inspect-board--contract">
-        <strong class="route-contract__title">${dominantForm.label}</strong>
-        <div class="forge-focus__proof"><span>다음 전장</span>${spotlightValue}</div>
-        <p class="forge-card__pivot forge-card__pivot--bill">
-          <span>보유 고철</span>
-          <strong>${scrapValue}</strong>
-        </p>
+        <article class="inspect-board__hero">
+          <span class="inspect-board__hero-label">현재 형태</span>
+          <strong class="route-contract__title">${dominantForm.label}</strong>
+          <div class="forge-focus__proof"><span>다음 전장</span>${spotlightValue}</div>
+          <p class="forge-card__pivot forge-card__pivot--bill">
+            <span>보유 고철</span>
+            <strong>${scrapValue}</strong>
+          </p>
+        </article>
+        ${[mainSummary, supportSummary, gambleSummary]
+          .filter(Boolean)
+          .map(
+            (entry) => `
+              <article class="inspect-board__lane inspect-board__lane--${entry.tone || "main"}">
+                <span class="inspect-board__label">${entry.label}</span>
+                <strong>${entry.value}</strong>
+                <p>${entry.note}</p>
+              </article>
+            `
+          )
+          .join("")}
       </div>
     `;
   }
@@ -21823,20 +21841,49 @@
         !hudVisibility.showRoadmap && !tabInspectBoardActive
           ? ""
           : minimalBaseRouteHud || tabInspectBoardActive
-            ? createBaseRouteFocusMarkup({
-              eyebrow: tabInspectBoardActive ? "현재 형태" : "",
-              chipLabel: ladderFocus.label,
-              title: dominantForm.label,
-              currentFormLabel: dominantForm.label,
-              spotlightLabel: "다음 전장",
-              spotlightValue: nextBeat.title,
-              tradeoffLabel: tabInspectBoardActive ? "보유 고철" : "판돈·유틸",
-              tradeoffValue: tabInspectBoardActive ? scrapSummaryLabel : gambleSummary.label,
-              tradeoffTone:
-                tabInspectBoardActive || gambleSummary.label === "잠잠" ? "" : "accent",
-              compact: true,
-            })
-          : createHeadlineRiderFocusMarkup(
+            ? tabInspectBoardActive
+              ? createTabInspectBoardMarkup({
+                  dominantForm,
+                  spotlightValue: proofWindow.label,
+                  scrapValue: scrapSummaryLabel,
+                  mainSummary: {
+                    label: "주력 변이",
+                    value: headlineLabel,
+                    note: trimInspectNote(
+                      dominantForm.detail,
+                      `${headlineLabel}로 현재 화력을 밀고 있다.`
+                    ),
+                    tone: "main",
+                  },
+                  supportSummary: {
+                    label: "방호·보조",
+                    value: supportTrack.label,
+                    note: trimInspectNote(
+                      supportTrack.detail,
+                      "보조 결은 아직 조용하다. 다음 포지 전까지 본체 실루엣으로 버틴다."
+                    ),
+                    tone: "support",
+                  },
+                  gambleSummary: {
+                    label: "판돈·유틸",
+                    value: gambleSummary.label,
+                    note: trimInspectNote(gambleSummary.note, "판돈 축은 아직 조용하다."),
+                    tone: "gamble",
+                  },
+                })
+              : createBaseRouteFocusMarkup({
+                  eyebrow: "",
+                  chipLabel: ladderFocus.label,
+                  title: dominantForm.label,
+                  currentFormLabel: dominantForm.label,
+                  spotlightLabel: "다음 전장",
+                  spotlightValue: nextBeat.title,
+                  tradeoffLabel: "판돈·유틸",
+                  tradeoffValue: gambleSummary.label,
+                  tradeoffTone: gambleSummary.label === "잠잠" ? "" : "accent",
+                  compact: true,
+                })
+            : createHeadlineRiderFocusMarkup(
               state.build,
               state.weapon,
               state.supportSystem,
