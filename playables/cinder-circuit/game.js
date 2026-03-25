@@ -8780,16 +8780,11 @@
     if (!proof) {
       return "";
     }
-    return `<p class="forge-card__proof forge-card__proof--compact"><span>다음 시험</span>${proof}</p>`;
+    return `<p class="forge-card__proof forge-card__proof--compact">${proof}</p>`;
   }
 
   function createBaseRouteForgeBillMarkup(slotLabel, accentLabel = "") {
-    return `
-      <p class="forge-card__pivot forge-card__pivot--bill">
-        <span>${accentLabel || "비용·대가"}</span>
-        <strong>${slotLabel}</strong>
-      </p>
-    `;
+    return `<span class="forge-card__slot">${slotLabel}</span>`;
   }
 
   function trimInspectNote(text, fallback) {
@@ -8882,17 +8877,10 @@
         ${chipLabel ? `<span class="summary-chip">${chipLabel}</span>` : ""}
       </div>
       <strong class="route-contract__title">${dominantFormLabel}</strong>
-      ${
-        waveAskLabel
-          ? `<div class="forge-focus__proof"><span>다음 전장</span>${waveAskLabel}</div>`
-          : ""
-      }
-      ${
-        scrapValue !== ""
-          ? `<p class="forge-card__pivot forge-card__pivot--bill"><span>보유 고철</span><strong>${scrapValue}</strong></p>`
-          : ""
-      }
-      <p class="summary-note">세 장 중 하나만 고르고 바로 다음 전장으로 들어간다.</p>
+      <div class="mini-pill-row">
+        ${waveAskLabel ? createMiniPill("다음 전장", waveAskLabel, "hot") : ""}
+        ${scrapValue !== "" ? createMiniPill("고철", scrapValue, "cool") : ""}
+      </div>
     `;
   }
 
@@ -21101,13 +21089,13 @@
       ladderSteps.find((step) => step.state === "primed" || step.state === "planned") ||
       ladderFocus;
     const riderStep = state.forgeMaxSteps > 1 && state.forgeStep === 2;
-    const featuredForgeChoice = riderStep
+    const useBaseRouteContract = shouldUseBaseRouteForgeContract();
+    const featuredForgeChoice = riderStep || useBaseRouteContract
       ? { showcase: null, featuredIndex: -1 }
       : getForgeFeaturedChoice(state.forgeChoices, state.build, state.waveIndex + 2);
     const showcase = featuredForgeChoice.showcase;
     const featuredIndex = featuredForgeChoice.featuredIndex;
     const featuredChoice = featuredIndex >= 0 ? state.forgeChoices[featuredIndex] : null;
-    const useBaseRouteContract = shouldUseBaseRouteForgeContract();
     const forgeModeLabel = getForgeDisplayModeLabel();
     const baseRouteForgeStage = useBaseRouteContract
       ? getBaseRouteForgeStage(state, state.waveIndex + 2)
@@ -21142,7 +21130,7 @@
         ? `${dominantFormSummary.label} 위에 rider 한 장만 얹고 바로 다음 전투 ask를 버틴다.`
           : `${dominantFormSummary.label} 다음에 가장 크게 전장을 바꿀 변이 하나만 먼저 고른다.`;
     elements.forgeSubtitle.textContent = useBaseRouteContract
-      ? `고철 ${Math.round(state.resources.scrap)} · 세 장 중 하나를 고르면 바로 다음 웨이브로 들어간다.`
+      ? `고철 ${Math.round(state.resources.scrap)} · 세 장 중 하나`
       : state.pendingFinalForge
         ? `${forgeModeLabel} · ${focusTitle} · 고철 ${Math.round(state.resources.scrap)}`
         : riderStep

@@ -62,6 +62,17 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-25 09:00:50 KST
+  Findings:
+  - [index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L37) through [index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L101) still wraps the arena in a full top strip plus two lower build columns. Against the combat-first readability of `Brotato`, `Nova Drift`, or the reward framing discipline of `Hades`, the player is still looking through a dashboard before they feel the run.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20886) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21080) keeps even the consolidated route busy with `current form`, `next arena`, `kills`, `cores`, `spent scrap`, hazard detail, and note text across multiple cards. That is cleaner than before, but it is still a status document, not a glanceable survival HUD with one obvious current ask.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21082) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21332) still sells between-wave choice through `proof`, `cost/bill`, `contract`, `recommended`, and context-copy scaffolding. The forge is explaining why a card matters instead of making the player immediately want the new gun/body/support silhouette.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L14729) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L14837) and [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L197) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L198) still preserve `postCapstone`, `Afterburn`, and expansion-facing validation language around the shipped slice. As long as the code and spec keep hinting at the cooler game after the clear, `Wave 1-12` will keep reading like rehearsal.
+  Top Priority: Collapse the shipped route to one combat-first information hierarchy: survival meters plus current wave ask in combat, then exactly three appetite-first forge cards that foreground visible payoff and cost while hiding roadmap/admin language entirely from the `Wave 1-12` player path.
+  Why Now: The highest-priority feedback is still that the opening and live readouts are too busy, so extra systems or extra copy will keep weakening first-run clarity instead of increasing replay desire.
+  Do Not Repeat: Do not answer this with renamed labels, another compact inspect mode, or more “recommended/proof” wrapper copy around the same reward flow.
+  Release Gate: Rewards
+
 - 2026-03-25 13:05:00 KST
   Findings:
   - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L75) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L733) now gives `Wave 9-12` branch-specific encounter profiles on paper, but nearly every directive still explains the fantasy in designer language `open-lane payoff`, `refuge cadence`, `cash-out routing`. If the late game still needs that much narration to separate offense, defense, and greed, the combat silhouette is not yet carrying replay desire by itself.
@@ -2283,6 +2294,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-25 09:12:13 KST
+  Changed: rebuilt the shipped base-route forge presentation in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the default `Wave 1-12` reward pause no longer frames one card as `추천` or labels every footer row as `다음 시험` / `비용·대가`. On the consolidated path, the context card now collapses to `현재 형태 / 다음 전장 / 고철`, the three forge cards render at equal weight instead of one featured-plus-two secondary layout, and each card now sells its immediate mutation promise with only an unlabeled next-ask line plus the raw cost tag underneath. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the leaner base-route markup contract. This UI pass stayed anchored to the appetite-first reward snap seen in `Hades`, `Nova Drift`, and `Brotato`: three visible appetites, minimal wrapper language.
+  Why: the newest critique's `Top Priority` said the shipped forge was still explaining picks through `proof`, `cost/bill`, `contract`, and `recommended` scaffolding instead of making the next gun/body/support silhouette feel desirable on sight. The highest-value bounded interpretation was to change the default three-card reward hierarchy itself, because that directly removes document-like emphasis without adding another wrapper mode.
+  Follow-up risk: the base-route forge now reads faster, but the combat HUD still carries more status-detail than the critique wants and non-shipping `Afterburn`/`postCapstone` scaffolding still exists deeper in the file. If critique stays on the same issue, the next bounded move should trim one of those remaining shipped-facing admin surfaces rather than reintroducing heavier forge labels.
+  Release Gate: Rewards
 
 - 2026-03-25 08:11:45 KST
   Changed: rewired [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so a run that already locked `Cataclysm Arsenal`, `Warplate Halo`, or `Black Ledger Heist` no longer resolves `Wave 9-12` by inheriting `SHARED_LATE_ACT_ENCOUNTER_POOL` and then layering branch overrides on top. `resolveWaveConfig` now pulls those late waves straight from the branch-owned finale profiles on top of the base wave timing shell, which means offense, defense/support, and greed keep their own arena, mix, hazard, and pressure-family asks without a shared late-act scaffold quietly shaping all three. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
