@@ -185,10 +185,11 @@ const compactFocusMarkup = game.createBaseRouteFocusMarkup({
 assert.ok(compactFocusMarkup.includes("판돈·유틸"));
 assert.ok(compactFocusMarkup.includes("고철 42"));
 assert.ok(compactFocusMarkup.includes("Cataclysm Arsenal"));
+assert.ok(!compactFocusMarkup.includes("다음 도약"));
 const forgeContextMarkup = game.createBaseRouteForgeContextMarkup({
   eyebrow: "주력 변이",
   title: "Prism Crown",
-  prompt: "Prism Crown 하나를 집고 바로 Crownbreaker Lap으로 시험한다.",
+  prompt: "Prism Crown 하나로 다음 전투의 화면을 바꾼다.",
   waveAskLabel: "Crownbreaker Lap",
   riderLabel: "Ember Ring",
   riderTone: "cool",
@@ -203,6 +204,7 @@ assert.ok(forgeContextMarkup.includes("mini-pill-row--solo"));
 assert.ok(!forgeContextMarkup.includes("forge-contract-strip"));
 assert.ok(!forgeContextMarkup.includes("forge-card__pivot--bill"));
 assert.ok(!forgeContextMarkup.includes("세 장 중 하나만"));
+assert.ok(!forgeContextMarkup.includes("시험한다"));
 const forgeBillMarkup = game.createBaseRouteForgeBillMarkup("고철 18");
 assert.ok(forgeBillMarkup.includes("고철 18"));
 assert.ok(!forgeBillMarkup.includes("비용·대가"));
@@ -225,6 +227,24 @@ assert.equal(expandedHudVisibility.showWave, true);
 assert.equal(expandedHudVisibility.showDash, true);
 assert.equal(expandedHudVisibility.showTimer, true);
 assert.equal(expandedHudVisibility.showRoadmap, true);
+const openingCombatAsk = game.getBaseRouteCombatAsk({
+  waveIndex: 0,
+  wave: { directive: "", hazard: null },
+});
+assert.equal(openingCombatAsk, "열린 외곽을 돌며 회피 각부터 익힌다.");
+const relayCombatAsk = game.getBaseRouteCombatAsk({
+  waveIndex: 5,
+  wave: {
+    directive: "가장 먼 relay를 먼저 끊고 열린 회랑 하나를 길게 붙든다.",
+    hazard: { type: "relay" },
+  },
+});
+assert.equal(relayCombatAsk, "가장 먼 relay를 먼저 끊고 열린 회랑 하나를 길게 붙든다.");
+const driftFallbackAsk = game.getBaseRouteCombatAsk({
+  waveIndex: 10,
+  wave: { directive: "", hazard: { type: "drift" } },
+});
+assert.equal(driftFallbackAsk, "추격 덩어리를 자르고 빈 pocket으로 갈아탄다.");
 assert.equal(
   game.shouldUseConsolidatedLateFormForge({ nextWave: 9, finalForge: false }),
   true

@@ -9500,6 +9500,53 @@
     `;
   }
 
+  function getBaseRouteCombatAsk(currentState = state, combatBand = null, hazardStatus = null) {
+    const waveNumber =
+      currentState && typeof currentState.waveIndex === "number"
+        ? clamp(currentState.waveIndex + 1, 1, MAX_WAVES)
+        : 1;
+    const wave = currentState && currentState.wave;
+    const directive = wave && wave.directive ? String(wave.directive).replace(/\s+/g, " ").trim() : "";
+    if (directive) {
+      return directive;
+    }
+    if (waveNumber === 1) {
+      return "열린 외곽을 돌며 회피 각부터 익힌다.";
+    }
+    if (waveNumber === 2) {
+      return "안전 지대를 갈아타며 회피 lane을 만든다.";
+    }
+    if (waveNumber === 3) {
+      return "코너를 비우고 열린 사선을 길게 붙든다.";
+    }
+    if (waveNumber === 4) {
+      return "굵은 차단선을 피해 열린 사선을 유지한다.";
+    }
+    const hazardType = wave && wave.hazard ? wave.hazard.type : "";
+    if (hazardType === "territory") {
+      return "점거 코어를 끊고 열린 외곽으로 바로 복귀한다.";
+    }
+    if (hazardType === "relay") {
+      return "먼 릴레이를 끊고 열린 회랑을 붙든다.";
+    }
+    if (hazardType === "drift") {
+      return "추격 덩어리를 자르고 빈 pocket으로 갈아탄다.";
+    }
+    if (hazardType === "salvage") {
+      return "먼저 긁고 바로 빠진다.";
+    }
+    if (hazardType === "caravan") {
+      return "짧게 추격하고 빈 측면으로 바로 복귀한다.";
+    }
+    if (combatBand && combatBand.label) {
+      return `${combatBand.label}만 보고 전장을 넓게 쓴다.`;
+    }
+    if (hazardStatus && hazardStatus.note) {
+      return trimInspectNote(hazardStatus.note, "열린 공간을 남기고 자주 자리를 바꾼다.");
+    }
+    return "열린 공간을 남기고 자주 자리를 바꾼다.";
+  }
+
   function getCombatBandState(build, weapon = null, waveNumber = 1) {
     const boundedWave = clamp(Math.round(waveNumber || 1), 1, MAX_WAVES + POST_CAPSTONE_WAVE_COUNT);
     if (boundedWave < 9 || boundedWave > MAX_WAVES) {
@@ -14923,6 +14970,7 @@
     getTabInspectGambleSummary,
     createTabInspectBoardMarkup,
     createBaseRouteFocusMarkup,
+    getBaseRouteCombatAsk,
     getMinimalBaseRouteHudVisibility,
     getBaseRouteForgeStage,
     createBaseRouteForgeContextMarkup,
@@ -21784,7 +21832,7 @@
         </div>
         ${
           minimalBaseRouteHud
-            ? `<div class="forge-focus__proof"><span>다음 도약</span>${nextBreakpoint.label}</div>`
+            ? `<div class="forge-focus__proof"><span>다음 변화</span>${nextBreakpoint.label}</div>`
             : `<div class="mini-pill-row">${
                 baseRouteForgeActive
                   ? createMiniPill("다음 전장", nextBeat.title, "hot") +
@@ -21899,32 +21947,39 @@
     const enemiesLeft = Math.max(0, state.wave ? state.wave.spawnBudget - state.wave.spawned : 0);
     if (elements.waveObjective) {
       const combatBand = getCombatBandState(state.build, state.weapon, state.waveIndex + 1);
-      const waveAsk =
-        state.wave && state.wave.directive
-          ? state.wave.directive
-          : combatBand
-            ? combatBand.detail
-            : hazardStatus.note || nextBreakpoint.detail;
-      elements.waveObjective.innerHTML = `
-        <div class="summary-head">
-          <strong>현재 전장</strong>
-          <span class="summary-chip ${hazardStatus.tone}">
-            ${hazardStatus.chipLabel}
-          </span>
-        </div>
-        <strong class="route-contract__title">${waveConfig.label}</strong>
-        <div class="status-list">
-          ${createStatusRow("위협", `${hazardStatus.detailLabel} ${hazardStatus.detailValue}`)}
-          ${createStatusRow("요구", combatBand ? combatBand.label : proofWindow.label)}
-        </div>
-        <p class="summary-note">${
-          minimalBaseRouteHud
-            ? waveAsk
-            : baseRouteForgeActive
+      const waveAsk = getBaseRouteCombatAsk(state, combatBand, hazardStatus);
+      elements.waveObjective.innerHTML = minimalBaseRouteHud
+        ? `
+          <div class="summary-head">
+            <strong>현재 전장</strong>
+            <span class="summary-chip ${hazardStatus.tone}">
+              ${hazardStatus.chipLabel}
+            </span>
+          </div>
+          <strong class="route-contract__title">${waveConfig.label}</strong>
+          <p class="summary-copy">${waveAsk}</p>
+          <div class="mini-pill-row mini-pill-row--solo">
+            ${createMiniPill("위협", `${hazardStatus.detailLabel} ${hazardStatus.detailValue}`)}
+          </div>
+        `
+        : `
+          <div class="summary-head">
+            <strong>현재 전장</strong>
+            <span class="summary-chip ${hazardStatus.tone}">
+              ${hazardStatus.chipLabel}
+            </span>
+          </div>
+          <strong class="route-contract__title">${waveConfig.label}</strong>
+          <div class="status-list">
+            ${createStatusRow("위협", `${hazardStatus.detailLabel} ${hazardStatus.detailValue}`)}
+            ${createStatusRow("요구", combatBand ? combatBand.label : proofWindow.label)}
+          </div>
+          <p class="summary-note">${
+            baseRouteForgeActive
               ? `${proofWindow.label}만 보면 된다. ${combatBand ? `${combatBand.headline}. ` : ""}${waveAsk}`
               : `${nextBreakpoint.label} + ${supportTrack.label}. ${combatBand ? `${combatBand.headline}. ` : ""}${waveAsk}`
-        }</p>
-      `;
+          }</p>
+        `;
     }
 
     if (elements.liveReadout) {
@@ -22037,10 +22092,10 @@
         : (featuredChoice && featuredChoice.title) || nextFormStep.label;
     const focusPrompt = useBaseRouteContract
       ? state.pendingFinalForge
-        ? `${dominantFormSummary.label}로 이번 런을 닫는다.`
+        ? `${dominantFormSummary.label}로 이번 런의 마지막 실루엣을 고정한다.`
         : riderStep
-          ? `${proofWindow.label} 전까지 버티는 선 한 줄만 더한다.`
-          : `${focusTitle} 하나를 집고 바로 ${proofWindow.label}로 시험한다.`
+          ? `${dominantFormSummary.label} 옆에 버티는 선 한 줄만 더한다.`
+          : `${focusTitle} 하나로 다음 전투의 화면을 바꾼다.`
       : state.pendingFinalForge
         ? `${dominantFormSummary.label}를 이번 12-wave spine의 최종 실루엣으로 봉인한다.`
         : riderStep

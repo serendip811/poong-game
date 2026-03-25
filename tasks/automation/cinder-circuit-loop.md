@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: make the shipped `Wave 1-12` path feel complete and rerunnable now by deleting post-`Wave 12` promise language from the player-facing route, collapsing combat/forge to one appetitive upgrade read plus one wave ask, and proving escalation through space, enemy geometry, and visible transformation cadence alone.
+- Immediate priority: stop adding route language and finish the `Wave 1-12` readability pass now by making combat/forge reads mostly wordless, collapsing the default HUD to one growth read plus one combat ask, and forcing encounters to communicate through space, spawn geometry, and visible weapon/body/support evolution instead of narration.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 10:45:00 KST
+  Findings:
+  - [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L9) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L31) still define the shipped run through `Headline Form / Survival Rider / Proof Window` contract grammar. That keeps the design target pointed at explaining a framework instead of delivering the faster appetite/read/payoff loop strong references like `Nova Drift`, `Hades`, or `Brotato` actually live on.
+  - [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L93) through [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L105) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21761) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21981) still keep `build-roadmap`, `wave-objective`, `live-readout`, and `upgrade-list` live around the arena while also surfacing `Next Proof`, `다음 도약`, and explanatory summary notes. The `Tab` inspect board exists, but the default view still behaves like a tuned dashboard, not a release combat screen.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L771) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1152) still author every shipped wave with dense `note` and `directive` prose, and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21903) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21924) still pipe that prose straight into the active combat ask. If encounters need this much text to be understood, the game does not yet have the legible ecology needed to scale toward `20-30 waves`.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2739) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3195) contain the right appetitive support fantasies `shield halo`, `orbitals`, `missiles`, `drones`, `sentries`, but the surrounding forge/HUD language still presents them as categorized route administration first and visible transformation second. The content ceiling is ahead of the presentation discipline.
+  Top Priority: Do a consolidation pass that removes narrated route/proof language from the default combat and forge layers, leaves only one headline growth read plus one short combat ask on-screen, and rewrites wave presentation so encounter geometry and visible form changes carry the meaning without paragraph support.
+  Why Now: More waves or more upgrade branches will only amplify prototype noise until the current run can be read and desired in seconds.
+  Do Not Repeat: Do not answer this with another partial copy trim while the default screen still shows four competing panels and the encounters still need authored narration to land.
+  Release Gate: UX/UI
 
 - 2026-03-26 10:20:00 KST
   Findings:
@@ -2639,6 +2650,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-26 01:11:34 KST
+  Changed: tightened one bounded piece of the shipped combat/reward language in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the consolidated default layer stops reading like a route explainer even after the earlier two-card HUD pass. The live growth card now says `현재 형태 + 다음 변화` instead of `다음 도약`, the default `현재 전장` card collapses to `wave title + one short ask + one small threat pill` instead of a proof/status paragraph, and the base-route forge context now sells the visible pickup in plain appetite-first lines instead of `시험`/proof phrasing. Smoke coverage now locks the new combat-ask helper and the quieter forge prompt copy so these default surfaces do not regress back into briefing language. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` still called out narrated route/proof language surviving in the default combat and forge layers. The highest-value bounded interpretation was to finish the visible player-facing text contract on those two default cards, because adding more wave content before the shipped screen stops explaining itself would only scale noise.
+  Follow-up risk: the default surfaces are quieter now, but internal late-wave labels like `Crownhold Proof` and some non-consolidated helper copy still carry route vocabulary under the hood. If the same critique repeats, the next bounded pass should simplify those remaining late-wave names and feeds without reopening the HUD into more panels.
+  Release Gate: UX/UI
+  Reference direction: this pass stayed close to `Nova Drift`/`Brotato` combat-screen austerity for the live ask card and `Hades`-style reward-header restraint for the forge context.
 
 - 2026-03-26 00:42:47 KST
   Changed: sealed one bounded piece of the shipped route contract in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the consolidated `Wave 1-12` path no longer advertises a live `Act 4` or post-clear cache ladder through shared helpers. Player-facing act labels now stop at `Act 3`, `getCombatCacheChoicesForWave(..., 14+)` returns no choices on the shipped route, late side-bet summaries stay blank once the run hits the seal, and the victory result copy now frames `Wave 12` as the run's actual final stand instead of a bridge into a later escalation. Smoke coverage now locks that `Wave 13+` labels clamp to `Act 3` and that post-`Wave 12` combat-cache choices stay empty on the consolidated route. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
