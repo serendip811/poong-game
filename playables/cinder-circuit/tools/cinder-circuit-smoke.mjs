@@ -1652,6 +1652,10 @@ assert.equal(game.shouldSkipOwnershipAdminStop(architectureRun.build, 9), false)
 assert.equal(game.unlockLateSupportBay(architectureRun.build), true);
 assert.equal(game.getSupportBayCapacity(architectureRun.build), 3);
 assert.ok(game.doctrineAllowsSystemInstall(architectureRun.build, "aegis_halo"));
+assert.equal(
+  JSON.stringify(game.getVisibleSupportOfferSystemIds(architectureRun.build, 8).sort()),
+  JSON.stringify(["seeker_array", "volt_drones"])
+);
 const postChaseChoices = game.buildForgeChoices(
   architectureRun.build,
   () => 0,
@@ -1791,6 +1795,10 @@ assert.equal(
 const doctrineCapstoneSystemStats = game.computeSupportSystemStats(doctrineCapstoneBuild);
 assert.equal(doctrineCapstoneSystemStats.doctrineCapstoneLabel, "Relay Storm Lattice");
 assert.ok(doctrineCapstoneSystemStats.statusNote.includes("Relay Storm Lattice"));
+assert.equal(
+  JSON.stringify(game.getVisibleSupportOfferSystemIds(doctrineCapstoneBuild, 8).sort()),
+  JSON.stringify(["seeker_array", "volt_drones"])
+);
 const artilleryDoctrineBuild = game.createInitialBuild("rail_zeal");
 artilleryDoctrineBuild.pendingCores = [];
 const artilleryArchitectureChoice = game
@@ -1821,6 +1829,10 @@ assert.ok(!artilleryAscensionChoice.description.includes("contraband salvage"));
 game.applyForgeChoice(
   { build: artilleryDoctrineBuild, player: null, resources: { scrap: 999 }, stats: {} },
   artilleryAscensionChoice
+);
+assert.equal(
+  JSON.stringify(game.getVisibleSupportOfferSystemIds(artilleryDoctrineBuild, 8).sort()),
+  JSON.stringify(["ember_ring", "seeker_array"])
 );
 const artilleryWaveFiveWeapon = game.computeWeaponStats(artilleryDoctrineBuild);
 assert.equal(artilleryDoctrineBuild.bastionDoctrineId, "storm_artillery");

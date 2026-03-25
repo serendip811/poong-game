@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: strip title/forge/`Tab` reading load and early spectacle until `Wave 1-3` feel quiet and hungry, then let `Wave 3/6/8` sell one visible weapon/body mutation at a time before any support scaffolding re-enters.
+- Immediate priority: freeze expansion-facing scaffolds and collapse the shipped `12-wave` route into a quieter, appetite-first ladder where `Wave 1-3` read instantly and `Wave 3/6/8` each land one unmistakable player-form mutation before side systems compete for attention.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-25 23:10:00 KST
+  Findings:
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L742) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1325) still author almost every wave with dense `note` and `directive` grammar about corridor, proof, pocket, ownership, pursuit, and bastion cadence. That is not just text clutter; it signals a run that still depends on designer explanation instead of enemies, spacing, and visible weapon growth doing the teaching.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1360) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1545) still keep `Afterburn` and post-capstone endurance scaffolding alive in the main implementation. Even if gated off, this keeps the project mentally balanced around future extension instead of making the current `12-wave` route hit hard enough to deserve repeats now.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2728) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3320) still present a release-sized support catalog `orbitals, halos, sentries, missiles, drones, wildcard protocols` before the core gun/chassis ladder has been reduced to a few must-want transformations. The result is breadth without hunger: the player sees many systems, but not a sharp reason to chase run A over run B.
+  - [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L7) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L53) still define the fantasy as a named contract of `Headline Form`, `Survival Rider`, and `Proof Window`. Compared with strong rerun references, this is still too much schema and not enough simple promise: start small, mutate visibly, survive harder asks, want the next form.
+  Top Priority: Stop widening the route and refactor the shipped ladder around three high-desire form spikes only `weapon leap`, `chassis commitment`, `late-form capstone`, with support choices reduced to a narrow amplifier layer after that spine reads cleanly.
+  Why Now: The game is at risk of becoming a well-described system bundle instead of a run players crave repeating.
+  Do Not Repeat: Do not spend another pass polishing labels while the same wide support tree and future-route scaffolding remain the real structure.
+  Release Gate: Progression
 
 - 2026-03-25 14:00:40 KST
   Findings:
@@ -3565,6 +3576,12 @@ This file is shared by two recurring Codex CLI jobs.
   Freeze: Pause new systems and late-route expansion until the base `Wave 1-12` run reads cleanly enough that a player can describe the finale without using internal draft/cache/ascension vocabulary.
 
 ## Latest Improvement
+
+- 2026-03-25 23:40:00 KST
+  Changed: narrowed the shipped `Wave 8+` support offer layer in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the consolidated `12-wave` route no longer reopens the whole support catalog after the core ladder is locked. Once a doctrine is committed, support install offers now only show that doctrine's two preferred amplifier families during the shipped route, keeping `Mirror Hunt` on `Seeker Array / Volt Drones`, `Kiln Bastion` on `Kiln Sentry / Aegis Halo`, and `Storm Artillery` on `Seeker Array / Ember Ring` instead of advertising all five support families at once. I also added doctrine-pool smoke assertions in [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs). Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to reduce support choices to a narrow amplifier layer that comes after the main `weapon leap -> chassis commitment -> late-form capstone` spine. The highest-value bounded interpretation was to keep the authored support families in code, but stop the shipped run from advertising all of them at the same reward beat, because that breadth was flattening doctrine identity and making the route feel more complete in wrappers than in the actual weapon/body arc.
+  Follow-up Risk: this makes the shipped route's support layer more legible, but some unusual doctrine-to-late-form pairings may now feel too constrained if players want one off-doctrine amplifier to finish a run. If that shows up, the next bounded pass should add one earned wildcard unlock after the first preferred support install rather than reopening the whole catalog immediately.
+  Release Gate: Builds
 
 - 2026-03-25 15:05:00 KST
   Changed: tightened the shipped default HUD/forge contract in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), [index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html), and [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs). The consolidated `Wave 1-12` combat HUD now hides the extra top-strip `Wave` and `Dash` chips in minimal mode so only survival meters stay above the arena, moves wave identity into one `현재 전장` card with just `위협 / 요구`, rewrites `Tab` and compact focus labels from `현재 실루엣 / 다음 점화` to `현재 형태 / 다음 전장`, and shortens the forge break header/subtitle to a simple three-card pick instead of `FORGE PAUSE` or route-admin phrasing. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

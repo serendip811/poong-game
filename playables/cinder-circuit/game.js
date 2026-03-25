@@ -6381,9 +6381,11 @@
     const supportBayCap = getSupportBayCapacity(build);
     const installedMap = new Map(installedSystems.map((entry) => [entry.id, entry]));
     const doctrine = build && build.bastionDoctrineId ? getBastionDoctrineDef(build) : null;
+    const visibleSystemIds = new Set(getVisibleSupportOfferSystemIds(build, nextWave));
     const installChoices = shuffle(
       Object.keys(SUPPORT_SYSTEM_DEFS).filter(
         (systemId) =>
+          visibleSystemIds.has(systemId) &&
           !installedMap.has(systemId) &&
           isSupportSystemUnlocked(systemId, nextWave) &&
           doctrineAllowsSystemInstall(build, systemId)
@@ -9509,6 +9511,26 @@
       return true;
     }
     return countDoctrineWildcardSystems(build, doctrine) < getDoctrineWildcardSystemAllowance(build);
+  }
+
+  function getVisibleSupportOfferSystemIds(build, nextWave = 0) {
+    const allSystemIds = Object.keys(SUPPORT_SYSTEM_DEFS);
+    if (
+      !(
+        CONSOLIDATED_12_WAVE_ROUTE &&
+        build &&
+        build.bastionDoctrineId &&
+        Number.isFinite(nextWave) &&
+        nextWave >= SUPPORT_SYSTEM_START_WAVE &&
+        nextWave <= MAX_WAVES
+      )
+    ) {
+      return allSystemIds;
+    }
+    const preferredSystemIds = getDoctrinePreferredSystemIds(getBastionDoctrineDef(build)).filter(
+      (systemId) => SUPPORT_SYSTEM_DEFS[systemId]
+    );
+    return preferredSystemIds.length > 0 ? preferredSystemIds : allSystemIds;
   }
 
   function doctrineAllowsModChoice(build, modId) {
@@ -14262,6 +14284,7 @@
     getChassisBreakpointDef,
     getIllegalOverclockDef,
     doctrineAllowsSystemInstall,
+    getVisibleSupportOfferSystemIds,
     unlockLateSupportBay,
     shouldSkipOwnershipAdminStop,
     shouldUseConsolidatedLateFormForge,

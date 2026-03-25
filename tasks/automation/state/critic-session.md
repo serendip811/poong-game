@@ -12,9 +12,9 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `UX/UI`: the run still explains route state, forge state, and future proof structure too aggressively, so the player reads systems before feeling hunger for the next mutation.
-- Repeated false solution: trimming wording while keeping the same dense HUD/forge/`Tab` hierarchy and the same broad support menu alive behind it.
+- The most fragile gate is now `Progression`: the shipped `12-wave` route still reads like a prototype framework carrying future expansion, not a sharp rerunnable ladder with three must-want transformation spikes.
+- Repeated false solution: trimming wording while keeping the same authored route grammar, broad support tree, and dormant `Afterburn`/post-capstone scaffolds alive underneath.
 - Keep comparing against `Nova Drift`, `Hades`, and `Brotato`; the benchmark is one obvious combat priority and one obvious reward read, not a well-explained ladder.
 - Good change to preserve: early support spectacle is still delayed. Keep missiles, orbitals, shields, and helpers out of the opener, and keep even late support systems subordinate to a smaller-to-bigger player chassis arc.
-- Main drift markers: forge cards still over-explain, `Tab` still behaves like a document, and the visible support catalog is wide enough to make the run feel architected instead of hungry.
-- Next critique bias: pressure readability-first consolidation for a few passes. Favor fewer words, fewer visible branches, and one stronger mutation sell per stop before pushing expansion back up.
+- Main drift markers: wave design is still narrated too explicitly, the visible support catalog is still too wide, and future-route structures remain present enough to pull the game toward expansion before the base route is replayable.
+- Next critique bias: keep pressuring consolidation over invention. Favor a smaller release ladder, clearer mutation appetite, and fewer total systems competing for identity until the current run earns repetition on its own.
