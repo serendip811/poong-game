@@ -12,9 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The weakest gate is still `Progression`: the run remains a scripted mid-run staircase instead of a reusable `payoff -> pressure -> forge fork` cell that could survive `20-30 waves`.
-- Repeated false solution: trimming HUD text, renaming forge wrappers, or adding another support branch while `Wave 5-10` still resolves into authored set pieces and the same helper-heavy timing.
-- Benchmark against `Nova Drift`, `Brotato`, and `Hades` for reward readability and build hunger; the player should want the pick before reading the system model.
-- Keep these constraints active: the opener stays quiet, one major weapon/chassis spike lands before orbit/drone/shield spectacle, and the HUD/forge surfaces stay at one combat ask plus one visible payoff.
-- Main drift markers: support primers still soften the growth curve, mid-run combat is still bespoke instead of reusable, and the docs still describe a bounded `12-wave` contract more strongly than a repeatable run skeleton.
-- Next critique bias: keep pressuring structural replayability and transformation timing; do not endorse more content breadth until the middle-game loop and reward hierarchy are genuinely release-feeling.
+- The weakest gate remains `Progression`: `Wave 5-10` is still an authored staircase, not a durable `payoff -> pressure -> forge fork` grammar that could carry repeat runs or scale toward `20-30 waves`.
+- Current drift is structural, not cosmetic. The project keeps adding branches `wildcards`, support lanes, and phase wrappers before the shipped run has one repeatable midgame pattern worth replaying.
+- Repeated false solution: HUD copy trims, reward wrapper renames, or fresh support combinations while helper silhouettes still appear by `Wave 7-8` and the core weapon/chassis leap is not the dominant fantasy.
+- Keep using `Nova Drift`, `Brotato`, and `Hades` as hierarchy checks: one urgent combat read, one exciting reward read, minimal explanation.
+- Protect the growth curve: opener stays quiet, visible orbit/drone/shield/sentry spectacle waits until after one unmistakable weapon/chassis transformation, and docs should describe the shipped route as a reusable run skeleton rather than a bounded `12-wave` slice.
