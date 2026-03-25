@@ -157,20 +157,22 @@ assert.ok(compactFocusMarkup.includes("판돈·유틸"));
 assert.ok(compactFocusMarkup.includes("고철 42"));
 assert.ok(compactFocusMarkup.includes("Cataclysm Arsenal"));
 const forgeContextMarkup = game.createBaseRouteForgeContextMarkup({
-  dominantFormLabel: "Sky Lance",
+  eyebrow: "주력 변이",
+  title: "Prism Crown",
+  prompt: "Prism Crown 하나를 집고 바로 Crownbreaker Lap으로 시험한다.",
   waveAskLabel: "Crownbreaker Lap",
-  scrapValue: "42",
+  riderLabel: "Ember Ring",
+  riderTone: "cool",
 });
-assert.ok(forgeContextMarkup.includes("현재 형태"));
+assert.ok(forgeContextMarkup.includes("주력 변이"));
+assert.ok(forgeContextMarkup.includes("Prism Crown"));
 assert.ok(forgeContextMarkup.includes("다음 전장"));
-assert.ok(forgeContextMarkup.includes("보유 고철"));
-assert.ok(forgeContextMarkup.includes("forge-contract-strip"));
-assert.ok(forgeContextMarkup.includes("forge-contract-strip__item--hot"));
-assert.ok(forgeContextMarkup.includes("forge-contract-strip__item--bill"));
-assert.ok(!forgeContextMarkup.includes("forge-focus__proof"));
+assert.ok(forgeContextMarkup.includes("보조 결"));
+assert.ok(forgeContextMarkup.includes("Ember Ring"));
+assert.ok(forgeContextMarkup.includes("forge-focus__proof"));
+assert.ok(forgeContextMarkup.includes("mini-pill-row--solo"));
+assert.ok(!forgeContextMarkup.includes("forge-contract-strip"));
 assert.ok(!forgeContextMarkup.includes("forge-card__pivot--bill"));
-assert.ok(!forgeContextMarkup.includes("주력 변이"));
-assert.ok(!forgeContextMarkup.includes("다음 점화"));
 assert.ok(!forgeContextMarkup.includes("세 장 중 하나만"));
 const forgeBillMarkup = game.createBaseRouteForgeBillMarkup("고철 18");
 assert.ok(forgeBillMarkup.includes("고철 18"));

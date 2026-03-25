@@ -9160,6 +9160,7 @@
     compact = false,
   }) {
     const billLabel = tradeoffLabel || "비용·대가";
+    const tradeoffToneClass = tradeoffTone === "accent" ? " mini-pill-row--accent" : "";
     return `
       <div class="summary-head">
         <strong>${eyebrow || title}</strong>
@@ -9177,7 +9178,11 @@
       }
       ${
         tradeoffValue
-          ? `<p class="forge-card__pivot forge-card__pivot--bill"><span>${billLabel}</span><strong>${tradeoffValue}</strong></p>`
+          ? `<div class="mini-pill-row mini-pill-row--solo${tradeoffToneClass}">${createMiniPill(
+              billLabel,
+              tradeoffValue,
+              tradeoffTone === "accent" ? "accent" : ""
+            )}</div>`
           : ""
       }
     `;
@@ -9465,33 +9470,34 @@
   }
 
   function createBaseRouteForgeContextMarkup({
-    dominantFormLabel = "",
+    eyebrow = "",
+    title = "",
+    prompt = "",
     waveAskLabel = "",
-    scrapValue = "",
+    riderLabel = "",
+    riderTone = "",
   }) {
+    const riderToneClass = riderTone === "accent" ? " mini-pill-row--accent" : "";
     return `
-      <div class="forge-contract-strip">
-        <article class="forge-contract-strip__item">
-          <span>현재 형태</span>
-          <strong>${dominantFormLabel || "-"}</strong>
-        </article>
-        ${
-          waveAskLabel
-            ? `<article class="forge-contract-strip__item forge-contract-strip__item--hot">
-                <span>다음 전장</span>
-                <strong>${waveAskLabel}</strong>
-              </article>`
-            : ""
-        }
-        ${
-          scrapValue !== ""
-            ? `<article class="forge-contract-strip__item forge-contract-strip__item--bill">
-                <span>보유 고철</span>
-                <strong>${scrapValue}</strong>
-              </article>`
-            : ""
-        }
+      <div class="summary-head">
+        <strong>${eyebrow || "변이 선택"}</strong>
       </div>
+      <strong class="route-contract__title">${title || "-"}</strong>
+      ${prompt ? `<p class="summary-copy">${prompt}</p>` : ""}
+      ${
+        waveAskLabel
+          ? `<div class="forge-focus__proof"><span>다음 전장</span>${waveAskLabel}</div>`
+          : ""
+      }
+      ${
+        riderLabel
+          ? `<div class="mini-pill-row mini-pill-row--solo${riderToneClass}">${createMiniPill(
+              "보조 결",
+              riderLabel,
+              riderTone === "accent" ? "accent" : ""
+            )}</div>`
+          : ""
+      }
     `;
   }
 
@@ -22025,9 +22031,16 @@
       ? `
         <article class="forge-focus forge-focus--${riderStep ? "rider" : "headline"} forge-context__card forge-context__card--span-two">
           ${createBaseRouteForgeContextMarkup({
-            dominantFormLabel: dominantFormSummary.label,
+            eyebrow: focusEyebrow,
+            title: focusTitle,
+            prompt: focusPrompt,
             waveAskLabel: proofWindow.label,
-            scrapValue: String(Math.round(state.resources.scrap)),
+            riderLabel: state.pendingFinalForge
+              ? `보유 고철 ${Math.round(state.resources.scrap)}`
+              : riderStep
+                ? dominantFormSummary.label
+                : activeSupportTrack.label,
+            riderTone: state.pendingFinalForge ? "accent" : "cool",
           })}
         </article>
       `
