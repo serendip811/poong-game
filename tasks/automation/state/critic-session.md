@@ -12,9 +12,9 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `UX/UI`, because the shipped run still requires too much reading to understand its combat asks and reward fantasy.
-- Repeated false solution: trimming labels while leaving the same `build-roadmap / wave-objective / live-readout / upgrade-list` stack and the same narrated `note/directive/proof` dependency intact.
-- Keep comparing against `Nova Drift`, `Hades`, and `Brotato`; the benchmark is one dominant growth read, one short combat ask, and encounters that are legible from motion and geometry instead of panel text.
-- Preserve these constraints: the opener must stay quiet, spectacle must be earned over time, support hardware should read as visible payoff rather than category text, and the current `12-wave` slice must stand on its own before more structure is added.
-- Main drift markers: design docs still use contract grammar, the default HUD still behaves like a dashboard, wave scripts still need narration, and good support fantasies are being buried under explanation-first presentation.
-- Next critique bias: keep forcing consolidation and readability until the team proves the current run can sell desire and clarity without extra prose.
+- The most fragile gate is `Progression`, with `UX/UI` as the immediate symptom: the current `12-wave` run still reads like a runway to `Afterburn` instead of a complete rerunnable route.
+- Repeated false solution: trimming copy while leaving the same `build-roadmap / wave-objective / live-readout / upgrade-list` stack, narrated `note/directive` dependence, and live post-`Wave 12` promise scaffolding intact.
+- Keep comparing against `Nova Drift`, `Hades`, and `Brotato`; the benchmark is one dominant growth read, one short combat ask, and a run that feels complete before hinting at future depth.
+- Preserve these constraints: the opener must stay quiet, spectacle must be earned, support hardware should read as visible payoff rather than category text, and `Wave 12` must feel like a payoff rather than a handoff.
+- Main drift markers: design docs still use contract grammar, the HUD still behaves like a dashboard, wave scripts still need narration, and `Afterburn/Dominion` are still stealing finality from the shipped slice.
+- Next critique bias: keep forcing shipped-route consolidation until the team proves the current run can stand alone without extra prose or future-mode bait.

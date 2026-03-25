@@ -9371,6 +9371,17 @@
     return `${source.slice(0, 75).trimEnd()}...`;
   }
 
+  function trimInspectChipText(text, fallback) {
+    const source = (text || fallback || "").replace(/\s+/g, " ").trim();
+    if (!source) {
+      return fallback || "";
+    }
+    if (source.length <= 44) {
+      return source;
+    }
+    return `${source.slice(0, 41).trimEnd()}...`;
+  }
+
   function getTabInspectGambleSummary(currentState = state) {
     const liveBet = getLiveSideBetSummary(currentState);
     if (liveBet) {
@@ -9408,7 +9419,7 @@
   }) {
     return `
       <div class="summary-head">
-        <strong>상태 보드</strong>
+        <strong>런 보드</strong>
         <span class="summary-chip">TAB</span>
       </div>
       <div class="inspect-board inspect-board--contract">
@@ -9421,14 +9432,20 @@
             <strong>${scrapValue}</strong>
           </p>
         </article>
-        ${[mainSummary, supportSummary, gambleSummary]
+          ${[mainSummary, supportSummary, gambleSummary]
           .filter(Boolean)
           .map(
             (entry) => `
               <article class="inspect-board__lane inspect-board__lane--${entry.tone || "main"}">
                 <span class="inspect-board__label">${entry.label}</span>
                 <strong>${entry.value}</strong>
-                <p>${entry.note}</p>
+                ${
+                  entry.note
+                    ? `<div class="inspect-board__chips">
+                        <span class="inspect-board__chip">${trimInspectChipText(entry.note)}</span>
+                      </div>`
+                    : ""
+                }
               </article>
             `
           )

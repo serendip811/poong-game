@@ -764,11 +764,12 @@ body[data-overdrive="true"] .backdrop__glow--right {
 
 .inspect-board__lane {
   display: grid;
-  gap: 4px;
+  gap: 8px;
   padding: 11px 12px;
   border-radius: 14px;
   border: 1px solid rgba(255, 255, 255, 0.07);
   background: rgba(255, 255, 255, 0.035);
+  align-content: start;
 }
 
 .inspect-board__lane--main {
@@ -798,11 +799,23 @@ body[data-overdrive="true"] .backdrop__glow--right {
   line-height: 1.24;
 }
 
-.inspect-board__lane p {
-  margin: 0;
+.inspect-board__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.inspect-board__chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.045);
   color: var(--muted);
-  font-size: 0.8rem;
-  line-height: 1.42;
+  font-size: 0.74rem;
+  line-height: 1.3;
 }
 
 @media (max-width: 720px) {

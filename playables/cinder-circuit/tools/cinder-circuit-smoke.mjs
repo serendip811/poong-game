@@ -161,7 +161,7 @@ const inspectMarkup = game.createTabInspectBoardMarkup({
   },
 });
 assert.ok(inspectMarkup.includes("보유 고철"));
-assert.ok(inspectMarkup.includes("상태 보드"));
+assert.ok(inspectMarkup.includes("런 보드"));
 assert.ok(inspectMarkup.includes("현재 형태"));
 assert.ok(inspectMarkup.includes("다음 전장"));
 assert.ok(inspectMarkup.includes("Cataclysm Arsenal"));
@@ -171,6 +171,7 @@ assert.ok(inspectMarkup.includes("inspect-board__hero"));
 assert.ok(inspectMarkup.includes("inspect-board__lane--main"));
 assert.ok(inspectMarkup.includes("inspect-board__lane--support"));
 assert.ok(inspectMarkup.includes("inspect-board__lane--gamble"));
+assert.ok(inspectMarkup.includes("inspect-board__chip"));
 const compactFocusMarkup = game.createBaseRouteFocusMarkup({
   eyebrow: "현재 형태",
   title: "Sky Lance",
