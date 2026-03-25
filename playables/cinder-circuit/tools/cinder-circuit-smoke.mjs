@@ -269,6 +269,25 @@ assert.equal(recurringWave5HeadlineChoice.action, "afterglow_mutation");
 const recurringWave5Transform = game.getBaseRouteForgeChoiceTransformation(recurringWave5HeadlineChoice);
 assert.ok(/프리즘탄|날개|레일|산탄/.test(recurringWave5Transform.promise));
 assert.ok(/반사|lane|빈틈|전투/.test(recurringWave5Transform.proof));
+const recurringWave5RiderChoice =
+  recurringWave5Choices.find((choice) => choice.contractRole === "rider") ||
+  recurringWave5Choices[1];
+assert.ok(recurringWave5RiderChoice);
+assert.equal(recurringWave5RiderChoice.action, "preview_support");
+const recurringWave5RiderTransform =
+  game.getBaseRouteForgeChoiceTransformation(recurringWave5RiderChoice);
+assert.ok(/위성|방호|보조/.test(recurringWave5RiderTransform.promise));
+assert.ok(/탄각|추격선|복귀|반경|사격 각/.test(recurringWave5RiderTransform.proof));
+const recurringWave5Run = {
+  build: wave5MutationBuild,
+  player: null,
+};
+game.applyForgeChoice(recurringWave5Run, recurringWave5RiderChoice);
+assert.equal(recurringWave5Run.build.supportSystems.length, 0);
+assert.ok(recurringWave5Run.build.previewSupportSystemId);
+const recurringWave5SupportStats = game.computeSupportSystemStats(recurringWave5Run.build);
+assert.ok(recurringWave5SupportStats);
+assert.equal(recurringWave5SupportStats.orbitCount, 1);
 const shippingLadderWave4 = game.getShippingLadderSteps(roadmapBuild, null, 4);
 assert.equal(shippingLadderWave4.length, 4);
 assert.equal(shippingLadderWave4.map((step) => step.label).join("|"), "START|도약|방호|점화");

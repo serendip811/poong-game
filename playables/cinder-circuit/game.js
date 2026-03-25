@@ -3223,6 +3223,57 @@
     },
   };
 
+  const PREVIEW_SUPPORT_SYSTEM_DEFS = {
+    ember_ring: {
+      label: "Ember Ring Primer",
+      title: "Ember Ring Primer",
+      description:
+        "화염 위성 1기를 약하게 먼저 띄운다. 아직 자동 볼트는 없지만 근접 추격선을 살짝 긁어 다음 방호 선택 전까지 안전 반경을 예고한다.",
+      slotText: "약식 화염 위성 1기",
+      previewText: "약식 화염 위성",
+      statusNote: "약식 Ember Ring이 플레이어 주위를 천천히 돌며 근접 추격선을 긁어 작은 안전 반경을 남긴다.",
+      orbitCount: 1,
+      orbitRadius: 46,
+      orbitSpeed: 1.55,
+      satelliteRadius: 7,
+      touchDamage: 10,
+      touchCooldown: 0.42,
+      shotCooldown: 0,
+      shotRange: 0,
+      shotDamage: 0,
+      shotSpeed: 0,
+      interceptRange: 0,
+      interceptCooldown: 0,
+      interceptPulseDamage: 0,
+      interceptPulseRadius: 0,
+      deployCount: 0,
+    },
+    aegis_halo: {
+      label: "Aegis Halo Primer",
+      title: "Aegis Halo Primer",
+      description:
+        "요격 위성 1기를 약하게 먼저 띄운다. 가까운 탄 한두 발만 끊는 수준이지만, 다음 몸체 도약 전에 사격 각을 어떻게 비울지 미리 보여 준다.",
+      slotText: "약식 요격 위성 1기",
+      previewText: "약식 요격 위성",
+      statusNote: "약식 Aegis Halo가 주변을 돌며 가까운 탄환부터 먼저 걷어 작은 복귀 각을 만든다.",
+      orbitCount: 1,
+      orbitRadius: 40,
+      orbitSpeed: 1.5,
+      satelliteRadius: 7.5,
+      touchDamage: 6,
+      touchCooldown: 0.48,
+      shotCooldown: 0,
+      shotRange: 0,
+      shotDamage: 0,
+      shotSpeed: 0,
+      interceptRange: 18,
+      interceptCooldown: 0.24,
+      interceptPulseDamage: 0,
+      interceptPulseRadius: 0,
+      deployCount: 0,
+    },
+  };
+
   const CHASSIS_BREAKPOINT_DEFS = {
     vector_thrusters: {
       id: "vector_thrusters",
@@ -5345,6 +5396,7 @@
     illegalOverclockOffered: false,
     illegalOverclockMutationLevel: 0,
     afterglowMutationId: null,
+    previewSupportSystemId: null,
     riskMutationLevel: 0,
     riskMutationQueuedLevel: 0,
     apexMutationLevel: 0,
@@ -6257,6 +6309,9 @@
   function getSupportSystemDef(build) {
     const installedSystems = getInstalledSupportSystems(build);
     if (installedSystems.length === 0) {
+      if (build && build.previewSupportSystemId) {
+        return SUPPORT_SYSTEM_DEFS[build.previewSupportSystemId] || null;
+      }
       return null;
     }
     return SUPPORT_SYSTEM_DEFS[installedSystems[0].id] || null;
@@ -6334,19 +6389,31 @@
   function computeSupportSystemStats(build) {
     const installedSystems = getInstalledSupportSystems(build);
     const doctrineCapstone = getDoctrineCapstoneDef(build);
-    if (installedSystems.length === 0) {
+    const previewSystemId =
+      installedSystems.length === 0 && build ? build.previewSupportSystemId || null : null;
+    if (installedSystems.length === 0 && !previewSystemId) {
       return null;
     }
-    const systems = installedSystems
+    const sourceEntries =
+      installedSystems.length > 0
+        ? installedSystems
+        : previewSystemId
+          ? [{ id: previewSystemId, tier: 0, preview: true }]
+          : [];
+    const systems = sourceEntries
       .map((entry, systemIndex) => {
         const system = SUPPORT_SYSTEM_DEFS[entry.id];
-        const tierDef = system && system.tiers[entry.tier];
+        const tierDef =
+          entry.preview && PREVIEW_SUPPORT_SYSTEM_DEFS[entry.id]
+            ? PREVIEW_SUPPORT_SYSTEM_DEFS[entry.id]
+            : system && system.tiers[entry.tier];
         if (!system || !tierDef) {
           return null;
         }
         return {
           id: system.id,
           tier: entry.tier,
+          preview: Boolean(entry.preview),
           label: tierDef.label,
           title: tierDef.title,
           color: system.color,
@@ -7109,6 +7176,14 @@
         ...finaleRows,
       ];
     }
+    if (choice.type === "utility" && choice.action === "preview_support") {
+      const previewDef = PREVIEW_SUPPORT_SYSTEM_DEFS[choice.systemId];
+      return [
+        { label: "보조", value: previewDef ? previewDef.previewText : choice.title || "약식 위성" },
+        { label: "효과", value: previewDef ? previewDef.slotText : choice.slotText || "약식 방호" },
+        ...finaleRows,
+      ];
+    }
     if (choice.type === "utility" && choice.action === "doctrine_chase") {
       return [
         {
@@ -7333,6 +7408,23 @@
         proof: "바로 다음 전투에서 열린 화선이 더 오래 버티는지 즉시 드러난다.",
         riderLabel: "Defense / Utility",
         riderNote: "살아남는 선 한 줄만 더하면 새 화선이 실제 공간으로 바뀐다.",
+        accent,
+      };
+    }
+    if (choice.type === "utility" && choice.action === "preview_support") {
+      const previewDef = PREVIEW_SUPPORT_SYSTEM_DEFS[choice.systemId];
+      const accent = (previewDef && previewDef.previewText) || choice.title || "약식 위성";
+      return {
+        laneLabel: choice.forgeLaneLabel || choice.laneLabel || "Forge Lane",
+        title: choice.title || accent,
+        tone: "defense",
+        promise: `${accent}를 먼저 띄워 다음 몸체 도약 전까지 작은 방호·보조 실루엣을 붙인다.`,
+        proof:
+          choice.systemId === "aegis_halo"
+            ? "가까운 탄각이 먼저 비워지는지, 복귀 턴이 쉬워지는지 다음 전투에서 바로 드러난다."
+            : "근접 추격선이 얼마나 얇아지는지, 새 화선 앞에 숨 쉴 반경이 생기는지 바로 드러난다.",
+        riderLabel: "Support Rider",
+        riderNote: "완성형 support는 아직 늦게 열고, 지금은 몸을 받쳐 줄 작은 실루엣만 먼저 붙인다.",
         accent,
       };
     }
@@ -11467,6 +11559,7 @@
     const doctrineChaseChoice = createDoctrineChaseChoice(build, options);
     const wildcardChoice = createWildcardProtocolChoice(build, nextWave);
     const greedContractChoice = createFieldGreedContractChoice(build, nextWave);
+    const previewSupportChoice = createPreviewSupportChoice(build, nextWave);
     const supportSystemChoices =
       recurringBaseRouteContract && nextWave < LATE_BREAK_ARMORY_WAVE
         ? []
@@ -11560,6 +11653,8 @@
     sortChoicesForDoctrine(subsystemCandidates, doctrine);
     sortChoicesForDoctrine(sustainCandidates, doctrine);
     sortChoicesForDoctrine(chassisBreakpointChoices, doctrine);
+
+    pushChoiceIfOpen(subsystemCandidates, previewSupportChoice, choiceCatalog);
 
     if (sustainCandidates.length === 0) {
       sustainCandidates.push({
@@ -12092,7 +12187,49 @@
     };
   }
 
+  function getPreviewSupportSystemId(build) {
+    if (!build) {
+      return null;
+    }
+    if (build.previewSupportSystemId && PREVIEW_SUPPORT_SYSTEM_DEFS[build.previewSupportSystemId]) {
+      return build.previewSupportSystemId;
+    }
+    if (build.coreId === "scatter" || build.coreId === "ember") {
+      return "ember_ring";
+    }
+    return "aegis_halo";
+  }
+
+  function createPreviewSupportChoice(build, nextWave) {
+    if (!build || nextWave !== 5 || getInstalledSupportSystems(build).length > 0) {
+      return null;
+    }
+    const systemId = getPreviewSupportSystemId(build);
+    const previewDef = systemId ? PREVIEW_SUPPORT_SYSTEM_DEFS[systemId] : null;
+    if (!systemId || !previewDef) {
+      return null;
+    }
+    return {
+      type: "utility",
+      action: "preview_support",
+      id: `utility:preview_support:${systemId}:${nextWave}`,
+      verb: "예열",
+      tag: "PRIME",
+      title: previewDef.title,
+      description: `${previewDef.description} 이번 포지에서는 완성형 support가 아니라 작은 방호·보조 실루엣만 먼저 붙인다.`,
+      slotText: previewDef.slotText,
+      cost: 10,
+      systemId,
+      laneLabel: "방호·보조",
+      forgeLaneLabel: "방호·보조",
+    };
+  }
+
   function createForgeRiderSupportChoice(build, rng, nextWave, excludedChoiceId = null) {
+    const previewChoice = createPreviewSupportChoice(build, nextWave);
+    if (previewChoice && previewChoice.id !== excludedChoiceId) {
+      return createForgeRiderCard(previewChoice, "Support Rider");
+    }
     const random = typeof rng === "function" ? rng : Math.random;
     const wildcardChoice = createWildcardProtocolChoice(build, nextWave);
     if (wildcardChoice && wildcardChoice.id !== excludedChoiceId) {
@@ -13875,6 +14012,15 @@
       return choice;
     }
 
+    if (choice.type === "utility" && choice.action === "preview_support") {
+      if (!PREVIEW_SUPPORT_SYSTEM_DEFS[choice.systemId]) {
+        return null;
+      }
+      run.build.previewSupportSystemId = choice.systemId;
+      run.build.upgrades.push(`방호·보조 예열: ${PREVIEW_SUPPORT_SYSTEM_DEFS[choice.systemId].label}`);
+      return choice;
+    }
+
     if (choice.type === "system") {
       const system = SUPPORT_SYSTEM_DEFS[choice.systemId];
       const tierDef = system && system.tiers[choice.systemTier];
@@ -13897,6 +14043,7 @@
         });
       }
       run.build.supportSystems = sanitizeSupportSystems(nextSystems, run.build);
+      run.build.previewSupportSystemId = null;
       run.build.supportSystemId = choice.systemId;
       run.build.supportSystemTier = choice.systemTier || 1;
       run.build.upgrades.push(
