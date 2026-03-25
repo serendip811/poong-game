@@ -317,6 +317,27 @@ const mirrorPrimerSupportStats = game.computeSupportSystemStats(mirrorPrimerRun.
 assert.ok(mirrorPrimerSupportStats);
 assert.equal(mirrorPrimerSupportStats.orbitCount, 1);
 assert.equal(mirrorPrimerSupportStats.shotCooldown, 1.6);
+const mirrorWave7Choices = game.buildForgeChoices(mirrorPrimerRun.build, Math.random, 64, {
+  nextWave: 7,
+  finalForge: false,
+  build: mirrorPrimerRun.build,
+});
+const mirrorWave7RiderChoice =
+  mirrorWave7Choices.find((choice) => choice.contractRole === "rider") || mirrorWave7Choices[1];
+assert.ok(mirrorWave7RiderChoice);
+assert.equal(mirrorWave7RiderChoice.type, "system");
+assert.equal(mirrorWave7RiderChoice.systemId, "volt_drones");
+assert.equal(mirrorWave7RiderChoice.systemTier, 2);
+assert.equal(mirrorWave7RiderChoice.primerCompletion, true);
+assert.equal(mirrorWave7RiderChoice.title, "Volt Drones Mk.II");
+assert.equal(mirrorWave7RiderChoice.cost, 48);
+assert.ok(/예열 완성/.test(mirrorWave7RiderChoice.slotText));
+game.applyForgeChoice(mirrorPrimerRun, mirrorWave7RiderChoice);
+const mirrorWave7SupportStats = game.computeSupportSystemStats(mirrorPrimerRun.build);
+assert.ok(mirrorWave7SupportStats);
+assert.equal(mirrorWave7SupportStats.orbitCount, 3);
+assert.equal(mirrorWave7SupportStats.shotCooldown, 0.8);
+assert.equal(mirrorPrimerRun.build.previewSupportSystemId, null);
 const shippingLadderWave4 = game.getShippingLadderSteps(roadmapBuild, null, 4);
 assert.equal(shippingLadderWave4.length, 4);
 assert.equal(shippingLadderWave4.map((step) => step.label).join("|"), "START|도약|방호|점화");

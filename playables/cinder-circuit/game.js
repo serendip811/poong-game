@@ -2753,6 +2753,7 @@
   const MAX_SUPPORT_BAY_LIMIT = 4;
   const SUPPORT_SYSTEM_START_WAVE = 8;
   const BASE_ROUTE_MIDRUN_SUPPORT_WAVE = 7;
+  const PREVIEW_SUPPORT_PRIMER_CREDIT = 10;
   const SUPPORT_SYSTEM_DEFS = {
     ember_ring: {
       id: "ember_ring",
@@ -6573,6 +6574,10 @@
     const installedMap = new Map(installedSystems.map((entry) => [entry.id, entry]));
     const doctrine = build && build.bastionDoctrineId ? getBastionDoctrineDef(build) : null;
     const visibleSystemIds = new Set(getVisibleSupportOfferSystemIds(build, nextWave));
+    const primedSystemId =
+      build && build.previewSupportSystemId && PREVIEW_SUPPORT_SYSTEM_DEFS[build.previewSupportSystemId]
+        ? build.previewSupportSystemId
+        : null;
     const installChoices = shuffle(
       Object.keys(SUPPORT_SYSTEM_DEFS).filter(
         (systemId) =>
@@ -6588,7 +6593,14 @@
           return null;
         }
         const system = SUPPORT_SYSTEM_DEFS[systemId];
-        const tierDef = system && system.tiers[1];
+        const primerCompletion =
+          CONSOLIDATED_12_WAVE_ROUTE &&
+          primedSystemId === systemId &&
+          installedSystems.length === 0 &&
+          nextWave === BASE_ROUTE_MIDRUN_SUPPORT_WAVE;
+        const targetTier = primerCompletion ? 2 : 1;
+        const tierDef = system && system.tiers[targetTier];
+        const previewDef = primerCompletion ? PREVIEW_SUPPORT_SYSTEM_DEFS[systemId] : null;
         if (!system || !tierDef) {
           return null;
         }
@@ -6599,18 +6611,25 @@
           tag: "SYSTEM",
           title: tierDef.title,
           description:
-            installedSystems.length > 0
+            primerCompletion && previewDef
+              ? `${previewDef.title}에서 바로 ${tierDef.title}로 완성한다. Wave 5에 먼저 띄운 약식 실루엣이 이번 정지에서 완전한 편대/파동으로 열린다. ${tierDef.description}`
+              : installedSystems.length > 0
               ? `${tierDef.description} 기존 ${installedSystems.map((entry) => SUPPORT_SYSTEM_DEFS[entry.id].tiers[entry.tier].label).join(" + ")}와 병렬 베이에 탑재된다.${doctrine && doctrine.supportDoctrineText ? ` ${doctrine.supportDoctrineText}` : ""}`
               : tierDef.description,
           slotText:
-            installedSystems.length > 0
+            primerCompletion
+              ? `예열 완성 · ${tierDef.slotText}`
+              : installedSystems.length > 0
               ? `빈 베이 설치 · ${tierDef.slotText}`
               : tierDef.slotText,
           systemId: system.id,
-          systemTier: 1,
+          systemTier: targetTier,
           bayAction: "install",
           forgeLaneLabel: getSupportSystemForgeLane(system.id),
-          cost: tierDef.cost,
+          cost: primerCompletion
+            ? Math.max(system.tiers[1].cost, tierDef.cost - PREVIEW_SUPPORT_PRIMER_CREDIT)
+            : tierDef.cost,
+          primerCompletion,
         };
       })
       .filter(Boolean);
