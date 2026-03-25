@@ -62,10 +62,16 @@ assert.equal(game.WAVE_CONFIG[5].hazard.type, "relay");
 assert.ok(game.WAVE_CONFIG[5].activeCap > game.WAVE_CONFIG[4].activeCap);
 assert.ok(game.WAVE_CONFIG[5].hazard.count <= game.WAVE_CONFIG[4].hazard.count);
 assert.ok(game.WAVE_CONFIG[5].arena.width > game.WAVE_CONFIG[4].arena.width);
-assert.equal(game.WAVE_CONFIG[4].directive, "열린 외곽을 먼저 먹고 얇은 anchor는 지나가며 끊는다.");
-assert.equal(game.WAVE_CONFIG[5].directive, "가장 먼 relay를 먼저 끊고 열린 회랑 하나를 길게 붙든다.");
-assert.equal(game.WAVE_CONFIG[6].directive, "넓은 측면 하나를 먼저 비우고 그 lane을 오래 돌린다.");
-assert.equal(game.WAVE_CONFIG[7].directive, "가장 얇은 입구를 짧게 찢고 바로 열린 lane으로 빠진다.");
+assert.equal(game.WAVE_CONFIG[4].label, "Wave 5 · Payoff Run");
+assert.equal(game.WAVE_CONFIG[5].label, "Wave 6 · Crown Breach");
+assert.equal(game.WAVE_CONFIG[6].label, "Wave 7 · Payoff Sweep");
+assert.equal(game.WAVE_CONFIG[7].label, "Wave 8 · Crown Proof");
+assert.equal(game.WAVE_CONFIG[8].label, "Wave 9 · Payoff Sweep+");
+assert.equal(game.WAVE_CONFIG[9].label, "Wave 10 · Crown Proof+");
+assert.equal(game.WAVE_CONFIG[4].directive, "가장 넓은 flank부터 비우고 열린 lane 둘 중 하나를 오래 붙든다.");
+assert.equal(game.WAVE_CONFIG[5].directive, "가장 먼 relay를 먼저 끊고 뚫린 corridor 하나를 길게 지킨다.");
+assert.equal(game.WAVE_CONFIG[6].directive, "한 flank를 먼저 비운 뒤 반대 lane으로 짧게 갈아타며 sweep 폭을 유지한다.");
+assert.equal(game.WAVE_CONFIG[7].directive, "가장 얇은 입구를 짧게 찢고 열린 crownline을 오래 붙든다.");
 assert.equal(game.WAVE_CONFIG[5].mix.mortar || 0, 0);
 assert.ok(game.WAVE_CONFIG[5].mix.lancer > game.WAVE_CONFIG[5].mix.brute);
 assert.equal(game.WAVE_CONFIG[8].activeCap, 28);
@@ -236,11 +242,11 @@ assert.equal(openingCombatAsk, "열린 외곽을 돌며 회피 각부터 익힌�
 const relayCombatAsk = game.getBaseRouteCombatAsk({
   waveIndex: 5,
   wave: {
-    directive: "가장 먼 relay를 먼저 끊고 열린 회랑 하나를 길게 붙든다.",
+    directive: "가장 먼 relay를 먼저 끊고 뚫린 corridor 하나를 길게 지킨다.",
     hazard: { type: "relay" },
   },
 });
-assert.equal(relayCombatAsk, "가장 먼 relay를 먼저 끊고 열린 회랑 하나를 길게 붙든다.");
+assert.equal(relayCombatAsk, "가장 먼 relay를 먼저 끊고 뚫린 corridor 하나를 길게 지킨다.");
 const genericWave7Build = game.createInitialBuild("rail_zeal");
 assert.deepEqual(Array.from(game.getVisibleSupportOfferSystemIds(genericWave7Build, 7)), []);
 const genericWave7Choices = game.buildForgeChoices(genericWave7Build, () => 0.1, 999, {
@@ -644,7 +650,7 @@ const lateRoutePayoffBeat = game.getStandardLateRouteBeatSummary(lateCacheBuild,
 const lateRouteProofBeat = game.getStandardLateRouteBeatSummary(lateCacheBuild, 11);
 const lateRouteFinaleBeat = game.getStandardLateRouteBeatSummary(lateCacheBuild, 12);
 assert.equal(lateRoutePayoffBeat.label, "Payoff Band");
-assert.ok(lateRoutePayoffBeat.detail.includes("Lockgrid Gallery"));
+assert.ok(lateRoutePayoffBeat.detail.includes("Payoff Sweep+"));
 assert.equal(lateRouteProofBeat.label, "Refuge Run");
 assert.ok(lateRouteProofBeat.detail.includes("Starforge Pursuit"));
 assert.equal(lateRouteFinaleBeat.label, "Finale");
@@ -1522,8 +1528,8 @@ const sharedLateWaveNine = game.resolveWaveConfig(8, sharedLateBuild);
 const sharedLateWaveTen = game.resolveWaveConfig(9, sharedLateBuild);
 const sharedLateWaveEleven = game.resolveWaveConfig(10, sharedLateBuild);
 const sharedLateWaveTwelve = game.resolveWaveConfig(11, sharedLateBuild);
-assert.equal(sharedLateWaveNine.label, "Wave 9 · Lockgrid Gallery");
-assert.equal(sharedLateWaveTen.label, "Wave 10 · Crownhold Proof");
+assert.equal(sharedLateWaveNine.label, "Wave 9 · Payoff Sweep+");
+assert.equal(sharedLateWaveTen.label, "Wave 10 · Crown Proof+");
 assert.equal(sharedLateWaveTen.pressureFamily, "breach");
 assert.equal(sharedLateWaveTen.hazard.type, "relay");
 assert.equal(sharedLateWaveEleven.label, "Wave 11 · Starforge Pursuit");
@@ -3107,8 +3113,8 @@ assert.equal(
 assert.ok(actTwoLadder[2].arena.width >= actTwoLadder[1].arena.width);
 assert.ok(actTwoLadder[2].arena.height >= actTwoLadder[1].arena.height);
 assert.ok(actTwoLadder[2].activeCap < actTwoLadder[3].activeCap);
-assert.ok(actTwoLadder[2].note.includes("open-lane"));
-assert.ok(actTwoLadder[3].note.includes("hard breach"));
+assert.ok(actTwoLadder[2].note.includes("shared sweep cell"));
+assert.ok(actTwoLadder[3].note.includes("shared proof cell"));
 
 const lateBreakSmokeBuild = game.createInitialBuild("scrap_pact");
 lateBreakSmokeBuild.bastionDoctrineId = "kiln_bastion";

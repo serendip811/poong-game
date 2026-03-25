@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop adding new support/admin branches and consolidate the shipped run around one reusable `payoff -> pressure -> forge fork` midgame cell plus one-screen combat/reward hierarchy, so `Wave 5-10` proves replay hunger before any further expansion.
+- Immediate priority: freeze new support/wildcard/future-route branches and turn `Wave 5-10` into one repeatable `main-form payoff -> pressure variant -> forge fork` cell with quieter HUD/reward hierarchy, so the shipped route proves replay hunger before any further expansion.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 15:05:00 KST
+  Findings:
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L862) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1120) still run the middle and late game as a named sequence `Afterglow -> Breakline -> Crownfire -> Forgecross -> Lockgrid -> Crownhold -> Starforge -> Cinder Bastion`, each with bespoke pressure family, note, and directive. Bigger arenas help, but this is still authored scenario rotation rather than one durable combat grammar that could survive repeated runs or stretch toward `20-30 waves`.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2739) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3410) still front-load too many build fantasies. Support systems, support primers, wildcard protocols, chassis breakpoints, and late illegal convergence all coexist in the same ladder, so by `Wave 7-8` the run is already teasing orbitals, shields, sentries, missiles, drones, and hijack branches before one core weapon/body mutation has fully owned the screen.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21720) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22440) still make the HUD and forge layers carry too much explanatory load: current form, next beat, support track, gamble summary, wave ask, hazard detail, live readout, and inspect-board summaries are all still competing. Compared with the cleaner combat-to-reward hierarchy in `Nova Drift`, `Brotato`, or `Hades`, the game is still asking the player to parse the run instead of immediately feel one threat and one desire.
+  - [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L7) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L36) still define the product most clearly as a `12-wave`, `3-era` contract that locks headline, rider, and proof windows on schedule. That keeps encouraging content-slot thinking instead of a run skeleton that can naturally repeat, breathe, and escalate.
+  Top Priority: Stop adding branches and consolidate the shipped route around one dominant visible weapon/chassis leap by `Wave 5`, one restrained rider fork after that, and one reusable midgame encounter grammar that can be remixed without new named systems.
+  Why Now: The run is still broadening faster than it is becoming replayable.
+  Do Not Repeat: Do not spend another pass inventing wildcard/support/admin branches or trimming wording if the player still reaches midgame with multiple helper fantasies online and no single build payoff clearly owning the run.
+  Release Gate: Builds
 
 - 2026-03-26 14:40:00 KST
   Findings:
@@ -2716,6 +2727,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-26 04:43:48 KST
+  Changed: consolidated one bounded piece of the shipped combat spine in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) by replacing the authored `Wave 5-10` naming/description ladder with a shared recurring-cell helper. `Wave 5-8` and the shared late `Wave 9-10` pool now pull their labels, pressure identity, note, and directive from four reusable cells `Payoff Run / Crown Breach / Payoff Sweep / Crown Proof`, so the route reads more like one repeatable `payoff -> breach -> payoff remix -> proof` ladder than six bespoke scenario stops. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` explicitly called out `Wave 5-10` still reading as named authored rotation instead of one durable combat grammar. The highest-value bounded interpretation was to change the encounter source itself, not add another branch or just trim UI copy, because this gives the current 12-wave route a cleaner skeleton that can be remixed toward `20-30` waves without inventing another family of bespoke beats first.
+  Follow-up risk: the underlying hazard stats and enemy mixes are still hand-tuned per wave, so this pass fixes the route grammar and player-facing identity more than it creates fully systemic remix rules. If critique stays on the same gate, the next bounded pass should push one more step deeper by moving `Wave 5-10` density/mix scaling into the same shared-cell scaffolding instead of leaving those values fully per-wave.
+  Release Gate: Progression
 
 - 2026-03-26 03:46:08 KST
   Changed: added one bounded mid-run headline leap in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the consolidated `Wave 5-8` contract no longer resolves as the same automatic `small mutation -> evolution 1 -> evolution 2 -> evolution 3` weapon staircase before support opens. `Wave 7` headline picks can now surface a new core-specific `Crownfire Overdrive` once the run already has a real gun/body foundation from `Wave 5-6`, giving the player a second unmistakable main-form transformation before `Wave 8` finally unlocks the first visible support install. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new cadence: `rail_zeal` now gets `Wave 7` `Sky Splitter` overdrive, the overdrive fire pattern is applied in live weapon stats, and `Wave 8` falls back to the next weapon evolution tier instead of arriving already visually complete. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

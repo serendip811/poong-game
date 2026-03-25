@@ -755,6 +755,74 @@
     },
   };
 
+  const RECURRING_COMBAT_CELL_DEFS = {
+    payoff: {
+      title: "Payoff Run",
+      pressureFamily: "domination",
+      note: (stageText, focusText) =>
+        `${stageText} 같은 form으로 먼저 화면을 먹는 shared payoff cell이다. upkeep 구조물은 최소한으로만 남기고, ${focusText} 열린 lane ownership을 얼마나 오래 유지하는지 먼저 보여 준다.`,
+      directive:
+        "가장 넓은 flank부터 비우고 열린 lane 둘 중 하나를 오래 붙든다.",
+    },
+    breach: {
+      title: "Crown Breach",
+      pressureFamily: "breach",
+      note: (stageText, focusText) =>
+        `${stageText} 같은 form을 바로 시험하는 shared breach cell이다. relay crown 하나만 늦게 닫아, ${focusText} corridor를 얼마나 길게 붙드는지 바로 묻는다.`,
+      directive:
+        "가장 먼 relay를 먼저 끊고 뚫린 corridor 하나를 길게 지킨다.",
+    },
+    sweep: {
+      title: "Payoff Sweep",
+      pressureFamily: "crossfire",
+      note: (stageText, focusText) =>
+        `${stageText} payoff grammar를 한 단계만 remix한 shared sweep cell이다. 구조물 upkeep는 늘리지 않고 flank 재진입만 빨라져, ${focusText} 열린 lane ownership을 유지한 채 방향 전환하는지 본다.`,
+      directive:
+        "한 flank를 먼저 비운 뒤 반대 lane으로 짧게 갈아타며 sweep 폭을 유지한다.",
+    },
+    proof: {
+      title: "Crown Proof",
+      pressureFamily: "breach",
+      note: (stageText, focusText) =>
+        `${stageText} breach grammar를 한 단계만 키운 shared proof cell이다. 같은 crownline ask를 더 단단하게 붙여, ${focusText} 열린 입구를 찢고 오래 버티는지 결산한다.`,
+      directive:
+        "가장 얇은 입구를 짧게 찢고 열린 crownline을 오래 붙든다.",
+    },
+  };
+
+  function buildRecurringCombatWave({
+    id,
+    waveNumber,
+    cellId,
+    stageText,
+    focusText,
+    labelSuffix = "",
+    bandId = null,
+    bandLabel = null,
+    bandFocusId = null,
+    ...rest
+  }) {
+    const cell = RECURRING_COMBAT_CELL_DEFS[cellId];
+    if (!cell) {
+      return {
+        id,
+        label: `Wave ${waveNumber}`,
+        ...rest,
+      };
+    }
+    return {
+      id,
+      ...rest,
+      label: `Wave ${waveNumber} · ${cell.title}${labelSuffix}`,
+      pressureFamily: cell.pressureFamily,
+      note: cell.note(stageText, focusText),
+      directive: cell.directive,
+      ...(bandId ? { bandId } : {}),
+      ...(bandLabel ? { bandLabel } : {}),
+      ...(bandFocusId ? { bandFocusId } : {}),
+    };
+  }
+
   const WAVE_CONFIG = [
     {
       id: "ignition",
@@ -861,10 +929,12 @@
         damage: 12,
       },
     },
-    {
+    buildRecurringCombatWave({
       id: "afterglow",
-      label: "Wave 5 · Afterglow",
-      pressureFamily: "domination",
+      waveNumber: 5,
+      cellId: "payoff",
+      stageText: "Wave 5-8 중반 셀의 첫 칸은",
+      focusText: "막 커진 주포와 차체가",
       duration: 78,
       spawnBudget: 116,
       activeCap: 25,
@@ -877,8 +947,6 @@
         brute: 0.28,
         shrike: 0.46,
       },
-      note: "첫 Armory 직후의 payoff window. 넓어진 작업장과 느슨한 bastion anchor 하나만 남겨, 막 커진 차체와 주포가 외곽 회전선 전체를 바로 먹는 시간을 먼저 준다.",
-      directive: "열린 외곽을 먼저 먹고 얇은 anchor는 지나가며 끊는다.",
       driveGainFactor: 1.22,
       arena: SECOND_ACT_ARENA,
       hazard: {
@@ -897,11 +965,13 @@
         turretSpeed: 198,
         enemyPullRadius: 132,
       },
-    },
-    {
+    }),
+    buildRecurringCombatWave({
       id: "breakline",
-      label: "Wave 6 · Breakline",
-      pressureFamily: "breach",
+      waveNumber: 6,
+      cellId: "breach",
+      stageText: "Wave 5 payoff 직후의 두 번째 칸은",
+      focusText: "headline midform이",
       duration: 80,
       spawnBudget: 128,
       activeCap: 27,
@@ -918,8 +988,6 @@
         binder: 0.06,
         warden: 0.04,
       },
-      note: "Act 2 staircase의 두 번째 판은 더 이상 같은 domination 반복이 아니다. 열린 lane으로 맛본 ownership를 얇은 relay corridor 위에서 바로 다시 밀어붙이게 만들어, headline midform이 실제 breach window를 얼마나 오래 버는지 시험한다.",
-      directive: "가장 먼 relay를 먼저 끊고 열린 회랑 하나를 길게 붙든다.",
       driveGainFactor: 1.24,
       arena: {
         width: 1400,
@@ -940,11 +1008,13 @@
         relayWidth: 26,
         relayDamage: 12,
       },
-    },
-    {
+    }),
+    buildRecurringCombatWave({
       id: "crownfire",
-      label: "Wave 7 · Crownfire",
-      pressureFamily: "crossfire",
+      waveNumber: 7,
+      cellId: "sweep",
+      stageText: "Wave 7은 새 판을 열지 않고 같은 midform contract를 이어 가는",
+      focusText: "방금 잠근 form이",
       duration: 84,
       spawnBudget: 138,
       activeCap: 26,
@@ -959,18 +1029,18 @@
         skimmer: 0.24,
         lancer: 0.22,
       },
-      note: "Act 2 후반의 세 번째 판은 hazard remix가 아니라 더 거친 open-lane sweep이다. 구조물과 drift를 걷어내고 측면 재진입만 빠르게 돌려, 방금 커진 form이 열린 lane 둘을 실제로 오래 들고 미는지 바로 드러나게 만든다.",
-      directive: "넓은 측면 하나를 먼저 비우고 그 lane을 오래 돌린다.",
       driveGainFactor: 1.28,
       arena: {
         width: 1500,
         height: 820,
       },
-    },
-    {
+    }),
+    buildRecurringCombatWave({
       id: "forgecross",
-      label: "Wave 8 · Forgecross",
-      pressureFamily: "breach",
+      waveNumber: 8,
+      cellId: "proof",
+      stageText: "Wave 8 결산은 maintenance stack이 아니라 마지막으로 같은 cell을 한 단계 키운",
+      focusText: "열린 lane 지배가",
       duration: 90,
       spawnBudget: 148,
       activeCap: 28,
@@ -987,8 +1057,6 @@
         binder: 0.04,
         warden: 0.1,
       },
-      note: "Act 2 결산은 이제 maintenance stack이 아니라 단일 hard breach다. Crownfire에서 벌어 둔 space ownership 위에 늦게 닫히는 relay crown 하나만 다시 얹어, 열린 lane 지배를 마지막 한 번의 돌파 각으로 바꾸게 만든다.",
-      directive: "가장 얇은 입구를 짧게 찢고 바로 열린 lane으로 빠진다.",
       driveGainFactor: 1.34,
       arena: {
         width: 1500,
@@ -1009,11 +1077,14 @@
         relayWidth: 30,
         relayDamage: 14,
       },
-    },
-    {
+    }),
+    buildRecurringCombatWave({
       id: "lockgrid",
-      label: "Wave 9 · Lockgrid",
-      pressureFamily: "crossfire",
+      waveNumber: 9,
+      cellId: "sweep",
+      stageText: "Late Breakpoint 직후 첫 칸도 새 장르로 갈아타지 않는",
+      focusText: "막 완성한 late form이",
+      labelSuffix: "+",
       duration: 90,
       spawnBudget: 146,
       activeCap: 28,
@@ -1030,8 +1101,6 @@
         mortar: 0.06,
         warden: 0.1,
       },
-      note: "Late Breakpoint 직후의 첫 payoff window는 이제 진짜 domination lap으로 열린다. arena를 더 크게 벌리고 active cap을 크게 낮춰, 방금 완성한 late chassis/weapon form이 열린 lane 둘을 길게 점유하는 시간이 먼저 보이게 만든다.",
-      directive: "넓은 측면부터 비우고 열린 두 lane을 오래 유지한다.",
       driveGainFactor: 1.38,
       arena: THIRD_ACT_PAYOFF_ARENA,
       hazard: {
@@ -1043,11 +1112,14 @@
         duration: 3.4,
         damage: 12,
       },
-    },
-    {
+    }),
+    buildRecurringCombatWave({
       id: "crownhold_proof",
-      label: "Wave 10 · Crownhold Proof",
-      pressureFamily: "breach",
+      waveNumber: 10,
+      cellId: "proof",
+      stageText: "Wave 10은 chase detour 없이 같은 late contract를 바로 시험하는",
+      focusText: "같은 late form이",
+      labelSuffix: "+",
       duration: 94,
       spawnBudget: 162,
       activeCap: 30,
@@ -1066,8 +1138,6 @@
         mortar: 0.02,
         warden: 0.08,
       },
-      note: "Act 3 두 번째 rung은 caravan greed detour 대신 single crownline proof로 붙인다. relay crown 하나만 더 크게 열어, Wave 9에서 벌어 둔 lane ownership를 같은 late form으로 직접 찢고 오래 지키는지 즉시 확인하게 만든다.",
-      directive: "가장 먼 pylon을 먼저 끊고 뚫린 복도를 오래 지킨다.",
       driveGainFactor: 1.42,
       arena: THIRD_ACT_PROOF_ARENA,
       ascensionCarrierType: "binder",
@@ -1086,7 +1156,7 @@
         relayWidth: 30,
         relayDamage: 14,
       },
-    },
+    }),
     {
       id: "starforge",
       label: "Wave 11 · Starforge Pursuit",
@@ -1181,15 +1251,16 @@
   ];
 
   const SHARED_LATE_ACT_ENCOUNTER_POOL = {
-    8: {
-      label: "Wave 9 · Lockgrid Gallery",
+    8: buildRecurringCombatWave({
+      id: "lockgrid_gallery",
+      waveNumber: 9,
+      cellId: "sweep",
+      stageText: "Act 3 shared pool의 첫 칸도 doctrine breakpoint 직후 새 scripted beat를 만들지 않는",
+      focusText: "막 굳은 body/gun form이",
+      labelSuffix: "+",
       bandId: "lockgrid_gallery",
-      bandLabel: "Lockgrid Gallery",
+      bandLabel: "Payoff Sweep+",
       bandFocusId: "doctrine_capstone",
-      pressureFamily: "crossfire",
-      note: "Act 3 첫 밴드는 doctrine breakpoint 직후의 deliberate payoff window다. 첫 판은 truly open-lane gallery로 열어, 막 굳은 body/gun form이 측면 sweep와 lancer 돌입을 얼마나 넓게 잘라내는지 upkeep 없이 먼저 즐기게 만든다.",
-      directive:
-        "lockgrid gallery. skimmer가 외곽 회전선을 긁고 lancer가 직선 charge로 중앙을 찌르지만, ask는 절차가 아니라 lane ownership이다. 가장 넓은 flank를 먼저 비우고 charge 각을 흘리며 새 late form의 sweep 폭을 오래 유지해야 한다.",
       driveGainFactor: 1.4,
       arena: THIRD_ACT_PAYOFF_ARENA,
       activeCap: 28,
@@ -1213,16 +1284,17 @@
         duration: 3.8,
         damage: 13,
       },
-    },
-    9: {
-      label: "Wave 10 · Crownhold Proof",
+    }),
+    9: buildRecurringCombatWave({
+      id: "crownhold_proof",
+      waveNumber: 10,
+      cellId: "proof",
+      stageText: "Act 3 shared pool의 두 번째 칸은 detour를 허용하지 않는",
+      focusText: "late form이",
+      labelSuffix: "+",
       bandId: "crownhold_proof",
-      bandLabel: "Crownhold Proof",
+      bandLabel: "Crown Proof+",
       bandFocusId: "doctrine_capstone",
-      pressureFamily: "breach",
-      note: "두 번째 판은 caravan chase가 아니라 single crownline proof다. Lockgrid Gallery에서 벌어 둔 ownership를 그대로 들고 와 relay crown 하나를 찢어야 하므로, late form이 lane을 얼마나 길게 잠그는지가 직접 드러난다.",
-      directive:
-        "crownhold proof. relay crown 하나가 proof lane을 늦게 but hard하게 조인다. skimmer sweep와 lancer wedge가 열린 복도를 흔들기 전에 가장 얇은 flank를 먼저 찢고 breach hold를 길게 유지해야 한다.",
       driveGainFactor: 1.44,
       arena: THIRD_ACT_PROOF_ARENA,
       activeCap: 30,
@@ -1253,7 +1325,7 @@
         relayWidth: 30,
         relayDamage: 14,
       },
-    },
+    }),
     10: {
       label: "Wave 11 · Starforge Pursuit",
       bandId: "starforge_pursuit",
