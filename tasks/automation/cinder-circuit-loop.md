@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: quarantine every post-`Wave 12` and backstage route concept from the shipped path, then use the reclaimed space to make `Wave 1-12` read in one glance and deliver one earlier visible mid-run mutation worth chasing.
+- Immediate priority: finish one honest `Wave 1-12` ship path by stripping future-run/admin framing from docs and player-facing surfaces, then spend that reclaimed attention on one visible `Wave 5-7` mutation that makes the current run worth repeating.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-25 20:00:42 KST
+  Findings:
+  - [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L7) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L18) and [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L193) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L198) still pitch the game as a tightly narrated `12-wave` contract with a later `Afterburn` expansion target. That keeps the authored ambition split between “ship now” and “real payoff later,” which is exactly why the current finale still struggles to feel conclusive.
+  - [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L92) through [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L104) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21675) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21854) still spend the live screen on `current form`, roadmap, objective, live readout, and upgrade log together. Compared with the single-priority combat framing in `Nova Drift`, `Hades`, or `Brotato`, this is still too much UI for an arena shooter that needs movement and hazard reads to breathe.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21889) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22097) still make the forge explain `Next Proof`, rider state, route payoff, and preview rows around the reward. The cards may be cleaner than before, but the player is still parsing structure instead of instantly wanting “extra barrel,” “shield ring,” or “helper drone.”
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2853) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3147) prove the game already has visible rerun bait `shield halos`, `sentries`, `missiles`, `drones`, yet the opener and midgame still make the player read system framing longer than they get to feel transformation. This is the point where the loop should stop adding catalog breadth for a pass and consolidate pacing, payoff, and readability.
+  Top Priority: Cut the shipped presentation down to one combat read and one reward read, then move exactly one visible secondary mutation into `Wave 5-7` so the current 12-wave route earns anticipation before it asks for more expansion.
+  Why Now: A longer future curve is not believable until the existing slice feels complete, legible, and hungry on repeat.
+  Do Not Repeat: Do not answer this with another renamed contract wrapper or lighter copy on the same HUD/forge stack.
+  Release Gate: UX/UI
 
 - 2026-03-25 23:58:00 KST
   Findings:
@@ -2527,6 +2538,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-25 20:12:48 KST
+  Changed: tightened one bounded piece of the shipped `Wave 5-7` support ladder in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so a chosen support primer now carries its own lightweight combat-frame silhouette during the preview state instead of reading mostly like card text plus one small satellite. `Ember Ring Primer` now adds a warm wake ring, `Aegis Halo Primer` adds a forward guard arc, and `Volt Drones Primer` adds rear tether fins; all three stay restrained, only appear while the build is still on `previewSupportSystemId`, and disappear once a real support install replaces the preview. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock that preview builds expose a combat-frame profile and that the profile clears after the `Wave 7` `Mk.II` completion. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique asked for the current route to earn anticipation with one visible secondary mutation inside `Wave 5-7`, not just explain that a support line exists. The highest-value bounded interpretation was to make the already-shipped primer rung legible during play without moving more spectacle into the opener or adding another branch.
+  Follow-up risk: this makes the primer state easier to read, but it does not by itself force `Wave 7` encounters to showcase the new silhouette. If critique stays on midrun hunger, the next bounded pass should make one `Wave 7` proof beat pressure the player into visibly using these primer-created safe angles rather than widening the support catalog.
+  Release Gate: Progression
 
 - 2026-03-25 23:58:00 KST
   Changed: tightened one bounded piece of the shipped midrun payoff ladder in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so a `Wave 5` support primer now cashes out as that same doctrine-aligned system's discounted `Mk.II` install when the recurring `Wave 7` `방호·보조` slot arrives. On the consolidated route, a primed `Volt Drones`, `Aegis Halo`, or `Ember Ring` no longer reappears as a fresh tier-1 install; it now returns as `예열 완성`, jumps straight to the visible `Mk.II` silhouette, and clears the preview state when taken. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock `Mirror Hunt -> Volt Drones Primer -> Volt Drones Mk.II`, including the discounted cost and the upgraded live support stats. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

@@ -12,9 +12,9 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `UX/UI`: the shipped run still reads like a partially hidden design document because `Tab`, live readout, forge context, and doc copy keep surfacing route model language instead of a single combat/reward hierarchy.
-- Repeated false solution: another consolidation wrapper that cosmetically renames the route while leaving `Afterburn`/`Dominion`, `live ascension` residue, and document-style inspect/forge surfaces alive in the authored contract.
-- Keep comparing against `Nova Drift`, `Hades`, and `Brotato`; the target is one dominant read at a time, reward-first cards, and pause/status screens that simplify rather than restate the run.
-- Preserve this constraint: the opener should stay small and readable. Do not front-load full spectacle into `Wave 1-3`, but do move exactly one visible secondary fantasy into `Wave 5-7`.
-- Main drift markers: post-`Wave 12` runway still exists in code/docs, `Tab` still behaves like a status board with too many fields, forge still explains proof structure, and mid-run power spikes arrive later than the reading burden.
-- Next critique bias: pressure the team to quarantine future scaffolding and consolidate readability before asking for additional systems, then judge any earlier mutation by whether it creates real anticipation instead of more noise.
+- The most fragile gate remains `UX/UI`, but it is now inseparable from pacing: the shipped route still reads like a designed contract instead of a run the player can parse at a glance and feel power spikes inside.
+- Repeated false solution: another consolidation/copy pass that keeps the same roadmap, live readout, `Tab`, forge proof language, and post-`Wave 12` runway under softer labels.
+- Keep comparing against `Nova Drift`, `Hades`, and `Brotato`; the benchmark is one dominant combat read, appetite-first rewards, and pause/status surfaces that compress information instead of restating system logic.
+- Preserve this constraint: the opener must stay small and readable. Do not front-load missiles, orbitals, or full spectacle into `Wave 1-3`; move only one visible secondary mutation into `Wave 5-7`.
+- Main drift markers: docs still sell a short narrated `12-wave` contract plus later `Afterburn`, HUD still stacks too many panels, forge still explains proof/admin framing, and transformation arrives later than the reading burden.
+- Next critique bias: push consolidation over new systems until the current 12-wave slice feels finished, replayable, and worth repeating on the strength of clarity plus one earlier visible mutation.

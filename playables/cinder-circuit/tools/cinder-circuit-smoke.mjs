@@ -317,6 +317,9 @@ const mirrorPrimerSupportStats = game.computeSupportSystemStats(mirrorPrimerRun.
 assert.ok(mirrorPrimerSupportStats);
 assert.equal(mirrorPrimerSupportStats.orbitCount, 1);
 assert.equal(mirrorPrimerSupportStats.shotCooldown, 1.6);
+const mirrorPrimerFrame = game.getPreviewSupportFrameProfile(mirrorPrimerRun.build);
+assert.ok(mirrorPrimerFrame);
+assert.equal(mirrorPrimerFrame.systemId, "volt_drones");
 const mirrorWave7Choices = game.buildForgeChoices(mirrorPrimerRun.build, Math.random, 64, {
   nextWave: 7,
   finalForge: false,
@@ -338,6 +341,7 @@ assert.ok(mirrorWave7SupportStats);
 assert.equal(mirrorWave7SupportStats.orbitCount, 3);
 assert.equal(mirrorWave7SupportStats.shotCooldown, 0.8);
 assert.equal(mirrorPrimerRun.build.previewSupportSystemId, null);
+assert.equal(game.getPreviewSupportFrameProfile(mirrorPrimerRun.build), null);
 const shippingLadderWave4 = game.getShippingLadderSteps(roadmapBuild, null, 4);
 assert.equal(shippingLadderWave4.length, 4);
 assert.equal(shippingLadderWave4.map((step) => step.label).join("|"), "START|도약|방호|점화");

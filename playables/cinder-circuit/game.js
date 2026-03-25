@@ -6563,6 +6563,44 @@
     };
   }
 
+  function getPreviewSupportFrameProfile(build) {
+    if (!build) {
+      return null;
+    }
+    const previewSystemId =
+      build.previewSupportSystemId && PREVIEW_SUPPORT_SYSTEM_DEFS[build.previewSupportSystemId]
+        ? build.previewSupportSystemId
+        : null;
+    if (!previewSystemId || getInstalledSupportSystems(build).length > 0) {
+      return null;
+    }
+    if (previewSystemId === "aegis_halo") {
+      return {
+        systemId: previewSystemId,
+        ringColor: "rgba(206, 247, 255, 0.72)",
+        accentColor: "rgba(127, 224, 255, 0.94)",
+        arcWidth: 0.84,
+        radiusOffset: 11,
+      };
+    }
+    if (previewSystemId === "volt_drones") {
+      return {
+        systemId: previewSystemId,
+        ringColor: "rgba(194, 214, 255, 0.62)",
+        accentColor: "rgba(123, 161, 255, 0.92)",
+        arcWidth: 0.62,
+        radiusOffset: 12,
+      };
+    }
+    return {
+      systemId: previewSystemId,
+      ringColor: "rgba(255, 218, 182, 0.62)",
+      accentColor: "rgba(255, 150, 102, 0.9)",
+      arcWidth: 0.7,
+      radiusOffset: 10,
+    };
+  }
+
   function createSupportSystemChoices(build, rng, options = null) {
     if (!build) {
       return [];
@@ -14822,6 +14860,7 @@
     getSupportBayCapacity,
     getChassisBreakpointDef,
     getIllegalOverclockDef,
+    getPreviewSupportFrameProfile,
     doctrineAllowsSystemInstall,
     getVisibleSupportOfferSystemIds,
     unlockLateSupportBay,
@@ -23000,6 +23039,7 @@
       drawPlayerWave6AscensionFrame(context);
       drawPlayerChassisFrame(context);
       drawPlayerDoctrineFrame(context);
+      drawPlayerPreviewSupportFrame(context);
       drawPlayerLateFieldMutationFrame(context);
       drawPlayerLateFieldConvergenceFrame(context);
       drawPlayerLateFieldAegisFrame(context);
@@ -23663,6 +23703,77 @@
       );
       context.stroke();
     }
+  }
+
+  function drawPlayerPreviewSupportFrame(context) {
+    if (!state.player) {
+      return;
+    }
+    const previewFrame = getPreviewSupportFrameProfile(state.build);
+    if (!previewFrame) {
+      return;
+    }
+    const facing = state.player.facing || 0;
+    const pulse = Math.sin(performance.now() * 0.018) * 1.2;
+    const radius = state.player.radius + previewFrame.radiusOffset + pulse;
+    context.strokeStyle = previewFrame.ringColor;
+    context.lineWidth = 1.9;
+    context.beginPath();
+    context.arc(state.player.x, state.player.y, radius, 0, Math.PI * 2);
+    context.stroke();
+    if (previewFrame.systemId === "aegis_halo") {
+      context.strokeStyle = previewFrame.accentColor;
+      context.lineWidth = 2.6;
+      context.beginPath();
+      context.arc(
+        state.player.x,
+        state.player.y,
+        radius + 3,
+        facing - previewFrame.arcWidth,
+        facing + previewFrame.arcWidth
+      );
+      context.stroke();
+      return;
+    }
+    if (previewFrame.systemId === "volt_drones") {
+      [-1, 1].forEach((direction, index) => {
+        const anchor = getOffsetPoint(
+          state.player.x,
+          state.player.y,
+          facing + Math.PI,
+          state.player.radius + 3,
+          direction * 8
+        );
+        context.strokeStyle = `rgba(137, 173, 255, ${0.82 - index * 0.12})`;
+        context.lineWidth = 2.1;
+        context.beginPath();
+        context.moveTo(anchor.x, anchor.y);
+        context.lineTo(
+          anchor.x + Math.cos(facing + Math.PI + direction * 0.26) * (10 + pulse),
+          anchor.y + Math.sin(facing + Math.PI + direction * 0.26) * (10 + pulse)
+        );
+        context.stroke();
+      });
+      return;
+    }
+    [-1, 1].forEach((direction, index) => {
+      const flare = getOffsetPoint(
+        state.player.x,
+        state.player.y,
+        facing + Math.PI,
+        state.player.radius + 2,
+        direction * 7
+      );
+      context.strokeStyle = `rgba(255, 174, 122, ${0.8 - index * 0.1})`;
+      context.lineWidth = 2.2;
+      context.beginPath();
+      context.moveTo(flare.x, flare.y);
+      context.lineTo(
+        flare.x + Math.cos(facing + Math.PI + direction * 0.18) * (11 + pulse),
+        flare.y + Math.sin(facing + Math.PI + direction * 0.18) * (11 + pulse)
+      );
+      context.stroke();
+    });
   }
 
   function drawPlayerLateAscensionFrame(context) {
