@@ -4700,6 +4700,106 @@
       },
     },
   };
+  const CROWNFIRE_OVERDRIVE_DEFS = {
+    ember: {
+      id: "ember_crownfire",
+      title: "Crownflare Turbine",
+      traitLabel: "삼중 점화 편대",
+      previewText: "측면 점화 편대 3줄",
+      description:
+        "Wave 6에서 잠근 차체 위에 점화 터빈을 더 얹어 주탄 양옆에 삼중 점화 편대를 연다. 정면만 미는 대신 열린 측면 둘까지 함께 태워 mid-run ownership를 크게 벌린다.",
+      statusNote:
+        "Crownflare Turbine이 주탄 양옆에 삼중 점화 편대를 붙여 열린 lane sweep를 더 길게 유지한다.",
+      slotText: "중반 과열 도약 · 삼중 점화 편대",
+      cost: 36,
+      firePattern: {
+        offsets: [-0.32, -0.16, 0.16, 0.32],
+        damageMultiplier: 0.28,
+        speedMultiplier: 1.12,
+        radius: 4,
+        life: 1.12,
+        pierceBonus: 0,
+        bounceBonus: 0,
+        chainBonus: 0,
+        color: "#ffd28a",
+      },
+      applyWeapon(stats) {
+        stats.cooldown = clamp(stats.cooldown * 0.9, 0.08, 0.4);
+        stats.projectileSpeed += 16;
+      },
+    },
+    scatter: {
+      id: "scatter_crownfire",
+      title: "Kiln Cycler",
+      traitLabel: "외곽 산탄 벨트",
+      previewText: "외곽 펠릿 +4",
+      description:
+        "산탄 외곽에 회전 벨트를 덧대 양쪽 산탄 열을 더 길게 뿜어낸다. 전방 파쇄를 유지하면서도 side pocket 정리가 붙어 open-lane 교전이 한 단계 커진다.",
+      statusNote:
+        "Kiln Cycler가 외곽 산탄 벨트를 더해 열린 측면과 전방 돌파를 동시에 두껍게 만든다.",
+      slotText: "중반 과열 도약 · 외곽 펠릿 +4",
+      cost: 36,
+      applyWeapon(stats) {
+        stats.pellets += 4;
+        stats.spread = round(stats.spread * 1.08, 3);
+        stats.damage += 3;
+      },
+    },
+    lance: {
+      id: "lance_crownfire",
+      title: "Sky Splitter",
+      traitLabel: "측선 절개 레일",
+      previewText: "측선 레일 4줄",
+      description:
+        "직선 절개 옆에 네 갈래 측선 레일을 더 깔아 관통선 하나를 lane sweep 프레임으로 바꾼다. Wave 6 몸체 break 뒤 첫 open-lane 교전이 훨씬 더 공격적으로 열린다.",
+      statusNote:
+        "Sky Splitter가 측선 절개 레일을 더해 관통선 하나를 넓은 lane sweep로 바꾼다.",
+      slotText: "중반 과열 도약 · 측선 절개 레일",
+      cost: 36,
+      firePattern: {
+        offsets: [-0.22, -0.08, 0.08, 0.22],
+        damageMultiplier: 0.34,
+        speedMultiplier: 1.16,
+        radius: 5,
+        life: 1.14,
+        pierceBonus: 1,
+        bounceBonus: 0,
+        chainBonus: 0,
+        color: "#d9fbff",
+      },
+      applyWeapon(stats) {
+        stats.projectileSpeed += 42;
+        stats.pierce += 1;
+      },
+    },
+    ricochet: {
+      id: "ricochet_crownfire",
+      title: "Mirror Fan",
+      traitLabel: "사중 분광 부채",
+      previewText: "분광탄 4갈래 추가",
+      description:
+        "중심 분광탄 바깥에 사중 분광 부채를 더 깔아 반사 진입선 자체를 전장 폭으로 넓힌다. 벽을 스칠 때마다 여러 복귀각이 한꺼번에 열려 open-lane crossfire를 더 쉽게 비운다.",
+      statusNote:
+        "Mirror Fan이 사중 분광 부채를 더해 반사 진입선과 복귀 화선을 동시에 넓힌다.",
+      slotText: "중반 과열 도약 · 사중 분광 부채",
+      cost: 36,
+      firePattern: {
+        offsets: [-0.26, -0.12, 0.12, 0.26],
+        damageMultiplier: 0.42,
+        speedMultiplier: 1.06,
+        radius: 4.1,
+        life: 1.18,
+        pierceBonus: 0,
+        bounceBonus: 1,
+        chainBonus: 0,
+        color: "#f7e8ff",
+      },
+      applyWeapon(stats) {
+        stats.chain += 1;
+        stats.chainRange = Math.max(stats.chainRange || 0, 180);
+      },
+    },
+  };
   const FINISHER_RECIPE_DEFS = {
     ember: {
       label: "Crown Pyre",
@@ -5413,6 +5513,7 @@
     illegalOverclockOffered: false,
     illegalOverclockMutationLevel: 0,
     afterglowMutationId: null,
+    crownfireOverdriveId: null,
     previewSupportSystemId: null,
     riskMutationLevel: 0,
     riskMutationQueuedLevel: 0,
@@ -7083,6 +7184,19 @@
     return Object.values(AFTERGLOW_MUTATION_DEFS).find((def) => def.id === mutationId) || null;
   }
 
+  function getCrownfireOverdriveDef(buildOrId) {
+    const overdriveId =
+      typeof buildOrId === "string"
+        ? buildOrId
+        : buildOrId && buildOrId.crownfireOverdriveId
+          ? buildOrId.crownfireOverdriveId
+          : null;
+    if (!overdriveId) {
+      return null;
+    }
+    return Object.values(CROWNFIRE_OVERDRIVE_DEFS).find((def) => def.id === overdriveId) || null;
+  }
+
   function createAfterglowMutationChoice(build, nextWave) {
     if (
       !build ||
@@ -7112,6 +7226,39 @@
       afterglowMutationId: mutation.id,
       previewText: mutation.previewText,
       traitLabel: mutation.traitLabel,
+    };
+  }
+
+  function createCrownfireOverdriveChoice(build, nextWave) {
+    if (
+      !build ||
+      !Number.isFinite(nextWave) ||
+      nextWave !== 7 ||
+      build.crownfireOverdriveId ||
+      !build.chassisId ||
+      (!build.afterglowMutationId && getWeaponEvolutionTier(build, build.coreId) < 1)
+    ) {
+      return null;
+    }
+    const overdrive = CROWNFIRE_OVERDRIVE_DEFS[build.coreId];
+    if (!overdrive) {
+      return null;
+    }
+    return {
+      type: "utility",
+      action: "crownfire_overdrive",
+      id: `utility:crownfire_overdrive:${overdrive.id}:${nextWave}`,
+      verb: "점화",
+      tag: "OVERDRIVE",
+      title: overdrive.title,
+      description: `${overdrive.description} 다음 전투는 support 없이도 방금 잠근 gun/body silhouette가 열린 lane 둘을 얼마나 오래 먹는지 바로 보여 준다.`,
+      slotText: overdrive.slotText,
+      cost: overdrive.cost,
+      laneLabel: "Main Weapon Mutation",
+      forgeLaneLabel: "Main Weapon Mutation",
+      crownfireOverdriveId: overdrive.id,
+      previewText: overdrive.previewText,
+      traitLabel: overdrive.traitLabel,
     };
   }
 
@@ -7251,6 +7398,13 @@
       return [
         { label: "형태", value: choice.previewText || choice.title || "작은 변이" },
         { label: "효과", value: choice.traitLabel || choice.slotText || "사격 조율" },
+        ...finaleRows,
+      ];
+    }
+    if (choice.type === "utility" && choice.action === "crownfire_overdrive") {
+      return [
+        { label: "형태", value: choice.previewText || choice.title || "중반 점화" },
+        { label: "효과", value: choice.traitLabel || choice.slotText || "open-lane 과열" },
         ...finaleRows,
       ];
     }
@@ -7486,6 +7640,19 @@
         proof: "바로 다음 전투에서 열린 화선이 더 오래 버티는지 즉시 드러난다.",
         riderLabel: "Defense / Utility",
         riderNote: "살아남는 선 한 줄만 더하면 새 화선이 실제 공간으로 바뀐다.",
+        accent,
+      };
+    }
+    if (choice.type === "utility" && choice.action === "crownfire_overdrive") {
+      const accent = choice.previewText || choice.traitLabel || choice.title || "중반 점화";
+      return {
+        laneLabel: choice.forgeLaneLabel || choice.laneLabel || "Forge Lane",
+        title: choice.title || accent,
+        tone: "main",
+        promise: `${accent}를 열어 Wave 6 몸체 break 뒤 첫 open-lane 지배 형태를 완성한다.`,
+        proof: "다음 전투에서 support 없이도 열린 측면 둘을 얼마나 오래 비우는지 바로 드러난다.",
+        riderLabel: "Defense / Utility",
+        riderNote: "큰 gun/body 실루엣이 먼저 서고, support는 그 뒤에 따라와야 한다.",
         accent,
       };
     }
@@ -7764,6 +7931,10 @@
       weapon.afterglowMutationFirePattern &&
       Array.isArray(weapon.afterglowMutationFirePattern.offsets)
         ? weapon.afterglowMutationFirePattern.offsets.length
+        : 0,
+      weapon.crownfireOverdriveFirePattern &&
+      Array.isArray(weapon.crownfireOverdriveFirePattern.offsets)
+        ? weapon.crownfireOverdriveFirePattern.offsets.length
         : 0,
     ];
     return Math.max(...patternCounts, 0);
@@ -8045,6 +8216,7 @@
         illegalOverclockId: BASE_BUILD.illegalOverclockId,
         illegalOverclockOffered: BASE_BUILD.illegalOverclockOffered,
         illegalOverclockMutationLevel: BASE_BUILD.illegalOverclockMutationLevel,
+        crownfireOverdriveId: BASE_BUILD.crownfireOverdriveId,
         riskMutationLevel: BASE_BUILD.riskMutationLevel,
         riskMutationQueuedLevel: BASE_BUILD.riskMutationQueuedLevel,
         apexMutationLevel: BASE_BUILD.apexMutationLevel,
@@ -10247,6 +10419,11 @@
       afterglowMutationTraitLabel: null,
       afterglowMutationStatusNote: null,
       afterglowMutationFirePattern: null,
+      crownfireOverdriveId: null,
+      crownfireOverdriveLabel: null,
+      crownfireOverdriveTraitLabel: null,
+      crownfireOverdriveStatusNote: null,
+      crownfireOverdriveFirePattern: null,
       doctrineStage: 0,
       doctrineFormLabel: null,
       doctrineTraitLabel: null,
@@ -10328,6 +10505,17 @@
       stats.afterglowMutationFirePattern = afterglowMutation.firePattern || null;
       if (typeof afterglowMutation.applyWeapon === "function") {
         afterglowMutation.applyWeapon(stats, build);
+      }
+    }
+    const crownfireOverdrive = getCrownfireOverdriveDef(build);
+    if (crownfireOverdrive) {
+      stats.crownfireOverdriveId = crownfireOverdrive.id;
+      stats.crownfireOverdriveLabel = crownfireOverdrive.title;
+      stats.crownfireOverdriveTraitLabel = crownfireOverdrive.traitLabel;
+      stats.crownfireOverdriveStatusNote = crownfireOverdrive.statusNote;
+      stats.crownfireOverdriveFirePattern = crownfireOverdrive.firePattern || null;
+      if (typeof crownfireOverdrive.applyWeapon === "function") {
+        crownfireOverdrive.applyWeapon(stats, build);
       }
     }
     const catalystCapstone = getCatalystCapstone(build, core.id);
@@ -11851,6 +12039,7 @@
     const recurringBaseRouteContract =
       CONSOLIDATED_12_WAVE_ROUTE && Number.isFinite(nextWave) && nextWave < LATE_BREAK_ARMORY_WAVE;
     const afterglowMutationChoice = createAfterglowMutationChoice(build, nextWave);
+    const crownfireOverdriveChoice = createCrownfireOverdriveChoice(build, nextWave);
     const catalystReforgeChoice = createCatalystReforgeChoice(build);
     const recycleChoice = createRecycleChoice(build);
     const reforgeChoice = catalystReforgeChoice || createReforgeChoice(build, random);
@@ -11877,6 +12066,7 @@
       : null;
     const packagePrimary = shouldForceForgePackage(options) && (options.packageStep || 1) === 1;
     pushChoiceIfOpen(evolutionCandidates, afterglowMutationChoice, choiceCatalog);
+    pushChoiceIfOpen(evolutionCandidates, crownfireOverdriveChoice, choiceCatalog);
     pushChoiceIfOpen(evolutionCandidates, weaponEvolutionChoice, choiceCatalog);
     pushChoiceIfOpen(commitCandidates, doctrineChaseChoice, choiceCatalog);
     pushChoiceIfOpen(commitCandidates, guaranteedMidrunChase || finisherChoice, choiceCatalog);
@@ -14336,6 +14526,20 @@
       run.build.upgrades.push(`Afterglow Mutation: ${mutation.title}`);
       if (run.player) {
         run.player.heat = Math.max(0, run.player.heat - 10);
+        run.player.overheated = false;
+      }
+      return choice;
+    }
+
+    if (choice.type === "utility" && choice.action === "crownfire_overdrive") {
+      const overdrive = getCrownfireOverdriveDef(choice.crownfireOverdriveId);
+      if (!overdrive) {
+        return null;
+      }
+      run.build.crownfireOverdriveId = overdrive.id;
+      run.build.upgrades.push(`Crownfire Overdrive: ${overdrive.title}`);
+      if (run.player) {
+        run.player.heat = Math.max(0, run.player.heat - 12);
         run.player.overheated = false;
       }
       return choice;
@@ -20227,6 +20431,7 @@
 
     fireWeaponPattern(weapon.evolutionFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.afterglowMutationFirePattern, weapon, baseAngle, driveActive);
+    fireWeaponPattern(weapon.crownfireOverdriveFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.doctrineFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.lateAscensionFirePattern, weapon, baseAngle, driveActive);
     fireWeaponPattern(weapon.afterburnOverdriveFirePattern, weapon, baseAngle, driveActive);

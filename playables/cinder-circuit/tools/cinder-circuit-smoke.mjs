@@ -462,6 +462,57 @@ assert.ok(/충격파|탄막|돌격/.test(wave6DefenseTransform.promise));
 assert.ok(
   !/armory|bay|junction|uplink|무기고|정션|업링크/i.test(wave6DefenseTransform.proof)
 );
+const crownfireBuild = game.createInitialBuild("rail_zeal");
+const crownfireWave5Choices = game.buildForgeChoices(crownfireBuild, () => 0.1, 999, {
+  nextWave: 5,
+  finalForge: false,
+  build: crownfireBuild,
+});
+game.applyForgeChoice(
+  { build: crownfireBuild, player: null },
+  crownfireWave5Choices.find((choice) => choice.contractRole === "headline")
+);
+const crownfireWave6Choices = game.buildForgeChoices(crownfireBuild, () => 0.1, 999, {
+  nextWave: 6,
+  finalForge: false,
+  build: crownfireBuild,
+});
+game.applyForgeChoice(
+  { build: crownfireBuild, player: null },
+  crownfireWave6Choices.find((choice) => choice.contractRole === "headline")
+);
+game.applyForgeChoice(
+  { build: crownfireBuild, player: null },
+  crownfireWave6Choices.find((choice) => choice.contractRole === "rider")
+);
+const crownfireWave7Choices = game.buildForgeChoices(crownfireBuild, () => 0.1, 999, {
+  nextWave: 7,
+  finalForge: false,
+  build: crownfireBuild,
+});
+const crownfireWave7Headline =
+  crownfireWave7Choices.find((choice) => choice.contractRole === "headline") ||
+  crownfireWave7Choices[0];
+assert.equal(crownfireWave7Headline.action, "crownfire_overdrive");
+assert.equal(crownfireWave7Headline.title, "Sky Splitter");
+const crownfireWave7Transform = game.getBaseRouteForgeChoiceTransformation(crownfireWave7Headline);
+assert.equal(crownfireWave7Transform.previewLabel, "형태");
+assert.ok(/측선 레일|open-lane|절개/.test(crownfireWave7Transform.promise));
+assert.ok(/Wave 6 몸체 break|open-lane 교전|공격적으로/.test(crownfireWave7Transform.proof));
+game.applyForgeChoice({ build: crownfireBuild, player: null }, crownfireWave7Headline);
+const crownfireWeapon = game.computeWeaponStats(crownfireBuild);
+assert.equal(crownfireWeapon.crownfireOverdriveLabel, "Sky Splitter");
+assert.deepEqual(Array.from(crownfireWeapon.crownfireOverdriveFirePattern.offsets), [-0.22, -0.08, 0.08, 0.22]);
+const crownfireWave8Choices = game.buildForgeChoices(crownfireBuild, () => 0.1, 999, {
+  nextWave: 8,
+  finalForge: false,
+  build: crownfireBuild,
+});
+const crownfireWave8Headline =
+  crownfireWave8Choices.find((choice) => choice.contractRole === "headline") ||
+  crownfireWave8Choices[0];
+assert.equal(crownfireWave8Headline.type, "evolution");
+assert.equal(crownfireWave8Headline.evolutionTier, 2);
 const recurringWave3GambleChoice =
   recurringWave3Choices.find((choice) => choice.contractRole === "gamble") ||
   recurringWave3Choices[2];
