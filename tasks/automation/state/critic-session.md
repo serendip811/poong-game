@@ -12,9 +12,9 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is `Builds`: the run now has more space and cleaner wave shaping, but the appetitive visible growth layers are still gated too late and buried under route/admin structure.
-- Repeated false solution: polishing copy or forge layout without exposing earlier, smaller visual mutations that make the player crave the next form.
-- Keep comparing against `Nova Drift`, `Hades`, and `Brotato`; the target is immediate desire, one-priority reads, and visible build hunger, not a clearly documented route contract.
-- Good change to preserve: the opener has more room and should stay visually small; do not front-load the full satellite/missile/drone spectacle into `Wave 1-3`, but do tease smaller body/support mutations earlier than `Wave 8`.
-- Main drift markers: the coolest support fantasies are still late-gated, forge cards still sell explanation before fantasy, and `Afterburn` keeps implying the real payoff is after the shipped slice.
-- Next critique bias: keep pushing appetite-first build lanes and earlier visible transformation beats, while pressuring the team to consolidate rather than stacking more wrappers or future-run ladders.
+- The most fragile gate is now `UX/UI`: combat and rewards still ask the player to read too many parallel panels before threat, movement space, and mutation payoff become obvious.
+- Repeated false solution: trimming labels or copy while leaving the same roadmap/live-readout/forge-context scaffolding and post-`Wave 12` promises intact.
+- Keep comparing against `Nova Drift`, `Hades`, and `Brotato`; the target is one combat priority, one reward priority, and visible form hunger with minimal text.
+- Good change to preserve: the opener has more breathing room and should stay visually small; do not front-load full missile/drone spectacle into `Wave 1-3`, but do not leave all appetitive support/body mutations stranded at `Wave 8+` either.
+- Main drift markers: the forge still explains process before fantasy, the default HUD still stacks too many status boards, and `Afterburn`/`Dominion` still imply the real payoff lives after the shipped run.
+- Next critique bias: keep pressuring consolidation and screen hierarchy, and only push new systems if the current `Wave 1-12` route first becomes clean, hungry, and self-contained.

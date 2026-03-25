@@ -14830,6 +14830,7 @@
     waveObjective: document.getElementById("wave-objective"),
     liveReadout: document.getElementById("live-readout"),
     forgeOverlay: document.getElementById("forge-overlay"),
+    forgeEyebrow: document.getElementById("forge-eyebrow"),
     forgeSubtitle: document.getElementById("forge-subtitle"),
     forgeContext: document.getElementById("forge-context"),
     forgeCards: document.getElementById("forge-cards"),
@@ -21858,13 +21859,19 @@
         : riderStep
         ? `${dominantFormSummary.label} 위에 rider 한 장만 얹고 바로 다음 전투 ask를 버틴다.`
           : `${dominantFormSummary.label} 다음에 가장 크게 전장을 바꿀 변이 하나만 먼저 고른다.`;
-    elements.forgeSubtitle.textContent = useBaseRouteContract
-      ? `고철 ${Math.round(state.resources.scrap)}`
-      : state.pendingFinalForge
-        ? `${forgeModeLabel} · ${focusTitle} · 고철 ${Math.round(state.resources.scrap)}`
-        : riderStep
-          ? `${forgeModeLabel} · ${proofWindow.label} 대비 rider 선택 · 고철 ${Math.round(state.resources.scrap)}`
-          : `${forgeModeLabel} · ${focusTitle} 먼저 · 고철 ${Math.round(state.resources.scrap)}`;
+    if (elements.forgeEyebrow) {
+      elements.forgeEyebrow.classList.toggle("hidden", useBaseRouteContract);
+    }
+    if (elements.forgeSubtitle) {
+      elements.forgeSubtitle.classList.toggle("hidden", useBaseRouteContract);
+      elements.forgeSubtitle.textContent = useBaseRouteContract
+        ? ""
+        : state.pendingFinalForge
+          ? `${forgeModeLabel} · ${focusTitle} · 고철 ${Math.round(state.resources.scrap)}`
+          : riderStep
+            ? `${forgeModeLabel} · ${proofWindow.label} 대비 rider 선택 · 고철 ${Math.round(state.resources.scrap)}`
+            : `${forgeModeLabel} · ${focusTitle} 먼저 · 고철 ${Math.round(state.resources.scrap)}`;
+    }
     elements.forgeContext.innerHTML = useBaseRouteContract
       ? `
         <article class="forge-focus forge-focus--${riderStep ? "rider" : "headline"} forge-context__card forge-context__card--span-two">
@@ -21939,7 +21946,7 @@
             return `
           <button
             type="button"
-            class="forge-card forge-card--contract forge-card--${choice.tag.toLowerCase()}"
+            class="forge-card forge-card--contract forge-card--snap forge-card--${choice.tag.toLowerCase()}"
             data-kind="${kind}"
             data-contract="${choice.contractRole || (riderStep ? "rider" : "open")}"
             data-index="${index}"
@@ -21947,7 +21954,6 @@
             data-verb="${choice.verb}"
             ${state.resources.scrap < choice.cost ? "disabled" : ""}
           >
-            <span class="forge-card__tag">${contractLabel}</span>
             <h3>${choice.title}</h3>
             <p class="forge-card__hero-copy">${transformation.promise}</p>
             ${createBaseRouteForgePreviewMarkup(

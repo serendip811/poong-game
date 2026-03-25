@@ -1834,6 +1834,32 @@ body[data-overdrive="true"] .backdrop__glow--right {
   gap: 10px;
 }
 
+.forge-card--snap {
+  gap: 12px;
+  padding: 16px;
+}
+
+.forge-card--snap h3 {
+  margin-top: 0;
+  font-size: 1.08rem;
+  line-height: 1.2;
+}
+
+.forge-card--snap .forge-card__hero-copy {
+  margin-top: 0;
+  color: var(--text);
+  font-size: 0.92rem;
+  line-height: 1.46;
+}
+
+.forge-card--snap .forge-card__pivot {
+  margin-top: 2px;
+}
+
+.forge-card--snap .forge-card__slot {
+  margin-top: auto;
+}
+
 .forge-card:hover {
   border-color: rgba(255, 175, 108, 0.34);
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22);
