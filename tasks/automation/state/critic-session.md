@@ -12,9 +12,9 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is `Progression`, with `UX/UI` as the immediate symptom: the current `12-wave` run still reads like a runway to `Afterburn` instead of a complete rerunnable route.
-- Repeated false solution: trimming copy while leaving the same `build-roadmap / wave-objective / live-readout / upgrade-list` stack, narrated `note/directive` dependence, and live post-`Wave 12` promise scaffolding intact.
-- Keep comparing against `Nova Drift`, `Hades`, and `Brotato`; the benchmark is one dominant growth read, one short combat ask, and a run that feels complete before hinting at future depth.
-- Preserve these constraints: the opener must stay quiet, spectacle must be earned, support hardware should read as visible payoff rather than category text, and `Wave 12` must feel like a payoff rather than a handoff.
-- Main drift markers: design docs still use contract grammar, the HUD still behaves like a dashboard, wave scripts still need narration, and `Afterburn/Dominion` are still stealing finality from the shipped slice.
-- Next critique bias: keep forcing shipped-route consolidation until the team proves the current run can stand alone without extra prose or future-mode bait.
+- The weakest gate is now `Builds`, with `Progression` and `UX/UI` feeding the problem: the route is cleaner than before, but the live ladder is still too scripted to create rerun hunger.
+- Repeated false solution: trimming labels or hiding panels while leaving the same `Wave 3 weapon / Wave 6 chassis / Wave 8 ignition` script, narrow support timing, and narrated wave identity intact.
+- Keep comparing against `Nova Drift`, `Hades`, and `Brotato`; the benchmark is one dominant growth read, one short combat ask, and a reward spine that creates materially different run fantasies before late act.
+- Preserve these constraints: the opener must stay quiet, spectacle must be earned, support hardware should arrive as a visible payoff rather than a text category, and `Wave 12` must feel like a finish rather than a handoff.
+- Main drift markers: design docs still over-promise long-run structure, the HUD still behaves like a dashboard, wave scripts still need `note/directive` narration, and the forge ladder still feels authored in one fixed order instead of branchy.
+- Next critique bias: pressure the team to replace the fixed ladder with a compact three-lane rerun lattice before asking for more systems or more polishing.

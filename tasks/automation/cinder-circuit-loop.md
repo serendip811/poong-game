@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: lock the shipped game to a self-contained `Wave 1-12` route now by hiding post-`Wave 12` promise scaffolding, collapsing the default HUD to one growth read plus one combat ask, and making encounters/rewards sell themselves through space, silhouettes, and visible weapon-body-support evolution instead of route narration.
+- Immediate priority: replace the scripted `Wave 3 -> Wave 6 -> Wave 8` ladder with a compact rerunnable forge lattice across `Wave 4-10`, while keeping the opener quiet and the default combat HUD limited to one growth read plus one combat ask.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 02:01:08 KST
+  Findings:
+  - [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L15) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L18) still promise a route with enough structure to grow toward `20-30 waves`, but [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8480) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8538) hard-code the shipped appetite ladder to `약한 시작 -> Wave 3 weapon -> Wave 6 chassis -> Wave 8 late ignition`. That makes the run readable, but it also makes reruns feel mostly pre-solved by schedule instead of hungry for different pivots.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2718) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3206) now contain the right visible fantasies `orbitals`, `shield halos`, `sentries`, `missiles`, `drones`, yet the shipped route still introduces them through a narrow timing gate and a small bay economy. The player is mostly confirming the run's authored upgrade order, not forming a distinct offense/defense/utility identity they want to chase again.
+  - [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L93) through [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L105) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21828) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22053) still keep roadmap/objective/readout/upgrade log plus a `Tab` inspect board alive around combat. Compared with `Nova Drift`, `Brotato`, or `Hades`, this is still too much run explanation wrapped around too little actual decision variance.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L771) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1152) still write each wave's identity through `note` and `directive` prose. If encounter value has to be narrated this hard, the arena ecology is still not carrying enough of the excitement through space, enemy composition, and visible build payoff on its own.
+  Top Priority: Rebuild the `Wave 4-10` forge contract into a true three-lane draft `offense mutation / defense-support package / greed-utility gamble` so the player starts small, sees one visible mid-run support payoff before late act, and can form materially different rerun goals without relying on post-`Wave 12` promise language.
+  Why Now: A cleaner HUD will only expose how fixed the run is unless the reward spine starts generating real build hunger.
+  Do Not Repeat: Do not answer this with another wording pass or another late-only branch if the live route still resolves into the same `Wave 3 / 6 / 8` script.
+  Release Gate: Builds
 
 - 2026-03-26 01:30:35 KST
   Findings:
@@ -2661,6 +2672,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-26 15:05:00 KST
+  Changed: rebuilt one bounded piece of the consolidated `Wave 4-10` forge contract in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the shipped `판돈·유틸` lane no longer auto-collapses into the same `Greed Contract` every stop. Base-route forge selection now scores that third slot against run state and wave timing, which lets healthy runs surface utility pivots like `Flux Reforge`, `고철 회수`, `Magnet Rig`, `Step Servos`, or other sustain-tech cards while low-scrap or late-act states can still let greed retake priority. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so smoke coverage stops assuming the third card is always a pure scrap pact and instead locks the stronger contract: `headline / rider / gamble` still remain present, but the gamble lane may now be either greed or utility depending on the build state. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` asked for a true three-lane draft `offense mutation / defense-support package / greed-utility gamble` across `Wave 4-10`, and the highest-value bounded interpretation was to stop the live third lane from being a disguised fixed script. This keeps the current gun/body ladder intact while giving reruns a more believable utility-vs-greed fork before the late form lock.
+  Follow-up risk: this makes the third lane less pre-solved, but it does not yet add new bespoke utility fantasies; if critique stays on the same gate, the next bounded pass should add one or two more visibly distinct utility packages so the lane is not carried mainly by existing mods/reforges.
+  Release Gate: Builds
 
 - 2026-03-26 01:11:34 KST
   Changed: tightened one bounded piece of the shipped combat/reward language in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the consolidated default layer stops reading like a route explainer even after the earlier two-card HUD pass. The live growth card now says `현재 형태 + 다음 변화` instead of `다음 도약`, the default `현재 전장` card collapses to `wave title + one short ask + one small threat pill` instead of a proof/status paragraph, and the base-route forge context now sells the visible pickup in plain appetite-first lines instead of `시험`/proof phrasing. Smoke coverage now locks the new combat-ask helper and the quieter forge prompt copy so these default surfaces do not regress back into briefing language. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

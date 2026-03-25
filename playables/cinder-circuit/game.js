@@ -10810,6 +10810,104 @@
     return null;
   }
 
+  function takeBestScoredChoice(candidates, takenIds, laneLabel, scoreChoice) {
+    if (!Array.isArray(candidates) || candidates.length === 0) {
+      return null;
+    }
+    let bestChoice = null;
+    let bestScore = -Infinity;
+    for (const choice of candidates) {
+      if (!choice || takenIds.has(choice.id)) {
+        continue;
+      }
+      const score = typeof scoreChoice === "function" ? scoreChoice(choice) : 0;
+      if (score > bestScore) {
+        bestChoice = choice;
+        bestScore = score;
+      }
+    }
+    if (!bestChoice) {
+      return null;
+    }
+    takenIds.add(bestChoice.id);
+    return markForgeLane(bestChoice, laneLabel);
+  }
+
+  function scoreBaseRouteGambleChoice(choice, build, scrapBank, nextWave) {
+    if (!choice) {
+      return -1;
+    }
+    const lowScrap = Number.isFinite(scrapBank) && scrapBank < 34;
+    const debtActive = Boolean(
+      build &&
+        ((Number.isFinite(build.blackLedgerRaidWaves) && build.blackLedgerRaidWaves > 0) ||
+          (Number.isFinite(build.bastionPactDebtWaves) && build.bastionPactDebtWaves > 0))
+    );
+    const pendingCount = build ? getPendingCoreIds(build).length : 0;
+    const affixCount = build
+      ? sanitizeAffixIds(build.affixes, getAffixCapacity(build)).length
+      : 0;
+    if (choice.type === "utility" && choice.action === "field_greed") {
+      let score = 172;
+      if (!debtActive) {
+        score += 36;
+      }
+      if (lowScrap) {
+        score += 34;
+      }
+      if (nextWave >= 8) {
+        score += 26;
+      }
+      if ((build && Number.isFinite(build.scrapMultiplier) ? build.scrapMultiplier : 0) < 0.2) {
+        score += 10;
+      }
+      return score;
+    }
+    if (choice.type === "utility" && choice.action === "recycle") {
+      return 240 + pendingCount * 42 + (lowScrap ? 22 : 0);
+    }
+    if (choice.type === "utility" && choice.action === "reforge") {
+      return 220 + pendingCount * 36 + (nextWave >= 7 ? 18 : 0);
+    }
+    if (choice.type === "utility" && choice.action === "affix_reforge") {
+      return 202 + affixCount * 24 + (nextWave >= 8 ? 10 : 0);
+    }
+    if (choice.type === "mod") {
+      if (choice.modId === "magnet_rig") {
+        return 244 + (lowScrap ? 16 : 0);
+      }
+      if (choice.modId === "step_servos") {
+        return 238;
+      }
+      if (choice.modId === "reactor_cap") {
+        return 232;
+      }
+      if (choice.modId === "drive_sync") {
+        return 228;
+      }
+      if (choice.modId === "coolant_purge") {
+        return 220;
+      }
+      if (choice.modId === "armor_mesh") {
+        return 216;
+      }
+      return 160;
+    }
+    if (choice.type === "affix") {
+      return choice.affixId === "salvage_link" ? 214 : 198;
+    }
+    if (choice.type === "core") {
+      return 138 + pendingCount * 8;
+    }
+    if (choice.type === "system") {
+      return choice.forgeLaneLabel === "공세 모듈" ? 132 : 124;
+    }
+    if (choice.type === "fallback") {
+      return 24;
+    }
+    return 120;
+  }
+
   function createModChoice(modId) {
     const mod = MOD_DEFS[modId];
     return {
@@ -11822,7 +11920,14 @@
       }
     });
 
-    [createModChoice("coolant_purge"), createModChoice("magnet_rig"), createModChoice("armor_mesh"), createModChoice("step_servos")]
+    [
+      createModChoice("coolant_purge"),
+      createModChoice("magnet_rig"),
+      createModChoice("armor_mesh"),
+      createModChoice("step_servos"),
+      createModChoice("reactor_cap"),
+      createModChoice("drive_sync"),
+    ]
       .filter(Boolean)
       .forEach((choice) => pushChoiceIfOpen(sustainCandidates, choice, choiceCatalog));
 
@@ -11963,6 +12068,12 @@
     const gamblePool = reserveMidrunSupportForRider
       ? [...gambleCandidates, ...pivotCandidates, ...sustainCandidates]
       : [...gambleCandidates, ...pivotCandidates, ...sustainCandidates, ...offensiveModuleCandidates];
+    const adaptiveGambleChoice =
+      recurringBaseRouteContract && nextWave <= 10
+        ? takeBestScoredChoice(gamblePool, takenIds, "탐욕/유틸", (choice) =>
+            scoreBaseRouteGambleChoice(choice, build, scrapBank, nextWave)
+          )
+        : takeFirstAvailableChoice(gamblePool, takenIds, "탐욕/유틸");
     const choices = [
       markForgeContract(
         takeFirstAvailableChoice(headlinePool, takenIds, "주력 변신"),
@@ -11975,7 +12086,7 @@
         "방호·보조"
       ),
       markForgeContract(
-        takeFirstAvailableChoice(gamblePool, takenIds, "탐욕/유틸"),
+        adaptiveGambleChoice,
         "gamble",
         "판돈·유틸"
       ),
