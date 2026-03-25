@@ -291,6 +291,32 @@ assert.ok(recurringWave5Run.build.previewSupportSystemId);
 const recurringWave5SupportStats = game.computeSupportSystemStats(recurringWave5Run.build);
 assert.ok(recurringWave5SupportStats);
 assert.equal(recurringWave5SupportStats.orbitCount, 1);
+const mirrorPrimerBuild = game.createInitialBuild("relay_oath");
+mirrorPrimerBuild.pendingCores = [];
+mirrorPrimerBuild.bastionDoctrineId = "mirror_hunt";
+const mirrorWave5Choices = game.buildForgeChoices(mirrorPrimerBuild, Math.random, 40, {
+  nextWave: 5,
+  finalForge: false,
+  build: mirrorPrimerBuild,
+});
+const mirrorWave5RiderChoice =
+  mirrorWave5Choices.find((choice) => choice.contractRole === "rider") || mirrorWave5Choices[1];
+assert.ok(mirrorWave5RiderChoice);
+assert.equal(mirrorWave5RiderChoice.action, "preview_support");
+assert.equal(mirrorWave5RiderChoice.systemId, "volt_drones");
+assert.equal(mirrorWave5RiderChoice.title, "Volt Drones Primer");
+const mirrorWave5Transform = game.getBaseRouteForgeChoiceTransformation(mirrorWave5RiderChoice);
+assert.ok(/드론|보조/.test(mirrorWave5Transform.promise));
+assert.ok(/추격선|복귀 사선|외곽 회전/.test(mirrorWave5Transform.proof));
+const mirrorPrimerRun = {
+  build: mirrorPrimerBuild,
+  player: null,
+};
+game.applyForgeChoice(mirrorPrimerRun, mirrorWave5RiderChoice);
+const mirrorPrimerSupportStats = game.computeSupportSystemStats(mirrorPrimerRun.build);
+assert.ok(mirrorPrimerSupportStats);
+assert.equal(mirrorPrimerSupportStats.orbitCount, 1);
+assert.equal(mirrorPrimerSupportStats.shotCooldown, 1.6);
 const shippingLadderWave4 = game.getShippingLadderSteps(roadmapBuild, null, 4);
 assert.equal(shippingLadderWave4.length, 4);
 assert.equal(shippingLadderWave4.map((step) => step.label).join("|"), "START|도약|방호|점화");

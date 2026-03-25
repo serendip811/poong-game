@@ -3273,6 +3273,30 @@
       interceptPulseRadius: 0,
       deployCount: 0,
     },
+    volt_drones: {
+      label: "Volt Drones Primer",
+      title: "Volt Drones Primer",
+      description:
+        "자율 드론 1기를 약하게 먼저 띄운다. 아직 편대 화력은 아니지만 뒤를 물고 늘어지는 추격선을 먼저 찢어 다음 공세 선택 전까지 회전 복귀 각을 예고한다.",
+      slotText: "약식 자율 드론 1기",
+      previewText: "약식 자율 드론",
+      statusNote: "약식 Volt Drone이 플레이어 주변을 돌며 후방 추격선에 짧은 전격탄을 꽂아 복귀 각을 남긴다.",
+      orbitCount: 1,
+      orbitRadius: 56,
+      orbitSpeed: 1.7,
+      satelliteRadius: 7.5,
+      touchDamage: 8,
+      touchCooldown: 0.32,
+      shotCooldown: 1.6,
+      shotRange: 228,
+      shotDamage: 8,
+      shotSpeed: 500,
+      interceptRange: 0,
+      interceptCooldown: 0,
+      interceptPulseDamage: 0,
+      interceptPulseRadius: 0,
+      deployCount: 0,
+    },
   };
 
   const CHASSIS_BREAKPOINT_DEFS = {
@@ -7415,15 +7439,18 @@
     if (choice.type === "utility" && choice.action === "preview_support") {
       const previewDef = PREVIEW_SUPPORT_SYSTEM_DEFS[choice.systemId];
       const accent = (previewDef && previewDef.previewText) || choice.title || "약식 위성";
+      const proof =
+        choice.systemId === "aegis_halo"
+          ? "가까운 탄각이 먼저 비워지는지, 복귀 턴이 쉬워지는지 다음 전투에서 바로 드러난다."
+          : choice.systemId === "volt_drones"
+            ? "후방 추격선이 먼저 찢기는지, 외곽 회전 뒤 복귀 사선이 열리는지 바로 드러난다."
+            : "근접 추격선이 얼마나 얇아지는지, 새 화선 앞에 숨 쉴 반경이 생기는지 바로 드러난다.";
       return {
         laneLabel: choice.forgeLaneLabel || choice.laneLabel || "Forge Lane",
         title: choice.title || accent,
         tone: "defense",
         promise: `${accent}를 먼저 띄워 다음 몸체 도약 전까지 작은 방호·보조 실루엣을 붙인다.`,
-        proof:
-          choice.systemId === "aegis_halo"
-            ? "가까운 탄각이 먼저 비워지는지, 복귀 턴이 쉬워지는지 다음 전투에서 바로 드러난다."
-            : "근접 추격선이 얼마나 얇아지는지, 새 화선 앞에 숨 쉴 반경이 생기는지 바로 드러난다.",
+        proof,
         riderLabel: "Support Rider",
         riderNote: "완성형 support는 아직 늦게 열고, 지금은 몸을 받쳐 줄 작은 실루엣만 먼저 붙인다.",
         accent,
@@ -12209,6 +12236,19 @@
     }
     if (build.previewSupportSystemId && PREVIEW_SUPPORT_SYSTEM_DEFS[build.previewSupportSystemId]) {
       return build.previewSupportSystemId;
+    }
+    const doctrinePreviewBuild =
+      build.bastionDoctrineId || build.architectureForecastId
+        ? {
+            ...build,
+            bastionDoctrineId: build.bastionDoctrineId || build.architectureForecastId,
+          }
+        : null;
+    const doctrinePreviewSystemId = doctrinePreviewBuild
+      ? getDoctrineMidrunSupportSystemId(doctrinePreviewBuild)
+      : null;
+    if (doctrinePreviewSystemId && PREVIEW_SUPPORT_SYSTEM_DEFS[doctrinePreviewSystemId]) {
+      return doctrinePreviewSystemId;
     }
     if (build.coreId === "scatter" || build.coreId === "ember") {
       return "ember_ring";
