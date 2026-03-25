@@ -91,6 +91,14 @@ assert.ok(game.WAVE_CONFIG[9].hazard.relayWidth > 0);
 assert.equal(game.WAVE_CONFIG[10].pressureFamily, "pursuit");
 assert.equal(game.WAVE_CONFIG[11].pressureFamily, "hold");
 const roadmapBuild = game.createInitialBuild("rail_zeal");
+assert.equal(game.createWildcardProtocolChoice(roadmapBuild, 4), null);
+assert.equal(game.createWildcardProtocolChoice(roadmapBuild, 7), null);
+assert.equal(game.createWildcardProtocolChoice(roadmapBuild, 10), null);
+const wave5ForgeChoices = game.buildForgeChoices(roadmapBuild, Math.random, 999, {
+  nextWave: 5,
+  finalForge: false,
+});
+assert.ok(wave5ForgeChoices.every((choice) => !(choice.type === "utility" && choice.action === "preview_support")));
 const earlyRoadmap = game.getBuildRoadmap(roadmapBuild, game.computeWeaponStats(roadmapBuild), 1);
 assert.equal(earlyRoadmap.steps.length, 3);
 assert.equal(earlyRoadmap.steps[0].title, "Twin Spine");
@@ -100,6 +108,9 @@ assert.ok(earlyRoadmap.steps[1].detail.includes("weapon/body leap"));
 assert.equal(earlyRoadmap.steps[2].title, "Crown Break");
 roadmapBuild.bastionDoctrineId = "storm_artillery";
 roadmapBuild.overcommitUnlocked = true;
+roadmapBuild.previewSupportSystemId = "volt_drones";
+roadmapBuild.wildcardProtocolIds = ["rogue_lattice"];
+assert.equal(game.computeSupportSystemStats(roadmapBuild), null);
 const primedRoadmap = game.getBuildRoadmap(roadmapBuild, game.computeWeaponStats(roadmapBuild), 6);
 assert.equal(primedRoadmap.steps[0].title, "Siege Frame");
 assert.equal(primedRoadmap.steps[0].state, "locked");

@@ -10126,6 +10126,9 @@
   }
 
   function getClaimedWildcardProtocolIds(build) {
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
+      return [];
+    }
     if (!build || !Array.isArray(build.wildcardProtocolIds)) {
       return [];
     }
@@ -12768,7 +12771,7 @@
   }
 
   function getPreviewSupportSystemId(build) {
-    if (!build) {
+    if (!build || CONSOLIDATED_12_WAVE_ROUTE) {
       return null;
     }
     if (build.previewSupportSystemId && PREVIEW_SUPPORT_SYSTEM_DEFS[build.previewSupportSystemId]) {
@@ -15181,6 +15184,9 @@
     }
 
     if (choice.type === "utility" && choice.action === "wildcard_protocol") {
+      if (CONSOLIDATED_12_WAVE_ROUTE) {
+        return null;
+      }
       const protocol = WILDCARD_PROTOCOL_DEFS[choice.wildcardProtocolId];
       if (!protocol) {
         return null;

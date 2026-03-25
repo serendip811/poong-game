@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop mid-run spectacle leakage and prove one replayable shipped skeleton first: let a single main weapon/chassis transformation own `Wave 5-10`, delay support primers/wildcards/satellite fantasies until after that ownership lands, and strip HUD/reward admin down to one combat read and one reward read.
+- Immediate priority: freeze new branch spectacle and prove one replayable shipped spine first: make `Wave 1-10` read as `main-form payoff -> harder remix -> delayed rider fork`, hide support/wildcard previews from the default path, and cut the default HUD/forge to one combat ask and one reward desire.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 16:10:00 KST
+  Findings:
+  - [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L16) and [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L33) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L36) still define the shipped game as a `12-wave / 3-era` contract with `Headline Form`, `Survival Rider`, and `Proof Window` as the main promise. That keeps the game aimed at servicing a framework instead of proving a run skeleton players would want to repeat and later stretch toward `20-30 waves`.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L932) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1120) still make `Wave 5-10` a named authored ladder with different hazard identities, enemy mixes, and stage text every stop. The arena has more room, but mastery is still about learning the script, not enjoying one durable combat grammar long enough for a build to feel dominant.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2815) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3361) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3409) still front-load too much future hardware: support systems start at `Wave 8`, primers already preview orbitals/shields/drones, and wildcard beats still fire at `4 / 7 / 10`. That is still showing the toy box before one main gun/body leap has fully earned screen ownership.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22233) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22599) still make the player read `현재 형태`, `다음 변화`, `다음 전장`, `방호·보조`, `판돈·유틸`, live readout, and `Next Proof`/`Route Payoff` framing in parallel. Against the hierarchy in `Hades`, `Nova Drift`, or `Brotato`, this is still a route console, not a release-feeling combat/reward screen.
+  Top Priority: Freeze new systems and recut the shipped path so the default player journey through `Wave 1-10` only sells one main-form payoff spine, one delayed rider decision after that payoff lands, and one default HUD/forge read for combat plus one for desire.
+  Why Now: The loop is cycling because the game is still broadening faster than it is becoming replayable.
+  Do Not Repeat: Do not spend another pass on wording trims, new branches, or hidden framework cleanup while the default run still previews helper hardware and route admin before the main form fully takes over.
+  Release Gate: Progression
 
 - 2026-03-26 05:30:43 KST
   Findings:
@@ -2749,6 +2760,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-26 17:35:00 KST
+  Changed: hardened one bounded piece of the shipped `Wave 1-10` build spine in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so consolidated runs now fail closed on future-hardware helpers instead of merely hiding the offers. `getClaimedWildcardProtocolIds(...)` now collapses to `[]` on the shipped route, preview-support resolution now hard-returns `null`, and applying a `wildcard_protocol` choice is inert under consolidation. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock that `Wave 4 / 7 / 10` never surface wildcard choices, `Wave 5` forge pools never leak `preview_support`, and even legacy `previewSupportSystemId` / `wildcardProtocolIds` state no longer revives helper hardware on the shipped path. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` asked for a default run that sells one main-form payoff spine first and delays rider hardware until after that payoff lands. The highest-value concrete interpretation was to close the remaining helper/state leak points, because the shipped route already hid most of this spectacle at the offer layer but could still carry primer or wildcard state through shared getters and old build data.
+  Follow-up risk: this is a consolidation guardrail, not a new payoff. `Wave 8-10` still need stronger rider excitement and a clearer late support payoff once the core form has earned screen ownership, so a future pass should deepen the first real rider install rather than reopening primer previews.
+  Release Gate: Progression
 
 - 2026-03-26 17:05:00 KST
   Changed: tightened one bounded piece of the shipped midgame support gate in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the consolidated route now treats `Wave 8` as the first real rider-support beat everywhere, not just in the visible offer list. `BASE_ROUTE_MIDRUN_SUPPORT_WAVE` now resolves to the actual support unlock wave, recurring forge assembly no longer reserves a support rider lane at `Wave 7`, and consolidated wildcard schedule helpers now hard-return `null` so `Wave 7-10` cannot leak contraband spectacle back through shared helper calls or future UI. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock that `Wave 7` still has no wildcard rider and `Wave 8` still opens support without wildcard detours. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
