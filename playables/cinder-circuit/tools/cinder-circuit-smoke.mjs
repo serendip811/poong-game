@@ -267,6 +267,7 @@ const wave7ForgeChoices = game.buildForgeChoices(midrunSupportBuild, () => 0.1, 
   nextWave: 7,
   finalForge: false,
 });
+assert.equal(game.createWildcardProtocolChoice(midrunSupportBuild, 7), null);
 const wave7RiderChoice = wave7ForgeChoices.find((choice) => choice.contractRole === "rider");
 assert.ok(wave7RiderChoice);
 assert.notEqual(wave7RiderChoice.type, "system");
@@ -275,6 +276,11 @@ const wave8ForgeChoices = game.buildForgeChoices(midrunSupportBuild, () => 0.1, 
   nextWave: 8,
   finalForge: false,
 });
+assert.ok(
+  !wave8ForgeChoices.some(
+    (choice) => choice.type === "utility" && choice.action === "wildcard_protocol"
+  )
+);
 const wave8RiderChoice = wave8ForgeChoices.find((choice) => choice.contractRole === "rider");
 assert.ok(wave8RiderChoice);
 assert.equal(wave8RiderChoice.type, "system");

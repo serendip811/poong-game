@@ -2813,7 +2813,7 @@
   const MAX_SUPPORT_BAYS = 2;
   const MAX_SUPPORT_BAY_LIMIT = 4;
   const SUPPORT_SYSTEM_START_WAVE = 8;
-  const BASE_ROUTE_MIDRUN_SUPPORT_WAVE = 7;
+  const BASE_ROUTE_MIDRUN_SUPPORT_WAVE = SUPPORT_SYSTEM_START_WAVE;
   const PREVIEW_SUPPORT_PRIMER_CREDIT = 10;
   const SUPPORT_SYSTEM_DEFS = {
     ember_ring: {
@@ -10133,6 +10133,9 @@
   }
 
   function getWildcardProtocolForWave(nextWave) {
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
+      return null;
+    }
     const index = WILDCARD_PROTOCOL_WAVES.indexOf(nextWave);
     if (index < 0) {
       return null;
@@ -10142,6 +10145,9 @@
   }
 
   function getUpcomingWildcardProtocol(build, waveNumber) {
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
+      return null;
+    }
     const claimedIds = new Set(getClaimedWildcardProtocolIds(build));
     for (let index = 0; index < WILDCARD_PROTOCOL_WAVES.length; index += 1) {
       const scheduledWave = WILDCARD_PROTOCOL_WAVES[index];
@@ -10339,7 +10345,7 @@
         build &&
         build.bastionDoctrineId &&
         Number.isFinite(nextWave) &&
-        nextWave >= BASE_ROUTE_MIDRUN_SUPPORT_WAVE &&
+        nextWave >= SUPPORT_SYSTEM_START_WAVE &&
         nextWave <= MAX_WAVES
       )
     ) {
@@ -12127,7 +12133,7 @@
     const greedContractChoice = createFieldGreedContractChoice(build, nextWave);
     const previewSupportChoice = createPreviewSupportChoice(build, nextWave);
     const supportSystemChoices =
-      recurringBaseRouteContract && nextWave < BASE_ROUTE_MIDRUN_SUPPORT_WAVE
+      recurringBaseRouteContract && nextWave < SUPPORT_SYSTEM_START_WAVE
         ? []
         : shouldOfferSupportSystem(build, options)
           ? createSupportSystemChoices(build, random, options)
@@ -12332,7 +12338,7 @@
     const takenIds = new Set();
     const reserveMidrunSupportForRider =
       recurringBaseRouteContract &&
-      nextWave >= BASE_ROUTE_MIDRUN_SUPPORT_WAVE &&
+      nextWave >= SUPPORT_SYSTEM_START_WAVE &&
       supportSystemChoices.length > 0;
     const defensePool =
       recurringBaseRouteContract && nextWave === 6
