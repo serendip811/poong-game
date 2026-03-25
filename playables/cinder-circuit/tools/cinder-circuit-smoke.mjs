@@ -220,13 +220,16 @@ assert.equal(
 );
 const recurringWave3HeadlineTransform =
   game.getBaseRouteForgeChoiceTransformation(recurringWave3Choices[0]);
+assert.equal(recurringWave3HeadlineTransform.previewLabel, "진화");
 assert.ok(recurringWave3HeadlineTransform.previewValue.length > 0);
-assert.ok(recurringWave3HeadlineTransform.promise.includes("실루엣"));
+assert.ok(recurringWave3HeadlineTransform.previewValue.includes("레일"));
+assert.ok(recurringWave3HeadlineTransform.promise.includes("보조 레일"));
 assert.ok(
   !/afterburn|dominion|ascension|forecast|draft|doctrine|교리|승천|예보|초안/i.test(
     recurringWave3HeadlineTransform.promise
   )
 );
+assert.ok(!/Lance\b/.test(recurringWave3HeadlineTransform.previewValue));
 const recurringWave3PreviewMarkup = game.createBaseRouteForgePreviewMarkup(
   recurringWave3HeadlineTransform.previewLabel,
   recurringWave3HeadlineTransform.previewValue
@@ -279,10 +282,19 @@ assert.equal(wave6DefenseChoice.action, "bastion_bay_forge");
 assert.equal(wave6DefenseChoice.bayUnlock, false);
 const wave6DefenseTransform = game.getBaseRouteForgeChoiceTransformation(wave6DefenseChoice);
 assert.ok(wave6DefenseTransform.previewLabel.length > 0);
-assert.ok(wave6DefenseTransform.promise.includes("버티는 선"));
+assert.ok(/충격파|탄막|돌격/.test(wave6DefenseTransform.promise));
 assert.ok(
   !/armory|bay|junction|uplink|무기고|정션|업링크/i.test(wave6DefenseTransform.proof)
 );
+const recurringWave3GambleChoice =
+  recurringWave3Choices.find((choice) => choice.contractRole === "gamble") ||
+  recurringWave3Choices[2];
+const recurringWave3GambleTransform =
+  game.getBaseRouteForgeChoiceTransformation(recurringWave3GambleChoice);
+assert.equal(recurringWave3GambleTransform.previewLabel, "판돈");
+assert.ok(recurringWave3GambleTransform.previewValue.includes("고철 +"));
+assert.ok(!recurringWave3GambleTransform.previewValue.includes("Siege Debt"));
+assert.ok(!recurringWave3GambleTransform.proof.includes("Siege Debt"));
 const actBreakCacheBuild = game.createInitialBuild("rail_zeal");
 const actBreakCacheChoices = game.getCombatCacheChoicesForWave(actBreakCacheBuild, 5, 12);
 assert.equal(actBreakCacheChoices.length, 3);

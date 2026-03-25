@@ -8827,6 +8827,106 @@
 
   const BASE_ROUTE_FORGE_ADMIN_LEAK_PATTERN =
     /(afterburn|dominion|ascension|forecast|draft|doctrine|armory|junction|uplink|cache|교리|승천|예보|초안|무기고|정션|업링크|캐시)/i;
+  const BASE_ROUTE_FORGE_GENERIC_PREVIEW_PATTERN =
+    /(현재 무기 직접 강화|새 속성 추가|후속 보조 선택|forge pursuit|main weapon mutation|defense \/ utility|greed contract|forge lane)/i;
+  const BASE_ROUTE_FORGE_GENERIC_PROOF_PATTERN =
+    /^(효과\s+.+|현재 무기에 새 속성을 추가한다\.)$/i;
+
+  function localizeBaseRouteForgeText(text) {
+    return String(text || "")
+      .replace(/현장에서 바로 scrap credit를 당겨/gi, "현장에서 바로 고철을 당겨")
+      .replace(/Siege Debt가 붙어/gi, "압박 빚이 붙어")
+      .replace(/Siege Debt/gi, "압박 빚");
+  }
+
+  function getBaseRouteForgeSlotDetail(choice) {
+    if (!choice || !choice.slotText) {
+      return "";
+    }
+    const parts = String(choice.slotText)
+      .split("·")
+      .map((part) => part.trim())
+      .filter(Boolean);
+    if (parts.length <= 1) {
+      return parts[0] || "";
+    }
+    if (choice.contractRole === "gamble") {
+      return parts.slice(0, 2).join(" · ");
+    }
+    return parts.slice(1).join(" · ");
+  }
+
+  function getBaseRouteForgeDescriptionLines(choice) {
+    return splitForgeSentences(choice && choice.description)
+      .map((line) => line.replace(/\s+/g, " ").trim())
+      .filter(Boolean)
+      .filter((line) => !BASE_ROUTE_FORGE_ADMIN_LEAK_PATTERN.test(line));
+  }
+
+  function getBaseRouteForgePreviewLabel(choice, previewRow, tone) {
+    if (choice && choice.type === "evolution") {
+      return "진화";
+    }
+    if (choice && choice.type === "affix") {
+      return "속성";
+    }
+    if (choice && choice.type === "mod") {
+      return tone === "defense" ? "버팀" : "효과";
+    }
+    if (tone === "defense" && choice && choice.chassisTitle) {
+      return "몸체";
+    }
+    if (tone === "greed") {
+      return "판돈";
+    }
+    return (
+      (previewRow && previewRow.label) ||
+      (tone === "defense" ? "버팀" : tone === "greed" ? "판돈" : "형태")
+    );
+  }
+
+  function getBaseRouteForgePreviewValue(choice, previewRow, tone) {
+    const slotDetail = getBaseRouteForgeSlotDetail(choice);
+    const previewValue = previewRow && previewRow.value ? previewRow.value : "";
+    if (choice && choice.type === "evolution") {
+      return slotDetail || choice.title || previewValue || "실루엣";
+    }
+    if (choice && choice.type === "affix") {
+      return choice.title || slotDetail || previewValue || "새 속성";
+    }
+    if (choice && choice.type === "mod") {
+      return choice.title || slotDetail || previewValue || "즉시 보강";
+    }
+    if (tone === "greed" && slotDetail) {
+      return slotDetail;
+    }
+    if (
+      previewValue &&
+      !BASE_ROUTE_FORGE_GENERIC_PREVIEW_PATTERN.test(previewValue) &&
+      !BASE_ROUTE_FORGE_ADMIN_LEAK_PATTERN.test(previewValue)
+    ) {
+      return previewValue;
+    }
+    return (
+      slotDetail ||
+      (choice && (choice.chassisTitle || choice.systemChoice?.title || choice.title)) ||
+      previewValue ||
+      "실루엣"
+    );
+  }
+
+  function getBaseRouteForgeFallbackProof(choice, tone, previewValue) {
+    if (choice && choice.type === "mod") {
+      return `${previewValue}로 다음 전투 첫 진입의 회복선과 열 여유가 바로 넓어진다.`;
+    }
+    if (tone === "defense") {
+      return `${previewValue}가 다음 전투에서 버티는 선과 복귀 각을 얼마나 오래 여는지 바로 드러난다.`;
+    }
+    if (tone === "greed") {
+      return `${previewValue}를 쥔 직후 다음 전장에서는 더 긁을지 끊고 빠질지가 바로 갈라진다.`;
+    }
+    return `${previewValue}가 다음 전투에서 화면을 얼마나 넓게 여는지 바로 본다.`;
+  }
 
   function getBaseRouteForgePreviewRow(choice) {
     const previewRows = createForgePreviewRows(choice).filter(
@@ -8844,7 +8944,7 @@
         ? ["버팀", "보조", "효과", "몸체", "형태"]
         : choice && choice.contractRole === "gamble"
           ? ["획득", "판돈", "보상", "목표", "효과"]
-          : ["주포", "형태", "무기", "진화", "몸체", "효과"];
+          : ["주포", "진화", "형태", "속성", "몸체", "효과", "무기"];
     for (const label of priorityByRole) {
       const matchedRow = previewRows.find((row) => row.label === label);
       if (matchedRow) {
@@ -8858,45 +8958,40 @@
     const baseTransformation = getForgeChoiceTransformation(choice);
     const previewRow = getBaseRouteForgePreviewRow(choice);
     const contractRole = choice && choice.contractRole ? choice.contractRole : "";
+    const descriptionLines = getBaseRouteForgeDescriptionLines(choice);
     const tone =
       contractRole === "rider"
         ? "defense"
         : contractRole === "gamble"
           ? "greed"
           : baseTransformation.tone;
-    const previewLabel =
-      (previewRow && previewRow.label) ||
-      (tone === "defense" ? "버팀" : tone === "greed" ? "판돈" : "형태");
-    const previewValue =
-      (previewRow && previewRow.value) ||
-      baseTransformation.accent ||
-      (choice && choice.title) ||
-      "실루엣";
+    const previewLabel = getBaseRouteForgePreviewLabel(choice, previewRow, tone);
+    const previewValue = getBaseRouteForgePreviewValue(choice, previewRow, tone);
     const rawPromise =
-      tone === "defense"
+      descriptionLines[0] && !BASE_ROUTE_FORGE_ADMIN_LEAK_PATTERN.test(descriptionLines[0])
+        ? descriptionLines[0]
+        : tone === "defense"
         ? `${previewValue}로 버티는 선을 두껍게 만든다.`
         : tone === "greed"
           ? `${previewValue}로 판돈과 회수 리듬을 비튼다.`
           : `${previewValue}로 주력 실루엣을 바로 바꾼다.`;
-    const fallbackProof =
-      tone === "defense"
-        ? `${previewValue}가 다음 전투에서 버티는 선을 얼마나 오래 여는지 바로 드러난다.`
-        : tone === "greed"
-          ? `${previewValue}로 더 긁을지 끊고 빠질지 다음 전장에서 바로 갈라진다.`
-          : `${previewValue}가 다음 전투에서 화면을 얼마나 넓게 여는지 바로 본다.`;
+    const fallbackProof = getBaseRouteForgeFallbackProof(choice, tone, previewValue);
     const proof =
-      baseTransformation.proof &&
-      !BASE_ROUTE_FORGE_ADMIN_LEAK_PATTERN.test(baseTransformation.proof)
-        ? baseTransformation.proof
-        : fallbackProof;
-    const promise = trimInspectNote(rawPromise, rawPromise);
+      descriptionLines[1] && !BASE_ROUTE_FORGE_ADMIN_LEAK_PATTERN.test(descriptionLines[1])
+        ? descriptionLines[1]
+        : baseTransformation.proof &&
+            !BASE_ROUTE_FORGE_ADMIN_LEAK_PATTERN.test(baseTransformation.proof)
+            && !BASE_ROUTE_FORGE_GENERIC_PROOF_PATTERN.test(baseTransformation.proof)
+          ? baseTransformation.proof
+          : fallbackProof;
+    const promise = trimInspectNote(localizeBaseRouteForgeText(rawPromise), rawPromise);
     return {
       ...baseTransformation,
       tone,
       promise,
-      proof: trimInspectNote(proof, fallbackProof),
+      proof: trimInspectNote(localizeBaseRouteForgeText(proof), fallbackProof),
       previewLabel,
-      previewValue,
+      previewValue: localizeBaseRouteForgeText(previewValue),
     };
   }
 

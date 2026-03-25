@@ -12,6 +12,7 @@ Keep this short and replace stale notes instead of endlessly appending.
 
 ## Current Memory
 
+- On the consolidated route, base forge cards land better when their preview row prefers the visible mutation itself `보조 레일`, `격자 레일`, `고철 +회수`, `섀시 이름` over generic carrier labels like `Lance`, `현재 무기 직접 강화`, or branch/admin nouns; if the shipped three-card read falls back to those middle-layer terms again, the reward moment has drifted back into data parsing instead of appetite.
 - On the consolidated `12-wave` route, any finale preview, roadmap clamp, or wave-track summary must stop at `Wave 12`; if forge previews say `7연전 시작`, the track grows an `Act 4`, or any shipped guard re-allows `Afterburn/Dominion/finale mutation` offers, the run is implying its real climax still lives after the clear.
 - On the consolidated `12-wave` route, a doctrine's support follow-up should now stay one primary amplifier family only; if `Wave 8+` ever re-exposes the doctrine's second preferred system or any wildcard support install on the shipped path, the support layer has widened back into a parallel identity tree.
 - On the consolidated route, `Wave 6` chassis picks land better when the chosen body posture is immediately live for the first seconds of the next fight; if body breaks only change hidden stats and wait for later support/payoff layers to become visible, the `weapon leap -> body commitment` rung still feels theoretical.

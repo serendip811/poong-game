@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop widening the route with doctrine/live-ascension/support-bay side ladders and collapse the shipped `Wave 1-12` path into one readable mutation spine that makes `Wave 3/6/8/12` feel like escalating player-owned payoffs.
+- Immediate priority: freeze new surfaced systems and cut the shipped `Wave 1-12` path down to one quiet combat HUD plus one readable mutation spine so `Wave 3/6/8/12` land as earned weapon/chassis transformations instead of admin milestones.
 
 ## Release Gates
 
@@ -61,6 +61,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-25 16:01:02 KST
+  Findings:
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2707) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3410) still keep the shipped run bloated with support systems, wildcard protocols, Wave 6 ascensions, doctrines, doctrine capstones, and illegal overclock branches. That is too many visible ladders for a `12-wave` slice and it kills build hunger because the player is reading framework ownership instead of chasing one next form.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20896) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21597) still sell the forge through focus prompts, proof labels, contract tags, preview rows, impact strips, and slot/bill language all at once. Strong references make the card itself the desire object; this still reads like a purchase explainer layered on top of the reward.
+  - [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L37) through [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L103) still put top-strip meters, lower build panels, roadmap, objective, live readout, and upgrade list around the arena at all times. Compared with the hierarchy discipline of `Nova Drift`, `Hades`, or `Brotato`, the player is still looking through interface before reading threat, space, and power.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1440) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1615) and [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L198) still preserve `Afterburn` and post-slice expansion validation right next to the supposed shipped route. As long as the code and spec keep hinting that the cooler transformation game starts after the clear, `Wave 12` cannot feel like a rerun-worthy climax.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L760) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1110) do a better job giving the arena room to breathe, but the run still authors almost every wave with `note` and `directive` prose about lane ownership, breach proof, and pocket control. If the combat ask still needs that much explanation, the enemy ecology and weapon evolution are not yet carrying clarity on their own.
+  Top Priority: Strip the shipped route down to one combat HUD hierarchy and one three-choice forge read where each pick sells a visible weapon/chassis payoff first, with all doctrine/afterburn/admin language hidden from the `Wave 1-12` player path.
+  Why Now: The run is cycling on readability debt, and more systems will only make replay desire weaker until the current slice reads in one glance.
+  Do Not Repeat: Do not answer this with renamed labels, another compact status mode, or more future-facing reward ladders.
+  Release Gate: UX/UI
 
 - 2026-03-26 00:20:00 KST
   Findings:
@@ -2437,6 +2449,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-26 01:05:00 KST
+  Changed: tightened the shipped three-card forge read in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so base-route cards now sell the visible mutation or body payoff first instead of falling back to middle-layer labels like `Lance`, `현재 무기 직접 강화`, or `Siege Debt`. The base-route transformation helper now prefers concrete preview values from the actual mutation payload `이중 보조 레일`, `확장 삼지창 레일`, `고철 +34 · 회수 +10%`, `Vector Thrusters`, pulls hero/proof copy from the non-admin parts of the card description, and falls back to cleaner role-specific proof text when the old generic rows would only restate system metadata. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so smoke coverage now locks the new preview priorities and guards against base-route cards regressing to generic/admin phrasing.
+  Why: the newest critique's `Top Priority` was to make the shipped forge read as one appetite-first three-choice pause where each pick sells visible weapon/chassis payoff first. The highest-value bounded interpretation was to improve the card payload itself rather than adding another wrapper pass, because the existing base-route UI shell was still feeding it generic internal labels that weakened desire on sight.
+  Follow-up risk: the shipped forge cards read more cleanly now, but some late-form descriptions still contain English-heavy combat phrasing because the underlying choice authoring text is shared with non-shipping paths. If critique stays on reward readability, the next bounded pass should rewrite the few most common late-form description strings at source rather than adding more presentation filters.
+  Release Gate: Rewards
 
 - 2026-03-26 00:40:00 KST
   Changed: hardened the shipped `Wave 1-12` climax contract in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so consolidated-route previews and progress helpers now stop at `Wave 12` instead of leaking a second `Afterburn` game behind the clear. `getBuildRoadmap` and the wave track now clamp to the shipped route, final-fight previews now read `Wave 12 최종전` instead of `7연전 시작`, and the consolidated path now hard-gates `Afterburn Ascension`, `Afterburn Overdrive`, `Dominion`, and `finale mutation` offers even if a later refactor accidentally touches those helpers. I also added a safety stop so if the shipped route ever reaches the old post-capstone transition code, it finishes the run instead of opening `Wave 13+`. Validation passed with `node --check playables/cinder-circuit/game.js` and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
