@@ -161,14 +161,11 @@ const forgeContextMarkup = game.createBaseRouteForgeContextMarkup({
 assert.ok(forgeContextMarkup.includes("현재 형태"));
 assert.ok(forgeContextMarkup.includes("다음 전장"));
 assert.ok(forgeContextMarkup.includes("보유 고철"));
-assert.ok(forgeContextMarkup.includes("포지"));
+assert.ok(forgeContextMarkup.includes("forge-focus__proof"));
+assert.ok(forgeContextMarkup.includes("forge-card__pivot--bill"));
 assert.ok(!forgeContextMarkup.includes("주력 변이"));
 assert.ok(!forgeContextMarkup.includes("다음 점화"));
 assert.ok(!forgeContextMarkup.includes("세 장 중 하나만"));
-const forgeProofMarkup = game.createBaseRouteForgeProofMarkup("Crownbreaker Lap에서 버틴다.");
-assert.ok(forgeProofMarkup.includes("Crownbreaker Lap에서 버틴다."));
-assert.ok(forgeProofMarkup.includes("다음 시험"));
-assert.ok(!forgeProofMarkup.includes("preview"));
 const forgeBillMarkup = game.createBaseRouteForgeBillMarkup("고철 18");
 assert.ok(forgeBillMarkup.includes("고철 18"));
 assert.ok(!forgeBillMarkup.includes("비용·대가"));
@@ -236,6 +233,20 @@ const recurringWave3PreviewMarkup = game.createBaseRouteForgePreviewMarkup(
 );
 assert.ok(recurringWave3PreviewMarkup.includes(recurringWave3HeadlineTransform.previewLabel));
 assert.ok(recurringWave3PreviewMarkup.includes(recurringWave3HeadlineTransform.previewValue));
+const recurringWave3CardMarkup = `
+  <button type="button" class="forge-card forge-card--contract">
+    <span class="forge-card__tag">${recurringWave3Choices[0].contractLabel}</span>
+    <h3>${recurringWave3Choices[0].title}</h3>
+    <p class="forge-card__hero-copy">${recurringWave3HeadlineTransform.promise}</p>
+    ${game.createBaseRouteForgePreviewMarkup(
+      recurringWave3HeadlineTransform.previewLabel,
+      recurringWave3HeadlineTransform.previewValue
+    )}
+    ${game.createBaseRouteForgeBillMarkup("고철 18")}
+  </button>
+`;
+assert.ok(!recurringWave3CardMarkup.includes("다음 시험"));
+assert.ok(!recurringWave3CardMarkup.includes("forge-card__proof"));
 const recurringWave5Choices = game.buildForgeChoices(roadmapBuild, Math.random, 40, {
   nextWave: 5,
   finalForge: false,

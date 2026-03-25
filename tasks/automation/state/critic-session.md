@@ -12,9 +12,9 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Builds`: the game has cleaner readability than before, but the actual build ladder is still too scaffold-heavy, so support/admin layers are eating the hunger that should belong to weapon/body transformation spikes.
-- Repeated false solution: trimming copy or polishing contract panels while leaving doctrines, wildcard routes, support-bay ladders, and side systems competing with the main mutation beats.
+- The most fragile gate is now `UX/UI`: the run still explains route state, forge state, and future proof structure too aggressively, so the player reads systems before feeling hunger for the next mutation.
+- Repeated false solution: trimming wording while keeping the same dense HUD/forge/`Tab` hierarchy and the same broad support menu alive behind it.
 - Keep comparing against `Nova Drift`, `Hades`, and `Brotato`; the benchmark is one obvious combat priority and one obvious reward read, not a well-explained ladder.
-- Good change to preserve: early support spectacle is still delayed. Keep missiles, orbitals, shields, and helpers out of the opener, and keep late support systems subordinate to the player chassis instead of becoming the real build fantasy.
-- Main drift markers: too many parallel growth wrappers remain live `doctrine`, `wildcard`, `ascension`, `support bay`, `late armory`, and route jargon, so the player still reads about power architecture more than feeling a clean sequence of earned transformations.
-- Next critique bias: keep pressuring consolidation over expansion. Favor fewer, bigger mutation payoffs and more reusable combat/ecology pressure; punish any solution that keeps the same scaffolding and merely re-labels or compresses it.
+- Good change to preserve: early support spectacle is still delayed. Keep missiles, orbitals, shields, and helpers out of the opener, and keep even late support systems subordinate to a smaller-to-bigger player chassis arc.
+- Main drift markers: forge cards still over-explain, `Tab` still behaves like a document, and the visible support catalog is wide enough to make the run feel architected instead of hungry.
+- Next critique bias: pressure readability-first consolidation for a few passes. Favor fewer words, fewer visible branches, and one stronger mutation sell per stop before pushing expansion back up.

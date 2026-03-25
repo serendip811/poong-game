@@ -9012,13 +9012,14 @@
     return `
       <div class="summary-head">
         <strong>현재 형태</strong>
-        <span class="summary-chip">포지</span>
       </div>
       <strong class="route-contract__title">${dominantFormLabel}</strong>
-      <div class="mini-pill-row">
-        ${waveAskLabel ? createMiniPill("다음 전장", waveAskLabel, "hot") : ""}
-        ${scrapValue !== "" ? createMiniPill("보유 고철", scrapValue, "cool") : ""}
-      </div>
+      ${waveAskLabel ? `<div class="forge-focus__proof"><span>다음 전장</span>${waveAskLabel}</div>` : ""}
+      ${
+        scrapValue !== ""
+          ? `<p class="forge-card__pivot forge-card__pivot--bill"><span>보유 고철</span><strong>${scrapValue}</strong></p>`
+          : ""
+      }
     `;
   }
 
@@ -21353,7 +21354,7 @@
         ? `${dominantFormSummary.label} 위에 rider 한 장만 얹고 바로 다음 전투 ask를 버틴다.`
           : `${dominantFormSummary.label} 다음에 가장 크게 전장을 바꿀 변이 하나만 먼저 고른다.`;
     elements.forgeSubtitle.textContent = useBaseRouteContract
-      ? `고철 ${Math.round(state.resources.scrap)} · 세 장 중 하나`
+      ? `고철 ${Math.round(state.resources.scrap)}`
       : state.pendingFinalForge
         ? `${forgeModeLabel} · ${focusTitle} · 고철 ${Math.round(state.resources.scrap)}`
         : riderStep
@@ -21448,7 +21449,6 @@
               transformation.previewLabel,
               transformation.previewValue
             )}
-            ${createBaseRouteForgeProofMarkup(transformation.proof)}
             ${createBaseRouteForgeBillMarkup(slotLabel)}
           </button>
         `;
