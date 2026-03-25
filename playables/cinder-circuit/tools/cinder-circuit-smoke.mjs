@@ -279,21 +279,20 @@ const recurringWave5RiderChoice =
   recurringWave5Choices.find((choice) => choice.contractRole === "rider") ||
   recurringWave5Choices[1];
 assert.ok(recurringWave5RiderChoice);
-assert.equal(recurringWave5RiderChoice.action, "preview_support");
+assert.notEqual(recurringWave5RiderChoice.action, "preview_support");
 const recurringWave5RiderTransform =
   game.getBaseRouteForgeChoiceTransformation(recurringWave5RiderChoice);
-assert.ok(/위성|방호|보조/.test(recurringWave5RiderTransform.promise));
-assert.ok(/탄각|추격선|복귀|반경|사격 각/.test(recurringWave5RiderTransform.proof));
+assert.equal(recurringWave5RiderTransform.tone, "defense");
+assert.equal(recurringWave5RiderTransform.previewLabel, "버팀");
+assert.ok(/다음 전투|회복선|열 여유|공간/.test(recurringWave5RiderTransform.proof));
 const recurringWave5Run = {
   build: wave5MutationBuild,
   player: null,
 };
 game.applyForgeChoice(recurringWave5Run, recurringWave5RiderChoice);
 assert.equal(recurringWave5Run.build.supportSystems.length, 0);
-assert.ok(recurringWave5Run.build.previewSupportSystemId);
-const recurringWave5SupportStats = game.computeSupportSystemStats(recurringWave5Run.build);
-assert.ok(recurringWave5SupportStats);
-assert.equal(recurringWave5SupportStats.orbitCount, 1);
+assert.equal(recurringWave5Run.build.previewSupportSystemId ?? null, null);
+assert.equal(game.computeSupportSystemStats(recurringWave5Run.build), null);
 const mirrorPrimerBuild = game.createInitialBuild("relay_oath");
 mirrorPrimerBuild.pendingCores = [];
 mirrorPrimerBuild.bastionDoctrineId = "mirror_hunt";
@@ -305,24 +304,19 @@ const mirrorWave5Choices = game.buildForgeChoices(mirrorPrimerBuild, Math.random
 const mirrorWave5RiderChoice =
   mirrorWave5Choices.find((choice) => choice.contractRole === "rider") || mirrorWave5Choices[1];
 assert.ok(mirrorWave5RiderChoice);
-assert.equal(mirrorWave5RiderChoice.action, "preview_support");
-assert.equal(mirrorWave5RiderChoice.systemId, "volt_drones");
-assert.equal(mirrorWave5RiderChoice.title, "Volt Drones Primer");
+assert.notEqual(mirrorWave5RiderChoice.action, "preview_support");
 const mirrorWave5Transform = game.getBaseRouteForgeChoiceTransformation(mirrorWave5RiderChoice);
-assert.ok(/드론|보조/.test(mirrorWave5Transform.promise));
-assert.ok(/추격선|복귀 사선|외곽 회전/.test(mirrorWave5Transform.proof));
+assert.equal(mirrorWave5Transform.tone, "defense");
+assert.equal(mirrorWave5Transform.previewLabel, "버팀");
+assert.ok(/다음 전투|회복선|열 여유|공간/.test(mirrorWave5Transform.proof));
 const mirrorPrimerRun = {
   build: mirrorPrimerBuild,
   player: null,
 };
 game.applyForgeChoice(mirrorPrimerRun, mirrorWave5RiderChoice);
-const mirrorPrimerSupportStats = game.computeSupportSystemStats(mirrorPrimerRun.build);
-assert.ok(mirrorPrimerSupportStats);
-assert.equal(mirrorPrimerSupportStats.orbitCount, 1);
-assert.equal(mirrorPrimerSupportStats.shotCooldown, 1.6);
-const mirrorPrimerFrame = game.getPreviewSupportFrameProfile(mirrorPrimerRun.build);
-assert.ok(mirrorPrimerFrame);
-assert.equal(mirrorPrimerFrame.systemId, "volt_drones");
+assert.equal(mirrorPrimerRun.build.previewSupportSystemId ?? null, null);
+assert.equal(game.computeSupportSystemStats(mirrorPrimerRun.build), null);
+assert.equal(game.getPreviewSupportFrameProfile(mirrorPrimerRun.build), null);
 const mirrorWave7Choices = game.buildForgeChoices(mirrorPrimerRun.build, Math.random, 64, {
   nextWave: 7,
   finalForge: false,
@@ -333,17 +327,17 @@ const mirrorWave7RiderChoice =
 assert.ok(mirrorWave7RiderChoice);
 assert.equal(mirrorWave7RiderChoice.type, "system");
 assert.equal(mirrorWave7RiderChoice.systemId, "volt_drones");
-assert.equal(mirrorWave7RiderChoice.systemTier, 2);
-assert.equal(mirrorWave7RiderChoice.primerCompletion, true);
-assert.equal(mirrorWave7RiderChoice.title, "Volt Drones Mk.II");
-assert.equal(mirrorWave7RiderChoice.cost, 48);
-assert.ok(/예열 완성/.test(mirrorWave7RiderChoice.slotText));
+assert.equal(mirrorWave7RiderChoice.systemTier, 1);
+assert.ok(!mirrorWave7RiderChoice.primerCompletion);
+assert.equal(mirrorWave7RiderChoice.title, "Volt Drones");
+assert.equal(mirrorWave7RiderChoice.cost, 44);
+assert.ok(!/예열 완성/.test(mirrorWave7RiderChoice.slotText));
 game.applyForgeChoice(mirrorPrimerRun, mirrorWave7RiderChoice);
 const mirrorWave7SupportStats = game.computeSupportSystemStats(mirrorPrimerRun.build);
 assert.ok(mirrorWave7SupportStats);
-assert.equal(mirrorWave7SupportStats.orbitCount, 3);
-assert.equal(mirrorWave7SupportStats.shotCooldown, 0.8);
-assert.equal(mirrorPrimerRun.build.previewSupportSystemId, null);
+assert.equal(mirrorWave7SupportStats.orbitCount, 2);
+assert.equal(mirrorWave7SupportStats.shotCooldown, 1.08);
+assert.equal(mirrorPrimerRun.build.previewSupportSystemId ?? null, null);
 assert.equal(game.getPreviewSupportFrameProfile(mirrorPrimerRun.build), null);
 const shippingLadderWave4 = game.getShippingLadderSteps(roadmapBuild, null, 4);
 assert.equal(shippingLadderWave4.length, 4);

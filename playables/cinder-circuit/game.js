@@ -6342,7 +6342,7 @@
   function getSupportSystemDef(build) {
     const installedSystems = getInstalledSupportSystems(build);
     if (installedSystems.length === 0) {
-      if (build && build.previewSupportSystemId) {
+      if (!CONSOLIDATED_12_WAVE_ROUTE && build && build.previewSupportSystemId) {
         return SUPPORT_SYSTEM_DEFS[build.previewSupportSystemId] || null;
       }
       return null;
@@ -6423,7 +6423,9 @@
     const installedSystems = getInstalledSupportSystems(build);
     const doctrineCapstone = getDoctrineCapstoneDef(build);
     const previewSystemId =
-      installedSystems.length === 0 && build ? build.previewSupportSystemId || null : null;
+      !CONSOLIDATED_12_WAVE_ROUTE && installedSystems.length === 0 && build
+        ? build.previewSupportSystemId || null
+        : null;
     if (installedSystems.length === 0 && !previewSystemId) {
       return null;
     }
@@ -6571,7 +6573,7 @@
   }
 
   function getPreviewSupportFrameProfile(build) {
-    if (!build) {
+    if (!build || CONSOLIDATED_12_WAVE_ROUTE) {
       return null;
     }
     const previewSystemId =
@@ -6620,7 +6622,10 @@
     const doctrine = build && build.bastionDoctrineId ? getBastionDoctrineDef(build) : null;
     const visibleSystemIds = new Set(getVisibleSupportOfferSystemIds(build, nextWave));
     const primedSystemId =
-      build && build.previewSupportSystemId && PREVIEW_SUPPORT_SYSTEM_DEFS[build.previewSupportSystemId]
+      !CONSOLIDATED_12_WAVE_ROUTE &&
+      build &&
+      build.previewSupportSystemId &&
+      PREVIEW_SUPPORT_SYSTEM_DEFS[build.previewSupportSystemId]
         ? build.previewSupportSystemId
         : null;
     const installChoices = shuffle(
@@ -6639,7 +6644,7 @@
         }
         const system = SUPPORT_SYSTEM_DEFS[systemId];
         const primerCompletion =
-          CONSOLIDATED_12_WAVE_ROUTE &&
+          !CONSOLIDATED_12_WAVE_ROUTE &&
           primedSystemId === systemId &&
           installedSystems.length === 0 &&
           nextWave === BASE_ROUTE_MIDRUN_SUPPORT_WAVE;
@@ -12321,7 +12326,12 @@
   }
 
   function createPreviewSupportChoice(build, nextWave) {
-    if (!build || nextWave !== 5 || getInstalledSupportSystems(build).length > 0) {
+    if (
+      CONSOLIDATED_12_WAVE_ROUTE ||
+      !build ||
+      nextWave !== 5 ||
+      getInstalledSupportSystems(build).length > 0
+    ) {
       return null;
     }
     const systemId = getPreviewSupportSystemId(build);
@@ -14133,6 +14143,9 @@
     }
 
     if (choice.type === "utility" && choice.action === "preview_support") {
+      if (CONSOLIDATED_12_WAVE_ROUTE) {
+        return null;
+      }
       if (!PREVIEW_SUPPORT_SYSTEM_DEFS[choice.systemId]) {
         return null;
       }
