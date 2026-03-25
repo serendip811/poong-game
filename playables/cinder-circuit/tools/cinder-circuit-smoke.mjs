@@ -130,12 +130,14 @@ assert.ok(eraThreePlan[2].proofLabel.length > 0);
 const inspectMarkup = game.createTabInspectBoardMarkup({
   dominantForm: { label: "Sky Lance" },
   spotlightValue: "Cataclysm Arsenal",
-  gambleSummary: { label: "고철 42", note: "" },
+  scrapValue: "42",
 });
-assert.ok(inspectMarkup.includes("비용·대가"));
+assert.ok(inspectMarkup.includes("보유 고철"));
 assert.ok(inspectMarkup.includes("현재 형태"));
 assert.ok(inspectMarkup.includes("다음 전장"));
 assert.ok(inspectMarkup.includes("Cataclysm Arsenal"));
+assert.ok(inspectMarkup.includes("42"));
+assert.ok(!inspectMarkup.includes("비용·대가"));
 assert.ok(!inspectMarkup.includes("inspect-board__lane"));
 const compactFocusMarkup = game.createBaseRouteFocusMarkup({
   eyebrow: "현재 형태",
@@ -152,14 +154,15 @@ assert.ok(compactFocusMarkup.includes("판돈·유틸"));
 assert.ok(compactFocusMarkup.includes("고철 42"));
 assert.ok(compactFocusMarkup.includes("Cataclysm Arsenal"));
 const forgeContextMarkup = game.createBaseRouteForgeContextMarkup({
-  chipLabel: "주력 변이",
   dominantFormLabel: "Sky Lance",
   waveAskLabel: "Crownbreaker Lap",
   scrapValue: "42",
 });
 assert.ok(forgeContextMarkup.includes("현재 형태"));
 assert.ok(forgeContextMarkup.includes("다음 전장"));
-assert.ok(forgeContextMarkup.includes("고철"));
+assert.ok(forgeContextMarkup.includes("보유 고철"));
+assert.ok(forgeContextMarkup.includes("포지"));
+assert.ok(!forgeContextMarkup.includes("주력 변이"));
 assert.ok(!forgeContextMarkup.includes("다음 점화"));
 assert.ok(!forgeContextMarkup.includes("세 장 중 하나만"));
 const forgeProofMarkup = game.createBaseRouteForgeProofMarkup("Crownbreaker Lap에서 버틴다.");

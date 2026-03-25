@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: lock the shipped `Wave 1-12` route into a desire-first forge loop with three appetitive build lanes, cleaner screen hierarchy, and zero `Afterburn`/admin leakage.
+- Immediate priority: stop route expansion and consolidate the shipped `Wave 1-12` slice into a quieter opener plus one appetite-first forge/HUD contract with zero `Afterburn`/admin leakage.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-25 17:05:00 KST
+  Findings:
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21191) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21433) still makes the forge read like a briefing deck instead of a hunger moment: `focus eyebrow`, mode label, proof text, preview rows, bill rows, contract labels, and featured badges all compete at once. Compared with the snap-read boon/shop moments in `Hades`, `Nova Drift`, or `Brotato`, the player is still reading framework before feeling desire.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20933) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21178) still stacks `current form`, `next beat`, `combat ask`, `live readout`, hazard detail, and upgrade history around the arena. That is too much hierarchy for a game already trying to sell movement clarity; the HUD is still behaving like a design document pinned over combat.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12181) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12618) shows the systemic drift is continuing underneath the cleaner wrapper. `bastion doctrine`, `architecture forecast`, `wave6 ascension`, `auxiliary junction`, and `support bay` are still the real authoring spine, so even improved cards will keep leaking admin language until the structure itself is simplified.
+  - [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1947) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2030) and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20679) through [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20750) still preserve `Afterburn`, `Dominion`, and other post-route promises in live codepaths and clear-feed messaging. That keeps telling the player the real fireworks live after the shipped run, which directly weakens the finality of `Wave 12`.
+  Top Priority: Collapse the in-run information contract to one status board and one forge card grammar only: `what I am now / what this pick becomes / what it costs`, while removing roadmap/live-admin panels and every player-facing post-`Wave 12` promise from the shipped route.
+  Why Now: The highest-priority feedback risk is still overload, and overloaded reward/combat screens kill replay desire faster than missing content does.
+  Do Not Repeat: Do not solve this with another rename pass or another compact wrapper around the same roadmap/live-readout/forge scaffolding.
+  Release Gate: UX/UI
 
 - 2026-03-25 16:40:00 KST
   Findings:
@@ -2327,6 +2338,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-25 17:45:00 KST
+  Changed: collapsed one more shipped-facing UI contract in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the consolidated `Wave 1-12` route no longer lets `Tab` inspect or the forge context drift into separate bookkeeping surfaces. `Tab` now reads as the same quiet status board as the forge header `현재 형태 / 다음 전장 / 보유 고철`, the spare bench panel stays hidden while inspect is open, and the forge context no longer advertises stage chips like `주력 변이` above the same information. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new inspect/context wording and to assert that `비용·대가` and stage-chip copy stay off those base-route summary surfaces. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to collapse the in-run information contract to one status board and one forge card grammar while removing roadmap/live-admin leakage from the shipped route. The highest-value bounded interpretation was to unify the two remaining summary surfaces the player still reads during picks and inspect, because they were still duplicating state with different wrappers instead of reinforcing one snap-read contract.
+  Follow-up risk: the base-route status board is quieter now, but normal combat still computes side-bet/admin summaries under the hood and some non-inspect compact focus states still reference `판돈·유틸`. If critique stays on this issue, the next bounded move should trim one more shipped-facing combat summary surface rather than adding any new card framing.
+  Release Gate: UX/UI
 
 - 2026-03-25 17:20:00 KST
   Changed: quarantined more of the shipped `Wave 1-12` forge contract in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) by giving base-route reward cards their own appetite-first transformation layer instead of reusing the underlying admin descriptions. On the default three-card route, each card now renders from one visible preview row plus one short proof line and one cost line, so the body copy sells `what changes now` rather than leaking `doctrine`, `forecast`, `ascension`, `armory`, `bay`, or other backstage routing nouns into the pick moment. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new preview-led card contract and to assert that base-route headline/defense cards stay free of those admin terms. This UI/readability pass stayed anchored to the appetite-first reward snap seen in `Hades`, `Nova Drift`, and `Brotato`: one visible mutation hook, one immediate test, one bill line. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

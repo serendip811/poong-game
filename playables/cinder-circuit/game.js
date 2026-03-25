@@ -8949,7 +8949,7 @@
   function createTabInspectBoardMarkup({
     dominantForm,
     spotlightValue,
-    gambleSummary,
+    scrapValue,
   }) {
     return `
       <div class="summary-head">
@@ -8960,8 +8960,8 @@
         <strong class="route-contract__title">${dominantForm.label}</strong>
         <div class="forge-focus__proof"><span>다음 전장</span>${spotlightValue}</div>
         <p class="forge-card__pivot forge-card__pivot--bill">
-          <span>비용·대가</span>
-          <strong>${gambleSummary.label}</strong>
+          <span>보유 고철</span>
+          <strong>${scrapValue}</strong>
         </p>
       </div>
     `;
@@ -8987,7 +8987,6 @@
   }
 
   function createBaseRouteForgeContextMarkup({
-    chipLabel = "",
     dominantFormLabel = "",
     waveAskLabel = "",
     scrapValue = "",
@@ -8995,12 +8994,12 @@
     return `
       <div class="summary-head">
         <strong>현재 형태</strong>
-        ${chipLabel ? `<span class="summary-chip">${chipLabel}</span>` : ""}
+        <span class="summary-chip">포지</span>
       </div>
       <strong class="route-contract__title">${dominantFormLabel}</strong>
       <div class="mini-pill-row">
         ${waveAskLabel ? createMiniPill("다음 전장", waveAskLabel, "hot") : ""}
-        ${scrapValue !== "" ? createMiniPill("고철", scrapValue, "cool") : ""}
+        ${scrapValue !== "" ? createMiniPill("보유 고철", scrapValue, "cool") : ""}
       </div>
     `;
   }
@@ -21031,6 +21030,7 @@
     const tabInspectBoardActive =
       CONSOLIDATED_12_WAVE_ROUTE && state.hudInspect && !state.paused;
     const gambleSummary = getTabInspectGambleSummary(state);
+    const scrapSummaryLabel = `고철 ${Math.round(state.resources.scrap)}`;
     if (elements.activeCore) {
       elements.activeCore.innerHTML = `
         <div class="summary-head">
@@ -21063,13 +21063,12 @@
 
     const benchEntries = getBenchEntries(state.build);
     if (elements.pendingCores) {
-        elements.pendingCores.classList.toggle("hidden", !hudVisibility.showBench);
+        elements.pendingCores.classList.toggle(
+          "hidden",
+          !hudVisibility.showBench || tabInspectBoardActive
+        );
         if (tabInspectBoardActive) {
-          elements.pendingCores.innerHTML = createTabInspectBoardMarkup({
-            dominantForm,
-            spotlightValue: nextBeat.title,
-            gambleSummary,
-          });
+          elements.pendingCores.innerHTML = "";
       } else {
         elements.pendingCores.innerHTML = benchEntries.length
           ? benchEntries
@@ -21114,9 +21113,10 @@
               currentFormLabel: dominantForm.label,
               spotlightLabel: "다음 전장",
               spotlightValue: nextBeat.title,
-              tradeoffLabel: "판돈·유틸",
-              tradeoffValue: gambleSummary.label,
-              tradeoffTone: gambleSummary.label === "잠잠" ? "" : "accent",
+              tradeoffLabel: tabInspectBoardActive ? "보유 고철" : "판돈·유틸",
+              tradeoffValue: tabInspectBoardActive ? scrapSummaryLabel : gambleSummary.label,
+              tradeoffTone:
+                tabInspectBoardActive || gambleSummary.label === "잠잠" ? "" : "accent",
               compact: true,
             })
           : createHeadlineRiderFocusMarkup(
@@ -21283,7 +21283,6 @@
       ? `
         <article class="forge-focus forge-focus--${riderStep ? "rider" : "headline"} forge-context__card forge-context__card--span-two">
           ${createBaseRouteForgeContextMarkup({
-            chipLabel: baseRouteForgeStage ? baseRouteForgeStage.label : "",
             dominantFormLabel: dominantFormSummary.label,
             waveAskLabel: proofWindow.label,
             scrapValue: String(Math.round(state.resources.scrap)),
