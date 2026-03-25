@@ -241,6 +241,28 @@ const relayCombatAsk = game.getBaseRouteCombatAsk({
   },
 });
 assert.equal(relayCombatAsk, "가장 먼 relay를 먼저 끊고 열린 회랑 하나를 길게 붙든다.");
+const midrunSupportBuild = game.createInitialBuild("rail_zeal");
+midrunSupportBuild.architectureForecastId = "mirror_hunt";
+midrunSupportBuild.bastionDoctrineId = "mirror_hunt";
+midrunSupportBuild.chassisId = "vector_thrusters";
+assert.deepEqual(Array.from(game.getVisibleSupportOfferSystemIds(midrunSupportBuild, 7)), []);
+assert.deepEqual(Array.from(game.getVisibleSupportOfferSystemIds(midrunSupportBuild, 8)), ["volt_drones"]);
+const wave7ForgeChoices = game.buildForgeChoices(midrunSupportBuild, () => 0.1, 999, {
+  nextWave: 7,
+  finalForge: false,
+});
+const wave7RiderChoice = wave7ForgeChoices.find((choice) => choice.contractRole === "rider");
+assert.ok(wave7RiderChoice);
+assert.notEqual(wave7RiderChoice.type, "system");
+assert.ok(["mod", "affix", "fallback"].includes(wave7RiderChoice.type));
+const wave8ForgeChoices = game.buildForgeChoices(midrunSupportBuild, () => 0.1, 999, {
+  nextWave: 8,
+  finalForge: false,
+});
+const wave8RiderChoice = wave8ForgeChoices.find((choice) => choice.contractRole === "rider");
+assert.ok(wave8RiderChoice);
+assert.equal(wave8RiderChoice.type, "system");
+assert.equal(wave8RiderChoice.systemId, "volt_drones");
 const driftFallbackAsk = game.getBaseRouteCombatAsk({
   waveIndex: 10,
   wave: { directive: "", hazard: { type: "drift" } },
@@ -377,18 +399,31 @@ const mirrorWave7Choices = game.buildForgeChoices(mirrorPrimerRun.build, Math.ra
 const mirrorWave7RiderChoice =
   mirrorWave7Choices.find((choice) => choice.contractRole === "rider") || mirrorWave7Choices[1];
 assert.ok(mirrorWave7RiderChoice);
-assert.equal(mirrorWave7RiderChoice.type, "system");
-assert.equal(mirrorWave7RiderChoice.systemId, "volt_drones");
-assert.equal(mirrorWave7RiderChoice.systemTier, 1);
-assert.ok(!mirrorWave7RiderChoice.primerCompletion);
-assert.equal(mirrorWave7RiderChoice.title, "Volt Drones");
-assert.equal(mirrorWave7RiderChoice.cost, 44);
+assert.equal(mirrorWave7RiderChoice.type, "mod");
+assert.equal(mirrorWave7RiderChoice.modId, "step_servos");
+assert.equal(mirrorWave7RiderChoice.title, "Step Servos");
 assert.ok(!/예열 완성/.test(mirrorWave7RiderChoice.slotText));
 game.applyForgeChoice(mirrorPrimerRun, mirrorWave7RiderChoice);
-const mirrorWave7SupportStats = game.computeSupportSystemStats(mirrorPrimerRun.build);
-assert.ok(mirrorWave7SupportStats);
-assert.equal(mirrorWave7SupportStats.orbitCount, 2);
-assert.equal(mirrorWave7SupportStats.shotCooldown, 1.08);
+assert.equal(game.computeSupportSystemStats(mirrorPrimerRun.build), null);
+const mirrorWave8Choices = game.buildForgeChoices(mirrorPrimerRun.build, Math.random, 64, {
+  nextWave: 8,
+  finalForge: false,
+  build: mirrorPrimerRun.build,
+});
+const mirrorWave8RiderChoice =
+  mirrorWave8Choices.find((choice) => choice.contractRole === "rider") || mirrorWave8Choices[1];
+assert.ok(mirrorWave8RiderChoice);
+assert.equal(mirrorWave8RiderChoice.type, "system");
+assert.equal(mirrorWave8RiderChoice.systemId, "volt_drones");
+assert.equal(mirrorWave8RiderChoice.systemTier, 1);
+assert.ok(!mirrorWave8RiderChoice.primerCompletion);
+assert.equal(mirrorWave8RiderChoice.title, "Volt Drones");
+assert.equal(mirrorWave8RiderChoice.cost, 44);
+game.applyForgeChoice(mirrorPrimerRun, mirrorWave8RiderChoice);
+const mirrorWave8SupportStats = game.computeSupportSystemStats(mirrorPrimerRun.build);
+assert.ok(mirrorWave8SupportStats);
+assert.equal(mirrorWave8SupportStats.orbitCount, 2);
+assert.equal(mirrorWave8SupportStats.shotCooldown, 1.08);
 assert.equal(mirrorPrimerRun.build.previewSupportSystemId ?? null, null);
 assert.equal(game.getPreviewSupportFrameProfile(mirrorPrimerRun.build), null);
 const shippingLadderWave4 = game.getShippingLadderSteps(roadmapBuild, null, 4);
@@ -1777,12 +1812,26 @@ const doctrinePrimaryChoices = game.buildForgeChoices(
   { nextWave: 7, finalForge: false }
 );
 assert.ok(
-  doctrinePrimaryChoices.some(
+  !doctrinePrimaryChoices.some(
     (choice) => choice.type === "system" && choice.systemId === "volt_drones"
   )
 );
 const doctrineCommitChoice = doctrinePrimaryChoices.find((choice) => choice.contractRole === "headline");
 assert.ok(doctrineCommitChoice);
+const doctrineWave7RiderChoice = doctrinePrimaryChoices.find((choice) => choice.contractRole === "rider");
+assert.ok(doctrineWave7RiderChoice);
+assert.notEqual(doctrineWave7RiderChoice.type, "system");
+const doctrineWave8Choices = game.buildForgeChoices(
+  bastionDoctrineBuild,
+  () => 0.99,
+  180,
+  { nextWave: 8, finalForge: false }
+);
+assert.ok(
+  doctrineWave8Choices.some(
+    (choice) => choice.type === "system" && choice.systemId === "volt_drones"
+  )
+);
 const doctrineFollowupChoices = game.buildForgeFollowupChoices(
   bastionDoctrineBuild,
   () => 0,

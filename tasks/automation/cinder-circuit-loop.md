@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: replace the scripted `Wave 3 -> Wave 6 -> Wave 8` ladder with a compact rerunnable forge lattice across `Wave 4-10`, while keeping the opener quiet and the default combat HUD limited to one growth read plus one combat ask.
+- Immediate priority: stop adding branch wrappers and instead rebuild `Wave 4-10` into a rerunnable growth lattice with recurring combat asks, while keeping the opener quiet and the default combat HUD limited to one growth read plus one combat ask.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 11:15:00 KST
+  Findings:
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8480) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8530) still define the shipped run as `약한 시작 -> Wave 3 주포 -> Wave 6 방호 -> Wave 8 후기 점화`. That is cleaner than the older admin sprawl, but it is still a fixed staircase, not a build lattice that can plausibly stretch toward `20-30 waves` or make reruns feel materially different.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2739) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3285) still open visible support fantasies too early: `Wave 7` already allows orbitals, shields, and drones, with primer versions front-loading the same silhouette even sooner. That protects variety on paper, but it weakens the run’s transformation arc because the machine starts looking half-finished instead of hungry.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L771) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1146) still make nearly every mid/late wave a bespoke authored scenario `territory -> relay -> open-lane sweep -> relay -> surge -> relay -> drift -> rotating hold`. Compared with the cleaner escalation loops in `Nova Drift` or `Brotato`, this is still too many encounter grammars for the player to master one build and want to rerun it.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21848) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22090) reduce the HUD better than before, but the game still depends on text like `다음 변화`, detailed combat asks, and inspect-board summaries to explain where the run is headed. Strong references use HUD to confirm desire, not to carry the structure itself.
+  Top Priority: Recut `Wave 4-10` around a repeatable three-lane reward contract `main weapon/chassis leap / defense-support payoff / greed-utility gamble`, and delay full orbital-drone-shield spectacle until after one unmistakable mid-run main-form spike has landed.
+  Why Now: Until the run earns one big transformation before it starts decorating the chassis, new options will keep reading as catalog breadth instead of replayable appetite.
+  Do Not Repeat: Do not answer this with another HUD trim or another support variant if the live route still resolves into the same `3 / 6 / 8` staircase and bespoke wave script ladder.
+  Release Gate: Progression
 
 - 2026-03-26 02:01:08 KST
   Findings:
@@ -3954,6 +3965,12 @@ This file is shared by two recurring Codex CLI jobs.
   Freeze: Pause new systems and late-route expansion until the base `Wave 1-12` run reads cleanly enough that a player can describe the finale without using internal draft/cache/ascension vocabulary.
 
 ## Latest Improvement
+
+- 2026-03-26 11:35:00 KST
+  Changed: pushed the consolidated-route `Wave 7` rider lane in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) away from real support installs and back into chassis-defense/utility payoff. In the shipped `12-wave` route, `getVisibleSupportOfferSystemIds(build, 7)` now hard-hides support systems entirely, so the recurring three-lane contract still offers `주력 변이 / 방호·보조 / 판돈·유틸` at mid-run but `방호·보조` resolves to cards like movement, armor, cooling, or salvage posture instead of immediately showing `Volt Drones`, orbitals, or halos. The first visible doctrine support silhouette now lands from `Wave 8`, not `Wave 7`. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock `Wave 7 = no real support offer`, `Wave 8 = first doctrine-aligned support install`, and the shifted Mirror Hunt expectations. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was still open because the shipped route claimed to delay support spectacle, but `Wave 7` was still already surfacing drones/halos/orbitals and flattening the `weapon leap -> chassis break -> first support reveal` arc. The highest-value bounded interpretation was to keep the three-lane draft structure intact while moving the first real support silhouette one rung later, because that strengthens build anticipation without reopening the whole Wave 4-10 reward generator in the same pass.
+  Follow-up Risk: this makes the mid-run arc cleaner, but `Wave 8` now carries even more responsibility as the first real rider reveal. If critique still says the route feels too staircase-authored, the next bounded progression pass should make the `판돈·유틸` lane branch harder across `Wave 7-10` rather than letting utility keeps converge on the same safe mod package.
+  Release Gate: Builds
 
 - 2026-03-26 11:20:00 KST
   Changed: compressed the consolidated-route `Tab` inspect board in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), [styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css), and [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so it now reads like a quick status board instead of a mini document. The header now resolves to `런 보드`, each of the three lanes keeps only `label + current value + one tiny hint chip`, and the old sentence-length lane paragraphs are gone. This follows the quick-scan inspect direction from `Brotato` and `Nova Drift`: one dominant hero card, three short build lanes, and no extra explanatory blocks competing with the arena.

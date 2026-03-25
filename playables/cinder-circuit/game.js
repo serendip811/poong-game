@@ -10089,6 +10089,11 @@
     ) {
       return allSystemIds;
     }
+    // Keep the Wave 7 rider lane as a chassis-defense/utility payoff so the first
+    // visible support silhouette still lands after the mid-run weapon/body spike.
+    if (nextWave === BASE_ROUTE_MIDRUN_SUPPORT_WAVE) {
+      return [];
+    }
     if (nextWave < LATE_BREAK_ARMORY_WAVE) {
       const midrunSystemId = getDoctrineMidrunSupportSystemId(build);
       return midrunSystemId ? [midrunSystemId] : allSystemIds;
