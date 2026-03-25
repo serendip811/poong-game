@@ -2742,7 +2742,7 @@
   const SUPPORT_SYSTEM_DEFS = {
     ember_ring: {
       id: "ember_ring",
-      forgeWaveMin: BASE_ROUTE_MIDRUN_SUPPORT_WAVE,
+      forgeWaveMin: SUPPORT_SYSTEM_START_WAVE,
       forgeLane: "보조 시스템",
       tag: "SYSTEM",
       color: "#ffd166",
@@ -2829,7 +2829,7 @@
     },
     aegis_halo: {
       id: "aegis_halo",
-      forgeWaveMin: BASE_ROUTE_MIDRUN_SUPPORT_WAVE,
+      forgeWaveMin: SUPPORT_SYSTEM_START_WAVE,
       forgeLane: "보조 시스템",
       tag: "SYSTEM",
       color: "#8ae7ff",
@@ -3123,7 +3123,7 @@
     },
     volt_drones: {
       id: "volt_drones",
-      forgeWaveMin: BASE_ROUTE_MIDRUN_SUPPORT_WAVE,
+      forgeWaveMin: SUPPORT_SYSTEM_START_WAVE,
       forgeLane: "공세 모듈",
       tag: "DRONE",
       color: "#7fffd4",
@@ -10078,6 +10078,14 @@
   function getVisibleSupportOfferSystemIds(build, nextWave = 0) {
     const allSystemIds = Object.keys(SUPPORT_SYSTEM_DEFS);
     if (
+      CONSOLIDATED_12_WAVE_ROUTE &&
+      Number.isFinite(nextWave) &&
+      nextWave >= 1 &&
+      nextWave < SUPPORT_SYSTEM_START_WAVE
+    ) {
+      return [];
+    }
+    if (
       !(
         CONSOLIDATED_12_WAVE_ROUTE &&
         build &&
@@ -10091,7 +10099,7 @@
     }
     // Keep the Wave 7 rider lane as a chassis-defense/utility payoff so the first
     // visible support silhouette still lands after the mid-run weapon/body spike.
-    if (nextWave === BASE_ROUTE_MIDRUN_SUPPORT_WAVE) {
+    if (nextWave < SUPPORT_SYSTEM_START_WAVE) {
       return [];
     }
     if (nextWave < LATE_BREAK_ARMORY_WAVE) {

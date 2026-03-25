@@ -12,9 +12,9 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The weakest gate is now `Progression`, with `Builds` and `Combat` feeding it: the route is simpler, but it still behaves like a scripted staircase instead of a rerunnable escalation spine.
-- Repeated false solution: trimming UI/admin language while leaving the same `Wave 3 weapon / Wave 6 chassis / Wave 8 late-form` contract, early support primers, and bespoke wave grammar stack intact.
-- Keep comparing against `Nova Drift`, `Hades`, and `Brotato`; the benchmark is not internal consistency, but whether one dominant form spike creates replay hunger before support spectacle and documentation take over.
-- Preserve these constraints: the opener must stay quiet, full orbital/drone/shield spectacle must be earned after a clear main-form leap, and `Wave 12` must read like a completed run rather than a teaser.
-- Main drift markers: design docs still promise long-run scale without a branchy enough live spine, wave scripts still rely on authored `note/directive` identity, and the run still introduces too many encounter grammars before the player has mastered one build.
-- Next critique bias: push consolidation of `Wave 4-10` into recurring reward/combat patterns before endorsing more systems, more support variants, or more late-run branches.
+- The weakest gate is still `Progression`, but the next lever is `Builds`: the run keeps presenting a cleaner staircase instead of a reusable reward/combat cell that could carry replay hunger past `Wave 12`.
+- Repeated false solution: trimming HUD copy or renaming forge wrappers while leaving the same `Wave 3 / Wave 6 / Wave 8` contract, early support silhouettes, and bespoke `Wave 5-8` combat scripts intact.
+- Keep comparing against `Nova Drift`, `Brotato`, and `Hades`; the benchmark is whether the player gets one obvious mid-run form spike, then starts craving the next layer, not whether the system language sounds organized.
+- Preserve these constraints: the opener stays quiet, orbit/drone/shield spectacle is earned after the main weapon/body leap, and the shipped HUD/forge flow stays at one combat ask plus one visible payoff.
+- Main drift markers: `Wave 5-10` still behaves like authored set pieces, support fantasies still appear too early, and the interface still explains structure instead of letting the build silhouette carry it.
+- Next critique bias: keep pressuring for a repeatable `payoff -> pressure -> forge fork` middle-game loop before endorsing more modules, more late branches, or more readability-only cleanup.

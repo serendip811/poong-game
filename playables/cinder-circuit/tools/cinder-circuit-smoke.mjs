@@ -241,6 +241,16 @@ const relayCombatAsk = game.getBaseRouteCombatAsk({
   },
 });
 assert.equal(relayCombatAsk, "가장 먼 relay를 먼저 끊고 열린 회랑 하나를 길게 붙든다.");
+const genericWave7Build = game.createInitialBuild("rail_zeal");
+assert.deepEqual(Array.from(game.getVisibleSupportOfferSystemIds(genericWave7Build, 7)), []);
+const genericWave7Choices = game.buildForgeChoices(genericWave7Build, () => 0.1, 999, {
+  nextWave: 7,
+  finalForge: false,
+  build: genericWave7Build,
+});
+const genericWave7RiderChoice = genericWave7Choices.find((choice) => choice.contractRole === "rider");
+assert.ok(genericWave7RiderChoice);
+assert.notEqual(genericWave7RiderChoice.type, "system");
 const midrunSupportBuild = game.createInitialBuild("rail_zeal");
 midrunSupportBuild.architectureForecastId = "mirror_hunt";
 midrunSupportBuild.bastionDoctrineId = "mirror_hunt";
@@ -1507,9 +1517,9 @@ assert.equal(
   JSON.stringify(Object.keys(game.SUPPORT_SYSTEM_DEFS).sort()),
   JSON.stringify(["aegis_halo", "ember_ring", "kiln_sentry", "seeker_array", "volt_drones"])
 );
-assert.equal(game.SUPPORT_SYSTEM_DEFS.aegis_halo.forgeWaveMin, 7);
-assert.equal(game.SUPPORT_SYSTEM_DEFS.ember_ring.forgeWaveMin, 7);
-assert.equal(game.SUPPORT_SYSTEM_DEFS.volt_drones.forgeWaveMin, 7);
+assert.equal(game.SUPPORT_SYSTEM_DEFS.aegis_halo.forgeWaveMin, 8);
+assert.equal(game.SUPPORT_SYSTEM_DEFS.ember_ring.forgeWaveMin, 8);
+assert.equal(game.SUPPORT_SYSTEM_DEFS.volt_drones.forgeWaveMin, 8);
 assert.equal(game.SUPPORT_SYSTEM_DEFS.kiln_sentry.forgeWaveMin, 8);
 assert.equal(game.SUPPORT_SYSTEM_DEFS.seeker_array.forgeWaveMin, 8);
 assert.equal(
