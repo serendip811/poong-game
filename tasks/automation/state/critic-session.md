@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate to push next is `Progression`: the game still presents a split `12-wave product` vs `Wave 1-6 shipped route`, so the team needs one honest rerunnable spine before talking about long-run scale.
-- Current drift bundle: `Wave 5` is supposed to be the first domination payoff, but `Wave 6` still pivots into relay/upkeep pressure too quickly while HUD and forge keep admin framing alive around it.
-- Repeated false solution: trimming copy or hiding future systems without changing the proof window itself. The route problem is structural, not cosmetic.
-- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: reward desire should win in one glance, combat HUD should stay sparse, and new forms should get breathing room before maintenance asks return.
-- For the next few passes, pressure consolidation over expansion: align docs/UI/rules around one replayable `Wave 1-6` contract, make the first weapon/body leap the clearest visual memory, and keep satellites/shields/missiles/drones as later hunger instead of early noise.
+- The most fragile gate is still `Progression`: docs and player-facing UI continue to advertise a `12-wave / signature` product while the only honest shipped target is a replayable `Wave 1-6` spine.
+- Current drift bundle: `Wave 5-6` still lacks a true domination plateau because the payoff window is tuned too close together, while HUD/forge fallback framing keeps the route feeling managed instead of immediate.
+- Repeated false solution: copy cleanup, hidden wrappers, or "lean start" messaging that still leaves signature cards, 12-wave fallback scripts, or support-preview silhouettes in view.
+- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: early runs should start visibly smaller, reward desire should read in one glance, and the first big form should get breathing room before upkeep/admin returns.
+- Near-term critic pressure should stay on consolidation, not expansion: erase the split contract, protect the first gun/body transformation as the run's clearest memory, and leave orbitals/shields/helpers as later hunger instead of opener decoration.

@@ -604,7 +604,6 @@ const mirrorPrimerRun = {
 game.applyForgeChoice(mirrorPrimerRun, mirrorWave5RiderChoice);
 assert.equal(mirrorPrimerRun.build.previewSupportSystemId ?? null, null);
 assert.equal(game.computeSupportSystemStats(mirrorPrimerRun.build), null);
-assert.equal(game.getPreviewSupportFrameProfile(mirrorPrimerRun.build), null);
 const mirrorWave7Choices = game.buildForgeChoices(mirrorPrimerRun.build, Math.random, 64, {
   nextWave: 7,
   finalForge: false,
@@ -632,7 +631,6 @@ game.applyForgeChoice(mirrorPrimerRun, mirrorWave8RiderChoice);
 const mirrorWave8SupportStats = game.computeSupportSystemStats(mirrorPrimerRun.build);
 assert.equal(mirrorWave8SupportStats, null);
 assert.equal(mirrorPrimerRun.build.previewSupportSystemId ?? null, null);
-assert.equal(game.getPreviewSupportFrameProfile(mirrorPrimerRun.build), null);
 const shippingLadderWave4 = game.getShippingLadderSteps(roadmapBuild, null, 4);
 assert.equal(shippingLadderWave4.length, 3);
 assert.equal(shippingLadderWave4.map((step) => step.label).join("|"), "START|도약|방호");
