@@ -87,9 +87,16 @@ assert.equal(
   "result"
 );
 assert.ok(game.WAVE_CONFIG[0].spawnBudget < game.WAVE_CONFIG[2].spawnBudget);
-assert.equal(game.WAVE_CONFIG[0].activeCap, 14);
-assert.equal(game.WAVE_CONFIG[1].activeCap, 16);
+assert.equal(game.WAVE_CONFIG[0].activeCap, 12);
+assert.equal(game.WAVE_CONFIG[1].activeCap, 15);
 assert.equal(game.WAVE_CONFIG[2].activeCap, 19);
+assert.equal(game.WAVE_CONFIG[0].hazard, null);
+assert.equal(game.WAVE_CONFIG[1].hazard, null);
+assert.equal(game.WAVE_CONFIG[0].mix.shrike, 0);
+assert.equal(game.WAVE_CONFIG[1].mix.shrike, 0);
+assert.ok(game.WAVE_CONFIG[0].mix.scuttler > 0.9);
+assert.ok(game.WAVE_CONFIG[1].mix.brute >= 0.3);
+assert.ok(game.WAVE_CONFIG[2].hazard?.damage > 0);
 assert.equal(game.WAVE_CONFIG[0].arena.width, 1080);
 assert.equal(game.WAVE_CONFIG[1].arena.width, 1160);
 assert.equal(game.WAVE_CONFIG[2].arena.width, 1220);

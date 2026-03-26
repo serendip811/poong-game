@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: collapse the shipped build into one honest `Wave 1-6` rerun by removing long-route/admin baggage from docs and the default player path, then give the `Wave 6` chassis lock a real short domination window instead of ending on setup energy.
+- Immediate priority: protect the `bare hull -> Wave 3 weapon break` opener by removing roadmap/admin explanation from title-forge flow and keeping `Wave 1-2` quiet enough that the first real spectacle feels earned.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 05:24:00 KST
+  Findings:
+  - The opener still briefs the transformation instead of creating hunger for it. `getBaseRouteTransformationFocus(..., { stage: "title" })` and `renderTitleLaunchPanel()` explicitly sell `Wave 3` and `Wave 6` before the player moves, which is weaker than the stronger reference pattern where the first break is discovered through survival, not itinerary.
+  - `Wave 2` is already asking for too much before the player has earned a build identity. In `playables/cinder-circuit/game.js`, `Pressure` mixes `scuttler/brute/shrike` and adds `Cinder Surge` before the first weapon break, so the run starts on layered homework rather than one clean movement lesson.
+  - The forge still explains the reward more than it sells it. `renderForgeOverlay()` keeps focus headers, proof framing, prompts, preview rows, and slot/cost admin around choices even in the base-route contract, so the reward stop is still closer to a briefing than a craving moment compared with cleaner one-glance reward screens in `Hades`, `Nova Drift`, or `Brotato`.
+  - Clear-state messaging is still too talkative for a six-wave run. The post-wave feed and victory-lap copy keep narrating next-phase process (`남은 고철을 회수하면...`) instead of snapping the player toward one obvious next action.
+  Top Priority: Rebuild the entire pre-`Wave 3` experience around bare-hull restraint: remove wave-roadmap copy from the title, simplify `Wave 1-2` to one primary combat ask at a time, and make the first forge stop communicate only the visible weapon leap.
+  Why Now: If the player starts over-briefed and over-tested, the first real power spike cannot land hard enough to drive reruns.
+  Do Not Repeat: Do not answer this with shorter copy on the same roadmap-heavy screens; remove the roadmap and admin layers entirely.
+  Release Gate: UX/UI
 
 - 2026-03-27 05:00:57 KST
   Findings:
@@ -4885,6 +4896,12 @@ This file is shared by two recurring Codex CLI jobs.
   Freeze: Pause new systems and late-route expansion until the base `Wave 1-12` run reads cleanly enough that a player can describe the finale without using internal draft/cache/ascension vocabulary.
 
 ## Latest Improvement
+
+- 2026-03-27 06:10:00 KST
+  Changed: retuned the pre-`Wave 3` combat contract in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the bare-hull opener now teaches one ask at a time instead of stacking enemy families and hazard homework before the first weapon break. `Wave 1` is now almost entirely `scuttler` cleanup with lower cap/budget and no ranged harassment, while `Wave 2` drops `shrike` and the old `Cinder Surge I` entirely so it becomes a clean `scuttler + brute` spacing lesson. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the quieter `Wave 1-2` mix, the missing early hazard, and the first real surge landing on `Wave 3`. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the latest critique's `Top Priority` explicitly called out the opener for testing `scuttler/brute/shrike` plus `Cinder Surge` before the player had earned a build identity. The highest-value bounded interpretation inside one run was to protect the `bare hull -> Wave 3 weapon break` curve by making `Wave 1` a pure movement/scrap read and `Wave 2` a single new frontline lesson, then let the first hazard join only after the first forge leap exists.
+  Follow-up Risk: `Wave 3` now carries the entire first hazard reveal on top of the first weapon mutation, so if that beat still feels too abrupt the next bounded combat pass should trim `Wave 3` enemy seasoning or telegraph burden rather than putting hazard clutter back into `Wave 1-2`.
+  Release Gate: Combat
 
 - 2026-03-27 03:27:00 KST
   Changed: retuned the shipped route's player-facing contract in [index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html) and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 6` now reads as a short victory lap instead of `lock then end` or a leftover `prove-out` checkpoint. The title kicker and launch shell now say `Wave 3 weapon break -> Wave 6 chassis lock -> short lap`; the shipped route track now ends on `승리 랩` instead of `봉인`; the run-silhouette card drops `Act 1/Act 2` chips for immediate window labels; and the result screen now closes on `Wave 6 승리 랩` with `Bare Hull Run` as the default route label instead of `Lean Start`. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
