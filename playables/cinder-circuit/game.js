@@ -8532,32 +8532,32 @@
     const stage = options && options.stage ? options.stage : "combat";
     if (stage === "title") {
       return {
-        eyebrow: "6-wave loop",
+        eyebrow: "Wave 1-6",
         title: "Bare Hull -> Weapon Break -> Chassis Lock",
-        detail: "빈 선체로 들어가 Wave 3 무장 도약, Wave 6 차체 잠금 뒤 짧은 승리 랩까지 밀어붙인다.",
-        windowLabel: "Wave 6 lap",
+        detail: "Wave 3에서 무장이 깨지고 Wave 6에서 몸체가 잠긴 뒤 짧은 승리 랩으로 닫힌다.",
+        windowLabel: "짧은 승리 랩",
       };
     }
     if (stage === "forge") {
       if (options.pendingFinalForge) {
         return {
-          eyebrow: "마무리",
+          eyebrow: "마침표",
           title: "잠긴 실루엣",
-          detail: "마지막 형태 하나를 고르고 바로 전장으로 돌려보낸다.",
+          detail: "마지막 형태 하나만 고르고 바로 쓸어 담으러 돌아간다.",
           windowLabel: "지금 선택",
         };
       }
       if (options.riderStep) {
         return {
-          eyebrow: "방호·보조",
-          title: "버티는 선 보강",
-          detail: "주력 실루엣은 그대로 두고, 버티는 선 한 줄만 얇게 더한다.",
+          eyebrow: "버팀",
+          title: "버티는 선 한 줄",
+          detail: "주력 실루엣은 그대로 두고 생존선만 얇게 덧댄다.",
           windowLabel: "지금 선택",
         };
       }
       if (boundedWave >= 6) {
         return {
-          eyebrow: "주력 변이",
+          eyebrow: "주력",
           title: "잠긴 실루엣",
           detail: "이미 열린 gun/body 실루엣을 더 거칠게 밀어붙인다.",
           windowLabel: "지금 선택",
@@ -8565,13 +8565,13 @@
       }
       return boundedWave >= 5
         ? {
-            eyebrow: "방호·보조",
+            eyebrow: "버팀",
             title: "첫 차체 잠금",
             detail: "이번 정지에서 몸체 리듬이 처음 갈라진다.",
             windowLabel: "지금 선택",
           }
         : {
-            eyebrow: "주력 변이",
+            eyebrow: "주력",
             title: "첫 무기 도약",
             detail: "이번 정지에서 처음으로 총열과 화면 점유가 크게 바뀐다.",
             windowLabel: "지금 선택",
@@ -9502,7 +9502,7 @@
     detail = "",
   }) {
     return `
-      <p class="panel__eyebrow">${eyebrow || "변이 선택"}</p>
+      <p class="panel__eyebrow">${eyebrow || "변이"}</p>
       <strong class="route-contract__title">${title || "-"}</strong>
       ${detail ? `<p class="forge-focus__hint">${detail}</p>` : ""}
     `;
@@ -12279,12 +12279,12 @@
       markForgeContract(
         adaptiveHeadlineChoice,
         "headline",
-        "주력 변이"
+        "주력"
       ),
       markForgeContract(
         adaptiveRiderChoice,
         "rider",
-        "방호·보조"
+        "버팀"
       ),
     ].filter(Boolean);
     if (!twoCardBaseRouteContract) {
@@ -12292,15 +12292,15 @@
         markForgeContract(
           adaptiveGambleChoice,
           "gamble",
-          "판돈·유틸"
+          "판돈"
         )
       );
     }
 
     [
-      ["headline", "주력 변이", "주력 변신"],
-      ["rider", "방호·보조", "보조/방호"],
-      ...(twoCardBaseRouteContract ? [] : [["gamble", "판돈·유틸", "탐욕/유틸"]]),
+      ["headline", "주력", "주력 변신"],
+      ["rider", "버팀", "보조/방호"],
+      ...(twoCardBaseRouteContract ? [] : [["gamble", "판돈", "탐욕/유틸"]]),
     ]
       .filter(([role]) => !choices.some((choice) => choice.contractRole === role))
       .forEach(([role, label, laneLabel], index) => {
@@ -12330,7 +12330,7 @@
       choices.every((choice) => choice.cost > scrapBank)
     ) {
       const fallbackRole = twoCardBaseRouteContract ? "rider" : "gamble";
-      const fallbackLabel = twoCardBaseRouteContract ? "방호·보조" : "판돈·유틸";
+      const fallbackLabel = twoCardBaseRouteContract ? "버팀" : "판돈";
       const fallbackLane = twoCardBaseRouteContract ? "보조/방호" : "탐욕/유틸";
       choices[choices.length - 1] = markForgeContract(
         markForgeLane(
@@ -13797,10 +13797,10 @@
               choice,
               index === 0 ? "headline" : index === 1 ? "rider" : "gamble",
               index === 0
-                ? "주력 변이"
+                ? "주력"
                 : index === 1
-                  ? "방호·보조"
-                  : "판돈·유틸"
+                  ? "버팀"
+                  : "판돈"
             )
           );
       }
@@ -13819,10 +13819,10 @@
             choice,
             index === 0 ? "headline" : index === 1 ? "rider" : "gamble",
             index === 0
-              ? "주력 변이"
+              ? "주력"
               : index === 1
-                ? "방호·보조"
-                : "판돈·유틸"
+                ? "버팀"
+                : "판돈"
           )
         );
     }
@@ -13901,10 +13901,10 @@
           choice,
           index === 0 ? "headline" : index === 1 ? "rider" : "gamble",
           index === 0
-            ? "주력 변이"
+            ? "주력"
             : index === 1
-              ? "방호·보조"
-              : "판돈·유틸"
+              ? "버팀"
+              : "판돈"
         )
       );
   }
@@ -14423,15 +14423,15 @@
 
   function getBaseRouteForgeContractLabel(role, choice, riderStep = false) {
     if (riderStep) {
-      return "방호·보조";
+      return "버팀";
     }
     if (role === "headline") {
-      return "주력 변이";
+      return "주력";
     }
     if (role === "gamble") {
-      return "판돈·유틸";
+      return "판돈";
     }
-    return "방호·보조";
+    return "버팀";
   }
 
   function getBaseRouteForgeBannerLabel(run = state) {
@@ -17295,9 +17295,6 @@
     }
     if (CONSOLIDATED_12_WAVE_ROUTE) {
       const titleFocus = getBaseRouteTransformationFocus(1, { stage: "title" });
-      const titleBeats = getShippedRoutePresentationBeats().filter((entry) =>
-        [3, 5, 6].includes(entry.waveNumber)
-      );
       elements.titleLaunchPanel.innerHTML = `
         <section class="title-launch-shell title-launch-shell--lean">
           <div class="title-launch-shell__frame" aria-hidden="true">
@@ -17313,18 +17310,6 @@
             <p class="panel__eyebrow">${titleFocus.windowLabel}</p>
             <strong class="title-launch-shell__headline">${titleFocus.title}</strong>
             <p class="title-launch-shell__detail">${titleFocus.detail}</p>
-            <div class="title-launch-shell__proof-strip" aria-label="run proof beats">
-              ${titleBeats
-                .map(
-                  (entry) => `
-                    <article class="title-launch-shell__proof">
-                      <span>Wave ${entry.waveNumber}</span>
-                      <strong>${entry.title}</strong>
-                    </article>
-                  `
-                )
-                .join("")}
-            </div>
           </div>
         </section>
       `;

@@ -38,7 +38,7 @@ assert.equal(game.getPlayerFacingActLabelForWave(9).shortLabel, "Act 2");
 assert.equal(game.getPlayerFacingActLabelForWave(13).shortLabel, "Act 2");
 assert.equal(game.getPlayerFacingActLabelForWave(19).shortLabel, "Act 2");
 const titleFocus = game.getBaseRouteTransformationFocus(1, { stage: "title" });
-assert.equal(titleFocus.windowLabel, "Wave 6 lap");
+assert.equal(titleFocus.windowLabel, "짧은 승리 랩");
 assert.ok(titleFocus.title.includes("Weapon Break"));
 assert.ok(titleFocus.title.includes("Chassis Lock"));
 assert.ok(titleFocus.detail.includes("Wave 3"));
@@ -170,8 +170,8 @@ assert.ok(
 );
 const wave5FieldGrantChoices = game.buildFieldGrantChoices(game.createInitialBuild("rail_zeal"), Math.random, 5);
 assert.equal(wave5FieldGrantChoices.length, 2);
-assert.equal(wave5FieldGrantChoices.find((choice) => choice.contractRole === "headline")?.contractLabel, "주력 변이");
-assert.equal(wave5FieldGrantChoices.find((choice) => choice.contractRole === "rider")?.contractLabel, "방호·보조");
+assert.equal(wave5FieldGrantChoices.find((choice) => choice.contractRole === "headline")?.contractLabel, "주력");
+assert.equal(wave5FieldGrantChoices.find((choice) => choice.contractRole === "rider")?.contractLabel, "버팀");
 assert.equal(wave5FieldGrantChoices.find((choice) => choice.contractRole === "gamble"), undefined);
 const wave6ForgeChoices = game.buildForgeChoices(game.createInitialBuild("rail_zeal"), () => 0, 999, {
   nextWave: 6,
@@ -292,11 +292,11 @@ assert.ok(compactFocusMarkup.includes("고철 42"));
 assert.ok(compactFocusMarkup.includes("Cataclysm Arsenal"));
 assert.ok(!compactFocusMarkup.includes("다음 도약"));
 const forgeContextMarkup = game.createBaseRouteForgeContextMarkup({
-  eyebrow: "주력 변이",
+  eyebrow: "주력",
   title: "Prism Crown",
   detail: "이번 정지에서 처음으로 총열과 화면 점유가 크게 바뀐다.",
 });
-assert.ok(forgeContextMarkup.includes("주력 변이"));
+assert.ok(forgeContextMarkup.includes("주력"));
 assert.ok(forgeContextMarkup.includes("Prism Crown"));
 assert.ok(forgeContextMarkup.includes("이번 정지에서 처음으로 총열과 화면 점유가 크게 바뀐다."));
 assert.ok(forgeContextMarkup.includes("forge-focus__hint"));
@@ -316,7 +316,7 @@ const chassisFocus = game.getBaseRouteTransformationFocus(5);
 assert.equal(chassisFocus.title, "첫 차체 잠금");
 assert.ok(chassisFocus.detail.includes("몸체 리듬"));
 const forgeFocus = game.getBaseRouteTransformationFocus(5, { stage: "forge" });
-assert.equal(forgeFocus.eyebrow, "방호·보조");
+assert.equal(forgeFocus.eyebrow, "버팀");
 assert.equal(forgeFocus.title, "첫 차체 잠금");
 assert.ok(forgeFocus.detail.includes("몸체 리듬"));
 const forgeBillMarkup = game.createBaseRouteForgeBillMarkup("고철 18");
@@ -467,7 +467,7 @@ assert.equal(
 );
 assert.equal(
   recurringWave3Choices.map((choice) => choice.contractLabel).join("|"),
-  "주력 변이|방호·보조"
+  "주력|버팀"
 );
 const recurringWave3HeadlineTransform =
   game.getBaseRouteForgeChoiceTransformation(recurringWave3Choices[0]);
@@ -1816,9 +1816,9 @@ assert.equal(choices.length, 3);
 assert.equal(
   JSON.stringify(choices.map((choice) => choice.contractLabel)),
   JSON.stringify([
-    "주력 변이",
-    "방호·보조",
-    "판돈·유틸",
+    "주력",
+    "버팀",
+    "판돈",
   ])
 );
 assert.ok(choices.some((choice) => choice.contractRole === "gamble"));
@@ -2305,7 +2305,7 @@ const fieldGrantChoices = game.buildFieldGrantChoices(fieldGrantBuild, () => 0, 
 assert.equal(fieldGrantChoices.length, 2);
 assert.equal(
   JSON.stringify(fieldGrantChoices.map((choice) => choice.contractLabel)),
-  JSON.stringify(["주력 변이", "방호·보조"])
+  JSON.stringify(["주력", "버팀"])
 );
 assert.ok(
   fieldGrantChoices.every((choice) =>

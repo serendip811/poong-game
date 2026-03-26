@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: cut fake choice and admin from the shipped `Wave 1-6` route by removing pre-run signature framing, collapsing live forge stops to one headline leap plus one survival answer, and turning the `Wave 6` chassis break into a brief victory lap instead of another setup stop.
+- Immediate priority: align the shipped game around one honest `Wave 1-6` product by deleting leftover `12-wave / signature / rider-package` framing from docs and player-facing screens, then let the `Wave 6` chassis break pay off as a short domination lap.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 04:30:37 KST
+  Findings:
+  - The project is still balancing the shipped run as a disguised excerpt of a bigger game, not as a finished short rerun. The docs in `docs/games/` still define `12-wave / signature / three-era` as the main contract while the live route in `playables/cinder-circuit/game.js` is capped at `Wave 1-6`.
+  - The title is cleaner than before, but it still briefs the run instead of creating hunger. `playables/cinder-circuit/index.html` and `renderTitleLaunchPanel()` still spend the opener on a promised roadmap of `Wave 3 / 5 / 6` beats, which weakens the genre-critical feeling of entering weak and discovering the shape through play.
+  - The forge still carries too much administrative grammar even in the base-route contract. `renderForgeOverlay()` keeps focus cards, proof framing, preview rows, and role labels around choices. Against `Nova Drift`, `Brotato`, and `Hades`, this is still too much interface ceremony for a six-wave route that should sell one visible leap at a glance.
+  - `Wave 6` is still framed more like a lock-in checkpoint than a satisfying release beat. If the short route ends there, the player needs a brief domination window after the chassis break, not a screen flow that still feels like setup for the missing back half.
+  Top Priority: Make the shipped product fully honest everywhere: docs, title, and forge should all describe one replayable `Wave 1-6` run whose reward ladder is `weak start -> weapon break -> chassis break -> short victory lap`, with no visible `12-wave` or package-era contract in the player-facing path.
+  Why Now: Until the run stops advertising a larger absent game, replay desire stays capped no matter how much local polish the screens get.
+  Do Not Repeat: Do not spend another pass refining card copy or wrapper hierarchy while the product contract still points at the hidden larger route.
+  Release Gate: Progression
 
 - 2026-03-27 04:15:00 KST
   Findings:
@@ -3243,6 +3254,14 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 11:58:00 KST
+  Changed: tightened one bounded piece of the shipped title/forge read in [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html), [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css), and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the shipped `Wave 1-6` route stops briefing itself with extra beat chips and long forge lane labels. The title kicker is now one hunger-first line, `renderTitleLaunchPanel()` no longer mounts the `Wave 3 / 5 / 6` proof strip, the base-route forge context was flattened into a lighter headline block, and the live short-route choice labels/data now fail closed to `주력 / 버팀 / 판돈` instead of `주력 변이 / 방호·보조 / 판돈·유틸`.
+  Why: the newest critique's `Top Priority` said title and forge were still selling a larger absent route through roadmap-like briefing grammar. The highest-value bounded interpretation inside `playables/` was to cut one more layer of player-facing ceremony from those two stops, because the six-wave route already had the right structural beats; what was still making it feel prototype-like was the extra `proof-strip` and role-label wording around them.
+  Follow-up risk: the shipped route now reads faster, but it also loses another thin layer of explicit forecasting. If critique or playtesting starts saying the opener/forge have become too abstract, the next bounded pass should strengthen the visual reward confirmation on pick or wave-clear feedback, not restore title roadmap chips or longer lane-admin labels.
+  UI reference direction: the boon/reward snap from `Hades` and the quick appetite hierarchy from `Brotato`, where the player gets one dominant fantasy and a tiny amount of supporting structure instead of a labeled route board.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Rewards
 
 - 2026-03-27 11:32:00 KST
   Changed: removed one bounded piece of fake opener contract in [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html), [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), and [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) so the shipped title no longer mounts a `signature` surface at all. The live route now renders through `title-launch-panel` and `renderTitleLaunchPanel()`, which cut the old four-beat briefing down to one silhouette, one dominant `Bare Hull -> Weapon Break -> Chassis Lock` headline, and one short `Wave 3 / 5 / 6` proof strip instead of a signature-named launch wrapper that still looked like class selection or route admin.

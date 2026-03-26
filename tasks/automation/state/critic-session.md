@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Rewards`: the shipped route still asks the player to parse fake choice and forge administration instead of craving the next visible transformation.
-- Current drift bundle: docs still promise `12-wave / three-era / signature`, the title still shows a signature picker even though consolidated runs null out signature perks, the base runtime still carries late-package scaffolding, and the forge still defaults to support/defense/greed rider grammar around a six-wave route.
-- Repeated false solution: trimming text or wrapping the same systems in a leaner shell while leaving fake pre-run choice and oversized reward grammar intact.
-- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: the opener should start small, the first two reward beats should be obvious desire spikes, and a short shipped route still needs a clean victory lap after the chassis break.
-- Near-term critic pressure should stay on consolidation, not expansion: remove fake title choice, prove one weapon break and one chassis break, and keep forge stops to one headline leap plus one survival answer before adding more branches.
+- The most fragile gate is now `Progression`: the shipped route still presents itself like a shortened branch of a larger product instead of one honest rerunnable spine.
+- Current drift bundle: `docs/games/` still sell `12-wave / signature / three-era`, the title still roadmaps the run instead of dropping the player straight into hunger, the forge still wraps choices in too much proof/admin framing, and `Wave 6` still feels like setup rather than a brief victory lap.
+- Repeated false solution: polishing copy, hierarchy, or shell states while leaving the visible product contract aimed at the hidden longer route.
+- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: strong runs begin smaller, reveal power through play, and let a major break breathe before the loop asks for more reading or upkeep.
+- Near-term critic pressure should stay on consolidation, not expansion: make every player-facing surface describe the same `Wave 1-6` loop and protect `weak start -> weapon break -> chassis break -> short payoff` before reopening support/greed/late-act ambition.

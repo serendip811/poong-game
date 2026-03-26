@@ -366,7 +366,7 @@ body[data-overdrive="true"] .backdrop__glow--right {
 }
 
 .title-launch-shell__copy--lean {
-  gap: 12px;
+  gap: 10px;
 }
 
 .title-launch-shell__headline {
@@ -379,6 +379,7 @@ body[data-overdrive="true"] .backdrop__glow--right {
 .title-launch-shell__detail {
   margin: 0;
   color: var(--muted-strong);
+  max-width: 29ch;
   line-height: 1.52;
 }
 
@@ -1601,13 +1602,15 @@ body[data-overdrive="true"] .backdrop__glow--right {
 }
 
 .forge-context--contract .forge-context__card--span-two {
-  padding: 14px 16px;
-  background: rgba(255, 255, 255, 0.035);
+  padding: 10px 4px 2px;
+  background: transparent;
+  border: 0;
 }
 
 .forge-context--contract .route-contract__title {
-  font-size: clamp(1.32rem, 2vw, 1.72rem);
-  line-height: 1.1;
+  margin-top: 6px;
+  font-size: clamp(1.42rem, 2.2vw, 1.92rem);
+  line-height: 1.04;
 }
 
 .forge-context--contract .summary-copy {
@@ -2378,11 +2381,11 @@ body[data-overdrive="true"] .backdrop__glow--right {
 }
 
 .forge-focus__hint {
-  margin: 10px 0 0;
+  margin: 6px 0 0;
   color: var(--muted);
-  font-size: 0.86rem;
-  line-height: 1.42;
-  max-width: 32rem;
+  font-size: 0.82rem;
+  line-height: 1.38;
+  max-width: 28rem;
 }
 
 .forge-card__impact-strip {
@@ -2463,11 +2466,11 @@ body[data-overdrive="true"] .backdrop__glow--right {
 .result-grid__label {
   display: inline-flex;
   align-items: center;
-  padding: 6px 10px;
+  padding: 5px 9px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.08);
   color: #ffe0c2;
-  font-size: 0.74rem;
+  font-size: 0.68rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
