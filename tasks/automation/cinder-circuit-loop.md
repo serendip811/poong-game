@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: make the shipped `Wave 1-6` route prove one real rerun hook beyond the first weapon break by surfacing a visible defense/support/greed branch early enough to matter, instead of hiding build appetite in non-shipped later scaffolding.
+- Immediate priority: stop shipping a `Wave 1-6` shell that ends before the real support/greed grammar starts; either extend the honest route until one secondary branch gets a proof window, or cut the product claim back to the smaller game.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 10:25:00 KST
+  Findings:
+  - The current shipped product still cannot cash the build fantasy it advertises. In `playables/cinder-circuit/game.js`, `CONSOLIDATED_12_WAVE_ROUTE = true` and `DEFAULT_ROUTE_WAVE_COUNT = 6`, but `SUPPORT_SYSTEM_START_WAVE = 9`, so the honest run literally ends before orbitals, shields, drones, missiles, or any real support layer can enter play.
+  - `buildForgeChoices()` still treats most of the six-wave route as a two-card contract and only opens a real third branch at `nextWave === 5`. That means early reruns are still mostly `weapon jump + survive`, not the kind of offense/defense/greed assembly that makes players plan ahead between fights.
+  - The combat space is healthier than older cramped versions, but the payoff timing is still wrong. `Wave 6` body lock feeds almost directly into `createBaseRouteVictoryLapWave()` and then the run ends, so the first true chassis identity arrives at the moment a strong roguelite should be creating appetite for the next 10 minutes.
+  - The project is drifting into a split identity: `docs/games/cinder-circuit-design.md` still sells a 12-wave three-era ownership arc, while the live route behaves like a short sampler that hides the best fantasies behind unreachable wave gates. That mismatch weakens trust and makes every reward screen feel like a promise for another build, not payoff for this one.
+  Top Priority: Extend the shipped route to at least `Wave 8` and move one real secondary branch (`support`, `defense`, or `greed`) into `Wave 5-6`, so that branch gets one full combat proof window before the run closes.
+  Why Now: A rerunnable action roguelite cannot rely on off-screen future systems when the shipped session ends before the second build axis is playable.
+  Do Not Repeat: Do not answer this with more hidden Wave 9+ scaffolding, roadmap text, or additional support families that the honest route still cannot reach.
+  Release Gate: Progression
 
 - 2026-03-27 09:40:00 KST
   Findings:
@@ -3288,6 +3299,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 14:10:00 KST
+  Changed: extended the honest shipped run in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from `Wave 1-6` to `Wave 1-8`, pulled real support installs forward to `Wave 6`, and rewired the mid-run contract so the player now gets an actual second build axis before the close. `DEFAULT_ROUTE_WAVE_COUNT` is now `8`, `SUPPORT_SYSTEM_START_WAVE` is now `6`, `Wave 5` and `Wave 6` both open the three-lane contract, `buildWave6ChassisBreakpointChoices(...)` now locks a chassis and bundled support install together, and the short `Victory Lap` now resolves after `Wave 8` off the larger late-payoff bracket instead of firing immediately after the first body lock. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) was updated to lock the new `Wave 1-8 -> victory lap` transition and the earlier mid-run support visibility.
+  Why: the latest critique's `Top Priority` explicitly said the shipped route ends before the second build axis is playable. The highest-value concrete interpretation was to make the already-built `Wave 7-8` proof cells part of the honest product and let `Wave 6` chassis picks carry one real support install, because that creates visible offense/defense/support assembly without reopening hidden `Wave 9+` scaffolding or adding another new subsystem.
+  Follow-up risk: this fixes the unreachable-support problem, but it also means some forecasted doctrines no longer auto-adopt at `Wave 6` because that stop now spends its rider budget on chassis-plus-system delivery. If future critique says doctrine identity now lands too softly compared with the new support branch, the next bounded pass should decide whether `Wave 6` should auto-adopt the forecasted doctrine or whether `Wave 7-8` need stronger proof copy, not push support back out of the honest route.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Progression
 
 - 2026-03-27 13:05:00 KST
   Changed: reopened one bounded mid-run branch in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the shipped `Wave 1-6` route no longer stays on a flat two-card contract all the way to the end. The consolidated forge now keeps `Wave 1-4` and `Wave 6` on the lean `주력 + 버팀` read, but the stop that feeds `Wave 5` now opens a real `주력 + 버팀 + 판돈` fork: `preview_support` is allowed back onto the short route as the rider hint card, the greed lane can surface again, and the combat-feed copy now explicitly frames that stop as the first rerun branch instead of another strict two-card checkpoint. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks `Wave 5 = 3 choices with gamble present` while `Wave 6` still fails closed to the chassis-lock two-card contract.

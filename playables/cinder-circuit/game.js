@@ -2514,7 +2514,7 @@
   const LEAN_START_CORE_ID = "ember";
   const MAX_SUPPORT_BAYS = 2;
   const MAX_SUPPORT_BAY_LIMIT = 4;
-  const SUPPORT_SYSTEM_START_WAVE = 9;
+  const SUPPORT_SYSTEM_START_WAVE = 6;
   const BASE_ROUTE_MIDRUN_SUPPORT_WAVE = SUPPORT_SYSTEM_START_WAVE;
   const PREVIEW_SUPPORT_PRIMER_CREDIT = 10;
   const SUPPORT_SYSTEM_DEFS = {
@@ -4028,7 +4028,7 @@
   const ACT_BREAK_ARMORY_WAVE = 5;
   const LATE_BREAK_ARMORY_WAVE = 9;
   const CONSOLIDATED_12_WAVE_ROUTE = true;
-  const DEFAULT_ROUTE_WAVE_COUNT = CONSOLIDATED_12_WAVE_ROUTE ? 6 : MAX_WAVES;
+  const DEFAULT_ROUTE_WAVE_COUNT = CONSOLIDATED_12_WAVE_ROUTE ? 8 : MAX_WAVES;
   const ACT3_CATALYST_DRAFT_WAVE = 10;
   const OVERCOMMIT_TRIAL_WAVE = 5;
   const OVERCOMMIT_SALVAGE_REQUIRED = 3;
@@ -8496,7 +8496,7 @@
         <strong>런 실루엣</strong>
         <span class="summary-chip ${focus.state === "live" ? "summary-chip--hot" : ""}">${focus.windowLabel || focus.label}</span>
       </div>
-      <p class="summary-copy roadmap-card__path">기본 6웨이브 런에서는 약한 시작, 첫 무기 도약, 첫 방호 약속, 마지막 휩쓸기만 크게 드러내고 나머지 조율은 전부 백그라운드로 숨긴다.</p>
+      <p class="summary-copy roadmap-card__path">기본 8웨이브 런에서는 약한 시작, 첫 무기 도약, Wave 5-6 두 번째 축, Wave 8 마감만 크게 드러내고 나머지 조율은 전부 백그라운드로 숨긴다.</p>
       <div class="roadmap-card__steps">
         ${steps
           .map(
@@ -8521,9 +8521,9 @@
     const stage = options && options.stage ? options.stage : "combat";
     if (stage === "title") {
       return {
-        eyebrow: "Wave 1-6",
+        eyebrow: "Wave 1-8",
         title: "Bare Hull -> Weapon Break -> Chassis Lock",
-        detail: "Wave 3에서 무장이 깨지고 Wave 6에서 몸체가 잠긴 뒤 짧은 승리 랩으로 닫힌다.",
+        detail: "Wave 3에서 무장이 깨지고 Wave 5-6에서 두 번째 축이 열리며 Wave 8까지 증명한 뒤 짧은 승리 랩으로 닫힌다.",
         windowLabel: "짧은 승리 랩",
       };
     }
@@ -8595,8 +8595,10 @@
       { waveNumber: 2, shortLabel: "HOLD", title: "버티기" },
       { waveNumber: 3, shortLabel: "BREAK", title: "무장 도약" },
       { waveNumber: 4, shortLabel: "PRESS", title: "도약 시험" },
-      { waveNumber: 5, shortLabel: "LOCK", title: "차체 잠금" },
-      { waveNumber: 6, shortLabel: "LAP", title: "승리 랩" },
+      { waveNumber: 5, shortLabel: "BRANCH", title: "두 번째 축" },
+      { waveNumber: 6, shortLabel: "LOCK", title: "차체 잠금" },
+      { waveNumber: 7, shortLabel: "PROOF", title: "보조 증명" },
+      { waveNumber: 8, shortLabel: "FINISH", title: "완성 시험" },
     ];
   }
 
@@ -11011,7 +11013,8 @@
     return (
       CONSOLIDATED_12_WAVE_ROUTE &&
       Number.isFinite(nextWave) &&
-      nextWave === 5
+      nextWave >= 5 &&
+      nextWave <= 6
     );
   }
 
@@ -12223,6 +12226,7 @@
     const takenIds = new Set();
     const reserveMidrunSupportForRider =
       recurringBaseRouteContract &&
+      nextWave > 6 &&
       nextWave >= SUPPORT_SYSTEM_START_WAVE &&
       supportSystemChoices.length > 0;
     const openSecondaryBranch = shouldOpenBaseRouteSecondaryBranch(nextWave);
@@ -13635,24 +13639,6 @@
     if (!build) {
       return [];
     }
-    if (CONSOLIDATED_12_WAVE_ROUTE) {
-      return Object.values(CHASSIS_BREAKPOINT_DEFS).map((chassisDef) => ({
-        type: "utility",
-        action: "bastion_bay_forge",
-        id: `utility:bastion_chassis_break:${chassisDef.id}:lean`,
-        verb: "접합",
-        tag: chassisDef.tag,
-        title: chassisDef.title,
-        description: `${chassisDef.description} 이번 Wave 6은 차체 break만 잠그고 끝낸다. 별도 support 하드웨어는 late-form lock 직전까지 숨기고, 다음 두 번의 포지는 주포와 몸체가 더 오래 화면을 먹게 둔다.`,
-        slotText: `섀시 breakpoint · ${chassisDef.slotText}`,
-        cost: 0,
-        laneLabel: "섀시 breakpoint",
-        forgeLaneLabel: "섀시 breakpoint",
-        bayUnlock: false,
-        chassisId: chassisDef.id,
-        chassisTitle: chassisDef.title,
-      }));
-    }
     const random = typeof rng === "function" ? rng : Math.random;
     const doctrine = getBastionDoctrineDef(build);
     const preferredSystemIds = new Set(getDoctrinePreferredSystemIds(doctrine));
@@ -13686,9 +13672,33 @@
       takenIds.add(choice.id);
       ordered.push(choice);
     };
-    pushChoice(wildcardChoices[0]);
     pushChoice(doctrineChoices[0]);
-    [...wildcardChoices.slice(1), ...doctrineChoices.slice(1)].forEach(pushChoice);
+    pushChoice(wildcardChoices[0]);
+    [...doctrineChoices.slice(1), ...wildcardChoices.slice(1)].forEach(pushChoice);
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
+      const fallbackSystemChoice = ordered[0] || null;
+      return Object.values(CHASSIS_BREAKPOINT_DEFS).map((chassisDef, index) => {
+        const choice = ordered[index] || fallbackSystemChoice;
+        return {
+          type: "utility",
+          action: "bastion_bay_forge",
+          id: `utility:bastion_chassis_break:${chassisDef.id}:${choice ? choice.systemId : "midrun_unlock"}`,
+          verb: "접합",
+          tag: chassisDef.tag,
+          title: chassisDef.title,
+          description: `${chassisDef.description}${choice ? ` 세 번째 support bay를 즉시 열어 ${choice.title}을(를) 함께 직결한다.` : " 세 번째 support bay를 즉시 열어 중반 보조 축을 바로 받는다."} Wave 6-8은 새 body line과 보조 축을 같은 bracket 안에서 바로 증명하는 구간으로 바뀐다.`,
+          slotText: `섀시 breakpoint · ${chassisDef.slotText}${choice ? ` · ${choice.title}` : " · mid-run bay"}`,
+          cost: Math.max(10, Math.round(((choice && choice.cost) || 0) * 0.65)),
+          originalCost: (choice && choice.cost) || 0,
+          laneLabel: "섀시 breakpoint",
+          forgeLaneLabel: "섀시 breakpoint",
+          bayUnlock: true,
+          chassisId: chassisDef.id,
+          chassisTitle: chassisDef.title,
+          systemChoice: choice,
+        };
+      });
+    }
     const chassisDefs = Object.values(CHASSIS_BREAKPOINT_DEFS);
     const fallbackSystemChoice = ordered[0] || null;
     const chassisChoices = chassisDefs.map((chassisDef, index) => {
@@ -17743,7 +17753,7 @@
     pushCombatFeed(
       isFinalForge
         ? CONSOLIDATED_12_WAVE_ROUTE
-          ? "최종 웨이브 정리 완료. 기본 6-wave spine은 여기서 닫힌다."
+          ? "최종 웨이브 정리 완료. 기본 8-wave spine은 여기서 닫히고 짧은 승리 랩만 남는다."
           : "최종 웨이브 정리 완료. 마지막 포지에서 최종 각인과 7연속 afterburn survival ladder의 시작 형태를 마감한다."
         : isLateBreakArmory(forgeOptions)
           ? CONSOLIDATED_12_WAVE_ROUTE
@@ -18254,32 +18264,33 @@
   }
 
   function createBaseRouteVictoryLapWave(build = null) {
-    const sweepBase = resolveWaveConfig(6, build);
+    const sweepBase = resolveWaveConfig(DEFAULT_ROUTE_WAVE_COUNT, build);
     return {
       ...sweepBase,
       id: "base_route_victory_lap",
       label: "Victory Lap · Dominion Run",
       bannerLabel: "Victory Lap",
-      note: "Wave 6에서 잠근 차체를 바로 써보는 짧은 domination window. 추가 포지나 목표 세금 없이 열린 lane을 훑으며 새 몸체 화력을 직접 누르게 만든다.",
-      directive: "가장 넓게 열린 flank를 먼저 비우고, 반대 lane으로 짧게 갈아타며 잠긴 body line의 sweep 폭을 끝까지 유지한다.",
+      note: "Wave 8까지 키운 body/support bracket을 바로 써보는 짧은 domination window. 추가 포지나 목표 세금 없이 열린 lane을 훑으며 완성 직전 형태를 직접 누르게 만든다.",
+      directive: "가장 넓게 열린 flank를 먼저 비우고, 반대 lane으로 짧게 갈아타며 잠긴 body/support line의 sweep 폭을 끝까지 유지한다.",
       duration: 38,
-      spawnBudget: 58,
-      activeCap: 15,
-      baseSpawnInterval: 0.54,
+      spawnBudget: 66,
+      activeCap: 18,
+      baseSpawnInterval: 0.5,
       spawnIntervalMin: 0.15,
       spawnAcceleration: 0.16,
       eliteEvery: 12,
       mix: {
-        scuttler: 0.14,
-        brute: 0.16,
-        shrike: 0.32,
-        skimmer: 0.26,
-        lancer: 0.12,
+        scuttler: 0.1,
+        brute: 0.14,
+        shrike: 0.24,
+        skimmer: 0.28,
+        lancer: 0.18,
+        binder: 0.06,
       },
-      driveGainFactor: Math.max(1.3, sweepBase.driveGainFactor || 1.3),
+      driveGainFactor: Math.max(1.38, sweepBase.driveGainFactor || 1.38),
       arena: {
-        width: 1760,
-        height: 980,
+        width: 1820,
+        height: 1020,
       },
       hazard: null,
       cleanupPhase: false,
@@ -18470,7 +18481,7 @@
       ? "회로 봉인 성공"
       : "회로 붕괴";
     elements.resultCopy.textContent = victory
-      ? "Wave 6 차체 잠금 뒤 열린 승리 랩까지 밀어붙여 이번 런을 닫았다. 마지막 형태와 보강 조합은 아래에 기록된다."
+      ? "Wave 6 차체 잠금과 중반 보조 축을 Wave 8까지 증명한 뒤 열린 승리 랩까지 밀어붙여 이번 런을 닫았다. 마지막 형태와 보강 조합은 아래에 기록된다."
       : "열과 밀도를 버티지 못했다. 이동 경로와 포지 선택을 다시 정리해야 한다.";
     elements.resultStats.innerHTML = [
       createResultStat("Waves", String(state.result.wavesCleared)),
