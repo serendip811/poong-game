@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze the shipped path into a readable `Wave 1-6` prove-out with a bare opener, forge-only transformation spikes, and open-lane combat; cut wildcard/cache/support-preview/Afterburn clutter until movement choices and build hunger survive repeat runs.
+- Immediate priority: redefine the shipped path as a stripped `Wave 1-6` prove-out with a bare opener, forge-only transformation spikes, and open-lane combat; keep `Wave 7+`, `Afterburn`, wildcard/cache, and support-preview breadth out of the default contract until repeat-run hunger survives.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 23:40:00 KST
+  Findings:
+  - The game is still measuring itself against a `12-wave / three-era` package instead of proving that one short run spine is replayable. `docs/games/cinder-circuit-design.md` still defines success around `Wave 1-12`, three eras, and a full alpha slice, while `playables/cinder-circuit/game.js` already carries `Afterburn` bands and multiple late-route variants. That is expansion pressure before the core loop has earned it.
+  - The opener still starts too solved. The design doc still sells `Run Signature` as `initial bench 2 cards + passive`, and the code still keeps preview support, wildcard roadmap beats, and live cache language available around the route. A strong rerun should begin with one small gun/body identity and make the first obvious multi-barrel, beam, orbit, or shield jump feel awaited.
+  - The forge is still presented like a decision dossier. `playables/cinder-circuit/index.html` keeps subtitle/context layers, and `playables/cinder-circuit/game.js` still renders proof rows, preview rows, pivot rows, impact strips, rider prompts, and extra context copy around each choice. Compared with the snap readability of `Nova Drift`, `Brotato`, and `Hades`, this is still too much explanation wrapped around too little instant desire.
+  - Combat readability is improving in raw arena size, but the wave contract is still too authored and too busy to judge long-term fun honestly. `Wave 5-12` remains a named sequence of payoff/proof/pursuit/stand cells with custom hazards, while support satellites, shields, missiles, drones, and cache pickups continue to coexist in the same ruleset. That makes it hard to tell whether the chassis and primary weapon line are actually strong enough to carry reruns.
+  Top Priority: Change the shipped target and default route to a brutally simple `Wave 1-6` replayable spine with one main gun/body escalation, one optional survival fork, no live cache identity swaps, and forge cards reduced to silhouette plus one payoff line.
+  Why Now: Until the game can make players want to immediately rerun a short stripped route, every added wave and subsystem is mostly hiding the real problem.
+  Do Not Repeat: Do not spend another pass preserving the 12-wave package and trying to justify it with more labels, previews, or side-path rewards.
+  Release Gate: Progression
 
 - 2026-03-26 23:10:00 KST
   Findings:
@@ -3040,6 +3051,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 00:32:00 KST
+  Changed: narrowed one bounded piece of the shipped progression contract in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the default run now actually closes as a `Wave 1-6` prove-out instead of still presenting itself as a `12-wave` shipped route. I introduced `DEFAULT_ROUTE_WAVE_COUNT === 6`, clamped player-facing act labels to `Act 1 / Act 2`, sliced the live wave track to the first six nodes, marked `Wave 6` as the default-route run closer, and cut the shipped `런 실루엣` ladder down to the three beats that matter for this short spine `START -> 도약 -> 방호`. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks the six-wave cap, the act clamp, and the trimmed three-step ladder.
+  Why: the newest critique's `Top Priority` was to change the shipped target and default route to a brutally simple `Wave 1-6` replayable spine. The highest-value concrete interpretation was to make the shipped path itself fail closed at `Wave 6`, because the opener and forge had already been consolidated but the live track, act framing, and completion contract were still advertising a larger route than the game should currently promise.
+  Follow-up risk: this makes the default contract more honest, but the dormant `Wave 7-12` data and some deeper roadmap helpers still exist off the shipped path for future iteration. If later critique says the game still feels like it is teasing a bigger hidden route, the next bounded progression pass should scrub remaining `Wave 9-12` player-facing copy from inspect/roadmap helpers instead of reopening more content.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Progression
 
 - 2026-03-26 23:40:00 KST
   Changed: retuned one bounded piece of the shipped combat spine in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the consolidated `Wave 1-6` route no longer climbs on crowd volume before the first real body break can breathe. I lowered the opener caps to `14 / 16 / 19 / 22 / 20 / 21`, cut the same waves' spawn budgets down to `38 / 50 / 64 / 88 / 100 / 108`, and shortened the `Wave 5-6` bastion/relay hazard lockouts slightly so the earned `Wave 3` gun jump and `Wave 6` chassis jump create more visible lane-control space instead of being buried under simultaneous bodies. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks those calmer early-wave caps, budgets, and shorter mid-act hazard durations.

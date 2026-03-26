@@ -2130,7 +2130,7 @@
 
   function getPlayerFacingActLabelForWave(waveNumber) {
     const boundedWave = CONSOLIDATED_12_WAVE_ROUTE
-      ? clamp(Math.round(waveNumber || 1), 1, MAX_WAVES)
+      ? clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT)
       : waveNumber;
     return getActLabelForWave(boundedWave);
   }
@@ -4054,6 +4054,7 @@
   const ACT_BREAK_ARMORY_WAVE = 5;
   const LATE_BREAK_ARMORY_WAVE = 9;
   const CONSOLIDATED_12_WAVE_ROUTE = true;
+  const DEFAULT_ROUTE_WAVE_COUNT = CONSOLIDATED_12_WAVE_ROUTE ? 6 : MAX_WAVES;
   const ACT3_CATALYST_DRAFT_WAVE = 10;
   const OVERCOMMIT_TRIAL_WAVE = 5;
   const OVERCOMMIT_SALVAGE_REQUIRED = 3;
@@ -4061,8 +4062,7 @@
   const ACT_LABELS = CONSOLIDATED_12_WAVE_ROUTE
     ? [
         { start: 1, end: 4, label: "Act 1 · Ignition", shortLabel: "Act 1" },
-        { start: 5, end: 8, label: "Act 2 · Bastion Run", shortLabel: "Act 2" },
-        { start: 9, end: 12, label: "Act 3 · Crown Siege", shortLabel: "Act 3" },
+        { start: 5, end: DEFAULT_ROUTE_WAVE_COUNT, label: "Act 2 · Bastion Run", shortLabel: "Act 2" },
       ]
     : [
         { start: 1, end: 4, label: "Act 1 · Ignition", shortLabel: "Act 1" },
@@ -8489,10 +8489,9 @@
   }
 
   function getShippingLadderSteps(build, weapon = null, waveNumber = 1) {
-    const boundedWave = clamp(Math.round(waveNumber || 1), 1, MAX_WAVES);
+    const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
     const currentWeapon = weapon || computeWeaponStats(build);
     const dominantForm = getDominantFormSummary(build, currentWeapon, boundedWave);
-    const lateBreakHeadline = getLateBreakHeadline(build && build.lateBreakProfileId);
     const chassis = getChassisBreakpointDef(build);
     const stageState = (start, end = start) => {
       if (boundedWave > end) {
@@ -8530,14 +8529,6 @@
           ? `${chassis.label} 차체가 첫 방호 약속으로 잠긴다. 여기서 처음으로 dive, hold, exit 리듬이 몸체 선택에 따라 갈라진다.`
           : "Wave 6에서 몸체 하나를 골라 버티는 선을 만든다. 지원 하드웨어는 뒤로 밀고 첫 방호 약속만 먼저 굳힌다.",
       },
-      {
-        label: "점화",
-        title: lateBreakHeadline ? lateBreakHeadline.title : "후기 점화",
-        state: stageState(8),
-        detail: lateBreakHeadline
-          ? `${lateBreakHeadline.title} 하나만 크게 점화해 후반 실루엣을 고정한다. Wave 9-12는 새 갈림길 없이 이 후기 형태를 오래 누르는 구간이 된다.`
-          : "Wave 8에서 oversized late-form 하나만 점화한다. 이후 런은 새 갈림길 없이 그 후기 형태를 끝까지 밀어붙인다.",
-      },
     ];
   }
 
@@ -8552,7 +8543,7 @@
   }
 
   function createShippingLadderMarkup(build, weapon = null, waveNumber = 1) {
-    const boundedWave = clamp(Math.round(waveNumber || 1), 1, MAX_WAVES);
+    const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
     const act = getPlayerFacingActLabelForWave(boundedWave);
     const steps = getShippingLadderSteps(build, weapon, boundedWave);
     const focus = getShippingLadderFocus(build, weapon, boundedWave);
@@ -8561,7 +8552,7 @@
         <strong>런 실루엣</strong>
         <span class="summary-chip ${focus.state === "live" ? "summary-chip--hot" : ""}">${act.shortLabel}</span>
       </div>
-      <p class="summary-copy roadmap-card__path">약한 시작 뒤 첫 무기 도약, 첫 방호 약속, 후기 점화만 크게 드러내고 중간 조율은 전부 백그라운드로 숨긴다.</p>
+      <p class="summary-copy roadmap-card__path">기본 6웨이브 prove-out에서는 약한 시작, 첫 무기 도약, 첫 방호 약속만 크게 드러내고 나머지 조율은 전부 백그라운드로 숨긴다.</p>
       <div class="roadmap-card__steps">
         ${steps
           .map(
@@ -15237,6 +15228,7 @@
   const exported = {
     GAME_TITLE,
     MAX_WAVES,
+    DEFAULT_ROUTE_WAVE_COUNT,
     WAVE_CONFIG,
     resolveWaveConfig,
     POST_CAPSTONE_WAVE_COUNT,
@@ -16439,7 +16431,7 @@
     const currentWaveNumber = Math.max(1, state.waveIndex + 1);
     const currentAct = getPlayerFacingActLabelForWave(currentWaveNumber);
     const totalTrackWaves =
-      MAX_WAVES +
+      DEFAULT_ROUTE_WAVE_COUNT +
       (CONSOLIDATED_12_WAVE_ROUTE
         ? 0
         : state.postCapstone && state.postCapstone.active
@@ -16454,7 +16446,7 @@
           ? "Run Complete"
           : `${currentAct.shortLabel} · Wave ${state.waveIndex + 1} / ${totalTrackWaves}`;
     elements.runTrackLabel.textContent = label;
-    const trackEntries = WAVE_CONFIG.map((wave, index) => {
+    const trackEntries = WAVE_CONFIG.slice(0, DEFAULT_ROUTE_WAVE_COUNT).map((wave, index) => {
       const resolvedWave = resolveWaveConfig(index, state.build);
       return {
         waveNumber: index + 1,
@@ -17496,7 +17488,9 @@
       mix: config.mix,
       cleanupPhase: false,
       awaitingForge: false,
-      completesRun: Boolean(config.completesRun),
+      completesRun:
+        Boolean(config.completesRun) ||
+        (CONSOLIDATED_12_WAVE_ROUTE && waveNumber >= DEFAULT_ROUTE_WAVE_COUNT),
       driveGainFactor: config.driveGainFactor || 1,
       hazard: config.hazard,
       hazardTimer: config.hazard ? config.hazard.interval * 0.8 : Number.POSITIVE_INFINITY,
@@ -17680,7 +17674,7 @@
   }
 
   function enterForge() {
-    const isFinalForge = state.waveIndex >= MAX_WAVES - 1;
+    const isFinalForge = state.waveIndex >= DEFAULT_ROUTE_WAVE_COUNT - 1;
     const forgeOptions = {
       finalForge: isFinalForge,
       nextWave: state.waveIndex + 2,
@@ -17729,7 +17723,7 @@
     pushCombatFeed(
       isFinalForge
         ? CONSOLIDATED_12_WAVE_ROUTE
-          ? "최종 웨이브 정리 완료. 마지막 정지는 지금 실루엣만 다듬고 이번 12-wave run을 닫는다."
+          ? "최종 웨이브 정리 완료. 기본 6-wave spine은 여기서 닫힌다."
           : "최종 웨이브 정리 완료. 마지막 포지에서 최종 각인과 7연속 afterburn survival ladder의 시작 형태를 마감한다."
         : isLateBreakArmory(forgeOptions)
           ? CONSOLIDATED_12_WAVE_ROUTE
@@ -18384,7 +18378,7 @@
       ? "회로 봉인 성공"
       : "회로 붕괴";
     elements.resultCopy.textContent = victory
-      ? "Wave 12 최종 방어선을 버티고 이번 런을 닫았다. 마지막 형태와 보강 조합은 아래에 기록된다."
+      ? "Wave 6 prove-out을 버티고 이번 런을 닫았다. 마지막 형태와 보강 조합은 아래에 기록된다."
       : "열과 밀도를 버티지 못했다. 이동 경로와 포지 선택을 다시 정리해야 한다.";
     elements.resultStats.innerHTML = [
       createResultStat("Waves", String(state.result.wavesCleared)),

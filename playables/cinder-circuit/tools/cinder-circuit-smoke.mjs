@@ -23,18 +23,20 @@ const game = sandbox.module.exports;
 
 assert.equal(game.GAME_TITLE, "Cinder Circuit");
 assert.equal(game.MAX_WAVES, 12);
+assert.equal(game.DEFAULT_ROUTE_WAVE_COUNT, 6);
 assert.equal(game.WAVE_CONFIG.length, 12);
 assert.equal(game.ACT_BREAK_ARMORY_WAVE, 5);
 assert.equal(game.LATE_BREAK_ARMORY_WAVE, 9);
 assert.equal(game.ACT3_CATALYST_DRAFT_WAVE, 10);
 assert.equal(game.getActLabelForWave(4).shortLabel, "Act 1");
 assert.equal(game.getActLabelForWave(5).shortLabel, "Act 2");
-assert.equal(game.getActLabelForWave(9).shortLabel, "Act 3");
-assert.equal(game.getActLabelForWave(13).shortLabel, "Act 3");
-assert.equal(game.getActLabelForWave(19).shortLabel, "Act 3");
-assert.equal(game.getPlayerFacingActLabelForWave(9).shortLabel, "Act 3");
-assert.equal(game.getPlayerFacingActLabelForWave(13).shortLabel, "Act 3");
-assert.equal(game.getPlayerFacingActLabelForWave(19).shortLabel, "Act 3");
+assert.equal(game.getActLabelForWave(9).shortLabel, "Act 2");
+assert.equal(game.getActLabelForWave(13).shortLabel, "Act 2");
+assert.equal(game.getActLabelForWave(19).shortLabel, "Act 2");
+assert.equal(game.getPlayerFacingActLabelForWave(6).shortLabel, "Act 2");
+assert.equal(game.getPlayerFacingActLabelForWave(9).shortLabel, "Act 2");
+assert.equal(game.getPlayerFacingActLabelForWave(13).shortLabel, "Act 2");
+assert.equal(game.getPlayerFacingActLabelForWave(19).shortLabel, "Act 2");
 assert.equal(game.POST_CAPSTONE_WAVE_COUNT, 7);
 assert.equal(game.shouldAllowCombatRewardDrops(), false);
 assert.equal(game.shouldAllowContrabandOverclockRoute(), false);
@@ -128,6 +130,13 @@ assert.equal(game.WAVE_CONFIG[11].label, "Wave 12 · Final Stand");
 assert.equal(game.WAVE_CONFIG[10].pressureFamily, "pursuit");
 assert.equal(game.WAVE_CONFIG[11].pressureFamily, "hold");
 const roadmapBuild = game.createInitialBuild("rail_zeal");
+const shippedLadder = game.getShippingLadderSteps(roadmapBuild, game.computeWeaponStats(roadmapBuild), 5);
+assert.equal(shippedLadder.length, 3);
+assert.equal(
+  JSON.stringify(shippedLadder.map((step) => step.label)),
+  JSON.stringify(["START", "도약", "방호"])
+);
+assert.ok(!shippedLadder.some((step) => step.label === "점화"));
 assert.equal(game.createWildcardProtocolChoice(roadmapBuild, 4), null);
 assert.equal(game.createWildcardProtocolChoice(roadmapBuild, 7), null);
 assert.equal(game.createWildcardProtocolChoice(roadmapBuild, 10), null);
@@ -617,8 +626,8 @@ assert.equal(mirrorWave8SupportStats, null);
 assert.equal(mirrorPrimerRun.build.previewSupportSystemId ?? null, null);
 assert.equal(game.getPreviewSupportFrameProfile(mirrorPrimerRun.build), null);
 const shippingLadderWave4 = game.getShippingLadderSteps(roadmapBuild, null, 4);
-assert.equal(shippingLadderWave4.length, 4);
-assert.equal(shippingLadderWave4.map((step) => step.label).join("|"), "START|도약|방호|점화");
+assert.equal(shippingLadderWave4.length, 3);
+assert.equal(shippingLadderWave4.map((step) => step.label).join("|"), "START|도약|방호");
 assert.ok(
   !shippingLadderWave4.some(
     (step) => /Wave 5|작은 변이|사격 조율/i.test(`${step.label} ${step.title} ${step.detail}`)
