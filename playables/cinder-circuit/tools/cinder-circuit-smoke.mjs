@@ -253,47 +253,6 @@ assert.equal(eraThreePlan[0].state, "locked");
 assert.equal(eraThreePlan[1].state, "locked");
 assert.equal(eraThreePlan[2].state, "live");
 assert.ok(eraThreePlan[2].proofLabel.length > 0);
-const inspectMarkup = game.createTabInspectBoardMarkup({
-  dominantForm: { label: "Sky Lance" },
-  spotlightValue: "Cataclysm Arsenal",
-  scrapValue: "42",
-  hintChipText: "다음 포지 Sky Splitter",
-  mainSummary: {
-    label: "주력 변이",
-    value: "Sky Lance",
-    note: "긴 레일로 열린 복도를 먼저 찢는다.",
-    tone: "main",
-  },
-  supportSummary: {
-    label: "방호·보조",
-    value: "Bare Hull",
-    note: "보조 결은 아직 조용하다.",
-    tone: "support",
-  },
-  gambleSummary: {
-    label: "판돈·유틸",
-    value: "잠잠",
-    note: "판돈 라인은 아직 비어 있다.",
-    tone: "gamble",
-  },
-});
-assert.ok(inspectMarkup.includes("고철"));
-assert.ok(inspectMarkup.includes("현재 형태"));
-assert.ok(inspectMarkup.includes("다음 시험"));
-assert.ok(inspectMarkup.includes("Cataclysm Arsenal"));
-assert.ok(inspectMarkup.includes("42"));
-assert.ok(inspectMarkup.includes("다음 포지 Sky Splitter"));
-assert.ok(!inspectMarkup.includes("비용·대가"));
-assert.ok(inspectMarkup.includes("inspect-board__hero"));
-assert.ok(inspectMarkup.includes("inspect-board__meta"));
-assert.equal((inspectMarkup.match(/class="inspect-board__meta-item"/g) || []).length, 2);
-assert.ok(inspectMarkup.includes("inspect-board__lane--main"));
-assert.ok(inspectMarkup.includes("inspect-board__lane--support"));
-assert.ok(inspectMarkup.includes("inspect-board__lane--gamble"));
-assert.ok(inspectMarkup.includes("inspect-board__chip"));
-assert.equal((inspectMarkup.match(/class="inspect-board__chip"/g) || []).length, 1);
-assert.ok(!inspectMarkup.includes("forge-focus__proof"));
-assert.ok(!inspectMarkup.includes("forge-card__pivot--bill"));
 const compactFocusMarkup = game.createBaseRouteFocusMarkup({
   eyebrow: "현재 형태",
   title: "Sky Lance",
@@ -364,7 +323,6 @@ assert.ok(minimalCombatAskMarkup.includes("combat-ask-card__focus"));
 assert.ok(!minimalCombatAskMarkup.includes("mini-pill-row"));
 assert.ok(!minimalCombatAskMarkup.includes("summary-head"));
 const minimalHudVisibility = game.getMinimalBaseRouteHudVisibility({
-  hudInspect: false,
   paused: false,
 });
 assert.equal(minimalHudVisibility.minimal, true);
@@ -373,15 +331,14 @@ assert.equal(minimalHudVisibility.showDash, false);
 assert.equal(minimalHudVisibility.showTimer, false);
 assert.equal(minimalHudVisibility.showScrap, false);
 assert.equal(minimalHudVisibility.showRoadmap, false);
-const expandedHudVisibility = game.getMinimalBaseRouteHudVisibility({
-  hudInspect: true,
-  paused: false,
+const pausedHudVisibility = game.getMinimalBaseRouteHudVisibility({
+  paused: true,
 });
-assert.equal(expandedHudVisibility.minimal, false);
-assert.equal(expandedHudVisibility.showWave, true);
-assert.equal(expandedHudVisibility.showDash, true);
-assert.equal(expandedHudVisibility.showTimer, true);
-assert.equal(expandedHudVisibility.showRoadmap, true);
+assert.equal(pausedHudVisibility.minimal, false);
+assert.equal(pausedHudVisibility.showWave, true);
+assert.equal(pausedHudVisibility.showDash, true);
+assert.equal(pausedHudVisibility.showTimer, true);
+assert.equal(pausedHudVisibility.showRoadmap, true);
 const openingCombatAsk = game.getBaseRouteCombatAsk({
   waveIndex: 0,
   wave: { directive: "", hazard: null },

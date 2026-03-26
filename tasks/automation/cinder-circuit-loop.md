@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: remove the remaining `signature / 12-wave / support-primer` contract from docs and default presentation, then make `Wave 5-6` the first truly replay-worthy domination plateau before any broader route or support depth stays visible.
+- Immediate priority: make the shipped `Wave 1-6` route honest on screen and in docs by removing default `signature / 12-wave / support-primer / admin-HUD` scaffolding first, then retune `Wave 5-6` into one clear domination plateau before any broader route depth stays visible.
 
 ## Release Gates
 
@@ -61,6 +61,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 00:30:59 KST
+  Findings:
+  - The default route is still lying about how lean it is. [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L21) says the run starts from one shared `Ember` core, but the same screen still reserves central space for `signature-cards`, and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L5276) keeps `signatureId` in the base build. That is still a preconfigured-class silhouette wearing lean-start copy.
+  - The docs are still pulling the project toward a finished 12-wave package instead of a proven rerun spine. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L35) still define `12웨이브`, `시동 회로`, and `세 시대 계약` as the core promise, so the implementation keeps getting judged against breadth it has not earned.
+  - Combat readability is still being spent on run administration. [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L101) keeps a dedicated `wave-objective` card on the combat screen, and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22258) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22452) still turn `Tab` and forge into route-summary surfaces. Compared with `Brotato` or `Hades`, this is still too much reading around a survival loop that should resolve in one glance.
+  - Early growth is still visually over-equipped before the player has earned hunger. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3002) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3051) keep three support primers alive, which means orbitals, shielding, and drone silhouettes are still part of the opener contract instead of later payoff.
+  - `Wave 5-6` still do not create the long, clean ownership plateau the run needs. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L433) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L467) only move from `activeCap 18 -> 19` while immediately adding `lancer` pressure, so the first main transformation still does not buy the breathing room and domination memory a rerunnable arena roguelite needs.
+  Top Priority: Strip the shipped route down to one honest combat read by removing default signature/title scaffolding and the in-combat objective/admin inspect layer before tuning anything else.
+  Why Now: Player-facing overload and false breadth are still hiding the one payoff window that needs to hook repeat runs.
+  Do Not Repeat: Do not spend another pass on copy trims or hidden toggles that leave signature state, support primers, or route-summary HUD/forge behavior intact.
+  Release Gate: UX/UI
 
 - 2026-03-27 00:00:48 KST
   Findings:
@@ -3152,6 +3164,14 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 04:32:00 KST
+  Changed: removed one bounded piece of live combat administration from the shipped route in [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html), [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css), and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs). The game screen no longer reserves the bottom `wave-objective` slot at all, `updateHUD()` no longer builds the combat ask / `Tab` inspect board render path, `Tab` is inert during live play instead of opening an admin surface, and the shipped-route smoke now locks minimal HUD visibility against `paused` rather than a hidden inspect state. This makes normal combat read as survival meters only instead of `read a card before you move`.
+  Why: the newest critique's `Top Priority` explicitly asked to strip the in-combat objective/admin inspect layer before any more tuning. The highest-value concrete interpretation was to remove the live bottom-card rail itself, because keeping a hidden `Tab` board or dormant objective mount would still preserve the same over-explained combat contract under a lighter wrapper.
+  Follow-up risk: this makes the arena read faster, but it also means the player now gets less explicit mid-wave guidance on hazard identity. If critique keeps saying `Wave 5-8` asks are too opaque after this, the next bounded UX pass should sharpen enemy/hazard telegraphing or pause-state recap, not restore a live objective card.
+  UI reference direction: the quick-glance combat hierarchy from `Brotato` and `Hades`, where moment-to-moment survival reads stay on the playfield and meters instead of opening a separate route-summary panel.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: UX/UI
 
 - 2026-03-27 04:05:00 KST
   Changed: removed one bounded piece of hidden preload from the shipped route in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so consolidated runs no longer carry signature state at all. `applySignatureToBuild(...)` now nulls `signatureId` on the shipped route, `createAppState()`/`startRun()`/title-return flows no longer build runs through `selectedSignatureId`, and title-card pointer selection is inert under consolidation instead of quietly feeding future doctrine state into the run model. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) was updated to lock that all three former signatures now create the same null-signature `Ember` start, while doctrine-specific forge preference checks explicitly set doctrine state instead of inheriting it from a hidden opener choice.

@@ -9451,95 +9451,8 @@
     return `${source.slice(0, 75).trimEnd()}...`;
   }
 
-  function trimInspectChipText(text, fallback) {
-    const source = (text || fallback || "").replace(/\s+/g, " ").trim();
-    if (!source) {
-      return fallback || "";
-    }
-    if (source.length <= 44) {
-      return source;
-    }
-    return `${source.slice(0, 41).trimEnd()}...`;
-  }
-
-  function getTabInspectGambleSummary(currentState = state) {
-    const liveBet = getLiveSideBetSummary(currentState);
-    if (liveBet) {
-      return {
-        label: liveBet.label,
-        note: trimInspectNote(liveBet.note, "판돈 축이 이미 돌고 있다."),
-      };
-    }
-    const greedPressure = getLateFieldGreedPressure(currentState.build);
-    if (greedPressure > 0) {
-      return {
-        label: `청구서 ${greedPressure}웨이브`,
-        note: "판돈 라인이 열려 있다. 다음 선택은 안정성보다 회수 리듬을 먼저 흔든다.",
-      };
-    }
-    if ((currentState.resources && currentState.resources.scrap) >= 40) {
-      return {
-        label: `고철 ${Math.round(currentState.resources.scrap)}`,
-        note: "고철이 넉넉하다. 다음 정비에서 유틸이나 리롤로 런 결을 비틀 여지가 있다.",
-      };
-    }
-    return {
-      label: "잠잠",
-      note: "아직 판돈 라인은 조용하다. 주력 변이와 방호를 먼저 굳힐 타이밍이다.",
-    };
-  }
-
-  function createTabInspectBoardMarkup({
-    dominantForm,
-    spotlightValue,
-    scrapValue,
-    hintChipText = "",
-    mainSummary = null,
-    supportSummary = null,
-    gambleSummary = null,
-  }) {
-    return `
-      <div class="inspect-board inspect-board--contract">
-        <article class="inspect-board__hero">
-          <div class="inspect-board__hero-copy">
-            <span class="inspect-board__hero-label">현재 형태</span>
-            <strong class="route-contract__title">${dominantForm.label}</strong>
-          </div>
-          <div class="inspect-board__meta">
-            <p class="inspect-board__meta-item">
-              <span>다음 시험</span>
-              <strong>${spotlightValue}</strong>
-            </p>
-            <p class="inspect-board__meta-item">
-              <span>고철</span>
-              <strong>${scrapValue}</strong>
-            </p>
-          </div>
-          ${
-            hintChipText
-              ? `<div class="inspect-board__chips">
-                  <span class="inspect-board__chip">${trimInspectChipText(hintChipText)}</span>
-                </div>`
-              : ""
-          }
-        </article>
-          ${[mainSummary, supportSummary, gambleSummary]
-          .filter(Boolean)
-          .map(
-            (entry) => `
-              <article class="inspect-board__lane inspect-board__lane--${entry.tone || "main"}">
-                <span class="inspect-board__label">${entry.label}</span>
-                <strong>${entry.value}</strong>
-              </article>
-            `
-          )
-          .join("")}
-      </div>
-    `;
-  }
-
   function shouldUseMinimalBaseRouteHud(run = state) {
-    return Boolean(run && CONSOLIDATED_12_WAVE_ROUTE && !run.hudInspect && !run.paused);
+    return Boolean(run && CONSOLIDATED_12_WAVE_ROUTE && !run.paused);
   }
 
   function getMinimalBaseRouteHudVisibility(run = state) {
@@ -15345,8 +15258,6 @@
     getForgeHeadlineShowcase,
     createForgePreviewRows,
     getForgeChoiceTransformation,
-    getTabInspectGambleSummary,
-    createTabInspectBoardMarkup,
     createBaseRouteFocusMarkup,
     getBaseRouteCombatAsk,
     getMinimalBaseRouteHudVisibility,
@@ -15399,7 +15310,6 @@
     scrapStat: document.getElementById("scrap-stat"),
     hudBottomOverlay: document.querySelector(".hud-overlay--bottom"),
     hudBuildPanelRight: document.querySelector(".build-panel--right"),
-    waveObjective: document.getElementById("wave-objective"),
     forgeOverlay: document.getElementById("forge-overlay"),
     forgePanel: document.getElementById("forge-panel"),
     forgeHeader: document.getElementById("forge-header"),
@@ -15987,7 +15897,6 @@
       shake: 0,
       result: null,
       paused: false,
-      hudInspect: false,
       feed: [],
       overcommit: {
         active: false,
@@ -16418,8 +16327,7 @@
     if (!elements.arenaStage) {
       return;
     }
-    const expanded = state.hudInspect || state.paused;
-    elements.arenaStage.classList.toggle("arena-stage--hud-detail", expanded);
+    elements.arenaStage.classList.toggle("arena-stage--hud-detail", state.paused);
   }
 
   function pushCombatFeed(text, stamp) {
@@ -22190,7 +22098,6 @@
       state.player.overdriveActiveTime > 0
         ? state.player.overdriveActiveTime / Math.max(0.1, state.player.overdriveDuration)
         : state.player.drive / 100;
-    const hazardStatus = describeHazardState(state);
 
     elements.waveLabel.textContent = waveLabel;
     elements.hpStat.textContent = `${Math.ceil(state.player.hp)} / ${state.player.maxHp}`;
@@ -22250,81 +22157,6 @@
     }
     if (elements.dashStat && elements.dashStat.parentElement) {
       elements.dashStat.parentElement.classList.toggle("hidden", !hudVisibility.showDash);
-    }
-
-    const weapon = state.weapon;
-    const dominantForm = getDominantFormSummary(state.build, weapon, state.waveIndex + 1);
-    const nextBreakpoint = getNextBreakpointSummary(state.build, weapon, state.waveIndex + 1);
-    const proofWindow = getImmediateProofWindowSummary(state.build, state.waveIndex + 1);
-    const supportTrack = getForgeSupportTrackSnapshot(state.build, state.supportSystem);
-    const transformationFocus = getBaseRouteTransformationFocus(state.waveIndex + 1);
-    const headlineLabel = getPresentationHeadlineLabel(weapon, state.waveIndex + 1);
-    const tabInspectBoardActive =
-      CONSOLIDATED_12_WAVE_ROUTE && state.hudInspect && !state.paused;
-    const gambleSummary = getTabInspectGambleSummary(state);
-    const scrapSummaryLabel = `고철 ${Math.round(state.resources.scrap)}`;
-    if (elements.waveObjective) {
-      const combatBand = getCombatBandState(state.build, state.weapon, state.waveIndex + 1);
-      const waveAsk = getBaseRouteCombatAsk(state, combatBand, hazardStatus);
-      elements.waveObjective.classList.toggle("roadmap-card--contract", tabInspectBoardActive);
-      elements.waveObjective.innerHTML = tabInspectBoardActive
-        ? createTabInspectBoardMarkup({
-            dominantForm,
-            spotlightValue: proofWindow.label,
-            scrapValue: scrapSummaryLabel,
-            hintChipText:
-              nextBreakpoint && nextBreakpoint.label !== dominantForm.label
-                ? `다음 포지 ${nextBreakpoint.label}`
-                : `다음 시험 ${proofWindow.label}`,
-            mainSummary: {
-              label: "주력 변이",
-              value: headlineLabel,
-              note: trimInspectNote(
-                dominantForm.detail,
-                `${headlineLabel}로 현재 화력을 밀고 있다.`
-              ),
-              tone: "main",
-            },
-            supportSummary: {
-              label: "방호·보조",
-              value: supportTrack.label,
-              note: trimInspectNote(
-                supportTrack.detail,
-                "보조 결은 아직 조용하다. 다음 포지 전까지 본체 실루엣으로 버틴다."
-              ),
-              tone: "support",
-            },
-            gambleSummary: {
-              label: "판돈·유틸",
-              value: gambleSummary.label,
-              note: trimInspectNote(gambleSummary.note, "판돈 축은 아직 조용하다."),
-              tone: "gamble",
-            },
-          })
-        : minimalBaseRouteHud
-          ? createMinimalCombatAskMarkup({
-              focus: transformationFocus,
-              waveAsk,
-              hazardStatus,
-            })
-          : `
-            <div class="summary-head">
-              <strong>현재 전장</strong>
-              <span class="summary-chip ${hazardStatus.tone}">
-                ${hazardStatus.chipLabel}
-              </span>
-            </div>
-            <strong class="route-contract__title">${waveConfig.label}</strong>
-            <div class="status-list">
-              ${createStatusRow("위협", `${hazardStatus.detailLabel} ${hazardStatus.detailValue}`)}
-              ${createStatusRow("요구", combatBand ? combatBand.label : proofWindow.label)}
-            </div>
-            <p class="summary-note">${
-              baseRouteForgeActive
-                ? `${proofWindow.label}만 보면 된다. ${combatBand ? `${combatBand.headline}. ` : ""}${waveAsk}`
-                : `${nextBreakpoint.label} + ${supportTrack.label}. ${combatBand ? `${combatBand.headline}. ` : ""}${waveAsk}`
-            }</p>
-          `;
     }
 
     renderWaveTrack();
@@ -24759,8 +24591,7 @@
     }
     if (event.code === "Tab") {
       event.preventDefault();
-      state.hudInspect = true;
-      renderHudPanels();
+      return;
     }
     if (event.code === "KeyF" && !event.repeat) {
       activateOverdrive();
@@ -24799,10 +24630,6 @@
   });
 
   document.addEventListener("keyup", (event) => {
-    if (event.code === "Tab") {
-      state.hudInspect = false;
-      renderHudPanels();
-    }
     input.keys.delete(event.code);
   });
 

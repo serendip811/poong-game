@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is still `Progression`: the default route still advertises `12-wave / signature / layered support` ambitions before the `Wave 1-6` spine proves replay desire.
-- Current drift bundle: title state, docs, and support-primer definitions still preserve a preconfigured build fantasy, while `Wave 5-6` remains too compressed to deliver a real domination plateau.
-- Repeated false solution: copy trims or partial hiding that leave signature-aware run state, primer helpers, objective-card/admin HUD framing, or `12-wave` design language alive under a "lean start" label.
-- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: the opener should start smaller, the reward screen should sell desire in one glance, and the first major form should buy more space before any maintenance layer returns.
-- Near-term critic pressure should stay on consolidation, not expansion: kill the split contract, remove opener helper spectacle, and make the first weapon/body leap the one memory players want to rerun for.
+- The most fragile gate is now `UX/UI`: the default route still greets the player with a dishonest contract and too much route-summary surface before the run earns any desire.
+- Current drift bundle: title signature scaffolding, `12-wave` docs language, objective-card/Tab admin HUD, and support-primer visibility are all preserving a bigger product fantasy than the shipped route can prove.
+- Repeated false solution: copy trims, hidden toggles, or partial contract modes that leave signature-aware state, primer helpers, or route-summary reward framing alive under "lean start" presentation.
+- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: the opener should read instantly, reward screens should sell one pick in a glance, and the first main transformation should create breathing room before upkeep returns.
+- Near-term critic pressure should stay on consolidation over expansion: make the shipped `Wave 1-6` route honest first, then judge whether `Wave 5-6` finally create a rerun-worthy domination memory.
