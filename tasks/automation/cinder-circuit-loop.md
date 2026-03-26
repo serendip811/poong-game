@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: make the shipped `Wave 1-6` route honest on screen and in docs by removing default `signature / 12-wave / support-primer / admin-HUD` scaffolding first, then retune `Wave 5-6` into one clear domination plateau before any broader route depth stays visible.
+- Immediate priority: turn the shipped `Wave 1-6` route into one honest rerun spine with a small opener, a hungry first weapon break, and a real `Wave 5-6` domination plateau, while docs and dormant late-route scaffolding stop advertising a larger game than the run can prove.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 01:18:00 KST
+  Findings:
+  - The project target is still inflated past the shipped fun. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L35) still define the game as a `12웨이브 / 세 시대 / 시동 회로` package, while [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L4039) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L4045) ship a consolidated `6`-wave route. That mismatch keeps design energy pointed at future breadth instead of a replayable core.
+  - The opener contract is cleaner now, but it still explains the run more than it sells desire. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L17225) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L17258) replace signature picking with three title contract cards, which is better than class clutter, but still reads like onboarding for a structure the player has not yet felt. Strong references earn this information after the first spike, not before it.
+  - `Wave 5-6` still are not a domination memory. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L433) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L480) only move from `activeCap 18 -> 19` while adding `lancer` pressure, so the first chassis/body payoff still does not buy the breathing room, lane ownership, and “my build came online” rush that makes players queue another run.
+  - The forge is leaner in combat, but the build economy is still carrying too many latent branches for a route this short. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L11918) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12060) still keep evolution, commit, pivot, subsystem, sustain, gamble, reforge, and recycle logic active around the same short spine. A release-feeling six-wave loop needs stronger anticipation around one main weapon line, one chassis answer, and one greed fork, not a catalog that hints at larger optionality than the run can cash out.
+  Top Priority: Reframe the shipped game everywhere as a six-wave prove-out and retune `Wave 3-6` into one clear hunger-to-domination arc, with `Wave 5-6` giving noticeably more ownership instead of immediately re-taxing the player.
+  Why Now: Until one short route produces a memorable “I came online” payoff, longer-wave ambition is still fiction rather than runway.
+  Do Not Repeat: Do not spend another pass on dormant late systems or wording tweaks while the first mid-run power plateau is still too brief to create rerun hunger.
+  Release Gate: Progression
 
 - 2026-03-27 00:30:59 KST
   Findings:
@@ -3164,6 +3175,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 01:11:49 KST
+  Changed: retuned one bounded piece of the shipped combat spine in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 5-6` now behave like a real two-lap domination plateau instead of an immediate retax. `Wave 5 · Payoff Run` is now the softest open-lane window in the six-wave route at `82s / spawnBudget 88 / activeCap 16` with slower spawn acceleration, and `Wave 6 · Payoff Run+` now stretches into a larger `1640x920` arena at `86s / spawnBudget 92 / activeCap 17` while dropping `lancer` entirely so the clear stays focused on lane ownership rather than dive interrupts. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) was updated to lock the new shipped-route plateau values and the no-`lancer` followthrough.
+  Why: the newest critique's `Top Priority` explicitly called for `Wave 3-6` to read as one hunger-to-domination arc, with `Wave 5-6` granting noticeably more ownership instead of immediately taxing the player again. The highest-value concrete interpretation was to retune only those two shipped waves, because the route already ends at `Wave 6` and the biggest missing rerun hook was more airtime for the first weapon/body form to actually own space before the clear.
+  Follow-up risk: this creates the intended domination memory more cleanly, but it may also make the shipped clear run a little too forgiving if the first forge spike high-rolls. If critique or playtesting starts saying the route now flattens after `Wave 4`, the next bounded pass should add smarter elite cadence or clearer flank-remix pressure inside `Wave 6`, not restore early dive-tax clutter.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Progression
 
 - 2026-03-27 04:32:00 KST
   Changed: removed one bounded piece of live combat administration from the shipped route in [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html), [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css), and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs). The game screen no longer reserves the bottom `wave-objective` slot at all, `updateHUD()` no longer builds the combat ask / `Tab` inspect board render path, `Tab` is inert during live play instead of opening an admin surface, and the shipped-route smoke now locks minimal HUD visibility against `paused` rather than a hidden inspect state. This makes normal combat read as survival meters only instead of `read a card before you move`.

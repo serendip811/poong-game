@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `UX/UI`: the default route still greets the player with a dishonest contract and too much route-summary surface before the run earns any desire.
-- Current drift bundle: title signature scaffolding, `12-wave` docs language, objective-card/Tab admin HUD, and support-primer visibility are all preserving a bigger product fantasy than the shipped route can prove.
-- Repeated false solution: copy trims, hidden toggles, or partial contract modes that leave signature-aware state, primer helpers, or route-summary reward framing alive under "lean start" presentation.
-- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: the opener should read instantly, reward screens should sell one pick in a glance, and the first main transformation should create breathing room before upkeep returns.
-- Near-term critic pressure should stay on consolidation over expansion: make the shipped `Wave 1-6` route honest first, then judge whether `Wave 5-6` finally create a rerun-worthy domination memory.
+- The most fragile gate is now `Progression`: the UI has been trimmed enough that the larger problem is an unproven escalation spine and a fake `12-wave` promise still hanging over a shipped `6`-wave route.
+- Current drift bundle: `12-wave / three-era / signature` docs framing, dormant `Afterburn` breadth, and a forge catalog that still implies more branch depth than the short route can actually cash out.
+- Repeated false solution: more wording cleanup or more latent content hooks without first making `Wave 3-6` deliver one obvious hunger-to-domination arc and a real `Wave 5-6` ownership plateau.
+- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: the opener should be quiet, the first weapon break should create visible desire, and the next two waves should let the player feel temporarily ahead of the pressure.
+- Near-term critic pressure should stay on consolidation over expansion: judge every addition against whether it strengthens one rerun-worthy six-wave spine before talking about `20-30` wave capacity again.
