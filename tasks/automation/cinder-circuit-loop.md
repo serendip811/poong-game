@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze route expansion and prove one replayable forge-first `12-wave` spine by removing live-combat mutation/cache bypasses, collapsing `Wave 5-12` into reusable open-arena pressure bands, and keeping HUD/forge to one payoff headline plus one immediate threat.
+- Immediate priority: stop adding route grammar and side systems; prove one rerun-worthy `12-wave` spine by making `Wave 1-10` read fast, keeping the opening visually sparse, and letting one main-form ladder own the run before support/admin text returns.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 22:20:00 KST
+  Findings:
+  - `docs/games/cinder-circuit-design.md` still sells the game as a `12웨이브 / 세 시대 계약 / Headline Form + Survival Rider + Proof Window` package. That framing keeps the team polishing structure labels instead of asking whether the run has enough appetite, slack, and remix value to survive repeated play.
+  - `playables/cinder-circuit/game.js` still makes `Wave 5-12` feel administered through named `payoff / breach / sweep / proof / pursuit / hold` cells plus bespoke hazard identities. Even with larger arenas, the player is still progressing through authored encounter grammar more than solving breathable enemy flow.
+  - `playables/cinder-circuit/game.js` now delays full support lanes to `Wave 9`, but the catalog is still too complete for the current spine: satellites, halos, sentries, missiles, drones, wildcard protocols, and ascensions are all still in the run plan before one primary gun/body path has delivered a truly hunger-building takeover arc.
+  - `playables/cinder-circuit/index.html` and `playables/cinder-circuit/game.js` still keep roadmap, immediate ask, live readout, upgrade log, inspect board, and forge context in circulation. Compared with the screen hierarchy in `Nova Drift`, `Brotato`, or `Hades`, the run still explains itself too much and hides the fantasy under admin.
+  Top Priority: Lock the next pass to consolidation only: strip the shipped route down to one dominant main-form escalation through the midgame, then make HUD/forge show only current form, immediate danger, and one reason to want the next stop.
+  Why Now: The loop is no longer blocked by missing content; it is blocked by too many systems and labels competing before the core rerun fantasy is proven.
+  Do Not Repeat: Do not answer this with another branch, preview lane, or naming pass while the midgame still needs route grammar and side catalogs to feel eventful.
+  Release Gate: UX/UI
 
 - 2026-03-26 21:40:00 KST
   Findings:
@@ -2863,6 +2874,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-26 23:05:00 KST
+  Changed: compressed one bounded piece of the shipped admin surface in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so `Tab` inspect now behaves more like a glance board than a document. The consolidated board no longer renders the extra `런 보드 / TAB` header or per-lane note chips; it now shows one hero card `현재 형태 + 다음 전장 + 보유 고철`, one tiny hero hint pointing at the next forge hunger, and three short value-only lanes `주력 변이 / 방호·보조 / 판돈·유틸`. Smoke coverage now locks that the inspect board keeps exactly one chip instead of regrowing lane-by-lane explanation.
+  Why: the newest critique's `Top Priority` asked for HUD/forge surfaces to show only current form, immediate danger, and one reason to want the next stop, while the current red flags still called out `Tab` as too text-dense. The highest-value concrete interpretation was to finish the inspect board itself, because the live HUD had already been cut down but `Tab` was still reopening three explanatory mini-panels and reintroducing admin reading right when the player wanted a quick build check.
+  Follow-up risk: this makes inspect faster, but the default live HUD still keeps a dedicated `현재 형태` card beside `현재 전장`, so the arena can still feel a little UI-framed during combat. If the same critique repeats, the next bounded UI pass should collapse those live combat cards further rather than adding explanation back into inspect. UI reference direction: the quick-scan board discipline from `Brotato` and `Nova Drift` `status/readout` screens, where one dominant hero read carries the glance and the rest of the board stays value-first.
+  Release Gate: UX/UI
 
 - 2026-03-26 22:40:00 KST
   Changed: hardened one bounded piece of the shipped reward cadence in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) by adding a single fail-closed gate for live combat rewards on the consolidated `Wave 1-12` route. `shouldAllowCombatRewardDrops()` now clamps the shipped run to `false`, wave construction no longer arms `combatCache`, `lateAscension`, or `doctrineAscension` on that path, and both `deployCombatCache(...)` and `deployLateAscension(...)` now return immediately if old shared calls fire during elite deaths. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock that shipped combat reward drops stay dark, `Wave 6` and `Wave 10` still transition through forge, and late-ascension utility choices remain unavailable in the shipped mode. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

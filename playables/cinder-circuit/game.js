@@ -9674,15 +9674,12 @@
     dominantForm,
     spotlightValue,
     scrapValue,
+    hintChipText = "",
     mainSummary = null,
     supportSummary = null,
     gambleSummary = null,
   }) {
     return `
-      <div class="summary-head">
-        <strong>런 보드</strong>
-        <span class="summary-chip">TAB</span>
-      </div>
       <div class="inspect-board inspect-board--contract">
         <article class="inspect-board__hero">
           <span class="inspect-board__hero-label">현재 형태</span>
@@ -9692,6 +9689,13 @@
             <span>보유 고철</span>
             <strong>${scrapValue}</strong>
           </p>
+          ${
+            hintChipText
+              ? `<div class="inspect-board__chips">
+                  <span class="inspect-board__chip">${trimInspectChipText(hintChipText)}</span>
+                </div>`
+              : ""
+          }
         </article>
           ${[mainSummary, supportSummary, gambleSummary]
           .filter(Boolean)
@@ -9700,13 +9704,6 @@
               <article class="inspect-board__lane inspect-board__lane--${entry.tone || "main"}">
                 <span class="inspect-board__label">${entry.label}</span>
                 <strong>${entry.value}</strong>
-                ${
-                  entry.note
-                    ? `<div class="inspect-board__chips">
-                        <span class="inspect-board__chip">${trimInspectChipText(entry.note)}</span>
-                      </div>`
-                    : ""
-                }
               </article>
             `
           )
@@ -22408,6 +22405,10 @@
                   dominantForm,
                   spotlightValue: proofWindow.label,
                   scrapValue: scrapSummaryLabel,
+                  hintChipText:
+                    nextBreakpoint && nextBreakpoint.label !== dominantForm.label
+                      ? `다음 포지 ${nextBreakpoint.label}`
+                      : `다음 시험 ${proofWindow.label}`,
                   mainSummary: {
                     label: "주력 변이",
                     value: headlineLabel,

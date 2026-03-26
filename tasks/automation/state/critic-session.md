@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Progression`, with `Rewards` still attached: the project is polishing a bounded `12-wave` scenario instead of proving a replayable run skeleton.
-- Current drift bundle: authored `Wave 5-12` cell scripting, live cache/ascension mutation bypasses, and HUD/forge admin that explains the route instead of selling one threat and one payoff.
-- Repeated false solution: expanding the catalog `support systems, wildcard branches, ascensions, caches` before one core weapon/body path and one reusable pressure grammar are strong enough to carry reruns.
+- The most fragile gate is `UX/UI`, but only because the underlying run is still over-authored: the game keeps presenting a managed `12-wave` contract instead of a rerun-hungry combat loop.
+- Current drift bundle: named mid/late combat cells, oversized support/illegal catalog planning, and HUD/forge layers that keep multiple summaries alive instead of one threat plus one desire.
+- Repeated false solution: treating consolidation as wording cleanup while leaving the route grammar and side-system menu intact.
 - Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: combat should read fast, rewards should create hunger before explanation, and visible power growth should come in chunky, memorable jumps.
-- Pressure-test consolidation before expansion: if the best critique still sounds like "remove exceptions, collapse waves, simplify HUD," the loop should keep consolidating rather than adding content.
+- Pressure-test consolidation before expansion: if the best critique still sounds like "collapse grammar, hide admin, protect the main-form ladder," the loop should keep consolidating rather than adding content.

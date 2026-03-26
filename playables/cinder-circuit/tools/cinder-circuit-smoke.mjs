@@ -184,6 +184,7 @@ const inspectMarkup = game.createTabInspectBoardMarkup({
   dominantForm: { label: "Sky Lance" },
   spotlightValue: "Cataclysm Arsenal",
   scrapValue: "42",
+  hintChipText: "다음 포지 Sky Splitter",
   mainSummary: {
     label: "주력 변이",
     value: "Sky Lance",
@@ -204,17 +205,18 @@ const inspectMarkup = game.createTabInspectBoardMarkup({
   },
 });
 assert.ok(inspectMarkup.includes("보유 고철"));
-assert.ok(inspectMarkup.includes("런 보드"));
 assert.ok(inspectMarkup.includes("현재 형태"));
 assert.ok(inspectMarkup.includes("다음 전장"));
 assert.ok(inspectMarkup.includes("Cataclysm Arsenal"));
 assert.ok(inspectMarkup.includes("42"));
+assert.ok(inspectMarkup.includes("다음 포지 Sky Splitter"));
 assert.ok(!inspectMarkup.includes("비용·대가"));
 assert.ok(inspectMarkup.includes("inspect-board__hero"));
 assert.ok(inspectMarkup.includes("inspect-board__lane--main"));
 assert.ok(inspectMarkup.includes("inspect-board__lane--support"));
 assert.ok(inspectMarkup.includes("inspect-board__lane--gamble"));
 assert.ok(inspectMarkup.includes("inspect-board__chip"));
+assert.equal((inspectMarkup.match(/class="inspect-board__chip"/g) || []).length, 1);
 const compactFocusMarkup = game.createBaseRouteFocusMarkup({
   eyebrow: "현재 형태",
   title: "Sky Lance",
