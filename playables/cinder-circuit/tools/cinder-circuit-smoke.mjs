@@ -316,29 +316,40 @@ assert.ok(!compactFocusMarkup.includes("다음 도약"));
 const forgeContextMarkup = game.createBaseRouteForgeContextMarkup({
   eyebrow: "주력 변이",
   title: "Prism Crown",
-  prompt: "Prism Crown 하나로 다음 전투의 화면을 바꾼다.",
-  waveAskLabel: "Refuge Run",
-  riderLabel: "Ember Ring",
-  riderTone: "cool",
+  detail: "이번 정지에서 처음으로 총열과 화면 점유가 크게 바뀐다.",
 });
 assert.ok(forgeContextMarkup.includes("주력 변이"));
 assert.ok(forgeContextMarkup.includes("Prism Crown"));
-assert.ok(forgeContextMarkup.includes("다음 시험"));
-assert.ok(forgeContextMarkup.includes("Refuge Run"));
-assert.ok(forgeContextMarkup.includes("forge-focus__proof"));
+assert.ok(forgeContextMarkup.includes("이번 정지에서 처음으로 총열과 화면 점유가 크게 바뀐다."));
+assert.ok(forgeContextMarkup.includes("forge-focus__hint"));
 assert.ok(!forgeContextMarkup.includes("summary-head"));
 assert.ok(!forgeContextMarkup.includes("Next Proof"));
 assert.ok(!forgeContextMarkup.includes("Route Payoff"));
 assert.ok(!forgeContextMarkup.includes("forge-contract-strip"));
 assert.ok(!forgeContextMarkup.includes("forge-card__pivot--bill"));
 assert.ok(!forgeContextMarkup.includes("세 장 중 하나만"));
-assert.ok(!forgeContextMarkup.includes("Prism Crown 하나로 다음 전투의 화면을 바꾼다."));
+assert.ok(!forgeContextMarkup.includes("다음 시험"));
 assert.ok(!forgeContextMarkup.includes("보조 결"));
-assert.ok(!forgeContextMarkup.includes("Ember Ring"));
+const openerFocus = game.getBaseRouteTransformationFocus(1);
+assert.equal(openerFocus.windowLabel, "다음 포지");
+assert.equal(openerFocus.title, "첫 무기 도약");
+assert.ok(openerFocus.detail.includes("화선"));
+const chassisFocus = game.getBaseRouteTransformationFocus(5);
+assert.equal(chassisFocus.title, "첫 차체 잠금");
+assert.ok(chassisFocus.detail.includes("몸체 리듬"));
+const forgeFocus = game.getBaseRouteTransformationFocus(5, { stage: "forge" });
+assert.equal(forgeFocus.eyebrow, "방호·보조");
+assert.equal(forgeFocus.title, "첫 차체 잠금");
+assert.ok(forgeFocus.detail.includes("몸체 리듬"));
 const forgeBillMarkup = game.createBaseRouteForgeBillMarkup("고철 18");
 assert.ok(forgeBillMarkup.includes("고철 18"));
 assert.ok(!forgeBillMarkup.includes("비용·대가"));
 const minimalCombatAskMarkup = game.createMinimalCombatAskMarkup({
+  focus: {
+    windowLabel: "다음 포지",
+    title: "첫 무기 도약",
+    detail: "다음 포지까지 버티면 처음으로 화선과 화면 점유가 크게 갈라진다.",
+  },
   waveAsk: "가장 먼 relay를 먼저 끊고 뚫린 corridor 하나를 길게 지킨다.",
   hazardStatus: {
     tone: "summary-chip--cool",
@@ -348,9 +359,12 @@ const minimalCombatAskMarkup = game.createMinimalCombatAskMarkup({
   },
 });
 assert.ok(minimalCombatAskMarkup.includes("combat-ask-card"));
+assert.ok(minimalCombatAskMarkup.includes("다음 포지"));
+assert.ok(minimalCombatAskMarkup.includes("첫 무기 도약"));
 assert.ok(minimalCombatAskMarkup.includes("현재 전장"));
 assert.ok(minimalCombatAskMarkup.includes("RELAY"));
 assert.ok(minimalCombatAskMarkup.includes("중계기 1"));
+assert.ok(minimalCombatAskMarkup.includes("combat-ask-card__focus"));
 assert.ok(!minimalCombatAskMarkup.includes("mini-pill-row"));
 assert.ok(!minimalCombatAskMarkup.includes("summary-head"));
 const minimalHudVisibility = game.getMinimalBaseRouteHudVisibility({

@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: make the shipped route an honest `Wave 1-6` fight->forge rerun with no signature preload, no wildcard/support promises, and no reward/HUD admin language that outruns the first real weapon/body payoff.
+- Immediate priority: align the shipped contract, title flow, HUD/forge hierarchy, and default route around one honest `Wave 1-6` rerun with no signature preload, no late-route promise language, and one clearly earned weapon/body payoff before support spectacle appears.
 
 ## Release Gates
 
@@ -61,6 +61,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 23:59:59 KST
+  Findings:
+  - The game is still contradicting its own lean-start claim. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8) still sells a `12웨이브` signature-driven package, while [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L26) still reserves title real estate for `signature-cards`. That makes the opener feel like a disguised preload, not a hungry first run.
+  - The run still keeps too much authored future in view for a game that has not proven repeat fun. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1156) still carries `Afterburn I-VII`, and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2031) still explains `Wave 9-12` as a payoff/proof/pursuit/final-stand script. That is still a tour itinerary, not an escalation grammar with room to breathe into `20-30` waves later.
+  - UI hierarchy is still too administrative for the fantasy. [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L101) keeps a dedicated objective card alive in combat, and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22239) still lets `Tab` status boards and proof/support/gamble summaries compete with survival reads. Compared with `Brotato`, `Nova Drift`, or `Hades`, the player is still reading run paperwork in moments that should be about spacing and target priority.
+  - The forge is leaner than before but still not hungry enough. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22323) still builds focus prompts, proof labels, preview rows, side notes, and impact strips around picks, so the reward stop still behaves like a brief instead of a snap desire check.
+  - Early build restraint is only partially protected. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2550) still keeps support-system lanes for satellites, shields, missiles, and drones in the same shipped ruleset, which weakens the sense that the first real barrel/body leap is the run's main event.
+  Top Priority: Remove the remaining signature/admin contract from the default player-facing route and make the title, combat HUD, and forge all point at one thing only: survive to the next visible weapon/body transformation.
+  Why Now: The game needs one clean rerun fantasy players can feel instantly before any longer curve or broader build catalog will matter.
+  Do Not Repeat: Do not spend another pass on conditional wrappers that hide complexity while the default route still promises too much future structure and too much reading.
+  Release Gate: UX/UI
 
 - 2026-03-26 23:59:30 KST
   Findings:
@@ -3084,6 +3096,14 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 01:42:00 KST
+  Changed: tightened one bounded piece of the shipped UX contract in [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html), [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css), [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the default route now points the player at one thing only: the next visible weapon/body change. The shipped title card now opens on one wide `다음 포지 · 첫 무기 도약` focus card instead of a disguised signature contract, the minimal combat bottom card now leads with the same `next transformation` target before the lane/threat reminder, and the base-route forge context was cut down to `label + transformation title + one short hint` instead of another `다음 시험` admin chip. I added `getBaseRouteTransformationFocus(...)` to keep those three surfaces on the same wording and updated smoke to lock the new title/HUD/forge contract.
+  Why: the newest critique's `Top Priority` was to remove the remaining signature/admin contract from the player-facing route and make title, combat HUD, and forge all point at surviving to the next visible transformation. The highest-value concrete interpretation was to unify those three surfaces behind one shared transformation-focus helper, because the default route had already hidden most extra systems but still made the player read route scaffolding at the exact moments that should sell appetite.
+  Follow-up risk: this makes the shipped route read cleaner, but the underlying run still carries older `Wave 9-12` roadmap/Afterburn language deeper in the codebase and `Tab` inspect still keeps a fuller status board than the live HUD. If the next critique still says the run feels over-authored, the next bounded pass should scrub those deeper future-facing lines rather than adding another wrapper on top of this focus contract.
+  UI reference direction: the appetite-first hierarchy from `Hades` and the one-focus combat/readability restraint from `Nova Drift`, where the live surface sells the next power moment first and only then the immediate survival ask.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: UX/UI
 
 - 2026-03-27 01:18:00 KST
   Changed: narrowed one bounded piece of the shipped opener contract in [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html), [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css), and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the title screen no longer sells a prebuilt run before movement starts. The old signature-card picker was replaced with a three-card lean-start contract board `Wave 1-2 weak start -> Wave 3 weapon leap -> Wave 6 chassis lock`, title-screen signature pointer/hotkey selection is now inert on the shipped route, and the result panel now reports the earned route/doctrine instead of surfacing a hidden start signature. I kept the internal doctrine plumbing intact for later forge/capstone tests, but `applySignatureToBuild(...)` still fail-closes opening affixes and bench seeds on the consolidated route. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) still passes unchanged expectations for the later doctrine ladders.

@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate to push next is `Builds`: the opener still starts too complete, so the player is not earning a memorable `small gun -> visible takeover` transformation.
-- Current drift bundle: the public contract still says `12-wave / signature preload`, while the shipped route still exposes wildcard cache beats, support-system spectacle, document-like forge presentation, and `Afterburn` back-half scope before the first six waves are proven.
-- Repeated false solution: conditional simplification. Hiding copy or dressing forge cards differently is not enough if signature preload, support promises, and late-route authored breadth still define the default run.
-- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: open small, escalate in visible chunks, and make rewards desirable before they are explained.
-- Keep pushing consolidation over expansion until `Wave 1-6` proves one dominant gun/body path, one optional survival rider, cleaner movement space, and much lower reading load.
+- The most fragile gate to push next is `UX/UI`: title, HUD, `Tab`, and forge still carry too much contract/admin language, so danger and payoff are not the first things the player reads.
+- Current drift bundle: the public contract still says `12-wave / signature preload`, while the default route still keeps authored `Afterburn` scope, support-system breadth, and reward/status paperwork alive around the opening.
+- Repeated false solution: conditional hiding. Removing headers or shrinking copy is not enough if the default route still promises future structure and support spectacle before the first core weapon/body leap lands.
+- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: one-glance reward desire, sparse combat HUD, and visible growth chunks that start small.
+- Pressure-test consolidation over expansion for the next few passes: prove one clean `Wave 1-6` rerun with stronger spacing reads and lower reading load before arguing for more systems or more waves.

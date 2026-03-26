@@ -8581,6 +8581,71 @@
     `;
   }
 
+  function getBaseRouteTransformationFocus(waveNumber = 1, options = {}) {
+    const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
+    const stage = options && options.stage ? options.stage : "combat";
+    if (stage === "forge") {
+      if (options.pendingFinalForge) {
+        return {
+          eyebrow: "마무리",
+          title: "잠긴 실루엣",
+          detail: "마지막 형태 하나를 고르고 바로 전장으로 돌려보낸다.",
+          windowLabel: "지금 선택",
+        };
+      }
+      if (options.riderStep) {
+        return {
+          eyebrow: "방호·보조",
+          title: "버티는 선 보강",
+          detail: "주력 실루엣은 그대로 두고, 버티는 선 한 줄만 얇게 더한다.",
+          windowLabel: "지금 선택",
+        };
+      }
+      if (boundedWave >= 6) {
+        return {
+          eyebrow: "주력 변이",
+          title: "잠긴 실루엣",
+          detail: "이미 열린 gun/body 실루엣을 더 거칠게 밀어붙인다.",
+          windowLabel: "지금 선택",
+        };
+      }
+      return boundedWave >= 5
+        ? {
+            eyebrow: "방호·보조",
+            title: "첫 차체 잠금",
+            detail: "이번 정지에서 몸체 리듬이 처음 갈라진다.",
+            windowLabel: "지금 선택",
+          }
+        : {
+            eyebrow: "주력 변이",
+            title: "첫 무기 도약",
+            detail: "이번 정지에서 처음으로 총열과 화면 점유가 크게 바뀐다.",
+            windowLabel: "지금 선택",
+          };
+    }
+    if (boundedWave >= 6) {
+      return {
+        eyebrow: "런 봉인",
+        title: "잠긴 실루엣 시험",
+        detail: "첫 gun/body 실루엣이 잠겼다. 남은 웨이브는 이 형태로 끝까지 버틴다.",
+        windowLabel: "남은 웨이브",
+      };
+    }
+    return boundedWave >= 5
+      ? {
+          eyebrow: "다음 변이",
+          title: "첫 차체 잠금",
+          detail: "다음 포지까지 버티면 몸체 리듬이 잠기고 dive, hold, exit 각이 갈라진다.",
+          windowLabel: "다음 포지",
+        }
+      : {
+          eyebrow: "다음 변이",
+          title: "첫 무기 도약",
+          detail: "다음 포지까지 버티면 처음으로 화선과 화면 점유가 크게 갈라진다.",
+          windowLabel: "다음 포지",
+        };
+  }
+
   function getNextLateFieldBreakpointWave(waveNumber, offset = 0) {
     let candidate = Math.max(
       LATE_FIELD_CACHE_START_WAVE,
@@ -9556,20 +9621,17 @@
   function createBaseRouteForgeContextMarkup({
     eyebrow = "",
     title = "",
-    waveAskLabel = "",
+    detail = "",
   }) {
     return `
       <p class="panel__eyebrow">${eyebrow || "변이 선택"}</p>
       <strong class="route-contract__title">${title || "-"}</strong>
-      ${
-        waveAskLabel
-          ? `<div class="forge-focus__proof"><span>다음 시험</span>${waveAskLabel}</div>`
-          : ""
-      }
+      ${detail ? `<p class="forge-focus__hint">${detail}</p>` : ""}
     `;
   }
 
   function createMinimalCombatAskMarkup({
+    focus = null,
     waveAsk = "",
     hazardStatus = null,
   }) {
@@ -9580,13 +9642,19 @@
       hazardStatus && hazardStatus.detailLabel ? hazardStatus.detailLabel : "위협";
     const threatValue =
       hazardStatus && hazardStatus.detailValue ? hazardStatus.detailValue : "-";
+    const focusEyebrow =
+      focus && focus.windowLabel ? focus.windowLabel : focus && focus.eyebrow ? focus.eyebrow : "다음 변이";
+    const focusTitle = focus && focus.title ? focus.title : waveAsk || "-";
+    const focusDetail = focus && focus.detail ? focus.detail : "";
     return `
       <div class="combat-ask-card">
         <div class="combat-ask-card__head">
-          <span class="combat-ask-card__eyebrow">현재 전장</span>
+          <span class="combat-ask-card__eyebrow">${focusEyebrow}</span>
           <span class="summary-chip ${tone}">${chipLabel}</span>
         </div>
-        <strong class="combat-ask-card__title">${waveAsk || "-"}</strong>
+        <strong class="combat-ask-card__title">${focusTitle}</strong>
+        ${focusDetail ? `<p class="combat-ask-card__focus">${focusDetail}</p>` : ""}
+        <p class="combat-ask-card__threat">현재 전장 · ${waveAsk || "-"}</p>
         <p class="combat-ask-card__threat">${threatLabel} · ${threatValue}</p>
       </div>
     `;
@@ -15339,6 +15407,7 @@
     getBaseRoutePostWaveTransition,
     createBaseRouteForgeContextMarkup,
     createMinimalCombatAskMarkup,
+    getBaseRouteTransformationFocus,
     getBaseRouteForgeChoiceTransformation,
     createBaseRouteForgeCompactCardMarkup,
     createBaseRouteForgeHeadlineCardMarkup,
@@ -17299,29 +17368,31 @@
       return;
     }
     if (CONSOLIDATED_12_WAVE_ROUTE) {
+      const nextFocus = getBaseRouteTransformationFocus(1, { stage: "title" });
       elements.signatureCards.innerHTML = [
         {
-          tag: "Wave 1-2",
-          title: "약한 시작",
-          detail:
-            "처음 두 웨이브는 `Ember` 한 줄 화선으로만 버틴다. 시작 빌드 보너스, 보조 시스템, 미래 교리 예고는 전부 닫는다.",
+          className: "title-contract-card title-contract-card--focus",
+          tag: nextFocus.windowLabel,
+          title: nextFocus.title,
+          detail: nextFocus.detail,
         },
         {
-          tag: "Wave 3",
-          title: "첫 무기 도약",
-          detail:
-            "첫 포지에서는 세 갈래 주력 변이 중 하나만 고른다. 여기서 처음으로 탄도와 화면 점유가 크게 바뀐다.",
+          className: "title-contract-card",
+          tag: "시작",
+          title: "빈 화선 버티기",
+          detail: "처음 몇 웨이브는 `Ember` 한 줄 화선만 남긴다. 시작 보너스와 보조 연출은 닫아 둔다.",
         },
         {
-          tag: "Wave 6",
+          className: "title-contract-card",
+          tag: "그다음",
           title: "첫 차체 잠금",
           detail:
-            "두 번째 포지는 차체 break만 판다. dive, hold, exit 리듬을 몸체로 갈라 놓고 support spectacle은 그 뒤로 미룬다.",
+            "무기 도약 뒤 다음 포지에서 처음으로 몸체 리듬이 갈라진다. support spectacle은 그 뒤로 미룬다.",
         },
       ]
         .map(
           (card) => `
-            <article class="signal-card title-contract-card">
+            <article class="signal-card ${card.className || "title-contract-card"}">
               <span class="micro-chip micro-chip--quiet">${card.tag}</span>
               <strong>${card.title}</strong>
               <p>${card.detail}</p>
@@ -22158,9 +22229,6 @@
     const hudVisibility = getMinimalBaseRouteHudVisibility(state);
     const minimalBaseRouteHud = hudVisibility.minimal;
     syncMinimalCombatHud(minimalBaseRouteHud);
-    const baseRouteForgeStage = baseRouteForgeActive
-      ? getBaseRouteForgeStage(state, state.waveIndex + 2)
-      : null;
     const waveLabel =
       state.phase === "forge"
         ? `${waveConfig.label} · ${baseRouteForgeActive ? getBaseRouteForgeBannerLabel(state) : activeForgeLabel}`
@@ -22238,11 +22306,7 @@
     const nextBreakpoint = getNextBreakpointSummary(state.build, weapon, state.waveIndex + 1);
     const proofWindow = getImmediateProofWindowSummary(state.build, state.waveIndex + 1);
     const supportTrack = getForgeSupportTrackSnapshot(state.build, state.supportSystem);
-    const ladderFocus = getShippingLadderFocus(state.build, weapon, state.waveIndex + 1);
-    const ladderSteps = getShippingLadderSteps(state.build, weapon, state.waveIndex + 1);
-    const nextBeat =
-      ladderSteps.find((step) => step.state === "primed" || step.state === "planned") ||
-      ladderFocus;
+    const transformationFocus = getBaseRouteTransformationFocus(state.waveIndex + 1);
     const headlineLabel = getPresentationHeadlineLabel(weapon, state.waveIndex + 1);
     const tabInspectBoardActive =
       CONSOLIDATED_12_WAVE_ROUTE && state.hudInspect && !state.paused;
@@ -22288,6 +22352,7 @@
           })
         : minimalBaseRouteHud
           ? createMinimalCombatAskMarkup({
+              focus: transformationFocus,
               waveAsk,
               hazardStatus,
             })
@@ -22328,12 +22393,12 @@
     const dominantFormSummary = getDominantFormSummary(state.build, state.weapon, state.waveIndex + 2);
     const nextFormStep = getNextBreakpointSummary(state.build, state.weapon, state.waveIndex + 2);
     const proofWindow = getImmediateProofWindowSummary(state.build, state.waveIndex + 2);
-    const ladderFocus = getShippingLadderFocus(state.build, state.weapon, state.waveIndex + 2);
-    const ladderSteps = getShippingLadderSteps(state.build, state.weapon, state.waveIndex + 2);
-    const nextBeat =
-      ladderSteps.find((step) => step.state === "primed" || step.state === "planned") ||
-      ladderFocus;
     const riderStep = state.forgeMaxSteps > 1 && state.forgeStep === 2;
+    const baseRouteTransformationFocus = getBaseRouteTransformationFocus(state.waveIndex + 2, {
+      stage: "forge",
+      riderStep,
+      pendingFinalForge: state.pendingFinalForge,
+    });
     const useBaseRouteContract = shouldUseBaseRouteForgeContract();
     const featuredForgeChoice = riderStep || useBaseRouteContract
       ? { showcase: null, featuredIndex: -1 }
@@ -22342,9 +22407,6 @@
     const featuredIndex = featuredForgeChoice.featuredIndex;
     const featuredChoice = featuredIndex >= 0 ? state.forgeChoices[featuredIndex] : null;
     const forgeModeLabel = getForgeDisplayModeLabel();
-    const baseRouteForgeStage = useBaseRouteContract
-      ? getBaseRouteForgeStage(state, state.waveIndex + 2)
-      : null;
     const focusEyebrow = useBaseRouteContract
       ? riderStep
         ? "방호·보조"
@@ -22403,9 +22465,9 @@
       ? `
         <article class="forge-focus forge-focus--${riderStep ? "rider" : "headline"} forge-context__card forge-context__card--span-two">
           ${createBaseRouteForgeContextMarkup({
-            eyebrow: focusEyebrow,
-            title: focusTitle,
-            waveAskLabel: proofWindow.label,
+            eyebrow: baseRouteTransformationFocus.eyebrow || focusEyebrow,
+            title: baseRouteTransformationFocus.title || focusTitle,
+            detail: baseRouteTransformationFocus.detail,
           })}
         </article>
       `
