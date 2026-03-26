@@ -2514,7 +2514,7 @@
   const LEAN_START_CORE_ID = "ember";
   const MAX_SUPPORT_BAYS = 2;
   const MAX_SUPPORT_BAY_LIMIT = 4;
-  const SUPPORT_SYSTEM_START_WAVE = 6;
+  const SUPPORT_SYSTEM_START_WAVE = 7;
   const BASE_ROUTE_MIDRUN_SUPPORT_WAVE = SUPPORT_SYSTEM_START_WAVE;
   const PREVIEW_SUPPORT_PRIMER_CREDIT = 10;
   const SUPPORT_SYSTEM_DEFS = {
@@ -7441,14 +7441,20 @@
     if (choice.type === "utility" && choice.action === "bastion_bay_forge") {
       const defenseTitle = choice.chassisTitle || "방호 차체";
       const supportTitle = choice.systemChoice ? choice.systemChoice.title : choice.bayUnlock ? "빈 보조칸" : "후속 보조 선택";
+      const promise = !choice.bayUnlock && CONSOLIDATED_12_WAVE_ROUTE
+        ? `${defenseTitle}만 먼저 잠가 버티는 선을 굵게 만든다.`
+        : `${defenseTitle} 위에 ${supportTitle}를 얹어 버티는 선을 먼저 연다.`;
+      const proof = !choice.bayUnlock && CONSOLIDATED_12_WAVE_ROUTE
+        ? "다음 전투는 새 차체 리듬만 읽는 짧은 proof window가 되고, 첫 보조 rider는 Wave 7 포지에서 한 장만 붙는다."
+        : choice.systemChoice
+          ? `${supportTitle}가 다음 전투의 생존선과 복귀 각을 바로 다듬는다.`
+          : "지금은 빈 보조칸만 열어 두고, 다음 전투에서 숨 쉴 공간부터 확보한다.";
       return {
         laneLabel: choice.forgeLaneLabel || choice.laneLabel || "Forge Lane",
         title: choice.title || choice.slotText || "Unnamed Shift",
         tone: "defense",
-        promise: `${defenseTitle} 위에 ${supportTitle}를 얹어 버티는 선을 먼저 연다.`,
-        proof: choice.systemChoice
-          ? `${supportTitle}가 다음 전투의 생존선과 복귀 각을 바로 다듬는다.`
-          : "지금은 빈 보조칸만 열어 두고, 다음 전투에서 숨 쉴 공간부터 확보한다.",
+        promise,
+        proof,
         riderLabel: "Support Rider",
         riderNote: "버티는 선을 연 뒤 자동 화력이나 보호막을 얹어 전장을 넓힌다.",
         accent: `${defenseTitle} · ${supportTitle}`,
@@ -8471,8 +8477,8 @@
         title: chassis ? chassis.label : "방호 약속",
         state: stageState(6),
         detail: chassis
-          ? `${chassis.label} 차체가 첫 방호 약속으로 잠긴다. 여기서 처음으로 dive, hold, exit 리듬이 몸체 선택에 따라 갈라진다.`
-          : "Wave 6에서 몸체 하나를 골라 버티는 선을 만든다. 지원 하드웨어는 뒤로 밀고 첫 방호 약속만 먼저 굳힌다.",
+          ? `${chassis.label} 차체가 첫 방호 약속으로 잠긴다. 여기서 dive, hold, exit 리듬이 몸체 선택에 따라 갈라지고 첫 보조 rider는 Wave 7에 한 장만 이어 붙는다.`
+          : "Wave 6에서 몸체 하나를 골라 버티는 선을 만든다. 지원 하드웨어는 Wave 7까지 뒤로 밀고 첫 방호 약속만 먼저 굳힌다.",
       },
     ];
   }
@@ -8496,7 +8502,7 @@
         <strong>런 실루엣</strong>
         <span class="summary-chip ${focus.state === "live" ? "summary-chip--hot" : ""}">${focus.windowLabel || focus.label}</span>
       </div>
-      <p class="summary-copy roadmap-card__path">기본 8웨이브 런에서는 약한 시작, 첫 무기 도약, Wave 5-6 두 번째 축, Wave 8 마감만 크게 드러내고 나머지 조율은 전부 백그라운드로 숨긴다.</p>
+      <p class="summary-copy roadmap-card__path">기본 8웨이브 런에서는 Wave 5 주포 폭주, Wave 6 차체 잠금, Wave 7 보조 rider만 또렷하게 세우고 그 이후 형태는 짧게만 암시한다.</p>
       <div class="roadmap-card__steps">
         ${steps
           .map(
@@ -8523,7 +8529,7 @@
       return {
         eyebrow: "Wave 1-8",
         title: "Bare Hull -> Weapon Break -> Chassis Lock",
-        detail: "Wave 3에서 무장이 깨지고 Wave 5-6에서 두 번째 축이 열리며 Wave 8까지 증명한 뒤 짧은 승리 랩으로 닫힌다.",
+        detail: "Wave 3에서 무장이 깨지고 Wave 5에서 주포가 크게 폭주한다. Wave 6은 차체를 잠그고, Wave 7에서 첫 보조 rider를 얹어 Wave 8까지 짧게 증명한다.",
         windowLabel: "짧은 승리 랩",
       };
     }
@@ -8595,9 +8601,9 @@
       { waveNumber: 2, shortLabel: "HOLD", title: "버티기" },
       { waveNumber: 3, shortLabel: "BREAK", title: "무장 도약" },
       { waveNumber: 4, shortLabel: "PRESS", title: "도약 시험" },
-      { waveNumber: 5, shortLabel: "BRANCH", title: "두 번째 축" },
+      { waveNumber: 5, shortLabel: "SPIKE", title: "주포 폭주" },
       { waveNumber: 6, shortLabel: "LOCK", title: "차체 잠금" },
-      { waveNumber: 7, shortLabel: "PROOF", title: "보조 증명" },
+      { waveNumber: 7, shortLabel: "RIDER", title: "보조 연결" },
       { waveNumber: 8, shortLabel: "FINISH", title: "완성 시험" },
     ];
   }
@@ -11013,8 +11019,7 @@
     return (
       CONSOLIDATED_12_WAVE_ROUTE &&
       Number.isFinite(nextWave) &&
-      nextWave >= 5 &&
-      nextWave <= 6
+      nextWave === 5
     );
   }
 
@@ -13676,26 +13681,23 @@
     pushChoice(wildcardChoices[0]);
     [...doctrineChoices.slice(1), ...wildcardChoices.slice(1)].forEach(pushChoice);
     if (CONSOLIDATED_12_WAVE_ROUTE) {
-      const fallbackSystemChoice = ordered[0] || null;
-      return Object.values(CHASSIS_BREAKPOINT_DEFS).map((chassisDef, index) => {
-        const choice = ordered[index] || fallbackSystemChoice;
+      return Object.values(CHASSIS_BREAKPOINT_DEFS).map((chassisDef) => {
         return {
           type: "utility",
           action: "bastion_bay_forge",
-          id: `utility:bastion_chassis_break:${chassisDef.id}:${choice ? choice.systemId : "midrun_unlock"}`,
+          id: `utility:bastion_chassis_break:${chassisDef.id}:midrun_hold`,
           verb: "접합",
           tag: chassisDef.tag,
           title: chassisDef.title,
-          description: `${chassisDef.description}${choice ? ` 세 번째 support bay를 즉시 열어 ${choice.title}을(를) 함께 직결한다.` : " 세 번째 support bay를 즉시 열어 중반 보조 축을 바로 받는다."} Wave 6-8은 새 body line과 보조 축을 같은 bracket 안에서 바로 증명하는 구간으로 바뀐다.`,
-          slotText: `섀시 breakpoint · ${chassisDef.slotText}${choice ? ` · ${choice.title}` : " · mid-run bay"}`,
-          cost: Math.max(10, Math.round(((choice && choice.cost) || 0) * 0.65)),
-          originalCost: (choice && choice.cost) || 0,
+          description: `${chassisDef.description} 이번 정지에서는 support bay를 열지 않고 body line만 먼저 잠근다. Wave 7 포지에서 그 차체를 받쳐 줄 첫 보조 rider 한 장만 이어 붙여, Wave 6-7이 같은 실루엣을 읽는 짧은 proof window로 남게 만든다.`,
+          slotText: `섀시 breakpoint · ${chassisDef.slotText} · Wave 7 rider`,
+          cost: 0,
+          originalCost: 0,
           laneLabel: "섀시 breakpoint",
           forgeLaneLabel: "섀시 breakpoint",
-          bayUnlock: true,
+          bayUnlock: false,
           chassisId: chassisDef.id,
           chassisTitle: chassisDef.title,
-          systemChoice: choice,
         };
       });
     }

@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop shipping a `Wave 1-6` shell that ends before the real support/greed grammar starts; either extend the honest route until one secondary branch gets a proof window, or cut the product claim back to the smaller game.
+- Immediate priority: stop compressing the real build fantasy into `Wave 6-8`; move one visible secondary path into anticipation earlier, then give the first support/body payoff two cleaner combat proof windows before the finale layer lands.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 11:05:00 KST
+  Findings:
+  - The route is no longer too short in the old sense, but the payoff stack is still back-loaded. `DEFAULT_ROUTE_WAVE_COUNT = 8`, `SUPPORT_SYSTEM_START_WAVE = 6`, and `LATE_BREAK_ARMORY_WAVE = 9` in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) mean the honest run now has only Wave 6-8 to introduce support, prove it, and tease the late-form staircase. That is still a compressed finish, not the start of a rerun-hungry build arc.
+  - The forge grammar still spends too much energy on roadmap administration for a run this short. `getBuildRoadmap()`, shipping ladder language, and forge focus framing in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) keep telling the player about Wave 9-12 and staged contracts the current shipped route cannot actually deliver. Strong references use less future tense and more immediate desire.
+  - Early and mid growth now risk crossing wires. The game has real visible weapon evolution tiers and support families, but the schedule still clusters `Wave 5` weapon mutation, `Wave 6` chassis/support unlock, and `Wave 7` crownfire follow-up so tightly that the player is learning multiple fantasies at once instead of savoring one clean transformation at a time.
+  - The title and forge screens are cleaner than older versions, but they still frame the run like a managed package. Compared with `Nova Drift`, `Brotato`, or `Hades`, [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html) and the forge context in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still explain route structure more than they sell one irresistible next spike.
+  Top Priority: Re-time the shipped progression so `Wave 5` does one unmistakable weapon/body power spike, `Wave 6-7` are the clean proof window for that spike plus one support rider, and any late-form roadmap language is reduced to a minimal tease instead of a visible three-step contract.
+  Why Now: The run has enough length to start feeling real, so the next failure mode is not missing content but stuffing too many first-time payoffs into the closing minutes.
+  Do Not Repeat: Do not answer this with more Wave 9+ promise text, extra support families, or another forge copy pass that leaves the payoff timing compressed.
+  Release Gate: Rewards
 
 - 2026-03-27 10:25:00 KST
   Findings:
@@ -3299,6 +3310,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 15:00:00 KST
+  Changed: retimed one bounded piece of the shipped mid-run contract in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 6` is now a chassis-only lock and the first real support rider does not arrive until `Wave 7`. `SUPPORT_SYSTEM_START_WAVE` now starts at `7`, the shipped three-lane branch now opens only on the stop feeding `Wave 5`, and `buildWave6ChassisBreakpointChoices(...)` now returns `bayUnlock: false` chassis cards that hold support installation for the next forge instead of bundling body and system payoff together. I also updated the shipped-route focus text and beat labels so player-facing copy now sells `Wave 5` as the big gun spike, `Wave 6` as body lock, and `Wave 7` as the first rider, with late-form structure reduced to a short tease rather than a visible contract. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) was updated to lock the new support timing, two-card `Wave 6` forge, and doctrine/support visibility rules.
+  Why: the latest critique's `Top Priority` said the run still crammed `Wave 5` mutation, `Wave 6` chassis/support unlock, and `Wave 7` follow-up into one blurred finish. The highest-value concrete interpretation was to split the payoff stack at the generator level so the player gets one clean body proof window before the first support install, instead of another copy pass or another new branch.
+  Follow-up risk: this makes the mid-run read cleaner, but it also means some forecasted doctrines now auto-adopt at the chassis lock without any immediate support spectacle to help sell the new form. If a later critique says `Wave 6` now feels too restrained, the next bounded pass should strengthen the chassis-only proof window or the first `Wave 7` rider impact, not reopen bundled support on the same stop.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Rewards
 
 - 2026-03-27 14:10:00 KST
   Changed: extended the honest shipped run in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from `Wave 1-6` to `Wave 1-8`, pulled real support installs forward to `Wave 6`, and rewired the mid-run contract so the player now gets an actual second build axis before the close. `DEFAULT_ROUTE_WAVE_COUNT` is now `8`, `SUPPORT_SYSTEM_START_WAVE` is now `6`, `Wave 5` and `Wave 6` both open the three-lane contract, `buildWave6ChassisBreakpointChoices(...)` now locks a chassis and bundled support install together, and the short `Victory Lap` now resolves after `Wave 8` off the larger late-payoff bracket instead of firing immediately after the first body lock. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) was updated to lock the new `Wave 1-8 -> victory lap` transition and the earlier mid-run support visibility.
