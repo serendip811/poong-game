@@ -1034,10 +1034,46 @@ body[data-overdrive="true"] .backdrop__glow--right {
   width: min(100%, 360px);
 }
 
-.hud-overlay--bottom-minimal .core-summary--overlay .forge-focus__proof,
-.hud-overlay--bottom-minimal .status-card--overlay .forge-focus__proof {
-  margin-top: 10px;
-  padding: 8px 10px;
+.hud-overlay--bottom-minimal .status-card--overlay {
+  width: min(100%, 320px);
+  padding: 0;
+  border-color: rgba(255, 181, 112, 0.18);
+  background:
+    linear-gradient(180deg, rgba(255, 145, 88, 0.1), transparent 100%),
+    rgba(11, 10, 9, 0.76);
+}
+
+.combat-ask-card {
+  display: grid;
+  gap: 10px;
+  padding: 12px 13px;
+}
+
+.combat-ask-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.combat-ask-card__eyebrow {
+  color: var(--muted);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.combat-ask-card__title {
+  font-size: 1rem;
+  line-height: 1.42;
+  letter-spacing: -0.02em;
+}
+
+.combat-ask-card__threat {
+  margin: 0;
+  color: var(--muted-strong);
+  font-size: 0.8rem;
+  line-height: 1.35;
 }
 
 .stat-chip[data-state="warning"] {

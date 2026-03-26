@@ -266,6 +266,21 @@ assert.ok(!forgeContextMarkup.includes("Ember Ring"));
 const forgeBillMarkup = game.createBaseRouteForgeBillMarkup("고철 18");
 assert.ok(forgeBillMarkup.includes("고철 18"));
 assert.ok(!forgeBillMarkup.includes("비용·대가"));
+const minimalCombatAskMarkup = game.createMinimalCombatAskMarkup({
+  waveAsk: "가장 먼 relay를 먼저 끊고 뚫린 corridor 하나를 길게 지킨다.",
+  hazardStatus: {
+    tone: "summary-chip--cool",
+    chipLabel: "RELAY",
+    detailLabel: "위협",
+    detailValue: "중계기 1",
+  },
+});
+assert.ok(minimalCombatAskMarkup.includes("combat-ask-card"));
+assert.ok(minimalCombatAskMarkup.includes("현재 전장"));
+assert.ok(minimalCombatAskMarkup.includes("RELAY"));
+assert.ok(minimalCombatAskMarkup.includes("중계기 1"));
+assert.ok(!minimalCombatAskMarkup.includes("mini-pill-row"));
+assert.ok(!minimalCombatAskMarkup.includes("summary-head"));
 const minimalHudVisibility = game.getMinimalBaseRouteHudVisibility({
   hudInspect: false,
   paused: false,

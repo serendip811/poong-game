@@ -9798,6 +9798,29 @@
     `;
   }
 
+  function createMinimalCombatAskMarkup({
+    waveAsk = "",
+    hazardStatus = null,
+  }) {
+    const tone = hazardStatus && hazardStatus.tone ? hazardStatus.tone : "";
+    const chipLabel =
+      hazardStatus && hazardStatus.chipLabel ? hazardStatus.chipLabel : "THREAT";
+    const threatLabel =
+      hazardStatus && hazardStatus.detailLabel ? hazardStatus.detailLabel : "위협";
+    const threatValue =
+      hazardStatus && hazardStatus.detailValue ? hazardStatus.detailValue : "-";
+    return `
+      <div class="combat-ask-card">
+        <div class="combat-ask-card__head">
+          <span class="combat-ask-card__eyebrow">현재 전장</span>
+          <span class="summary-chip ${tone}">${chipLabel}</span>
+        </div>
+        <strong class="combat-ask-card__title">${waveAsk || "-"}</strong>
+        <p class="combat-ask-card__threat">${threatLabel} · ${threatValue}</p>
+      </div>
+    `;
+  }
+
   function getBaseRouteCombatAsk(currentState = state, combatBand = null, hazardStatus = null) {
     const waveNumber =
       currentState && typeof currentState.waveIndex === "number"
@@ -15503,6 +15526,7 @@
     getBaseRouteForgeStage,
     getBaseRoutePostWaveTransition,
     createBaseRouteForgeContextMarkup,
+    createMinimalCombatAskMarkup,
     getBaseRouteForgeChoiceTransformation,
     createBaseRouteForgeCompactCardMarkup,
     createBaseRouteForgeHeadlineCardMarkup,
@@ -22508,20 +22532,11 @@
     if (elements.waveObjective) {
       const combatBand = getCombatBandState(state.build, state.weapon, state.waveIndex + 1);
       const waveAsk = getBaseRouteCombatAsk(state, combatBand, hazardStatus);
-      const askLabel = combatBand ? combatBand.label : proofWindow.label;
       elements.waveObjective.innerHTML = minimalBaseRouteHud
-        ? `
-          <div class="summary-head">
-            <strong>현재 전장</strong>
-            <span class="summary-chip ${hazardStatus.tone}">
-              ${hazardStatus.chipLabel}
-            </span>
-          </div>
-          <strong class="route-contract__title">${waveAsk}</strong>
-          <div class="mini-pill-row mini-pill-row--solo">
-            ${createMiniPill("위협", `${hazardStatus.detailLabel} ${hazardStatus.detailValue}`)}
-          </div>
-        `
+        ? createMinimalCombatAskMarkup({
+            waveAsk,
+            hazardStatus,
+          })
         : `
           <div class="summary-head">
             <strong>현재 전장</strong>

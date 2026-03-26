@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze new branches and rebuild one scalable default run: quieter `Wave 1-3`, no live ascension/cache exceptions, 2-3 reusable midgame pressure cells, and forge-only build leaps before chasing `20-30 waves`.
+- Immediate priority: stop expansion and prove one quiet-to-dominant default run: survival-only combat HUD, no live cache/ascension reward exceptions, one-glance forge cards, and a main weapon/body ladder that stays visually incomplete until later waves.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 16:00:22 KST
+  Findings:
+  - `docs/games/cinder-circuit-design.md` still locks the target around a `12-wave / three-era / drop-driven proof window` contract, so the project is still optimizing a narrated alpha route instead of a rerunnable combat spine that could honestly stretch toward `20-30 waves`.
+  - `playables/cinder-circuit/index.html` and the HUD path in `playables/cinder-circuit/game.js` still keep `active-core`, `pending-cores`, `build-roadmap`, `wave-objective`, `live-readout`, `upgrade-list`, and the `Tab` inspect board circulating during combat. Against `Brotato`, `Nova Drift`, and `Hades`, the player is still reading run administration where they should be reading space, threat, and escape lanes.
+  - The forge presentation in `playables/cinder-circuit/game.js` is still too talkative: `focusPrompt`, `Next Proof`, `Route Payoff`, preview rows, side notes, and combat-feed banners all keep explaining the pick. Strong reward screens create desire in one glance; this one still asks for study.
+  - `playables/cinder-circuit/game.js` still preserves live `combat_cache`, `late_ascension_cache`, doctrine ascension drops, and a broad support ceiling `satellites / drones / halos / missiles / sentries`. That keeps the opening and midgame from feeling small, clean, and hungry before the main weapon/body line earns a real takeover.
+  Top Priority: Freeze new systems and do one consolidation pass that removes live reward drops from the default route, cuts combat HUD to survival-only essentials, and forces each forge card to sell one transformation fantasy plus one immediate test.
+  Why Now: Player-feedback priorities already say the opening is too busy and too wordy, and every extra layer currently hides the fantasy instead of strengthening it.
+  Do Not Repeat: Do not spend another pass on label trimming or late-branch reshuffles while combat still looks like a build dashboard and forge still reads like a brief.
+  Release Gate: UX/UI
 
 - 2026-03-26 23:58:00 KST
   Findings:
@@ -2963,6 +2974,14 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 00:12:00 KST
+  Changed: tightened one bounded piece of the shipped combat read in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css), and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the minimal default HUD now renders `현재 전장` through a dedicated single ask card instead of reusing the old stacked status-card grammar. Live combat on the consolidated route now shows the battlefield prompt, one hazard chip, and one compact threat line in a tighter one-glance surface, and smoke coverage locks that the minimal card no longer regrows `summary-head` or `mini-pill-row` scaffolding.
+  Why: the newest critique's `Top Priority` was to cut the default combat HUD to survival-only essentials. The highest-value concrete interpretation was to finish the one remaining live card, because the route was already down to a single ask panel but that panel still looked like a repurposed dashboard widget instead of a deliberate arena reminder.
+  Follow-up risk: the layout is quieter now, but the ask text still inherits authored wave directives. If later feedback says combat remains too wordy, the next bounded UX/UI pass should shorten directive copy at the wave-definition source rather than adding more HUD wrappers.
+  UI reference direction: the sparse combat hierarchy from `Nova Drift`, where survival meters stay peripheral and the arena reminder reads as one compact instruction, not a stacked status panel.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: UX/UI
 
 - 2026-03-26 23:59:00 KST
   Changed: collapsed one bounded piece of the shipped midgame itinerary in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 5-10` now reads with the same reusable payoff/proof grammar in its hazard and late-break band names, not just in the wave headers. `Wave 5` now exposes `Payoff Bastion`, `Wave 6` `Crown Breach Relay`, and `Wave 8/10` `Crown Proof Relay`, while all late-break `Wave 9-10` overrides now reuse the shared `Payoff Run+` / `Crown Proof+` band ids and labels instead of branch-specific `Overdrive/Halo/Vaultline` names. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks those generic labels and band ids on the resolved route.
