@@ -747,6 +747,22 @@
       directive:
         "가장 얇은 입구를 짧게 찢고 열린 crownline을 오래 붙든다.",
     },
+    pursuit: {
+      title: "Refuge Run",
+      pressureFamily: "pursuit",
+      note: (stageText, focusText) =>
+        `${stageText} late route를 또 다른 scripted stop으로 늘리지 않는 shared pursuit cell이다. drift pressure가 refuge pocket을 계속 비틀어, ${focusText} 얇은 추격 덩어리를 찢고 다음 pocket으로 얼마나 빨리 갈아타는지 묻는다.`,
+      directive:
+        "가장 얇은 pursuit 덩어리를 먼저 찢고 비워 낸 refuge pocket으로 짧게 갈아탄다.",
+    },
+    stand: {
+      title: "Final Stand",
+      pressureFamily: "hold",
+      note: (stageText, focusText) =>
+        `${stageText} finale도 새 gimmick을 덧씌우지 않는 shared stand cell이다. 짧게 열리는 bastion pocket만 남겨, ${focusText} 어느 pocket을 열고 버리며 점유 시간을 얼마나 늘리는지 결산한다.`,
+      directive:
+        "한 pocket만 짧게 열고 binder pinch가 닫히기 전에 다음 refuge lane으로 갈아탄다.",
+    },
   };
 
   function buildRecurringCombatWave({
@@ -1107,10 +1123,12 @@
         relayDamage: 14,
       },
     }),
-    {
-      id: "starforge",
-      label: "Wave 11 · Starforge Pursuit",
-      pressureFamily: "pursuit",
+    buildRecurringCombatWave({
+      id: "refuge_run",
+      waveNumber: 11,
+      cellId: "pursuit",
+      stageText: "Wave 11도 late route를 새 관광지로 돌리지 않고 같은 escalation cell을 한 칸 더 미는",
+      focusText: "막 완성한 late form이",
       duration: 96,
       spawnBudget: 172,
       activeCap: 28,
@@ -1129,8 +1147,6 @@
         mortar: 0.02,
         warden: 0.1,
       },
-      note: "두 웨이브 payoff/proof 뒤의 세 번째 ask는 더 이상 gallery 반복이 아니다. 넓어진 arena에서 빠른 drift furnace 하나가 계속 재진입 각을 비틀어, headline late form으로 lane 하나를 먹은 뒤 바로 다른 refuge pocket으로 갈아타는 cadence를 요구한다.",
-      directive: "얇은 추격 덩어리를 자르고 빈 pocket으로 짧게 갈아탄다.",
       driveGainFactor: 1.44,
       arena: {
         width: 1760,
@@ -1138,7 +1154,7 @@
       },
       ascensionCarrierType: "binder",
       hazard: {
-        label: "Starforge Pursuit Drift",
+        label: "Refuge Drift",
         type: "drift",
         interval: 9.6,
         count: 1,
@@ -1149,11 +1165,13 @@
         driftSpeed: 118,
         driftOrbit: 0.34,
       },
-    },
-    {
-      id: "cinder_bastion",
-      label: "Wave 12 · Cinder Bastion",
-      pressureFamily: "hold",
+    }),
+    buildRecurringCombatWave({
+      id: "final_stand",
+      waveNumber: 12,
+      cellId: "stand",
+      stageText: "Wave 12도 다른 finale wrapper를 열지 않고 같은 route grammar를 pocket rotation으로 닫는",
+      focusText: "완성된 form이",
       duration: 104,
       spawnBudget: 184,
       activeCap: 33,
@@ -1172,8 +1190,6 @@
         mortar: 0.02,
         warden: 0.18,
       },
-      note: "최종 전장은 두 번째 breach가 아니라 rotating stand다. 작은 bastion pocket 두 곳만 짧게 열어 두고 relay tax를 걷어, Wave 11에서 익힌 refuge cadence를 마지막까지 이어 가며 어느 pocket을 열고 버릴지 직접 결산하게 만든다.",
-      directive: "한 pocket만 열고 닫히기 전에 다음 pocket으로 갈아탄다.",
       driveGainFactor: 1.52,
       arena: {
         width: 1680,
@@ -1181,7 +1197,7 @@
       },
       ascensionCarrierType: "binder",
       hazard: {
-        label: "Cinder Bastion Pocket",
+        label: "Final Stand Pocket",
         type: "territory",
         interval: 8.2,
         count: 1,
@@ -1197,7 +1213,7 @@
         enemyPullRadius: 158,
       },
       completesRun: true,
-    },
+    }),
   ];
 
   const SHARED_LATE_ACT_ENCOUNTER_POOL = {
@@ -1266,15 +1282,15 @@
         relayDamage: 14,
       },
     }),
-    10: {
-      label: "Wave 11 · Starforge Pursuit",
-      bandId: "starforge_pursuit",
-      bandLabel: "Starforge Pursuit",
+    10: buildRecurringCombatWave({
+      id: "shared_refuge_run",
+      waveNumber: 11,
+      cellId: "pursuit",
+      stageText: "Act 3 shared pool의 세 번째 칸도 branch 관광을 만들지 않는",
+      focusText: "late form이",
+      bandId: "refuge_run",
+      bandLabel: "Refuge Run",
       bandFocusId: "late_form",
-      pressureFamily: "pursuit",
-      note: "두 칸짜리 payoff/proof 뒤의 세 번째 ask는 gallery 반복이 아니라 pursuit/refuge cadence다. drift furnace가 retreat lane을 계속 비틀어, 방금 잠긴 chassis/weapon leap로 한 pocket을 비운 뒤 다음 refuge pocket으로 얼마나 깔끔하게 갈아타는지 묻는다.",
-      directive:
-        "starforge pursuit. drifting furnace가 retreat pocket을 밀어내고 shrike 재진입이 flank를 다시 잠근다. 가장 얇은 pursuit 덩어리를 먼저 찢고 비워 낸 refuge lane으로 짧게 갈아타며 final crown breach 전 생존 cadence를 증명해야 한다.",
       driveGainFactor: 1.44,
       arena: {
         width: 1760,
@@ -1294,7 +1310,7 @@
         warden: 0.1,
       },
       hazard: {
-        label: "Starforge Pursuit Drift",
+        label: "Refuge Drift",
         type: "drift",
         interval: 9.6,
         count: 1,
@@ -1305,16 +1321,16 @@
         driftSpeed: 118,
         driftOrbit: 0.34,
       },
-    },
-    11: {
-      pressureFamily: "hold",
-      label: "Wave 12 · Cinder Bastion",
-      bandId: "cinder_bastion_hold",
-      bandLabel: "Cinder Bastion",
+    }),
+    11: buildRecurringCombatWave({
+      id: "shared_final_stand",
+      waveNumber: 12,
+      cellId: "stand",
+      stageText: "Act 3 shared pool finale도 same branch seasoning만 남기고 같은 pocket rotation ask로 닫는",
+      focusText: "late form이",
+      bandId: "final_stand",
+      bandLabel: "Final Stand",
       bandFocusId: "late_form",
-      note: "추격 시험 다음엔 두 번째 crown breach가 아니라 final stand가 남는다. 작은 bastion pocket 둘만 짧게 열어 Wave 11에서 익힌 refuge cadence를 결산하게 하고, headline form이 pocket을 비우는 힘과 rider 축이 버티는 시간이 같은 전투 안에서 함께 드러나게 만든다.",
-      directive:
-        "cinder bastion hold. 한 pocket을 짧게 열어 체력과 space를 회수한 뒤 binder pinch가 닫히기 전에 다른 flank로 갈아타야 한다. 마지막 판의 ask는 relay 파괴가 아니라 pocket rotation discipline이다.",
       driveGainFactor: 1.56,
       arena: {
         width: 1680,
@@ -1333,7 +1349,7 @@
         warden: 0.18,
       },
       hazard: {
-        label: "Cinder Bastion Pocket",
+        label: "Final Stand Pocket",
         type: "territory",
         interval: 8.2,
         count: 1,
@@ -1348,7 +1364,7 @@
         turretSpeed: 246,
         enemyPullRadius: 158,
       },
-    },
+    }),
   };
 
   const MAX_WAVES = WAVE_CONFIG.length;
@@ -9865,7 +9881,7 @@
     if (build && build.lateBreakProfileId) {
       if (boundedWave >= 11) {
         return {
-          label: boundedWave === 11 ? "Refuge Run" : "Cinder Bastion",
+          label: boundedWave === 11 ? "Refuge Run" : "Final Stand",
           headline:
             (currentWeapon && currentWeapon.headlineFormLabel) ||
             (currentWeapon && currentWeapon.capstoneLabel) ||
@@ -9883,7 +9899,7 @@
     }
     if (build && !build.doctrineCapstoneId) {
       return {
-        label: "Starforge Pursuit",
+        label: "Refuge Run",
         headline: capstoneTitle,
         detail:
           "Wave 11은 반복 crown 대신 pursuit/refuge run이다. doctrine capstone cache를 회수했다면 drift furnace와 재진입 압박이 retreat pocket을 계속 비틀므로, 새 폼으로 한 lane을 비운 뒤 다른 refuge lane으로 갈아타는 cadence를 먼저 증명해야 한다.",
@@ -9891,7 +9907,7 @@
     }
     if (build && !build.lateAscensionId) {
       return {
-        label: boundedWave === 11 ? "Starforge Pursuit" : "Cinder Bastion",
+        label: boundedWave === 11 ? "Refuge Run" : "Final Stand",
         headline: "Ascension Core",
         detail:
           boundedWave === 11
@@ -9911,7 +9927,7 @@
       };
     }
     return {
-      label: "Cinder Bastion",
+      label: "Final Stand",
       headline:
         (currentWeapon && currentWeapon.lateAscensionLabel) ||
         (currentWeapon && currentWeapon.capstoneLabel) ||

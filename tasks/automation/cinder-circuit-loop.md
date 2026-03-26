@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze expansion and turn the shipped loop into a clean `fight -> forge -> transform -> proof` cadence by removing build-defining in-combat payouts, stripping roadmap/inspect/admin clutter from default play, and delaying support spectacle until the main weapon/body ladder owns the run.
+- Immediate priority: stop expanding the authored `12-wave` route and prove one reusable `fight -> forge -> transform -> proof` escalation cell with a quieter HUD, forge-only build swings, and delayed support spectacle so the run can actually stretch toward `20-30 waves`.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 23:15:00 KST
+  Findings:
+  - `docs/games/cinder-circuit-design.md` still defines the product as a fixed `12웨이브 / 세 시대 / proof window` contract, which keeps the team optimizing a scripted route instead of a combat-reward grammar strong enough to survive `20-30 waves`.
+  - `playables/cinder-circuit/game.js#L928-L1155` still runs `Wave 5-12` as named authored cells `Breakline / Forgecross / Crownhold / Starforge / Cinder Bastion` with bespoke hazard identities and pressure notes. The arenas are larger, but the player is still learning the itinerary more than enjoying a reusable escalation loop.
+  - `playables/cinder-circuit/game.js#L3363-L3408` still exposes wildcard pivots and support-forward fantasy at `Wave 4`, `Wave 7`, and `Wave 10`, so the run previews salvage tech, halos, and illegal convergence before one main gun/body path has delivered a satisfying takeover.
+  - `playables/cinder-circuit/index.html#L93-L105` plus `playables/cinder-circuit/game.js#L22331-L22696` still keep roadmap, objective, live readout, upgrade list, inspect board, `Next Proof`, and `Route Payoff` in circulation. Compared with `Nova Drift`, `Brotato`, and `Hades`, the run is still being narrated instead of sold through danger and desire.
+  Top Priority: Replace the current `Wave 5-12` named tour with 2-3 reusable escalation cells and lock all build-defining gains to between-wave forge stops until the main weapon/body ladder fully peaks.
+  Why Now: Until one escalation cell is replayable without script novelty, the game cannot honestly grow into a longer roguelite run.
+  Do Not Repeat: Do not spend another pass on labels, extra branches, or new showcase hardware while the midgame still depends on authored wave names and early wildcard reveals.
+  Release Gate: Progression
 
 - 2026-03-26 13:00:47 KST
   Findings:
@@ -2919,6 +2930,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-26 23:59:59 KST
+  Changed: replaced one bounded piece of the shipped late-route itinerary in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) by pushing `Wave 11-12` onto the same recurring combat-cell grammar as the rest of the consolidated route. I added shared `Refuge Run` and `Final Stand` cells, converted both the base route and shared late pool to build those waves through `buildRecurringCombatWave(...)`, and rewired late proof/snapshot summaries so the default player-facing read no longer surfaces `Starforge Pursuit` or `Cinder Bastion`. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks the new labels, band ids, and late-route proof strings.
+  Why: the newest critique's `Top Priority` was to replace the remaining `Wave 5-12` named tour with reusable escalation cells. The highest-value bounded interpretation was to finish the lingering authored end of that route first, because `Wave 5-10` already leaned on shared cell helpers but `Wave 11-12` and their proof summaries still advertised a bespoke finale itinerary instead of a replayable late-run grammar.
+  Follow-up risk: `Wave 5`, `Wave 6`, `Wave 8`, and `Wave 10` still carry old hazard labels like `Afterglow Bastion`, `Breakline Crown`, `Forgecross Relay Crown`, and `Crownhold Relay` under otherwise generic wave headers. If this critique repeats, the next bounded progression pass should collapse those remaining hazard names into the same shared payoff/proof/refuge/final-stand language rather than adding more late content.
+  Release Gate: Progression
 
 - 2026-03-26 13:12:20 KST
   Changed: quarantined one bounded piece of legacy reward plumbing in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the shipped `Wave 5` stop no longer masquerades as a cache-era `field_grant` draft behind the scenes. The consolidated route now resolves that stop through a dedicated `early_mutation` forge mode, `enterFieldGrant()` rewrites the shipped path onto that mode instead of the legacy cache type, instant-draft handling and live readout copy both recognize it as `주력 변이`, and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks `getForgeDraftType({ nextWave: 5 }) === "early_mutation"` so the base route cannot quietly drift back onto `field_grant`.
