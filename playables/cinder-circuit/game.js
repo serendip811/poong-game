@@ -11235,6 +11235,44 @@
     return 120;
   }
 
+  function isBaseRouteDefenseRiderChoice(choice, nextWave) {
+    if (!choice) {
+      return false;
+    }
+    if (choice.type === "fallback") {
+      return true;
+    }
+    if (choice.type === "utility" && choice.action === "bastion_bay_forge") {
+      return nextWave === 6;
+    }
+    if (choice.type === "affix") {
+      return choice.affixId === "thermal_weave";
+    }
+    if (choice.type === "mod") {
+      return ["armor_mesh", "step_servos", "coolant_purge"].includes(choice.modId);
+    }
+    return false;
+  }
+
+  function isBaseRouteGreedChoice(choice) {
+    if (!choice) {
+      return false;
+    }
+    if (choice.type === "fallback") {
+      return true;
+    }
+    if (choice.type === "utility") {
+      return ["field_greed", "recycle", "reforge", "affix_reforge"].includes(choice.action);
+    }
+    if (choice.type === "affix") {
+      return choice.affixId === "salvage_link";
+    }
+    if (choice.type === "mod") {
+      return ["magnet_rig", "reactor_cap"].includes(choice.modId);
+    }
+    return false;
+  }
+
   function scoreBaseRouteHeadlineChoice(choice, build, nextWave) {
     if (!choice) {
       return -1;
@@ -12429,6 +12467,7 @@
       recurringBaseRouteContract &&
       nextWave >= SUPPORT_SYSTEM_START_WAVE &&
       supportSystemChoices.length > 0;
+    const strictBaseRouteRiderContract = recurringBaseRouteContract && nextWave >= 5 && nextWave < 9;
     const defensePool =
       recurringBaseRouteContract && nextWave === 6
         ? [...chassisBreakpointChoices, ...subsystemCandidates, ...sustainCandidates]
@@ -12436,12 +12475,16 @@
     const headlinePool = reserveMidrunSupportForRider
       ? [...evolutionCandidates, ...commitCandidates, ...pivotCandidates]
       : [...evolutionCandidates, ...commitCandidates, ...offensiveModuleCandidates, ...pivotCandidates];
-    const riderPool = reserveMidrunSupportForRider
-      ? [...supportSystemChoices, ...defensePool]
-      : defensePool;
-    const gamblePool = reserveMidrunSupportForRider
-      ? [...gambleCandidates, ...pivotCandidates, ...sustainCandidates]
-      : [...gambleCandidates, ...pivotCandidates, ...sustainCandidates, ...offensiveModuleCandidates];
+    const riderPool = strictBaseRouteRiderContract
+      ? defensePool.filter((choice) => isBaseRouteDefenseRiderChoice(choice, nextWave))
+      : reserveMidrunSupportForRider
+        ? [...supportSystemChoices, ...defensePool]
+        : defensePool;
+    const gamblePool = strictBaseRouteRiderContract
+      ? [...gambleCandidates, ...sustainCandidates].filter((choice) => isBaseRouteGreedChoice(choice))
+      : reserveMidrunSupportForRider
+        ? [...gambleCandidates, ...pivotCandidates, ...sustainCandidates]
+        : [...gambleCandidates, ...pivotCandidates, ...sustainCandidates, ...offensiveModuleCandidates];
     const adaptiveGambleChoice =
       recurringBaseRouteContract && nextWave <= 10
         ? takeBestScoredChoice(gamblePool, takenIds, "탐욕/유틸", (choice) =>

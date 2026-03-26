@@ -125,6 +125,32 @@ const wave5ForgeChoices = game.buildForgeChoices(roadmapBuild, Math.random, 999,
 });
 assert.ok(wave5ForgeChoices.every((choice) => !(choice.type === "utility" && choice.action === "preview_support")));
 assert.equal(wave5ForgeChoices.find((choice) => choice.contractRole === "headline")?.action, "afterglow_mutation");
+const wave5RiderChoice = wave5ForgeChoices.find((choice) => choice.contractRole === "rider");
+const wave5GambleChoice = wave5ForgeChoices.find((choice) => choice.contractRole === "gamble");
+assert.ok(
+  wave5RiderChoice &&
+    ((wave5RiderChoice.type === "affix" && wave5RiderChoice.affixId === "thermal_weave") ||
+      (wave5RiderChoice.type === "mod" &&
+        ["armor_mesh", "step_servos", "coolant_purge"].includes(wave5RiderChoice.modId)) ||
+      wave5RiderChoice.type === "fallback")
+);
+assert.ok(
+  wave5GambleChoice &&
+    ((wave5GambleChoice.type === "utility" &&
+      ["field_greed", "recycle", "reforge", "affix_reforge"].includes(wave5GambleChoice.action)) ||
+      (wave5GambleChoice.type === "affix" && wave5GambleChoice.affixId === "salvage_link") ||
+      (wave5GambleChoice.type === "mod" &&
+        ["magnet_rig", "reactor_cap"].includes(wave5GambleChoice.modId)) ||
+      wave5GambleChoice.type === "fallback")
+);
+const wave6ForgeChoices = game.buildForgeChoices(game.createInitialBuild("rail_zeal"), () => 0, 999, {
+  nextWave: 6,
+  finalForge: false,
+});
+assert.equal(
+  wave6ForgeChoices.find((choice) => choice.contractRole === "rider")?.action,
+  "bastion_bay_forge"
+);
 const cappedHeadlineBuild = game.createInitialBuild("rail_zeal");
 cappedHeadlineBuild.weaponEvolutions[cappedHeadlineBuild.coreId] = 3;
 cappedHeadlineBuild.chassisId = "vector_thrusters";
@@ -134,9 +160,27 @@ const wave8HeadlineChoices = game.buildForgeChoices(cappedHeadlineBuild, () => 0
   finalForge: false,
 });
 const wave8HeadlineChoice = wave8HeadlineChoices.find((choice) => choice.contractRole === "headline");
+const strictWave8RiderChoice = wave8HeadlineChoices.find((choice) => choice.contractRole === "rider");
+const strictWave8GambleChoice = wave8HeadlineChoices.find((choice) => choice.contractRole === "gamble");
 assert.equal(wave8HeadlineChoice?.type, "core");
 assert.ok(wave8HeadlineChoice?.coreId && wave8HeadlineChoice.coreId !== cappedHeadlineBuild.coreId);
 assert.notEqual(wave8HeadlineChoice?.title, "Overclock");
+assert.ok(
+  strictWave8RiderChoice &&
+    ((strictWave8RiderChoice.type === "affix" && strictWave8RiderChoice.affixId === "thermal_weave") ||
+      (strictWave8RiderChoice.type === "mod" &&
+        ["armor_mesh", "step_servos", "coolant_purge"].includes(strictWave8RiderChoice.modId)) ||
+      strictWave8RiderChoice.type === "fallback")
+);
+assert.ok(
+  strictWave8GambleChoice &&
+    ((strictWave8GambleChoice.type === "utility" &&
+      ["field_greed", "recycle", "reforge", "affix_reforge"].includes(strictWave8GambleChoice.action)) ||
+      (strictWave8GambleChoice.type === "affix" && strictWave8GambleChoice.affixId === "salvage_link") ||
+      (strictWave8GambleChoice.type === "mod" &&
+        ["magnet_rig", "reactor_cap"].includes(strictWave8GambleChoice.modId)) ||
+      strictWave8GambleChoice.type === "fallback")
+);
 const earlyRoadmap = game.getBuildRoadmap(roadmapBuild, game.computeWeaponStats(roadmapBuild), 1);
 assert.equal(earlyRoadmap.steps.length, 3);
 assert.equal(earlyRoadmap.steps[0].title, "Twin Spine");

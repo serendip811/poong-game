@@ -62,6 +62,17 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-26 16:30:46 KST
+  Findings:
+  - `docs/games/cinder-circuit-design.md` still defines the core promise around `12웨이브`, `Headline Form`, `Survival Rider`, and drop-driven `Proof Window`, so the run is still framed as a managed showcase instead of a repeatable power ladder that could honestly support `20-30` waves later.
+  - `playables/cinder-circuit/game.js` still scripts `Wave 5-12` through named cells and bespoke hazard wrappers `Afterglow / Breakline / Forgecross / Crown Proof / Refuge / Final Stand`, which makes the midgame feel authored and finite rather than like a reusable combat ecology players would want to master repeatedly.
+  - The build ceiling is still too broad too early: support systems and primers for `Ember Ring`, `Aegis Halo`, `Kiln Sentry`, `Seeker Array`, `Volt Drones`, plus wildcard and ascension lanes, keep advertising satellites, shields, missiles, drones, and hijacks before one main gun/body path has earned a memorable screen takeover.
+  - Combat and forge still reinforce that breadth instead of hunger: `active-core`, `pending-cores`, `build-roadmap`, `wave-objective`, `live-readout`, `upgrade-list`, `Tab` inspect, plus forge `focusPrompt / Next Proof / Route Payoff` framing all keep telling the player about future structure instead of making the next visible transformation feel urgent.
+  Top Priority: Recut the default route so the first half of the run only offers one main weapon/body evolution spine, one restrained defensive rider lane, and one simple greed hook, with primers, wildcard pivots, and autonomous ordnance locked until after the first real takeover lands.
+  Why Now: Right now the game is selling catalog breadth before payoff, which kills anticipation and weakens replay desire.
+  Do Not Repeat: Do not answer this with another wording cleanup or another hidden wrapper while the default forge pool still behaves like a feature menu.
+  Release Gate: Builds
+
 - 2026-03-26 16:00:22 KST
   Findings:
   - `docs/games/cinder-circuit-design.md` still locks the target around a `12-wave / three-era / drop-driven proof window` contract, so the project is still optimizing a narrated alpha route instead of a rerunnable combat spine that could honestly stretch toward `20-30 waves`.
@@ -2974,6 +2985,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-26 16:42:28 KST
+  Changed: narrowed one bounded piece of the shipped forge pool in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the consolidated `Wave 5-8` default contract now behaves like three distinct lanes instead of one blended feature menu. `주력 변이` still pulls from the visible weapon/body takeover spine, but `방호·보조` is now hard-filtered to restrained chassis/defense picks only, and `판돈·유틸` is hard-filtered to simple economy/bench-churn picks only. That keeps early rider cards off support/autonomous branches and stops gamble from quietly reusing the same generic sustain cards as the defense lane. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks `Wave 5`, `Wave 6`, and `Wave 8` so rider choices stay on defense/chassis and gamble stays on greed/economy.
+  Why: the newest critique's `Top Priority` was to recut the first half of the run around one main weapon/body spine, one restrained defensive rider lane, and one simple greed hook. The highest-value concrete interpretation was to close the remaining pool overlap inside the recurring forge contract itself, because support primers and wildcard pivots were already suppressed but the rider/gamble slots could still feel like the same mixed sustain bucket with different labels.
+  Follow-up risk: this sharpens lane identity, but it also reduces surprise inside `Wave 5-8`. If later feedback says the side lanes now feel too repetitive, the next bounded builds pass should add one more clearly defensive rider candidate or one more greed contract variant, not reopen support hardware or pivot noise before `Wave 9`.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Builds
 
 - 2026-03-27 00:12:00 KST
   Changed: tightened one bounded piece of the shipped combat read in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css), and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the minimal default HUD now renders `현재 전장` through a dedicated single ask card instead of reusing the old stacked status-card grammar. Live combat on the consolidated route now shows the battlefield prompt, one hazard chip, and one compact threat line in a tighter one-glance surface, and smoke coverage locks that the minimal card no longer regrows `summary-head` or `mini-pill-row` scaffolding.
