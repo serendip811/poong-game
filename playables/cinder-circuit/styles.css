@@ -366,7 +366,7 @@ body[data-overdrive="true"] .backdrop__glow--right {
 }
 
 .title-launch-shell__copy--lean {
-  gap: 10px;
+  gap: 12px;
 }
 
 .title-launch-shell__headline {
@@ -382,34 +382,34 @@ body[data-overdrive="true"] .backdrop__glow--right {
   line-height: 1.52;
 }
 
-.title-launch-shell__beats {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+.title-launch-shell__proof-strip {
+  display: flex;
+  flex-wrap: wrap;
   gap: 10px;
 }
 
-.title-launch-shell__beat {
-  padding: 12px 14px;
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  background: rgba(255, 255, 255, 0.035);
+.title-launch-shell__proof {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(180deg, rgba(255, 145, 88, 0.08), transparent 70%),
+    rgba(255, 255, 255, 0.04);
 }
 
-.title-launch-shell__beat strong,
-.title-launch-shell__beat span {
-  display: block;
-}
-
-.title-launch-shell__beat span {
+.title-launch-shell__proof span {
   color: var(--muted);
   font-size: 0.68rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
-.title-launch-shell__beat strong {
-  margin-top: 6px;
-  font-size: 0.94rem;
+.title-launch-shell__proof strong {
+  font-size: 0.9rem;
+  color: #ffe1c4;
 }
 
 .hero-side {
@@ -913,8 +913,8 @@ body[data-overdrive="true"] .backdrop__glow--right {
     min-height: 140px;
   }
 
-  .title-launch-shell__beats {
-    grid-template-columns: 1fr;
+  .title-launch-shell__proof-strip {
+    flex-direction: column;
   }
 }
 

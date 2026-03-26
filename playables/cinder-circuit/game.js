@@ -15391,7 +15391,7 @@
     startRun: document.getElementById("start-run"),
     restartRun: document.getElementById("restart-run"),
     backToTitle: document.getElementById("back-to-title"),
-    signatureCards: document.getElementById("signature-cards"),
+    titleLaunchPanel: document.getElementById("title-launch-panel"),
     arenaStage: document.getElementById("arena-stage"),
     waveLabel: document.getElementById("wave-label"),
     hpMeter: document.getElementById("hp-meter"),
@@ -17289,16 +17289,16 @@
     syncBodyState();
   }
 
-  function renderSignaturePicker() {
-    if (!elements.signatureCards) {
+  function renderTitleLaunchPanel() {
+    if (!elements.titleLaunchPanel) {
       return;
     }
     if (CONSOLIDATED_12_WAVE_ROUTE) {
       const titleFocus = getBaseRouteTransformationFocus(1, { stage: "title" });
       const titleBeats = getShippedRoutePresentationBeats().filter((entry) =>
-        [1, 3, 5, 6].includes(entry.waveNumber)
+        [3, 5, 6].includes(entry.waveNumber)
       );
-      elements.signatureCards.innerHTML = `
+      elements.titleLaunchPanel.innerHTML = `
         <section class="title-launch-shell title-launch-shell--lean">
           <div class="title-launch-shell__frame" aria-hidden="true">
             <div class="title-launch-shell__silhouette">
@@ -17313,11 +17313,11 @@
             <p class="panel__eyebrow">${titleFocus.windowLabel}</p>
             <strong class="title-launch-shell__headline">${titleFocus.title}</strong>
             <p class="title-launch-shell__detail">${titleFocus.detail}</p>
-            <div class="title-launch-shell__beats">
+            <div class="title-launch-shell__proof-strip" aria-label="run proof beats">
               ${titleBeats
                 .map(
                   (entry) => `
-                    <article class="title-launch-shell__beat">
+                    <article class="title-launch-shell__proof">
                       <span>Wave ${entry.waveNumber}</span>
                       <strong>${entry.title}</strong>
                     </article>
@@ -17330,7 +17330,7 @@
       `;
       return;
     }
-    elements.signatureCards.innerHTML = Object.values(SIGNATURE_DEFS)
+    elements.titleLaunchPanel.innerHTML = Object.values(SIGNATURE_DEFS)
       .map(
         (signature, index) => {
           const startCore = CORE_DEFS[signature.startCoreId];
@@ -17368,7 +17368,7 @@
       return;
     }
     selectedSignatureId = signatureId;
-    renderSignaturePicker();
+    renderTitleLaunchPanel();
   }
 
   function startRun() {
@@ -24565,7 +24565,7 @@
   elements.backToTitle.addEventListener("pointerdown", () => {
     state = createAppState();
     syncArenaCanvas();
-    renderSignaturePicker();
+    renderTitleLaunchPanel();
     showScreen("title");
   });
 
@@ -24580,12 +24580,12 @@
   elements.pauseTitle.addEventListener("pointerdown", () => {
     state = createAppState();
     syncArenaCanvas();
-    renderSignaturePicker();
+    renderTitleLaunchPanel();
     showScreen("title");
   });
 
-  if (elements.signatureCards) {
-    elements.signatureCards.addEventListener("pointerdown", (event) => {
+  if (elements.titleLaunchPanel) {
+    elements.titleLaunchPanel.addEventListener("pointerdown", (event) => {
       if (CONSOLIDATED_12_WAVE_ROUTE) {
         return;
       }
@@ -24672,7 +24672,7 @@
     input.keys.delete(event.code);
   });
 
-  renderSignaturePicker();
+  renderTitleLaunchPanel();
   syncArenaCanvas();
   showScreen("title");
   requestAnimationFrame(frame);

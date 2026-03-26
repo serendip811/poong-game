@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: make the shipped contract honest around one rerunnable `Wave 1-6` ladder by cutting the remaining `12-wave / Afterburn` framing, keeping the forge on one headline leap plus one survival answer, and turning the `Wave 6` chassis break into a brief victory lap instead of another setup stop.
+- Immediate priority: cut fake choice and admin from the shipped `Wave 1-6` route by removing pre-run signature framing, collapsing live forge stops to one headline leap plus one survival answer, and turning the `Wave 6` chassis break into a brief victory lap instead of another setup stop.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 04:15:00 KST
+  Findings:
+  - The project is still defining the live game as a `12-wave / three-era / signature` package in [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8), [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L24), [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L33), and [docs/games/cinder-circuit-source-analysis.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-analysis.md#L46), so the team is still balancing toward a larger product instead of one rerunnable six-wave route.
+  - The title is still selling a prebuilt run instead of a hungry weak start. [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L21) through [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L24) keep the roadmap copy and signature picker visible, but [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8036) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8065) already null out signature perks for the consolidated route. That is fake choice and extra reading, not anticipation.
+  - The live six-wave route is still built on top of a much larger hidden ruleset. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L46) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L95), [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1136) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1144), and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L5274) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L5324) still preserve late mutation, ascension, debt, predator, afterburn, doctrine, and support-bay scaffolding in the base runtime. That keeps the current route feeling like a trimmed branch, not a finished action loop.
+  - The forge still behaves like route administration when it should create appetite. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L11983) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12032) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12749) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12815) still preserve support, defense, greed, wildcard, and preview rider lanes around the short route, while [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22297) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22455) layer proof prompts, mode labels, preview rows, side notes, and impact strips onto the stop. Against `Nova Drift`, `Brotato`, or `Hades`, this is still too much explanation around too little transformation.
+  Top Priority: Remove the live title signature picker from the shipped `Wave 1-6` route and recut each forge stop there to one obvious weapon/chassis leap plus one plain survival fallback, with no support/greed/wildcard rider trio until the short route is actually worth rerunning.
+  Why Now: Until the opening and first forge read as honest, high-desire moments, more systems only make the game feel more prototype-heavy.
+  Do Not Repeat: Do not answer this with another copy trim or hidden wrapper while fake pre-run choice and multi-lane forge administration still survive underneath.
+  Release Gate: Rewards
 
 - 2026-03-27 03:30:50 KST
   Findings:
@@ -3232,6 +3243,14 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 11:32:00 KST
+  Changed: removed one bounded piece of fake opener contract in [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html), [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), and [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) so the shipped title no longer mounts a `signature` surface at all. The live route now renders through `title-launch-panel` and `renderTitleLaunchPanel()`, which cut the old four-beat briefing down to one silhouette, one dominant `Bare Hull -> Weapon Break -> Chassis Lock` headline, and one short `Wave 3 / 5 / 6` proof strip instead of a signature-named launch wrapper that still looked like class selection or route admin.
+  Why: the newest critique's `Top Priority` said to remove the live title signature picker from the shipped `Wave 1-6` route. The highest-value concrete interpretation was to delete the remaining signature framing at the mount/render level, because the run-start state had already been neutralized earlier; what was still making the opener dishonest was the title surface itself continuing to present the route through `signature-cards` and a mini roadmap.
+  Follow-up risk: this makes the opener cleaner and more honest, but it also strips another layer of title-side explanation. If critique or playtesting starts saying the title is now too bare, the next bounded pass should strengthen the `Wave 3` or `Wave 6` reward confirmation or add a sharper launch-transition burst, not restore signature naming or a longer briefing strip.
+  UI reference direction: the appetite-first opener hierarchy from `Hades` and `Nova Drift`, where the title sells one immediate fantasy and a few proof beats instead of presenting a class picker or route document.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Rewards
 
 - 2026-03-27 11:18:00 KST
   Changed: collapsed one bounded piece of the shipped forge contract in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so every live `Wave 1-6` reward stop now fails closed to exactly two cards: one `주력 변이` headline and one `방호·보조` survival/body rider. `buildForgeChoices(...)` no longer materializes or fallback-fills a `판돈·유틸` lane on the six-wave route, the `Wave 5` early-mutation `buildFieldGrantChoices(...)` stop now uses that same two-card grammar, and the shipped-route forge/combat-feed copy now says `big leap + survive it` instead of still advertising a third greed slot. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) was updated to lock the two-card contract across recurring `Wave 2-6` forge generation and the `Wave 5` early-mutation stop.

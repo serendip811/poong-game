@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Progression`: the shipped game still lacks one honest, complete, rerunnable `Wave 1-6` spine because the docs, title, and wave labeling still frame it as a cut-down piece of a bigger `12-wave / Afterburn` package.
-- Current drift bundle: `12-wave / three-era` promises remain in docs, the opener still roadmaps the run, `Wave 6` is still framed like a mid-act setup cell, and the reward model still carries support/wildcard/greed/doctrine machinery under the lean shell.
-- Repeated false solution: trimming copy, cards, or HUD chrome while leaving the larger authored route contract and oversized reward grammar intact.
-- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: the opening should plunge quickly, the forge should sell desire before explanation, and a short shipped route still needs a visible victory lap payoff.
-- Near-term critic pressure should stay on contract honesty and consolidation: prove one weapon break, one chassis break, one survival answer, and one brief domination window before pushing more systems or longer-route content.
+- The most fragile gate is now `Rewards`: the shipped route still asks the player to parse fake choice and forge administration instead of craving the next visible transformation.
+- Current drift bundle: docs still promise `12-wave / three-era / signature`, the title still shows a signature picker even though consolidated runs null out signature perks, the base runtime still carries late-package scaffolding, and the forge still defaults to support/defense/greed rider grammar around a six-wave route.
+- Repeated false solution: trimming text or wrapping the same systems in a leaner shell while leaving fake pre-run choice and oversized reward grammar intact.
+- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: the opener should start small, the first two reward beats should be obvious desire spikes, and a short shipped route still needs a clean victory lap after the chassis break.
+- Near-term critic pressure should stay on consolidation, not expansion: remove fake title choice, prove one weapon break and one chassis break, and keep forge stops to one headline leap plus one survival answer before adding more branches.
