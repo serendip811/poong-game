@@ -412,6 +412,27 @@ const recurringWave3CardMarkup = `
 `;
 assert.ok(!recurringWave3CardMarkup.includes("다음 시험"));
 assert.ok(!recurringWave3CardMarkup.includes("forge-card__proof"));
+const recurringWave3RiderChoice =
+  recurringWave3Choices.find((choice) => choice.contractRole === "rider") || recurringWave3Choices[1];
+const recurringWave3RiderTransform =
+  game.getBaseRouteForgeChoiceTransformation(recurringWave3RiderChoice);
+const recurringWave3RiderMarkup = game.createBaseRouteForgeCompactCardMarkup({
+  choice: recurringWave3RiderChoice,
+  index: 1,
+  kind:
+    recurringWave3RiderChoice.type === "utility"
+      ? recurringWave3RiderChoice.action || "utility"
+      : recurringWave3RiderChoice.type || "choice",
+  contractLabel: recurringWave3RiderChoice.contractLabel,
+  transformation: recurringWave3RiderTransform,
+  slotLabel: "고철 12",
+  disabled: false,
+});
+assert.ok(recurringWave3RiderMarkup.includes("forge-card--contract-side"));
+assert.ok(recurringWave3RiderMarkup.includes(recurringWave3RiderChoice.title));
+assert.ok(recurringWave3RiderMarkup.includes(recurringWave3RiderTransform.previewValue));
+assert.ok(!recurringWave3RiderMarkup.includes("forge-card__hero-copy"));
+assert.ok(!recurringWave3RiderMarkup.includes("forge-card__proof"));
 const wave5MutationBuild = game.createInitialBuild("relay_oath");
 wave5MutationBuild.pendingCores = [];
 const recurringWave5Choices = game.buildForgeChoices(wave5MutationBuild, Math.random, 40, {

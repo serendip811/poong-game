@@ -9621,6 +9621,34 @@
     return `<span class="forge-card__slot">${slotLabel}</span>`;
   }
 
+  function createBaseRouteForgeCompactCardMarkup({
+    choice,
+    index,
+    kind,
+    contractLabel,
+    transformation,
+    slotLabel,
+    disabled,
+  }) {
+    return `
+      <button
+        type="button"
+        class="forge-card forge-card--contract forge-card--contract-side forge-card--${choice.tag.toLowerCase()}"
+        data-kind="${kind}"
+        data-contract="${choice.contractRole || "side"}"
+        data-index="${index}"
+        data-tone="${transformation.tone}"
+        data-verb="${choice.verb}"
+        ${disabled ? "disabled" : ""}
+      >
+        <span class="forge-card__tag">${contractLabel}</span>
+        <h3>${choice.title}</h3>
+        ${createBaseRouteForgePreviewMarkup(transformation.previewLabel, transformation.previewValue)}
+        ${createBaseRouteForgeBillMarkup(slotLabel)}
+      </button>
+    `;
+  }
+
   function trimInspectNote(text, fallback) {
     const source = (text || fallback || "").replace(/\s+/g, " ").trim();
     if (!source) {
@@ -15460,6 +15488,7 @@
     getBaseRoutePostWaveTransition,
     createBaseRouteForgeContextMarkup,
     getBaseRouteForgeChoiceTransformation,
+    createBaseRouteForgeCompactCardMarkup,
     createBaseRouteForgePreviewMarkup,
     createBaseRouteForgeProofMarkup,
     createBaseRouteForgeBillMarkup,
@@ -22708,6 +22737,17 @@
                     ? "보류"
                     : "무료";
           if (useBaseRouteContract) {
+            if (choice.contractRole !== "headline") {
+              return createBaseRouteForgeCompactCardMarkup({
+                choice,
+                index,
+                kind,
+                contractLabel,
+                transformation,
+                slotLabel,
+                disabled: state.resources.scrap < choice.cost,
+              });
+            }
             return `
           <button
             type="button"

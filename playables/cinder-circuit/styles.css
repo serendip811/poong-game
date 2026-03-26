@@ -1908,9 +1908,10 @@ body[data-overdrive="true"] .backdrop__glow--right {
 }
 
 .forge-cards--contract {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1.18fr) minmax(0, 1.18fr) minmax(220px, 0.82fr);
   gap: 12px;
   margin-top: 12px;
+  align-items: stretch;
 }
 
 .forge-contract-strip {
@@ -1976,6 +1977,30 @@ body[data-overdrive="true"] .backdrop__glow--right {
   gap: 10px;
 }
 
+.forge-card--contract[data-contract="headline"] {
+  grid-column: span 2;
+  min-height: 100%;
+}
+
+.forge-card--contract-side {
+  gap: 8px;
+  padding: 14px 15px;
+}
+
+.forge-card--contract-side h3 {
+  margin-top: 0;
+  font-size: 0.98rem;
+  line-height: 1.22;
+}
+
+.forge-card--contract-side .forge-card__pivot {
+  margin-top: 0;
+}
+
+.forge-card--contract-side .forge-card__slot {
+  margin-top: auto;
+}
+
 .forge-card--snap {
   gap: 12px;
   padding: 16px;
@@ -2000,6 +2025,26 @@ body[data-overdrive="true"] .backdrop__glow--right {
 
 .forge-card--snap .forge-card__slot {
   margin-top: auto;
+}
+
+@media (max-width: 900px) {
+  .forge-cards--contract {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .forge-card--contract[data-contract="headline"] {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 640px) {
+  .forge-cards--contract {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .forge-card--contract[data-contract="headline"] {
+    grid-column: auto;
+  }
 }
 
 .forge-card:hover {

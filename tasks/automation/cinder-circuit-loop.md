@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop adding route grammar and side systems; prove one rerun-worthy `12-wave` spine by making `Wave 1-10` read fast, keeping the opening visually sparse, and letting one main-form ladder own the run before support/admin text returns.
+- Immediate priority: freeze expansion and make the `12-wave` spine earn anticipation again by removing build-defining in-combat payouts, keeping the opening visually sparse, and letting between-wave main-form jumps carry the run before support/admin layers return.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 11:30:38 KST
+  Findings:
+  - `playables/cinder-circuit/game.js` still lets `combat_cache`, `late_ascension_cache`, and `illegal_overclock_cache` grant major build state in the arena. That kills one of the genre's strongest repeat-run hooks: surviving the wave specifically to reach the next transformation screen hungry.
+  - `playables/cinder-circuit/game.js` still treats `Wave 5-12` as a managed sequence of named payoff/proof/pursuit/hold asks. Even with larger arenas, the run still feels administered by encounter labels instead of driven by enemy pressure, spacing, and player-created route decisions.
+  - `playables/cinder-circuit/index.html` and the forge/HUD render paths in `playables/cinder-circuit/game.js` still keep roadmap, objective, live readout, upgrade list, proof labels, and forge context active together. Compared with `Nova Drift`, `Brotato`, and `Hades`, the screen hierarchy still explains the run too often instead of showing one threat and one desire.
+  - `playables/cinder-circuit/game.js` still renders a broad support spectacle set `shields / missiles / drones / deployables` while the run structure is not yet strong enough to make those layers feel earned. The machine risks looking solved before the core weapon/body ladder has delivered a truly repeatable escalation arc.
+  Top Priority: Remove major in-combat build grants from the shipped spine and make wave clears lead into faster, cleaner forge choices where the next visible weapon/body leap is the only payoff that matters.
+  Why Now: Until the player must survive to cash out at the forge, the run cannot build real anticipation or a satisfying long-form escalation curve.
+  Do Not Repeat: Do not answer this by adding another cache type, named band, or preview widget.
+  Release Gate: Rewards
 
 - 2026-03-26 22:20:00 KST
   Findings:
@@ -2874,6 +2885,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-26 23:35:00 KST
+  Changed: tightened one bounded piece of the shipped forge reward hierarchy in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css), and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the consolidated `Wave 1-12` forge now sells one dominant payoff instead of three near-equal cards. `주력 변이` now owns a wide headline slot, while `방호·보조` and `판돈·유틸` collapse to smaller side cards with only `label + title + one pivot row + cost`. Smoke coverage now locks that the side-card helper omits extra hero-copy/proof rows instead of regrowing explanatory text.
+  Why: the newest critique's `Top Priority` asked for faster, cleaner forge choices where the next visible weapon/body leap is the only payoff that matters. The highest-value concrete interpretation was to change the reward hierarchy itself rather than add more wording trims, because live combat payouts were already fail-closed but the forge still presented all three lanes with similar visual weight and too much card-level explanation. This pass deliberately follows the appetite-first reward emphasis from `Hades` boon picks and `Nova Drift` upgrade choices: one big desire first, supporting options second.
+  Follow-up risk: the card hierarchy is cleaner, but the recurring contract still always surfaces three lanes. If later feedback says the side choices still pull too much attention in high-stakes waves, the next bounded pass should consider reducing side-card copy even further or softening their contrast, not reintroducing more proof/admin rows.
+  Release Gate: Rewards
 
 - 2026-03-26 23:05:00 KST
   Changed: compressed one bounded piece of the shipped admin surface in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so `Tab` inspect now behaves more like a glance board than a document. The consolidated board no longer renders the extra `런 보드 / TAB` header or per-lane note chips; it now shows one hero card `현재 형태 + 다음 전장 + 보유 고철`, one tiny hero hint pointing at the next forge hunger, and three short value-only lanes `주력 변이 / 방호·보조 / 판돈·유틸`. Smoke coverage now locks that the inspect board keeps exactly one chip instead of regrowing lane-by-lane explanation.
