@@ -62,6 +62,18 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-26 12:00:38 KST
+  Findings:
+  - `docs/games/cinder-circuit-design.md` still defines the product around a `12웨이브 / 세 시대 계약 / Headline Form + Survival Rider + Proof Window` package. That framing keeps steering the game toward finishing a labeled prototype route instead of proving a loop skeleton with enough slack and hunger to ever justify `20-30 waves`.
+  - `playables/cinder-circuit/game.js` still runs `Wave 5-12` through authored cells and named bands `payoff / breach / sweep / proof / pursuit / bastion`, with bespoke labels like `Afterglow`, `Breakline`, `Forgecross`, `Crownhold`, and `Starforge`. Even with larger arenas, the player is still touring encounter copy more than mastering a reusable combat rhythm.
+  - `playables/cinder-circuit/game.js` still grants major run-shaping power inside combat through `combat_cache`, `late_ascension_cache`, and `illegal_overclock_cache`. That short-circuits the most important anticipation beat because survival no longer cleanly cashes out into the next forge jump.
+  - `playables/cinder-circuit/game.js` still ships a broad late support catalog `orbitals / shields / sentries / missiles / drones` plus primers and wildcard links before the core weapon-body ladder has carried enough of the run alone. The machine still looks too solved too early.
+  - `playables/cinder-circuit/index.html` and the HUD/forge rendering in `playables/cinder-circuit/game.js` still keep wave label, meters, roadmap, objective, live readout, upgrade log, inspect board, and forge context circulating together. Against `Nova Drift`, `Brotato`, and `Hades`, the screen still spends too much time briefing instead of spotlighting one danger and one desired power spike.
+  Top Priority: Collapse the shipped route to one main weapon/body escalation spine where wave clears always pay out at the forge, late support stays mostly dark until after that spine peaks, and `Wave 5-10` is tuned as a reusable pressure grammar instead of a named tour.
+  Why Now: The run is blocked by structural appetite failure, not by lack of more content or more labels.
+  Do Not Repeat: Do not spend another loop on wording trims or another side-lane wrapper while live caches, named route grammar, and early-complete support spectacle still coexist.
+  Release Gate: Progression
+
 - 2026-03-26 11:30:38 KST
   Findings:
   - `playables/cinder-circuit/game.js` still lets `combat_cache`, `late_ascension_cache`, and `illegal_overclock_cache` grant major build state in the arena. That kills one of the genre's strongest repeat-run hooks: surviving the wave specifically to reach the next transformation screen hungry.
@@ -2885,6 +2897,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-26 23:58:00 KST
+  Changed: normalized one bounded piece of the shipped mid/late route grammar in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 9` now behaves like a real late-form cashout lap instead of another named gimmick stop. The default spine and shared late pool now promote `Wave 9 · Payoff Run+` with lighter enemy pressure, no extra hazard structure, and `Wave 10 · Crown Proof+` as the single follow-through breach. I also changed the run track to render player-facing wave headlines from the resolved cell/band label instead of leaking internal ids like `AFTERGLOW`, `LOCKGRID`, or `STARFORGE`, and updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new `Wave 9` contract and the track-facing labels.
+  Why: the newest critique's `Top Priority` was to make `Wave 5-10` read as reusable pressure grammar rather than a named tour, with forge stops paying into one visible transformation spine. The highest-value concrete interpretation was to fix the first post-`Wave 8` late-form test, because the run was still using a bespoke `Payoff Sweep+`/hazard handoff right after the biggest forge jump and the track still exposed internal scenario names that made the route feel authored instead of replayable.
+  Follow-up risk: `Wave 5`, `Wave 6`, `Wave 8`, and `Wave 10` still carry bespoke hazard labels such as `Afterglow Bastion`, `Breakline Crown`, `Forgecross Relay Crown`, and `Crownhold Relay` under the reusable cell wrapper. If the same critique repeats, the next bounded pass should collapse those remaining hazard names into shared payoff/proof terminology or more generic battlefield reads rather than adding more branch flavor.
+  Release Gate: Progression
 
 - 2026-03-26 23:35:00 KST
   Changed: tightened one bounded piece of the shipped forge reward hierarchy in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css), and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the consolidated `Wave 1-12` forge now sells one dominant payoff instead of three near-equal cards. `주력 변이` now owns a wide headline slot, while `방호·보조` and `판돈·유틸` collapse to smaller side cards with only `label + title + one pivot row + cost`. Smoke coverage now locks that the side-card helper omits extra hero-copy/proof rows instead of regrowing explanatory text.

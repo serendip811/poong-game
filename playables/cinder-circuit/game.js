@@ -91,13 +91,13 @@
   const BLACK_LEDGER_DEBT_SPAWN_INTERVAL_STEP = 0.05;
   const LATE_BREAK_ENCOUNTER_PROFILES = {
     mutation: {
-      label: "Wave 9 · Payoff Sweep+",
+      label: "Wave 9 · Payoff Run+",
       bandId: "breakpoint_overdrive",
       bandLabel: "Overdrive Payoff",
-      pressureFamily: "crossfire",
-      note: "Late Break 직후 첫 칸도 shared payoff sweep grammar 위에서 놀아야 한다. mutation lane은 전장을 더 크게 벌리고 upkeep 구조물을 걷어내, 방금 증설한 배럴과 broadside pod가 열린 lane 둘 이상을 얼마나 깊게 찢는지 먼저 즐기게 만든다.",
+      pressureFamily: "domination",
+      note: "Late Break 직후 첫 칸은 shared payoff run grammar로 다시 숨을 열어야 한다. mutation lane은 upkeep 구조물을 걷어내고 전장을 더 크게 벌려, 방금 증설한 배럴과 broadside pod가 열린 lane 둘을 얼마나 오래 소유하는지 먼저 즐기게 만든다.",
       directive:
-        "overdrive payoff sweep. 구조물 코어보다 열린 사선과 marked elite 절개가 우선이다. skimmer 훑기를 얇게 만든 뒤 lancer charge를 정면 화망으로 자르며 새 주포 실루엣을 바로 시험해야 한다.",
+        "overdrive payoff run. 구조물 코어 없이 열린 사선과 marked elite 절개가 우선이다. skimmer 훑기를 얇게 만든 뒤 lancer charge를 정면 화망으로 자르며 새 주포 실루엣을 바로 오래 굴려야 한다.",
       arena: {
         width: 1820,
         height: 1020,
@@ -117,24 +117,15 @@
         warden: 0.08,
       },
       mixWeight: 0.62,
-      hazard: {
-        label: "Overdrive Surge",
-        interval: 11.2,
-        count: 1,
-        radius: 68,
-        telegraph: 0.92,
-        duration: 3.7,
-        damage: 14,
-      },
     },
     aegis: {
-      label: "Wave 9 · Payoff Sweep+",
+      label: "Wave 9 · Payoff Run+",
       bandId: "halo_bastion",
       bandLabel: "Halo Payoff",
-      pressureFamily: "crossfire",
-      note: "Late Break 직후 첫 칸도 shared payoff sweep grammar를 유지해야 한다. aegis lane은 작은 bastion pocket 하나만 punctuation처럼 열어, plate를 믿고 열린 lane을 먼저 비운 뒤 진입-정착-이탈 타이밍을 증명하게 만든다.",
+      pressureFamily: "domination",
+      note: "Late Break 직후 첫 칸도 shared payoff run grammar를 유지해야 한다. aegis lane은 작은 bastion punctuation 대신 열린 lane을 먼저 남겨, plate를 믿고 진입-정착-이탈 타이밍을 구조물 없이 증명하게 만든다.",
       directive:
-        "halo payoff sweep. bastion pocket 하나만 짧게 punctuation처럼 열린다. plate를 믿고 전열 한 줄을 비운 뒤 체력과 dash를 회수하고, 적 점유가 두꺼워지기 전에 곧바로 외곽 refuge로 빠져야 한다.",
+        "halo payoff run. 구조물 없이 전열 한 줄을 먼저 비운 뒤 체력과 dash를 회수하고, 적 점유가 두꺼워지기 전에 곧바로 외곽 refuge로 빠져야 한다.",
       arena: {
         width: 1680,
         height: 980,
@@ -156,31 +147,15 @@
         brander: 0.1,
       },
       mixWeight: 0.56,
-      hazard: {
-        label: "Halo Bastion",
-        type: "territory",
-        interval: 9.4,
-        count: 1,
-        radius: 92,
-        telegraph: 0.84,
-        duration: 7.8,
-        damage: 14,
-        coreHp: 70,
-        coreRadius: 18,
-        turretInterval: 1.02,
-        turretDamage: 10,
-        turretSpeed: 236,
-        enemyPullRadius: 148,
-      },
     },
     ledger: {
-      label: "Wave 9 · Payoff Sweep+",
+      label: "Wave 9 · Payoff Run+",
       bandId: "ledger_vaultline",
       bandLabel: "Vaultline Payoff",
-      pressureFamily: "crossfire",
-      note: "Late Break 직후 첫 칸도 shared payoff sweep grammar를 벗어나면 안 된다. ledger lane은 contraband vaultline을 열린 lane 한복판에 얹어, 먼저 퇴로를 비운 뒤 어디까지 cash-out하고 언제 버릴지 greed 판단이 payoff 안에서 드러나게 만든다.",
+      pressureFamily: "domination",
+      note: "Late Break 직후 첫 칸도 shared payoff run grammar를 벗어나면 안 된다. ledger lane은 구조물 upkeep 대신 열린 lane 위의 cash-out 유혹만 남겨, 먼저 퇴로를 비운 뒤 어디까지 greed를 끌지 판단하게 만든다.",
       directive:
-        "vaultline payoff sweep. 중앙과 외곽에 열린 vault 중 하나만 길게 챙길 수 있다. 먼저 퇴로를 비우고 짧은 cash-out window를 고른 뒤, binder와 brander가 닫기 전에 빠져야 한다.",
+        "vaultline payoff run. 먼저 퇴로를 비우고 짧은 cash-out window를 고른 뒤, binder와 brander가 lane을 닫기 전에 빠져야 한다.",
       arena: {
         width: 1820,
         height: 1000,
@@ -202,22 +177,6 @@
         warden: 0.06,
       },
       mixWeight: 0.58,
-      hazard: {
-        label: "Ledger Vaults",
-        type: "salvage",
-        interval: 9.2,
-        count: 2,
-        radius: 84,
-        telegraph: 0.82,
-        duration: 7,
-        damage: 14,
-        coreHp: 86,
-        coreRadius: 19,
-        salvageScrap: 22,
-        salvageBurstCount: 6,
-        salvageBurstRadius: 64,
-        salvageDropLife: 8.6,
-      },
     },
   };
   const LATE_BREAK_FOLLOWTHROUGH_PROFILES = {
@@ -1081,16 +1040,16 @@
     buildRecurringCombatWave({
       id: "lockgrid",
       waveNumber: 9,
-      cellId: "sweep",
+      cellId: "payoff",
       stageText: "Late Breakpoint 직후 첫 칸도 새 장르로 갈아타지 않는",
       focusText: "막 완성한 late form이",
       labelSuffix: "+",
       duration: 90,
-      spawnBudget: 146,
-      activeCap: 28,
-      baseSpawnInterval: 0.446,
-      spawnIntervalMin: 0.12,
-      spawnAcceleration: 0.24,
+      spawnBudget: 142,
+      activeCap: 26,
+      baseSpawnInterval: 0.454,
+      spawnIntervalMin: 0.124,
+      spawnAcceleration: 0.22,
       eliteEvery: 5,
       mix: {
         scuttler: 0.08,
@@ -1103,15 +1062,6 @@
       },
       driveGainFactor: 1.38,
       arena: THIRD_ACT_PAYOFF_ARENA,
-      hazard: {
-        label: "Lockgrid Surge",
-        interval: 11.6,
-        count: 1,
-        radius: 60,
-        telegraph: 0.98,
-        duration: 3.4,
-        damage: 12,
-      },
     }),
     buildRecurringCombatWave({
       id: "crownhold_proof",
@@ -1252,19 +1202,19 @@
 
   const SHARED_LATE_ACT_ENCOUNTER_POOL = {
     8: buildRecurringCombatWave({
-      id: "lockgrid_gallery",
+      id: "late_payoff_run",
       waveNumber: 9,
-      cellId: "sweep",
+      cellId: "payoff",
       stageText: "Act 3 shared pool의 첫 칸도 doctrine breakpoint 직후 새 scripted beat를 만들지 않는",
       focusText: "막 굳은 body/gun form이",
       labelSuffix: "+",
-      bandId: "lockgrid_gallery",
-      bandLabel: "Payoff Sweep+",
+      bandId: "late_payoff_run",
+      bandLabel: "Payoff Run+",
       bandFocusId: "doctrine_capstone",
       driveGainFactor: 1.4,
       arena: THIRD_ACT_PAYOFF_ARENA,
-      activeCap: 28,
-      spawnBudget: 150,
+      activeCap: 26,
+      spawnBudget: 146,
       mix: {
         scuttler: 0.08,
         brute: 0.14,
@@ -1273,16 +1223,6 @@
         lancer: 0.22,
         mortar: 0.04,
         warden: 0.08,
-      },
-      hazard: {
-        label: "Lockgrid Gallery Surge",
-        type: null,
-        interval: 10.8,
-        count: 1,
-        radius: 70,
-        telegraph: 0.92,
-        duration: 3.8,
-        damage: 13,
       },
     }),
     9: buildRecurringCombatWave({
@@ -2412,6 +2352,16 @@
       ? clamp(Math.round(waveNumber || 1), 1, MAX_WAVES)
       : waveNumber;
     return getActLabelForWave(boundedWave);
+  }
+
+  function getWaveTrackHeadline(config, waveNumber) {
+    if (!config) {
+      return `Wave ${waveNumber}`;
+    }
+    const headline = config.bandLabel || config.label || `Wave ${waveNumber}`;
+    return String(headline)
+      .replace(/^Wave\s+\d+\s+·\s+/u, "")
+      .trim();
   }
 
   function isHazardCoreTarget(hazard) {
@@ -16607,12 +16557,15 @@
           ? "Run Complete"
           : `${currentAct.shortLabel} · Wave ${state.waveIndex + 1} / ${totalTrackWaves}`;
     elements.runTrackLabel.textContent = label;
-    const trackEntries = WAVE_CONFIG.map((wave, index) => ({
-      waveNumber: index + 1,
-      act: getPlayerFacingActLabelForWave(index + 1),
-      id: wave.id.toUpperCase(),
-      note: wave.directive || wave.note,
-    }));
+    const trackEntries = WAVE_CONFIG.map((wave, index) => {
+      const resolvedWave = resolveWaveConfig(index, state.build);
+      return {
+        waveNumber: index + 1,
+        act: getPlayerFacingActLabelForWave(index + 1),
+        id: getWaveTrackHeadline(resolvedWave, index + 1),
+        note: resolvedWave.directive || resolvedWave.note,
+      };
+    });
     for (let index = 0; index < totalTrackWaves - MAX_WAVES; index += 1) {
       const waveNumber = MAX_WAVES + index + 1;
       trackEntries.push({
