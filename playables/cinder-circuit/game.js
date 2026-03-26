@@ -227,6 +227,16 @@
       directive:
         "가장 넓은 flank부터 비우고 열린 lane 둘 중 하나를 오래 붙든다.",
     },
+    payoff_plus: {
+      title: "Payoff Run+",
+      ladderStepId: "claim_space",
+      ladderStepLabel: "Claim Space",
+      pressureFamily: "domination",
+      note: (stageText, focusText) =>
+        `${stageText} 새 upkeep를 덧씌우지 않고 같은 domination lap을 한 번 더 늘리는 shared payoff-plus cell이다. relay나 bastion chores는 비워 두고, ${focusText} 열린 lane 둘을 번갈아 오래 먹는지 더 길게 보여 준다.`,
+      directive:
+        "가장 넓은 lane을 먼저 열고 반대 flank까지 이어 붙이며 지배 시간을 늘린다.",
+    },
     breach: {
       title: "Crown Breach",
       ladderStepId: "hold_breach",
@@ -445,44 +455,27 @@
     buildRecurringCombatWave({
       id: "breakline",
       waveNumber: 6,
-      cellId: "breach",
-      stageText: "Wave 5 payoff 직후의 두 번째 칸은",
+      cellId: "payoff_plus",
+      stageText: "Wave 5 payoff 직후의 두 번째 칸도",
       focusText: "headline midform이",
       duration: 80,
-      spawnBudget: 108,
-      activeCap: 21,
-      baseSpawnInterval: 0.54,
-      spawnIntervalMin: 0.14,
-      spawnAcceleration: 0.28,
-      eliteEvery: 7,
+      spawnBudget: 102,
+      activeCap: 19,
+      baseSpawnInterval: 0.56,
+      spawnIntervalMin: 0.15,
+      spawnAcceleration: 0.24,
+      eliteEvery: 8,
       mix: {
-        scuttler: 0.14,
-        brute: 0.14,
-        shrike: 0.2,
-        skimmer: 0.18,
-        lancer: 0.24,
-        binder: 0.06,
-        warden: 0.04,
+        scuttler: 0.16,
+        brute: 0.16,
+        shrike: 0.28,
+        skimmer: 0.24,
+        lancer: 0.16,
       },
       driveGainFactor: 1.24,
       arena: {
-        width: 1400,
-        height: 780,
-      },
-      hazard: {
-        label: "Crown Breach Relay",
-        type: "relay",
-        interval: 10.2,
-        count: 1,
-        radius: 82,
-        telegraph: 0.86,
-        duration: 5.1,
-        damage: 11,
-        coreHp: 42,
-        coreRadius: 17,
-        relayRange: 432,
-        relayWidth: 26,
-        relayDamage: 12,
+        width: 1600,
+        height: 900,
       },
     }),
     buildRecurringCombatWave({
@@ -8999,7 +8992,7 @@
     const eraTwoProof = getEraProofWindow(
       5,
       "Act II Proof Window",
-      "Wave 5의 open-lane payoff와 Wave 6의 breach proof에서 headline midform이 space ownership를 실제 돌파 창으로 바꾸는지 확인한다."
+      "Wave 5-6의 이어진 open-lane payoff에서 headline midform이 공간 점유를 얼마나 길게 끌고 가는지 확인한다."
     );
     const eraThreeProof = getEraProofWindow(
       9,

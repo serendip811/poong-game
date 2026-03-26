@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate to push next is `Builds`: the default route still does not make the first gun/body leap the clearest visible payoff, while later support and endform branches still look more exciting.
-- Current drift bundle: the public contract still says `12-wave / signature preload`, while the default route still keeps `Wave 7-12` + `Afterburn`, wildcard timing, and support-system breadth alive behind a claimed `Wave 1-6` spine.
-- Repeated false solution: hiding scaffolding or trimming wording. That does not fix a route whose best spectacle and strongest anticipation still live in later systems instead of the first rerunnable leap.
-- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: one-glance reward desire, sparse combat HUD, and visible growth chunks that start small.
-- Pressure-test consolidation over expansion for the next few passes: prove one clean `Wave 1-6` rerun where the first weapon/body jump dominates the screen, HUD reading stays sparse, and support spectacle remains locked until after that payoff is already fun.
+- The most fragile gate to push next is `Progression`: the game still presents a split `12-wave product` vs `Wave 1-6 shipped route`, so the team needs one honest rerunnable spine before talking about long-run scale.
+- Current drift bundle: `Wave 5` is supposed to be the first domination payoff, but `Wave 6` still pivots into relay/upkeep pressure too quickly while HUD and forge keep admin framing alive around it.
+- Repeated false solution: trimming copy or hiding future systems without changing the proof window itself. The route problem is structural, not cosmetic.
+- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: reward desire should win in one glance, combat HUD should stay sparse, and new forms should get breathing room before maintenance asks return.
+- For the next few passes, pressure consolidation over expansion: align docs/UI/rules around one replayable `Wave 1-6` contract, make the first weapon/body leap the clearest visual memory, and keep satellites/shields/missiles/drones as later hunger instead of early noise.

@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: lock the shipped route to one honest `Wave 1-6` spine where the first weapon/body leap becomes the clear visual payoff, with no signature preload, no visible late-route scaffolding, and no support/admin competition before that jump lands.
+- Immediate priority: stop shipping a split contract and consolidate the public game around one honest replayable `Wave 1-6` spine where `Wave 5` is the first dominant payoff, combat space breathes, and support/admin noise stays locked behind that jump.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 23:58:30 KST
+  Findings:
+  - The shipped promise is still split in two. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8) still sells a `12웨이브 / 세 시대 / Signature` product, while [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L22) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L4046) present a lean `Wave 1-6` route. That is not a harmless doc mismatch; it means the game still does not know what version of itself it is trying to make replayable first.
+  - The first real payoff still does not get enough uncontested airtime. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L427) makes `Wave 5` the midform payoff, but [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L449) turns `Wave 6` into a relay-defense pressure test with `lancer / binder / warden` overlap almost immediately. Compared with `Nova Drift` or `Brotato`, the run still moves from "new form" to "maintenance exam" too fast.
+  - Reward and HUD hierarchy still spend too many words on status management. [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L101) still keeps an objective card in combat, and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22300) plus [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22421) still build `Tab` summaries, proof prompts, preview rows, and forge context framing around choices. Against strong arena-roguelite UI references, the game is still explaining the run instead of making the next upgrade irresistible in one glance.
+  - Visible growth is still allocated too generously to future systems. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L24280) previews support frames before they matter, while [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L24397) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L24515) reserve the richest silhouette expansion for late ascension and `Afterburn`. The early run still starts too visually complete for a game that needs players to crave later barrels, orbitals, shields, and helpers.
+  Top Priority: Reframe the shipped game as one replayable `Wave 1-6` product and rebuild `Wave 5-6` around a single longer open-lane domination test where the first weapon/body leap gets room to carry, with relay/admin/support-preview clutter removed from that proof window.
+  Why Now: Until the first rerun produces one clean memorable takeover, longer progression and extra systems only multiply prototype fatigue.
+  Do Not Repeat: Do not answer this with another hidden late-route scaffold, another wording trim, or another support branch while the first payoff still gets interrupted by upkeep.
+  Release Gate: Progression
 
 - 2026-03-26 22:30:44 KST
   Findings:
@@ -3118,6 +3129,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 03:05:00 KST
+  Changed: recut one bounded piece of the shipped combat spine in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 6` no longer snaps straight from the first payoff into `Crown Breach Relay`. I added a dedicated `payoff_plus` recurring cell and moved `Wave 6` onto it, which removes the relay hazard entirely, enlarges the arena to `1600x900`, keeps pressure only slightly above `Wave 5` at `activeCap 19 / spawnBudget 102`, and trims the mix back to fast lane-crossers instead of binder/warden upkeep. I also updated the Act II proof fallback copy to describe `Wave 5-6` as one longer open-lane ownership window, and refreshed [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the shipped route now fails closed to `Payoff Run -> Payoff Run+ -> Payoff Sweep -> Crown Proof`.
+  Why: the newest critique's `Top Priority` was to rebuild `Wave 5-6` around one longer domination test where the first weapon/body leap gets room to carry before any relay/admin clutter returns. The highest-value concrete interpretation was to recut `Wave 6` itself, because `Wave 5` had already been opened up and the remaining interruption was the immediate relay proof wave that was stealing airtime from the first takeover.
+  Follow-up risk: this gives the first payoff more breathing room, but `Wave 7` still jumps sharply in density and `Wave 8` is still the first relay proof. If critique keeps saying the mid-act handoff still feels abrupt, the next bounded combat pass should smooth the `Wave 6 -> 7` jump rather than reintroducing relay/admin asks into the first proof window.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Progression
 
 - 2026-03-27 02:20:00 KST
   Changed: strengthened one bounded piece of the shipped build spike in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the first `Wave 3-5` gun leap now changes the ship silhouette instead of hiding inside projectile math. I added `drawPlayerWeaponFrame(...)` to the live player render path and gave each core its own visible frame grammar: `Ember` grows outward spoke barrels as evolutions stack, `Scatter` gains furnace pods and a wider forward mouth, `Lance` opens parallel siege rails, and `Ricochet` spreads prism fins. The frame size keys off `max(evolutionTier, doctrineStage)`, so the earliest default-route pivot at `Wave 3` and the next weapon growth by `Wave 5` now read as immediate on-hull transformations before any later support or late-form spectacle can compete.

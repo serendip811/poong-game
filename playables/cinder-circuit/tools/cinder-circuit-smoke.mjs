@@ -85,24 +85,24 @@ assert.ok(game.WAVE_CONFIG[4].activeCap < game.WAVE_CONFIG[3].activeCap);
 assert.ok(game.WAVE_CONFIG[4].spawnBudget < game.WAVE_CONFIG[5].spawnBudget);
 assert.equal(game.WAVE_CONFIG[4].activeCap, 18);
 assert.equal(game.WAVE_CONFIG[4].spawnBudget, 96);
-assert.equal(game.WAVE_CONFIG[5].hazard.type, "relay");
-assert.ok(game.WAVE_CONFIG[5].activeCap > game.WAVE_CONFIG[4].activeCap);
-assert.ok(game.WAVE_CONFIG[5].arena.width < game.WAVE_CONFIG[4].arena.width);
-assert.equal(game.WAVE_CONFIG[5].activeCap, 21);
-assert.equal(game.WAVE_CONFIG[5].spawnBudget, 108);
-assert.equal(game.WAVE_CONFIG[5].hazard.duration, 5.1);
+assert.equal(game.WAVE_CONFIG[5].hazard, undefined);
+assert.ok(game.WAVE_CONFIG[5].activeCap <= game.WAVE_CONFIG[4].activeCap + 1);
+assert.ok(game.WAVE_CONFIG[5].arena.width > game.WAVE_CONFIG[4].arena.width);
+assert.equal(game.WAVE_CONFIG[5].activeCap, 19);
+assert.equal(game.WAVE_CONFIG[5].spawnBudget, 102);
 assert.equal(game.WAVE_CONFIG[4].label, "Wave 5 · Payoff Run");
-assert.equal(game.WAVE_CONFIG[5].label, "Wave 6 · Crown Breach");
+assert.equal(game.WAVE_CONFIG[5].label, "Wave 6 · Payoff Run+");
 assert.equal(game.WAVE_CONFIG[6].label, "Wave 7 · Payoff Sweep");
 assert.equal(game.WAVE_CONFIG[7].label, "Wave 8 · Crown Proof");
 assert.equal(game.WAVE_CONFIG[8].label, "Wave 9 · Payoff Run+");
 assert.equal(game.WAVE_CONFIG[9].label, "Wave 10 · Crown Proof+");
 assert.equal(game.WAVE_CONFIG[4].directive, "가장 넓은 flank부터 비우고 열린 lane 둘 중 하나를 오래 붙든다.");
-assert.equal(game.WAVE_CONFIG[5].directive, "가장 먼 relay를 먼저 끊고 뚫린 corridor 하나를 길게 지킨다.");
+assert.equal(game.WAVE_CONFIG[5].directive, "가장 넓은 lane을 먼저 열고 반대 flank까지 이어 붙이며 지배 시간을 늘린다.");
 assert.equal(game.WAVE_CONFIG[6].directive, "한 flank를 먼저 비운 뒤 반대 lane으로 짧게 갈아타며 sweep 폭을 유지한다.");
 assert.equal(game.WAVE_CONFIG[7].directive, "가장 얇은 입구를 짧게 찢고 열린 crownline을 오래 붙든다.");
 assert.equal(game.WAVE_CONFIG[5].mix.mortar || 0, 0);
-assert.ok(game.WAVE_CONFIG[5].mix.lancer > game.WAVE_CONFIG[5].mix.brute);
+assert.ok((game.WAVE_CONFIG[5].mix.binder || 0) === 0);
+assert.ok(game.WAVE_CONFIG[5].mix.shrike > game.WAVE_CONFIG[5].mix.lancer);
 assert.equal(game.WAVE_CONFIG[8].activeCap, 26);
 assert.equal(game.WAVE_CONFIG[9].activeCap, 30);
 assert.equal(game.WAVE_CONFIG[10].activeCap, 28);
@@ -808,16 +808,17 @@ const breaklineFollowthrough = game.resolveWaveConfig(5, act2WindowBuild);
 const crownfireSpike = game.resolveWaveConfig(6, act2WindowBuild);
 const forgecrossSpike = game.resolveWaveConfig(7, act2WindowBuild);
 assert.equal(afterglowWindow.hazard, undefined);
-assert.equal(breaklineFollowthrough.hazard.type, "relay");
-assert.equal(breaklineFollowthrough.hazard.label, "Crown Breach Relay");
+assert.equal(breaklineFollowthrough.hazard, undefined);
+assert.equal(breaklineFollowthrough.pressureFamily, "domination");
+assert.equal(breaklineFollowthrough.label, "Wave 6 · Payoff Run+");
 assert.equal(crownfireSpike.pressureFamily, "crossfire");
 assert.equal(crownfireSpike.hazard, undefined);
 assert.equal(forgecrossSpike.hazard.type, "relay");
 assert.equal(forgecrossSpike.hazard.label, "Crown Proof Relay");
-assert.ok(afterglowWindow.activeCap < breaklineFollowthrough.activeCap);
+assert.ok(afterglowWindow.activeCap <= breaklineFollowthrough.activeCap);
 assert.ok(breaklineFollowthrough.activeCap < crownfireSpike.activeCap);
 assert.ok(crownfireSpike.activeCap < forgecrossSpike.activeCap);
-assert.ok(afterglowWindow.arena.width > breaklineFollowthrough.arena.width);
+assert.ok(afterglowWindow.arena.width < breaklineFollowthrough.arena.width);
 assert.ok(crownfireSpike.arena.width >= forgecrossSpike.arena.width);
 assert.ok(crownfireSpike.mix.skimmer > crownfireSpike.mix.brute);
 assert.ok(forgecrossSpike.mix.warden > 0);
@@ -3173,7 +3174,7 @@ const lowBankChoices = game.buildForgeChoices(build, rng, 0);
 assert.ok(lowBankChoices.some((choice) => choice.contractRole === "gamble"));
 assert.ok(lowBankChoices.some((choice) => choice.cost === 0));
 
-const hazardConfig = game.WAVE_CONFIG[5].hazard;
+const hazardConfig = game.WAVE_CONFIG[7].hazard;
 const eliteHazard = game.chooseHazardSpawn(
   hazardConfig,
   {
@@ -3364,14 +3365,16 @@ const waveSummary = game.WAVE_CONFIG.map((wave) => ({
 const actTwoLadder = game.WAVE_CONFIG.slice(4, 8);
 assert.equal(
   actTwoLadder.map((wave) => wave.pressureFamily).join("|"),
-  "domination|breach|crossfire|breach"
+  "domination|domination|crossfire|breach"
 );
 assert.equal(
   actTwoLadder.map((wave) => (wave.hazard ? wave.hazard.type : "none")).join("|"),
-  "none|relay|none|relay"
+  "none|none|none|relay"
 );
-assert.ok(actTwoLadder[2].arena.width >= actTwoLadder[1].arena.width);
-assert.ok(actTwoLadder[2].arena.height >= actTwoLadder[1].arena.height);
+assert.ok(actTwoLadder[1].arena.width > actTwoLadder[0].arena.width);
+assert.ok(actTwoLadder[1].arena.height > actTwoLadder[0].arena.height);
+assert.ok(actTwoLadder[2].arena.width < actTwoLadder[1].arena.width);
+assert.ok(actTwoLadder[2].arena.height < actTwoLadder[1].arena.height);
 assert.ok(actTwoLadder[2].activeCap < actTwoLadder[3].activeCap);
 assert.ok(actTwoLadder[2].note.includes("shared sweep cell"));
 assert.ok(actTwoLadder[3].note.includes("shared proof cell"));
