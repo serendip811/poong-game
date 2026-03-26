@@ -62,6 +62,17 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-26 13:00:47 KST
+  Findings:
+  - `playables/cinder-circuit/game.js` still pays out major build state during combat through `combat_cache`, `late_ascension_cache`, `afterburn_*_cache`, and `illegal_overclock_cache`. That keeps breaking the most rerunnable beat in the genre: survive pressure, reach forge hungry, then cash out into a visible leap.
+  - `playables/cinder-circuit/index.html` and the HUD/forge rendering in `playables/cinder-circuit/game.js` still keep roadmap, objective, live readout, upgrade log, `Next Proof`, `Route Payoff`, and the `Tab` inspect board alive around the action. Compared with `Nova Drift`, `Brotato`, and `Hades`, the run is still over-briefed and under-sold.
+  - `docs/games/cinder-circuit-design.md` still frames the shipped game as a labeled `12-wave / three-era / Headline Form + Survival Rider + Proof Window` package. That keeps the team polishing a narrated route instead of proving one reward spine strong enough to support a much longer escalation curve later.
+  - The build silhouette still matures too early and too broadly: halos, missiles, drones, wildcard branches, and support bay growth remain part of the visible promise before the main gun/body line has earned a true `small -> dangerous -> dominant` takeover.
+  Top Priority: Remove build-defining in-combat cache payouts from the shipped route and recut forge presentation so each stop offers one instantly legible transformation promise plus, at most, one restrained rider follow-up.
+  Why Now: Until the reward stop becomes the run's cleanest and hungriest moment, repeated runs will feel administered instead of addictive.
+  Do Not Repeat: Do not answer this with another simplified overlay, another cache exception, or more terminology cleanup.
+  Release Gate: Rewards
+
 - 2026-03-26 12:30:53 KST
   Findings:
   - `playables/cinder-circuit/index.html` and the overlay render paths in `playables/cinder-circuit/game.js` still keep roadmap, objective, live readout, upgrade log, forge context, and `Tab` inspect machinery alive around the core arena loop. Against `Nova Drift`, `Brotato`, and `Hades`, this is still too much run administration for a game that needs the player to feel danger and desire instantly.
@@ -2908,6 +2919,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-26 13:12:20 KST
+  Changed: quarantined one bounded piece of legacy reward plumbing in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the shipped `Wave 5` stop no longer masquerades as a cache-era `field_grant` draft behind the scenes. The consolidated route now resolves that stop through a dedicated `early_mutation` forge mode, `enterFieldGrant()` rewrites the shipped path onto that mode instead of the legacy cache type, instant-draft handling and live readout copy both recognize it as `주력 변이`, and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks `getForgeDraftType({ nextWave: 5 }) === "early_mutation"` so the base route cannot quietly drift back onto `field_grant`.
+  Why: the newest critique's `Top Priority` was to make the shipped route feel like a forge-only reward spine, not a browser prototype with lingering live-cache exceptions. The highest-value concrete interpretation was to close the follow-up risk from the earlier cache-removal pass itself, because the visible payouts were already dark but the default route still depended on a legacy `field_grant` mode name that could easily re-leak cache/admin framing into future reward or HUD refactors.
+  Follow-up risk: the non-consolidated route still uses `field_grant` for older/post-capstone cache flows, and `enterFieldGrant()` still serves both worlds. If this critique repeats, the next bounded pass should split or rename that legacy helper entirely instead of letting the shared entry point remain ambiguous.
+  Release Gate: Rewards
 
 - 2026-03-26 23:59:30 KST
   Changed: tightened one bounded piece of the shipped forge reward surface in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the wide `주력 변이` card now sells a visible transformation with almost no admin text. The consolidated headline card is now rendered through a dedicated helper that keeps only `lane tag + title + one preview row + 다음 시험 + cost`, removes the paragraph promise copy, and locks that slimmer contract in smoke coverage.

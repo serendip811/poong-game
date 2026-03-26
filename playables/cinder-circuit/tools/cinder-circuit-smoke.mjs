@@ -37,6 +37,14 @@ assert.equal(game.getPlayerFacingActLabelForWave(13).shortLabel, "Act 3");
 assert.equal(game.getPlayerFacingActLabelForWave(19).shortLabel, "Act 3");
 assert.equal(game.POST_CAPSTONE_WAVE_COUNT, 7);
 assert.equal(game.shouldAllowCombatRewardDrops(), false);
+assert.equal(
+  game.getForgeDraftType({
+    nextWave: 5,
+    finalForge: false,
+    build: game.createInitialBuild("rail_zeal"),
+  }),
+  "early_mutation"
+);
 assert.equal(game.shouldUseFieldGrant({ nextWave: 9, finalForge: false }), false);
 assert.equal(game.shouldUseFieldGrant({ nextWave: 5, finalForge: false }), false);
 assert.equal(game.getCombatCacheChoicesForWave(game.createInitialBuild("rail_zeal"), 9).length, 0);

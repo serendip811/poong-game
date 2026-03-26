@@ -7180,7 +7180,7 @@
       return "catalyst_draft";
     }
     if (shouldUseConsolidatedEarlyMutationForge(options)) {
-      return "field_grant";
+      return "early_mutation";
     }
     if (shouldForceForgePackage(options)) {
       return "package";
@@ -14114,7 +14114,7 @@
     state.pendingFinalForge = false;
     state.forgeStep = 1;
     state.forgeMaxSteps = 1;
-    state.forgeDraftType = "field_grant";
+    state.forgeDraftType = earlyMutationForge ? "early_mutation" : "field_grant";
     state.forgeChoices = buildFieldGrantChoices(state.build, Math.random, nextWave);
     pushCombatFeed(
       earlyMutationForge
@@ -14457,6 +14457,9 @@
     }
     if (state.forgeDraftType === "architecture_draft") {
       return "Architecture Draft";
+    }
+    if (state.forgeDraftType === "early_mutation") {
+      return "주력 변이";
     }
     if (state.forgeDraftType === "field_grant") {
       return shouldUseLateFieldCache(state.waveIndex + 2) ? "Arsenal Cache" : "Field Cache";
@@ -15438,6 +15441,7 @@
     unlockLateSupportBay,
     shouldSkipOwnershipAdminStop,
     shouldUseConsolidatedLateFormForge,
+    getForgeDraftType,
     shouldUseFieldGrant,
     shouldAllowCombatRewardDrops,
     isArsenalBreakpointWave,
@@ -18593,10 +18597,11 @@
       !state.build.bastionDoctrineId &&
       state.waveIndex + 2 === 6;
     const earlyMutationForge =
-      state.forgeDraftType === "field_grant" &&
+      state.forgeDraftType === "early_mutation" &&
       shouldUseConsolidatedEarlyMutationForge({ nextWave: state.waveIndex + 2, finalForge: false });
     const instantDraft =
       state.forgeDraftType === "architecture_draft" ||
+      state.forgeDraftType === "early_mutation" ||
       state.forgeDraftType === "field_grant" ||
       state.forgeDraftType === "bastion_draft" ||
       state.forgeDraftType === "catalyst_draft";
@@ -22521,6 +22526,8 @@
             : "주력 선택 중"
         : state.forgeDraftType === "architecture_draft"
           ? "Architecture Draft 선택 중"
+          : state.forgeDraftType === "early_mutation"
+            ? "주력 변이 선택 중"
           : state.forgeDraftType === "field_grant"
             ? "Field Cache 선택 중"
             : state.forgeDraftType === "bastion_draft"
