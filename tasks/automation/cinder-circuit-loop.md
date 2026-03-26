@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop expanding the authored `12-wave` route and prove one reusable `fight -> forge -> transform -> proof` escalation cell with a quieter HUD, forge-only build swings, and delayed support spectacle so the run can actually stretch toward `20-30 waves`.
+- Immediate priority: freeze new side systems and rebuild the shipped route around one primary `gun/body` takeover ladder, forge-only reward cadence, and a much quieter early presentation before asking the game to support `20-30 waves`.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 23:45:00 KST
+  Findings:
+  - `docs/games/cinder-circuit-design.md` still defines the product as a `12-wave / three-era / Headline Form + Survival Rider + Proof Window` package, so the project is still optimizing a framework pitch instead of a run loop with enough hunger and headroom to deserve repeat play.
+  - `playables/cinder-circuit/game.js` still treats `Wave 5-12` as a labeled authored tour with bespoke hazard wrappers and encounter identities `Afterglow / Breakline / Forgecross / Crownhold / Refuge / Final Stand`; that is more itinerary than mastery, and it will not scale cleanly into a longer escalation curve.
+  - The build catalog is still too broad too early: support systems, primers, missiles, drones, halos, sentries, and wildcard protocols at `4 / 7 / 10` keep showing the player future hardware before one main weapon/body line has delivered a memorable `small -> dangerous -> dominant` transformation.
+  - `playables/cinder-circuit/index.html` plus the HUD/forge render path in `playables/cinder-circuit/game.js` still keep current form, next beat, immediate task, live readout, and upgrade history onscreen together. Compared with the hierarchy discipline of `Nova Drift`, `Brotato`, and `Hades`, the game is still explaining itself harder than it is selling danger, appetite, and payoff.
+  Top Priority: Strip the shipped route back to one visible weapon/body evolution spine, remove early primers and wildcard pivots from that path, and make between-wave forge stops the only place where major power identity changes happen until the first full takeover lands.
+  Why Now: Until one clean build path becomes replay-worthy on its own, every extra branch and every extra screen just stretches prototype noise across more minutes.
+  Do Not Repeat: Do not answer this with another UI wording pass, another cache exception, or another support branch while the opening still looks mechanically busy before it earns spectacle.
+  Release Gate: Builds
 
 - 2026-03-26 23:15:00 KST
   Findings:
@@ -2930,6 +2941,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 00:10:00 KST
+  Changed: hardened one bounded piece of the shipped build spine in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so legacy primer and wildcard state can no longer leak back into the consolidated `Wave 1-12` route. I added `sanitizeConsolidatedBuildState(build)` and wired it into initial build creation, forge choice generation, forge application, wildcard summary access, and support-stat helpers, so stale `previewSupportSystemId` / `wildcardProtocolIds` are scrubbed before the shipped path can advertise or apply them. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now injects a deliberately polluted `Wave 5` build and locks that the route clears those fields, offers no `preview_support` or `wildcard_protocol` card, and still reports no support silhouette. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to strip early primers and wildcard pivots out of the shipped route until the main weapon/body takeover lands. The highest-value concrete interpretation was to close the remaining helper/state backdoors, because choice creation was already mostly guarded but old build data could still survive long enough to re-widen the run during future refactors.
+  Follow-up risk: this only scrubs primer/wildcard state, not legacy early-installed support hardware from pre-consolidation saves. If the same critique repeats, the next bounded builds pass should decide whether shipped-route build normalization also needs a wave-aware cleanup for illegal early support installs instead of just hiding their teasers.
+  Release Gate: Builds
 
 - 2026-03-26 23:59:59 KST
   Changed: replaced one bounded piece of the shipped late-route itinerary in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) by pushing `Wave 11-12` onto the same recurring combat-cell grammar as the rest of the consolidated route. I added shared `Refuge Run` and `Final Stand` cells, converted both the base route and shared late pool to build those waves through `buildRecurringCombatWave(...)`, and rewired late proof/snapshot summaries so the default player-facing read no longer surfaces `Starforge Pursuit` or `Cinder Bastion`. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks the new labels, band ids, and late-route proof strings.

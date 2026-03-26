@@ -647,6 +647,23 @@ rogueLatticeBuild.supportBayCap = 3;
 rogueLatticeBuild.supportSystems = [{ id: "aegis_halo", tier: 1 }];
 const rogueLatticeChoice = game.createWildcardProtocolChoice(rogueLatticeBuild, 10);
 assert.equal(rogueLatticeChoice, null);
+const pollutedShippingBuild = game.createInitialBuild("rail_zeal");
+pollutedShippingBuild.previewSupportSystemId = "volt_drones";
+pollutedShippingBuild.wildcardProtocolIds = ["rogue_lattice"];
+const pollutedWave5Choices = game.buildForgeChoices(pollutedShippingBuild, Math.random, 40, {
+  nextWave: 5,
+  finalForge: false,
+  build: pollutedShippingBuild,
+});
+assert.equal(pollutedShippingBuild.previewSupportSystemId ?? null, null);
+assert.equal(pollutedShippingBuild.wildcardProtocolIds.length, 0);
+assert.ok(
+  !pollutedWave5Choices.some(
+    (choice) =>
+      choice.action === "preview_support" || choice.action === "wildcard_protocol"
+  )
+);
+assert.equal(game.computeSupportSystemStats(pollutedShippingBuild), null);
 assert.ok(game.WAVE_CONFIG[7].spawnBudget > game.WAVE_CONFIG[4].spawnBudget);
 assert.ok(game.WAVE_CONFIG[7].mix.warden > 0);
 assert.equal(game.WAVE_CONFIG[7].mix.mortar || 0, 0);

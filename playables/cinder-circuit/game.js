@@ -6466,6 +6466,7 @@
   }
 
   function getSupportSystemDef(build) {
+    sanitizeConsolidatedBuildState(build);
     const installedSystems = getInstalledSupportSystems(build);
     if (installedSystems.length === 0) {
       if (!CONSOLIDATED_12_WAVE_ROUTE && build && build.previewSupportSystemId) {
@@ -6546,6 +6547,7 @@
   }
 
   function computeSupportSystemStats(build) {
+    sanitizeConsolidatedBuildState(build);
     const installedSystems = getInstalledSupportSystems(build);
     const doctrineCapstone = getDoctrineCapstoneDef(build);
     const previewSystemId =
@@ -8241,7 +8243,7 @@
   }
 
   function createInitialBuild(signatureId = DEFAULT_SIGNATURE_ID) {
-    return applySignatureToBuild(
+    return sanitizeConsolidatedBuildState(applySignatureToBuild(
       {
         signatureId: BASE_BUILD.signatureId,
         coreId: BASE_BUILD.coreId,
@@ -8311,7 +8313,7 @@
         hazardMitigation: BASE_BUILD.hazardMitigation,
       },
       signatureId
-    );
+    ));
   }
 
   function applySignatureToBuild(build, signatureId) {
@@ -8339,7 +8341,20 @@
     nextBuild.upgrades = [`시그니처: ${signature.label}`].concat(
       Array.isArray(nextBuild.upgrades) ? nextBuild.upgrades : []
     );
-    return nextBuild;
+    return sanitizeConsolidatedBuildState(nextBuild);
+  }
+
+  function sanitizeConsolidatedBuildState(build) {
+    if (!CONSOLIDATED_12_WAVE_ROUTE || !build) {
+      return build;
+    }
+    if (build.previewSupportSystemId) {
+      build.previewSupportSystemId = null;
+    }
+    if (Array.isArray(build.wildcardProtocolIds) && build.wildcardProtocolIds.length > 0) {
+      build.wildcardProtocolIds = [];
+    }
+    return build;
   }
 
   function getSignatureDef(signatureId) {
@@ -10133,6 +10148,7 @@
 
   function getClaimedWildcardProtocolIds(build) {
     if (CONSOLIDATED_12_WAVE_ROUTE) {
+      sanitizeConsolidatedBuildState(build);
       return [];
     }
     if (!build || !Array.isArray(build.wildcardProtocolIds)) {
@@ -12147,6 +12163,7 @@
   }
 
   function buildForgeChoices(build, rng, scrapBank, options = null) {
+    sanitizeConsolidatedBuildState(build);
     if (options && options.finalForge) {
       const finalChoices = buildFinalForgeChoices(build);
       if (finalChoices) {
@@ -14626,6 +14643,7 @@
   }
 
   function applyForgeChoice(run, choice) {
+    sanitizeConsolidatedBuildState(run && run.build);
     if (!run || !run.build || !choice) {
       return null;
     }
