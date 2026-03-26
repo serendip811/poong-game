@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop route expansion and harden `Wave 1-6` into one quiet-first-minute, forge-only reward spine with one earned weapon/body ladder; cut live cache mutations, inspect/admin overlays, support-preview clutter, and post-capstone spillover until repeated runs feel readable and hungry.
+- Immediate priority: freeze the shipped path into a readable `Wave 1-6` prove-out with a bare opener, forge-only transformation spikes, and open-lane combat; cut wildcard/cache/support-preview/Afterburn clutter until movement choices and build hunger survive repeat runs.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 23:10:00 KST
+  Findings:
+  - The combat space is numerically larger, but it still does not breathe like a rerunnable arena shooter. `playables/cinder-circuit/game.js` expands arenas from `1080x620` to much larger layouts, yet Waves `1-6` still climb from `activeCap 16 -> 28` while later authored proof/break cells jump back into dense scripted asks. The player is still mostly solving crowd volume and designer grammar, not making clean lane-control movement decisions.
+  - The opening growth curve is still too visually complete. `docs/games/cinder-circuit-design.md` keeps signatures as a start-core-plus-bench identity package, and `playables/cinder-circuit/game.js` still carries support primers, wave-4/7/10 wildcards, and wave-6 ascension injections. That means the run keeps hinting or granting helper-tech before the base gun/body has earned its first memorable transformation.
+  - The forge is still overselling explanation instead of desire. `playables/cinder-circuit/index.html` and the forge markup in `playables/cinder-circuit/game.js` still frame the reward stop with subtitle copy, proof labels, focus prompts, preview rows, side notes, and impact strips. Against strong reference patterns like `Nova Drift`, `Brotato`, or `Hades`, this is still too much reading around a choice that should be understandable from silhouette and one payoff line.
+  - The project is still carrying late-run breadth that invalidates honest pacing work. `docs/games/cinder-circuit-design.md` still targets a `12-wave / three-era` alpha while `playables/cinder-circuit/game.js` keeps `Afterburn I-VII`, live caches, and multiple autonomous support families online. That breadth makes it too easy to fake escalation with extra systems instead of proving that one run spine is fun enough to replay.
+  Top Priority: Retune the default route so `Wave 1-6` plays with fewer simultaneous enemies, no support primers or wildcard/cache injections, and one clearly earned gun/body transformation that creates visible lane-control space.
+  Why Now: If the player never gets a calm read on space and one hard-earned power spike, extending the run only stretches prototype noise across more waves.
+  Do Not Repeat: Do not answer this with bigger arenas, more side systems, or more forge copy while the opener still plays crowded and over-equipped.
+  Release Gate: Combat
 
 - 2026-03-26 22:05:00 KST
   Findings:
@@ -3029,6 +3040,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-26 23:40:00 KST
+  Changed: retuned one bounded piece of the shipped combat spine in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the consolidated `Wave 1-6` route no longer climbs on crowd volume before the first real body break can breathe. I lowered the opener caps to `14 / 16 / 19 / 22 / 20 / 21`, cut the same waves' spawn budgets down to `38 / 50 / 64 / 88 / 100 / 108`, and shortened the `Wave 5-6` bastion/relay hazard lockouts slightly so the earned `Wave 3` gun jump and `Wave 6` chassis jump create more visible lane-control space instead of being buried under simultaneous bodies. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks those calmer early-wave caps, budgets, and shorter mid-act hazard durations.
+  Why: the newest critique's `Top Priority` was to make the default route play with fewer simultaneous enemies and let one earned weapon/body transformation create readable space before more growth layers matter. The highest-value concrete interpretation was to retune the actual `Wave 1-6` pressure numbers, because support primers, wildcard injections, and combat caches were already fail-closed on the shipped route while the opener still behaved like a denser survival test than a clean lane-control ramp.
+  Follow-up risk: this makes the first payoff spikes easier to read, but it also lowers the failure pressure floor in the opening six waves. If repeat runs start feeling too safe once players internalize the new spacing, the next bounded combat pass should add a sharper reusable movement ask or enemy-role handoff inside the same caps, not climb back to crowd compression.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Combat
 
 - 2026-03-26 18:44:20 KST
   Changed: narrowed one bounded piece of the shipped build ladder in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the consolidated `12-wave` route no longer grows a hidden contraband sub-build when the player takes `Dominant Mutation`. I added a shipped-route fail-closed gate for `illegal overclock`, made `createIllegalOverclockChoices(...)` and `createIllegalOverclockMutationChoice(...)` return nothing on the default route, and stopped `applyForgeChoice(... risk_mutation ...)` from auto-bundling `Glass Broadside / Meltdown Cycler / Rupture Crown` into the main mutation pick. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks that shipped-route risk mutation copy no longer advertises contraband, that taking it only advances `riskMutationLevel`, and that overclock choices/molts stay dark in smoke.
