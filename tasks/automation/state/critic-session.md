@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Builds`: the live game still advertises more route depth and support breadth than a six-wave run can pay off, so build desire gets diluted before the first real domination window lands.
-- Current drift bundle: `12-wave / three-era` docs plus tests, dormant `Wave 7-12` scaffolding, preview support primers, and forge taxonomy that still thinks in subsystem/support/gamble catalogs instead of one weapon spike, one rider, one greed fork.
-- Repeated false solution: trimming copy or reshuffling card presentation while leaving the hidden late-route contract and latent support fantasies intact.
-- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: the opener should stay small, the first weapon break should create obvious appetite, and reward pauses should sell silhouette and payoff faster than they explain route logic.
-- Near-term critic pressure should stay on consolidation over expansion: make the six-wave route honest in docs, tests, and live choice structure before arguing for `20-30` wave capacity again.
+- The most fragile gate is now `Rewards`: the title and forge still explain the run model more than they sell immediate desire, so the six-wave route loses hunger at its most important pauses.
+- Current drift bundle: title contract briefing cards, signature/doctrine machinery still underpinning a supposed lean start, verbose forge context/promise/proof layering, and docs that still define the product as `12-wave / three-era`.
+- Repeated false solution: shaving text while preserving the same presentation frame and hidden future-route architecture underneath it.
+- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: the opener should plunge quickly, reward screens should be readable from silhouette plus one payoff line, and the first real domination window should feel visibly different from baseline combat.
+- Near-term critic pressure should stay on simplification plus payoff proof: make `Wave 1-6` feel honest, legible, and hungry before defending any support breadth or `20-30` wave ambition.

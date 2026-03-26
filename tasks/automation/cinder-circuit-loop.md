@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: turn the shipped `Wave 1-6` route into one honest rerun spine with a small opener, a hungry first weapon break, and a real `Wave 5-6` domination plateau, while docs and dormant late-route scaffolding stop advertising a larger game than the run can prove.
+- Immediate priority: make the shipped `Wave 1-6` prove-out feel immediate and hungry by removing false pre-run structure, collapsing reward reading to silhouette-plus-payoff, and giving `Wave 5-6` one unmistakable domination window before any late-route restoration.
 
 ## Release Gates
 
@@ -61,6 +61,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 02:12:00 KST
+  Findings:
+  - The opener still spends its first screen on explanation instead of appetite. [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L21) through [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L27) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L17280) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L17307) still render a three-card contract briefing on the title screen. Compared with `Hades`, `Brotato`, or `Nova Drift`, this is still a read-first welcome when the six-wave route needs a one-button plunge and a smaller opening silhouette.
+  - The lean-start promise is still not fully trusted by the codebase. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3440) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3548) keep full signature and doctrine catalogs alive, [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L5275) still stores `signatureId` in the base build, and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8032) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8044) still route every new build through signature application before nulling it for the consolidated path. That keeps the game architected around pre-run identity even while the UI claims everyone starts from the same ember.
+  - The forge is cleaner than before, but it still explains too much for the payoff it delivers. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L9327) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L9510) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22228) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22478) still build reward moments around eyebrow/title/detail/promise/proof/cost layers. Strong references let the silhouette and one payoff line do the work; this screen still reads like a controlled document.
+  - `Wave 5-6` still do not land as a distinct "I came online" memory. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L425) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L480) frame both waves as recurring payoff cells with only light cap changes and no dramatic ruleset turn, so the first main weapon/body break risks feeling like a softer continuation of the same route instead of a domination plateau worth chasing on reruns.
+  - The project target is still split between the shipped six-wave run and a documented twelve-wave ambition. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L35) and [docs/games/cinder-circuit-source-analysis.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-analysis.md#L30) through [docs/games/cinder-circuit-source-analysis.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-analysis.md#L54) still define success as a `12-wave / three-era` structure, while [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L4032) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L4047) ship a six-wave route. That mismatch keeps every UX and pacing decision half-committed.
+  Top Priority: Strip the opener and forge to one immediate run start and one snap-readable reward language of `name + visible payoff + cost`, then retune `Wave 5-6` so the first gun/body break gets a clear victory-lap window instead of another explained proof cell.
+  Why Now: The current run still teaches structure at the exact moments it should be creating hunger.
+  Do Not Repeat: Do not answer this with lighter copy while keeping the same title briefing frame, forge document structure, and templated mid-run payoff.
+  Release Gate: Rewards
 
 - 2026-03-27 01:44:00 KST
   Findings:
@@ -4767,6 +4779,13 @@ This file is shared by two recurring Codex CLI jobs.
   Freeze: Pause new systems and late-route expansion until the base `Wave 1-12` run reads cleanly enough that a player can describe the finale without using internal draft/cache/ascension vocabulary.
 
 ## Latest Improvement
+
+- 2026-03-27 02:14:32 KST
+  Changed: stripped the shipped title opener in [index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html), [styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css), and [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) down to one plunge-first launch panel. The old three-card contract briefing and extra opener note are gone; the title now shows one short kicker, one compact silhouette frame, one small `start / wave 3 / wave 6` runline, and the primary `회로 투입` CTA. I also removed the unused title spotlight path so returning to title no longer rebuilds a second explanation surface. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the latest critique's `Top Priority` explicitly said the opener was still teaching structure where it should be creating hunger. The highest-value bounded interpretation was to fix the first screen itself, not just lighten copy, by replacing the `three-card briefing` frame with a single launch module that keeps only `start now` and `next big break`.
+  Follow-up Risk: the opener is now faster, but the forge still carries more layered explanation than this new title screen. If the next critique still says reward moments read like documents, the next bounded pass should compress forge cards toward `name + visible payoff + cost` rather than reopening more title framing.
+  Reference Direction: followed the immediate-plunge title hierarchy from `Hades` and `Brotato`: one dominant action, one appetite hook, and only a thin forecast of the next transformation instead of a contract board.
+  Release Gate: Rewards
 
 - 2026-03-26 04:11:49 KST
   Changed: recut the consolidated-route late-break followthrough in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 10` no longer splinters into separate branch-only grammars like `Halo Refuge` drift or `Jackpot Caravan` chase. `Warplate Halo` and `Black Ledger Heist` now keep their distinct `Wave 9` payoff variants, but both routes convert into a shared `single crownproof` `breach` rung on `Wave 10` with a `relay` hazard, matching the existing `Cataclysm Arsenal` proof step. I also updated the late-break cadence/headline copy and [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so all three late-break profiles now lock `Wave 10 = breach/relay`.

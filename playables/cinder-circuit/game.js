@@ -15342,16 +15342,14 @@
 
   window.CinderCircuitCore = exported;
 
-    const elements = {
+  const elements = {
     titleScreen: document.getElementById("title-screen"),
     gameScreen: document.getElementById("game-screen"),
     resultScreen: document.getElementById("result-screen"),
     startRun: document.getElementById("start-run"),
-    cycleSignature: document.getElementById("cycle-signature"),
     restartRun: document.getElementById("restart-run"),
     backToTitle: document.getElementById("back-to-title"),
     signatureCards: document.getElementById("signature-cards"),
-    signatureSpotlight: document.getElementById("signature-spotlight"),
     arenaStage: document.getElementById("arena-stage"),
     waveLabel: document.getElementById("wave-label"),
     hpMeter: document.getElementById("hp-meter"),
@@ -17282,37 +17280,43 @@
     }
     if (CONSOLIDATED_12_WAVE_ROUTE) {
       const nextFocus = getBaseRouteTransformationFocus(1, { stage: "title" });
-      elements.signatureCards.innerHTML = [
-        {
-          className: "title-contract-card title-contract-card--focus",
-          tag: nextFocus.windowLabel,
-          title: nextFocus.title,
-          detail: nextFocus.detail,
-        },
-        {
-          className: "title-contract-card",
-          tag: "시작",
-          title: "빈 화선 버티기",
-          detail: "처음 몇 웨이브는 `Ember` 한 줄 화선만 남긴다. 시작 보너스와 보조 연출은 닫아 둔다.",
-        },
-        {
-          className: "title-contract-card",
-          tag: "그다음",
-          title: "첫 차체 잠금",
-          detail:
-            "무기 도약 뒤 다음 포지에서 처음으로 몸체 리듬이 갈라진다. support spectacle은 그 뒤로 미룬다.",
-        },
-      ]
-        .map(
-          (card) => `
-            <article class="signal-card ${card.className || "title-contract-card"}">
-              <span class="micro-chip micro-chip--quiet">${card.tag}</span>
-              <strong>${card.title}</strong>
-              <p>${card.detail}</p>
+      elements.signatureCards.innerHTML = `
+        <section class="title-launch-shell">
+          <div class="title-launch-shell__frame" aria-hidden="true">
+            <div class="title-launch-shell__silhouette">
+              <span class="title-launch-shell__nose"></span>
+              <span class="title-launch-shell__wing title-launch-shell__wing--left"></span>
+              <span class="title-launch-shell__wing title-launch-shell__wing--right"></span>
+              <span class="title-launch-shell__core"></span>
+              <span class="title-launch-shell__trail"></span>
+            </div>
+          </div>
+          <div class="title-launch-shell__copy">
+            <article class="title-launch-shell__focus">
+              <p class="panel__eyebrow">${nextFocus.windowLabel}</p>
+              <strong>${nextFocus.title}</strong>
+              <p>${nextFocus.detail}</p>
             </article>
-          `
-        )
-        .join("");
+            <div class="title-launch-shell__runline">
+              <article class="title-launch-shell__step">
+                <span>start</span>
+                <strong>Ember Hull</strong>
+                <p>한 줄 화선으로 바로 투입.</p>
+              </article>
+              <article class="title-launch-shell__step title-launch-shell__step--focus">
+                <span>wave 3</span>
+                <strong>주무장 도약</strong>
+                <p>첫 forge에서 총열과 점유를 크게 바꾼다.</p>
+              </article>
+              <article class="title-launch-shell__step">
+                <span>wave 6</span>
+                <strong>차체 잠금</strong>
+                <p>두 번째 forge에서 버티는 리듬을 잠근다.</p>
+              </article>
+            </div>
+          </div>
+        </section>
+      `;
       return;
     }
     elements.signatureCards.innerHTML = Object.values(SIGNATURE_DEFS)
@@ -17348,36 +17352,12 @@
       .join("");
   }
 
-  function renderSignatureSpotlight() {
-    if (!elements.signatureSpotlight) {
-      return;
-    }
-    const signature = getSignatureDef(selectedSignatureId);
-    const startCore = CORE_DEFS[signature.startCoreId];
-    elements.signatureSpotlight.innerHTML = `
-      <div class="signature-spotlight__header">
-        <div>
-          <p class="panel__eyebrow">시동 회로</p>
-          <h3>${signature.label}</h3>
-        </div>
-        <span class="summary-chip summary-chip--cool">${startCore.short} 시작</span>
-      </div>
-      <article class="signature-spotlight__card">
-        <p class="panel__eyebrow">시작 코어</p>
-        <strong>${startCore.label}</strong>
-        <p>${signature.description}</p>
-      </article>
-      <p class="signature-spotlight__summary">${signature.short}</p>
-    `;
-  }
-
   function selectSignature(signatureId) {
     if (!SIGNATURE_DEFS[signatureId]) {
       return;
     }
     selectedSignatureId = signatureId;
     renderSignaturePicker();
-    renderSignatureSpotlight();
   }
 
   function startRun() {
@@ -24570,20 +24550,10 @@
     startRun();
   });
 
-  if (elements.cycleSignature) {
-    elements.cycleSignature.addEventListener("pointerdown", () => {
-      const signatureIds = Object.keys(SIGNATURE_DEFS);
-      const currentIndex = signatureIds.indexOf(selectedSignatureId);
-      const nextSignatureId = signatureIds[(currentIndex + 1) % signatureIds.length];
-      selectSignature(nextSignatureId);
-    });
-  }
-
   elements.backToTitle.addEventListener("pointerdown", () => {
     state = createAppState();
     syncArenaCanvas();
     renderSignaturePicker();
-    renderSignatureSpotlight();
     showScreen("title");
   });
 
@@ -24599,7 +24569,6 @@
     state = createAppState();
     syncArenaCanvas();
     renderSignaturePicker();
-    renderSignatureSpotlight();
     showScreen("title");
   });
 
@@ -24692,7 +24661,6 @@
   });
 
   renderSignaturePicker();
-  renderSignatureSpotlight();
   syncArenaCanvas();
   showScreen("title");
   requestAnimationFrame(frame);
