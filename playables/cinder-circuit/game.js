@@ -8531,6 +8531,14 @@
   function getBaseRouteTransformationFocus(waveNumber = 1, options = {}) {
     const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
     const stage = options && options.stage ? options.stage : "combat";
+    if (stage === "title") {
+      return {
+        eyebrow: "6-wave loop",
+        title: "Bare Hull -> Weapon Break -> Chassis Lock",
+        detail: "빈 선체로 들어가 Wave 3 무장 도약, Wave 6 차체 잠금까지 찍고 바로 끝낸다.",
+        windowLabel: "Wave 6 clear",
+      };
+    }
     if (stage === "forge") {
       if (options.pendingFinalForge) {
         return {
@@ -8591,6 +8599,17 @@
           detail: "다음 포지까지 버티면 처음으로 화선과 화면 점유가 크게 갈라진다.",
           windowLabel: "다음 포지",
         };
+  }
+
+  function getShippedRoutePresentationBeats() {
+    return [
+      { waveNumber: 1, shortLabel: "START", title: "Ember Hull" },
+      { waveNumber: 2, shortLabel: "HOLD", title: "버티기" },
+      { waveNumber: 3, shortLabel: "BREAK", title: "무장 도약" },
+      { waveNumber: 4, shortLabel: "PRESS", title: "도약 시험" },
+      { waveNumber: 5, shortLabel: "LOCK", title: "차체 잠금" },
+      { waveNumber: 6, shortLabel: "CLEAR", title: "봉인" },
+    ];
   }
 
   function getNextLateFieldBreakpointWave(waveNumber, offset = 0) {
@@ -15324,6 +15343,7 @@
     createBaseRouteForgeContextMarkup,
     createMinimalCombatAskMarkup,
     getBaseRouteTransformationFocus,
+    getShippedRoutePresentationBeats,
     getBaseRouteForgeChoiceTransformation,
     createBaseRouteForgeCompactCardMarkup,
     createBaseRouteForgeHeadlineCardMarkup,
@@ -16417,42 +16437,15 @@
     if (!elements.waveTrack || !elements.runTrackLabel) {
       return;
     }
-    const currentWaveNumber = Math.max(1, state.waveIndex + 1);
-    const currentAct = getPlayerFacingActLabelForWave(currentWaveNumber);
-    const totalTrackWaves =
-      DEFAULT_ROUTE_WAVE_COUNT +
-      (CONSOLIDATED_12_WAVE_ROUTE
-        ? 0
-        : state.postCapstone && state.postCapstone.active
-          ? state.postCapstone.total
-          : state.phase === "result" && state.stats.wavesCleared > MAX_WAVES
-            ? POST_CAPSTONE_WAVE_COUNT
-            : 0);
+    const totalTrackWaves = DEFAULT_ROUTE_WAVE_COUNT;
     const label =
       state.phase === "forge"
-        ? `Forge Stop · ${currentAct.shortLabel} · Wave ${state.waveIndex + 1}`
+        ? `Forge Stop · Wave ${state.waveIndex + 1} Clear`
         : state.phase === "result"
-          ? "Run Complete"
-          : `${currentAct.shortLabel} · Wave ${state.waveIndex + 1} / ${totalTrackWaves}`;
+          ? "Wave 6 Clear"
+          : `Wave ${state.waveIndex + 1} / ${totalTrackWaves}`;
     elements.runTrackLabel.textContent = label;
-    const trackEntries = WAVE_CONFIG.slice(0, DEFAULT_ROUTE_WAVE_COUNT).map((wave, index) => {
-      const resolvedWave = resolveWaveConfig(index, state.build);
-      return {
-        waveNumber: index + 1,
-        act: getPlayerFacingActLabelForWave(index + 1),
-        id: getWaveTrackHeadline(resolvedWave, index + 1),
-        note: resolvedWave.directive || resolvedWave.note,
-      };
-    });
-    for (let index = 0; index < totalTrackWaves - MAX_WAVES; index += 1) {
-      const waveNumber = MAX_WAVES + index + 1;
-      trackEntries.push({
-        waveNumber,
-        act: getPlayerFacingActLabelForWave(waveNumber),
-        id: POST_CAPSTONE_WAVE_LABELS[index].toUpperCase(),
-        note: "최종 포지 이후 relay, pursuit, bastion, surge grammar가 다시 섞이며 완성형 빌드가 실제 전장을 더 오래 점유하는 post-capstone afterburn ladder.",
-      });
-    }
+    const trackEntries = getShippedRoutePresentationBeats();
     elements.waveTrack.innerHTML = trackEntries.map((entry, index) => {
       const stateName =
         state.phase === "result"
@@ -16466,9 +16459,9 @@
               : "upcoming";
       return `
         <article class="wave-track__node" data-state="${stateName}">
-          <p class="panel__eyebrow">${entry.act.shortLabel} · Wave ${entry.waveNumber}</p>
-          <strong>${entry.id}</strong>
-          <p>${entry.note}</p>
+          <p class="panel__eyebrow">Wave ${entry.waveNumber}</p>
+          <strong>${entry.title}</strong>
+          <span>${entry.shortLabel}</span>
         </article>
       `;
     }).join("");
@@ -17279,9 +17272,12 @@
       return;
     }
     if (CONSOLIDATED_12_WAVE_ROUTE) {
-      const nextFocus = getBaseRouteTransformationFocus(1, { stage: "title" });
+      const titleFocus = getBaseRouteTransformationFocus(1, { stage: "title" });
+      const titleBeats = getShippedRoutePresentationBeats().filter((entry) =>
+        [1, 3, 5, 6].includes(entry.waveNumber)
+      );
       elements.signatureCards.innerHTML = `
-        <section class="title-launch-shell">
+        <section class="title-launch-shell title-launch-shell--lean">
           <div class="title-launch-shell__frame" aria-hidden="true">
             <div class="title-launch-shell__silhouette">
               <span class="title-launch-shell__nose"></span>
@@ -17291,28 +17287,21 @@
               <span class="title-launch-shell__trail"></span>
             </div>
           </div>
-          <div class="title-launch-shell__copy">
-            <article class="title-launch-shell__focus">
-              <p class="panel__eyebrow">${nextFocus.windowLabel}</p>
-              <strong>${nextFocus.title}</strong>
-              <p>${nextFocus.detail}</p>
-            </article>
-            <div class="title-launch-shell__runline">
-              <article class="title-launch-shell__step">
-                <span>start</span>
-                <strong>Ember Hull</strong>
-                <p>한 줄 화선으로 바로 투입.</p>
-              </article>
-              <article class="title-launch-shell__step title-launch-shell__step--focus">
-                <span>wave 3</span>
-                <strong>주무장 도약</strong>
-                <p>첫 forge에서 총열과 점유를 크게 바꾼다.</p>
-              </article>
-              <article class="title-launch-shell__step">
-                <span>wave 6</span>
-                <strong>차체 잠금</strong>
-                <p>두 번째 forge에서 버티는 리듬을 잠근다.</p>
-              </article>
+          <div class="title-launch-shell__copy title-launch-shell__copy--lean">
+            <p class="panel__eyebrow">${titleFocus.windowLabel}</p>
+            <strong class="title-launch-shell__headline">${titleFocus.title}</strong>
+            <p class="title-launch-shell__detail">${titleFocus.detail}</p>
+            <div class="title-launch-shell__beats">
+              ${titleBeats
+                .map(
+                  (entry) => `
+                    <article class="title-launch-shell__beat">
+                      <span>Wave ${entry.waveNumber}</span>
+                      <strong>${entry.title}</strong>
+                    </article>
+                  `
+                )
+                .join("")}
             </div>
           </div>
         </section>

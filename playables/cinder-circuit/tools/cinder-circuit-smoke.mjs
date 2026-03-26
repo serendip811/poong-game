@@ -37,6 +37,19 @@ assert.equal(game.getPlayerFacingActLabelForWave(6).shortLabel, "Act 2");
 assert.equal(game.getPlayerFacingActLabelForWave(9).shortLabel, "Act 2");
 assert.equal(game.getPlayerFacingActLabelForWave(13).shortLabel, "Act 2");
 assert.equal(game.getPlayerFacingActLabelForWave(19).shortLabel, "Act 2");
+const titleFocus = game.getBaseRouteTransformationFocus(1, { stage: "title" });
+assert.equal(titleFocus.windowLabel, "Wave 6 clear");
+assert.ok(titleFocus.title.includes("Weapon Break"));
+assert.ok(titleFocus.title.includes("Chassis Lock"));
+assert.ok(titleFocus.detail.includes("Wave 3"));
+assert.ok(titleFocus.detail.includes("Wave 6"));
+assert.ok(!titleFocus.detail.includes("Wave 9"));
+const shippedPresentationBeats = game.getShippedRoutePresentationBeats();
+assert.equal(shippedPresentationBeats.length, 6);
+assert.equal(
+  JSON.stringify(shippedPresentationBeats.map((entry) => entry.title)),
+  JSON.stringify(["Ember Hull", "버티기", "무장 도약", "도약 시험", "차체 잠금", "봉인"])
+);
 assert.equal(game.POST_CAPSTONE_WAVE_COUNT, 7);
 assert.equal(game.shouldAllowCombatRewardDrops(), false);
 assert.equal(game.shouldAllowContrabandOverclockRoute(), false);
