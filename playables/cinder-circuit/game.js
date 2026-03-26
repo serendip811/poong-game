@@ -9773,10 +9773,10 @@
       elements.hudBottomOverlay.classList.toggle("hud-overlay--bottom-minimal", isMinimal);
     }
     if (elements.hudBuildPanelLeft) {
-      elements.hudBuildPanelLeft.classList.remove("hidden");
+      elements.hudBuildPanelLeft.classList.toggle("hidden", isMinimal);
     }
     if (elements.hudBuildPanelRight) {
-      elements.hudBuildPanelRight.classList.remove("hud-build-panel--solo");
+      elements.hudBuildPanelRight.classList.toggle("hud-build-panel--solo", isMinimal);
     }
   }
 
@@ -22375,34 +22375,34 @@
     const gambleSummary = getTabInspectGambleSummary(state);
     const scrapSummaryLabel = `고철 ${Math.round(state.resources.scrap)}`;
     if (elements.activeCore) {
-      elements.activeCore.classList.toggle("hidden", tabInspectBoardActive);
-      elements.activeCore.innerHTML = `
-        <div class="summary-head">
-          <div>
-            <p class="forge-card__tag">${minimalBaseRouteHud ? "현재 형태" : activeCore.tag}</p>
-            <h3>${dominantForm.label}</h3>
+      elements.activeCore.classList.toggle("hidden", minimalBaseRouteHud || tabInspectBoardActive);
+      if (!minimalBaseRouteHud) {
+        elements.activeCore.innerHTML = `
+          <div class="summary-head">
+            <div>
+              <p class="forge-card__tag">${activeCore.tag}</p>
+              <h3>${dominantForm.label}</h3>
+            </div>
+            <span class="summary-chip ${
+              weapon.benchSyncLevel > 0 ? "summary-chip--hot" : ""
+            }">${weapon.tierLabel}</span>
           </div>
-          <span class="summary-chip ${
-            weapon.benchSyncLevel > 0 ? "summary-chip--hot" : ""
-          }">${weapon.tierLabel}</span>
-        </div>
-        ${
-          minimalBaseRouteHud
-            ? ""
-            : `<div class="mini-pill-row">${
-                baseRouteForgeActive
-                  ? createMiniPill("다음 전장", nextBeat.title, "hot") +
-                    createMiniPill("방호·보조", supportTrack.label, "cool")
-                  : createMiniPill(getHeadlineFormTierLabel(getHeadlineFormTier(state.build)), headlineLabel, "hot") +
-                    createMiniPill("보조", supportTrack.label, "cool")
-              }</div>
-              <p class="summary-note">${
-                baseRouteForgeActive
-                  ? `${ladderFocus.title}. ${dominantForm.label} 하나만 앞세우고 ${nextBeat.title}까지 결을 유지한다.`
-                  : `${nextBreakpoint.label}이 다음 monster-form jump다. ${supportTrack.label}는 rider로만 짧게 남기고, ${proofWindow.label}에서 바로 space ownership를 증명한다.`
-              }</p>`
-        }
-      `;
+          <div class="mini-pill-row">${
+            baseRouteForgeActive
+              ? createMiniPill("다음 전장", nextBeat.title, "hot") +
+                createMiniPill("방호·보조", supportTrack.label, "cool")
+              : createMiniPill(getHeadlineFormTierLabel(getHeadlineFormTier(state.build)), headlineLabel, "hot") +
+                createMiniPill("보조", supportTrack.label, "cool")
+          }</div>
+          <p class="summary-note">${
+            baseRouteForgeActive
+              ? `${ladderFocus.title}. ${dominantForm.label} 하나만 앞세우고 ${nextBeat.title}까지 결을 유지한다.`
+              : `${nextBreakpoint.label}이 다음 monster-form jump다. ${supportTrack.label}는 rider로만 짧게 남기고, ${proofWindow.label}에서 바로 space ownership를 증명한다.`
+          }</p>
+        `;
+      } else {
+        elements.activeCore.innerHTML = "";
+      }
     }
 
     const benchEntries = getBenchEntries(state.build);
@@ -22512,13 +22512,12 @@
       elements.waveObjective.innerHTML = minimalBaseRouteHud
         ? `
           <div class="summary-head">
-            <strong>즉시 과제</strong>
+            <strong>현재 전장</strong>
             <span class="summary-chip ${hazardStatus.tone}">
               ${hazardStatus.chipLabel}
             </span>
           </div>
-          <strong class="route-contract__title">${askLabel}</strong>
-          <p class="summary-copy">${waveAsk}</p>
+          <strong class="route-contract__title">${waveAsk}</strong>
           <div class="mini-pill-row mini-pill-row--solo">
             ${createMiniPill("위협", `${hazardStatus.detailLabel} ${hazardStatus.detailValue}`)}
           </div>

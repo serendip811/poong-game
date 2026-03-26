@@ -675,6 +675,7 @@ body[data-overdrive="true"] .backdrop__glow--right {
 
 .hud-build-panel--solo {
   justify-items: end;
+  width: min(100%, 360px);
 }
 
 .core-summary--overlay,
@@ -1030,6 +1031,7 @@ body[data-overdrive="true"] .backdrop__glow--right {
 
 .hud-overlay--bottom-minimal .build-panel--right {
   justify-items: end;
+  width: min(100%, 360px);
 }
 
 .hud-overlay--bottom-minimal .core-summary--overlay .forge-focus__proof,
