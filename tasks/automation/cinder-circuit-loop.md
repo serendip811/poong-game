@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: protect the `Wave 5` power spike by stripping title/forge roadmap language and turning `Wave 6-8` into one readable proof arc, not three stacked first-time explanations.
+- Immediate priority: make the shipped `8-wave` route honest by removing `12-wave / three-era` contract framing from title/forge/docs and protecting `Wave 7-8` as one clean support-proof arc, not a final stack of new asks.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 08:00:59 KST
+  Findings:
+  - The game is still talking like a `12-wave` product while shipping an `8-wave` route. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) still centers `12웨이브`, `세 시대`, and run-start signatures, while [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) ships `DEFAULT_ROUTE_WAVE_COUNT = 8`. That mismatch keeps the reward language bigger than the playable payoff.
+  - `Wave 5-6` finally create a readable weapon/body rise, but `Wave 7-8` spend that gain too aggressively. The live table jumps from `activeCap 17` to `26` and then `28`, adds lancer/binder/warden pressure, and only then asks support systems to debut, so the first helper/defense layer is tested as crisis management instead of becoming a hunger-making ownership spike.
+  - The title and forge still frame the run as a contract document. `getBuildRoadmap()`, `getForgeEraPlan()`, `createEraContractPanelMarkup()`, and the forge focus shell in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) keep explaining stage ladders, era labels, and future forms. Against `Nova Drift`, `Brotato`, or `Hades`, this is still too much roadmap and not enough immediate desire.
+  - Lean-start discipline is better mechanically, but the fantasy is still front-loaded verbally. [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html) and `renderTitleLaunchPanel()` promise upcoming transformation before the player has earned attachment to the tiny base gun, which weakens the feeling of later visual escalation.
+  Top Priority: Strip all shipped `12-wave / era / roadmap` framing from the title and base-route forge so the live build only sells the next visible spike, then leave `Wave 7` as a clean first support ownership lap instead of stacking final-form pressure on top of it.
+  Why Now: The game has enough structure now that false breadth and compressed payoff are hurting replay desire more than missing content.
+  Do Not Repeat: Do not answer this with another wording trim that leaves roadmap widgets, era labels, or Wave 8 pressure stacking intact.
+  Release Gate: Progression
 
 - 2026-03-27 07:30:54 KST
   Findings:
@@ -3321,6 +3332,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 16:20:00 KST
+  Changed: retuned one bounded slice of the shipped mid-run proof window in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 7` now behaves like a first-support ownership lap instead of a sudden crossfire crisis. I added a dedicated recurring cell, `Support Sweep`, and moved `Wave 7` onto it with `pressureFamily = domination`, a larger `1720x960` arena, no `lancer` tax, and a much softer pressure step from `Wave 6` (`activeCap 20`, `spawnBudget 112`) before `Wave 8` resumes the tighter crown-proof escalation. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks the new label, directive, pressure family, arena size, and reduced Wave 7 pressure.
+  Why: the newest critique's `Top Priority` said the title/forge should stop overselling the route and then `Wave 7` should be left as a clean first support lap instead of stacking final-form pressure on top. The highest-value concrete interpretation that was still clearly open was the second half: the shipped route already stripped a lot of roadmap UI, but `Wave 7` was still jumping from `activeCap 17 -> 26`, shrinking the arena, and adding `lancer` pressure exactly when the first rider should feel exciting.
+  Follow-up risk: `Wave 7` now gives support systems room to read, but `Wave 8` still carries the main breach/hazard squeeze for the short route. If later critique says the closing arc still compresses too hard, the next bounded pass should trim `Wave 8` proof density or restructure its enemy mix, not push `Wave 7` back into crossfire tax.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Combat
 
 - 2026-03-27 07:42:49 KST
   Changed: stripped one bounded layer of roadmap/admin presentation from the shipped title and base-route forge in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css), and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs). `getBaseRouteTransformationFocus(..., { stage: "title" })` now sells only the immediate `Wave 3` weapon break instead of spelling out `Wave 5-8`, `renderTitleLaunchPanel()` now shows that `Bare Hull -> first break` read directly, and the base-route forge no longer mounts its old `forge-focus` context card. The recurring contract header now resolves through a smaller `route-contract--forge` block with one short title and one short pulse line, so the reward stop stops re-briefing proof windows and route structure before the player picks.

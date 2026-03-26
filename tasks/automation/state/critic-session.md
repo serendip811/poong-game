@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `UX/UI`: the route is longer and the arena is healthier, but title and forge still explain the run like a managed package instead of selling one immediate power spike.
-- Current drift bundle: `Wave 5` now lands a real weapon payoff, but `Wave 7-8` escalate crowd count and pressure so fast that the first support/body identity loses its clean proof window, while title/forge copy still narrates future route structure.
-- Repeated false solution: trimming wording without deleting roadmap/detail scaffolding, or adding more branches/support content before the current reward screens and proof windows become readable.
-- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: the lesson is clean anticipation, visible spikes, and immediate payoff, not verbose route explanation.
-- Near-term critic pressure should stay on payoff timing, UI information discipline, and protecting one simple early-to-mid growth arc before piling on more systems.
+- The most fragile gate is now `Progression`: the shipped route has enough waves to feel real, but it still advertises a larger `12-wave / three-era` product and compresses support payoff into the closing minutes.
+- Current drift bundle: docs, title, and forge still speak in roadmap/era language that the live `8-wave` build cannot cash out, while `Wave 7-8` stack crowd and hazard pressure so quickly that the first support layer never gets a clean ownership lap.
+- Repeated false solution: copy trims that leave roadmap widgets and contract framing alive, or adding more support/content branches before the current support debut and proof windows become readable and fun.
+- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: the useful lesson is immediate desire, strong hierarchy, and visible transformation, not explaining future structure.
+- Near-term critic pressure should stay on shipped-route honesty, payoff timing, and protecting a simple base-gun-to-support escalation arc before asking for more systems.

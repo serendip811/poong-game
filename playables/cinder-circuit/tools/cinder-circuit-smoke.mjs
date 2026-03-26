@@ -127,7 +127,7 @@ assert.equal(game.WAVE_CONFIG[5].arena.width, 1640);
 assert.equal(game.WAVE_CONFIG[5].arena.height, 920);
 assert.equal(game.WAVE_CONFIG[4].label, "Wave 5 · Payoff Run");
 assert.equal(game.WAVE_CONFIG[5].label, "Wave 6 · Payoff Run+");
-assert.equal(game.WAVE_CONFIG[6].label, "Wave 7 · Payoff Sweep");
+assert.equal(game.WAVE_CONFIG[6].label, "Wave 7 · Support Sweep");
 const baseRouteVictoryLap = game.createBaseRouteVictoryLapWave(game.createInitialBuild("rail_zeal"));
 assert.equal(baseRouteVictoryLap.label, "Victory Lap · Dominion Run");
 assert.equal(baseRouteVictoryLap.completesRun, true);
@@ -145,12 +145,23 @@ assert.equal(game.WAVE_CONFIG[8].label, "Wave 9 · Payoff Run+");
 assert.equal(game.WAVE_CONFIG[9].label, "Wave 10 · Crown Proof+");
 assert.equal(game.WAVE_CONFIG[4].directive, "가장 넓은 flank부터 비우고 열린 lane 둘 중 하나를 오래 붙든다.");
 assert.equal(game.WAVE_CONFIG[5].directive, "가장 넓은 lane을 먼저 열고 반대 flank까지 이어 붙이며 지배 시간을 늘린다.");
-assert.equal(game.WAVE_CONFIG[6].directive, "한 flank를 먼저 비운 뒤 반대 lane으로 짧게 갈아타며 sweep 폭을 유지한다.");
+assert.equal(
+  game.WAVE_CONFIG[6].directive,
+  "가장 넓은 flank를 먼저 비우고 rider가 덧난 lane 하나를 오래 붙들며 점유 시간을 늘린다."
+);
 assert.equal(game.WAVE_CONFIG[7].directive, "가장 얇은 입구를 짧게 찢고 열린 crownline을 오래 붙든다.");
 assert.equal(game.WAVE_CONFIG[5].mix.mortar || 0, 0);
 assert.ok((game.WAVE_CONFIG[5].mix.binder || 0) === 0);
 assert.equal(game.WAVE_CONFIG[5].mix.lancer || 0, 0);
 assert.ok(game.WAVE_CONFIG[5].mix.shrike > game.WAVE_CONFIG[5].mix.skimmer);
+assert.equal(game.WAVE_CONFIG[6].pressureFamily, "domination");
+assert.equal(game.WAVE_CONFIG[6].activeCap, 20);
+assert.equal(game.WAVE_CONFIG[6].spawnBudget, 112);
+assert.equal(game.WAVE_CONFIG[6].mix.lancer || 0, 0);
+assert.equal(game.WAVE_CONFIG[6].arena.width, 1720);
+assert.equal(game.WAVE_CONFIG[6].arena.height, 960);
+assert.ok(game.WAVE_CONFIG[6].arena.width > game.WAVE_CONFIG[5].arena.width);
+assert.ok(game.WAVE_CONFIG[6].activeCap < game.WAVE_CONFIG[7].activeCap);
 assert.equal(game.WAVE_CONFIG[8].activeCap, 26);
 assert.equal(game.WAVE_CONFIG[9].activeCap, 30);
 assert.equal(game.WAVE_CONFIG[10].activeCap, 28);
@@ -827,7 +838,7 @@ assert.equal(afterglowWindow.hazard, undefined);
 assert.equal(breaklineFollowthrough.hazard, undefined);
 assert.equal(breaklineFollowthrough.pressureFamily, "domination");
 assert.equal(breaklineFollowthrough.label, "Wave 6 · Payoff Run+");
-assert.equal(crownfireSpike.pressureFamily, "crossfire");
+assert.equal(crownfireSpike.pressureFamily, "domination");
 assert.equal(crownfireSpike.hazard, undefined);
 assert.equal(forgecrossSpike.hazard.type, "relay");
 assert.equal(forgecrossSpike.hazard.label, "Crown Proof Relay");
@@ -3372,7 +3383,7 @@ const waveSummary = game.WAVE_CONFIG.map((wave) => ({
 const actTwoLadder = game.WAVE_CONFIG.slice(4, 8);
 assert.equal(
   actTwoLadder.map((wave) => wave.pressureFamily).join("|"),
-  "domination|domination|crossfire|breach"
+  "domination|domination|domination|breach"
 );
 assert.equal(
   actTwoLadder.map((wave) => (wave.hazard ? wave.hazard.type : "none")).join("|"),
@@ -3380,10 +3391,10 @@ assert.equal(
 );
 assert.ok(actTwoLadder[1].arena.width > actTwoLadder[0].arena.width);
 assert.ok(actTwoLadder[1].arena.height > actTwoLadder[0].arena.height);
-assert.ok(actTwoLadder[2].arena.width < actTwoLadder[1].arena.width);
-assert.ok(actTwoLadder[2].arena.height < actTwoLadder[1].arena.height);
+assert.ok(actTwoLadder[2].arena.width > actTwoLadder[1].arena.width);
+assert.ok(actTwoLadder[2].arena.height > actTwoLadder[1].arena.height);
 assert.ok(actTwoLadder[2].activeCap < actTwoLadder[3].activeCap);
-assert.ok(actTwoLadder[2].note.includes("shared sweep cell"));
+assert.ok(actTwoLadder[2].note.includes("shared support lap cell"));
 assert.ok(actTwoLadder[3].note.includes("shared proof cell"));
 
 const lateBreakSmokeBuild = game.createInitialBuild("scrap_pact");
