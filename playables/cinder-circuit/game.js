@@ -23492,6 +23492,7 @@
         state.player.invulnerableTime > 0 ? "#fff0c9" : state.weapon.color;
       drawPlayerWave6AscensionFrame(context);
       drawPlayerChassisFrame(context);
+      drawPlayerWeaponFrame(context);
       drawPlayerDoctrineFrame(context);
       drawPlayerPreviewSupportFrame(context);
       drawPlayerLateFieldMutationFrame(context);
@@ -23606,6 +23607,164 @@
         );
         context.stroke();
       });
+    }
+  }
+
+  function drawPlayerWeaponFrame(context) {
+    if (!state.player || !state.weapon || !state.weapon.core) {
+      return;
+    }
+    const coreId = state.weapon.core.id;
+    const stage = clamp(
+      Math.max(state.weapon.evolutionTier || 0, state.weapon.doctrineStage || 0),
+      0,
+      3
+    );
+    if (coreId === "ember" && stage <= 0) {
+      return;
+    }
+    const facing = state.player.facing || 0;
+    const pulse = Math.sin(performance.now() * 0.018) * 1.1;
+
+    if (coreId === "ember") {
+      const spokeOffsets =
+        stage >= 3
+          ? [-2.1, -1.3, -0.55, 0.55, 1.3, 2.1]
+          : stage === 2
+            ? [-1.6, -0.6, 0.6, 1.6]
+            : [-1.05, 1.05];
+      spokeOffsets.forEach((lane, index) => {
+        const spoke = getOffsetPoint(state.player.x, state.player.y, facing, 7, 12 * lane);
+        const direction = Math.sign(lane || 1);
+        context.fillStyle = `rgba(255, 232, 168, ${0.78 - index * 0.05})`;
+        context.beginPath();
+        context.moveTo(
+          spoke.x + Math.cos(facing) * (10 + stage * 1.5),
+          spoke.y + Math.sin(facing) * (10 + stage * 1.5)
+        );
+        context.lineTo(
+          spoke.x - Math.cos(facing) * 4 - Math.sin(facing) * (4.5 + stage * 0.5) * direction,
+          spoke.y - Math.sin(facing) * 4 + Math.cos(facing) * (4.5 + stage * 0.5) * direction
+        );
+        context.lineTo(
+          spoke.x - Math.cos(facing) * (9 + stage) + Math.sin(facing) * 4 * direction,
+          spoke.y - Math.sin(facing) * (9 + stage) - Math.cos(facing) * 4 * direction
+        );
+        context.closePath();
+        context.fill();
+      });
+      context.strokeStyle = "rgba(255, 243, 196, 0.72)";
+      context.lineWidth = 2;
+      context.beginPath();
+      context.arc(
+        state.player.x,
+        state.player.y,
+        state.player.radius + 10 + stage * 1.6 + pulse,
+        state.player.facing - 0.86,
+        state.player.facing + 0.86
+      );
+      context.stroke();
+      return;
+    }
+
+    if (coreId === "scatter") {
+      const furnaceLanes =
+        stage >= 3 ? [-1.45, -0.5, 0.5, 1.45] : stage === 2 ? [-1.1, 0, 1.1] : [-0.85, 0.85];
+      furnaceLanes.forEach((lane, index) => {
+        const furnace = getOffsetPoint(state.player.x, state.player.y, facing, 8, lane * 12);
+        const size = stage >= 2 ? 4.6 : 4;
+        context.fillStyle = `rgba(255, 186, 122, ${0.8 - index * 0.06})`;
+        context.fillRect(
+          furnace.x - size - Math.sin(facing) * 4,
+          furnace.y - size + Math.cos(facing) * 4,
+          size * 2,
+          size * 2.4
+        );
+      });
+      context.strokeStyle = "rgba(255, 219, 176, 0.74)";
+      context.lineWidth = 2.4;
+      context.beginPath();
+      context.arc(
+        state.player.x + Math.cos(facing) * 7,
+        state.player.y + Math.sin(facing) * 7,
+        state.player.radius + 5 + stage * 1.5,
+        facing - (0.54 + stage * 0.12),
+        facing + (0.54 + stage * 0.12)
+      );
+      context.stroke();
+      return;
+    }
+
+    if (coreId === "lance") {
+      const railLanes =
+        stage >= 3
+          ? [-1.7, -1.05, -0.35, 0.35, 1.05, 1.7]
+          : stage === 2
+            ? [-1.25, -0.45, 0.45, 1.25]
+            : [-0.9, 0, 0.9];
+      railLanes.forEach((lane, index) => {
+        const barrel = getOffsetPoint(state.player.x, state.player.y, facing, 12, lane * 10);
+        context.fillStyle = `rgba(224, 251, 255, ${0.84 - index * 0.05})`;
+        context.fillRect(
+          barrel.x - 2.2 - Math.sin(facing) * (6 + stage),
+          barrel.y - 2.2 + Math.cos(facing) * (6 + stage),
+          4.4,
+          12 + stage * 2.2
+        );
+      });
+      context.strokeStyle = "rgba(244, 254, 255, 0.72)";
+      context.lineWidth = 2;
+      context.beginPath();
+      context.arc(
+        state.player.x,
+        state.player.y,
+        state.player.radius + 11 + stage * 1.4 + pulse * 0.7,
+        facing - 0.58,
+        facing + 0.58
+      );
+      context.stroke();
+      return;
+    }
+
+    if (coreId === "ricochet") {
+      const prismLanes =
+        stage >= 3
+          ? [-1.9, -1.2, -0.45, 0.45, 1.2, 1.9]
+          : stage === 2
+            ? [-1.3, -0.55, 0.55, 1.3]
+            : [-0.95, 0.95];
+      prismLanes.forEach((lane, index) => {
+        const prism = getOffsetPoint(state.player.x, state.player.y, facing, 6, 11 * lane);
+        const direction = Math.sign(lane || 1);
+        context.strokeStyle = `rgba(244, 225, 255, ${0.82 - index * 0.05})`;
+        context.lineWidth = 2;
+        context.beginPath();
+        context.moveTo(
+          prism.x - Math.cos(facing) * 4,
+          prism.y - Math.sin(facing) * 4
+        );
+        context.lineTo(
+          prism.x + Math.cos(facing) * (8 + stage * 1.4),
+          prism.y + Math.sin(facing) * (8 + stage * 1.4)
+        );
+        context.lineTo(
+          prism.x + Math.sin(facing) * (5 + stage * 0.5) * direction,
+          prism.y - Math.cos(facing) * (5 + stage * 0.5) * direction
+        );
+        context.closePath();
+        context.stroke();
+      });
+      context.strokeStyle = "rgba(247, 232, 255, 0.68)";
+      context.lineWidth = 2;
+      context.beginPath();
+      context.arc(
+        state.player.x,
+        state.player.y,
+        state.player.radius + 10 + stage * 1.5 + pulse,
+        0,
+        Math.PI * 2
+      );
+      context.stroke();
     }
   }
 

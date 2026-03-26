@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: lock the shipped route to one honest `Wave 1-6` spine with no signature preload, no visible late-route scaffolding, and one larger open-lane payoff encounter where the first weapon/body leap can read before support/admin layers return.
+- Immediate priority: lock the shipped route to one honest `Wave 1-6` spine where the first weapon/body leap becomes the clear visual payoff, with no signature preload, no visible late-route scaffolding, and no support/admin competition before that jump lands.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 22:30:44 KST
+  Findings:
+  - The project is still selling more future than present fun. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8) still defines a `12웨이브 / 시동 회로 / 세 시대` run, while [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L26) still keeps `signature-cards` on the title. The opener still reads like a managed package, not a rerunnable hunger loop.
+  - The honest route is still not the loudest thing in the ruleset. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1145) still carries `Afterburn I-VII`, [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3132) still schedules wildcard pivots at `4 / 7 / 10`, and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2539) still preserves a full support catalog behind the same route contract. The game keeps advertising side fantasies before one short spine has earned them.
+  - Build hunger is upside down. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2539) gives satellites, shields, sentries, missiles, and drones clear `Mk.II / Mk.III` payoff language, while [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L23924) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L24238) spend the flashiest silhouette/render work on late mutation, ascension, and afterburn frames. Compared with `Nova Drift`, the player-facing fantasy is still stronger in the codebase's late branches than in the first rerunnable weapon/body leap.
+  - HUD and forge still slow down desire with route administration. [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L101) keeps a dedicated combat objective card, while [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22308) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22457) still build `Tab` summaries, proof framing, preview rows, and focus context around picks. Against `Brotato`, `Nova Drift`, and `Hades`, the run still reads too much before it hits.
+  Top Priority: Make the first shipped gun/body transformation by `Wave 3-5` the most obvious visual and functional spike in the whole default route, and lock support-preview, wildcard, and late-form spectacle behind it instead of beside it.
+  Why Now: If the first short rerun does not produce one memorable "I want that build again" jump, extending the run will only stretch prototype fatigue.
+  Do Not Repeat: Do not answer this with more late-form branches, more forge copy cleanup, or more hidden scaffolding while the current short route still hides its best spectacle in later systems.
+  Release Gate: Builds
 
 - 2026-03-26 22:01:15 KST
   Findings:
@@ -3107,6 +3118,14 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 02:20:00 KST
+  Changed: strengthened one bounded piece of the shipped build spike in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the first `Wave 3-5` gun leap now changes the ship silhouette instead of hiding inside projectile math. I added `drawPlayerWeaponFrame(...)` to the live player render path and gave each core its own visible frame grammar: `Ember` grows outward spoke barrels as evolutions stack, `Scatter` gains furnace pods and a wider forward mouth, `Lance` opens parallel siege rails, and `Ricochet` spreads prism fins. The frame size keys off `max(evolutionTier, doctrineStage)`, so the earliest default-route pivot at `Wave 3` and the next weapon growth by `Wave 5` now read as immediate on-hull transformations before any later support or late-form spectacle can compete.
+  Why: the newest critique's `Top Priority` was to make the first shipped gun/body transformation by `Wave 3-5` the clearest visual and functional spike in the default route, with later support/wildcard fantasies staying behind it instead of beside it. The highest-value concrete interpretation was to make the first weapon change visible on the chassis itself, because support previews and wildcard offers were already fail-closed on the consolidated route but the early gun jump still looked too similar unless the player parsed bullet behavior.
+  Follow-up risk: this makes the early weapon leap easier to read, but the `Wave 6` body break can still land mostly as posture/stats unless its chassis moment stays punchy too. If critique keeps saying the first replayable spike is still too soft, the next bounded builds pass should add a short acquisition burst or a more forceful `Wave 6` body lock presentation rather than reopening early support spectacle.
+  Visual reference direction: the silhouette-first readability from `Nova Drift`, where a new weapon form is legible from the ship body before the player audits the projectile pattern.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Builds
 
 - 2026-03-27 02:05:00 KST
   Changed: recut one bounded piece of the shipped combat spine in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 5 · Payoff Run` is no longer a disguised territory chore. The default route now gives that first post-forge payoff wave a larger open-lane arena `1520x860`, removes the `Payoff Bastion` hazard entirely, lowers density to `activeCap 18 / spawnBudget 96`, and shifts the enemy mix slightly toward fast lane crossers instead of another hold-the-zone ask. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks that `Wave 5` has no hazard, is larger than `Wave 6`, and stays the lighter domination lap before the `Crown Breach Relay` proof wave.
