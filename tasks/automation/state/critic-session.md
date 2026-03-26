@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Progression`: the project is still packaged like a polished `12-wave` route instead of a durable escalation spine that could genuinely stretch.
-- Current drift bundle: named mid/late wave grammar, in-combat build grants, oversized late-support catalogs/primers, and HUD/forge layers that keep explaining the run instead of sharpening appetite.
-- Repeated false solution: treating consolidation as wording cleanup or one more wrapper while live caches, route scripting, and early-complete support spectacle remain intact.
+- The most fragile gate to push next is `Rewards`: the run still hides desire behind roadmap/inspect/admin presentation instead of making survival cash out into one obvious transformation.
+- Current drift bundle: duplicate HUD abstractions, named route/admin framing, in-combat build grants, and a support catalog that still looks broader than the main-form ladder deserves.
+- Repeated false solution: adding another "clean" wrapper or summary layer instead of deleting competing presentation and forcing one reward hierarchy.
 - Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: combat should read fast, rewards should create hunger before explanation, and visible power growth should come in chunky, memorable jumps.
-- Pressure-test consolidation before expansion: if the best critique still sounds like "remove live payouts, collapse grammar, darken support lanes, hide admin, protect the main-form ladder," the loop should keep consolidating rather than adding content.
+- Pressure-test consolidation before expansion: if the game still needs roadmap/inspect reduction, forge cleanup, and support darkening, keep the loop on readability/pacing hardening instead of adding systems.

@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze expansion and make the `12-wave` spine earn anticipation again by removing build-defining in-combat payouts, keeping the opening visually sparse, and letting between-wave main-form jumps carry the run before support/admin layers return.
+- Immediate priority: freeze expansion and turn the shipped loop into a clean `fight -> forge -> transform -> proof` cadence by removing build-defining in-combat payouts, stripping roadmap/inspect/admin clutter from default play, and delaying support spectacle until the main weapon/body ladder owns the run.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 12:30:53 KST
+  Findings:
+  - `playables/cinder-circuit/index.html` and the overlay render paths in `playables/cinder-circuit/game.js` still keep roadmap, objective, live readout, upgrade log, forge context, and `Tab` inspect machinery alive around the core arena loop. Against `Nova Drift`, `Brotato`, and `Hades`, this is still too much run administration for a game that needs the player to feel danger and desire instantly.
+  - `playables/cinder-circuit/game.js` now has both a "shipping ladder" simplification pass and the older roadmap/inspect framework, which means the project is layering explanations on top of explanations instead of actually committing to one screen hierarchy. That is classic prototype drift, not release hardening.
+  - The build catalog is still wider than the current spine can support: missiles, drones, halos, primers, wildcard protocols, ascensions, and late convergence all remain defined before one repeated run can prove that a small opening gun can grow into a must-replay fantasy on its own.
+  - `docs/games/cinder-circuit-design.md` still pitches the game as a labeled `12-wave / three-era / proof-window` package. That keeps encouraging structure talk and screen copy instead of forcing the team to answer the more important question: is the survive-to-forge payoff loop actually fun enough to repeat before more wrappers return?
+  Top Priority: Consolidate the player-facing loop so default play shows only current form, immediate survival resources, and the next forge hunger, then make every between-wave reward card sell one visible transformation promise with almost no admin text.
+  Why Now: The game is at risk of hiding its own power fantasy behind status architecture.
+  Do Not Repeat: Do not stack another "simplified" overlay or another branch wrapper on top of the existing roadmap/inspect system.
+  Release Gate: Rewards
 
 - 2026-03-26 12:00:38 KST
   Findings:
@@ -2897,6 +2908,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-26 23:59:30 KST
+  Changed: tightened one bounded piece of the shipped forge reward surface in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the wide `주력 변이` card now sells a visible transformation with almost no admin text. The consolidated headline card is now rendered through a dedicated helper that keeps only `lane tag + title + one preview row + 다음 시험 + cost`, removes the paragraph promise copy, and locks that slimmer contract in smoke coverage.
+  Why: the newest critique's `Top Priority` was to make every between-wave reward card sell one transformation promise instead of layering another explanation pass on top of the reward moment. The highest-value concrete interpretation was to finish the one remaining verbose card in the consolidated forge contract, because side cards were already compressed but the dominant headline reward still spent its biggest slot on sentence copy instead of the next visible form and proof beat. This follows the same appetite-first reward snap called out in earlier reference directions from `Hades` and `Nova Drift`.
+  Follow-up risk: the headline card now reads faster, but the default forge overlay still keeps a separate context card above the three picks. If later critique still says the reward pause feels administered, the next bounded pass should consider collapsing or softening that context wrapper instead of reintroducing hero-copy onto the pick cards.
+  Release Gate: Rewards
 
 - 2026-03-26 23:58:00 KST
   Changed: normalized one bounded piece of the shipped mid/late route grammar in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 9` now behaves like a real late-form cashout lap instead of another named gimmick stop. The default spine and shared late pool now promote `Wave 9 · Payoff Run+` with lighter enemy pressure, no extra hazard structure, and `Wave 10 · Crown Proof+` as the single follow-through breach. I also changed the run track to render player-facing wave headlines from the resolved cell/band label instead of leaking internal ids like `AFTERGLOW`, `LOCKGRID`, or `STARFORGE`, and updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new `Wave 9` contract and the track-facing labels.

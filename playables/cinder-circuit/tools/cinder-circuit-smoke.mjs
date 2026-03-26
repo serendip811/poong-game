@@ -400,20 +400,23 @@ const recurringWave3PreviewMarkup = game.createBaseRouteForgePreviewMarkup(
 );
 assert.ok(recurringWave3PreviewMarkup.includes(recurringWave3HeadlineTransform.previewLabel));
 assert.ok(recurringWave3PreviewMarkup.includes(recurringWave3HeadlineTransform.previewValue));
-const recurringWave3CardMarkup = `
-  <button type="button" class="forge-card forge-card--contract">
-    <span class="forge-card__tag">${recurringWave3Choices[0].contractLabel}</span>
-    <h3>${recurringWave3Choices[0].title}</h3>
-    <p class="forge-card__hero-copy">${recurringWave3HeadlineTransform.promise}</p>
-    ${game.createBaseRouteForgePreviewMarkup(
-      recurringWave3HeadlineTransform.previewLabel,
-      recurringWave3HeadlineTransform.previewValue
-    )}
-    ${game.createBaseRouteForgeBillMarkup("고철 18")}
-  </button>
-`;
-assert.ok(!recurringWave3CardMarkup.includes("다음 시험"));
-assert.ok(!recurringWave3CardMarkup.includes("forge-card__proof"));
+const recurringWave3CardMarkup = game.createBaseRouteForgeHeadlineCardMarkup({
+  choice: recurringWave3Choices[0],
+  index: 0,
+  kind:
+    recurringWave3Choices[0].type === "utility"
+      ? recurringWave3Choices[0].action || "utility"
+      : recurringWave3Choices[0].type || "choice",
+  contractLabel: recurringWave3Choices[0].contractLabel,
+  transformation: recurringWave3HeadlineTransform,
+  slotLabel: "고철 18",
+  disabled: false,
+});
+assert.ok(recurringWave3CardMarkup.includes("forge-card--snap"));
+assert.ok(recurringWave3CardMarkup.includes("다음 시험"));
+assert.ok(recurringWave3CardMarkup.includes("forge-card__proof"));
+assert.ok(recurringWave3CardMarkup.includes(recurringWave3HeadlineTransform.previewValue));
+assert.ok(!recurringWave3CardMarkup.includes("forge-card__hero-copy"));
 const recurringWave3RiderChoice =
   recurringWave3Choices.find((choice) => choice.contractRole === "rider") || recurringWave3Choices[1];
 const recurringWave3RiderTransform =

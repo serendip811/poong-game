@@ -9599,6 +9599,38 @@
     `;
   }
 
+  function createBaseRouteForgeHeadlineCardMarkup({
+    choice,
+    index,
+    kind,
+    contractLabel,
+    transformation,
+    slotLabel,
+    disabled,
+  }) {
+    return `
+      <button
+        type="button"
+        class="forge-card forge-card--contract forge-card--snap forge-card--${choice.tag.toLowerCase()}"
+        data-kind="${kind}"
+        data-contract="${choice.contractRole || "headline"}"
+        data-index="${index}"
+        data-tone="${transformation.tone}"
+        data-verb="${choice.verb}"
+        ${disabled ? "disabled" : ""}
+      >
+        <span class="forge-card__tag">${contractLabel}</span>
+        <h3>${choice.title}</h3>
+        ${createBaseRouteForgePreviewMarkup(
+          transformation.previewLabel,
+          transformation.previewValue
+        )}
+        ${createBaseRouteForgeProofMarkup(transformation.proof)}
+        ${createBaseRouteForgeBillMarkup(slotLabel)}
+      </button>
+    `;
+  }
+
   function trimInspectNote(text, fallback) {
     const source = (text || fallback || "").replace(/\s+/g, " ").trim();
     if (!source) {
@@ -15439,6 +15471,7 @@
     createBaseRouteForgeContextMarkup,
     getBaseRouteForgeChoiceTransformation,
     createBaseRouteForgeCompactCardMarkup,
+    createBaseRouteForgeHeadlineCardMarkup,
     createBaseRouteForgePreviewMarkup,
     createBaseRouteForgeProofMarkup,
     createBaseRouteForgeBillMarkup,
@@ -22701,26 +22734,15 @@
                 disabled: state.resources.scrap < choice.cost,
               });
             }
-            return `
-          <button
-            type="button"
-            class="forge-card forge-card--contract forge-card--snap forge-card--${choice.tag.toLowerCase()}"
-            data-kind="${kind}"
-            data-contract="${choice.contractRole || (riderStep ? "rider" : "open")}"
-            data-index="${index}"
-            data-tone="${transformation.tone}"
-            data-verb="${choice.verb}"
-            ${state.resources.scrap < choice.cost ? "disabled" : ""}
-          >
-            <h3>${choice.title}</h3>
-            <p class="forge-card__hero-copy">${transformation.promise}</p>
-            ${createBaseRouteForgePreviewMarkup(
-              transformation.previewLabel,
-              transformation.previewValue
-            )}
-            ${createBaseRouteForgeBillMarkup(slotLabel)}
-          </button>
-        `;
+            return createBaseRouteForgeHeadlineCardMarkup({
+              choice,
+              index,
+              kind,
+              contractLabel,
+              transformation,
+              slotLabel,
+              disabled: state.resources.scrap < choice.cost,
+            });
           }
           const isFeaturedHeadline = !riderStep && index === featuredIndex;
           if (riderStep) {
