@@ -37,6 +37,7 @@ assert.equal(game.getPlayerFacingActLabelForWave(13).shortLabel, "Act 3");
 assert.equal(game.getPlayerFacingActLabelForWave(19).shortLabel, "Act 3");
 assert.equal(game.POST_CAPSTONE_WAVE_COUNT, 7);
 assert.equal(game.shouldAllowCombatRewardDrops(), false);
+assert.equal(game.shouldAllowContrabandOverclockRoute(), false);
 assert.equal(
   game.getForgeDraftType({
     nextWave: 5,
@@ -1510,6 +1511,20 @@ const standardLateFieldChoice = game
   .buildFieldGrantChoices(fieldMutationRun.build, () => 0, 11)
   .find((choice) => choice.action === "risk_mutation");
 assert.ok(standardLateFieldChoice);
+assert.ok(!standardLateFieldChoice.description.includes("금지 성장선"));
+assert.ok(!standardLateFieldChoice.slotText.includes("contraband splice"));
+const standardLateFieldRun = {
+  build: game.createInitialBuild("scrap_pact"),
+  resources: { scrap: 0 },
+  stats: { scrapCollected: 0, scrapSpent: 0 },
+  player: { hp: 100, maxHp: 100, heat: 20, overheated: false },
+};
+game.applyForgeChoice(standardLateFieldRun, standardLateFieldChoice);
+assert.equal(standardLateFieldRun.build.riskMutationLevel, 1);
+assert.equal(standardLateFieldRun.build.riskMutationQueuedLevel, 1);
+assert.equal(standardLateFieldRun.build.illegalOverclockId, null);
+assert.equal(standardLateFieldRun.build.illegalOverclockOffered, false);
+assert.equal(standardLateFieldRun.build.illegalOverclockMutationLevel, 0);
 const lateAscensionBuild = game.createInitialBuild("relay_oath");
 lateAscensionBuild.supportBayCap = 3;
 lateAscensionBuild.supportSystems = [
@@ -1600,34 +1615,9 @@ assert.ok(anvilWeapon.lateAscensionFirePattern.offsets.length >= 5);
 assert.ok(anvilWeapon.damage > slagburstWeapon.damage);
 const illegalOverclockBuild = game.createInitialBuild("relay_oath");
 const illegalOverclockChoices = game.createIllegalOverclockChoices(illegalOverclockBuild);
-assert.equal(illegalOverclockChoices.length, 3);
-assert.ok(illegalOverclockChoices.every((choice) => choice.action === "illegal_overclock"));
-const broadsideChoice = illegalOverclockChoices.find(
-  (choice) => choice.illegalOverclockId === "glass_broadside"
-);
-assert.ok(broadsideChoice);
-const broadsideRun = {
-  build: illegalOverclockBuild,
-  resources: { scrap: 0 },
-  stats: { scrapCollected: 0, scrapSpent: 0 },
-  player: { hp: 100, maxHp: 100, heat: 32, overheated: false },
-};
-game.applyForgeChoice(broadsideRun, broadsideChoice);
-assert.equal(broadsideRun.build.illegalOverclockId, "glass_broadside");
-assert.equal(broadsideRun.build.maxHpBonus, -18);
-const broadsideWeapon = game.computeWeaponStats(broadsideRun.build);
-assert.equal(broadsideWeapon.illegalOverclockLabel, "Glass Broadside");
-assert.equal(broadsideWeapon.illegalOverclockFirePattern.kind, "broadside");
-assert.equal(broadsideWeapon.illegalOverclockFirePattern.offsets.length, 2);
-const broadsideMutationChoice = game.createIllegalOverclockMutationChoice(broadsideRun.build);
-assert.ok(broadsideMutationChoice);
-assert.equal(broadsideMutationChoice.mutationLevel, 1);
-game.applyForgeChoice(broadsideRun, broadsideMutationChoice);
-assert.equal(broadsideRun.build.illegalOverclockMutationLevel, 1);
-assert.equal(broadsideRun.build.maxHpBonus, -26);
-const mutatedBroadsideWeapon = game.computeWeaponStats(broadsideRun.build);
-assert.match(mutatedBroadsideWeapon.illegalOverclockTraitLabel, /MOLT 1/);
-assert.equal(mutatedBroadsideWeapon.illegalOverclockFirePattern.offsets.length, 4);
+assert.equal(illegalOverclockChoices.length, 0);
+illegalOverclockBuild.illegalOverclockId = "glass_broadside";
+assert.equal(game.createIllegalOverclockMutationChoice(illegalOverclockBuild), null);
 const apexRun = {
   build: game.createInitialBuild("relay_oath"),
   resources: { scrap: 0 },
@@ -1647,14 +1637,11 @@ const apexIllegalRun = {
   stats: { scrapCollected: 0, scrapSpent: 0 },
   player: { hp: 100, maxHp: 100, heat: 18, overheated: false },
 };
-game.applyForgeChoice(
-  apexIllegalRun,
-  illegalOverclockChoices.find((choice) => choice.illegalOverclockId === "rupture_crown")
-);
+apexIllegalRun.build.illegalOverclockId = "rupture_crown";
 const apexIllegalReward = game.applyApexPredatorMutation(apexIllegalRun);
 assert.equal(apexIllegalReward.nextLevel, 1);
-assert.equal(apexIllegalReward.illegalMutationApplied, true);
-assert.equal(apexIllegalRun.build.illegalOverclockMutationLevel, 1);
+assert.equal(apexIllegalReward.illegalMutationApplied, false);
+assert.equal(apexIllegalRun.build.illegalOverclockMutationLevel, 0);
 const baseRelayWeapon = game.computeWeaponStats(game.createInitialBuild("relay_oath"));
 const cyclerBuild = game.createInitialBuild("relay_oath");
 const cyclerRun = {
@@ -1663,19 +1650,10 @@ const cyclerRun = {
   stats: { scrapCollected: 0, scrapSpent: 0 },
   player: { hp: 100, maxHp: 100, heat: 0, overheated: false },
 };
-game.applyForgeChoice(
-  cyclerRun,
-  illegalOverclockChoices.find((choice) => choice.illegalOverclockId === "meltdown_cycler")
-);
 const cyclerWeapon = game.computeWeaponStats(cyclerBuild);
-assert.equal(cyclerWeapon.illegalOverclockLabel, "Meltdown Cycler");
-assert.ok(cyclerWeapon.cooldown < baseRelayWeapon.cooldown);
-const cyclerMutationChoice = game.createIllegalOverclockMutationChoice(cyclerBuild);
-assert.ok(cyclerMutationChoice);
-game.applyForgeChoice(cyclerRun, cyclerMutationChoice);
-const mutatedCyclerWeapon = game.computeWeaponStats(cyclerBuild);
-assert.ok(mutatedCyclerWeapon.cooldown < cyclerWeapon.cooldown);
-assert.equal(mutatedCyclerWeapon.illegalOverclockFirePattern.offsets.length, 2);
+assert.equal(cyclerWeapon.illegalOverclockLabel, null);
+assert.equal(cyclerWeapon.cooldown, baseRelayWeapon.cooldown);
+assert.equal(game.createIllegalOverclockMutationChoice(cyclerBuild), null);
 const artilleryFrameBuild = game.createInitialBuild("rail_zeal");
 artilleryFrameBuild.bastionDoctrineId = "storm_artillery";
 artilleryFrameBuild.coreId = "lance";

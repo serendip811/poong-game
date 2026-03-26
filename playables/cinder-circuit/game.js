@@ -6749,6 +6749,10 @@
     return !CONSOLIDATED_12_WAVE_ROUTE;
   }
 
+  function shouldAllowContrabandOverclockRoute() {
+    return !CONSOLIDATED_12_WAVE_ROUTE;
+  }
+
   function shouldUseLateFieldCache(nextWave) {
     return (
       Number.isFinite(nextWave) &&
@@ -11450,7 +11454,7 @@
   }
 
   function createIllegalOverclockChoices(build) {
-    if (!build || build.illegalOverclockId) {
+    if (!build || build.illegalOverclockId || !shouldAllowContrabandOverclockRoute()) {
       return [];
     }
     return Object.values(ILLEGAL_OVERCLOCK_DEFS).map((overclock) => ({
@@ -11470,7 +11474,7 @@
   }
 
   function createIllegalOverclockMutationChoice(build) {
-    if (!build || !build.illegalOverclockId) {
+    if (!build || !build.illegalOverclockId || !shouldAllowContrabandOverclockRoute()) {
       return null;
     }
     const overclock = getIllegalOverclockDef(build);
@@ -11553,12 +11557,8 @@
       title: `${mutation.title} ${getRiskMutationTierLabel(nextLevel)}`,
       description: `${
         mutation.description
-      } ${
-        !build.illegalOverclockId
-          ? "첫 접합에서는 금지 성장선까지 자동으로 묶어 late reward를 한 개의 monster lane으로 고정한다. "
-          : ""
-      }다음 Wave ${nextWave}는 spawn budget, active cap, hazard count가 함께 오른다.`,
-      slotText: `${mutation.slotText}${!build.illegalOverclockId ? " · contraband splice 동봉" : ""} · Wave ${nextWave} 압박세`,
+      } 다음 Wave ${nextWave}는 spawn budget, active cap, hazard count가 함께 오른다.`,
+      slotText: `${mutation.slotText} · Wave ${nextWave} 압박세`,
       cost: 0,
       laneLabel: "Dominant Mutation",
       forgeLaneLabel: "Dominant Mutation",
@@ -14724,7 +14724,7 @@
       run.build.riskMutationLevel = Math.max(getRiskMutationLevel(run.build), nextLevel);
       run.build.riskMutationQueuedLevel = Math.max(getRiskMutationQueuedLevel(run.build), nextLevel);
       let bundledIllegalNote = "";
-      if (!run.build.illegalOverclockId) {
+      if (shouldAllowContrabandOverclockRoute() && !run.build.illegalOverclockId) {
         const overclockId = getDominantMutationOverclockId(run.build);
         const overclock = getIllegalOverclockDef(overclockId);
         if (overclock) {
@@ -14741,7 +14741,7 @@
         MAX_ILLEGAL_OVERCLOCK_MUTATIONS,
         Math.floor(nextLevel / 2)
       );
-      if (run.build.illegalOverclockId) {
+      if (shouldAllowContrabandOverclockRoute() && run.build.illegalOverclockId) {
         const overclock = getIllegalOverclockDef(run.build);
         while (getIllegalOverclockMutationLevel(run.build) < targetIllegalMutationLevel) {
           const illegalNextLevel = getIllegalOverclockMutationLevel(run.build) + 1;
@@ -15307,6 +15307,7 @@
     getForgeDraftType,
     shouldUseFieldGrant,
     shouldAllowCombatRewardDrops,
+    shouldAllowContrabandOverclockRoute,
     isArsenalBreakpointWave,
     shouldRunCatalystDraft,
     applyBlackLedgerRaidConfig,

@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop route expansion and harden `Wave 1-6` into one quiet-first-minute, forge-only reward spine with minimal HUD/forge language; cut inspect-board/admin overlays and post-capstone route spillover until repeated runs feel readable and hungry.
+- Immediate priority: stop route expansion and harden `Wave 1-6` into one quiet-first-minute, forge-only reward spine with one earned weapon/body ladder; cut live cache mutations, inspect/admin overlays, support-preview clutter, and post-capstone spillover until repeated runs feel readable and hungry.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 22:05:00 KST
+  Findings:
+  - The run still sells too many future fantasies before the player has earned the first one. `docs/games/cinder-circuit-design.md` opens with signatures granting a start core plus bench seeds, then `playables/cinder-circuit/game.js` layers wildcard protocols at `Wave 4/7/10`, support systems at `Wave 9`, and multiple live cache mutations after that. A strong rerun opener should begin smaller and let the first obvious transformation feel expensive and awaited.
+  - The core weapon ladder is actually stronger than the surrounding game, but it is being buried. The doctrine ladders in `playables/cinder-circuit/game.js` already have real visual payoff jumps like triple-to-five-to-seven shot spreads, slag seed growth, and screen-width lance forms, yet the run keeps competing with sentries, drones, halos, missiles, illegal overclocks, and cache hijacks for attention.
+  - Build choice quality is still too often "take another layer" instead of "commit to a form." Against the repeat-run hunger in `Nova Drift` or the clean survivability/greed forks in `Brotato`, `Cinder Circuit` still over-advertises side systems and exception rewards when the player should be anticipating one main gun/body break, one survival answer, and one economy risk.
+  - In-combat cache pickups still weaken payoff timing. `late_ascension_cache`, `afterburn_ascension_cache`, `finale_mutation_cache`, and `illegal_overclock_cache` let giant identity shifts happen in the arena, which robs the forge of anticipation and makes the run feel like stacked exceptions rather than a disciplined escalation ladder.
+  Top Priority: Rebuild the default run so the first 6 waves only escalate one dominant weapon/body line plus one modest survival fork, with support systems and all live identity-changing caches disabled until that ladder feels hungry on repeat.
+  Why Now: The game already has some strong form evolutions, but they cannot land while the run keeps front-loading alternate fantasies and shortcut mutations.
+  Do Not Repeat: Do not answer this by adding another support tier, wildcard branch, or cache wrapper around the same overloaded ladder.
+  Release Gate: Builds
 
 - 2026-03-26 18:42:00 KST
   Findings:
@@ -3018,6 +3029,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-26 18:44:20 KST
+  Changed: narrowed one bounded piece of the shipped build ladder in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the consolidated `12-wave` route no longer grows a hidden contraband sub-build when the player takes `Dominant Mutation`. I added a shipped-route fail-closed gate for `illegal overclock`, made `createIllegalOverclockChoices(...)` and `createIllegalOverclockMutationChoice(...)` return nothing on the default route, and stopped `applyForgeChoice(... risk_mutation ...)` from auto-bundling `Glass Broadside / Meltdown Cycler / Rupture Crown` into the main mutation pick. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks that shipped-route risk mutation copy no longer advertises contraband, that taking it only advances `riskMutationLevel`, and that overclock choices/molts stay dark in smoke.
+  Why: the newest critique's `Top Priority` was to make the default run climb one dominant weapon/body line plus one modest survival fork, with side fantasies hidden until that ladder earns hunger. The highest-value concrete interpretation was to cut the contraband splice that `Dominant Mutation` was still silently attaching, because that one hidden rider kept turning a main-gun payoff into "take another layer" even after live caches and early support offers were already being reduced.
+  Follow-up risk: this makes the default route cleaner, but it also leaves the late `risk_mutation` lane with less variance than before. If repeated runs start feeling too samey after the main weapon/body ladder is proven, the next bounded builds pass should add a second visible main-weapon mutation fork or a sharper defense/greed tradeoff, not revive hidden contraband sidecars on the shipped route.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Builds
 
 - 2026-03-26 18:12:01 KST
   Changed: tightened one bounded piece of the shipped `Tab` inspect surface in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css), and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the on-demand board now reads like a quick combat snapshot instead of a recycled forge card. The inspect hero now shows only `현재 형태`, one `다음 시험` cell, one `고철` cell, and the three build-lane tiles, using dedicated inspect-board meta styling instead of `forge-focus__proof` and `forge-card__pivot` markup. Smoke now locks that this board keeps exactly two compact meta cells and does not regrow forge proof/bill scaffolding.
