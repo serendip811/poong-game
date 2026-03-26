@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: protect the `bare hull -> Wave 3 weapon break` opener by removing roadmap/admin explanation from title-forge flow and keeping `Wave 1-2` quiet enough that the first real spectacle feels earned.
+- Immediate priority: make the shipped `Wave 1-6` route prove one real rerun hook beyond the first weapon break by surfacing a visible defense/support/greed branch early enough to matter, instead of hiding build appetite in non-shipped later scaffolding.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 09:40:00 KST
+  Findings:
+  - The shipped six-wave route is still too narrow to create rerun hunger. In `playables/cinder-circuit/game.js`, `buildForgeChoices()` forces a two-card base-route contract for `Wave 1-6`, which removes the greed/utility lane entirely right where a roguelite should start teaching players that different runs can branch for different reasons.
+  - The game already contains the right fantasies, but they mostly live outside the honest product. Support systems like orbitals, shields, missiles, and drones exist in `SUPPORT_SYSTEM_DEFS`, yet the consolidated route withholds them until later while the docs in `docs/games/cinder-circuit-design.md` still sell a much bigger 12-wave ownership arc. The player sees the promise in the codebase, not in the run they can actually replay.
+  - `Wave 6` currently tries to be chassis lock, final forge, and payoff all at once. That compresses the first real body/support identity into the end of the session, so the player closes the run just as the build starts becoming distinct instead of getting a proof window big enough to want another attempt.
+  - The UI contract is cleaner than before, but it now risks becoming too restrictive rather than too verbose. Strong references like `Nova Drift` or `Brotato` do not just show fewer words; they expose one more meaningful axis of desire early, so the player starts planning for orbitals, shields, greed, or helpers before they own them.
+  Top Priority: Redesign the shipped `Wave 1-6` progression so the player gets one clear secondary build axis by mid-run, for example a visible support/defense/greed branch at `Wave 4-5`, then give that choice one full combat proof window before results.
+  Why Now: Without a second axis of build identity before the run ends, the loop can feel clean once but still not feel worth rerunning.
+  Do Not Repeat: Do not solve this by adding more hidden late-game systems or more preview text about future forms; the shipped route itself needs an actual branch with live payoff.
+  Release Gate: Builds
 
 - 2026-03-27 05:24:00 KST
   Findings:
@@ -3277,6 +3288,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 13:05:00 KST
+  Changed: reopened one bounded mid-run branch in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the shipped `Wave 1-6` route no longer stays on a flat two-card contract all the way to the end. The consolidated forge now keeps `Wave 1-4` and `Wave 6` on the lean `주력 + 버팀` read, but the stop that feeds `Wave 5` now opens a real `주력 + 버팀 + 판돈` fork: `preview_support` is allowed back onto the short route as the rider hint card, the greed lane can surface again, and the combat-feed copy now explicitly frames that stop as the first rerun branch instead of another strict two-card checkpoint. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks `Wave 5 = 3 choices with gamble present` while `Wave 6` still fails closed to the chassis-lock two-card contract.
+  Why: the latest critique's `Top Priority` said the shipped six-wave loop still removes the second build axis right where the player should start planning for greed or support. The highest-value concrete interpretation was to make only the `Wave 4 -> 5` forge stop branch again, because that gives the run one honest mid-run decision and one full combat proof window before results without reloading the opener with extra spectacle or turning the `Wave 6` lock into another admin-heavy draft.
+  Follow-up risk: this restores appetite, but `preview_support` is still just a hint card rather than a full install on the short route. If critique or playtesting says the new branch reads interesting but lands too softly in combat, the next bounded pass should strengthen the immediate proof of that `Wave 5` rider or greed fork inside the same six-wave spine, not widen earlier waves or add another reward wrapper.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Builds
 
 - 2026-03-27 12:14:36 KST
   Changed: added one bounded post-lock payoff window in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the shipped route no longer jumps straight from `Wave 6` clear to results. The consolidated run now routes `Wave 6 clear -> Victory Lap -> result`: `getBaseRoutePostWaveTransition()` advertises a short `승리 랩`, `beginBaseRouteVictoryLap()` launches one no-admin open-lane domination cell with a larger `1760x980` arena, lighter `58 spawnBudget / 15 activeCap` pressure, no hazard tax, and no extra forge stop, and the HUD/feed/result copy now explicitly treat that window as the real post-lock payoff. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks the new `Wave 6 clear -> victory lap -> result` transition and the lap config.

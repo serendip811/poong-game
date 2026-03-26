@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `UX/UI` coupled to early combat readability: the six-wave route exists, but the player is still being told too much and tested on too many asks before the first break.
-- Current drift bundle: the title still roadmaps `Wave 3` and `Wave 6`, `Wave 2` already stacks flanker mix plus hazard before build identity forms, the forge still wraps rewards in proof/admin framing, and clear-state messaging still narrates process instead of urgency.
-- Repeated false solution: shrinking or restyling roadmap/admin copy instead of removing it and letting the first transformation be learned in play.
-- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: the first minute should be sparse, readable, and hungry, with the first major reward readable at a glance.
-- Near-term critic pressure should stay on bare-hull restraint, reward appetite, and pre-break clarity; do not reopen expansion talk until the first `Wave 3` leap lands cleanly.
+- The most fragile gate is now `Builds`: the shipped six-wave route is cleaner than before, but it still ends before the player gets a real secondary build identity worth chasing again.
+- Current drift bundle: `buildForgeChoices()` suppresses the greed/utility lane across the base route, support fantasies like orbitals/shields/missiles/drones mostly remain outside the honest shipped path, and `Wave 6` compresses chassis lock plus payoff into a finale that arrives too late to enjoy.
+- Repeated false solution: trimming UI text while leaving the shipped route structurally too narrow, or pointing at hidden 12-wave/afterburn depth instead of surfacing one meaningful branch in the replayable route.
+- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: clarity matters, but those games also plant build anticipation early by exposing one more hunger axis before the run is nearly over.
+- Near-term critic pressure should stay on route honesty, secondary build-axis timing, and proof-window length; every new system idea should be judged by whether the current `Wave 1-6` loop actually lets players feel and chase it.

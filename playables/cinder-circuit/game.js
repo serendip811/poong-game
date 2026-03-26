@@ -6208,7 +6208,7 @@
     sanitizeConsolidatedBuildState(build);
     const installedSystems = getInstalledSupportSystems(build);
     if (installedSystems.length === 0) {
-      if (!CONSOLIDATED_12_WAVE_ROUTE && build && build.previewSupportSystemId) {
+      if (build && build.previewSupportSystemId) {
         return SUPPORT_SYSTEM_DEFS[build.previewSupportSystemId] || null;
       }
       return null;
@@ -6290,7 +6290,7 @@
     const installedSystems = getInstalledSupportSystems(build);
     const doctrineCapstone = getDoctrineCapstoneDef(build);
     const previewSystemId =
-      !CONSOLIDATED_12_WAVE_ROUTE && installedSystems.length === 0 && build
+      installedSystems.length === 0 && build
         ? build.previewSupportSystemId || null
         : null;
     if (installedSystems.length === 0 && !previewSystemId) {
@@ -8060,9 +8060,6 @@
   function sanitizeConsolidatedBuildState(build) {
     if (!CONSOLIDATED_12_WAVE_ROUTE || !build) {
       return build;
-    }
-    if (build.previewSupportSystemId) {
-      build.previewSupportSystemId = null;
     }
     if (Array.isArray(build.wildcardProtocolIds) && build.wildcardProtocolIds.length > 0) {
       build.wildcardProtocolIds = [];
@@ -11010,6 +11007,14 @@
     return false;
   }
 
+  function shouldOpenBaseRouteSecondaryBranch(nextWave) {
+    return (
+      CONSOLIDATED_12_WAVE_ROUTE &&
+      Number.isFinite(nextWave) &&
+      nextWave === 5
+    );
+  }
+
   function isBaseRouteHeadlineChoice(choice, nextWave) {
     if (!choice) {
       return false;
@@ -12220,10 +12225,10 @@
       recurringBaseRouteContract &&
       nextWave >= SUPPORT_SYSTEM_START_WAVE &&
       supportSystemChoices.length > 0;
+    const openSecondaryBranch = shouldOpenBaseRouteSecondaryBranch(nextWave);
     const strictBaseRouteRiderContract =
       recurringBaseRouteContract &&
-      nextWave >= 5 &&
-      nextWave <= DEFAULT_ROUTE_WAVE_COUNT;
+      nextWave === DEFAULT_ROUTE_WAVE_COUNT;
     const defensePool =
       recurringBaseRouteContract && nextWave === 6
         ? [...chassisBreakpointChoices, ...subsystemCandidates, ...sustainCandidates]
@@ -12247,7 +12252,8 @@
     const twoCardBaseRouteContract =
       recurringBaseRouteContract &&
       nextWave >= 1 &&
-      nextWave <= DEFAULT_ROUTE_WAVE_COUNT;
+      nextWave <= DEFAULT_ROUTE_WAVE_COUNT &&
+      !openSecondaryBranch;
     const adaptiveHeadlineChoice =
       recurringBaseRouteContract && nextWave < LATE_BREAK_ARMORY_WAVE
         ? takeBestScoredChoice(headlinePool, takenIds, "주력 변신", (choice) =>
@@ -12683,7 +12689,7 @@
   }
 
   function getPreviewSupportSystemId(build) {
-    if (!build || CONSOLIDATED_12_WAVE_ROUTE) {
+    if (!build) {
       return null;
     }
     if (build.previewSupportSystemId && PREVIEW_SUPPORT_SYSTEM_DEFS[build.previewSupportSystemId]) {
@@ -12710,9 +12716,9 @@
 
   function createPreviewSupportChoice(build, nextWave) {
     if (
-      CONSOLIDATED_12_WAVE_ROUTE ||
       !build ||
       nextWave !== 5 ||
+      Boolean(build.previewSupportSystemId) ||
       getInstalledSupportSystems(build).length > 0
     ) {
       return null;
@@ -13775,7 +13781,8 @@
       CONSOLIDATED_12_WAVE_ROUTE &&
       Number.isFinite(nextWave) &&
       nextWave >= 1 &&
-      nextWave <= DEFAULT_ROUTE_WAVE_COUNT;
+      nextWave <= DEFAULT_ROUTE_WAVE_COUNT &&
+      !shouldOpenBaseRouteSecondaryBranch(nextWave);
     if (shouldUseLateFieldCache(nextWave)) {
       if (isArsenalBreakpointWave(nextWave)) {
         return [
@@ -14579,9 +14586,6 @@
     }
 
     if (choice.type === "utility" && choice.action === "preview_support") {
-      if (CONSOLIDATED_12_WAVE_ROUTE) {
-        return null;
-      }
       if (!PREVIEW_SUPPORT_SYSTEM_DEFS[choice.systemId]) {
         return null;
       }
@@ -17752,7 +17756,9 @@
             ? "Wave 4 돌파. 이번 정지는 눈에 띄게 큰 한 장과 버티는 답 한 장만 남긴다. 판돈 갈림길은 body break 뒤로 미룬다."
             : "Wave 4 돌파. Act Break Armory는 이제 headline breakpoint 1장 뒤에 support/defense/greed rider 1장을 얹어, Act 2 빌드 정체성을 더 빨리 조립하게 만든다."
           : CONSOLIDATED_12_WAVE_ROUTE
-            ? "웨이브 종료. 눈에 띄게 큰 한 장과 버티는 답 한 장만 남기고 바로 다음 전투로 이어진다."
+            ? forgeOptions.nextWave === 5
+              ? "Wave 4 돌파. 이번 정지는 주력 하나 뒤에 버팀과 판돈을 함께 열어 첫 rerun 갈림길을 바로 시험하게 만든다."
+              : "웨이브 종료. 눈에 띄게 큰 한 장과 버티는 답 한 장만 남기고 바로 다음 전투로 이어진다."
             : "웨이브 종료. 먼저 headline 변신을 고르고, 이어서 작은 rider slot으로 support/defense/greed를 한 장 더 얹는다.",
       "FORGE"
     );
