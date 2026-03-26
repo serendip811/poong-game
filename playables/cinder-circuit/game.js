@@ -7012,6 +7012,10 @@
     );
   }
 
+  function shouldAllowCombatRewardDrops() {
+    return !CONSOLIDATED_12_WAVE_ROUTE;
+  }
+
   function shouldUseLateFieldCache(nextWave) {
     return (
       Number.isFinite(nextWave) &&
@@ -14152,6 +14156,9 @@
   }
 
   function deployCombatCache(enemy) {
+    if (!shouldAllowCombatRewardDrops()) {
+      return;
+    }
     const combatCache = state.wave && state.wave.combatCache;
     if (!combatCache || combatCache.deployed || combatCache.claimed) {
       return;
@@ -14324,6 +14331,9 @@
   }
 
   function deployLateAscension(enemy) {
+    if (!shouldAllowCombatRewardDrops()) {
+      return;
+    }
     const ascension = state.wave && state.wave.lateAscension;
     if (!ascension || ascension.deployed || ascension.claimed) {
       return;
@@ -15422,6 +15432,7 @@
     shouldSkipOwnershipAdminStop,
     shouldUseConsolidatedLateFormForge,
     shouldUseFieldGrant,
+    shouldAllowCombatRewardDrops,
     isArsenalBreakpointWave,
     shouldRunCatalystDraft,
     applyBlackLedgerRaidConfig,
@@ -17624,7 +17635,7 @@
             activeCapBonus: 4,
           }
         : null,
-      combatCache: shouldForceBaseRouteForgeStop(waveNumber + 1)
+      combatCache: !shouldAllowCombatRewardDrops()
         ? null
         : shouldUseCompactActBreakCache({ nextWave: waveNumber + 1, finalForge: false }) ||
             shouldUseFieldGrant({ nextWave: waveNumber + 1, finalForge: false })
@@ -17645,7 +17656,7 @@
               ),
             }
           : null,
-      lateAscension: shouldForceBaseRouteForgeStop(waveNumber)
+      lateAscension: !shouldAllowCombatRewardDrops()
         ? null
         : shouldOfferLateAscension(state.build, waveNumber)
         ? {
@@ -17657,7 +17668,7 @@
         : null,
       lateAscensionCarrierType: config.ascensionCarrierType || null,
       lateAscensionCarrierSpawned: false,
-      doctrineAscension: shouldForceBaseRouteForgeStop(waveNumber)
+      doctrineAscension: !shouldAllowCombatRewardDrops()
         ? null
         : shouldRunDoctrineLiveAscension(state.build, waveNumber)
         ? {

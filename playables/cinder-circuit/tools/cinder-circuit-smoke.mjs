@@ -36,11 +36,20 @@ assert.equal(game.getPlayerFacingActLabelForWave(9).shortLabel, "Act 3");
 assert.equal(game.getPlayerFacingActLabelForWave(13).shortLabel, "Act 3");
 assert.equal(game.getPlayerFacingActLabelForWave(19).shortLabel, "Act 3");
 assert.equal(game.POST_CAPSTONE_WAVE_COUNT, 7);
+assert.equal(game.shouldAllowCombatRewardDrops(), false);
 assert.equal(game.shouldUseFieldGrant({ nextWave: 9, finalForge: false }), false);
 assert.equal(game.shouldUseFieldGrant({ nextWave: 5, finalForge: false }), false);
 assert.equal(game.getCombatCacheChoicesForWave(game.createInitialBuild("rail_zeal"), 9).length, 0);
 assert.equal(game.getCombatCacheChoicesForWave(game.createInitialBuild("rail_zeal"), 5).length, 0);
 assert.equal(game.getCombatCacheChoicesForWave(game.createInitialBuild("rail_zeal"), 14).length, 0);
+assert.equal(
+  game.getBaseRoutePostWaveTransition({ waveIndex: 4, wave: { completesRun: false } }, 6).action,
+  "forge"
+);
+assert.equal(
+  game.getBaseRoutePostWaveTransition({ waveIndex: 8, wave: { completesRun: false } }, 10).action,
+  "forge"
+);
 assert.ok(game.WAVE_CONFIG[0].spawnBudget < game.WAVE_CONFIG[2].spawnBudget);
 assert.equal(game.WAVE_CONFIG[0].arena.width, 1080);
 assert.equal(game.WAVE_CONFIG[1].arena.width, 1160);

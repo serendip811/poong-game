@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: close the shipped route into a forge-first `12-wave` spine by removing live-combat mutation/cache bypasses, reducing `Wave 5-10` to two reusable open-arena pressure bands, and keeping HUD/forge to one growth headline plus one immediate threat.
+- Immediate priority: freeze route expansion and prove one replayable forge-first `12-wave` spine by removing live-combat mutation/cache bypasses, collapsing `Wave 5-12` into reusable open-arena pressure bands, and keeping HUD/forge to one payoff headline plus one immediate threat.
 
 ## Release Gates
 
@@ -61,6 +61,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 21:40:00 KST
+  Findings:
+  - [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8) and [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L33) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L37) still define the shipped game as a clean `12-wave / three-era` contract that may later grow to `20-30 waves`. That keeps the whole project aimed at polishing a bounded slice instead of proving a run skeleton that can actually sustain repeated play desire.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L932) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1249) still turn the back half into authored showcase waves with named cells, bespoke hazard types, and custom encounter grammar. The arena is larger, but the combat still does not breathe like a system-driven arena shooter loop a player would want to re-solve for 30 minutes.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21850) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22055) still let caches, ascensions, and illegal overclocks mutate the build live in combat. That undercuts the core addiction loop because the player is still being paid during action instead of being made hungry for the next between-wave transformation.
+  - [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L93) through [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L122) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22445) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22740) still keep roadmap, objective card, live readout, upgrade list, forge context copy, and proof/payoff labels on screen together. Compared with the hierarchy discipline in `Nova Drift`, `Brotato`, or `Hades`, the game still makes the player read the run structure instead of feel one danger and crave one upgrade.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2812) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3509) still maintain a wide late catalog of satellites, halos, sentries, missiles, drones, wildcard protocols, and ascensions. Even with support delayed to `Wave 9`, the design energy is still going into breadth before one core weapon/body path has proven enough visual escalation and payoff to carry reruns by itself.
+  Top Priority: Stop expanding the catalog and rebuild the shipped run around a single reusable `fight -> forge -> visible transformation -> proof` loop, with `Wave 5-12` reduced to a few remixable pressure bands and all major mutations forced into forge stops.
+  Why Now: Until one run skeleton is replayable without bespoke wave scripting or live reward exceptions, every added system just makes the prototype broader.
+  Do Not Repeat: Do not answer this with another support branch, another named cache, or another wording pass while the mid-to-late run still depends on scripted cells and in-combat mutations to stay interesting.
+  Release Gate: Progression
 
 - 2026-03-26 21:05:00 KST
   Findings:
@@ -2851,6 +2863,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-26 22:40:00 KST
+  Changed: hardened one bounded piece of the shipped reward cadence in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) by adding a single fail-closed gate for live combat rewards on the consolidated `Wave 1-12` route. `shouldAllowCombatRewardDrops()` now clamps the shipped run to `false`, wave construction no longer arms `combatCache`, `lateAscension`, or `doctrineAscension` on that path, and both `deployCombatCache(...)` and `deployLateAscension(...)` now return immediately if old shared calls fire during elite deaths. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock that shipped combat reward drops stay dark, `Wave 6` and `Wave 10` still transition through forge, and late-ascension utility choices remain unavailable in the shipped mode. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to stop letting caches and ascensions mutate the build live in combat and to reassert one reusable `fight -> forge -> visible transformation -> proof` spine. The highest-value concrete interpretation was to close the shared deploy path itself, because earlier passes had already hidden many shipped offers but elite-drop helpers and wave-state setup still depended on scattered route guards instead of one clear fail-closed contract.
+  Follow-up risk: the non-consolidated route still carries `combat_cache` and ascension drop systems for older/post-capstone content, so future shared refactors could bypass this guard if they mint new live reward helpers instead of reusing `shouldAllowCombatRewardDrops()`. If this critique repeats, the next bounded pass should quarantine more of those legacy live-drop systems behind a clearer non-shipping boundary rather than reopening any shipped combat payout.
+  Release Gate: Progression
 
 - 2026-03-26 10:11:31 KST
   Changed: removed one bounded reward-cadence exception from the shipped route in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so consolidated `Wave 1-12` now fail closed to between-wave forge beats only. `getBaseRoutePostWaveTransition(...)` no longer returns a player-facing `field_grant` stop at `Wave 5`, `getCombatCacheChoicesForWave(...)` now returns `[]` for the shipped mode at every wave, wave construction now nulls `combatCache`, `lateAscension`, and `doctrineAscension` on the default route, and stale `combat_cache` / `late_ascension_cache` pickups are discarded if old state somehow leaks in. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new contract: `Wave 5` and `Wave 9` both transition through forge, and shipped combat-cache expectations now stay dark instead of advertising a live stop. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
