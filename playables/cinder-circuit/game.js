@@ -12253,12 +12253,10 @@
       : reserveMidrunSupportForRider
         ? [...gambleCandidates, ...pivotCandidates, ...sustainCandidates]
         : [...gambleCandidates, ...pivotCandidates, ...sustainCandidates, ...offensiveModuleCandidates];
-    const adaptiveGambleChoice =
-      recurringBaseRouteContract && nextWave <= 10
-        ? takeBestScoredChoice(gamblePool, takenIds, "탐욕/유틸", (choice) =>
-            scoreBaseRouteGambleChoice(choice, build, scrapBank, nextWave)
-          )
-        : takeFirstAvailableChoice(gamblePool, takenIds, "탐욕/유틸");
+    const twoCardBaseRouteContract =
+      recurringBaseRouteContract &&
+      nextWave >= 1 &&
+      nextWave <= DEFAULT_ROUTE_WAVE_COUNT;
     const adaptiveHeadlineChoice =
       recurringBaseRouteContract && nextWave < LATE_BREAK_ARMORY_WAVE
         ? takeBestScoredChoice(headlinePool, takenIds, "주력 변신", (choice) =>
@@ -12270,6 +12268,14 @@
           scoreBaseRouteRiderChoice(choice, nextWave)
         )
       : takeFirstAvailableChoice(riderPool, takenIds, "보조/방호");
+    const adaptiveGambleChoice =
+      twoCardBaseRouteContract
+        ? null
+        : recurringBaseRouteContract && nextWave <= 10
+          ? takeBestScoredChoice(gamblePool, takenIds, "탐욕/유틸", (choice) =>
+              scoreBaseRouteGambleChoice(choice, build, scrapBank, nextWave)
+            )
+          : takeFirstAvailableChoice(gamblePool, takenIds, "탐욕/유틸");
     const choices = [
       markForgeContract(
         adaptiveHeadlineChoice,
@@ -12281,17 +12287,21 @@
         "rider",
         "방호·보조"
       ),
-      markForgeContract(
-        adaptiveGambleChoice,
-        "gamble",
-        "판돈·유틸"
-      ),
     ].filter(Boolean);
+    if (!twoCardBaseRouteContract) {
+      choices.push(
+        markForgeContract(
+          adaptiveGambleChoice,
+          "gamble",
+          "판돈·유틸"
+        )
+      );
+    }
 
     [
       ["headline", "주력 변이", "주력 변신"],
       ["rider", "방호·보조", "보조/방호"],
-      ["gamble", "판돈·유틸", "탐욕/유틸"],
+      ...(twoCardBaseRouteContract ? [] : [["gamble", "판돈·유틸", "탐욕/유틸"]]),
     ]
       .filter(([role]) => !choices.some((choice) => choice.contractRole === role))
       .forEach(([role, label, laneLabel], index) => {
@@ -12320,6 +12330,9 @@
       choices.length > 0 &&
       choices.every((choice) => choice.cost > scrapBank)
     ) {
+      const fallbackRole = twoCardBaseRouteContract ? "rider" : "gamble";
+      const fallbackLabel = twoCardBaseRouteContract ? "방호·보조" : "판돈·유틸";
+      const fallbackLane = twoCardBaseRouteContract ? "보조/방호" : "탐욕/유틸";
       choices[choices.length - 1] = markForgeContract(
         markForgeLane(
           {
@@ -12331,14 +12344,14 @@
             slotText: "무료 정비",
             cost: 0,
           },
-          "탐욕/유틸"
+          fallbackLane
         ),
-        "gamble",
-        "판돈·유틸"
+        fallbackRole,
+        fallbackLabel
       );
     }
 
-    return choices.slice(0, 3);
+    return choices.slice(0, twoCardBaseRouteContract ? 2 : 3);
   }
 
   function shouldOpenForgePackage(run, choice) {
@@ -13767,6 +13780,11 @@
 
   function buildFieldGrantChoices(build, rng, nextWave) {
     const wildcardChoice = createWildcardProtocolChoice(build, nextWave);
+    const twoCardBaseRouteContract =
+      CONSOLIDATED_12_WAVE_ROUTE &&
+      Number.isFinite(nextWave) &&
+      nextWave >= 1 &&
+      nextWave <= DEFAULT_ROUTE_WAVE_COUNT;
     if (shouldUseLateFieldCache(nextWave)) {
       if (isArsenalBreakpointWave(nextWave)) {
         return [
@@ -13859,19 +13877,25 @@
             laneLabel: "Main Weapon Mutation",
           }),
       createFieldGrantCard(survivalChoice),
-      gambleChoice
-        ? createFieldGrantCard(gambleChoice)
-        : createFieldGrantCard({
-            type: "fallback",
-            id: `fieldgrant:gamble_fallback:${nextWave}`,
-            tag: "CACHE",
-            title: "Emergency Vent",
-            description: "이번 캐시는 탐욕/유틸 카드가 비어 있어 열과 체력만 정리한다.",
-            slotText: "현장 보급",
-            cost: 0,
-            laneLabel: "Greed / Utility",
-          }),
     ]
+      .filter(Boolean);
+    if (!twoCardBaseRouteContract) {
+      choices.push(
+        gambleChoice
+          ? createFieldGrantCard(gambleChoice)
+          : createFieldGrantCard({
+              type: "fallback",
+              id: `fieldgrant:gamble_fallback:${nextWave}`,
+              tag: "CACHE",
+              title: "Emergency Vent",
+              description: "이번 캐시는 탐욕/유틸 카드가 비어 있어 열과 체력만 정리한다.",
+              slotText: "현장 보급",
+              cost: 0,
+              laneLabel: "Greed / Utility",
+            })
+      );
+    }
+    return choices
       .filter(Boolean)
       .map((choice, index) =>
         markForgeContract(
@@ -13884,7 +13908,6 @@
               : "판돈·유틸"
         )
       );
-    return choices;
   }
 
   function buildCatalystDraftChoices(build) {
@@ -13986,7 +14009,7 @@
     state.forgeChoices = buildFieldGrantChoices(state.build, Math.random, nextWave);
     pushCombatFeed(
       earlyMutationForge
-        ? "Wave 4 돌파. 이번 정지는 Wave 3에 붙인 주포를 한 번 더 비튼다. 주포 패턴, 버팀선, 판돈 중 하나만 집고 Wave 5 payoff window를 바로 연다."
+        ? "Wave 4 돌파. 이번 정지는 Wave 3에 붙인 주포를 한 번 더 비틀거나, 버티는 선 한 줄을 더하는 두 장만 뜬다. Wave 5 payoff window는 판돈 대신 주포/생존으로 바로 연다."
         : shouldUseLateFieldCache(nextWave)
         ? CONSOLIDATED_12_WAVE_ROUTE
           ? isArsenalBreakpointWave(nextWave)
@@ -17737,10 +17760,10 @@
               : "Wave 8 돌파. Late Break Armory를 단일 breakpoint로 재절단했다. 이제 정확히 세 장만 뜨며, Cataclysm Arsenal, Warplate Halo, Black Ledger Heist 중 하나를 고르면 Wave 9-10은 payoff band, Wave 11은 그 선택 전용 proof, Wave 12는 최종 finale로 꺾인다."
           : draftType === "armory"
           ? CONSOLIDATED_12_WAVE_ROUTE
-            ? "Wave 4 돌파. 이번 정지는 눈에 띄게 큰 한 장만 고르고 바로 다음 전투에서 시험한다."
+            ? "Wave 4 돌파. 이번 정지는 눈에 띄게 큰 한 장과 버티는 답 한 장만 남긴다. 판돈 갈림길은 body break 뒤로 미룬다."
             : "Wave 4 돌파. Act Break Armory는 이제 headline breakpoint 1장 뒤에 support/defense/greed rider 1장을 얹어, Act 2 빌드 정체성을 더 빨리 조립하게 만든다."
           : CONSOLIDATED_12_WAVE_ROUTE
-            ? "웨이브 종료. 눈에 띄게 큰 한 장을 고른 뒤 바로 다음 전투로 이어진다."
+            ? "웨이브 종료. 눈에 띄게 큰 한 장과 버티는 답 한 장만 남기고 바로 다음 전투로 이어진다."
             : "웨이브 종료. 먼저 headline 변신을 고르고, 이어서 작은 rider slot으로 support/defense/greed를 한 장 더 얹는다.",
       "FORGE"
     );

@@ -154,11 +154,12 @@ const wave5ForgeChoices = game.buildForgeChoices(roadmapBuild, Math.random, 999,
   nextWave: 5,
   finalForge: false,
 });
+assert.equal(wave5ForgeChoices.length, 2);
 assert.ok(wave5ForgeChoices.every((choice) => !(choice.type === "utility" && choice.action === "preview_support")));
 assert.equal(wave5ForgeChoices.find((choice) => choice.contractRole === "headline")?.action, "afterglow_mutation");
 assert.equal(wave5ForgeChoices.find((choice) => choice.contractRole === "headline")?.type, "utility");
 const wave5RiderChoice = wave5ForgeChoices.find((choice) => choice.contractRole === "rider");
-const wave5GambleChoice = wave5ForgeChoices.find((choice) => choice.contractRole === "gamble");
+assert.equal(wave5ForgeChoices.find((choice) => choice.contractRole === "gamble"), undefined);
 assert.ok(
   wave5RiderChoice &&
     ((wave5RiderChoice.type === "affix" && wave5RiderChoice.affixId === "thermal_weave") ||
@@ -166,19 +167,16 @@ assert.ok(
         ["armor_mesh", "step_servos", "coolant_purge"].includes(wave5RiderChoice.modId)) ||
       wave5RiderChoice.type === "fallback")
 );
-assert.ok(
-  wave5GambleChoice &&
-    ((wave5GambleChoice.type === "utility" &&
-      ["field_greed", "recycle", "reforge", "affix_reforge"].includes(wave5GambleChoice.action)) ||
-      (wave5GambleChoice.type === "affix" && wave5GambleChoice.affixId === "salvage_link") ||
-      (wave5GambleChoice.type === "mod" &&
-        ["magnet_rig", "reactor_cap"].includes(wave5GambleChoice.modId)) ||
-      wave5GambleChoice.type === "fallback")
-);
+const wave5FieldGrantChoices = game.buildFieldGrantChoices(game.createInitialBuild("rail_zeal"), Math.random, 5);
+assert.equal(wave5FieldGrantChoices.length, 2);
+assert.equal(wave5FieldGrantChoices.find((choice) => choice.contractRole === "headline")?.contractLabel, "주력 변이");
+assert.equal(wave5FieldGrantChoices.find((choice) => choice.contractRole === "rider")?.contractLabel, "방호·보조");
+assert.equal(wave5FieldGrantChoices.find((choice) => choice.contractRole === "gamble"), undefined);
 const wave6ForgeChoices = game.buildForgeChoices(game.createInitialBuild("rail_zeal"), () => 0, 999, {
   nextWave: 6,
   finalForge: false,
 });
+assert.equal(wave6ForgeChoices.length, 2);
 const wave6HeadlineChoice = wave6ForgeChoices.find((choice) => choice.contractRole === "headline");
 assert.ok(
   wave6HeadlineChoice &&
@@ -189,6 +187,7 @@ assert.equal(
   wave6ForgeChoices.find((choice) => choice.contractRole === "rider")?.action,
   "bastion_bay_forge"
 );
+assert.equal(wave6ForgeChoices.find((choice) => choice.contractRole === "gamble"), undefined);
 const cappedHeadlineBuild = game.createInitialBuild("rail_zeal");
 cappedHeadlineBuild.weaponEvolutions[cappedHeadlineBuild.coreId] = 3;
 cappedHeadlineBuild.chassisId = "vector_thrusters";
@@ -460,14 +459,14 @@ const recurringWave3Choices = game.buildForgeChoices(roadmapBuild, Math.random, 
   finalForge: false,
   build: roadmapBuild,
 });
-assert.equal(recurringWave3Choices.length, 3);
+assert.equal(recurringWave3Choices.length, 2);
 assert.equal(
   recurringWave3Choices.map((choice) => choice.contractRole).join("|"),
-  "headline|rider|gamble"
+  "headline|rider"
 );
 assert.equal(
   recurringWave3Choices.map((choice) => choice.contractLabel).join("|"),
-  "주력 변이|방호·보조|판돈·유틸"
+  "주력 변이|방호·보조"
 );
 const recurringWave3HeadlineTransform =
   game.getBaseRouteForgeChoiceTransformation(recurringWave3Choices[0]);
@@ -533,10 +532,10 @@ const recurringWave5Choices = game.buildForgeChoices(wave5MutationBuild, Math.ra
   finalForge: false,
   build: wave5MutationBuild,
 });
-assert.equal(recurringWave5Choices.length, 3);
+assert.equal(recurringWave5Choices.length, 2);
 assert.equal(
   recurringWave5Choices.map((choice) => choice.contractRole).join("|"),
-  "headline|rider|gamble"
+  "headline|rider"
 );
 const recurringWave5HeadlineChoice =
   recurringWave5Choices.find((choice) => choice.contractRole === "headline") ||
@@ -695,18 +694,7 @@ const crownfireWave8Headline =
   crownfireWave8Choices[0];
 assert.equal(crownfireWave8Headline.type, "evolution");
 assert.equal(crownfireWave8Headline.evolutionTier, 2);
-const recurringWave3GambleChoice =
-  recurringWave3Choices.find((choice) => choice.contractRole === "gamble") ||
-  recurringWave3Choices[2];
-const recurringWave3GambleTransform =
-  game.getBaseRouteForgeChoiceTransformation(recurringWave3GambleChoice);
-assert.ok(["판돈", "효과", "버팀", "속성"].includes(recurringWave3GambleTransform.previewLabel));
-assert.ok(recurringWave3GambleTransform.previewValue.length > 0);
-if (recurringWave3GambleTransform.previewLabel === "판돈") {
-  assert.ok(recurringWave3GambleTransform.previewValue.includes("고철 +"));
-  assert.ok(!recurringWave3GambleTransform.previewValue.includes("Siege Debt"));
-}
-assert.ok(!recurringWave3GambleTransform.proof.includes("Siege Debt"));
+assert.equal(recurringWave3Choices.find((choice) => choice.contractRole === "gamble"), undefined);
 const actBreakCacheBuild = game.createInitialBuild("rail_zeal");
 const actBreakCacheChoices = game.getCombatCacheChoicesForWave(actBreakCacheBuild, 5, 12);
 assert.equal(actBreakCacheChoices.length, 0);
@@ -999,7 +987,7 @@ const earlyRiderChoices = game.buildForgeFollowupChoices(
 );
 assert.equal(
   earlyRiderChoices.map((choice) => choice.contractRole).join("|"),
-  "headline|rider|gamble"
+  "headline|rider"
 );
 const actBreakRiderChoices = game.buildForgeFollowupChoices(
   game.createInitialBuild("scrap_pact"),
@@ -1015,7 +1003,7 @@ const actBreakRiderChoices = game.buildForgeFollowupChoices(
 );
 assert.equal(
   actBreakRiderChoices.map((choice) => choice.contractRole).join("|"),
-  "headline|rider|gamble"
+  "headline|rider"
 );
 const packageProbeRun = { waveIndex: 7, pendingFinalForge: false };
 assert.equal(game.shouldOpenForgePackage(packageProbeRun, lateBreakChoices[0]), false);
@@ -1856,10 +1844,10 @@ const directPivotOfferChoices = game.buildForgeChoices(
   180,
   { nextWave: 2 }
 );
-assert.equal(directPivotOfferChoices.length, 3);
+assert.equal(directPivotOfferChoices.length, 2);
 assert.deepEqual(
   Array.from(directPivotOfferChoices, (choice) => choice.contractRole),
-  ["headline", "rider", "gamble"]
+  ["headline", "rider"]
 );
 assert.ok(
   directPivotOfferChoices.some(
@@ -1920,10 +1908,10 @@ midrunChaseBuild.attunedCopies = 1;
 const genericForgeChoices = game.buildForgeChoices(midrunChaseBuild, () => 0, 180);
 assert.ok(!genericForgeChoices.some((choice) => choice.recipeLabel === "Kiln Bloom"));
 const waveTwoForgeChoices = game.buildForgeChoices(midrunChaseBuild, () => 0, 180, { nextWave: 2 });
-assert.equal(waveTwoForgeChoices.length, 3);
+assert.equal(waveTwoForgeChoices.length, 2);
 assert.deepEqual(
   Array.from(waveTwoForgeChoices, (choice) => choice.contractRole),
-  ["headline", "rider", "gamble"]
+  ["headline", "rider"]
 );
 assert.ok(!waveTwoForgeChoices.some((choice) => choice.type === "system"));
 assert.ok(waveTwoForgeChoices.some((choice) => choice.recipeLabel === "Kiln Bloom"));
@@ -1934,10 +1922,10 @@ const waveThreeEvolutionChoice = waveThreeForgeChoices.find(
 assert.ok(waveThreeEvolutionChoice);
 assert.equal(waveThreeEvolutionChoice.coreId, "scatter");
 assert.equal(waveThreeEvolutionChoice.evolutionTier, 1);
-assert.equal(waveThreeForgeChoices.length, 3);
+assert.equal(waveThreeForgeChoices.length, 2);
 assert.equal(
   waveThreeForgeChoices.map((choice) => choice.contractRole).join("|"),
-  "headline|rider|gamble"
+  "headline|rider"
 );
 assert.ok(waveThreeForgeChoices.every((choice) => choice.laneLabel !== "보조 시스템"));
 assert.ok(waveThreeForgeChoices.every((choice) => choice.laneLabel !== "생존/경제"));
@@ -2313,14 +2301,10 @@ assert.ok(!fortressFollowupChoices.some((choice) => choice.laneLabel === "Suppor
 const fieldGrantBuild = game.createInitialBuild("relay_oath");
 fieldGrantBuild.pendingCores = [];
 const fieldGrantChoices = game.buildFieldGrantChoices(fieldGrantBuild, () => 0, 4);
-assert.equal(fieldGrantChoices.length, 3);
+assert.equal(fieldGrantChoices.length, 2);
 assert.equal(
   JSON.stringify(fieldGrantChoices.map((choice) => choice.contractLabel)),
-  JSON.stringify([
-    "주력 변이",
-    "방호·보조",
-    "판돈·유틸",
-  ])
+  JSON.stringify(["주력 변이", "방호·보조"])
 );
 assert.ok(
   fieldGrantChoices.every((choice) =>
@@ -2329,13 +2313,7 @@ assert.ok(
 );
 assert.ok(fieldGrantChoices.every((choice) => choice.fieldGrant === true));
 assert.ok(fieldGrantChoices.every((choice) => choice.type !== "core"));
-assert.ok(
-  fieldGrantChoices.some(
-    (choice) =>
-      choice.type === "utility" &&
-      choice.action === "field_greed"
-  )
-);
+assert.ok(!fieldGrantChoices.some((choice) => choice.type === "utility" && choice.action === "field_greed"));
 assert.ok(
   fieldGrantChoices
     .filter((choice) => choice.type !== "fallback" && choice.cost > 0)
@@ -2455,7 +2433,7 @@ const packageFollowupChoices = game.buildForgeFollowupChoices(
 );
 assert.equal(
   packageFollowupChoices.map((choice) => choice.contractRole).join("|"),
-  "headline|rider|gamble"
+  "headline|rider"
 );
 assert.ok(!packageFollowupChoices.some((choice) => choice.type === "system"));
 assert.equal(
@@ -2565,10 +2543,10 @@ const actBreakArmoryChoices = game.buildForgeChoices(
   180,
   { nextWave: 5, finalForge: false }
 );
-assert.equal(actBreakArmoryChoices.length, 3);
+assert.equal(actBreakArmoryChoices.length, 2);
 assert.equal(
   actBreakArmoryChoices.map((choice) => choice.contractRole).join("|"),
-  "headline|rider|gamble"
+  "headline|rider"
 );
 const armoryFirstPick = actBreakArmoryChoices.find((choice) => choice.contractRole === "headline");
 assert.ok(armoryFirstPick);
@@ -2585,7 +2563,7 @@ const actBreakFollowupChoices = game.buildForgeFollowupChoices(
 );
 assert.equal(
   actBreakFollowupChoices.map((choice) => choice.contractRole).join("|"),
-  "headline|rider|gamble"
+  "headline|rider"
 );
 assert.ok(!actBreakFollowupChoices.some((choice) => choice.id === armoryFirstPick.id));
 const lateArmoryBuild = game.createInitialBuild("relay_oath");
@@ -2625,7 +2603,7 @@ const actOneModuleFollowup = game.buildForgeFollowupChoices(
 );
 assert.equal(
   actOneModuleFollowup.map((choice) => choice.contractRole).join("|"),
-  "rider|gamble"
+  "rider"
 );
 const actTwoModuleFollowup = game.buildForgeFollowupChoices(
   actModuleFollowupBuild,
@@ -2636,7 +2614,7 @@ const actTwoModuleFollowup = game.buildForgeFollowupChoices(
 );
 assert.equal(
   actTwoModuleFollowup.map((choice) => choice.contractRole).join("|"),
-  "rider|gamble"
+  "rider"
 );
 const seekerInstallChoice = game
   .buildForgeFollowupChoices(

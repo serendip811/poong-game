@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: make the shipped `Wave 1-6` route honest on every player-facing screen by stripping roadmap-style explanation, killing lingering `Wave 9+` fantasy in the active presentation, and centering the run on one small start, one weapon break, and one chassis break.
+- Immediate priority: collapse the shipped `Wave 1-6` route into one hungry growth ladder by removing live doctrine/support/greed side lanes from the forge and giving the `Wave 6` chassis break a short domination lap instead of ending on setup.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 03:01:44 KST
+  Findings:
+  - The project still defines success as a `12-wave / three-era / signature + rider` game even while the shipped route is `Wave 1-6`. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8) and [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L33) plus [docs/games/cinder-circuit-source-analysis.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-analysis.md#L46) and [docs/games/cinder-circuit-source-analysis.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-analysis.md#L51) still aim at a larger contract, so the current run keeps feeling like an excerpt instead of a rerunnable spine.
+  - The live forge is still too broad for a six-wave action roguelite. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L11984) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12023) mix weapon evolution, mutation, doctrine chase, wildcard, greed contract, and support preview into the same stop, and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12737) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12804) still assume every follow-up should branch into support, defense, or greed. That is prototype menu breadth, not build hunger.
+  - The supposed lean start is still built on helper-tech scaffolding. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L5274) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L5324) reserve support bays and numerous late-route hooks in the base build, while [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L17195) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L17234) still maintain satellite/deployable runtime as a first-class layer. The run may show a bare hull, but the system is still mentally built from orbitals, shields, missiles, and drones backward.
+  - `Wave 5-6` still read like mid-act payoff cells from a longer route, not the first unforgettable domination lap. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L433) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L479) stage them as `payoff` and `payoff_plus`, and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L13363) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L13394) spend `Wave 6` on locking the first real body break. The run is stopping exactly where the player should finally get to bully the arena for a minute and want another run.
+  Top Priority: Collapse the shipped forge to one headline leap plus one survival pick per stop, and keep doctrine/support/greed preview lanes out of the live `Wave 1-6` route until the `Wave 6` body break earns a real domination window.
+  Why Now: Leaner screens will not matter if the actual reward ladder still feels like a prototype sampler.
+  Do Not Repeat: Do not answer this with smaller cards or shorter copy while the same multi-lane choice catalog remains live underneath.
+  Release Gate: Builds
 
 - 2026-03-27 02:38:00 KST
   Findings:
@@ -3209,6 +3220,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 11:18:00 KST
+  Changed: collapsed one bounded piece of the shipped forge contract in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so every live `Wave 1-6` reward stop now fails closed to exactly two cards: one `주력 변이` headline and one `방호·보조` survival/body rider. `buildForgeChoices(...)` no longer materializes or fallback-fills a `판돈·유틸` lane on the six-wave route, the `Wave 5` early-mutation `buildFieldGrantChoices(...)` stop now uses that same two-card grammar, and the shipped-route forge/combat-feed copy now says `big leap + survive it` instead of still advertising a third greed slot. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) was updated to lock the two-card contract across recurring `Wave 2-6` forge generation and the `Wave 5` early-mutation stop.
+  Why: the newest critique's `Top Priority` was to collapse the shipped forge to one headline leap plus one survival pick per stop and keep doctrine/support/greed preview lanes out of the live `Wave 1-6` route. The highest-value concrete interpretation was to remove the third lane from the generators themselves, because smaller cards or lighter copy would still leave the short run behaving like a prototype sampler if `gamble` choices could still appear underneath.
+  Follow-up risk: this makes the shipped route more disciplined, but it also removes one source of short-run variety and extra scrap acceleration. If critique or playtesting starts saying reruns now feel too samey after `Wave 4`, the next bounded pass should add more visibly different headline mutations or more distinct survival/body riders inside the same two-card contract, not restore `판돈·유틸` or early support/greed branches.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Builds
 
 - 2026-03-27 10:43:45 KST
   Changed: recut one bounded piece of the shipped route presentation in [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html), [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css), and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the default route now presents one honest `Wave 1-6` loop instead of a hidden roadmap. The title card no longer renders a future-focus article plus three explanatory step cards; it now shows one lean silhouette panel, one `Wave 6 clear` headline, and four compact beats `Wave 1 / 3 / 5 / 6`. I also added `getShippedRoutePresentationBeats()` and moved the live wave-track renderer onto that same six-node source, which strips act labels, explanatory notes, and any post-capstone `Wave 9+` ladder from the player-facing track contract.
