@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate to push next is `Progression`: the project still defines success as a `12-wave / three-era` package, but the real question is whether a stripped `Wave 1-6` route creates enough hunger to justify any longer structure.
-- Current drift bundle: `docs/games/cinder-circuit-design.md` still anchors scope around `Wave 1-12`, `playables/cinder-circuit/game.js` still carries `Afterburn`, live caches, support previews, and multiple named route cells, and the opener still starts too informed and too visually complete.
-- Repeated false solution: preserving breadth and trying to explain it better; the fix is to narrow the default contract, remove live shortcut systems from the honest route, and force the forge to sell silhouette-plus-payoff instead of dossier-style context.
-- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: combat should read fast, rewards should create hunger before explanation, and visible power growth should come in chunky, memorable jumps.
-- Pressure-test consolidation before expansion: if `Wave 1-6`, the forge stop, and the first dominant gun/body path still do not feel quiet, legible, anticipation-building, and spatially expressive, keep the loop on deleting side systems, labels, and live shortcuts instead of proposing more content.
+- The most fragile gate to push next is `Rewards`: the forge and opener still do not create enough hunger because the run starts too preloaded and the reward stop still explains too much.
+- Current drift bundle: the design doc still sells a `12-wave / three-era / signature preload` game, while the code still carries `Afterburn`, wildcard/cache beats, early support infrastructure, and conditional forge verbosity instead of one honest shipped route.
+- Repeated false solution: UI-only simplification. Hiding headers or adding a base-route card variant is not enough if the underlying contract still includes bench/passive preload, support previewing, and off-route branch promises.
+- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: open small, escalate in visible chunks, and make rewards desirable before they are explained.
+- Keep pushing consolidation over expansion until `Wave 1-6` proves one dominant gun/body path, one optional survival rider, cleaner movement space, and much lower reading load.

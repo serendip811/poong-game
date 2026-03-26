@@ -1779,21 +1779,22 @@ assert.equal(game.MAX_APEX_MUTATION_LEVEL, 3);
 
 const signatureBuild = game.createInitialBuild("scrap_pact");
 assert.equal(signatureBuild.signatureId, "scrap_pact");
-assert.equal(signatureBuild.maxHpBonus, 4);
-assert.equal(signatureBuild.pickupBonus, 10);
-assert.equal(signatureBuild.scrapMultiplier, 1.04);
+assert.equal(signatureBuild.maxHpBonus, 0);
+assert.equal(signatureBuild.pickupBonus, 0);
+assert.equal(signatureBuild.scrapMultiplier, 1);
 assert.equal(signatureBuild.supportBayCap, 2);
 assert.equal(JSON.stringify(signatureBuild.affixes), JSON.stringify([]));
 assert.equal(JSON.stringify(signatureBuild.pendingCores), JSON.stringify([]));
+assert.equal(JSON.stringify(signatureBuild.upgrades), JSON.stringify([]));
 
 const relayStartBuild = game.createInitialBuild("relay_oath");
-assert.equal(relayStartBuild.driveGainBonus, 0.08);
-assert.equal(relayStartBuild.overdriveDurationBonus, 0.2);
+assert.equal(relayStartBuild.driveGainBonus, 0);
+assert.equal(relayStartBuild.overdriveDurationBonus, 0);
 assert.equal(JSON.stringify(relayStartBuild.pendingCores), JSON.stringify([]));
 
 const railStartBuild = game.createInitialBuild("rail_zeal");
-assert.equal(railStartBuild.damageBonus, 2);
-assert.equal(railStartBuild.coolRateBonus, 3);
+assert.equal(railStartBuild.damageBonus, 0);
+assert.equal(railStartBuild.coolRateBonus, 0);
 assert.equal(JSON.stringify(railStartBuild.pendingCores), JSON.stringify([]));
 
 const build = game.createInitialBuild("scrap_pact");
@@ -3299,8 +3300,8 @@ const playerStats = game.computePlayerStats(run.build);
 
 assert.ok(weapon.damage > 0);
 assert.equal(weapon.benchSyncLevel, 0);
-assert.equal(playerStats.pickupRadius, 52);
-assert.equal(playerStats.maxHp, 104);
+assert.equal(playerStats.pickupRadius, 42);
+assert.equal(playerStats.maxHp, 100);
 assert.ok(playerStats.maxHp >= 100);
 assert.ok(playerStats.overdriveDuration >= 5.5);
 assert.ok(Array.isArray(weapon.affixLabels));

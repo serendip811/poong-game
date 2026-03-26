@@ -3462,7 +3462,7 @@
       label: "Relay Oath",
       tag: "RICOCHET",
       short: "반사·드라이브",
-      description: "반사 코어로 시작해 drive 회전을 살짝 앞당기는 약한 시동 회로.",
+      description: "반사 코어로만 시작한다. 첫 포지 전까지는 추가 회로 없이 각을 직접 벌려야 한다.",
       perkText: "Ricochet start · Drive +8% · Overdrive +0.2s",
       startCoreId: "ricochet",
       startAffixes: [],
@@ -3477,7 +3477,7 @@
       label: "Salvage Pact",
       tag: "SALVAGE",
       short: "회수·지속",
-      description: "산탄 코어로 시작해 회수 동선을 조금 더 쉽게 잡는 약한 수거 회로.",
+      description: "산탄 코어로만 시작한다. 첫 포지 전까지는 추가 회복이나 수거 완충 없이 pocket을 직접 비워야 한다.",
       perkText: "Scatter start · 고철 +4% · Pickup +10 · Max HP +4",
       startCoreId: "scatter",
       startAffixes: [],
@@ -3493,7 +3493,7 @@
       label: "Rail Zeal",
       tag: "LANCE",
       short: "연쇄·냉각",
-      description: "관통 코어로 시작해 냉각과 선형 화력을 살짝 앞당기는 약한 포격 회로.",
+      description: "관통 코어로만 시작한다. 첫 포지 전까지는 추가 냉각 없이 긴 사선을 직접 유지해야 한다.",
       perkText: "Lance start · Damage +2 · Cool +3",
       startCoreId: "lance",
       startAffixes: [],
@@ -8089,6 +8089,7 @@
     const nextBuild = build || {};
     const signature =
       SIGNATURE_DEFS[signatureId] || SIGNATURE_DEFS[DEFAULT_SIGNATURE_ID];
+    const leanStartContract = CONSOLIDATED_12_WAVE_ROUTE;
     nextBuild.signatureId = signature.id;
     nextBuild.coreId = signature.startCoreId || nextBuild.coreId || BASE_BUILD.coreId;
     nextBuild.attunedCoreId = nextBuild.coreId;
@@ -8104,12 +8105,16 @@
         signature.seedCores || []
       )
     );
-    if (typeof signature.apply === "function") {
+    if (!leanStartContract && typeof signature.apply === "function") {
       signature.apply(nextBuild);
     }
-    nextBuild.upgrades = [`시그니처: ${signature.label}`].concat(
-      Array.isArray(nextBuild.upgrades) ? nextBuild.upgrades : []
-    );
+    nextBuild.upgrades = leanStartContract
+      ? Array.isArray(nextBuild.upgrades)
+        ? nextBuild.upgrades.slice()
+        : []
+      : [`시그니처: ${signature.label}`].concat(
+          Array.isArray(nextBuild.upgrades) ? nextBuild.upgrades : []
+        );
     return sanitizeConsolidatedBuildState(nextBuild);
   }
 

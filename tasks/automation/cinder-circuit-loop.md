@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: redefine the shipped path as a stripped `Wave 1-6` prove-out with a bare opener, forge-only transformation spikes, and open-lane combat; keep `Wave 7+`, `Afterburn`, wildcard/cache, and support-preview breadth out of the default contract until repeat-run hunger survives.
+- Immediate priority: align the actual shipped contract around an honest `Wave 1-6` one-core opener; strip signature preload, support previews, wildcard/cache beats, and route-admin UI from the default path until reruns feel hungry.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 23:55:00 KST
+  Findings:
+  - The project is still drifting because the narrowed `Wave 1-6` story is not the real product contract yet. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L1) still defines success as `12웨이브`, `세 시대 계약`, and `시동 회로 + 초기 벤치 2장 + 패시브`, so the team is still aiming at a broadened alpha package instead of a rerunnable first spine.
+  - The opener still starts too informed and too visually complete. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3459) keeps signature packages, while wildcard/cache ladders and late support infrastructure are still live deeper in the same route; that weakens the genre-critical feeling of beginning with a small gun and earning the first real transformation.
+  - The forge simplification is still mostly a skin over a verbose reward model. [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L101) still carries subtitle/context structure, and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22340) still builds proof rows, pivot rows, preview rows, and impact strips when the base-route contract is not active. Compared with `Nova Drift`, `Brotato`, and `Hades`, the reward stop still risks reading like a brief instead of a hunger spike.
+  - Combat breadth is still outrunning combat proof. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1120) still carries seven `Afterburn` waves, [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3120) still schedules wildcard protocols at Waves `4/7/10`, and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2544) still opens support systems early enough that satellites, shields, missiles, and drones remain part of the route promise before the main gun/body ladder has proven repeat-run ownership.
+  Top Priority: Make the default shipped route start with one core and no bench/passive/support-preview preload, then limit the first `Wave 1-6` forge cadence to primary gun/body transformations plus, at most, one restrained survival rider.
+  Why Now: Until the first six waves create clean anticipation and one chunky visible payoff, added branches only disguise the lack of rerun hunger.
+  Do Not Repeat: Do not answer this with another conditional UI mode while the underlying run contract still starts preloaded and still points at `Wave 1-12`.
+  Release Gate: Rewards
 
 - 2026-03-26 23:40:00 KST
   Findings:
@@ -3051,6 +3062,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 00:45:00 KST
+  Changed: tightened one bounded piece of the shipped opener contract in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the default run now truly starts as `one core only` instead of still front-loading signature passives behind the lean `Wave 1-6` pitch. On the consolidated shipped route, `applySignatureToBuild(...)` now keeps only the chosen start core and no longer applies signature stat perks or seeds an opening upgrade log, and the signature descriptions were rewritten to describe a bare-core start rather than a preloaded bonus package. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks that `scrap_pact`, `relay_oath`, and `rail_zeal` all begin with zero passive stat bonuses, zero bench seeds, and an empty upgrade list.
+  Why: the newest critique's `Top Priority` was to make the shipped route begin with one core and no bench/passive/support-preview preload, then let the first `Wave 1-6` forge stops carry the real gun/body payoff. The highest-value concrete interpretation was to remove the remaining hidden start-of-run stat preload, because preview support and wildcard state were already fail-closed while signature perks still made the opener feel more solved than the route promise.
+  Follow-up risk: this makes the first run state cleaner, but it also removes some immediate differentiation between starts before the first forge. If later feedback says the opener now feels too flat, the next bounded pass should strengthen the first visible `Wave 3/5/6` weapon-body payoff copy or animation, not reintroduce passive preload.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Rewards
 
 - 2026-03-27 00:32:00 KST
   Changed: narrowed one bounded piece of the shipped progression contract in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the default run now actually closes as a `Wave 1-6` prove-out instead of still presenting itself as a `12-wave` shipped route. I introduced `DEFAULT_ROUTE_WAVE_COUNT === 6`, clamped player-facing act labels to `Act 1 / Act 2`, sliced the live wave track to the first six nodes, marked `Wave 6` as the default-route run closer, and cut the shipped `런 실루엣` ladder down to the three beats that matter for this short spine `START -> 도약 -> 방호`. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks the six-wave cap, the act clamp, and the trimmed three-step ladder.
