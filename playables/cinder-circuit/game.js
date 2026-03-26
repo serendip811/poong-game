@@ -8500,15 +8500,14 @@
 
   function createShippingLadderMarkup(build, weapon = null, waveNumber = 1) {
     const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
-    const act = getPlayerFacingActLabelForWave(boundedWave);
     const steps = getShippingLadderSteps(build, weapon, boundedWave);
     const focus = getShippingLadderFocus(build, weapon, boundedWave);
     return `
       <div class="summary-head">
         <strong>런 실루엣</strong>
-        <span class="summary-chip ${focus.state === "live" ? "summary-chip--hot" : ""}">${act.shortLabel}</span>
+        <span class="summary-chip ${focus.state === "live" ? "summary-chip--hot" : ""}">${focus.windowLabel || focus.label}</span>
       </div>
-      <p class="summary-copy roadmap-card__path">기본 6웨이브 prove-out에서는 약한 시작, 첫 무기 도약, 첫 방호 약속만 크게 드러내고 나머지 조율은 전부 백그라운드로 숨긴다.</p>
+      <p class="summary-copy roadmap-card__path">기본 6웨이브 런에서는 약한 시작, 첫 무기 도약, 첫 방호 약속, 마지막 휩쓸기만 크게 드러내고 나머지 조율은 전부 백그라운드로 숨긴다.</p>
       <div class="roadmap-card__steps">
         ${steps
           .map(
@@ -8535,8 +8534,8 @@
       return {
         eyebrow: "6-wave loop",
         title: "Bare Hull -> Weapon Break -> Chassis Lock",
-        detail: "빈 선체로 들어가 Wave 3 무장 도약, Wave 6 차체 잠금까지 찍고 바로 끝낸다.",
-        windowLabel: "Wave 6 clear",
+        detail: "빈 선체로 들어가 Wave 3 무장 도약, Wave 6 차체 잠금 뒤 짧은 승리 랩까지 밀어붙인다.",
+        windowLabel: "Wave 6 lap",
       };
     }
     if (stage === "forge") {
@@ -8580,10 +8579,10 @@
     }
     if (boundedWave >= 6) {
       return {
-        eyebrow: "런 봉인",
-        title: "잠긴 실루엣 시험",
-        detail: "첫 gun/body 실루엣이 잠겼다. 남은 웨이브는 이 형태로 끝까지 버틴다.",
-        windowLabel: "남은 웨이브",
+        eyebrow: "마지막 랩",
+        title: "잠긴 실루엣 휩쓸기",
+        detail: "첫 gun/body 실루엣이 잠겼다. 이번 웨이브는 이 형태로 전장을 짧게 휩쓴다.",
+        windowLabel: "지금 전장",
       };
     }
     return boundedWave >= 5
@@ -8608,7 +8607,7 @@
       { waveNumber: 3, shortLabel: "BREAK", title: "무장 도약" },
       { waveNumber: 4, shortLabel: "PRESS", title: "도약 시험" },
       { waveNumber: 5, shortLabel: "LOCK", title: "차체 잠금" },
-      { waveNumber: 6, shortLabel: "CLEAR", title: "봉인" },
+      { waveNumber: 6, shortLabel: "LAP", title: "승리 랩" },
     ];
   }
 
@@ -16465,7 +16464,7 @@
       state.phase === "forge"
         ? `Forge Stop · Wave ${state.waveIndex + 1} Clear`
         : state.phase === "result"
-          ? "Wave 6 Clear"
+          ? "Run Clear"
           : `Wave ${state.waveIndex + 1} / ${totalTrackWaves}`;
     elements.runTrackLabel.textContent = label;
     const trackEntries = getShippedRoutePresentationBeats();
@@ -18397,6 +18396,7 @@
       scrapBanked: Math.round(state.resources.scrap),
       overdrivesUsed: state.stats.overdrivesUsed,
       route: doctrine ? doctrine.label : "Lean Start",
+      routeLabel: doctrine ? doctrine.label : "Bare Hull Run",
       core: CORE_DEFS[state.build.coreId].label,
       tier: state.weapon.tierLabel,
     };
@@ -18405,7 +18405,7 @@
       ? "회로 봉인 성공"
       : "회로 붕괴";
     elements.resultCopy.textContent = victory
-      ? "Wave 6 prove-out을 버티고 이번 런을 닫았다. 마지막 형태와 보강 조합은 아래에 기록된다."
+      ? "Wave 6 승리 랩까지 밀어붙여 이번 런을 닫았다. 마지막 형태와 보강 조합은 아래에 기록된다."
       : "열과 밀도를 버티지 못했다. 이동 경로와 포지 선택을 다시 정리해야 한다.";
     elements.resultStats.innerHTML = [
       createResultStat("Waves", String(state.result.wavesCleared)),
@@ -18413,13 +18413,13 @@
       createResultStat("고철+", String(state.result.scrapCollected)),
       createResultStat("Spent", String(state.result.scrapSpent)),
       createResultStat("Drive", String(state.result.overdrivesUsed)),
-      createResultStat("Route", state.result.route),
+      createResultStat("Route", state.result.routeLabel),
       createResultStat("Core", state.result.core),
     ].join("");
     elements.resultBuild.innerHTML = `
       <p class="panel__eyebrow">FINAL FORM</p>
       <div class="result-build__grade">${grade.grade}</div>
-      <strong>${state.result.route} / ${CORE_DEFS[state.build.coreId].label} / ${state.weapon.tierLabel}</strong>
+      <strong>${state.result.routeLabel} / ${CORE_DEFS[state.build.coreId].label} / ${state.weapon.tierLabel}</strong>
       <p>${grade.note}</p>
       <div class="result-build__chips">
         <span class="micro-chip">남은 고철 ${state.result.scrapBanked}</span>
