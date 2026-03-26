@@ -9537,9 +9537,6 @@
     if (elements.hudBottomOverlay) {
       elements.hudBottomOverlay.classList.toggle("hud-overlay--bottom-minimal", isMinimal);
     }
-    if (elements.hudBuildPanelLeft) {
-      elements.hudBuildPanelLeft.classList.toggle("hidden", isMinimal);
-    }
     if (elements.hudBuildPanelRight) {
       elements.hudBuildPanelRight.classList.toggle("hud-build-panel--solo", isMinimal);
     }
@@ -9551,9 +9548,7 @@
     waveAskLabel = "",
   }) {
     return `
-      <div class="summary-head">
-        <strong>${eyebrow || "변이 선택"}</strong>
-      </div>
+      <p class="panel__eyebrow">${eyebrow || "변이 선택"}</p>
       <strong class="route-contract__title">${title || "-"}</strong>
       ${
         waveAskLabel
@@ -15353,7 +15348,7 @@
 
   window.CinderCircuitCore = exported;
 
-  const elements = {
+    const elements = {
     titleScreen: document.getElementById("title-screen"),
     gameScreen: document.getElementById("game-screen"),
     resultScreen: document.getElementById("result-screen"),
@@ -15378,14 +15373,8 @@
     timerStat: document.getElementById("timer-stat"),
     scrapStat: document.getElementById("scrap-stat"),
     hudBottomOverlay: document.querySelector(".hud-overlay--bottom"),
-    hudBuildPanelLeft: document.querySelector(".build-panel--left"),
     hudBuildPanelRight: document.querySelector(".build-panel--right"),
-    activeCore: document.getElementById("active-core"),
-    pendingCores: document.getElementById("pending-cores"),
-    upgradeList: document.getElementById("upgrade-list"),
-    buildRoadmap: document.getElementById("build-roadmap"),
     waveObjective: document.getElementById("wave-objective"),
-    liveReadout: document.getElementById("live-readout"),
     forgeOverlay: document.getElementById("forge-overlay"),
     forgePanel: document.getElementById("forge-panel"),
     forgeHeader: document.getElementById("forge-header"),
@@ -22191,7 +22180,6 @@
       elements.dashStat.parentElement.classList.toggle("hidden", !hudVisibility.showDash);
     }
 
-    const activeCore = CORE_DEFS[state.build.coreId];
     const weapon = state.weapon;
     const dominantForm = getDominantFormSummary(state.build, weapon, state.waveIndex + 1);
     const nextBreakpoint = getNextBreakpointSummary(state.build, weapon, state.waveIndex + 1);
@@ -22207,221 +22195,67 @@
       CONSOLIDATED_12_WAVE_ROUTE && state.hudInspect && !state.paused;
     const gambleSummary = getTabInspectGambleSummary(state);
     const scrapSummaryLabel = `고철 ${Math.round(state.resources.scrap)}`;
-    if (elements.activeCore) {
-      elements.activeCore.classList.toggle("hidden", minimalBaseRouteHud || tabInspectBoardActive);
-      if (!minimalBaseRouteHud) {
-        elements.activeCore.innerHTML = `
-          <div class="summary-head">
-            <div>
-              <p class="forge-card__tag">${activeCore.tag}</p>
-              <h3>${dominantForm.label}</h3>
-            </div>
-            <span class="summary-chip ${
-              weapon.benchSyncLevel > 0 ? "summary-chip--hot" : ""
-            }">${weapon.tierLabel}</span>
-          </div>
-          <div class="mini-pill-row">${
-            baseRouteForgeActive
-              ? createMiniPill("다음 전장", nextBeat.title, "hot") +
-                createMiniPill("방호·보조", supportTrack.label, "cool")
-              : createMiniPill(getHeadlineFormTierLabel(getHeadlineFormTier(state.build)), headlineLabel, "hot") +
-                createMiniPill("보조", supportTrack.label, "cool")
-          }</div>
-          <p class="summary-note">${
-            baseRouteForgeActive
-              ? `${ladderFocus.title}. ${dominantForm.label} 하나만 앞세우고 ${nextBeat.title}까지 결을 유지한다.`
-              : `${nextBreakpoint.label}이 다음 monster-form jump다. ${supportTrack.label}는 rider로만 짧게 남기고, ${proofWindow.label}에서 바로 space ownership를 증명한다.`
-          }</p>
-        `;
-      } else {
-        elements.activeCore.innerHTML = "";
-      }
-    }
-
-    const benchEntries = getBenchEntries(state.build);
-    if (elements.pendingCores) {
-        elements.pendingCores.classList.toggle(
-          "hidden",
-          !hudVisibility.showBench || tabInspectBoardActive
-        );
-        if (tabInspectBoardActive) {
-          elements.pendingCores.innerHTML = "";
-      } else {
-        elements.pendingCores.innerHTML = benchEntries.length
-          ? benchEntries
-              .map(
-                (entry) => `
-                  <span class="chip ${entry.coreId === state.build.coreId ? "chip--active" : ""}">
-                    <strong>${CORE_DEFS[entry.coreId].short}</strong>
-                    <span class="chip__count">x${entry.copies}</span>
-                    <span class="chip__sync">${formatSyncLabel(entry.syncLevel)}</span>
-                  </span>
-                `
-              )
-              .join("")
-          : `<span class="chip">없음</span>`;
-      }
-    }
-
-    if (elements.upgradeList) {
-      elements.upgradeList.classList.toggle(
-        "hidden",
-        !hudVisibility.showUpgradeList || tabInspectBoardActive
-      );
-      elements.upgradeList.innerHTML = state.build.upgrades.length
-        ? state.build.upgrades
-            .slice(-4)
-            .map((upgrade) => `<li>${upgrade}</li>`)
-            .join("")
-        : `<li>아직 포지 보강이 없다.</li>`;
-    }
-
-    if (elements.buildRoadmap) {
-      elements.buildRoadmap.classList.toggle("hidden", !hudVisibility.showRoadmap);
-      elements.buildRoadmap.classList.toggle("roadmap-card--contract", minimalBaseRouteHud);
-      elements.buildRoadmap.innerHTML =
-        !hudVisibility.showRoadmap && !tabInspectBoardActive
-          ? ""
-          : minimalBaseRouteHud || tabInspectBoardActive
-            ? tabInspectBoardActive
-              ? createTabInspectBoardMarkup({
-                  dominantForm,
-                  spotlightValue: proofWindow.label,
-                  scrapValue: scrapSummaryLabel,
-                  hintChipText:
-                    nextBreakpoint && nextBreakpoint.label !== dominantForm.label
-                      ? `다음 포지 ${nextBreakpoint.label}`
-                      : `다음 시험 ${proofWindow.label}`,
-                  mainSummary: {
-                    label: "주력 변이",
-                    value: headlineLabel,
-                    note: trimInspectNote(
-                      dominantForm.detail,
-                      `${headlineLabel}로 현재 화력을 밀고 있다.`
-                    ),
-                    tone: "main",
-                  },
-                  supportSummary: {
-                    label: "방호·보조",
-                    value: supportTrack.label,
-                    note: trimInspectNote(
-                      supportTrack.detail,
-                      "보조 결은 아직 조용하다. 다음 포지 전까지 본체 실루엣으로 버틴다."
-                    ),
-                    tone: "support",
-                  },
-                  gambleSummary: {
-                    label: "판돈·유틸",
-                    value: gambleSummary.label,
-                    note: trimInspectNote(gambleSummary.note, "판돈 축은 아직 조용하다."),
-                    tone: "gamble",
-                  },
-                })
-              : createBaseRouteFocusMarkup({
-                  eyebrow: "",
-                  chipLabel: ladderFocus.label,
-                  title: dominantForm.label,
-                  currentFormLabel: dominantForm.label,
-                  spotlightLabel: "다음 전장",
-                  spotlightValue: nextBeat.title,
-                  tradeoffLabel: "판돈·유틸",
-                  tradeoffValue: gambleSummary.label,
-                  tradeoffTone: gambleSummary.label === "잠잠" ? "" : "accent",
-                  compact: true,
-                })
-            : createHeadlineRiderFocusMarkup(
-              state.build,
-              state.weapon,
-              state.supportSystem,
-              state.waveIndex + 1
-            );
-    }
-
-    const enemiesLeft = Math.max(0, state.wave ? state.wave.spawnBudget - state.wave.spawned : 0);
     if (elements.waveObjective) {
       const combatBand = getCombatBandState(state.build, state.weapon, state.waveIndex + 1);
       const waveAsk = getBaseRouteCombatAsk(state, combatBand, hazardStatus);
-      elements.waveObjective.innerHTML = minimalBaseRouteHud
-        ? createMinimalCombatAskMarkup({
-            waveAsk,
-            hazardStatus,
+      elements.waveObjective.classList.toggle("roadmap-card--contract", tabInspectBoardActive);
+      elements.waveObjective.innerHTML = tabInspectBoardActive
+        ? createTabInspectBoardMarkup({
+            dominantForm,
+            spotlightValue: proofWindow.label,
+            scrapValue: scrapSummaryLabel,
+            hintChipText:
+              nextBreakpoint && nextBreakpoint.label !== dominantForm.label
+                ? `다음 포지 ${nextBreakpoint.label}`
+                : `다음 시험 ${proofWindow.label}`,
+            mainSummary: {
+              label: "주력 변이",
+              value: headlineLabel,
+              note: trimInspectNote(
+                dominantForm.detail,
+                `${headlineLabel}로 현재 화력을 밀고 있다.`
+              ),
+              tone: "main",
+            },
+            supportSummary: {
+              label: "방호·보조",
+              value: supportTrack.label,
+              note: trimInspectNote(
+                supportTrack.detail,
+                "보조 결은 아직 조용하다. 다음 포지 전까지 본체 실루엣으로 버틴다."
+              ),
+              tone: "support",
+            },
+            gambleSummary: {
+              label: "판돈·유틸",
+              value: gambleSummary.label,
+              note: trimInspectNote(gambleSummary.note, "판돈 축은 아직 조용하다."),
+              tone: "gamble",
+            },
           })
-        : `
-          <div class="summary-head">
-            <strong>현재 전장</strong>
-            <span class="summary-chip ${hazardStatus.tone}">
-              ${hazardStatus.chipLabel}
-            </span>
-          </div>
-          <strong class="route-contract__title">${waveConfig.label}</strong>
-          <div class="status-list">
-            ${createStatusRow("위협", `${hazardStatus.detailLabel} ${hazardStatus.detailValue}`)}
-            ${createStatusRow("요구", combatBand ? combatBand.label : proofWindow.label)}
-          </div>
-          <p class="summary-note">${
-            baseRouteForgeActive
-              ? `${proofWindow.label}만 보면 된다. ${combatBand ? `${combatBand.headline}. ` : ""}${waveAsk}`
-              : `${nextBreakpoint.label} + ${supportTrack.label}. ${combatBand ? `${combatBand.headline}. ` : ""}${waveAsk}`
-          }</p>
-        `;
-    }
-
-    if (elements.liveReadout) {
-      elements.liveReadout.classList.toggle(
-        "hidden",
-        !hudVisibility.showLiveReadout || tabInspectBoardActive
-      );
-      const forgeReadoutLabel = shouldUseBaseRouteForgeContract()
-        ? state.pendingFinalForge
-          ? "마무리 선택 중"
-          : state.forgeMaxSteps > 1 && state.forgeStep === 2
-            ? "방호·보조 선택 중"
-            : "주력 선택 중"
-        : state.forgeDraftType === "architecture_draft"
-          ? "Architecture Draft 선택 중"
-          : state.forgeDraftType === "early_mutation"
-            ? "주력 변이 선택 중"
-          : state.forgeDraftType === "field_grant"
-            ? "Field Cache 선택 중"
-            : state.forgeDraftType === "bastion_draft"
-              ? "Bastion Draft 선택 중"
-              : state.forgeDraftType === "catalyst_draft"
-                ? "Catalyst Crucible 선택 중"
-                : state.forgeMaxSteps > 1 && state.forgeStep === 2
-                  ? "세 갈래 포지 rider 선택 중"
-                  : "세 갈래 포지 headline 선택 중";
-      elements.liveReadout.innerHTML = `
-        <div class="summary-head">
-          <strong>${
-            state.phase === "forge" ? forgeReadoutLabel : "전투 진행 중"
-          }</strong>
-          <span class="summary-chip ${
-            state.player.overdriveActiveTime > 0 || state.player.drive >= 100
-              ? "summary-chip--cool"
-              : ""
-          }">${
-            state.player.overdriveActiveTime > 0
-              ? "Drive Live"
-              : state.player.drive >= 100
-                ? "Drive Ready"
-                : "Drive Charge"
-          }</span>
-        </div>
-        <div class="status-list">
-          ${createStatusRow("처치", String(state.stats.kills))}
-          ${createStatusRow("코어 수집", String(state.stats.coresCollected))}
-          ${createStatusRow("쓴 고철", String(Math.round(state.stats.scrapSpent)))}
-          ${createStatusRow(hazardStatus.detailLabel, hazardStatus.detailValue)}
-          ${createStatusRow("벤트", "Q / 24 Drive")}
-        </div>
-        <p class="summary-note ${
-          state.player.overheated ? "summary-note--danger" : ""
-        }">${
-          state.player.overheated
-            ? "사격 정지: 열을 비워야 한다."
-            : `${dominantForm.detail} ${hazardStatus.note} 자동 사격은 과열 전까지 유지된다.`
-        }</p>
-      `;
+        : minimalBaseRouteHud
+          ? createMinimalCombatAskMarkup({
+              waveAsk,
+              hazardStatus,
+            })
+          : `
+            <div class="summary-head">
+              <strong>현재 전장</strong>
+              <span class="summary-chip ${hazardStatus.tone}">
+                ${hazardStatus.chipLabel}
+              </span>
+            </div>
+            <strong class="route-contract__title">${waveConfig.label}</strong>
+            <div class="status-list">
+              ${createStatusRow("위협", `${hazardStatus.detailLabel} ${hazardStatus.detailValue}`)}
+              ${createStatusRow("요구", combatBand ? combatBand.label : proofWindow.label)}
+            </div>
+            <p class="summary-note">${
+              baseRouteForgeActive
+                ? `${proofWindow.label}만 보면 된다. ${combatBand ? `${combatBand.headline}. ` : ""}${waveAsk}`
+                : `${nextBreakpoint.label} + ${supportTrack.label}. ${combatBand ? `${combatBand.headline}. ` : ""}${waveAsk}`
+            }</p>
+          `;
     }
 
     renderWaveTrack();
@@ -22530,7 +22364,7 @@
           </div>
           <strong>${focusTitle}</strong>
           <p>${focusPrompt}</p>
-          <div class="forge-focus__proof"><span>Next Proof</span>${proofWindow.label}</div>
+          <div class="forge-focus__proof"><span>다음 시험</span>${proofWindow.label}</div>
           <div class="mini-pill-row">
             ${createMiniPill(
               riderStep ? "Locked Form" : "Rider",
@@ -22539,7 +22373,7 @@
             )}
           </div>
           <p class="forge-focus__proof"><span>${
-            state.pendingFinalForge ? "Route Payoff" : "Next Proof"
+            state.pendingFinalForge ? "형태 고정" : "다음 시험"
           }</span>${
             state.pendingFinalForge
               ? `${dominantFormSummary.label}를 메인 12-wave route의 최종 실루엣으로 봉인한다.`

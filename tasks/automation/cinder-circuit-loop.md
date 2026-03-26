@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop authored-route expansion and prove one reusable run spine: survival-first combat HUD, forge-only transformation beats, and open-arena pressure bands that can honestly scale past 12 waves without designer-scripted wave names carrying the fun.
+- Immediate priority: freeze expansion and harden one quiet-first-minute, forge-only reward spine with a shared open-arena pressure ladder; delete live cache payouts and combat admin until repeated runs feel readable and hungry before more content returns.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 18:10:00 KST
+  Findings:
+  - `docs/games/cinder-circuit-design.md` still defines success as a `12웨이브 / 세 시대 계약 / Proof Window` package with drop-driven forge logic, so the project target is still a polished route plan rather than a rerunnable escalation machine that could later hold `20-30` waves.
+  - `playables/cinder-circuit/game.js` still keeps major growth spilling into combat through `combat_cache`, `late_ascension_cache`, and `illegal_overclock_cache`; that breaks the clean `survive -> forge -> transform -> test` hunger loop that stronger repeat-run shooters rely on.
+  - `playables/cinder-circuit/index.html` plus the forge/HUD render path still keep `active-core`, `pending-cores`, `build-roadmap`, `wave-objective`, `live-readout`, `upgrade-list`, `Next Proof`, and `Route Payoff` in circulation. Compared with `Nova Drift`, `Brotato`, and `Hades`, the game is still over-informing the player instead of selling one danger and one desired payoff.
+  - The loop is starting to cycle on authored-route cleanup without enough consolidation pressure: named bands like `Crown Proof+` and `Afterglow` are still doing emotional work that should come from enemy flow, arena ownership, and one visibly escalating main weapon/body line.
+  Top Priority: Lock the default route to forge-only major upgrades and cut combat HUD/forge copy down to survival essentials plus one transformation headline before adding any new wave grammar or support content.
+  Why Now: The run still cannot prove that repeated play is fun when script labels and live exceptions are removed.
+  Do Not Repeat: Do not spend the next pass on another route rename, another branch wrapper, or another support module.
+  Release Gate: Rewards
 
 - 2026-03-26 17:05:00 KST
   Findings:
@@ -2996,6 +3007,14 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-26 17:44:33 KST
+  Changed: tightened one bounded piece of the shipped combat/reward surface in [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html), [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the default route now truly fails closed to one bottom-card HUD plus one quiet forge context card. I removed the live combat DOM slots for `active-core`, `pending-cores`, `build-roadmap`, `live-readout`, and `upgrade-list`, moved `Tab` inspect onto the same single `wave-objective` card used in combat, and simplified the base forge context to `eyebrow + form title + 다음 시험` while scrubbing lingering `Next Proof / Route Payoff` copy from the remaining alternate forge wrapper. Smoke now locks that the base forge context stays free of the old proof/payoff labels and extra summary header scaffolding.
+  Why: the newest critique's `Top Priority` was to cut combat HUD and forge copy down to survival essentials plus one transformation headline. The highest-value concrete interpretation was to remove the remaining admin surfaces at the structure level, because the run already hid most of them in minimal mode but still carried the old panels and proof/payoff language through the shipped HUD/forge path.
+  Follow-up risk: this makes the default route clearer, but `Tab` inspect still packs three lanes into the same single card and some late-form forge copy still uses English rider labels like `Locked Form`. If the same critique repeats, the next bounded UX/UI pass should shorten the inspect lane copy and normalize the remaining alternate-forge labels instead of reopening combat admin.
+  UI reference direction: the one-card combat hierarchy from `Nova Drift` and the quick-board restraint from `Brotato`, where live play shows one immediate ask and build detail only appears on demand.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: UX/UI
 
 - 2026-03-26 17:17:53 KST
   Changed: consolidated one bounded piece of the late-route spine in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 5-12` now carries explicit shared pressure-ladder metadata `Claim Space -> Hold Breach -> Survive Spike`, and late-break `Wave 9-10` overrides are generated from the shared late pool instead of hand-authored branch objects. I added `ladderStepId/ladderStepLabel` to recurring combat cells, introduced `buildLateBreakLadderWave(...)` so `mutation / aegis / ledger` only season the same `Payoff Run+` and `Crown Proof+` rungs, and removed the stale bespoke `Wave 11-12` branch profile table that still advertised scenario tourism. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks those rung ids on resolved late waves and checks that late proof summaries surface the shared ladder language.
