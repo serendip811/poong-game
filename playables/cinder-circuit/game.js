@@ -2538,6 +2538,7 @@
   };
 
   const MAX_SUPPORT_SYSTEM_TIER = 3;
+  const LEAN_START_CORE_ID = "ember";
   const MAX_SUPPORT_BAYS = 2;
   const MAX_SUPPORT_BAY_LIMIT = 4;
   const SUPPORT_SYSTEM_START_WAVE = 9;
@@ -8090,8 +8091,11 @@
     const signature =
       SIGNATURE_DEFS[signatureId] || SIGNATURE_DEFS[DEFAULT_SIGNATURE_ID];
     const leanStartContract = CONSOLIDATED_12_WAVE_ROUTE;
+    const starterCoreId = leanStartContract
+      ? LEAN_START_CORE_ID
+      : signature.startCoreId || nextBuild.coreId || BASE_BUILD.coreId;
     nextBuild.signatureId = signature.id;
-    nextBuild.coreId = signature.startCoreId || nextBuild.coreId || BASE_BUILD.coreId;
+    nextBuild.coreId = starterCoreId;
     nextBuild.attunedCoreId = nextBuild.coreId;
     nextBuild.attunedCopies = 1;
     nextBuild.affixes = sanitizeAffixIds(
@@ -17298,6 +17302,15 @@
       .map(
         (signature, index) => {
           const startCore = CORE_DEFS[signature.startCoreId];
+          const doctrine = getBastionDoctrineDef(signature.id);
+          const headlineChip = CONSOLIDATED_12_WAVE_ROUTE
+            ? `${doctrine ? doctrine.short : signature.short} 예약`
+            : `${startCore.short} 시작`;
+          const summaryText = CONSOLIDATED_12_WAVE_ROUTE
+            ? doctrine
+              ? `${doctrine.label} 계열 · Wave 3부터 크게 갈라진다`
+              : signature.short
+            : signature.short;
           return `
           <button
             type="button"
@@ -17307,10 +17320,10 @@
           >
             <div class="signature-card__top">
               <span class="signature-card__hotkey">0${index + 1}</span>
-              <span class="micro-chip micro-chip--quiet">${startCore.short} 시작</span>
+              <span class="micro-chip micro-chip--quiet">${headlineChip}</span>
             </div>
             <h3>${signature.label}</h3>
-            <p class="signature-card__bias">${signature.short}</p>
+            <p class="signature-card__bias">${summaryText}</p>
           </button>
         `;
         }
@@ -17361,7 +17374,7 @@
     if (typeof signature.onRunStart === "function") {
       signature.onRunStart(state);
     }
-    pushCombatFeed(`${CORE_DEFS[signature.startCoreId].label} 기동.`, "DROP");
+    pushCombatFeed(`${CORE_DEFS[state.build.coreId].label} 기동.`, "DROP");
     showScreen("game");
     renderPauseOverlay();
     beginWave(0);

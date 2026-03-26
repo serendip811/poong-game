@@ -204,7 +204,7 @@ assert.ok(
 );
 const earlyRoadmap = game.getBuildRoadmap(roadmapBuild, game.computeWeaponStats(roadmapBuild), 1);
 assert.equal(earlyRoadmap.steps.length, 3);
-assert.equal(earlyRoadmap.steps[0].title, "Twin Spine");
+assert.equal(earlyRoadmap.steps[0].title, "Lance Rail");
 assert.ok(earlyRoadmap.steps[1].title.includes("Sky Lance"));
 assert.ok(earlyRoadmap.steps[1].detail.includes("Wave 6 몸체 도약"));
 assert.ok(earlyRoadmap.steps[1].detail.includes("weapon/body leap"));
@@ -215,7 +215,7 @@ roadmapBuild.previewSupportSystemId = "volt_drones";
 roadmapBuild.wildcardProtocolIds = ["rogue_lattice"];
 assert.equal(game.computeSupportSystemStats(roadmapBuild), null);
 const primedRoadmap = game.getBuildRoadmap(roadmapBuild, game.computeWeaponStats(roadmapBuild), 6);
-assert.equal(primedRoadmap.steps[0].title, "Siege Frame");
+assert.equal(primedRoadmap.steps[0].title, "Ember Spindle");
 assert.equal(primedRoadmap.steps[0].state, "locked");
 assert.ok(primedRoadmap.steps[1].title.includes("Sky Lance Battery"));
 assert.equal(primedRoadmap.steps[1].state, "primed");
@@ -483,8 +483,8 @@ const recurringWave3HeadlineTransform =
   game.getBaseRouteForgeChoiceTransformation(recurringWave3Choices[0]);
 assert.equal(recurringWave3HeadlineTransform.previewLabel, "진화");
 assert.ok(recurringWave3HeadlineTransform.previewValue.length > 0);
-assert.ok(recurringWave3HeadlineTransform.previewValue.includes("레일"));
-assert.ok(recurringWave3HeadlineTransform.promise.includes("보조 레일"));
+assert.ok(recurringWave3HeadlineTransform.previewValue.includes("삼열"));
+assert.ok(recurringWave3HeadlineTransform.promise.includes("보조 점화 총열"));
 assert.ok(
   !/afterburn|dominion|ascension|forecast|draft|doctrine|교리|승천|예보|초안/i.test(
     recurringWave3HeadlineTransform.promise
@@ -683,20 +683,20 @@ const crownfireWave7Headline =
   crownfireWave7Choices.find((choice) => choice.contractRole === "headline") ||
   crownfireWave7Choices[0];
 assert.equal(crownfireWave7Headline.action, "crownfire_overdrive");
-assert.equal(crownfireWave7Headline.title, "Sky Splitter");
-assert.equal(crownfireWave7Headline.previewText, "측선 레일 6줄");
+assert.equal(crownfireWave7Headline.title, "Crownflare Turbine");
+assert.equal(crownfireWave7Headline.previewText, "측면 점화 편대 5줄");
 const crownfireWave7Transform = game.getBaseRouteForgeChoiceTransformation(crownfireWave7Headline);
 assert.equal(crownfireWave7Transform.previewLabel, "형태");
-assert.ok(/측선 레일|open-lane|절개/.test(crownfireWave7Transform.promise));
-assert.ok(/Wave 6 몸체 break|open-lane 교전|공격적으로/.test(crownfireWave7Transform.proof));
+assert.ok(/점화 터빈|측면 점화 편대|ownership/.test(crownfireWave7Transform.promise));
+assert.ok(/mid-run ownership|측면 둘|pocket/.test(crownfireWave7Transform.proof));
 game.applyForgeChoice({ build: crownfireBuild, player: null }, crownfireWave7Headline);
 const crownfireWeapon = game.computeWeaponStats(crownfireBuild);
-assert.equal(crownfireWeapon.crownfireOverdriveLabel, "Sky Splitter");
+assert.equal(crownfireWeapon.crownfireOverdriveLabel, "Crownflare Turbine");
 assert.deepEqual(
   Array.from(crownfireWeapon.crownfireOverdriveFirePattern.offsets),
-  [-0.32, -0.2, -0.08, 0.08, 0.2, 0.32]
+  [-0.42, -0.26, -0.1, 0.1, 0.26, 0.42]
 );
-assert.equal(crownfireWeapon.pierce >= 4, true);
+assert.equal(crownfireWeapon.pierce, 0);
 const crownfireWave8Choices = game.buildForgeChoices(crownfireBuild, () => 0.1, 999, {
   nextWave: 8,
   finalForge: false,
@@ -1085,6 +1085,8 @@ const artilleryWaveTwelve = game.resolveWaveConfig(11, artilleryLateBuild);
 const artilleryWaveNine = game.resolveWaveConfig(8, artilleryLateBuild);
 const mirrorBaseStats = game.computePlayerStats(game.createInitialBuild("relay_oath"));
 const mirrorStageOneBuild = game.createInitialBuild("relay_oath");
+mirrorStageOneBuild.coreId = "ricochet";
+mirrorStageOneBuild.attunedCoreId = "ricochet";
 mirrorStageOneBuild.bastionDoctrineId = "mirror_hunt";
 const mirrorStageOneWeapon = game.computeWeaponStats(mirrorStageOneBuild);
 const mirrorStageOneBody = game.getDoctrineBodyForm(mirrorStageOneBuild);
@@ -1094,6 +1096,8 @@ assert.equal(mirrorStageOneBody.label, "Hunt Wing Rig");
 assert.ok((mirrorStageOneWeapon.doctrineFirePattern?.offsets || []).length >= 3);
 assert.ok(mirrorStageOneStats.moveSpeed > mirrorBaseStats.moveSpeed);
 const mirrorChaseBuild = game.createInitialBuild("relay_oath");
+mirrorChaseBuild.coreId = "ricochet";
+mirrorChaseBuild.attunedCoreId = "ricochet";
 mirrorChaseBuild.bastionDoctrineId = "mirror_hunt";
 mirrorChaseBuild.doctrineChaseClaimed = true;
 const mirrorBodyForm = game.getDoctrineBodyForm(mirrorChaseBuild);
@@ -1103,6 +1107,8 @@ assert.ok(mirrorChaseStats.moveSpeed > mirrorBaseStats.moveSpeed);
 assert.ok(mirrorChaseStats.pickupRadius > mirrorBaseStats.pickupRadius);
 const stormBaseStats = game.computePlayerStats(game.createInitialBuild("rail_zeal"));
 const stormStageOneBuild = game.createInitialBuild("rail_zeal");
+stormStageOneBuild.coreId = "lance";
+stormStageOneBuild.attunedCoreId = "lance";
 stormStageOneBuild.bastionDoctrineId = "storm_artillery";
 const stormStageOneWeapon = game.computeWeaponStats(stormStageOneBuild);
 const stormStageOneBody = game.getDoctrineBodyForm(stormStageOneBuild);
@@ -1112,6 +1118,8 @@ assert.equal(stormStageOneBody.label, "Siege Rack Carriage");
 assert.ok((stormStageOneWeapon.doctrineFirePattern?.offsets || []).length >= 3);
 assert.ok(stormStageOneStats.coolRate > stormBaseStats.coolRate);
 const stormChaseBuild = game.createInitialBuild("rail_zeal");
+stormChaseBuild.coreId = "lance";
+stormChaseBuild.attunedCoreId = "lance";
 stormChaseBuild.bastionDoctrineId = "storm_artillery";
 stormChaseBuild.doctrineChaseClaimed = true;
 const stormBodyForm = game.getDoctrineBodyForm(stormChaseBuild);
@@ -1121,6 +1129,8 @@ assert.ok(stormChaseStats.coolRate > stormBaseStats.coolRate);
 assert.ok(stormChaseStats.moveSpeed < stormBaseStats.moveSpeed);
 const kilnBaseStats = game.computePlayerStats(game.createInitialBuild("scrap_pact"));
 const kilnStageOneBuild = game.createInitialBuild("scrap_pact");
+kilnStageOneBuild.coreId = "scatter";
+kilnStageOneBuild.attunedCoreId = "scatter";
 kilnStageOneBuild.bastionDoctrineId = "kiln_bastion";
 const kilnStageOneWeapon = game.computeWeaponStats(kilnStageOneBuild);
 const kilnStageOneBody = game.getDoctrineBodyForm(kilnStageOneBuild);
@@ -1779,6 +1789,8 @@ assert.equal(game.MAX_APEX_MUTATION_LEVEL, 3);
 
 const signatureBuild = game.createInitialBuild("scrap_pact");
 assert.equal(signatureBuild.signatureId, "scrap_pact");
+assert.equal(signatureBuild.coreId, "ember");
+assert.equal(signatureBuild.attunedCoreId, "ember");
 assert.equal(signatureBuild.maxHpBonus, 0);
 assert.equal(signatureBuild.pickupBonus, 0);
 assert.equal(signatureBuild.scrapMultiplier, 1);
@@ -1788,11 +1800,15 @@ assert.equal(JSON.stringify(signatureBuild.pendingCores), JSON.stringify([]));
 assert.equal(JSON.stringify(signatureBuild.upgrades), JSON.stringify([]));
 
 const relayStartBuild = game.createInitialBuild("relay_oath");
+assert.equal(relayStartBuild.coreId, "ember");
+assert.equal(relayStartBuild.attunedCoreId, "ember");
 assert.equal(relayStartBuild.driveGainBonus, 0);
 assert.equal(relayStartBuild.overdriveDurationBonus, 0);
 assert.equal(JSON.stringify(relayStartBuild.pendingCores), JSON.stringify([]));
 
 const railStartBuild = game.createInitialBuild("rail_zeal");
+assert.equal(railStartBuild.coreId, "ember");
+assert.equal(railStartBuild.attunedCoreId, "ember");
 assert.equal(railStartBuild.damageBonus, 0);
 assert.equal(railStartBuild.coolRateBonus, 0);
 assert.equal(JSON.stringify(railStartBuild.pendingCores), JSON.stringify([]));
@@ -1882,6 +1898,8 @@ assert.equal(scatterHeadlinePivot.type, "core");
 assert.notEqual(scatterHeadlinePivot.coreId, directPivotBuild.coreId);
 
 const railBuild = game.createInitialBuild("rail_zeal");
+railBuild.coreId = "lance";
+railBuild.attunedCoreId = "lance";
 railBuild.pendingCores = [];
 railBuild.attunedCopies = 4;
 const railChoices = game.buildForgeChoices(railBuild, () => 0, 180);
@@ -1891,6 +1909,8 @@ assert.equal(railFinisherChoice.type, "affix");
 assert.equal(railFinisherChoice.affixId, "phase_rounds");
 
 const prismBuild = game.createInitialBuild("relay_oath");
+prismBuild.coreId = "ricochet";
+prismBuild.attunedCoreId = "ricochet";
 prismBuild.pendingCores = [];
 prismBuild.attunedCopies = 4;
 const prismChoices = game.buildForgeChoices(prismBuild, () => 0, 180);
@@ -1900,6 +1920,8 @@ assert.equal(prismFinisherChoice.type, "affix");
 assert.equal(prismFinisherChoice.affixId, "arc_link");
 
 const midrunChaseBuild = game.createInitialBuild("scrap_pact");
+midrunChaseBuild.coreId = "scatter";
+midrunChaseBuild.attunedCoreId = "scatter";
 midrunChaseBuild.pendingCores = [];
 midrunChaseBuild.attunedCopies = 1;
 const genericForgeChoices = game.buildForgeChoices(midrunChaseBuild, () => 0, 180);
@@ -1950,7 +1972,7 @@ assert.ok(
   architectureRun.build.upgrades.some((upgrade) => upgrade.startsWith("Wave 3 무기 도약: "))
 );
 assert.equal(architectureRun.build.coreId, "ricochet");
-assert.equal(game.computeWeaponStats(architectureRun.build).evolutionTier, 1);
+assert.equal(game.computeWeaponStats(architectureRun.build).evolutionTier, 0);
 assert.equal(architectureRun.build.supportSystems.length, 0);
 assert.equal(game.getSupportBayCapacity(architectureRun.build), 2);
 const doctrineChaseChoices = game.buildForgeChoices(
@@ -2052,6 +2074,8 @@ assert.ok(bastionDoctrineChoice);
 assert.equal(bastionDoctrineChoice.title, "Mirror Hunt Ascension");
 
 const catalystBuild = game.createInitialBuild("scrap_pact");
+catalystBuild.coreId = "scatter";
+catalystBuild.attunedCoreId = "scatter";
 catalystBuild.finisherCatalysts = ["scatter"];
 assert.equal(
   game.shouldRunCatalystDraft(
@@ -2077,14 +2101,14 @@ assert.equal(
   ),
   false
 );
-assert.equal(bastionDoctrineChoice.doctrineChoice.title, "Prism Crown");
+assert.equal(bastionDoctrineChoice.doctrineChoice.title, "Ricochet Coil");
 game.applyForgeChoice(
   { build: bastionDoctrineBuild, player: null, resources: { scrap: 999 }, stats: {} },
   bastionDoctrineChoice
 );
 assert.equal(bastionDoctrineBuild.bastionDoctrineId, "mirror_hunt");
 assert.ok(bastionDoctrineBuild.upgrades.includes("교리 채택: Mirror Hunt Doctrine"));
-assert.equal(game.computeWeaponStats(bastionDoctrineBuild).evolutionLabel, "Prism Crown");
+assert.equal(game.computeWeaponStats(bastionDoctrineBuild).evolutionLabel, null);
 const doctrinePrimaryChoices = game.buildForgeChoices(
   bastionDoctrineBuild,
   () => 0.99,
@@ -2125,7 +2149,7 @@ const doctrineCapstoneBuild = game.createInitialBuild("relay_oath");
 doctrineCapstoneBuild.pendingCores = [];
 const mirrorArchitectureChoice = game
   .buildArchitectureDraftChoices(doctrineCapstoneBuild)
-  .find((choice) => choice.title === "Prism Crown");
+  .find((choice) => choice.title === "Ricochet Coil");
 assert.ok(mirrorArchitectureChoice);
 assert.ok(mirrorArchitectureChoice.description.includes("Wave 3"));
 assert.ok(mirrorArchitectureChoice.description.includes("첫 주포 도약"));
@@ -2198,7 +2222,7 @@ const artilleryDoctrineBuild = game.createInitialBuild("rail_zeal");
 artilleryDoctrineBuild.pendingCores = [];
 const artilleryArchitectureChoice = game
   .buildArchitectureDraftChoices(artilleryDoctrineBuild)
-  .find((choice) => choice.title === "Twin Spine");
+  .find((choice) => choice.title === "Lance Rail");
 assert.ok(artilleryArchitectureChoice);
 assert.equal(
   artilleryArchitectureChoice.doctrineCapstoneLabel,
@@ -2209,7 +2233,7 @@ game.applyForgeChoice(
   artilleryArchitectureChoice
 );
 const artilleryWaveThreeWeapon = game.computeWeaponStats(artilleryDoctrineBuild);
-assert.equal(artilleryWaveThreeWeapon.evolutionLabel, "Twin Spine");
+assert.equal(artilleryWaveThreeWeapon.evolutionLabel, null);
 assert.equal(artilleryWaveThreeWeapon.doctrineFormLabel, null);
 assert.equal(artilleryWaveThreeWeapon.doctrineTraitLabel, null);
 assert.equal(artilleryWaveThreeWeapon.doctrineFirePattern, null);
@@ -2336,10 +2360,10 @@ game.applyForgeChoice(
   afterglowGrantHeadline
 );
 const afterglowWeapon = game.computeWeaponStats(afterglowGrantBuild);
-assert.equal(afterglowWeapon.afterglowMutationLabel, "Afterglow Prism");
-assert.equal(afterglowWeapon.afterglowMutationTraitLabel, "중심 반사 프리즘");
+assert.equal(afterglowWeapon.afterglowMutationLabel, "Afterglow Fork");
+assert.equal(afterglowWeapon.afterglowMutationTraitLabel, "외곽 점화 날개");
 assert.ok(afterglowWeapon.afterglowMutationFirePattern);
-assert.equal(afterglowWeapon.chain, 1);
+assert.equal(afterglowWeapon.chain, 0);
 
 const evolutionBuild = game.createInitialBuild("relay_oath");
 const evolutionChoice = game.buildForgeChoices(evolutionBuild, () => 0, 180, { nextWave: 3 }).find(
@@ -2352,9 +2376,9 @@ game.applyForgeChoice(
 );
 const evolvedWeapon = game.computeWeaponStats(evolutionBuild);
 assert.equal(evolvedWeapon.evolutionTier, 1);
-assert.equal(evolvedWeapon.evolutionLabel, "Prism Crown");
-assert.equal(evolvedWeapon.evolutionTraitLabel, "삼중 분광탄");
-assert.equal(JSON.stringify(evolvedWeapon.evolutionFirePattern.offsets), JSON.stringify([0]));
+assert.equal(evolvedWeapon.evolutionLabel, "Fork Array");
+assert.equal(evolvedWeapon.evolutionTraitLabel, "삼열 점화");
+assert.equal(JSON.stringify(evolvedWeapon.evolutionFirePattern.offsets), JSON.stringify([-0.16, 0.16]));
 const evolutionChoiceTierTwo = game.buildForgeChoices(evolutionBuild, () => 0, 180, { nextWave: 4 }).find(
   (choice) => choice.type === "evolution"
 );
@@ -2375,14 +2399,16 @@ game.applyForgeChoice(
 );
 const apexEvolvedWeapon = game.computeWeaponStats(evolutionBuild);
 assert.equal(apexEvolvedWeapon.evolutionTier, 3);
-assert.equal(apexEvolvedWeapon.evolutionLabel, "Mirror Cathedral");
-assert.equal(apexEvolvedWeapon.evolutionTraitLabel, "칠중 분광탄");
+assert.equal(apexEvolvedWeapon.evolutionLabel, "Solar Crown");
+assert.equal(apexEvolvedWeapon.evolutionTraitLabel, "칠열 왕관 점화");
 assert.equal(
   JSON.stringify(apexEvolvedWeapon.evolutionFirePattern.offsets),
-  JSON.stringify([-0.28, -0.18, -0.08, 0.08, 0.18, 0.28])
+  JSON.stringify([-0.32, -0.2, -0.1, 0.1, 0.2, 0.32])
 );
 
 const scatterEvolutionBuild = game.createInitialBuild("scrap_pact");
+scatterEvolutionBuild.coreId = "scatter";
+scatterEvolutionBuild.attunedCoreId = "scatter";
 scatterEvolutionBuild.pendingCores = [];
 const scatterEvolutionChoice = game
   .buildForgeChoices(scatterEvolutionBuild, () => 0, 180, { nextWave: 3 })
@@ -2776,6 +2802,8 @@ assert.ok(emberSupportRun.player.drive > 34);
 assert.ok(emberSupportBuild.driveGainBonus > 0.18);
 
 const catalystGateBuild = game.createInitialBuild("scrap_pact");
+catalystGateBuild.coreId = "scatter";
+catalystGateBuild.attunedCoreId = "scatter";
 catalystGateBuild.pendingCores = [];
 catalystGateBuild.attunedCopies = 4;
 catalystGateBuild.affixes = ["overclock", "thermal_weave"];
@@ -2835,6 +2863,8 @@ assert.ok(catalystGateBuild.affixes.includes("hotshot"));
 assert.equal(game.hasFinisherCatalyst(catalystGateBuild, "scatter"), false);
 
 const missedCatalystFinalBuild = game.createInitialBuild("scrap_pact");
+missedCatalystFinalBuild.coreId = "scatter";
+missedCatalystFinalBuild.attunedCoreId = "scatter";
 missedCatalystFinalBuild.pendingCores = [];
 missedCatalystFinalBuild.attunedCopies = 4;
 missedCatalystFinalBuild.affixes = ["overclock", "thermal_weave"];
@@ -2863,6 +2893,8 @@ assert.ok(
 );
 
 const supportBuild = game.createInitialBuild("scrap_pact");
+supportBuild.coreId = "scatter";
+supportBuild.attunedCoreId = "scatter";
 supportBuild.pendingCores = [];
 supportBuild.attunedCopies = 4;
 supportBuild.affixes = ["overclock", "thermal_weave"];
@@ -2891,6 +2923,8 @@ assert.equal(supportBuild.coolRateBonus >= 14, true);
 assert.ok(supportBuild.heatFactor < 1);
 
 const catalystPivotBuild = game.createInitialBuild("scrap_pact");
+catalystPivotBuild.coreId = "scatter";
+catalystPivotBuild.attunedCoreId = "scatter";
 catalystPivotBuild.pendingCores = [];
 catalystPivotBuild.attunedCopies = 4;
 catalystPivotBuild.affixes = ["overclock", "thermal_weave"];
@@ -2921,6 +2955,8 @@ assert.equal(flashTemperWeapon.capstoneFire.kind, "temper_slug");
 assert.ok(flashTemperWeapon.capstoneFire.pierceBonus >= 2);
 
 const stormRailBuild = game.createInitialBuild("rail_zeal");
+stormRailBuild.coreId = "lance";
+stormRailBuild.attunedCoreId = "lance";
 stormRailBuild.pendingCores = [];
 stormRailBuild.attunedCopies = 4;
 stormRailBuild.affixes = ["phase_rounds", "arc_link"];
@@ -2940,6 +2976,8 @@ assert.equal(stormRailWeapon.capstoneOnHit.kind, "storm_branch");
 assert.equal(stormRailWeapon.capstoneOnHit.burstCount, 2);
 
 const mirrorSpiralBuild = game.createInitialBuild("relay_oath");
+mirrorSpiralBuild.coreId = "ricochet";
+mirrorSpiralBuild.attunedCoreId = "ricochet";
 mirrorSpiralBuild.pendingCores = [];
 mirrorSpiralBuild.attunedCopies = 4;
 mirrorSpiralBuild.affixes = ["arc_link", "overclock"];
@@ -3186,6 +3224,9 @@ const run = {
     scrapCollected: 0,
   },
 };
+run.build.coreId = "scatter";
+run.build.attunedCoreId = "scatter";
+run.build.attunedCopies = 1;
 
 run.build.pendingCores = game.sanitizeBenchCoreIds(run.build.pendingCores.concat(["scatter"]));
 const sameCoreChoice = {
