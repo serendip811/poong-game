@@ -9624,7 +9624,7 @@
       >
         <span class="forge-card__tag">${contractLabel}</span>
         <h3>${choice.title}</h3>
-        ${createBaseRouteForgePreviewMarkup(transformation.previewLabel, transformation.previewValue)}
+        <p class="forge-card__hero-copy">${transformation.promise}</p>
         ${createBaseRouteForgeBillMarkup(slotLabel)}
       </button>
     `;
@@ -9652,11 +9652,7 @@
       >
         <span class="forge-card__tag">${contractLabel}</span>
         <h3>${choice.title}</h3>
-        ${createBaseRouteForgePreviewMarkup(
-          transformation.previewLabel,
-          transformation.previewValue
-        )}
-        ${createBaseRouteForgeProofMarkup(transformation.proof)}
+        <p class="forge-card__hero-copy">${transformation.promise}</p>
         ${createBaseRouteForgeBillMarkup(slotLabel)}
       </button>
     `;

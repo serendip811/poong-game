@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze new side systems and rebuild the shipped route around one primary `gun/body` takeover ladder, forge-only reward cadence, and a much quieter early presentation before asking the game to support `20-30 waves`.
+- Immediate priority: stop expanding route variants and consolidate one readable default run: quiet `Wave 1-3`, one dominant `gun/body` ladder, forge-first payoff, and far less combat/forge admin text before scaling toward `20-30 waves`.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 14:30:44 KST
+  Findings:
+  - `docs/games/cinder-circuit-design.md` still defines the product around a narrated `12-wave / three-era / Headline Form + Survival Rider + Proof Window` contract, so the run is still framed like an authored feature list instead of a combat-reward spine that could earn `20-30 waves`.
+  - `playables/cinder-circuit/index.html` still keeps `build-roadmap`, `wave-objective`, `live-readout`, and `upgrade-list` alive during combat, and `playables/cinder-circuit/game.js` still fills even the "minimal" HUD with current form, next beat, utility, threat, and inspect-state language. Compared with `Hades`, `Brotato`, and `Nova Drift`, this is still a run-administration screen, not a fight.
+  - The forge render path in `playables/cinder-circuit/game.js` is still explanation-first: `focusPrompt`, `Next Proof`, `Route Payoff`, preview rows, impact strips, and slot text all compete at once. Strong roguelite shops make you want the card in one glance; this forge still asks the player to study it.
+  - `playables/cinder-circuit/game.js` still carries wildcard protocols, ascension drafts, late support uplinks, and other exception lanes behind the default route. Even when hidden, that ruleset breadth keeps the baseline run from becoming clean, hunger-driven, and easy to rebalance.
+  Top Priority: Ship one ruthlessly stripped default route where `Wave 1-8` major gains happen only at forge, combat HUD shows only survival meters plus one immediate ask, and each forge card sells itself with one fantasy line and one cost line.
+  Why Now: If the player has to parse the run instead of craving the next form, extending the run just multiplies fatigue.
+  Do Not Repeat: Do not answer this with another "minimal" wrapper while roadmap/proof/payoff/admin concepts still survive in combat HUD, `Tab`, and forge variants.
+  Release Gate: Rewards
 
 - 2026-03-26 23:45:00 KST
   Findings:
@@ -2941,6 +2952,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-26 14:42:22 KST
+  Changed: tightened one bounded piece of the shipped forge reward read in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css), and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the consolidated `Wave 1-12` forge cards now all resolve to one clear card contract: `lane tag + title + one fantasy line + cost`. The base-route headline and side-card helpers no longer render preview rows or per-card `다음 시험` copy; instead they sell `transformation.promise` directly and leave the single `다음 시험` read to the quiet context card above the choices. Smoke coverage now locks that base-route cards keep the promise line, omit `forge-card__pivot`, and omit `forge-card__proof`. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` explicitly asked for forge cards that sell themselves with one fantasy line and one cost line. The highest-value concrete interpretation was to finish the card bodies themselves, because the context wrapper had already been reduced but the shipped picks still asked the player to compare extra preview/proof rows inside each option instead of making the desire read instantaneous.
+  Follow-up risk: the default forge overlay still keeps a separate context card above the choices, so the pause can still feel slightly administered even after the cards themselves got faster. If the same critique repeats, the next bounded rewards pass should consider whether that wrapper can collapse further without losing the single `다음 시험` anchor. UI reference direction: the appetite-first reward snap from `Hades` boon picks and `Nova Drift` draft cards, where each card sells one fantasy at a glance and the situational context stays outside the pick body.
+  Release Gate: Rewards
 
 - 2026-03-27 00:10:00 KST
   Changed: hardened one bounded piece of the shipped build spine in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so legacy primer and wildcard state can no longer leak back into the consolidated `Wave 1-12` route. I added `sanitizeConsolidatedBuildState(build)` and wired it into initial build creation, forge choice generation, forge application, wildcard summary access, and support-stat helpers, so stale `previewSupportSystemId` / `wildcardProtocolIds` are scrubbed before the shipped path can advertise or apply them. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now injects a deliberately polluted `Wave 5` build and locks that the route clears those fields, offers no `preview_support` or `wildcard_protocol` card, and still reports no support silhouette. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

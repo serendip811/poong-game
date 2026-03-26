@@ -1997,6 +1997,13 @@ body[data-overdrive="true"] .backdrop__glow--right {
   margin-top: 0;
 }
 
+.forge-card--contract-side .forge-card__hero-copy {
+  margin-top: 0;
+  color: var(--muted-strong);
+  font-size: 0.84rem;
+  line-height: 1.42;
+}
+
 .forge-card--contract-side .forge-card__slot {
   margin-top: auto;
 }
@@ -2021,6 +2028,14 @@ body[data-overdrive="true"] .backdrop__glow--right {
 
 .forge-card--snap .forge-card__pivot {
   margin-top: 2px;
+}
+
+.forge-card--snap .forge-card__hero-copy {
+  margin-top: 0;
+  color: var(--text);
+  font-size: 0.92rem;
+  line-height: 1.42;
+  max-width: 30rem;
 }
 
 .forge-card--snap .forge-card__slot {
