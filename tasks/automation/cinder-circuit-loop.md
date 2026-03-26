@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: align the shipped game around one honest `Wave 1-6` product by deleting leftover `12-wave / signature / rider-package` framing from docs and player-facing screens, then let the `Wave 6` chassis break pay off as a short domination lap.
+- Immediate priority: collapse the shipped build into one honest `Wave 1-6` rerun by removing long-route/admin baggage from docs and the default player path, then give the `Wave 6` chassis lock a real short domination window instead of ending on setup energy.
 
 ## Release Gates
 
@@ -61,6 +61,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 05:00:57 KST
+  Findings:
+  - The project is still balancing an absent game. `docs/games/cinder-circuit-design.md` and `docs/games/cinder-circuit-source-analysis.md` still define the core contract as `12-wave / three-era / signature + rider`, so the live six-wave build still lacks one honest product identity.
+  - The runtime still carries too much hidden long-route baggage for the shipped path. `playables/cinder-circuit/game.js` keeps `Afterburn`, wildcard, support-bay, and late-break scaffolding inside the default build state, so the current run reads like a cropped branch of a bigger system instead of a clean rerunnable loop.
+  - The opener still explains the run before the player earns it. `getBaseRouteTransformationFocus()` and the title launch panel roadmap `Wave 3` and `Wave 6` up front, where stronger references like `Nova Drift`, `Brotato`, and `Hades` let the first transformation create hunger through play, not pre-briefing.
+  - The forge is still over-ceremonial for a short route. `renderForgeOverlay()` continues to stack focus cards, proof rows, preview rows, and impact strips around choices, which keeps reward moments closer to interface admin than one-glance desire.
+  - The promised payoff still arrives too late or not at all. The run copy talks about a `Wave 6` victory lap, but the same route still treats `Wave 6` as the chassis-lock moment, so the player is asked to celebrate a transformation without enough live combat to enjoy it.
+  Top Priority: Recut the default route so only two visible promises shape the run, `Wave 3` weapon break and `Wave 6` chassis lock, then add a real short post-lock domination window before results instead of more support/admin scaffolding.
+  Why Now: Until the first shipped loop has a clear start, break, and payoff, added systems only make replay desire blurrier.
+  Do Not Repeat: Do not answer this with more wrappers that hide the larger route while its scaffolding still drives the shipped build underneath.
+  Release Gate: Progression
 
 - 2026-03-27 04:30:37 KST
   Findings:
@@ -3254,6 +3266,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 12:14:36 KST
+  Changed: added one bounded post-lock payoff window in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the shipped route no longer jumps straight from `Wave 6` clear to results. The consolidated run now routes `Wave 6 clear -> Victory Lap -> result`: `getBaseRoutePostWaveTransition()` advertises a short `승리 랩`, `beginBaseRouteVictoryLap()` launches one no-admin open-lane domination cell with a larger `1760x980` arena, lighter `58 spawnBudget / 15 activeCap` pressure, no hazard tax, and no extra forge stop, and the HUD/feed/result copy now explicitly treat that window as the real post-lock payoff. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks the new `Wave 6 clear -> victory lap -> result` transition and the lap config.
+  Why: the newest critique's `Top Priority` said the shipped route still treats `Wave 6` as the chassis-lock moment without giving that form enough live combat to enjoy. The highest-value concrete interpretation inside `playables/` was to add one hidden, no-admin domination lap after the lock instead of expanding another system, because that makes the six-wave product honest about its promised payoff without reopening support/wildcard scaffolding.
+  Follow-up risk: this gives the chassis lock real airtime, but the new lap is intentionally lighter than late-route cells. If critique or playtesting starts saying the ending now feels too soft, the next bounded pass should tighten elite cadence or flank-remix pressure inside this same `Victory Lap`, not add another reward stop or objective wrapper after `Wave 6`.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Progression
 
 - 2026-03-27 11:58:00 KST
   Changed: tightened one bounded piece of the shipped title/forge read in [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html), [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css), and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the shipped `Wave 1-6` route stops briefing itself with extra beat chips and long forge lane labels. The title kicker is now one hunger-first line, `renderTitleLaunchPanel()` no longer mounts the `Wave 3 / 5 / 6` proof strip, the base-route forge context was flattened into a lighter headline block, and the live short-route choice labels/data now fail closed to `주력 / 버팀 / 판돈` instead of `주력 변이 / 방호·보조 / 판돈·유틸`.

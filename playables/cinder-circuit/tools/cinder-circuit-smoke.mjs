@@ -75,6 +75,17 @@ assert.equal(
   game.getBaseRoutePostWaveTransition({ waveIndex: 8, wave: { completesRun: false } }, 10).action,
   "forge"
 );
+assert.equal(
+  game.getBaseRoutePostWaveTransition({ waveIndex: 5, wave: { completesRun: true } }, 7).action,
+  "victory_lap"
+);
+assert.equal(
+  game.getBaseRoutePostWaveTransition(
+    { waveIndex: 5, wave: { completesRun: true, baseRouteVictoryLap: true } },
+    7
+  ).action,
+  "result"
+);
 assert.ok(game.WAVE_CONFIG[0].spawnBudget < game.WAVE_CONFIG[2].spawnBudget);
 assert.equal(game.WAVE_CONFIG[0].activeCap, 14);
 assert.equal(game.WAVE_CONFIG[1].activeCap, 16);
@@ -109,6 +120,14 @@ assert.equal(game.WAVE_CONFIG[5].arena.height, 920);
 assert.equal(game.WAVE_CONFIG[4].label, "Wave 5 · Payoff Run");
 assert.equal(game.WAVE_CONFIG[5].label, "Wave 6 · Payoff Run+");
 assert.equal(game.WAVE_CONFIG[6].label, "Wave 7 · Payoff Sweep");
+const baseRouteVictoryLap = game.createBaseRouteVictoryLapWave(game.createInitialBuild("rail_zeal"));
+assert.equal(baseRouteVictoryLap.label, "Victory Lap · Dominion Run");
+assert.equal(baseRouteVictoryLap.completesRun, true);
+assert.equal(baseRouteVictoryLap.baseRouteVictoryLap, true);
+assert.equal(baseRouteVictoryLap.hazard, null);
+assert.ok(baseRouteVictoryLap.arena.width > game.WAVE_CONFIG[5].arena.width);
+assert.ok(baseRouteVictoryLap.spawnBudget < game.WAVE_CONFIG[6].spawnBudget);
+assert.ok(baseRouteVictoryLap.activeCap < game.WAVE_CONFIG[5].activeCap);
 assert.equal(game.WAVE_CONFIG[7].label, "Wave 8 · Crown Proof");
 assert.equal(game.WAVE_CONFIG[8].label, "Wave 9 · Payoff Run+");
 assert.equal(game.WAVE_CONFIG[9].label, "Wave 10 · Crown Proof+");

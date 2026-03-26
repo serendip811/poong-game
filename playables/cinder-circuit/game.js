@@ -14441,7 +14441,9 @@
   function getBaseRoutePostWaveTransition(run = state, nextWave = null) {
     const upcomingWave = Number.isFinite(nextWave) ? nextWave : run ? run.waveIndex + 2 : 0;
     if (run && run.wave && run.wave.completesRun) {
-      return { id: "result_panel", label: "결과 패널", action: "result" };
+      return run.wave.baseRouteVictoryLap
+        ? { id: "result_panel", label: "결과 패널", action: "result" }
+        : { id: "victory_lap", label: "승리 랩", action: "victory_lap" };
     }
     return {
       id: shouldUseConsolidatedEarlyMutationForge({ nextWave: upcomingWave, finalForge: false })
@@ -15300,6 +15302,7 @@
     shouldFinishAfterForge,
     createPostCapstoneWave,
     createFinalCashoutWave,
+    createBaseRouteVictoryLapWave,
     getFinalCashoutTransitionProfile,
     applyFinalCashoutTransition,
     chooseHazardSpawn,
@@ -16432,7 +16435,15 @@
     if (!text) {
       return;
     }
-    const nextStamp = stamp || (state.phase === "forge" ? "FORGE" : state.wave ? `W${state.waveIndex + 1}` : "RUN");
+    const nextStamp =
+      stamp ||
+      (state.phase === "forge"
+        ? "FORGE"
+        : state.wave
+          ? state.wave.baseRouteVictoryLap
+            ? "LAP"
+            : `W${state.waveIndex + 1}`
+          : "RUN");
     state.feed = [{ stamp: nextStamp, text }, ...state.feed].slice(0, 4);
   }
 
@@ -16465,7 +16476,9 @@
         ? `Forge Stop · Wave ${state.waveIndex + 1} Clear`
         : state.phase === "result"
           ? "Run Clear"
-          : `Wave ${state.waveIndex + 1} / ${totalTrackWaves}`;
+          : state.wave && state.wave.baseRouteVictoryLap
+            ? "Victory Lap"
+            : `Wave ${state.waveIndex + 1} / ${totalTrackWaves}`;
     elements.runTrackLabel.textContent = label;
     const trackEntries = getShippedRoutePresentationBeats();
     elements.waveTrack.innerHTML = trackEntries.map((entry, index) => {
@@ -18242,6 +18255,75 @@
     return profile;
   }
 
+  function createBaseRouteVictoryLapWave(build = null) {
+    const sweepBase = resolveWaveConfig(6, build);
+    return {
+      ...sweepBase,
+      id: "base_route_victory_lap",
+      label: "Victory Lap · Dominion Run",
+      bannerLabel: "Victory Lap",
+      note: "Wave 6에서 잠근 차체를 바로 써보는 짧은 domination window. 추가 포지나 목표 세금 없이 열린 lane을 훑으며 새 몸체 화력을 직접 누르게 만든다.",
+      directive: "가장 넓게 열린 flank를 먼저 비우고, 반대 lane으로 짧게 갈아타며 잠긴 body line의 sweep 폭을 끝까지 유지한다.",
+      duration: 38,
+      spawnBudget: 58,
+      activeCap: 15,
+      baseSpawnInterval: 0.54,
+      spawnIntervalMin: 0.15,
+      spawnAcceleration: 0.16,
+      eliteEvery: 12,
+      mix: {
+        scuttler: 0.14,
+        brute: 0.16,
+        shrike: 0.32,
+        skimmer: 0.26,
+        lancer: 0.12,
+      },
+      driveGainFactor: Math.max(1.3, sweepBase.driveGainFactor || 1.3),
+      arena: {
+        width: 1760,
+        height: 980,
+      },
+      hazard: null,
+      cleanupPhase: false,
+      awaitingForge: false,
+      completesRun: true,
+      baseRouteVictoryLap: true,
+    };
+  }
+
+  function beginBaseRouteVictoryLap() {
+    state.phase = "wave";
+    state.pendingFinalForge = false;
+    state.wave = createBaseRouteVictoryLapWave(state.build);
+    state.arena = getArenaSize(state.wave);
+    state.waveClearTimer = 0;
+    state.enemies = [];
+    state.projectiles = [];
+    state.drops = [];
+    state.hazards = [];
+    state.slagPools = [];
+    state.particles = [];
+    state.supportDeployables = [];
+    resetOvercommitState(state);
+    resetDoctrinePursuitState(state);
+    syncArenaCanvas();
+    state.player.x = state.arena.width / 2;
+    state.player.y = state.arena.height / 2;
+    state.player.heat = Math.max(0, state.player.heat - 22);
+    state.player.overheated = false;
+    state.player.fireCooldown = 0;
+    state.player.dashCharges = state.player.dashMax;
+    state.player.dashCooldownTimer = 0;
+    pushCombatFeed(
+      "차체 잠금 완료. 결과 패널 대신 짧은 승리 랩이 바로 열린다. 이번 구간은 추가 목표 없이 새 몸체 화력을 직접 누르는 domination window다.",
+      "LAP"
+    );
+    pushCombatFeed(`${state.wave.label} 진입. ${state.wave.note}`, "LAP");
+    setBanner(state.wave.bannerLabel || state.wave.label, 1.1);
+    renderForgeOverlay();
+    updateHUD();
+  }
+
   function beginFinalCashout() {
     if (CONSOLIDATED_12_WAVE_ROUTE) {
       finishRun(true);
@@ -18390,7 +18472,7 @@
       ? "회로 봉인 성공"
       : "회로 붕괴";
     elements.resultCopy.textContent = victory
-      ? "Wave 6 승리 랩까지 밀어붙여 이번 런을 닫았다. 마지막 형태와 보강 조합은 아래에 기록된다."
+      ? "Wave 6 차체 잠금 뒤 열린 승리 랩까지 밀어붙여 이번 런을 닫았다. 마지막 형태와 보강 조합은 아래에 기록된다."
       : "열과 밀도를 버티지 못했다. 이동 경로와 포지 선택을 다시 정리해야 한다.";
     elements.resultStats.innerHTML = [
       createResultStat("Waves", String(state.result.wavesCleared)),
@@ -21995,7 +22077,9 @@
           !CONSOLIDATED_12_WAVE_ROUTE && state.waveIndex >= MAX_WAVES - 1;
         const nextBaseRouteTransition = getBaseRoutePostWaveTransition(state, nextWave);
         const nextPhaseLabel = state.wave.completesRun
-          ? "결과 패널"
+          ? CONSOLIDATED_12_WAVE_ROUTE
+            ? nextBaseRouteTransition.label
+            : "결과 패널"
           : CONSOLIDATED_12_WAVE_ROUTE
             ? nextBaseRouteTransition.label
             : enteringAfterburn
@@ -22023,7 +22107,9 @@
         pushCombatFeed(
           CONSOLIDATED_12_WAVE_ROUTE
             ? state.wave.completesRun
-              ? "적 반응 정지. 남은 고철을 회수하면 이번 런의 결과가 열린다."
+              ? state.wave.baseRouteVictoryLap
+                ? "적 반응 정지. 남은 고철을 회수하면 이번 런의 결과가 열린다."
+                : "적 반응 정지. 남은 고철을 회수하면 짧은 승리 랩 하나만 더 밀어붙인 뒤 이번 런이 닫힌다."
               : `적 반응 정지. 남은 고철을 회수하면 ${nextPhaseLabel} 하나만 고른 뒤 바로 다음 시험으로 이어진다.`
             : `적 반응 정지. 남은 고철을 회수한 뒤 ${nextPhaseLabel}로 이어진다.`,
           "CLEAR"
@@ -22034,7 +22120,11 @@
       state.waveClearTimer = Math.max(0, state.waveClearTimer - dt);
       if (state.waveClearTimer <= 0) {
         if (state.wave.completesRun) {
-          finishRun(true);
+          if (CONSOLIDATED_12_WAVE_ROUTE && !state.wave.baseRouteVictoryLap) {
+            beginBaseRouteVictoryLap();
+          } else {
+            finishRun(true);
+          }
         } else if (CONSOLIDATED_12_WAVE_ROUTE) {
           const nextBaseRouteTransition = getBaseRoutePostWaveTransition(state, state.waveIndex + 2);
           if (nextBaseRouteTransition.action === "field_grant") {
