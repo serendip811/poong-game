@@ -37,7 +37,9 @@ assert.equal(game.getPlayerFacingActLabelForWave(13).shortLabel, "Act 3");
 assert.equal(game.getPlayerFacingActLabelForWave(19).shortLabel, "Act 3");
 assert.equal(game.POST_CAPSTONE_WAVE_COUNT, 7);
 assert.equal(game.shouldUseFieldGrant({ nextWave: 9, finalForge: false }), false);
+assert.equal(game.shouldUseFieldGrant({ nextWave: 5, finalForge: false }), false);
 assert.equal(game.getCombatCacheChoicesForWave(game.createInitialBuild("rail_zeal"), 9).length, 0);
+assert.equal(game.getCombatCacheChoicesForWave(game.createInitialBuild("rail_zeal"), 5).length, 0);
 assert.equal(game.getCombatCacheChoicesForWave(game.createInitialBuild("rail_zeal"), 14).length, 0);
 assert.ok(game.WAVE_CONFIG[0].spawnBudget < game.WAVE_CONFIG[2].spawnBudget);
 assert.equal(game.WAVE_CONFIG[0].arena.width, 1080);
@@ -331,6 +333,27 @@ assert.equal(
   ).label,
   "마무리"
 );
+assert.equal(
+  game.getBaseRoutePostWaveTransition(
+    { waveIndex: 3, wave: { completesRun: false } },
+    5
+  ).action,
+  "forge"
+);
+assert.equal(
+  game.getBaseRoutePostWaveTransition(
+    { waveIndex: 3, wave: { completesRun: false } },
+    5
+  ).id,
+  "field_break"
+);
+assert.equal(
+  game.getBaseRoutePostWaveTransition(
+    { waveIndex: 7, wave: { completesRun: false } },
+    9
+  ).action,
+  "forge"
+);
 assert.equal(game.shouldUseFieldGrant({ nextWave: 6, finalForge: false, build: roadmapBuild }), false);
 const recurringWave3Choices = game.buildForgeChoices(roadmapBuild, Math.random, 40, {
   nextWave: 3,
@@ -563,29 +586,7 @@ if (recurringWave3GambleTransform.previewLabel === "판돈") {
 assert.ok(!recurringWave3GambleTransform.proof.includes("Siege Debt"));
 const actBreakCacheBuild = game.createInitialBuild("rail_zeal");
 const actBreakCacheChoices = game.getCombatCacheChoicesForWave(actBreakCacheBuild, 5, 12);
-assert.equal(actBreakCacheChoices.length, 3);
-assert.equal(
-  actBreakCacheChoices.map((choice) => choice.contractRole).join("|"),
-  "headline|rider|gamble"
-);
-assert.equal(
-  actBreakCacheChoices.map((choice) => choice.contractLabel).join("|"),
-  "주력 변이|방호·보조|판돈·유틸"
-);
-assert.ok(actBreakCacheChoices.some((choice) => choice.laneLabel === "Main Weapon Mutation"));
-assert.ok(actBreakCacheChoices.some((choice) => choice.laneLabel === "Defense / Utility"));
-const actBreakHeadlineChoice =
-  actBreakCacheChoices.find((choice) => choice.contractRole === "headline") ||
-  actBreakCacheChoices[0];
-const actBreakHeadlineShowcase = game.getForgeHeadlineShowcase(
-  actBreakHeadlineChoice,
-  actBreakCacheBuild,
-  5
-);
-assert.ok(actBreakHeadlineShowcase);
-assert.equal(actBreakHeadlineShowcase.rows.length, 3);
-assert.ok(actBreakHeadlineShowcase.rows.some((row) => row.label === "Form"));
-assert.ok(actBreakHeadlineShowcase.proofLabel.length > 0);
+assert.equal(actBreakCacheChoices.length, 0);
 const wildcardGrantBuild = game.createInitialBuild("scrap_pact");
 const wildcardGrantChoices = game.buildFieldGrantChoices(wildcardGrantBuild, Math.random, 4);
 assert.ok(
@@ -1881,7 +1882,7 @@ const earlyMutationTransition = game.getBaseRoutePostWaveTransition(
   },
   5
 );
-assert.equal(earlyMutationTransition.action, "field_grant");
+assert.equal(earlyMutationTransition.action, "forge");
 assert.equal(earlyMutationTransition.label, "주력 변이");
 assert.equal(game.shouldUseFieldGrant({ nextWave: 12, finalForge: true }), false);
 const bastionDoctrineBuild = game.createInitialBuild("relay_oath");

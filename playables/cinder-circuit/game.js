@@ -7003,6 +7003,15 @@
     return (options.nextWave || 0) === EARLY_MUTATION_FORGE_WAVE;
   }
 
+  function shouldForceBaseRouteForgeStop(nextWave = 0) {
+    return Boolean(
+      CONSOLIDATED_12_WAVE_ROUTE &&
+        Number.isFinite(nextWave) &&
+        nextWave >= 1 &&
+        nextWave <= MAX_WAVES
+    );
+  }
+
   function shouldUseLateFieldCache(nextWave) {
     return (
       Number.isFinite(nextWave) &&
@@ -14133,10 +14142,7 @@
   }
 
   function getCombatCacheChoicesForWave(build, nextWave, scrapBank = Number.POSITIVE_INFINITY) {
-    if (
-      CONSOLIDATED_12_WAVE_ROUTE &&
-      (nextWave >= LATE_BREAK_ARMORY_WAVE || nextWave > MAX_WAVES)
-    ) {
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
       return [];
     }
     if (shouldUseCompactActBreakCache({ nextWave, finalForge: false })) {
@@ -14527,15 +14533,10 @@
     if (run && run.wave && run.wave.completesRun) {
       return { id: "result_panel", label: "결과 패널", action: "result" };
     }
-    if (shouldUseConsolidatedEarlyMutationForge({ nextWave: upcomingWave, finalForge: false })) {
-      return {
-        id: "field_break",
-        label: getBaseRouteForgeStage(run, upcomingWave).label,
-        action: "field_grant",
-      };
-    }
     return {
-      id: "forge_break",
+      id: shouldUseConsolidatedEarlyMutationForge({ nextWave: upcomingWave, finalForge: false })
+        ? "field_break"
+        : "forge_break",
       label: getBaseRouteForgeStage(run, upcomingWave).label,
       action: "forge",
     };
@@ -17623,27 +17624,30 @@
             activeCapBonus: 4,
           }
         : null,
-      combatCache:
-        shouldUseCompactActBreakCache({ nextWave: waveNumber + 1, finalForge: false }) ||
-        shouldUseFieldGrant({ nextWave: waveNumber + 1, finalForge: false })
-        ? {
-            armed: true,
-            deployed: false,
-            claimed: false,
-            groupId: null,
-            variant: shouldUseCompactActBreakCache({ nextWave: waveNumber + 1, finalForge: false })
-              ? "act_break_cache"
-              : "field_cache",
-            choices: getCombatCacheChoicesForWave(
-              state.build,
-              waveNumber + 1,
-              state.resources && Number.isFinite(state.resources.scrap)
-                ? state.resources.scrap
-                : Number.POSITIVE_INFINITY
-            ),
-          }
-        : null,
-      lateAscension: shouldOfferLateAscension(state.build, waveNumber)
+      combatCache: shouldForceBaseRouteForgeStop(waveNumber + 1)
+        ? null
+        : shouldUseCompactActBreakCache({ nextWave: waveNumber + 1, finalForge: false }) ||
+            shouldUseFieldGrant({ nextWave: waveNumber + 1, finalForge: false })
+          ? {
+              armed: true,
+              deployed: false,
+              claimed: false,
+              groupId: null,
+              variant: shouldUseCompactActBreakCache({ nextWave: waveNumber + 1, finalForge: false })
+                ? "act_break_cache"
+                : "field_cache",
+              choices: getCombatCacheChoicesForWave(
+                state.build,
+                waveNumber + 1,
+                state.resources && Number.isFinite(state.resources.scrap)
+                  ? state.resources.scrap
+                  : Number.POSITIVE_INFINITY
+              ),
+            }
+          : null,
+      lateAscension: shouldForceBaseRouteForgeStop(waveNumber)
+        ? null
+        : shouldOfferLateAscension(state.build, waveNumber)
         ? {
             deployed: false,
             claimed: false,
@@ -17653,7 +17657,9 @@
         : null,
       lateAscensionCarrierType: config.ascensionCarrierType || null,
       lateAscensionCarrierSpawned: false,
-      doctrineAscension: shouldRunDoctrineLiveAscension(state.build, waveNumber)
+      doctrineAscension: shouldForceBaseRouteForgeStop(waveNumber)
+        ? null
+        : shouldRunDoctrineLiveAscension(state.build, waveNumber)
         ? {
             deployed: false,
             claimed: false,
@@ -21842,6 +21848,10 @@
     }
 
     if (drop.kind === "combat_cache") {
+      if (shouldForceBaseRouteForgeStop(state.waveIndex + 2)) {
+        drop.life = 0;
+        return true;
+      }
       const combatCache = state.wave && state.wave.combatCache;
       const choice = drop.choice;
       if (!combatCache || combatCache.claimed || !choice) {
@@ -21884,6 +21894,10 @@
     }
 
     if (drop.kind === "late_ascension_cache") {
+      if (shouldForceBaseRouteForgeStop(state.waveIndex + 1)) {
+        drop.life = 0;
+        return true;
+      }
       const ascension = state.wave && state.wave.lateAscension;
       const choice = drop.choice;
       if (!ascension || ascension.claimed || !choice || state.build.lateAscensionId) {
