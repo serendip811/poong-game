@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: align docs, title, HUD, and forge around one honest replayable `Wave 1-6` contract, then make `Wave 5-6` a clean two-wave domination plateau where the first gun/body leap gets full breathing room before any support or upkeep asks return.
+- Immediate priority: remove the remaining `signature / 12-wave / support-primer` contract from docs and default presentation, then make `Wave 5-6` the first truly replay-worthy domination plateau before any broader route or support depth stays visible.
 
 ## Release Gates
 
@@ -61,6 +61,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 00:00:48 KST
+  Findings:
+  - The game still sells a bigger product than the fun it can currently prove. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8) and [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L141) still define the run around `12-wave acts` and `run-start signatures`, while [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L21) claims a lean start. That split contract keeps the game feeling like a prototype hiding behind future structure.
+  - The title route is still functionally a signature game even when the copy says otherwise. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L17309) still renders `signature-cards`, keeps selected-signature state alive, and starts runs through signature-aware app state. Players should not feel a pre-chosen class package lurking behind a supposedly smaller opener.
+  - `Wave 5-6` is still not a real takeover memory. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L433) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L467) only move from `activeCap 18 -> 19` and add `lancer` pressure immediately, so the first gun/body leap still does not create the breathing, lane-ownership high that strong repeat-run arena shooters use to hook reruns.
+  - Early growth is still being visually pre-spent on helpers that should remain future hunger. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2999) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3055) keep `Primer` support definitions for orbitals and drones, which means the run still reserves opener bandwidth for support silhouettes instead of letting the base gun/body start plain and earn spectacle later.
+  - The combat HUD and forge still explain too much structure for a game that needs snap desire. [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L99) through [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L118) keep an objective card plus framed forge header/subtitle, and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22262) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22539) still build `Tab` summaries, breakpoint framing, and proof copy. Against `Nova Drift`, `Brotato`, or `Hades`, the run is still asking the player to parse the contract instead of instantly wanting the pick.
+  Top Priority: Remove signature state and support-primer presentation from the default shipped route, then retune `Wave 5-6` into one clearly longer domination window where the first weapon/body leap owns open lanes before new upkeep pressure appears.
+  Why Now: Until the first transformation creates one obvious rerun-worthy payoff, longer structure and extra systems are still fake promise.
+  Do Not Repeat: Do not spend another pass on wording trims that leave signature logic, primer helpers, or admin-heavy forge/HUD framing intact.
+  Release Gate: Progression
 
 - 2026-03-26 23:59:20 KST
   Findings:
@@ -3140,6 +3152,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 04:05:00 KST
+  Changed: removed one bounded piece of hidden preload from the shipped route in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so consolidated runs no longer carry signature state at all. `applySignatureToBuild(...)` now nulls `signatureId` on the shipped route, `createAppState()`/`startRun()`/title-return flows no longer build runs through `selectedSignatureId`, and title-card pointer selection is inert under consolidation instead of quietly feeding future doctrine state into the run model. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) was updated to lock that all three former signatures now create the same null-signature `Ember` start, while doctrine-specific forge preference checks explicitly set doctrine state instead of inheriting it from a hidden opener choice.
+  Why: the newest critique's `Top Priority` explicitly called out that the title route still behaved like a signature game because the shipped run was being created through signature-aware app state even after the lean-start copy changed. The highest-value concrete interpretation was to cut that state path itself, because otherwise the opener was still a disguised class preload no matter how quiet the title copy looked.
+  Follow-up risk: this makes the shipped opener more honest, but it also strips some early roadmap specificity that used to piggyback on hidden signature identity. If critique keeps saying the early path now feels too anonymous, the next bounded pass should add earned `Wave 3` doctrine-forecast presentation or stronger first-forge payoff, not restore start-of-run signature bias.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Progression
 
 - 2026-03-27 03:22:00 KST
   Changed: removed one bounded piece of leaked future spectacle from the shipped route in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) by deleting the player-facing preview-support frame path entirely. The live player render no longer calls `drawPlayerPreviewSupportFrame(...)`, the unused `getPreviewSupportFrameProfile(...)` helper/export is gone, and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) was updated so the shipped route now only proves `previewSupportSystemId` stays scrubbed and support stats stay dark, without preserving a render contract for halo/drone/missile teaser rings around the base hull.

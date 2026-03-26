@@ -198,11 +198,13 @@ assert.ok(
 );
 const earlyRoadmap = game.getBuildRoadmap(roadmapBuild, game.computeWeaponStats(roadmapBuild), 1);
 assert.equal(earlyRoadmap.steps.length, 3);
-assert.equal(earlyRoadmap.steps[0].title, "Lance Rail");
-assert.ok(earlyRoadmap.steps[1].title.includes("Sky Lance"));
+assert.equal(earlyRoadmap.steps[0].title, "Monster Form Lock");
+assert.equal(earlyRoadmap.steps[1].title, "Midform Spike");
 assert.ok(earlyRoadmap.steps[1].detail.includes("Wave 6 몸체 도약"));
 assert.ok(earlyRoadmap.steps[1].detail.includes("weapon/body leap"));
 assert.equal(earlyRoadmap.steps[2].title, "Crown Break");
+assert.ok(!earlyRoadmap.prompt.includes("Lance"));
+assert.ok(!earlyRoadmap.note.includes("Lance"));
 roadmapBuild.bastionDoctrineId = "storm_artillery";
 roadmapBuild.overcommitUnlocked = true;
 roadmapBuild.previewSupportSystemId = "volt_drones";
@@ -1793,7 +1795,7 @@ assert.equal(
 assert.equal(game.MAX_APEX_MUTATION_LEVEL, 3);
 
 const signatureBuild = game.createInitialBuild("scrap_pact");
-assert.equal(signatureBuild.signatureId, "scrap_pact");
+assert.equal(signatureBuild.signatureId, null);
 assert.equal(signatureBuild.coreId, "ember");
 assert.equal(signatureBuild.attunedCoreId, "ember");
 assert.equal(signatureBuild.maxHpBonus, 0);
@@ -1805,6 +1807,7 @@ assert.equal(JSON.stringify(signatureBuild.pendingCores), JSON.stringify([]));
 assert.equal(JSON.stringify(signatureBuild.upgrades), JSON.stringify([]));
 
 const relayStartBuild = game.createInitialBuild("relay_oath");
+assert.equal(relayStartBuild.signatureId, null);
 assert.equal(relayStartBuild.coreId, "ember");
 assert.equal(relayStartBuild.attunedCoreId, "ember");
 assert.equal(relayStartBuild.driveGainBonus, 0);
@@ -1812,6 +1815,7 @@ assert.equal(relayStartBuild.overdriveDurationBonus, 0);
 assert.equal(JSON.stringify(relayStartBuild.pendingCores), JSON.stringify([]));
 
 const railStartBuild = game.createInitialBuild("rail_zeal");
+assert.equal(railStartBuild.signatureId, null);
 assert.equal(railStartBuild.coreId, "ember");
 assert.equal(railStartBuild.attunedCoreId, "ember");
 assert.equal(railStartBuild.damageBonus, 0);
@@ -1907,6 +1911,8 @@ railBuild.coreId = "lance";
 railBuild.attunedCoreId = "lance";
 railBuild.pendingCores = [];
 railBuild.attunedCopies = 4;
+railBuild.bastionDoctrineId = "storm_artillery";
+railBuild.architectureForecastId = "storm_artillery";
 const railChoices = game.buildForgeChoices(railBuild, () => 0, 180);
 const railFinisherChoice = railChoices.find((choice) => choice.recipeLabel === "Sky Pierce");
 assert.ok(railFinisherChoice);
@@ -1918,6 +1924,8 @@ prismBuild.coreId = "ricochet";
 prismBuild.attunedCoreId = "ricochet";
 prismBuild.pendingCores = [];
 prismBuild.attunedCopies = 4;
+prismBuild.bastionDoctrineId = "mirror_hunt";
+prismBuild.architectureForecastId = "mirror_hunt";
 const prismChoices = game.buildForgeChoices(prismBuild, () => 0, 180);
 const prismFinisherChoice = prismChoices.find((choice) => choice.recipeLabel === "Prism Cascade");
 assert.ok(prismFinisherChoice);

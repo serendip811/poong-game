@@ -8038,7 +8038,7 @@
     const starterCoreId = leanStartContract
       ? LEAN_START_CORE_ID
       : signature.startCoreId || nextBuild.coreId || BASE_BUILD.coreId;
-    nextBuild.signatureId = signature.id;
+    nextBuild.signatureId = leanStartContract ? null : signature.id;
     nextBuild.coreId = starterCoreId;
     nextBuild.attunedCoreId = nextBuild.coreId;
     nextBuild.attunedCopies = 1;
@@ -8081,6 +8081,10 @@
 
   function getSignatureDef(signatureId) {
     return SIGNATURE_DEFS[signatureId] || SIGNATURE_DEFS[DEFAULT_SIGNATURE_ID];
+  }
+
+  function getTitleRouteSignatureId() {
+    return CONSOLIDATED_12_WAVE_ROUTE ? null : selectedSignatureId;
   }
 
   function getBastionDoctrineDef(buildOrSignatureId) {
@@ -15430,7 +15434,7 @@
   };
 
   let selectedSignatureId = DEFAULT_SIGNATURE_ID;
-  let state = createAppState(selectedSignatureId);
+  let state = createAppState();
   let lastFrameTime = 0;
 
   function setFill(element, ratio) {
@@ -15938,8 +15942,8 @@
     return { grade: "D", note: "초기 포지 이전 안정화가 우선이다." };
   }
 
-  function createAppState(signatureId = selectedSignatureId) {
-    const build = createInitialBuild(signatureId);
+  function createAppState(signatureId = getTitleRouteSignatureId()) {
+    const build = createInitialBuild(signatureId || DEFAULT_SIGNATURE_ID);
     return {
       screen: "title",
       phase: "title",
@@ -17411,13 +17415,13 @@
   }
 
   function startRun() {
-    state = createAppState(selectedSignatureId);
+    state = createAppState();
     state.screen = "game";
     state.phase = "wave";
     state.paused = false;
     state.player = createPlayer(state.build);
     refreshDerivedStats(false);
-    const signature = getSignatureDef(selectedSignatureId);
+    const signature = getSignatureDef(getTitleRouteSignatureId());
     if (!CONSOLIDATED_12_WAVE_ROUTE && typeof signature.onRunStart === "function") {
       signature.onRunStart(state);
     }
@@ -24686,7 +24690,7 @@
   }
 
   elements.backToTitle.addEventListener("pointerdown", () => {
-    state = createAppState(selectedSignatureId);
+    state = createAppState();
     syncArenaCanvas();
     renderSignaturePicker();
     renderSignatureSpotlight();
@@ -24702,20 +24706,25 @@
   });
 
   elements.pauseTitle.addEventListener("pointerdown", () => {
-    state = createAppState(selectedSignatureId);
+    state = createAppState();
     syncArenaCanvas();
     renderSignaturePicker();
     renderSignatureSpotlight();
     showScreen("title");
   });
 
-  elements.signatureCards.addEventListener("pointerdown", (event) => {
-    const card = event.target.closest("[data-signature-id]");
-    if (!card) {
-      return;
-    }
-    selectSignature(card.dataset.signatureId);
-  });
+  if (elements.signatureCards) {
+    elements.signatureCards.addEventListener("pointerdown", (event) => {
+      if (CONSOLIDATED_12_WAVE_ROUTE) {
+        return;
+      }
+      const card = event.target.closest("[data-signature-id]");
+      if (!card) {
+        return;
+      }
+      selectSignature(card.dataset.signatureId);
+    });
+  }
 
   elements.forgeCards.addEventListener("pointerdown", (event) => {
     const card = event.target.closest("[data-index]");

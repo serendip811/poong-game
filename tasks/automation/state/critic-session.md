@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is still `Progression`: docs and player-facing UI continue to advertise a `12-wave / signature` product while the only honest shipped target is a replayable `Wave 1-6` spine.
-- Current drift bundle: `Wave 5-6` still lacks a true domination plateau because the payoff window is tuned too close together, while HUD/forge fallback framing keeps the route feeling managed instead of immediate.
-- Repeated false solution: copy cleanup, hidden wrappers, or "lean start" messaging that still leaves signature cards, 12-wave fallback scripts, or support-preview silhouettes in view.
-- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: early runs should start visibly smaller, reward desire should read in one glance, and the first big form should get breathing room before upkeep/admin returns.
-- Near-term critic pressure should stay on consolidation, not expansion: erase the split contract, protect the first gun/body transformation as the run's clearest memory, and leave orbitals/shields/helpers as later hunger instead of opener decoration.
+- The most fragile gate is still `Progression`: the default route still advertises `12-wave / signature / layered support` ambitions before the `Wave 1-6` spine proves replay desire.
+- Current drift bundle: title state, docs, and support-primer definitions still preserve a preconfigured build fantasy, while `Wave 5-6` remains too compressed to deliver a real domination plateau.
+- Repeated false solution: copy trims or partial hiding that leave signature-aware run state, primer helpers, objective-card/admin HUD framing, or `12-wave` design language alive under a "lean start" label.
+- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: the opener should start smaller, the reward screen should sell desire in one glance, and the first major form should buy more space before any maintenance layer returns.
+- Near-term critic pressure should stay on consolidation, not expansion: kill the split contract, remove opener helper spectacle, and make the first weapon/body leap the one memory players want to rerun for.
