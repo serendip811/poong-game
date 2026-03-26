@@ -89,237 +89,6 @@
   const BLACK_LEDGER_DEBT_ACTIVE_CAP_STEP = 2;
   const BLACK_LEDGER_DEBT_HAZARD_RATE_STEP = 0.12;
   const BLACK_LEDGER_DEBT_SPAWN_INTERVAL_STEP = 0.05;
-  const LATE_BREAK_ENCOUNTER_PROFILES = {
-    mutation: {
-      label: "Wave 9 · Payoff Run+",
-      bandId: "late_payoff_run",
-      bandLabel: "Payoff Run+",
-      pressureFamily: "domination",
-      note: "Late Break 직후 첫 칸도 shared payoff run grammar를 벗어나면 안 된다. mutation lane은 upkeep 구조물을 걷어내고 전장을 더 크게 벌려, 방금 증설한 배럴과 broadside pod가 열린 lane 둘을 얼마나 오래 소유하는지 먼저 즐기게 만든다.",
-      directive:
-        "payoff run+. 구조물 코어 없이 열린 사선과 marked elite 절개가 우선이다. skimmer 훑기를 얇게 만든 뒤 lancer charge를 정면 화망으로 자르며 새 주포 실루엣을 바로 오래 굴려야 한다.",
-      arena: {
-        width: 1820,
-        height: 1020,
-      },
-      activeCap: 24,
-      spawnBudget: 144,
-      baseSpawnInterval: 0.438,
-      spawnIntervalMin: 0.126,
-      eliteEvery: 4,
-      mix: {
-        scuttler: 0.06,
-        brute: 0.12,
-        shrike: 0.14,
-        skimmer: 0.34,
-        lancer: 0.24,
-        mortar: 0.02,
-        warden: 0.08,
-      },
-      mixWeight: 0.62,
-    },
-    aegis: {
-      label: "Wave 9 · Payoff Run+",
-      bandId: "late_payoff_run",
-      bandLabel: "Payoff Run+",
-      pressureFamily: "domination",
-      note: "Late Break 직후 첫 칸도 shared payoff run grammar를 유지해야 한다. aegis lane은 작은 bastion punctuation 대신 열린 lane을 먼저 남겨, plate를 믿고 진입-정착-이탈 타이밍을 구조물 없이 증명하게 만든다.",
-      directive:
-        "payoff run+. 구조물 없이 전열 한 줄을 먼저 비운 뒤 체력과 dash를 회수하고, 적 점유가 두꺼워지기 전에 곧바로 외곽 refuge로 빠져야 한다.",
-      arena: {
-        width: 1680,
-        height: 980,
-      },
-      activeCap: 22,
-      spawnBudget: 138,
-      baseSpawnInterval: 0.454,
-      spawnIntervalMin: 0.13,
-      eliteEvery: 4,
-      mix: {
-        scuttler: 0.04,
-        brute: 0.18,
-        shrike: 0.14,
-        skimmer: 0.08,
-        lancer: 0.14,
-        binder: 0.1,
-        mortar: 0.04,
-        warden: 0.18,
-        brander: 0.1,
-      },
-      mixWeight: 0.56,
-    },
-    ledger: {
-      label: "Wave 9 · Payoff Run+",
-      bandId: "late_payoff_run",
-      bandLabel: "Payoff Run+",
-      pressureFamily: "domination",
-      note: "Late Break 직후 첫 칸도 shared payoff run grammar를 벗어나면 안 된다. ledger lane은 구조물 upkeep 대신 열린 lane 위의 cash-out 유혹만 남겨, 먼저 퇴로를 비운 뒤 어디까지 greed를 끌지 판단하게 만든다.",
-      directive:
-        "payoff run+. 먼저 퇴로를 비우고 짧은 cash-out window를 고른 뒤, binder와 brander가 lane을 닫기 전에 빠져야 한다.",
-      arena: {
-        width: 1820,
-        height: 1000,
-      },
-      activeCap: 24,
-      spawnBudget: 146,
-      baseSpawnInterval: 0.432,
-      spawnIntervalMin: 0.124,
-      eliteEvery: 4,
-      mix: {
-        scuttler: 0.04,
-        brute: 0.12,
-        shrike: 0.14,
-        skimmer: 0.14,
-        lancer: 0.16,
-        brander: 0.18,
-        binder: 0.08,
-        mortar: 0.08,
-        warden: 0.06,
-      },
-      mixWeight: 0.58,
-    },
-  };
-  const LATE_BREAK_FOLLOWTHROUGH_PROFILES = {
-    mutation: {
-      label: "Wave 10 · Crown Proof+",
-      bandId: "crownhold_proof",
-      bandLabel: "Crown Proof+",
-      pressureFamily: "breach",
-      note: "Wave 10도 shared crown proof grammar를 그대로 이어야 한다. mutation lane은 corridor 하나만 늦게 닫고 arena를 더 크게 벌려, 방금 증설한 포문이 열린 flank 둘을 오래 누른 뒤 마지막 한 줄만 직접 찢게 만든다.",
-      directive:
-        "crown proof+. relay crown이 얇은 corridor 하나만 늦게 잠근다. 가장 넓은 pocket을 먼저 잡고 split volley로 flank 둘을 오래 눌러 지배 시간을 만든 뒤, 닫히는 회랑 한 줄만 마지막에 찢어 breach 창을 직접 늘려야 한다.",
-      arena: {
-        width: 2020,
-        height: 1140,
-      },
-      activeCap: 25,
-      spawnBudget: 148,
-      baseSpawnInterval: 0.422,
-      spawnIntervalMin: 0.126,
-      eliteEvery: 4,
-      mix: {
-        scuttler: 0.08,
-        brute: 0.12,
-        shrike: 0.14,
-        skimmer: 0.26,
-        lancer: 0.24,
-        binder: 0.04,
-        mortar: 0.02,
-        warden: 0.08,
-        brander: 0.02,
-      },
-      mixWeight: 0.58,
-      hazard: {
-        label: "Crown Proof Relay",
-        type: "relay",
-        interval: 10,
-        count: 1,
-        radius: 82,
-        telegraph: 0.88,
-        duration: 4.9,
-        damage: 15,
-        coreHp: 60,
-        coreRadius: 18,
-        relayRange: 520,
-        relayWidth: 26,
-        relayDamage: 14,
-      },
-    },
-    aegis: {
-      label: "Wave 10 · Crown Proof+",
-      bandId: "crownhold_proof",
-      bandLabel: "Crown Proof+",
-      pressureFamily: "breach",
-      note: "Wave 10도 shared crown proof grammar를 그대로 이어야 한다. aegis lane은 bastion pocket에서 plate timing으로 벌어 둔 진입 창을 그대로 들고 와, relay crown 하나를 짧게 찢고 그 복도를 얼마나 오래 지키는지 바로 드러나게 만든다.",
-      directive:
-        "crown proof+. relay crown 하나만 늦게 닫힌다. plate를 믿고 가장 얇은 입구를 먼저 뚫은 뒤, 비워 낸 breach lane을 오래 붙잡아 다음 refuge lap으로 이어질 버티는 선을 만든다.",
-      arena: {
-        width: 1760,
-        height: 1000,
-      },
-      activeCap: 24,
-      spawnBudget: 150,
-      baseSpawnInterval: 0.424,
-      spawnIntervalMin: 0.124,
-      eliteEvery: 4,
-      mix: {
-        scuttler: 0.04,
-        brute: 0.16,
-        shrike: 0.16,
-        skimmer: 0.08,
-        lancer: 0.14,
-        binder: 0.1,
-        mortar: 0.04,
-        warden: 0.18,
-        brander: 0.1,
-      },
-      mixWeight: 0.54,
-      hazard: {
-        label: "Crown Proof Relay",
-        type: "relay",
-        interval: 9.4,
-        count: 1,
-        radius: 88,
-        telegraph: 0.86,
-        duration: 5.4,
-        damage: 15,
-        coreHp: 66,
-        coreRadius: 18,
-        relayRange: 496,
-        relayWidth: 28,
-        relayDamage: 14,
-      },
-    },
-    ledger: {
-      label: "Wave 10 · Crown Proof+",
-      bandId: "crownhold_proof",
-      bandLabel: "Crown Proof+",
-      pressureFamily: "breach",
-      note: "Wave 10도 shared crown proof grammar를 그대로 이어야 한다. ledger lane은 Wave 9 vaultline에서 벌어 둔 payout lane을 그대로 들고 와, relay crown 하나를 언제 찢고 언제 끊어 살아남을지 greed 판단이 breach hold 안에서 바로 드러나게 만든다.",
-      directive:
-        "crown proof+. relay crown 하나와 payout 잔재가 같이 남는다. 먼저 퇴로를 비우고 짧은 cash-out window를 만든 뒤, binder와 brander가 닫기 전에 breach lane을 버릴지 더 긁을지 직접 정해야 한다.",
-      arena: {
-        width: 1860,
-        height: 1020,
-      },
-      activeCap: 25,
-      spawnBudget: 154,
-      baseSpawnInterval: 0.414,
-      spawnIntervalMin: 0.122,
-      eliteEvery: 4,
-      mix: {
-        scuttler: 0.04,
-        brute: 0.1,
-        shrike: 0.14,
-        skimmer: 0.1,
-        lancer: 0.18,
-        brander: 0.18,
-        binder: 0.08,
-        mortar: 0.08,
-        warden: 0.1,
-      },
-      mixWeight: 0.58,
-      hazard: {
-        label: "Crown Proof Relay",
-        type: "relay",
-        interval: 9,
-        count: 1,
-        radius: 90,
-        telegraph: 0.82,
-        duration: 5.6,
-        damage: 15,
-        coreHp: 74,
-        coreRadius: 18,
-        salvageScrap: 28,
-        salvageBurstCount: 5,
-        salvageBurstRadius: 66,
-        salvageDropLife: 8.2,
-        relayRange: 508,
-        relayWidth: 28,
-        relayDamage: 14,
-      },
-    },
-  };
   const ARSENAL_BREAKPOINT_ENCOUNTER_PROFILES = {
     mutation: {
       bandLabel: "Arsenal Overdrive",
@@ -442,281 +211,12 @@
       },
     },
   };
-  const LATE_BREAK_CROWN_PROFILES = {
-    mutation: {
-      10: {
-        label: "Wave 11 · Crownbreaker Gallery",
-        bandId: "crownbreaker_gallery",
-        bandLabel: "Crownbreaker Gallery",
-        pressureFamily: "crossfire",
-        note: "Cataclysm Arsenal branch의 세 번째 rung은 finale 직전 domination lap이다. relay upkeep를 걷어내고 kill lane만 넓게 남겨, 커진 배럴이 corridor 하나가 아니라 전장 폭 전체를 오래 찢는 시간을 먼저 준다.",
-        directive:
-          "crownbreaker gallery. relay pylon보다 mortar perch와 marked elite 절개가 먼저다. 열린 사선 둘을 동시에 비우며 새 split volley가 어느 lane까지 덮는지 증명해야 한다.",
-        arena: {
-          width: 1940,
-          height: 1080,
-        },
-        activeCap: 28,
-        spawnBudget: 174,
-        baseSpawnInterval: 0.372,
-        spawnIntervalMin: 0.112,
-        eliteEvery: 4,
-        mix: {
-          scuttler: 0.04,
-          brute: 0.12,
-          shrike: 0.14,
-          skimmer: 0.22,
-          lancer: 0.22,
-          mortar: 0.12,
-          warden: 0.1,
-          brander: 0.04,
-        },
-        mixWeight: 0.56,
-        hazard: {
-          label: "Gallery Breakers",
-          type: null,
-          interval: 9.4,
-          count: 1,
-          radius: 74,
-          telegraph: 0.82,
-          duration: 4.1,
-          damage: 15,
-        },
-      },
-      11: {
-        label: "Wave 12 · Cataclysm Crownline",
-        bandId: "cataclysm_crownline",
-        bandLabel: "Cataclysm Crownline",
-        pressureFamily: "breach",
-        note: "무장 branch의 마지막 판은 Wave 11 gallery에서 벌어 둔 ownership를 닫는 단일 crownline breach다. relay corridor만 남기고 binder·brander 세금을 줄여, 막 완성한 화망으로 직접 돌파 창을 찢는 결산으로 마무리한다.",
-        directive:
-          "cataclysm crownline. relay crown이 드문 대신 더 길게 열린다. 가장 얇은 corridor를 먼저 찢어 split fire로 양측 flank를 같이 억누르며 직접 breach window를 연장해야 한다.",
-        arena: {
-          width: 1840,
-          height: 1030,
-        },
-        activeCap: 35,
-        spawnBudget: 208,
-        baseSpawnInterval: 0.334,
-        spawnIntervalMin: 0.1,
-        eliteEvery: 4,
-        mix: {
-          scuttler: 0.04,
-          brute: 0.14,
-          shrike: 0.12,
-          skimmer: 0.12,
-          lancer: 0.22,
-          brander: 0.08,
-          mortar: 0.06,
-          warden: 0.1,
-        },
-        mixWeight: 0.54,
-        hazard: {
-          label: "Cataclysm Crownline",
-          type: "relay",
-          interval: 7.8,
-          count: 2,
-          radius: 90,
-          telegraph: 0.72,
-          duration: 5.1,
-          damage: 16,
-          coreHp: 80,
-          coreRadius: 19,
-          relayRange: 548,
-          relayWidth: 30,
-          relayDamage: 15,
-        },
-      },
-    },
-    aegis: {
-      10: {
-        label: "Wave 11 · Halo Refuge",
-        bandId: "halo_refuge",
-        bandLabel: "Halo Refuge",
-        pressureFamily: "pursuit",
-        note: "Warplate Halo branch의 세 번째 rung은 finale 직전 refuge lap이다. drift wake가 전장을 접더라도 적 점유를 한 박자 늦춰, plate를 믿고 깊게 들어간 뒤 살아서 빠져나오는 cadence를 먼저 즐기게 만든다.",
-        directive:
-          "halo refuge. drift wake가 닫히기 전에 한 lane을 비우고 오래 욕심내지 말고 reset pocket으로 빠져야 한다. 버티기보다 plate timing과 retreat cadence가 중요하다.",
-        arena: {
-          width: 1780,
-          height: 1020,
-        },
-        activeCap: 27,
-        spawnBudget: 170,
-        baseSpawnInterval: 0.382,
-        spawnIntervalMin: 0.11,
-        eliteEvery: 4,
-        mix: {
-          scuttler: 0.04,
-          brute: 0.18,
-          shrike: 0.18,
-          skimmer: 0.06,
-          lancer: 0.1,
-          binder: 0.1,
-          mortar: 0.04,
-          warden: 0.14,
-          brander: 0.16,
-        },
-        mixWeight: 0.52,
-        hazard: {
-          label: "Halo Refuge Drift",
-          type: "drift",
-          interval: 9.6,
-          count: 1,
-          radius: 94,
-          telegraph: 0.82,
-          duration: 5.8,
-          damage: 15,
-          driftSpeed: 120,
-          driftOrbit: 0.28,
-        },
-      },
-      11: {
-        label: "Wave 12 · Citadel Stand",
-        bandId: "citadel_stand",
-        bandLabel: "Citadel Stand",
-        pressureFamily: "territory",
-        note: "방호 branch의 마지막 판은 Wave 11 refuge cadence를 결산하는 stand-off다. 작은 bastion 코어 두 곳만 잠깐 열어 두고 pursuit tax를 걷어, plate와 복구를 어디에 쓰는지 build 판단이 선명하게 드러나게 만든다.",
-        directive:
-          "citadel stand. 모든 거점을 지키려 하지 말고 한 pocket만 짧게 열어 체력과 dash를 회수한 뒤 바로 다른 flank로 갈아타야 한다. halo가 없는 정면 교환은 오래 버티지 못한다.",
-        arena: {
-          width: 1720,
-          height: 1000,
-        },
-        activeCap: 34,
-        spawnBudget: 204,
-        baseSpawnInterval: 0.338,
-        spawnIntervalMin: 0.102,
-        eliteEvery: 4,
-        mix: {
-          scuttler: 0.04,
-          brute: 0.2,
-          shrike: 0.16,
-          lancer: 0.12,
-          binder: 0.1,
-          mortar: 0.04,
-          warden: 0.12,
-          brander: 0.08,
-        },
-        mixWeight: 0.5,
-        hazard: {
-          label: "Citadel Pocket",
-          type: "territory",
-          interval: 8.1,
-          count: 2,
-          radius: 96,
-          telegraph: 0.82,
-          duration: 8.2,
-          damage: 14,
-          coreHp: 76,
-          coreRadius: 18,
-          turretInterval: 0.96,
-          turretDamage: 11,
-          turretSpeed: 240,
-          enemyPullRadius: 152,
-        },
-      },
-    },
-    ledger: {
-      10: {
-        label: "Wave 11 · Kingpin Vaultline",
-        bandId: "kingpin_vaultline",
-        bandLabel: "Kingpin Vaultline",
-        pressureFamily: "raid",
-        note: "Black Ledger branch의 세 번째 rung은 finale 직전 cash-out lap이다. 고정 corridor 대신 흩어진 contraband vault만 크게 던져, 어디까지 chase하고 언제 이탈할지 greed 판단을 한 판 더 즐기게 만든다.",
-        directive:
-          "kingpin vaultline. 외곽과 중앙에 흩어진 vault 중 하나만 오래 쫓을 수 있다. jackpot을 노리면 brander와 binder가 회수선을 찢으니, payout line을 정하고 빨리 이탈해야 한다.",
-        arena: {
-          width: 1860,
-          height: 1040,
-        },
-        activeCap: 28,
-        spawnBudget: 178,
-        baseSpawnInterval: 0.364,
-        spawnIntervalMin: 0.108,
-        eliteEvery: 4,
-        mix: {
-          scuttler: 0.04,
-          brute: 0.14,
-          shrike: 0.14,
-          skimmer: 0.14,
-          lancer: 0.14,
-          brander: 0.18,
-          binder: 0.08,
-          mortar: 0.08,
-          warden: 0.06,
-        },
-        mixWeight: 0.54,
-        hazard: {
-          label: "Kingpin Vaultline",
-          type: "salvage",
-          interval: 9,
-          count: 2,
-          radius: 78,
-          telegraph: 0.8,
-          duration: 7.2,
-          damage: 14,
-          coreHp: 86,
-          coreRadius: 19,
-          salvageScrap: 24,
-          salvageBurstCount: 6,
-          salvageBurstRadius: 62,
-          salvageDropLife: 8.8,
-        },
-      },
-      11: {
-        label: "Wave 12 · Grand Blackout Run",
-        bandId: "grand_blackout_run",
-        bandLabel: "Grand Blackout Run",
-        pressureFamily: "raid",
-        note: "탐욕 branch의 마지막 판은 Wave 11 vaultline을 키운 최종 caravan chase다. 거대한 contraband train 하나만 오래 열어 payout 판단을 밀어붙이게 하고, binder·mortar 세금은 덜어 cash-out 종결 타이밍을 스스로 정하게 만든다.",
-        directive:
-          "grand blackout run. caravan이 더 크고 더 오래 열린다. 끝까지 쫓으면 payout이 폭증하지만 escape lane도 함께 닫히므로, 언제 jackpot을 확정하고 언제 버릴지 마지막까지 직접 계산해야 한다.",
-        arena: {
-          width: 1820,
-          height: 1020,
-        },
-        activeCap: 35,
-        spawnBudget: 212,
-        baseSpawnInterval: 0.33,
-        spawnIntervalMin: 0.1,
-        eliteEvery: 4,
-        mix: {
-          scuttler: 0.04,
-          brute: 0.14,
-          shrike: 0.16,
-          skimmer: 0.1,
-          lancer: 0.18,
-          brander: 0.18,
-          binder: 0.08,
-          mortar: 0.06,
-        },
-        mixWeight: 0.56,
-        hazard: {
-          label: "Grand Blackout Caravan",
-          type: "caravan",
-          interval: 7.6,
-          count: 2,
-          radius: 88,
-          telegraph: 0.76,
-          duration: 8.4,
-          damage: 16,
-          coreHp: 102,
-          coreRadius: 20,
-          salvageScrap: 34,
-          salvageBurstCount: 7,
-          salvageBurstRadius: 74,
-          salvageDropLife: 10.2,
-          driftSpeed: 138,
-          driftOrbit: 0.26,
-        },
-      },
-    },
-  };
 
   const RECURRING_COMBAT_CELL_DEFS = {
     payoff: {
       title: "Payoff Run",
+      ladderStepId: "claim_space",
+      ladderStepLabel: "Claim Space",
       pressureFamily: "domination",
       note: (stageText, focusText) =>
         `${stageText} 같은 form으로 먼저 화면을 먹는 shared payoff cell이다. upkeep 구조물은 최소한으로만 남기고, ${focusText} 열린 lane ownership을 얼마나 오래 유지하는지 먼저 보여 준다.`,
@@ -725,6 +225,8 @@
     },
     breach: {
       title: "Crown Breach",
+      ladderStepId: "hold_breach",
+      ladderStepLabel: "Hold Breach",
       pressureFamily: "breach",
       note: (stageText, focusText) =>
         `${stageText} 같은 form을 바로 시험하는 shared breach cell이다. relay crown 하나만 늦게 닫아, ${focusText} corridor를 얼마나 길게 붙드는지 바로 묻는다.`,
@@ -733,6 +235,8 @@
     },
     sweep: {
       title: "Payoff Sweep",
+      ladderStepId: "survive_spike",
+      ladderStepLabel: "Survive Spike",
       pressureFamily: "crossfire",
       note: (stageText, focusText) =>
         `${stageText} payoff grammar를 한 단계만 remix한 shared sweep cell이다. 구조물 upkeep는 늘리지 않고 flank 재진입만 빨라져, ${focusText} 열린 lane ownership을 유지한 채 방향 전환하는지 본다.`,
@@ -741,6 +245,8 @@
     },
     proof: {
       title: "Crown Proof",
+      ladderStepId: "hold_breach",
+      ladderStepLabel: "Hold Breach",
       pressureFamily: "breach",
       note: (stageText, focusText) =>
         `${stageText} breach grammar를 한 단계만 키운 shared proof cell이다. 같은 crownline ask를 더 단단하게 붙여, ${focusText} 열린 입구를 찢고 오래 버티는지 결산한다.`,
@@ -749,6 +255,8 @@
     },
     pursuit: {
       title: "Refuge Run",
+      ladderStepId: "survive_spike",
+      ladderStepLabel: "Survive Spike",
       pressureFamily: "pursuit",
       note: (stageText, focusText) =>
         `${stageText} late route를 또 다른 scripted stop으로 늘리지 않는 shared pursuit cell이다. drift pressure가 refuge pocket을 계속 비틀어, ${focusText} 얇은 추격 덩어리를 찢고 다음 pocket으로 얼마나 빨리 갈아타는지 묻는다.`,
@@ -757,6 +265,8 @@
     },
     stand: {
       title: "Final Stand",
+      ladderStepId: "survive_spike",
+      ladderStepLabel: "Survive Spike",
       pressureFamily: "hold",
       note: (stageText, focusText) =>
         `${stageText} finale도 새 gimmick을 덧씌우지 않는 shared stand cell이다. 짧게 열리는 bastion pocket만 남겨, ${focusText} 어느 pocket을 열고 버리며 점유 시간을 얼마나 늘리는지 결산한다.`,
@@ -790,6 +300,8 @@
       ...rest,
       label: `Wave ${waveNumber} · ${cell.title}${labelSuffix}`,
       pressureFamily: cell.pressureFamily,
+      ladderStepId: cell.ladderStepId || null,
+      ladderStepLabel: cell.ladderStepLabel || null,
       note: cell.note(stageText, focusText),
       directive: cell.directive,
       ...(bandId ? { bandId } : {}),
@@ -1363,6 +875,270 @@
         turretDamage: 11,
         turretSpeed: 246,
         enemyPullRadius: 158,
+      },
+    }),
+  };
+
+  function buildLateBreakLadderWave(baseIndex, override) {
+    const baseConfig = SHARED_LATE_ACT_ENCOUNTER_POOL[baseIndex];
+    if (!baseConfig || !override) {
+      return null;
+    }
+    const rungConfig = buildRecurringCombatWave({
+      id: override.id || baseConfig.id,
+      waveNumber: override.waveNumber || baseIndex + 1,
+      cellId: override.cellId,
+      stageText: override.stageText,
+      focusText: override.focusText,
+      labelSuffix: override.labelSuffix ?? "+",
+      bandId: baseConfig.bandId,
+      bandLabel: baseConfig.bandLabel,
+      bandFocusId: baseConfig.bandFocusId,
+      duration: baseConfig.duration,
+      spawnBudget: baseConfig.spawnBudget,
+      activeCap: baseConfig.activeCap,
+      baseSpawnInterval: baseConfig.baseSpawnInterval,
+      spawnIntervalMin: baseConfig.spawnIntervalMin,
+      spawnAcceleration: baseConfig.spawnAcceleration,
+      eliteEvery: baseConfig.eliteEvery,
+      driveGainFactor: baseConfig.driveGainFactor,
+      arena: baseConfig.arena,
+      mix: baseConfig.mix,
+      ascensionCarrierType: baseConfig.ascensionCarrierType,
+      hazard: baseConfig.hazard,
+    });
+    return applyEncounterOverride(rungConfig, override.tuning || {});
+  }
+
+  const LATE_BREAK_ENCOUNTER_PROFILES = {
+    mutation: buildLateBreakLadderWave(8, {
+      id: "late_break_mutation_payoff",
+      waveNumber: 9,
+      cellId: "payoff",
+      stageText: "Late Break 직후 첫 칸도 branch spectacle로 새 장르를 열지 않는",
+      focusText: "cataclysm form이",
+      tuning: {
+        arena: {
+          width: 1820,
+          height: 1020,
+        },
+        activeCap: 24,
+        spawnBudget: 144,
+        baseSpawnInterval: 0.438,
+        spawnIntervalMin: 0.126,
+        eliteEvery: 4,
+        mix: {
+          scuttler: 0.06,
+          brute: 0.12,
+          shrike: 0.14,
+          skimmer: 0.34,
+          lancer: 0.24,
+          mortar: 0.02,
+          warden: 0.08,
+        },
+        mixWeight: 0.62,
+      },
+    }),
+    aegis: buildLateBreakLadderWave(8, {
+      id: "late_break_aegis_payoff",
+      waveNumber: 9,
+      cellId: "payoff",
+      stageText: "Late Break 직후 첫 칸도 branch pocket gimmick을 늘리지 않는",
+      focusText: "warplate form이",
+      tuning: {
+        arena: {
+          width: 1680,
+          height: 980,
+        },
+        activeCap: 22,
+        spawnBudget: 138,
+        baseSpawnInterval: 0.454,
+        spawnIntervalMin: 0.13,
+        eliteEvery: 4,
+        mix: {
+          scuttler: 0.04,
+          brute: 0.18,
+          shrike: 0.14,
+          skimmer: 0.08,
+          lancer: 0.14,
+          binder: 0.1,
+          mortar: 0.04,
+          warden: 0.18,
+          brander: 0.1,
+        },
+        mixWeight: 0.56,
+      },
+    }),
+    ledger: buildLateBreakLadderWave(8, {
+      id: "late_break_ledger_payoff",
+      waveNumber: 9,
+      cellId: "payoff",
+      stageText: "Late Break 직후 첫 칸도 contraband tour로 새 stop을 만들지 않는",
+      focusText: "raid frame이",
+      tuning: {
+        arena: {
+          width: 1820,
+          height: 1000,
+        },
+        activeCap: 24,
+        spawnBudget: 146,
+        baseSpawnInterval: 0.432,
+        spawnIntervalMin: 0.124,
+        eliteEvery: 4,
+        mix: {
+          scuttler: 0.04,
+          brute: 0.12,
+          shrike: 0.14,
+          skimmer: 0.14,
+          lancer: 0.16,
+          brander: 0.18,
+          binder: 0.08,
+          mortar: 0.08,
+          warden: 0.06,
+        },
+        mixWeight: 0.58,
+      },
+    }),
+  };
+
+  const LATE_BREAK_FOLLOWTHROUGH_PROFILES = {
+    mutation: buildLateBreakLadderWave(9, {
+      id: "late_break_mutation_proof",
+      waveNumber: 10,
+      cellId: "proof",
+      stageText: "Wave 10도 branch finale wrapper를 붙이지 않고 같은 hold-breach rung을 다시 누르는",
+      focusText: "cataclysm form이",
+      tuning: {
+        arena: {
+          width: 2020,
+          height: 1140,
+        },
+        activeCap: 25,
+        spawnBudget: 148,
+        baseSpawnInterval: 0.422,
+        spawnIntervalMin: 0.126,
+        eliteEvery: 4,
+        mix: {
+          scuttler: 0.08,
+          brute: 0.12,
+          shrike: 0.14,
+          skimmer: 0.26,
+          lancer: 0.24,
+          binder: 0.04,
+          mortar: 0.02,
+          warden: 0.08,
+          brander: 0.02,
+        },
+        mixWeight: 0.58,
+        hazard: {
+          label: "Crown Proof Relay",
+          type: "relay",
+          interval: 10,
+          count: 1,
+          radius: 82,
+          telegraph: 0.88,
+          duration: 4.9,
+          damage: 15,
+          coreHp: 60,
+          coreRadius: 18,
+          relayRange: 520,
+          relayWidth: 26,
+          relayDamage: 14,
+        },
+      },
+    }),
+    aegis: buildLateBreakLadderWave(9, {
+      id: "late_break_aegis_proof",
+      waveNumber: 10,
+      cellId: "proof",
+      stageText: "Wave 10도 branch bastion detour를 만들지 않고 같은 hold-breach rung을 유지하는",
+      focusText: "warplate form이",
+      tuning: {
+        arena: {
+          width: 1760,
+          height: 1000,
+        },
+        activeCap: 24,
+        spawnBudget: 150,
+        baseSpawnInterval: 0.424,
+        spawnIntervalMin: 0.124,
+        eliteEvery: 4,
+        mix: {
+          scuttler: 0.04,
+          brute: 0.16,
+          shrike: 0.16,
+          skimmer: 0.08,
+          lancer: 0.14,
+          binder: 0.1,
+          mortar: 0.04,
+          warden: 0.18,
+          brander: 0.1,
+        },
+        mixWeight: 0.54,
+        hazard: {
+          label: "Crown Proof Relay",
+          type: "relay",
+          interval: 9.4,
+          count: 1,
+          radius: 88,
+          telegraph: 0.86,
+          duration: 5.4,
+          damage: 15,
+          coreHp: 66,
+          coreRadius: 18,
+          relayRange: 496,
+          relayWidth: 28,
+          relayDamage: 14,
+        },
+      },
+    }),
+    ledger: buildLateBreakLadderWave(9, {
+      id: "late_break_ledger_proof",
+      waveNumber: 10,
+      cellId: "proof",
+      stageText: "Wave 10도 branch caravan chase로 갈라지지 않고 같은 hold-breach rung에 greed만 얹는",
+      focusText: "raid frame이",
+      tuning: {
+        arena: {
+          width: 1860,
+          height: 1020,
+        },
+        activeCap: 25,
+        spawnBudget: 154,
+        baseSpawnInterval: 0.414,
+        spawnIntervalMin: 0.122,
+        eliteEvery: 4,
+        mix: {
+          scuttler: 0.04,
+          brute: 0.1,
+          shrike: 0.14,
+          skimmer: 0.1,
+          lancer: 0.18,
+          brander: 0.18,
+          binder: 0.08,
+          mortar: 0.08,
+          warden: 0.1,
+        },
+        mixWeight: 0.58,
+        hazard: {
+          label: "Crown Proof Relay",
+          type: "relay",
+          interval: 9,
+          count: 1,
+          radius: 90,
+          telegraph: 0.82,
+          duration: 5.6,
+          damage: 15,
+          coreHp: 74,
+          coreRadius: 18,
+          salvageScrap: 28,
+          salvageBurstCount: 5,
+          salvageBurstRadius: 66,
+          salvageDropLife: 8.2,
+          relayRange: 508,
+          relayWidth: 28,
+          relayDamage: 14,
+        },
       },
     }),
   };
@@ -2225,17 +2001,6 @@
       return null;
     }
     return LATE_BREAK_FOLLOWTHROUGH_PROFILES[build.lateBreakProfileId] || null;
-  }
-
-  function getLateBreakCrownProfile(build, index) {
-    if (!build || !build.lateBreakProfileId) {
-      return null;
-    }
-    const branchProfiles = LATE_BREAK_CROWN_PROFILES[build.lateBreakProfileId];
-    if (!branchProfiles) {
-      return null;
-    }
-    return branchProfiles[index] || null;
   }
 
   function getLateBreakCadenceSummary(profileId) {
@@ -15909,94 +15674,95 @@
     }
     const resolvedWave = resolveWaveConfig(boundedWave - 1, build);
     const bandLabel = resolvedWave.bandLabel || resolvedWave.label;
+    const ladderLead = resolvedWave.ladderStepLabel ? `${resolvedWave.ladderStepLabel}. ` : "";
     const profileId = build && build.lateBreakProfileId;
     if (profileId === "mutation") {
       if (boundedWave === 9) {
         return {
           label: "Cataclysm Payoff",
-          detail: `${bandLabel}에서 잠근 주포 실루엣으로 열린 flank 둘을 동시에 잠그는 시간부터 먼저 벌어야 한다.`,
+          detail: `${ladderLead}${bandLabel}에서 잠근 주포 실루엣으로 열린 flank 둘을 동시에 잠그는 시간부터 먼저 벌어야 한다.`,
         };
       }
       if (boundedWave === 10) {
         return {
           label: "Crownline Proof",
-          detail: `${bandLabel}에서 split fire로 relay corridor를 직접 찢고 breach hold를 길게 유지하는지 본다.`,
+          detail: `${ladderLead}${bandLabel}에서 split fire로 relay corridor를 직접 찢고 breach hold를 길게 유지하는지 본다.`,
         };
       }
       if (boundedWave === 11) {
         return {
           label: "Refuge Run",
-          detail: `${bandLabel}에서 cataclysm form으로 pursuit 덩어리를 먼저 찢고, 비워 낸 refuge pocket 사이를 갈아타는 cadence를 증명한다.`,
+          detail: `${ladderLead}${bandLabel}에서 cataclysm form으로 pursuit 덩어리를 먼저 찢고, 비워 낸 refuge pocket 사이를 갈아타는 cadence를 증명한다.`,
         };
       }
       return {
         label: "Final Stand",
-        detail: `${bandLabel}에서 cataclysm form이 한 pocket을 열고 버리며 final stand 점유 시간을 얼마나 늘리는지 결산한다.`,
+        detail: `${ladderLead}${bandLabel}에서 cataclysm form이 한 pocket을 열고 버리며 final stand 점유 시간을 얼마나 늘리는지 결산한다.`,
       };
     }
     if (profileId === "aegis") {
       if (boundedWave === 9) {
         return {
           label: "Halo Bastion",
-          detail: `${bandLabel}에서 plate를 믿고 bastion pocket 하나를 열고 버리는 cadence를 먼저 증명한다.`,
+          detail: `${ladderLead}${bandLabel}에서 plate를 믿고 bastion pocket 하나를 열고 버리는 cadence를 먼저 증명한다.`,
         };
       }
       if (boundedWave === 10) {
         return {
           label: "Refuge Proof",
-          detail: `${bandLabel}에서 drift wake를 끊고 한 pocket을 비운 뒤 다음 refuge로 짧게 갈아타는지 본다.`,
+          detail: `${ladderLead}${bandLabel}에서 drift wake를 끊고 한 pocket을 비운 뒤 다음 refuge로 짧게 갈아타는지 본다.`,
         };
       }
       if (boundedWave === 11) {
         return {
           label: "Refuge Run",
-          detail: `${bandLabel}에서 locked form으로 pursuit 덩어리를 먼저 찢고 refuge pocket 사이를 갈아타는 cadence를 증명한다.`,
+          detail: `${ladderLead}${bandLabel}에서 locked form으로 pursuit 덩어리를 먼저 찢고 refuge pocket 사이를 갈아타는 cadence를 증명한다.`,
         };
       }
       return {
         label: "Final Stand",
-        detail: `${bandLabel}에서 warplate hull로 어느 bastion pocket을 열고 버릴지 직접 결산하며 final stand를 닫는다.`,
+        detail: `${ladderLead}${bandLabel}에서 warplate hull로 어느 bastion pocket을 열고 버릴지 직접 결산하며 final stand를 닫는다.`,
       };
     }
     if (profileId === "ledger") {
       if (boundedWave === 9) {
         return {
           label: "Vaultline Raid",
-          detail: `${bandLabel}에서 주포로 퇴로를 열고 어떤 contraband vault까지 cash-out할지 먼저 고른다.`,
+          detail: `${ladderLead}${bandLabel}에서 주포로 퇴로를 열고 어떤 contraband vault까지 cash-out할지 먼저 고른다.`,
         };
       }
       if (boundedWave === 10) {
         return {
           label: "Caravan Chase",
-          detail: `${bandLabel}에서 moving jackpot을 끝까지 쫓을지 중간에 끊고 살아남을지 판단이 갈린다.`,
+          detail: `${ladderLead}${bandLabel}에서 moving jackpot을 끝까지 쫓을지 중간에 끊고 살아남을지 판단이 갈린다.`,
         };
       }
       if (boundedWave === 11) {
         return {
           label: "Refuge Run",
-          detail: `${bandLabel}에서 raid frame으로 pursuit 덩어리를 먼저 찢고, greed line을 짧게 긁은 뒤 refuge pocket으로 이탈하는 cadence를 증명한다.`,
+          detail: `${ladderLead}${bandLabel}에서 raid frame으로 pursuit 덩어리를 먼저 찢고, greed line을 짧게 긁은 뒤 refuge pocket으로 이탈하는 cadence를 증명한다.`,
         };
       }
       return {
         label: "Final Stand",
-        detail: `${bandLabel}에서 raid frame이 마지막 pocket rotation 안에서도 greed line을 얼마나 오래 지키는지 결산한다.`,
+        detail: `${ladderLead}${bandLabel}에서 raid frame이 마지막 pocket rotation 안에서도 greed line을 얼마나 오래 지키는지 결산한다.`,
       };
     }
     if (boundedWave <= 10) {
       return {
         label: "Payoff Band",
-        detail: `${bandLabel}에서 잠근 late form이 lane ownership을 넓히고 첫 crownline hold를 증명한다.`,
+        detail: `${ladderLead}${bandLabel}에서 잠근 late form이 lane ownership을 넓히고 첫 crownline hold를 증명한다.`,
       };
     }
     if (boundedWave === 11) {
       return {
         label: "Refuge Run",
-        detail: `${bandLabel}에서 locked form으로 pursuit 덩어리를 먼저 찢고 refuge pocket 사이를 갈아타는 cadence를 증명한다.`,
+        detail: `${ladderLead}${bandLabel}에서 locked form으로 pursuit 덩어리를 먼저 찢고 refuge pocket 사이를 갈아타는 cadence를 증명한다.`,
       };
     }
     return {
       label: "Finale",
-      detail: `${bandLabel}에서 이번 run의 마지막 pocket rotation과 stand discipline을 결산한다.`,
+      detail: `${ladderLead}${bandLabel}에서 이번 run의 마지막 pocket rotation과 stand discipline을 결산한다.`,
     };
   }
 

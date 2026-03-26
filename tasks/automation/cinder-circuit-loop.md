@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop expansion and prove one quiet-to-dominant default run: survival-only combat HUD, no live cache/ascension reward exceptions, one-glance forge cards, and a main weapon/body ladder that stays visually incomplete until later waves.
+- Immediate priority: stop authored-route expansion and prove one reusable run spine: survival-first combat HUD, forge-only transformation beats, and open-arena pressure bands that can honestly scale past 12 waves without designer-scripted wave names carrying the fun.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 17:05:00 KST
+  Findings:
+  - `docs/games/cinder-circuit-design.md` still sells the game as a `12웨이브 / 세 시대 / Proof Window` contract, so the target is still a polished slice instead of a rerunnable escalation spine with enough slack for `20-30` waves.
+  - `playables/cinder-circuit/game.js` still leans on authored route grammar from `Wave 5` onward: named bands, bespoke directives, branch-specific profiles, and late-wave labels like `Crown Proof+`, `Halo Refuge`, and `Grand Blackout Run` keep the run feeling written in advance rather than discovered through enemy flow and space control.
+  - Arena sizes are larger, but the combat space still does not truly breathe because pressure is carried by scripted corridor asks, hazard wrappers, and branch rules instead of a small set of reusable enemy-pressure patterns that players can learn, exploit, and fear across many runs.
+  - `playables/cinder-circuit/index.html` still keeps `active-core`, `pending-cores`, `build-roadmap`, `wave-objective`, `live-readout`, and `upgrade-list` visible during combat. Against readable arena-shooter references, this is still too much run administration for a game that needs snap movement decisions and instant threat parsing.
+  Top Priority: Replace the current `Wave 5-12` branch scripting with one shared mid-to-late pressure ladder built from reusable open-arena bands `claim space -> hold breach -> survive spike`, then make every build prove itself inside that same structure.
+  Why Now: Until the middle of the run is systemic instead of authored, longer progression and stronger builds will still land like scenario dressing.
+  Do Not Repeat: Do not answer this with more named late-wave content, more branch copy, or another route wrapper.
+  Release Gate: Progression
 
 - 2026-03-26 16:30:46 KST
   Findings:
@@ -2985,6 +2996,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-26 17:17:53 KST
+  Changed: consolidated one bounded piece of the late-route spine in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 5-12` now carries explicit shared pressure-ladder metadata `Claim Space -> Hold Breach -> Survive Spike`, and late-break `Wave 9-10` overrides are generated from the shared late pool instead of hand-authored branch objects. I added `ladderStepId/ladderStepLabel` to recurring combat cells, introduced `buildLateBreakLadderWave(...)` so `mutation / aegis / ledger` only season the same `Payoff Run+` and `Crown Proof+` rungs, and removed the stale bespoke `Wave 11-12` branch profile table that still advertised scenario tourism. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks those rung ids on resolved late waves and checks that late proof summaries surface the shared ladder language.
+  Why: the newest critique's `Top Priority` was to replace `Wave 5-12` branch scripting with one reusable open-arena pressure ladder. The highest-value concrete interpretation was to harden the actual config path for `Wave 9-10`, because the shipped route already shared labels in places but still kept branch-specific authored override blobs that could quietly pull the run back toward bespoke scenarios.
+  Follow-up risk: this pass unifies the route grammar, but the branch-specific late-form fantasy names `Cataclysm Arsenal / Warplate Halo / Black Ledger Heist` still survive in forge and build summaries. That is acceptable while they name the earned form itself, but if future critique says Act 3 still reads too scripted, the next bounded progression pass should trim branch-only prose in late proof/detail copy rather than flattening combat or adding new bands.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Progression
 
 - 2026-03-26 16:42:28 KST
   Changed: narrowed one bounded piece of the shipped forge pool in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the consolidated `Wave 5-8` default contract now behaves like three distinct lanes instead of one blended feature menu. `주력 변이` still pulls from the visible weapon/body takeover spine, but `방호·보조` is now hard-filtered to restrained chassis/defense picks only, and `판돈·유틸` is hard-filtered to simple economy/bench-churn picks only. That keeps early rider cards off support/autonomous branches and stops gamble from quietly reusing the same generic sustain cards as the defense lane. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks `Wave 5`, `Wave 6`, and `Wave 8` so rider choices stay on defense/chassis and gamble stays on greed/economy.
