@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate to push next is `Rewards`: the run still pays out too much build identity inside combat and through explanation-heavy HUD/forge framing, so survival is not creating enough hunger for the next stop.
-- Current drift bundle: named mid/late-wave cells, live cache/ascension exceptions, combat HUD boards `roadmap/objective/readout/upgrades`, and forge copy `Next Proof/Route Payoff` that explain the contract instead of letting desire and pressure read instantly.
-- Repeated false solution: renaming route bands, polishing wording, or adding support-side content instead of deleting live reward exceptions and forcing the default run through clean forge-only transformation beats.
+- The most fragile gate to push next is `UX/UI`: the run is still explained through inspect boards, forge framing, and route-admin language before the player has a clean danger/read-payoff loop worth replaying.
+- Current drift bundle: the design target is still a managed `12-wave / three-era` package, `Afterburn` and other post-capstone spillover remain live in code, and combat/forge still surface too much run administration instead of one threat and one desired transformation.
+- Repeated false solution: preserving expansion content, renaming route layers, or trimming copy without deleting the underlying inspect/admin structures and extra late-run route surface.
 - Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: combat should read fast, rewards should create hunger before explanation, and visible power growth should come in chunky, memorable jumps.
-- Pressure-test consolidation before expansion: if the first minute, the forge stop, and the first dominant gun/body path still do not feel quiet, legible, and anticipation-building, keep the loop on deletion and reward-cadence hardening instead of proposing more systems.
+- Pressure-test consolidation before expansion: if `Wave 1-6`, the forge stop, and the first dominant gun/body path still do not feel quiet, legible, and anticipation-building, keep the loop on deleting route/admin surface instead of proposing more systems.

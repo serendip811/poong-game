@@ -9484,13 +9484,20 @@
     return `
       <div class="inspect-board inspect-board--contract">
         <article class="inspect-board__hero">
-          <span class="inspect-board__hero-label">현재 형태</span>
-          <strong class="route-contract__title">${dominantForm.label}</strong>
-          <div class="forge-focus__proof"><span>다음 전장</span>${spotlightValue}</div>
-          <p class="forge-card__pivot forge-card__pivot--bill">
-            <span>보유 고철</span>
-            <strong>${scrapValue}</strong>
-          </p>
+          <div class="inspect-board__hero-copy">
+            <span class="inspect-board__hero-label">현재 형태</span>
+            <strong class="route-contract__title">${dominantForm.label}</strong>
+          </div>
+          <div class="inspect-board__meta">
+            <p class="inspect-board__meta-item">
+              <span>다음 시험</span>
+              <strong>${spotlightValue}</strong>
+            </p>
+            <p class="inspect-board__meta-item">
+              <span>고철</span>
+              <strong>${scrapValue}</strong>
+            </p>
+          </div>
           ${
             hintChipText
               ? `<div class="inspect-board__chips">

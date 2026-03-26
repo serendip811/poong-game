@@ -260,19 +260,23 @@ const inspectMarkup = game.createTabInspectBoardMarkup({
     tone: "gamble",
   },
 });
-assert.ok(inspectMarkup.includes("보유 고철"));
+assert.ok(inspectMarkup.includes("고철"));
 assert.ok(inspectMarkup.includes("현재 형태"));
-assert.ok(inspectMarkup.includes("다음 전장"));
+assert.ok(inspectMarkup.includes("다음 시험"));
 assert.ok(inspectMarkup.includes("Cataclysm Arsenal"));
 assert.ok(inspectMarkup.includes("42"));
 assert.ok(inspectMarkup.includes("다음 포지 Sky Splitter"));
 assert.ok(!inspectMarkup.includes("비용·대가"));
 assert.ok(inspectMarkup.includes("inspect-board__hero"));
+assert.ok(inspectMarkup.includes("inspect-board__meta"));
+assert.equal((inspectMarkup.match(/class="inspect-board__meta-item"/g) || []).length, 2);
 assert.ok(inspectMarkup.includes("inspect-board__lane--main"));
 assert.ok(inspectMarkup.includes("inspect-board__lane--support"));
 assert.ok(inspectMarkup.includes("inspect-board__lane--gamble"));
 assert.ok(inspectMarkup.includes("inspect-board__chip"));
 assert.equal((inspectMarkup.match(/class="inspect-board__chip"/g) || []).length, 1);
+assert.ok(!inspectMarkup.includes("forge-focus__proof"));
+assert.ok(!inspectMarkup.includes("forge-card__pivot--bill"));
 const compactFocusMarkup = game.createBaseRouteFocusMarkup({
   eyebrow: "현재 형태",
   title: "Sky Lance",

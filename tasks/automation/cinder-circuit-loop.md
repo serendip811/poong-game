@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze expansion and harden one quiet-first-minute, forge-only reward spine with a shared open-arena pressure ladder; delete live cache payouts and combat admin until repeated runs feel readable and hungry before more content returns.
+- Immediate priority: stop route expansion and harden `Wave 1-6` into one quiet-first-minute, forge-only reward spine with minimal HUD/forge language; cut inspect-board/admin overlays and post-capstone route spillover until repeated runs feel readable and hungry.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 18:42:00 KST
+  Findings:
+  - `docs/games/cinder-circuit-design.md` still frames the ship target as a `12웨이브 / 세 시대 계약 / 드랍의 가치` package with left-right HUD boards and a command-deck UI, so the project is still aiming to finish a managed route instead of proving a rerunnable escalation spine players would chase repeatedly.
+  - `playables/cinder-circuit/game.js` still carries `POST_CAPSTONE_WAVE_COUNT`, `Afterburn I-VII`, and a large post-capstone encounter pool. That is direct expansion drift while the active stage says the game still needs a quiet, readable first route.
+  - The combat UI is still too editorial. `Tab` inspect can replace the wave card with `주력 변이 / 방호·보조 / 판돈·유틸` summaries, and the forge overlay still layers focus prompts, proof text, pills, subtitles, and card side notes. Against `Nova Drift`, `Brotato`, and `Hades`, the player is still reading the run model instead of feeling immediate danger and craving one payoff.
+  - The build catalog still advertises too much finished spectacle before the core ladder earns it: primers, sentries, missiles, drones, wildcard hijacks, ascensions, and illegal overclocks remain part of the visible structure around a run that still has not proven one main weapon/body evolution can carry replay hunger by itself.
+  Top Priority: Freeze the shipped path at one consolidated `Wave 1-6` prove-out and strip the default HUD/forge flow to survival essentials plus one transformation headline before any more late-run content or support fantasies stay live.
+  Why Now: The game is still solving prototype breadth with more route and more explanation instead of proving that one clean run loop is worth repeating.
+  Do Not Repeat: Do not spend the next pass preserving `Afterburn`, `Tab` contract boards, or support catalog teases under the label of polish.
+  Release Gate: UX/UI
 
 - 2026-03-26 18:10:00 KST
   Findings:
@@ -3007,6 +3018,14 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-26 18:12:01 KST
+  Changed: tightened one bounded piece of the shipped `Tab` inspect surface in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css), and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the on-demand board now reads like a quick combat snapshot instead of a recycled forge card. The inspect hero now shows only `현재 형태`, one `다음 시험` cell, one `고철` cell, and the three build-lane tiles, using dedicated inspect-board meta styling instead of `forge-focus__proof` and `forge-card__pivot` markup. Smoke now locks that this board keeps exactly two compact meta cells and does not regrow forge proof/bill scaffolding.
+  Why: the newest critique's `Top Priority` was to strip the default HUD/forge flow to survival essentials plus one transformation headline, and it explicitly called out `Tab` inspect as still too editorial. The highest-value concrete interpretation was to finish the one on-demand board the player still opens during combat, because the live HUD was already reduced but inspect still looked and read like the forge screen.
+  Follow-up risk: this makes `Tab` faster to parse, but the lane tiles still only show labels and values, so players who want deeper build reasoning must wait for the forge or pause screens. If fresh feedback says the board became too terse, the next bounded UX/UI pass should add one short current-proof line under the dominant form rather than restoring multiple forge-style subrows.
+  UI reference direction: the quick-board restraint from `Brotato` and the low-admin combat snapshot feel from `Nova Drift`, where inspection is a short state check, not a second reward screen.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: UX/UI
 
 - 2026-03-26 17:44:33 KST
   Changed: tightened one bounded piece of the shipped combat/reward surface in [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html), [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the default route now truly fails closed to one bottom-card HUD plus one quiet forge context card. I removed the live combat DOM slots for `active-core`, `pending-cores`, `build-roadmap`, `live-readout`, and `upgrade-list`, moved `Tab` inspect onto the same single `wave-objective` card used in combat, and simplified the base forge context to `eyebrow + form title + 다음 시험` while scrubbing lingering `Next Proof / Route Payoff` copy from the remaining alternate forge wrapper. Smoke now locks that the base forge context stays free of the old proof/payoff labels and extra summary header scaffolding.
