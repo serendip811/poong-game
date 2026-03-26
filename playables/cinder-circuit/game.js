@@ -92,12 +92,12 @@
   const LATE_BREAK_ENCOUNTER_PROFILES = {
     mutation: {
       label: "Wave 9 · Payoff Run+",
-      bandId: "breakpoint_overdrive",
-      bandLabel: "Overdrive Payoff",
+      bandId: "late_payoff_run",
+      bandLabel: "Payoff Run+",
       pressureFamily: "domination",
-      note: "Late Break 직후 첫 칸은 shared payoff run grammar로 다시 숨을 열어야 한다. mutation lane은 upkeep 구조물을 걷어내고 전장을 더 크게 벌려, 방금 증설한 배럴과 broadside pod가 열린 lane 둘을 얼마나 오래 소유하는지 먼저 즐기게 만든다.",
+      note: "Late Break 직후 첫 칸도 shared payoff run grammar를 벗어나면 안 된다. mutation lane은 upkeep 구조물을 걷어내고 전장을 더 크게 벌려, 방금 증설한 배럴과 broadside pod가 열린 lane 둘을 얼마나 오래 소유하는지 먼저 즐기게 만든다.",
       directive:
-        "overdrive payoff run. 구조물 코어 없이 열린 사선과 marked elite 절개가 우선이다. skimmer 훑기를 얇게 만든 뒤 lancer charge를 정면 화망으로 자르며 새 주포 실루엣을 바로 오래 굴려야 한다.",
+        "payoff run+. 구조물 코어 없이 열린 사선과 marked elite 절개가 우선이다. skimmer 훑기를 얇게 만든 뒤 lancer charge를 정면 화망으로 자르며 새 주포 실루엣을 바로 오래 굴려야 한다.",
       arena: {
         width: 1820,
         height: 1020,
@@ -120,12 +120,12 @@
     },
     aegis: {
       label: "Wave 9 · Payoff Run+",
-      bandId: "halo_bastion",
-      bandLabel: "Halo Payoff",
+      bandId: "late_payoff_run",
+      bandLabel: "Payoff Run+",
       pressureFamily: "domination",
       note: "Late Break 직후 첫 칸도 shared payoff run grammar를 유지해야 한다. aegis lane은 작은 bastion punctuation 대신 열린 lane을 먼저 남겨, plate를 믿고 진입-정착-이탈 타이밍을 구조물 없이 증명하게 만든다.",
       directive:
-        "halo payoff run. 구조물 없이 전열 한 줄을 먼저 비운 뒤 체력과 dash를 회수하고, 적 점유가 두꺼워지기 전에 곧바로 외곽 refuge로 빠져야 한다.",
+        "payoff run+. 구조물 없이 전열 한 줄을 먼저 비운 뒤 체력과 dash를 회수하고, 적 점유가 두꺼워지기 전에 곧바로 외곽 refuge로 빠져야 한다.",
       arena: {
         width: 1680,
         height: 980,
@@ -150,12 +150,12 @@
     },
     ledger: {
       label: "Wave 9 · Payoff Run+",
-      bandId: "ledger_vaultline",
-      bandLabel: "Vaultline Payoff",
+      bandId: "late_payoff_run",
+      bandLabel: "Payoff Run+",
       pressureFamily: "domination",
       note: "Late Break 직후 첫 칸도 shared payoff run grammar를 벗어나면 안 된다. ledger lane은 구조물 upkeep 대신 열린 lane 위의 cash-out 유혹만 남겨, 먼저 퇴로를 비운 뒤 어디까지 greed를 끌지 판단하게 만든다.",
       directive:
-        "vaultline payoff run. 먼저 퇴로를 비우고 짧은 cash-out window를 고른 뒤, binder와 brander가 lane을 닫기 전에 빠져야 한다.",
+        "payoff run+. 먼저 퇴로를 비우고 짧은 cash-out window를 고른 뒤, binder와 brander가 lane을 닫기 전에 빠져야 한다.",
       arena: {
         width: 1820,
         height: 1000,
@@ -182,12 +182,12 @@
   const LATE_BREAK_FOLLOWTHROUGH_PROFILES = {
     mutation: {
       label: "Wave 10 · Crown Proof+",
-      bandId: "overdrive_breach",
-      bandLabel: "Overdrive Proof",
+      bandId: "crownhold_proof",
+      bandLabel: "Crown Proof+",
       pressureFamily: "breach",
       note: "Wave 10도 shared crown proof grammar를 그대로 이어야 한다. mutation lane은 corridor 하나만 늦게 닫고 arena를 더 크게 벌려, 방금 증설한 포문이 열린 flank 둘을 오래 누른 뒤 마지막 한 줄만 직접 찢게 만든다.",
       directive:
-        "overdrive crown proof. relay crown이 얇은 corridor 하나만 늦게 잠근다. 가장 넓은 pocket을 먼저 잡고 split volley로 flank 둘을 오래 눌러 지배 시간을 만든 뒤, 닫히는 회랑 한 줄만 마지막에 찢어 breach 창을 직접 늘려야 한다.",
+        "crown proof+. relay crown이 얇은 corridor 하나만 늦게 잠근다. 가장 넓은 pocket을 먼저 잡고 split volley로 flank 둘을 오래 눌러 지배 시간을 만든 뒤, 닫히는 회랑 한 줄만 마지막에 찢어 breach 창을 직접 늘려야 한다.",
       arena: {
         width: 2020,
         height: 1140,
@@ -210,7 +210,7 @@
       },
       mixWeight: 0.58,
       hazard: {
-        label: "Overdrive Crown",
+        label: "Crown Proof Relay",
         type: "relay",
         interval: 10,
         count: 1,
@@ -227,12 +227,12 @@
     },
     aegis: {
       label: "Wave 10 · Crown Proof+",
-      bandId: "halo_crownproof",
-      bandLabel: "Halo Proof",
+      bandId: "crownhold_proof",
+      bandLabel: "Crown Proof+",
       pressureFamily: "breach",
       note: "Wave 10도 shared crown proof grammar를 그대로 이어야 한다. aegis lane은 bastion pocket에서 plate timing으로 벌어 둔 진입 창을 그대로 들고 와, relay crown 하나를 짧게 찢고 그 복도를 얼마나 오래 지키는지 바로 드러나게 만든다.",
       directive:
-        "halo crown proof. relay crown 하나만 늦게 닫힌다. plate를 믿고 가장 얇은 입구를 먼저 뚫은 뒤, 비워 낸 breach lane을 오래 붙잡아 다음 refuge lap으로 이어질 버티는 선을 만든다.",
+        "crown proof+. relay crown 하나만 늦게 닫힌다. plate를 믿고 가장 얇은 입구를 먼저 뚫은 뒤, 비워 낸 breach lane을 오래 붙잡아 다음 refuge lap으로 이어질 버티는 선을 만든다.",
       arena: {
         width: 1760,
         height: 1000,
@@ -255,7 +255,7 @@
       },
       mixWeight: 0.54,
       hazard: {
-        label: "Halo Crownproof Relay",
+        label: "Crown Proof Relay",
         type: "relay",
         interval: 9.4,
         count: 1,
@@ -272,12 +272,12 @@
     },
     ledger: {
       label: "Wave 10 · Crown Proof+",
-      bandId: "jackpot_crownproof",
-      bandLabel: "Jackpot Proof",
+      bandId: "crownhold_proof",
+      bandLabel: "Crown Proof+",
       pressureFamily: "breach",
       note: "Wave 10도 shared crown proof grammar를 그대로 이어야 한다. ledger lane은 Wave 9 vaultline에서 벌어 둔 payout lane을 그대로 들고 와, relay crown 하나를 언제 찢고 언제 끊어 살아남을지 greed 판단이 breach hold 안에서 바로 드러나게 만든다.",
       directive:
-        "jackpot crown proof. relay crown 하나와 payout 잔재가 같이 남는다. 먼저 퇴로를 비우고 짧은 cash-out window를 만든 뒤, binder와 brander가 닫기 전에 breach lane을 버릴지 더 긁을지 직접 정해야 한다.",
+        "crown proof+. relay crown 하나와 payout 잔재가 같이 남는다. 먼저 퇴로를 비우고 짧은 cash-out window를 만든 뒤, binder와 brander가 닫기 전에 breach lane을 버릴지 더 긁을지 직접 정해야 한다.",
       arena: {
         width: 1860,
         height: 1020,
@@ -300,7 +300,7 @@
       },
       mixWeight: 0.58,
       hazard: {
-        label: "Jackpot Crownline",
+        label: "Crown Proof Relay",
         type: "relay",
         interval: 9,
         count: 1,
@@ -925,7 +925,7 @@
       driveGainFactor: 1.22,
       arena: SECOND_ACT_ARENA,
       hazard: {
-        label: "Afterglow Bastion",
+        label: "Payoff Bastion",
         type: "territory",
         interval: 12.4,
         count: 1,
@@ -969,7 +969,7 @@
         height: 780,
       },
       hazard: {
-        label: "Breakline Crown",
+        label: "Crown Breach Relay",
         type: "relay",
         interval: 10.2,
         count: 1,
@@ -1038,7 +1038,7 @@
         height: 820,
       },
       hazard: {
-        label: "Forgecross Relay Crown",
+        label: "Crown Proof Relay",
         type: "relay",
         interval: 9.2,
         count: 1,
@@ -1108,7 +1108,7 @@
       arena: THIRD_ACT_PROOF_ARENA,
       ascensionCarrierType: "binder",
       hazard: {
-        label: "Crownhold Relay",
+        label: "Crown Proof Relay",
         type: "relay",
         interval: 9.6,
         count: 1,
@@ -1267,7 +1267,7 @@
         brander: 0.08,
       },
       hazard: {
-        label: "Crownhold Relay",
+        label: "Crown Proof Relay",
         type: "relay",
         interval: 9.6,
         count: 1,
@@ -2241,23 +2241,23 @@
   function getLateBreakCadenceSummary(profileId) {
     if (profileId === "mutation") {
       return {
-        label: "Cataclysm cadence",
+        label: "Late Break cadence",
         detail:
-          "Wave 9는 열린 firing gallery payoff, Wave 10은 light breach proof, Wave 11은 shared pursuit run, Wave 12는 rotating final stand다.",
+          "Wave 9는 Payoff Run+, Wave 10은 Crown Proof+, Wave 11은 shared Refuge Run, Wave 12는 rotating Final Stand다. mutation branch는 열린 lane ownership 압박만 더 세게 민다.",
       };
     }
     if (profileId === "aegis") {
       return {
-        label: "Warplate cadence",
+        label: "Late Break cadence",
         detail:
-          "Wave 9는 Halo bastion pocket, Wave 10은 Halo crownproof, Wave 11은 shared pursuit run, Wave 12는 rotating final stand다.",
+          "Wave 9는 Payoff Run+, Wave 10은 Crown Proof+, Wave 11은 shared Refuge Run, Wave 12는 rotating Final Stand다. aegis branch는 진입-정착-이탈 cadence만 더 무겁게 민다.",
       };
     }
     if (profileId === "ledger") {
       return {
-        label: "Ledger cadence",
+        label: "Late Break cadence",
         detail:
-          "Wave 9는 Ledger vaultline, Wave 10은 Jackpot crownproof, Wave 11은 shared pursuit run, Wave 12는 rotating final stand다.",
+          "Wave 9는 Payoff Run+, Wave 10은 Crown Proof+, Wave 11은 shared Refuge Run, Wave 12는 rotating Final Stand다. ledger branch는 cash-out greed 판단만 더 날카롭게 민다.",
       };
     }
     return {
@@ -2272,21 +2272,21 @@
       return {
         title: "Cataclysm Arsenal",
         detail:
-          "Wave 9는 열린 firing gallery payoff, Wave 10은 light breach proof, Wave 11은 shared pursuit run, Wave 12는 rotating final stand로 고정된다.",
+          "Wave 9 Payoff Run+에서 열린 lane 둘을 먹고, Wave 10 Crown Proof+에서 breach corridor를 찢은 뒤, shared Refuge Run -> Final Stand로 고정된다.",
       };
     }
     if (profileId === "aegis") {
       return {
         title: "Warplate Halo",
         detail:
-          "Wave 9는 Halo bastion pocket, Wave 10은 Halo crownproof, Wave 11은 shared pursuit run, Wave 12는 rotating final stand로 고정된다.",
+          "Wave 9 Payoff Run+에서 진입-정착 cadence를 벌고, Wave 10 Crown Proof+에서 breach lane을 붙든 뒤, shared Refuge Run -> Final Stand로 고정된다.",
       };
     }
     if (profileId === "ledger") {
       return {
         title: "Black Ledger Heist",
         detail:
-          "Wave 9는 Ledger vaultline, Wave 10은 Jackpot crownproof, Wave 11은 shared pursuit run, Wave 12는 rotating final stand로 고정된다.",
+          "Wave 9 Payoff Run+에서 cash-out lane을 고르고, Wave 10 Crown Proof+에서 greed breach를 버틸지 갈라진 뒤, shared Refuge Run -> Final Stand로 고정된다.",
       };
     }
     return null;

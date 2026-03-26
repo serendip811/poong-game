@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate to push next is `Rewards`: forge still explains too much, combat still shows too much, and the run is not creating enough hunger for the next between-wave leap.
-- Current drift bundle: fixed `12-wave / three-era` framing, latent wildcard/ascension exception lanes, and layered combat/forge UI that keeps narrating route logic instead of letting one default run read fast.
-- Repeated false solution: adding another minimal-mode wrapper or wording trim instead of deleting admin surfaces and forcing all major identity gains back into a simple forge cadence.
+- The most fragile gate to push next is `Progression`: the run still depends on a fixed `12-wave / three-era` tour, named midgame bands, and live ascension/cache exceptions instead of a reusable escalation loop that could grow longer.
+- Current drift bundle: scripted `Afterglow -> Final Stand` route identity, combat HUD admin that keeps multiple build boards alive, and a support catalog that stays broader than the main weapon/body spine.
+- Repeated false solution: polishing wording or "minimal" overlays instead of deleting named route scaffolding, live reward exceptions, and early side-system promises.
 - Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: combat should read fast, rewards should create hunger before explanation, and visible power growth should come in chunky, memorable jumps.
-- Pressure-test consolidation before expansion: if one dominant gun/body path, forge payoff, HUD hierarchy, and early growth discipline are still weak, keep the loop on deletion and cadence hardening instead of proposing more systems.
+- Pressure-test consolidation before expansion: if one dominant gun/body path, reusable pressure grammar, forge payoff, and HUD hierarchy are still weak, keep the loop on deletion and cadence hardening instead of proposing more systems.
