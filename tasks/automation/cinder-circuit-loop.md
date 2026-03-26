@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze new branches and prove a quiet forge-only default route: `Wave 1-3` stay small and readable, `Wave 4-10` earn one visible weapon/body takeover plus one later rider lane, and live caches/route-admin text stop interrupting the reward cadence.
+- Immediate priority: cut live cache/ascension/admin exceptions out of the default route and prove a quiet forge-only spine: `Wave 1-3` stay small and readable, `Wave 4-10` earn one visible weapon/body takeover before any rider spectacle, and HUD/forge text stop narrating the reward cadence.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 20:15:00 KST
+  Findings:
+  - [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L16) and [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L31) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L104) still define the shipped target as a `12-wave`, `three-era`, drop-driven proof contract. That is still a tidy scenario frame, not a rerun-hungry skeleton that can honestly stretch toward `20-30 waves`.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L932) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1245) still make `Wave 5-12` live inside authored territory/relay/sweep/proof/pursuit/hold asks almost every round. The arenas are larger, but the player is still following directed encounter grammar instead of making repeated movement and lane-ownership decisions that would stay fun across many runs.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2815) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3509) still keep satellites, shield halos, sentries, missiles, drones, wildcard hijacks, and instant ascensions as active structure around the base route. That keeps promising side fantasies before one main gun/body line has earned a real `small -> strong -> dominant` visual takeover.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21808) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22003), [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L93) through [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L122), and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22523) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22618) still let live caches, route boards, readouts, `Next Proof`, and `Route Payoff` copy sit on top of the reward beat. Against `Nova Drift`, `Brotato`, or `Hades`, the run is still explained too hard and desired too little.
+  Top Priority: Remove live cache/ascension bypasses from the default `Wave 1-12` route and rebuild `Wave 5-10` as forge-only reward beats where one main weapon/body ladder visibly escalates first, with support/satellite/missile lanes locked until after that takeover lands.
+  Why Now: Until reward cadence and transformation hierarchy are clean, every extra system reads as prototype clutter instead of replay fuel.
+  Do Not Repeat: Do not answer this with another support branch, another cache variant, or another wording trim while the base route still depends on mid-combat rewards and admin framing.
+  Release Gate: Rewards
 
 - 2026-03-26 19:40:00 KST
   Findings:
@@ -2817,6 +2828,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-26 09:13:25 KST
+  Changed: tightened one bounded piece of the shipped forge reward spine in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so consolidated `Wave 5-8` `주력 변이` now scores visible gun/body change above maintenance cards. The recurring contract's headline slot now explicitly prefers `afterglow_mutation`, `crownfire_overdrive`, weapon evolutions, and real core pivots before affix/mod upkeep, which means capped mid-run builds stop surfacing `Overclock`-style tuneups as the big reward beat when a fresh weapon silhouette is still available. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock both ends of that contract: `Wave 5` still leads with the intended mutation takeover, and a capped `Wave 8` build now promotes a core pivot into the headline slot instead of an affix.
+  Why: the newest critique's `Top Priority` was to make the default route feel forge-only and to let one main weapon/body ladder visibly escalate before support fantasy takes the stage. The highest-value concrete interpretation was to fix the reward-selection rule itself, because the support gate was already cleaner but the recurring headline slot could still degrade into small tuning cards once an active core line was temporarily exhausted, which made the reward beat feel administrative instead of exciting.
+  Follow-up risk: this makes headline picks more appetitive, but it can also increase how often a capped build sees a cross-core pivot before `Wave 9`. If later feedback says mid-run identity gets too slippery, the next bounded pass should constrain which pivot families qualify for the headline slot instead of letting affix/mod upkeep retake it.
+  Release Gate: Rewards
 
 - 2026-03-26 08:44:43 KST
   Changed: consolidated one bounded piece of the shipped late-run combat spine in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so late-break branches no longer retake `Wave 11-12` with bespoke finales. `mutation`, `aegis`, and `ledger` now keep their distinct payoff/proof flavor at `Wave 9-10`, but all three funnel into the shared `Wave 11 · Starforge Pursuit` and `Wave 12 · Cinder Bastion` cells. I updated route-preview, cadence-summary, and late beat/HUD copy to describe that shared `pursuit -> final stand` closure instead of `Crownbreaker / Halo Refuge / Kingpin` branch-specific endings, and refreshed [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new late-run expectations. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

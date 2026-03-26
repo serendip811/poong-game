@@ -11178,6 +11178,50 @@
     return 120;
   }
 
+  function scoreBaseRouteHeadlineChoice(choice, build, nextWave) {
+    if (!choice) {
+      return -1;
+    }
+    const doctrine = getBastionDoctrineDef(build);
+    const doctrineScore = getDoctrinePreferenceScore(choice, doctrine) * 0.1;
+    const costScore = (choice.cost || 0) * 0.01;
+    if (choice.type === "utility") {
+      if (choice.action === "crownfire_overdrive") {
+        return 1180 + doctrineScore + costScore;
+      }
+      if (choice.action === "afterglow_mutation") {
+        return 1120 + doctrineScore + costScore;
+      }
+      if (choice.action === "wave6_ascension") {
+        return 1080 + doctrineScore + costScore;
+      }
+      if (choice.action === "bastion_doctrine" || choice.action === "architecture_forecast") {
+        return 1040 + doctrineScore + costScore;
+      }
+      if (choice.action === "doctrine_capstone" || choice.action === "late_ascension") {
+        return 1020 + doctrineScore + costScore;
+      }
+    }
+    if (choice.type === "evolution") {
+      return 980 + (choice.evolutionTier || 0) * 28 + doctrineScore + costScore;
+    }
+    if (choice.type === "core") {
+      const directPivotBonus = choice.directOffer ? 40 : 0;
+      const swapBonus = choice.coreId !== (build && build.coreId) ? 56 : 18;
+      return 860 + directPivotBonus + swapBonus + (choice.syncLevel || 0) * 18 + costScore;
+    }
+    if (choice.type === "affix") {
+      return 240 + doctrineScore + costScore;
+    }
+    if (choice.type === "mod") {
+      return 220 + doctrineScore + costScore;
+    }
+    if (choice.type === "fallback") {
+      return 0;
+    }
+    return 160 + doctrineScore + costScore;
+  }
+
   function createModChoice(modId) {
     const mod = MOD_DEFS[modId];
     return {
@@ -12346,9 +12390,15 @@
             scoreBaseRouteGambleChoice(choice, build, scrapBank, nextWave)
           )
         : takeFirstAvailableChoice(gamblePool, takenIds, "탐욕/유틸");
+    const adaptiveHeadlineChoice =
+      recurringBaseRouteContract && nextWave < LATE_BREAK_ARMORY_WAVE
+        ? takeBestScoredChoice(headlinePool, takenIds, "주력 변신", (choice) =>
+            scoreBaseRouteHeadlineChoice(choice, build, nextWave)
+          )
+        : takeFirstAvailableChoice(headlinePool, takenIds, "주력 변신");
     const choices = [
       markForgeContract(
-        takeFirstAvailableChoice(headlinePool, takenIds, "주력 변신"),
+        adaptiveHeadlineChoice,
         "headline",
         "주력 변이"
       ),

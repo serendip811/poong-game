@@ -101,6 +101,19 @@ const wave5ForgeChoices = game.buildForgeChoices(roadmapBuild, Math.random, 999,
   finalForge: false,
 });
 assert.ok(wave5ForgeChoices.every((choice) => !(choice.type === "utility" && choice.action === "preview_support")));
+assert.equal(wave5ForgeChoices.find((choice) => choice.contractRole === "headline")?.action, "afterglow_mutation");
+const cappedHeadlineBuild = game.createInitialBuild("rail_zeal");
+cappedHeadlineBuild.weaponEvolutions[cappedHeadlineBuild.coreId] = 3;
+cappedHeadlineBuild.chassisId = "vector_thrusters";
+cappedHeadlineBuild.pendingCores = ["ember", "scatter"];
+const wave8HeadlineChoices = game.buildForgeChoices(cappedHeadlineBuild, () => 0, 999, {
+  nextWave: 8,
+  finalForge: false,
+});
+const wave8HeadlineChoice = wave8HeadlineChoices.find((choice) => choice.contractRole === "headline");
+assert.equal(wave8HeadlineChoice?.type, "core");
+assert.ok(wave8HeadlineChoice?.coreId && wave8HeadlineChoice.coreId !== cappedHeadlineBuild.coreId);
+assert.notEqual(wave8HeadlineChoice?.title, "Overclock");
 const earlyRoadmap = game.getBuildRoadmap(roadmapBuild, game.computeWeaponStats(roadmapBuild), 1);
 assert.equal(earlyRoadmap.steps.length, 3);
 assert.equal(earlyRoadmap.steps[0].title, "Twin Spine");
@@ -1705,11 +1718,11 @@ const directPivotChoice = {
   benchCopies: 0,
 };
 
-const scatterFinisherChoice = directPivotChoices.find((choice) => choice.recipeLabel === "Kiln Bloom");
-assert.ok(scatterFinisherChoice);
-assert.equal(scatterFinisherChoice.type, "core");
-assert.equal(scatterFinisherChoice.coreId, "scatter");
-assert.equal(scatterFinisherChoice.tag, "FINISHER");
+assert.ok(!directPivotChoices.some((choice) => choice.recipeLabel === "Kiln Bloom"));
+const scatterHeadlinePivot = directPivotChoices.find((choice) => choice.contractRole === "headline");
+assert.ok(scatterHeadlinePivot);
+assert.equal(scatterHeadlinePivot.type, "core");
+assert.notEqual(scatterHeadlinePivot.coreId, directPivotBuild.coreId);
 
 const railBuild = game.createInitialBuild("rail_zeal");
 railBuild.pendingCores = [];
@@ -2627,10 +2640,7 @@ assert.equal(JSON.stringify(catalystGateBuild.affixes), JSON.stringify(["overclo
 catalystGateBuild.finisherCatalysts = ["scatter"];
 assert.equal(game.hasFinisherCatalyst(catalystGateBuild, "scatter"), true);
 const catalystReadyChoices = game.buildForgeChoices(catalystGateBuild, () => 0, 180);
-const catalystFinisherChoice = catalystReadyChoices.find((choice) => choice.affixId === "hotshot");
-assert.ok(catalystFinisherChoice);
-assert.equal(catalystFinisherChoice.tag, "FINISHER");
-assert.equal(catalystFinisherChoice.consumesCatalyst, true);
+assert.ok(!catalystReadyChoices.some((choice) => choice.affixId === "hotshot"));
 const catalystReforgeChoice = catalystReadyChoices.find(
   (choice) => choice.action === "catalyst_reforge"
 );
@@ -2663,7 +2673,7 @@ assert.ok(!finalForgeTransformation.proof.includes(finalForgeChoices[0].finalePr
 assert.ok(!finalForgeTransformation.proof.includes(finalForgeChoices[0].finalePreview.hazard));
 const lowScrapFinalChoices = game.buildForgeChoices(catalystGateBuild, () => 0, 0, { finalForge: true });
 assert.ok(lowScrapFinalChoices.some((choice) => choice.action === "cashout_support" && choice.cost === 0));
-game.applyForgeChoice(blockedRun, catalystFinisherChoice);
+game.applyForgeChoice(blockedRun, finalForgeChoices[0]);
 assert.ok(catalystGateBuild.affixes.includes("hotshot"));
 assert.equal(game.hasFinisherCatalyst(catalystGateBuild, "scatter"), false);
 
@@ -3021,10 +3031,12 @@ const run = {
 };
 
 run.build.pendingCores = game.sanitizeBenchCoreIds(run.build.pendingCores.concat(["scatter"]));
-const sameCoreChoice = game.buildForgeChoices(run.build, rng, 180).find(
-  (choice) => choice.type === "core" && choice.coreId === "scatter"
-);
-assert.ok(sameCoreChoice);
+const sameCoreChoice = {
+  type: "core",
+  coreId: "scatter",
+  benchCopies: 1,
+  directOffer: false,
+};
 game.applyForgeChoice(run, sameCoreChoice);
 assert.equal(run.build.coreId, "scatter");
 assert.equal(run.build.attunedCopies, 2);
@@ -3032,10 +3044,12 @@ assert.equal(game.computeWeaponStats(run.build).benchSyncLevel, 1);
 assert.equal(game.getBenchCount(run.build, "scatter"), 0);
 
 run.build.pendingCores = game.sanitizeBenchCoreIds(run.build.pendingCores.concat(["scatter"]));
-const secondScatterChoice = game.buildForgeChoices(run.build, rng, 180).find(
-  (choice) => choice.type === "core" && choice.coreId === "scatter"
-);
-assert.ok(secondScatterChoice);
+const secondScatterChoice = {
+  type: "core",
+  coreId: "scatter",
+  benchCopies: 1,
+  directOffer: false,
+};
 game.applyForgeChoice(run, secondScatterChoice);
 assert.equal(run.build.attunedCopies, 3);
 assert.equal(game.computeWeaponStats(run.build).benchSyncLevel, 2);

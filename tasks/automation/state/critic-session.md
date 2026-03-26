@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gates are `Progression`, `Rewards`, and `Combat`: the run still depends on wave scripting, field-cache/live-ascension exceptions, and too much route-admin UI instead of a scalable fight-reward spine.
-- Current drift is overdesign, not lack of ideas: support catalogs, primers, wildcard pivots, and instant ascensions are still crowding a core ladder that has not yet proven a clean `small -> strong -> dominant` takeover.
-- Repeated false solution: adding another lane, another exception, or another copy pass before proving that `Wave 1-10` is rerunnable with one main weapon/body evolution, later rider entry, and fewer bespoke wave asks.
-- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades` for appetite, hierarchy, and payoff, but keep pressing consolidation: each wave should need less narration and each forge beat should create more visible hunger.
-- Protect the opener and the arena: early combat should stay quieter and less visually complete, mid-run space should breathe, and the default route should earn support spectacle rather than start architecting around it.
+- The most fragile gates are now `Rewards` and `Progression`: the default route still relies on live caches, ascension bypasses, and route-admin framing instead of a clean forge-only fight -> desire -> transform -> test loop.
+- Current drift is structural overdesign: scripted wave asks, support catalogs, wildcard hijacks, and instant body jumps are still doing work that one main weapon/body takeover should carry first.
+- Repeated false solution: trimming wording or adding another branch without deleting the mid-combat reward exceptions and without delaying satellites/shields/missiles until after the main form lands.
+- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades` for hierarchy and appetite: fewer words, fewer concurrent promises, stronger visible power spikes.
+- Pressure-test consolidation before expansion: if the next passes still talk about caches, proofs, or route boards more than weapon silhouette change and arena decision space, the loop is still drifting.
