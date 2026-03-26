@@ -143,6 +143,7 @@ const wave5ForgeChoices = game.buildForgeChoices(roadmapBuild, Math.random, 999,
 });
 assert.ok(wave5ForgeChoices.every((choice) => !(choice.type === "utility" && choice.action === "preview_support")));
 assert.equal(wave5ForgeChoices.find((choice) => choice.contractRole === "headline")?.action, "afterglow_mutation");
+assert.equal(wave5ForgeChoices.find((choice) => choice.contractRole === "headline")?.type, "utility");
 const wave5RiderChoice = wave5ForgeChoices.find((choice) => choice.contractRole === "rider");
 const wave5GambleChoice = wave5ForgeChoices.find((choice) => choice.contractRole === "gamble");
 assert.ok(
@@ -165,6 +166,12 @@ const wave6ForgeChoices = game.buildForgeChoices(game.createInitialBuild("rail_z
   nextWave: 6,
   finalForge: false,
 });
+const wave6HeadlineChoice = wave6ForgeChoices.find((choice) => choice.contractRole === "headline");
+assert.ok(
+  wave6HeadlineChoice &&
+    (wave6HeadlineChoice.type === "evolution" ||
+      (wave6HeadlineChoice.type === "utility" && wave6HeadlineChoice.action === "wave6_ascension"))
+);
 assert.equal(
   wave6ForgeChoices.find((choice) => choice.contractRole === "rider")?.action,
   "bastion_bay_forge"

@@ -10953,6 +10953,34 @@
     return false;
   }
 
+  function scoreBaseRouteRiderChoice(choice, nextWave) {
+    if (!isBaseRouteDefenseRiderChoice(choice, nextWave)) {
+      return -1;
+    }
+    if (choice.type === "utility" && choice.action === "bastion_bay_forge") {
+      return nextWave === 6 ? 320 : 80;
+    }
+    if (choice.type === "affix" && choice.affixId === "thermal_weave") {
+      return nextWave === 6 ? 182 : 228;
+    }
+    if (choice.type === "mod") {
+      if (choice.modId === "armor_mesh") {
+        return nextWave === 6 ? 196 : 222;
+      }
+      if (choice.modId === "step_servos") {
+        return nextWave === 6 ? 188 : 214;
+      }
+      if (choice.modId === "coolant_purge") {
+        return nextWave === 6 ? 176 : 206;
+      }
+      return 144;
+    }
+    if (choice.type === "fallback") {
+      return 24;
+    }
+    return 120;
+  }
+
   function isBaseRouteGreedChoice(choice) {
     if (!choice) {
       return false;
@@ -10970,6 +10998,26 @@
       return ["magnet_rig", "reactor_cap"].includes(choice.modId);
     }
     return false;
+  }
+
+  function isBaseRouteHeadlineChoice(choice, nextWave) {
+    if (!choice) {
+      return false;
+    }
+    if (choice.type === "evolution") {
+      return true;
+    }
+    if (choice.type !== "utility") {
+      return false;
+    }
+    if (nextWave === 6) {
+      return choice.action === "wave6_ascension";
+    }
+    return [
+      "afterglow_mutation",
+      "bastion_doctrine",
+      "architecture_forecast",
+    ].includes(choice.action);
   }
 
   function scoreBaseRouteHeadlineChoice(choice, build, nextWave) {
@@ -12162,14 +12210,20 @@
       recurringBaseRouteContract &&
       nextWave >= SUPPORT_SYSTEM_START_WAVE &&
       supportSystemChoices.length > 0;
-    const strictBaseRouteRiderContract = recurringBaseRouteContract && nextWave >= 5 && nextWave < 9;
+    const strictBaseRouteRiderContract =
+      recurringBaseRouteContract &&
+      nextWave >= 5 &&
+      nextWave <= DEFAULT_ROUTE_WAVE_COUNT;
     const defensePool =
       recurringBaseRouteContract && nextWave === 6
         ? [...chassisBreakpointChoices, ...subsystemCandidates, ...sustainCandidates]
         : [...subsystemCandidates, ...sustainCandidates];
-    const headlinePool = reserveMidrunSupportForRider
+    const unconstrainedHeadlinePool = reserveMidrunSupportForRider
       ? [...evolutionCandidates, ...commitCandidates, ...pivotCandidates]
       : [...evolutionCandidates, ...commitCandidates, ...offensiveModuleCandidates, ...pivotCandidates];
+    const headlinePool = strictBaseRouteRiderContract
+      ? unconstrainedHeadlinePool.filter((choice) => isBaseRouteHeadlineChoice(choice, nextWave))
+      : unconstrainedHeadlinePool;
     const riderPool = strictBaseRouteRiderContract
       ? defensePool.filter((choice) => isBaseRouteDefenseRiderChoice(choice, nextWave))
       : reserveMidrunSupportForRider
@@ -12192,6 +12246,11 @@
             scoreBaseRouteHeadlineChoice(choice, build, nextWave)
           )
         : takeFirstAvailableChoice(headlinePool, takenIds, "주력 변신");
+    const adaptiveRiderChoice = strictBaseRouteRiderContract
+      ? takeBestScoredChoice(riderPool, takenIds, "보조/방호", (choice) =>
+          scoreBaseRouteRiderChoice(choice, nextWave)
+        )
+      : takeFirstAvailableChoice(riderPool, takenIds, "보조/방호");
     const choices = [
       markForgeContract(
         adaptiveHeadlineChoice,
@@ -12199,7 +12258,7 @@
         "주력 변이"
       ),
       markForgeContract(
-        takeFirstAvailableChoice(riderPool, takenIds, "보조/방호"),
+        adaptiveRiderChoice,
         "rider",
         "방호·보조"
       ),
