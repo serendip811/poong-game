@@ -8538,7 +8538,7 @@
       return {
         eyebrow: "Bare Hull",
         title: "Wave 3 첫 무기 도약",
-        detail: "세 웨이브만 버티면 첫 화면 점유가 열린다.",
+        detail: "세 웨이브만 버티면 된다.",
         windowLabel: "회로 투입",
       };
     }
@@ -9505,13 +9505,13 @@
   function createBaseRouteForgeContextMarkup({
     eyebrow = "",
     title = "",
-    detail = "",
   }) {
     return `
       <div class="route-contract route-contract--forge">
-        <p class="panel__eyebrow">${eyebrow || "변이"}</p>
-        <strong class="route-contract__title">${title || "-"}</strong>
-        ${detail ? `<p class="route-contract__pulse">${detail}</p>` : ""}
+        <p class="route-contract__line">
+          <span class="route-contract__eyebrow">${eyebrow || "변이"}</span>
+          <strong class="route-contract__title">${title || "-"}</strong>
+        </p>
       </div>
     `;
   }
@@ -17339,9 +17339,7 @@
             </div>
           </div>
           <div class="title-launch-shell__copy title-launch-shell__copy--lean">
-            <p class="panel__eyebrow">${titleFocus.eyebrow}</p>
-            <strong class="title-launch-shell__headline">${titleFocus.title}</strong>
-            <p class="title-launch-shell__detail">${titleFocus.detail}</p>
+            <strong class="title-launch-shell__headline title-launch-shell__headline--solo">${titleFocus.title}</strong>
           </div>
         </section>
       `;

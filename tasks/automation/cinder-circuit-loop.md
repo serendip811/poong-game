@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: make the shipped `8-wave` route honest by removing `12-wave / three-era` contract framing from title/forge/docs and protecting `Wave 7-8` as one clean support-proof arc, not a final stack of new asks.
+- Immediate priority: consolidate the shipped `8-wave` spine into one readable reward loop by stripping dormant `12-wave / final-form / late-ascension` framing from title/forge/docs and protecting `Wave 7-8` as payoff, not future-content spill.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 08:46:12 KST
+  Findings:
+  - The run still fails the strongest release-feeling test: the reward screen makes the player read a plan instead of crave a form. `renderForgeOverlay()` in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still builds contract shell copy, proof rows, slot labels, preview rows, and even `12-wave` final-silhouette language. Against `Nova Drift`, `Brotato`, or `Hades`, this is too much admin around what should be an immediate "take the big gun" moment.
+  - The project is still carrying future-route machinery inside the shipped slice. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) remains centered on `12웨이브 / 세 시대`, while [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still contains `Wave 9+`, `Late Break Armory`, `live ascension`, and `illegal overclock` framing. Even if some of it is not surfaced every run, it keeps the design language bloated and pulls decisions toward unfinished breadth.
+  - The opener still talks too much for a game that needs the base gun to feel small and hungry first. `renderTitleLaunchPanel()` in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still presents an eyebrow, headline, and detail stack before the player has fired a shot, so the fantasy arrives as briefing text instead of tactile contrast.
+  - `Wave 7` is closer to the right shape, but `Wave 8` still cashes out like a finale instead of a proof lap. The curve in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) jumps from `activeCap 20` to `28`, shrinks the arena from `1720x960` to `1500x820`, and layers `lancer + binder + warden` plus hazard pressure. That turns the first support-enabled identity into panic maintenance when it should still be selling dominance and anticipation for a longer future curve.
+  Top Priority: Collapse the shipped title/forge flow to one short focus line plus three hunger-driven cards, removing all `12-wave`, `final form`, `late ascension`, and roadmap/detail framing from the live `8-wave` route before tuning more content.
+  Why Now: Until the reward moments become fast, legible, and desirable, new systems only increase noise instead of replay hunger.
+  Do Not Repeat: Do not spend another pass hiding this under softer copy while leaving contract-shell markup, preview stacks, or Wave 9+ language alive in the shipped route.
+  Release Gate: Rewards
 
 - 2026-03-27 08:00:59 KST
   Findings:
@@ -3332,6 +3343,14 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 16:55:00 KST
+  Changed: collapsed one more bounded layer of reward/title admin in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css), and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs). The shipped title launch panel now renders only the hull silhouette plus a single `Wave 3 첫 무기 도약` focus line, and the recurring base-route forge context now resolves to one inline `eyebrow + form` line with no pulse/detail sentence, leaving the three cards themselves to sell the pick.
+  Why: the newest critique's `Top Priority` was to collapse the shipped title/forge flow to one short focus line plus three hunger-driven cards and stop hiding roadmap/admin framing under softer wording. The highest-value concrete interpretation still clearly open was the remaining wrapper shell itself: the title still had a briefing stack, and the forge still carried a context sentence that read like plan copy instead of desire.
+  Follow-up risk: this makes the reward moment faster and cleaner, but it also removes another sliver of explicit forecasting. If later critique says the reward stop now feels too bare, the next bounded pass should strengthen card art/silhouette confirmation or pick impact, not restore detail text, proof rows, or route-plan copy.
+  UI reference direction: followed the appetite-first hierarchy from `Hades`, `Brotato`, and `Nova Drift`, where title and reward stops land as one dominant hook with minimal supporting text instead of a contract board.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Rewards
 
 - 2026-03-27 16:20:00 KST
   Changed: retuned one bounded slice of the shipped mid-run proof window in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 7` now behaves like a first-support ownership lap instead of a sudden crossfire crisis. I added a dedicated recurring cell, `Support Sweep`, and moved `Wave 7` onto it with `pressureFamily = domination`, a larger `1720x960` arena, no `lancer` tax, and a much softer pressure step from `Wave 6` (`activeCap 20`, `spawnBudget 112`) before `Wave 8` resumes the tighter crown-proof escalation. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks the new label, directive, pressure family, arena size, and reduced Wave 7 pressure.
