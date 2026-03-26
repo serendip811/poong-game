@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: replace the public shipped contract with a real `Wave 1-6` rerun spine; docs, title flow, forge/HUD language, and the default route must all stop promising the old `12-wave` preload-heavy package.
+- Immediate priority: make the shipped route an honest `Wave 1-6` fight->forge rerun with no signature preload, no wildcard/support promises, and no reward/HUD admin language that outruns the first real weapon/body payoff.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 23:59:30 KST
+  Findings:
+  - The game is still selling the wrong run fantasy before the player even moves. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L1) still defines `12웨이브`, `시동 회로`, `초기 벤치 2장`, and `패시브` as the core loop, while [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L23) still foregrounds signature selection on the title screen. That keeps the opener feeling prebuilt instead of hungry.
+  - The early build curve is still too visually complete to create real anticipation. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3138) still schedules wildcard protocol reveals at `Wave 4 / 7 / 10`, and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2550) still keeps satellites, shields, missiles, and drones as live forge lanes. A strong roguelite opener should make the first extra barrel, beam break, orbit, or shield feel earned, not already forecast.
+  - The forge is still too document-like for a game that needs appetite. [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L101) still carries header/subtitle scaffolding, and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22340) still builds focus, proof, preview, side-note, and impact-strip layers into the reward stop. Compared with the one-glance desirability of `Hades`, `Nova Drift`, or `Brotato`, this still asks the player to read the reward instead of want it.
+  - The back half is still overscoped before the core rerun is proven. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1156) still preserves `Afterburn I-VII`, while [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L216) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2031) still frame the route around payoff/proof/pursuit/final-stand beats. That is too much authored escalation to balance movement space, enemy density, and real build payoff cleanly.
+  Top Priority: Rebuild the default run so the first six waves start from one small core, offer only main weapon/body transformations at the first two forge stops, and hide wildcard/support branches until that base path already feels worth rerunning.
+  Why Now: Until the opener is simpler and the first visible power spike lands hard, every extra branch weakens replay desire instead of extending it.
+  Do Not Repeat: Do not answer this with more conditional contract modes or more late-wave content while the opening still starts preloaded and over-explained.
+  Release Gate: Builds
 
 - 2026-03-26 20:30:28 KST
   Findings:
@@ -3073,6 +3084,14 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 01:18:00 KST
+  Changed: narrowed one bounded piece of the shipped opener contract in [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html), [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css), and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the title screen no longer sells a prebuilt run before movement starts. The old signature-card picker was replaced with a three-card lean-start contract board `Wave 1-2 weak start -> Wave 3 weapon leap -> Wave 6 chassis lock`, title-screen signature pointer/hotkey selection is now inert on the shipped route, and the result panel now reports the earned route/doctrine instead of surfacing a hidden start signature. I kept the internal doctrine plumbing intact for later forge/capstone tests, but `applySignatureToBuild(...)` still fail-closes opening affixes and bench seeds on the consolidated route. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) still passes unchanged expectations for the later doctrine ladders.
+  Why: the newest critique's `Top Priority` explicitly called out the title screen for foregrounding signature selection and making the opener feel preloaded instead of hungry. The highest-value bounded interpretation was to remove that player-facing preload first, because it changes the run fantasy before the first input without reopening support systems or adding more route wrappers.
+  Follow-up risk: the first impression is cleaner now, but some internal roadmap text still infers future doctrine identity earlier than the new title contract does. If the next critique still says the opener feels too informed, the next bounded pass should scrub those early preview lines rather than bringing signature choice back to the title.
+  UI reference direction: the appetite-first opener restraint from `Hades` and `Nova Drift`, where the title/start surface sells a small beginning and a near-term transformation beat instead of a build planner.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Builds
 
 - 2026-03-26 20:51:23 KST
   Changed: tightened one bounded piece of the shipped opener in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html), and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the default `Wave 1-6` route now really begins with one small gun. On the consolidated shipped route, `applySignatureToBuild(...)` now forces every signature to start from the same lean `Ember` core, the title picker reframes signatures as future doctrine appetite instead of different starting loadouts, and smoke now locks that all three signatures open with `Ember` plus zero preload stats. I also updated the smoke setups that intentionally test later doctrine/catalyst forms so those checks still verify the downstream build ladders without assuming the opener is already `ricochet / scatter / lance`.

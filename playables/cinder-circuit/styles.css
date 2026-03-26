@@ -222,6 +222,14 @@ body[data-overdrive="true"] .backdrop__glow--right {
   text-align: center;
 }
 
+.title-intro {
+  width: min(720px, 100%);
+  margin: 0;
+  color: var(--muted-strong);
+  font-size: 1.02rem;
+  line-height: 1.7;
+}
+
 .hero-main {
   display: flex;
   flex-direction: column;
@@ -239,6 +247,27 @@ body[data-overdrive="true"] .backdrop__glow--right {
 .signal-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   margin-top: 28px;
+}
+
+.title-contract-grid {
+  width: 100%;
+  margin-top: 2px;
+}
+
+.title-contract-card {
+  text-align: left;
+}
+
+.title-contract-card strong {
+  display: block;
+  margin: 10px 0 8px;
+  font-size: 1.04rem;
+}
+
+.title-contract-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.58;
 }
 
 .hero-side {

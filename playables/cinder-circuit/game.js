@@ -8100,13 +8100,13 @@
     nextBuild.attunedCopies = 1;
     nextBuild.affixes = sanitizeAffixIds(
       (Array.isArray(nextBuild.affixes) ? nextBuild.affixes : []).concat(
-        signature.startAffixes || []
+        leanStartContract ? [] : signature.startAffixes || []
       ),
       getAffixCapacity(nextBuild)
     );
     nextBuild.pendingCores = sanitizeBenchCoreIds(
       (Array.isArray(nextBuild.pendingCores) ? nextBuild.pendingCores : []).concat(
-        signature.seedCores || []
+        leanStartContract ? [] : signature.seedCores || []
       )
     );
     if (!leanStartContract && typeof signature.apply === "function") {
@@ -17298,6 +17298,39 @@
     if (!elements.signatureCards) {
       return;
     }
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
+      elements.signatureCards.innerHTML = [
+        {
+          tag: "Wave 1-2",
+          title: "약한 시작",
+          detail:
+            "처음 두 웨이브는 `Ember` 한 줄 화선으로만 버틴다. 시작 빌드 보너스, 보조 시스템, 미래 교리 예고는 전부 닫는다.",
+        },
+        {
+          tag: "Wave 3",
+          title: "첫 무기 도약",
+          detail:
+            "첫 포지에서는 세 갈래 주력 변이 중 하나만 고른다. 여기서 처음으로 탄도와 화면 점유가 크게 바뀐다.",
+        },
+        {
+          tag: "Wave 6",
+          title: "첫 차체 잠금",
+          detail:
+            "두 번째 포지는 차체 break만 판다. dive, hold, exit 리듬을 몸체로 갈라 놓고 support spectacle은 그 뒤로 미룬다.",
+        },
+      ]
+        .map(
+          (card) => `
+            <article class="signal-card title-contract-card">
+              <span class="micro-chip micro-chip--quiet">${card.tag}</span>
+              <strong>${card.title}</strong>
+              <p>${card.detail}</p>
+            </article>
+          `
+        )
+        .join("");
+      return;
+    }
     elements.signatureCards.innerHTML = Object.values(SIGNATURE_DEFS)
       .map(
         (signature, index) => {
@@ -17371,7 +17404,7 @@
     state.player = createPlayer(state.build);
     refreshDerivedStats(false);
     const signature = getSignatureDef(selectedSignatureId);
-    if (typeof signature.onRunStart === "function") {
+    if (!CONSOLIDATED_12_WAVE_ROUTE && typeof signature.onRunStart === "function") {
       signature.onRunStart(state);
     }
     pushCombatFeed(`${CORE_DEFS[state.build.coreId].label} 기동.`, "DROP");
@@ -18373,7 +18406,7 @@
   }
 
   function finishRun(victory) {
-    const signature = getSignatureDef(state.build.signatureId);
+    const doctrine = getBastionDoctrineDef(state.build);
     const benchEntries = getBenchEntries(state.build);
     state.screen = "result";
     state.phase = "result";
@@ -18387,7 +18420,7 @@
       scrapSpent: Math.round(state.stats.scrapSpent),
       scrapBanked: Math.round(state.resources.scrap),
       overdrivesUsed: state.stats.overdrivesUsed,
-      signature: signature.short,
+      route: doctrine ? doctrine.label : "Lean Start",
       core: CORE_DEFS[state.build.coreId].label,
       tier: state.weapon.tierLabel,
     };
@@ -18404,13 +18437,13 @@
       createResultStat("고철+", String(state.result.scrapCollected)),
       createResultStat("Spent", String(state.result.scrapSpent)),
       createResultStat("Drive", String(state.result.overdrivesUsed)),
-      createResultStat("Sig", state.result.signature),
+      createResultStat("Route", state.result.route),
       createResultStat("Core", state.result.core),
     ].join("");
     elements.resultBuild.innerHTML = `
       <p class="panel__eyebrow">FINAL FORM</p>
       <div class="result-build__grade">${grade.grade}</div>
-      <strong>${signature.label} / ${CORE_DEFS[state.build.coreId].label} / ${state.weapon.tierLabel}</strong>
+      <strong>${state.result.route} / ${CORE_DEFS[state.build.coreId].label} / ${state.weapon.tierLabel}</strong>
       <p>${grade.note}</p>
       <div class="result-build__chips">
         <span class="micro-chip">남은 고철 ${state.result.scrapBanked}</span>
@@ -24641,6 +24674,7 @@
     }
     if (
       state.screen === "title" &&
+      !CONSOLIDATED_12_WAVE_ROUTE &&
       ["Digit1", "Digit2", "Digit3"].includes(event.code)
     ) {
       const signatureIds = Object.keys(SIGNATURE_DEFS);

@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate to push next is `Progression`: the game still lacks one honest, replayable `Wave 1-6` spine because docs, title flow, route structure, and HUD language still promise the older `12-wave` package.
-- Current drift bundle: `docs/games/cinder-circuit-design.md` still defines `12-wave / three-era / signature preload`, while the code still carries named payoff/proof bands, `Afterburn`, wildcard/cache beats, support spectacle, and route-admin UI around the default path.
-- Repeated false solution: conditional simplification. Hiding some copy or adding a quieter card layout is not enough if the public contract and default route still advertise preload, branch promises, and late-run breadth.
+- The most fragile gate to push next is `Builds`: the opener still starts too complete, so the player is not earning a memorable `small gun -> visible takeover` transformation.
+- Current drift bundle: the public contract still says `12-wave / signature preload`, while the shipped route still exposes wildcard cache beats, support-system spectacle, document-like forge presentation, and `Afterburn` back-half scope before the first six waves are proven.
+- Repeated false solution: conditional simplification. Hiding copy or dressing forge cards differently is not enough if signature preload, support promises, and late-route authored breadth still define the default run.
 - Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: open small, escalate in visible chunks, and make rewards desirable before they are explained.
 - Keep pushing consolidation over expansion until `Wave 1-6` proves one dominant gun/body path, one optional survival rider, cleaner movement space, and much lower reading load.
