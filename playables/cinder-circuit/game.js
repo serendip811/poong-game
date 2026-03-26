@@ -9736,30 +9736,16 @@
   function createBaseRouteForgeContextMarkup({
     eyebrow = "",
     title = "",
-    prompt = "",
     waveAskLabel = "",
-    riderLabel = "",
-    riderTone = "",
   }) {
-    const riderToneClass = riderTone === "accent" ? " mini-pill-row--accent" : "";
     return `
       <div class="summary-head">
         <strong>${eyebrow || "변이 선택"}</strong>
       </div>
       <strong class="route-contract__title">${title || "-"}</strong>
-      ${prompt ? `<p class="summary-copy">${prompt}</p>` : ""}
       ${
         waveAskLabel
-          ? `<div class="forge-focus__proof"><span>다음 전장</span>${waveAskLabel}</div>`
-          : ""
-      }
-      ${
-        riderLabel
-          ? `<div class="mini-pill-row mini-pill-row--solo${riderToneClass}">${createMiniPill(
-              "보조 결",
-              riderLabel,
-              riderTone === "accent" ? "accent" : ""
-            )}</div>`
+          ? `<div class="forge-focus__proof"><span>다음 시험</span>${waveAskLabel}</div>`
           : ""
       }
     `;
@@ -22330,7 +22316,7 @@
         </div>
         ${
           minimalBaseRouteHud
-            ? `<div class="forge-focus__proof"><span>다음 변화</span>${nextBreakpoint.label}</div>`
+            ? ""
             : `<div class="mini-pill-row">${
                 baseRouteForgeActive
                   ? createMiniPill("다음 전장", nextBeat.title, "hot") +
@@ -22446,15 +22432,16 @@
     if (elements.waveObjective) {
       const combatBand = getCombatBandState(state.build, state.weapon, state.waveIndex + 1);
       const waveAsk = getBaseRouteCombatAsk(state, combatBand, hazardStatus);
+      const askLabel = combatBand ? combatBand.label : proofWindow.label;
       elements.waveObjective.innerHTML = minimalBaseRouteHud
         ? `
           <div class="summary-head">
-            <strong>현재 전장</strong>
+            <strong>즉시 과제</strong>
             <span class="summary-chip ${hazardStatus.tone}">
               ${hazardStatus.chipLabel}
             </span>
           </div>
-          <strong class="route-contract__title">${waveConfig.label}</strong>
+          <strong class="route-contract__title">${askLabel}</strong>
           <p class="summary-copy">${waveAsk}</p>
           <div class="mini-pill-row mini-pill-row--solo">
             ${createMiniPill("위협", `${hazardStatus.detailLabel} ${hazardStatus.detailValue}`)}
@@ -22630,14 +22617,7 @@
           ${createBaseRouteForgeContextMarkup({
             eyebrow: focusEyebrow,
             title: focusTitle,
-            prompt: focusPrompt,
             waveAskLabel: proofWindow.label,
-            riderLabel: state.pendingFinalForge
-              ? `보유 고철 ${Math.round(state.resources.scrap)}`
-              : riderStep
-                ? dominantFormSummary.label
-                : activeSupportTrack.label,
-            riderTone: state.pendingFinalForge ? "accent" : "cool",
           })}
         </article>
       `

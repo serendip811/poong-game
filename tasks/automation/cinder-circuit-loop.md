@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: cut live cache/ascension/admin exceptions out of the default route and prove a quiet forge-only spine: `Wave 1-3` stay small and readable, `Wave 4-10` earn one visible weapon/body takeover before any rider spectacle, and HUD/forge text stop narrating the reward cadence.
+- Immediate priority: replace the authored `Wave 5-12` script ladder with a reusable open-arena pressure spine that can scale toward `20-30 waves`, while HUD/forge language collapses to one growth headline and one combat ask instead of narrating the run.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 09:31:09 KST
+  Findings:
+  - [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L19) and [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L33) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L39) still define the shipped game as a tidy `12-wave`, `three-era`, `Headline Form / Rider / Proof Window` contract. That is still a controlled scenario frame, not a run skeleton with enough slack and appetite to honestly stretch toward `20-30 waves`.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L829) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1245) still script `Wave 5-12` through named payoff/breach/sweep/proof/pursuit/hold cells with bespoke hazard grammar and designer-written `note`/`directive` copy. The arena is bigger, but the run still behaves like authored encounter choreography instead of a breathable combat ecology players would want to re-solve dozens of times.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8580) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8670), [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L100) through [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L105), and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22547) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22792) still keep roadmap staging, `Next Proof`, `Route Payoff`, run-board language, and multiple status cards alive around the action. Against `Nova Drift`, `Brotato`, or `Hades`, the game is still asking the player to read the run model instead of instantly craving the next visible power spike.
+  - [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2812) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3525) correctly push support systems later, but the late reward ceiling still fans out into satellites, shields, sentries, missiles, and drones as a broad catalog. That is more content breadth than the current wave spine can justify, so the finale still risks reading as option inventory rather than one main form reaching a hunger-inducing apex.
+  Top Priority: Rebuild `Wave 5-10` into two reusable open-arena pressure bands `payoff sweep` and `proof hold` with enemy-mix escalation doing the work, then strip combat HUD/forge wording down to one build headline and one immediate ask.
+  Why Now: Until the middle of the run is fun without bespoke scripting and explanation, no amount of added modules will make repeated runs feel stronger.
+  Do Not Repeat: Do not answer this with another lane, cache, or late support branch while the run still needs designer prose to explain why each wave is interesting.
+  Release Gate: Progression
 
 - 2026-03-26 20:15:00 KST
   Findings:
@@ -2828,6 +2839,12 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-26 22:05:00 KST
+  Changed: collapsed one bounded piece of the shipped default readout in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so consolidated combat and forge surfaces now lean harder into `one build headline + one immediate ask`. In minimal combat HUD, the left card no longer spends its only line on `다음 변화`, and the right card now promotes the live ask itself instead of a wave-name hero header. In the base-route forge overlay, the context card now strips the extra setup sentence and rider pill, leaving only the pick headline and `다음 시험`. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock that the compact forge context no longer leaks prompt/rider copy. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` explicitly paired reusable mid-run bands with a HUD/forge surface that stops teaching the route and just sells the next thing to do. The highest-value bounded interpretation was to cut the remaining default-surface copy first, because the combat spine was already substantially consolidated but the player was still being asked to read `next change`, rider context, and wave labels on the main reward/readout layer. The UI direction here stays anchored to the same appetite-first reference pattern from `Hades` and `Brotato`: one dominant headline, one clear ask, and the rest deferred to inspect.
+  Follow-up risk: this makes the shipped surface cleaner, but it also means the default HUD now carries less forward-planning context during combat. If later feedback says players miss too much route anticipation, the next bounded UI pass should restore only a tiny proof chip or forecast icon, not full sentence copy or another status card.
+  Release Gate: UX/UI
 
 - 2026-03-26 09:13:25 KST
   Changed: tightened one bounded piece of the shipped forge reward spine in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so consolidated `Wave 5-8` `주력 변이` now scores visible gun/body change above maintenance cards. The recurring contract's headline slot now explicitly prefers `afterglow_mutation`, `crownfire_overdrive`, weapon evolutions, and real core pivots before affix/mod upkeep, which means capped mid-run builds stop surfacing `Overclock`-style tuneups as the big reward beat when a fresh weapon silhouette is still available. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock both ends of that contract: `Wave 5` still leads with the intended mutation takeover, and a capped `Wave 8` build now promotes a core pivot into the headline slot instead of an affix.
