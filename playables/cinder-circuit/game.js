@@ -23,6 +23,10 @@
     width: 1280,
     height: 720,
   };
+  const SECOND_ACT_PAYOFF_ARENA = {
+    width: 1520,
+    height: 860,
+  };
   const THIRD_ACT_ARENA = {
     width: 1520,
     height: 880,
@@ -423,35 +427,20 @@
       stageText: "Wave 5-8 중반 셀의 첫 칸은",
       focusText: "막 커진 주포와 차체가",
       duration: 78,
-      spawnBudget: 100,
-      activeCap: 20,
-      baseSpawnInterval: 0.58,
-      spawnIntervalMin: 0.156,
-      spawnAcceleration: 0.27,
-      eliteEvery: 9,
+      spawnBudget: 96,
+      activeCap: 18,
+      baseSpawnInterval: 0.6,
+      spawnIntervalMin: 0.162,
+      spawnAcceleration: 0.25,
+      eliteEvery: 10,
       mix: {
-        scuttler: 0.26,
-        brute: 0.28,
-        shrike: 0.46,
+        scuttler: 0.24,
+        brute: 0.2,
+        shrike: 0.4,
+        skimmer: 0.16,
       },
       driveGainFactor: 1.22,
-      arena: SECOND_ACT_ARENA,
-      hazard: {
-        label: "Payoff Bastion",
-        type: "territory",
-        interval: 12.4,
-        count: 1,
-        radius: 90,
-        telegraph: 1.08,
-        duration: 6.2,
-        damage: 10,
-        coreHp: 34,
-        coreRadius: 16,
-        turretInterval: 1.36,
-        turretDamage: 8,
-        turretSpeed: 198,
-        enemyPullRadius: 132,
-      },
+      arena: SECOND_ACT_PAYOFF_ARENA,
     }),
     buildRecurringCombatWave({
       id: "breakline",
@@ -19036,6 +19025,10 @@
   }
 
   function chooseHazardSpawn(config, context, rng = Math.random) {
+    if (!config || !Number.isFinite(config.radius) || config.radius <= 0) {
+      const player = (context && context.player) || { x: ARENA_WIDTH / 2, y: ARENA_HEIGHT / 2 };
+      return { x: player.x, y: player.y };
+    }
     const player = context.player || { x: ARENA_WIDTH / 2, y: ARENA_HEIGHT / 2 };
     const heading = getHazardHeading(context);
     const routeFocus = {

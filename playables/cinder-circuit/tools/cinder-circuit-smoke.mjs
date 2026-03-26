@@ -74,26 +74,20 @@ assert.ok(game.WAVE_CONFIG[3].activeCap < 30);
 assert.ok(game.WAVE_CONFIG[3].spawnBudget < 120);
 assert.equal(game.WAVE_CONFIG[3].activeCap, 22);
 assert.equal(game.WAVE_CONFIG[3].spawnBudget, 88);
-assert.ok(game.WAVE_CONFIG[4].hazard);
-assert.ok(game.WAVE_CONFIG[3].hazard.damage > game.WAVE_CONFIG[4].hazard.damage);
+assert.equal(game.WAVE_CONFIG[4].hazard, undefined);
+assert.ok(game.WAVE_CONFIG[3].hazard.damage > 0);
 assert.ok(game.WAVE_CONFIG[4].driveGainFactor > game.WAVE_CONFIG[3].driveGainFactor);
-assert.equal(game.WAVE_CONFIG[4].arena.width, 1280);
-assert.equal(game.WAVE_CONFIG[4].arena.height, 720);
+assert.equal(game.WAVE_CONFIG[4].arena.width, 1520);
+assert.equal(game.WAVE_CONFIG[4].arena.height, 860);
 assert.ok(game.WAVE_CONFIG[8].arena.width > game.WAVE_CONFIG[4].arena.width);
 assert.ok(game.WAVE_CONFIG[8].arena.height > game.WAVE_CONFIG[4].arena.height);
-assert.equal(game.WAVE_CONFIG[4].hazard.type, "territory");
-assert.ok(game.WAVE_CONFIG[4].hazard.coreHp > 0);
 assert.ok(game.WAVE_CONFIG[4].activeCap < game.WAVE_CONFIG[3].activeCap);
-assert.ok(game.WAVE_CONFIG[4].hazard.count <= game.WAVE_CONFIG[3].hazard.count);
 assert.ok(game.WAVE_CONFIG[4].spawnBudget < game.WAVE_CONFIG[5].spawnBudget);
-assert.ok(game.WAVE_CONFIG[4].hazard.interval > game.WAVE_CONFIG[5].hazard.interval);
-assert.equal(game.WAVE_CONFIG[4].activeCap, 20);
-assert.equal(game.WAVE_CONFIG[4].spawnBudget, 100);
-assert.equal(game.WAVE_CONFIG[4].hazard.duration, 6.2);
+assert.equal(game.WAVE_CONFIG[4].activeCap, 18);
+assert.equal(game.WAVE_CONFIG[4].spawnBudget, 96);
 assert.equal(game.WAVE_CONFIG[5].hazard.type, "relay");
 assert.ok(game.WAVE_CONFIG[5].activeCap > game.WAVE_CONFIG[4].activeCap);
-assert.ok(game.WAVE_CONFIG[5].hazard.count <= game.WAVE_CONFIG[4].hazard.count);
-assert.ok(game.WAVE_CONFIG[5].arena.width > game.WAVE_CONFIG[4].arena.width);
+assert.ok(game.WAVE_CONFIG[5].arena.width < game.WAVE_CONFIG[4].arena.width);
 assert.equal(game.WAVE_CONFIG[5].activeCap, 21);
 assert.equal(game.WAVE_CONFIG[5].spawnBudget, 108);
 assert.equal(game.WAVE_CONFIG[5].hazard.duration, 5.1);
@@ -813,8 +807,7 @@ const afterglowWindow = game.resolveWaveConfig(4, act2WindowBuild);
 const breaklineFollowthrough = game.resolveWaveConfig(5, act2WindowBuild);
 const crownfireSpike = game.resolveWaveConfig(6, act2WindowBuild);
 const forgecrossSpike = game.resolveWaveConfig(7, act2WindowBuild);
-assert.equal(afterglowWindow.hazard.type, "territory");
-assert.equal(afterglowWindow.hazard.label, "Payoff Bastion");
+assert.equal(afterglowWindow.hazard, undefined);
 assert.equal(breaklineFollowthrough.hazard.type, "relay");
 assert.equal(breaklineFollowthrough.hazard.label, "Crown Breach Relay");
 assert.equal(crownfireSpike.pressureFamily, "crossfire");
@@ -824,8 +817,7 @@ assert.equal(forgecrossSpike.hazard.label, "Crown Proof Relay");
 assert.ok(afterglowWindow.activeCap < breaklineFollowthrough.activeCap);
 assert.ok(breaklineFollowthrough.activeCap < crownfireSpike.activeCap);
 assert.ok(crownfireSpike.activeCap < forgecrossSpike.activeCap);
-assert.ok(breaklineFollowthrough.hazard.count <= afterglowWindow.hazard.count + 1);
-assert.ok(afterglowWindow.arena.width < breaklineFollowthrough.arena.width);
+assert.ok(afterglowWindow.arena.width > breaklineFollowthrough.arena.width);
 assert.ok(crownfireSpike.arena.width >= forgecrossSpike.arena.width);
 assert.ok(crownfireSpike.mix.skimmer > crownfireSpike.mix.brute);
 assert.ok(forgecrossSpike.mix.warden > 0);
@@ -3181,7 +3173,7 @@ const lowBankChoices = game.buildForgeChoices(build, rng, 0);
 assert.ok(lowBankChoices.some((choice) => choice.contractRole === "gamble"));
 assert.ok(lowBankChoices.some((choice) => choice.cost === 0));
 
-const hazardConfig = game.WAVE_CONFIG[4].hazard;
+const hazardConfig = game.WAVE_CONFIG[5].hazard;
 const eliteHazard = game.chooseHazardSpawn(
   hazardConfig,
   {
@@ -3376,7 +3368,7 @@ assert.equal(
 );
 assert.equal(
   actTwoLadder.map((wave) => (wave.hazard ? wave.hazard.type : "none")).join("|"),
-  "territory|relay|none|relay"
+  "none|relay|none|relay"
 );
 assert.ok(actTwoLadder[2].arena.width >= actTwoLadder[1].arena.width);
 assert.ok(actTwoLadder[2].arena.height >= actTwoLadder[1].arena.height);

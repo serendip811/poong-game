@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: align the shipped contract, title flow, HUD/forge hierarchy, and default route around one honest `Wave 1-6` rerun with no signature preload, no late-route promise language, and one clearly earned weapon/body payoff before support spectacle appears.
+- Immediate priority: lock the shipped route to one honest `Wave 1-6` spine with no signature preload, no visible late-route scaffolding, and one larger open-lane payoff encounter where the first weapon/body leap can read before support/admin layers return.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-26 22:01:15 KST
+  Findings:
+  - The shipped contract is still dishonest about the current game. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8) still defines a `12웨이브 / 시동 회로 / 세 시대` product, while [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L26) still gives title-screen space to `signature-cards`. That keeps the opener feeling preconfigured instead of hungry.
+  - The default route says `Wave 1-6`, but the live ruleset still carries too much future hardware and authored route scope. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L4050) still keeps `DEFAULT_ROUTE_WAVE_COUNT = 6` beside full `Wave 7-12` and `Afterburn` scaffolding, and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3132) still schedules wildcard pivots at `4 / 7 / 10`. The run is still coded like an oversized package that happens to hide parts of itself.
+  - The first real payoff encounter still does not breathe enough. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L426) makes `Wave 5` a territory-objective payoff test in only `1280x720`, and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L463) follows with relay upkeep plus `skimmer/lancer/binder/warden` pressure by `Wave 6`. Compared with the cleaner “new form, bigger lane, immediate domination test” pattern in strong arena roguelites like `Nova Drift` or `Brotato`, the game is still giving the player chores before mastery.
+  - HUD and forge still frame the run like paperwork. [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L101) keeps a dedicated objective card in combat, while [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22308) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22428) still build `Tab` summaries, support/gamble readouts, and focus prompts around rewards. The player is still asked to parse run state when they should be craving the next visible transformation.
+  Top Priority: Recut the shipped path so `Wave 5` is one larger open-lane weapon payoff with no territory/relay objective, no wildcard offer, and no support-system branch until after the first body lock lands.
+  Why Now: If the first visible power spike is immediately buried under upkeep and future-system noise, the run will not earn repeat play.
+  Do Not Repeat: Do not answer this with another copy trim or hidden toggle while `Wave 5-6` still behave like system showcases instead of clean domination tests.
+  Release Gate: Combat
 
 - 2026-03-26 23:59:59 KST
   Findings:
@@ -3096,6 +3107,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 02:05:00 KST
+  Changed: recut one bounded piece of the shipped combat spine in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 5 · Payoff Run` is no longer a disguised territory chore. The default route now gives that first post-forge payoff wave a larger open-lane arena `1520x860`, removes the `Payoff Bastion` hazard entirely, lowers density to `activeCap 18 / spawnBudget 96`, and shifts the enemy mix slightly toward fast lane crossers instead of another hold-the-zone ask. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks that `Wave 5` has no hazard, is larger than `Wave 6`, and stays the lighter domination lap before the `Crown Breach Relay` proof wave.
+  Why: the newest critique's `Top Priority` explicitly asked for `Wave 5` to become one larger open-lane weapon payoff with no territory/relay objective so the first visible body/gun leap can actually breathe. The highest-value concrete interpretation was to change the encounter itself, because wildcard offers and support branches were already fail-closed on the shipped route but the payoff fight was still making the player do upkeep before mastery.
+  Follow-up risk: `Wave 6` still carries the first relay proof immediately after this cleaner domination lap, so the mid-act handoff can still feel abrupt if later balance pushes its density back up. If critique keeps saying the first payoff is buried, the next bounded combat pass should soften the `Wave 5 -> 6` transition pressure rather than reintroducing objective scaffolding on `Wave 5`.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Combat
 
 - 2026-03-27 01:42:00 KST
   Changed: tightened one bounded piece of the shipped UX contract in [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html), [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css), [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the default route now points the player at one thing only: the next visible weapon/body change. The shipped title card now opens on one wide `다음 포지 · 첫 무기 도약` focus card instead of a disguised signature contract, the minimal combat bottom card now leads with the same `next transformation` target before the lane/threat reminder, and the base-route forge context was cut down to `label + transformation title + one short hint` instead of another `다음 시험` admin chip. I added `getBaseRouteTransformationFocus(...)` to keep those three surfaces on the same wording and updated smoke to lock the new title/HUD/forge contract.
