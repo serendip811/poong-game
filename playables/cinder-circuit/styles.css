@@ -374,13 +374,14 @@ body[data-overdrive="true"] .backdrop__glow--right {
   font-size: clamp(1.4rem, 2.6vw, 2.1rem);
   line-height: 1.02;
   letter-spacing: -0.04em;
+  max-width: 12ch;
 }
 
 .title-launch-shell__detail {
   margin: 0;
   color: var(--muted-strong);
-  max-width: 29ch;
-  line-height: 1.52;
+  max-width: 24ch;
+  line-height: 1.42;
 }
 
 .title-launch-shell__proof-strip {
@@ -1602,21 +1603,13 @@ body[data-overdrive="true"] .backdrop__glow--right {
 }
 
 .forge-context--contract .forge-context__card--span-two {
-  padding: 10px 4px 2px;
+  padding: 6px 0 0;
   background: transparent;
   border: 0;
 }
 
-.forge-context--contract .route-contract__title {
-  margin-top: 6px;
-  font-size: clamp(1.42rem, 2.2vw, 1.92rem);
-  line-height: 1.04;
-}
-
-.forge-context--contract .summary-copy {
-  margin-top: 8px;
-  max-width: 52ch;
-  color: var(--muted-strong);
+.forge-context__card--contract-shell {
+  padding: 0;
 }
 
 .forge-context__card strong {
@@ -2386,6 +2379,26 @@ body[data-overdrive="true"] .backdrop__glow--right {
   font-size: 0.82rem;
   line-height: 1.38;
   max-width: 28rem;
+}
+
+.route-contract--forge {
+  display: grid;
+  gap: 8px;
+}
+
+.forge-context--contract .route-contract__title {
+  margin-top: 0;
+  font-size: clamp(1.42rem, 2.2vw, 1.92rem);
+  line-height: 1.04;
+  max-width: 12ch;
+}
+
+.route-contract__pulse {
+  margin: 0;
+  color: var(--muted-strong);
+  font-size: 0.88rem;
+  line-height: 1.38;
+  max-width: 26ch;
 }
 
 .forge-card__impact-strip {

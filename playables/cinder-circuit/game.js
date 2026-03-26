@@ -8527,10 +8527,10 @@
     const stage = options && options.stage ? options.stage : "combat";
     if (stage === "title") {
       return {
-        eyebrow: "Wave 1-8",
-        title: "Bare Hull -> Weapon Break -> Chassis Lock",
-        detail: "Wave 3에서 무장이 깨지고 Wave 5에서 주포가 크게 폭주한다. Wave 6은 차체를 잠그고, Wave 7에서 첫 보조 rider를 얹어 Wave 8까지 짧게 증명한다.",
-        windowLabel: "짧은 승리 랩",
+        eyebrow: "Bare Hull",
+        title: "Wave 3 첫 무기 도약",
+        detail: "세 웨이브만 버티면 첫 화면 점유가 열린다.",
+        windowLabel: "회로 투입",
       };
     }
     if (stage === "forge") {
@@ -8538,7 +8538,7 @@
         return {
           eyebrow: "마침표",
           title: "잠긴 실루엣",
-          detail: "마지막 형태 하나만 고르고 바로 쓸어 담으러 돌아간다.",
+          detail: "마지막 한 번만 휩쓴다.",
           windowLabel: "지금 선택",
         };
       }
@@ -8546,7 +8546,7 @@
         return {
           eyebrow: "버팀",
           title: "버티는 선 한 줄",
-          detail: "주력 실루엣은 그대로 두고 생존선만 얇게 덧댄다.",
+          detail: "주포는 두고 생존선만 얹는다.",
           windowLabel: "지금 선택",
         };
       }
@@ -8554,7 +8554,7 @@
         return {
           eyebrow: "주력",
           title: "잠긴 실루엣",
-          detail: "이미 열린 gun/body 실루엣을 더 거칠게 밀어붙인다.",
+          detail: "열린 실루엣을 더 세게 민다.",
           windowLabel: "지금 선택",
         };
       }
@@ -8562,13 +8562,13 @@
         ? {
             eyebrow: "버팀",
             title: "첫 차체 잠금",
-            detail: "이번 정지에서 몸체 리듬이 처음 갈라진다.",
+            detail: "몸체 리듬이 처음 갈라진다.",
             windowLabel: "지금 선택",
           }
         : {
             eyebrow: "주력",
             title: "첫 무기 도약",
-            detail: "이번 정지에서 처음으로 총열과 화면 점유가 크게 바뀐다.",
+            detail: "총열과 화면 점유가 처음 크게 열린다.",
             windowLabel: "지금 선택",
           };
     }
@@ -9499,9 +9499,11 @@
     detail = "",
   }) {
     return `
-      <p class="panel__eyebrow">${eyebrow || "변이"}</p>
-      <strong class="route-contract__title">${title || "-"}</strong>
-      ${detail ? `<p class="forge-focus__hint">${detail}</p>` : ""}
+      <div class="route-contract route-contract--forge">
+        <p class="panel__eyebrow">${eyebrow || "변이"}</p>
+        <strong class="route-contract__title">${title || "-"}</strong>
+        ${detail ? `<p class="route-contract__pulse">${detail}</p>` : ""}
+      </div>
     `;
   }
 
@@ -17328,7 +17330,7 @@
             </div>
           </div>
           <div class="title-launch-shell__copy title-launch-shell__copy--lean">
-            <p class="panel__eyebrow">${titleFocus.windowLabel}</p>
+            <p class="panel__eyebrow">${titleFocus.eyebrow}</p>
             <strong class="title-launch-shell__headline">${titleFocus.title}</strong>
             <p class="title-launch-shell__detail">${titleFocus.detail}</p>
           </div>
@@ -22382,7 +22384,7 @@
     }
     elements.forgeContext.innerHTML = useBaseRouteContract
       ? `
-        <article class="forge-focus forge-focus--${riderStep ? "rider" : "headline"} forge-context__card forge-context__card--span-two">
+        <article class="forge-context__card forge-context__card--span-two forge-context__card--contract-shell">
           ${createBaseRouteForgeContextMarkup({
             eyebrow: baseRouteTransformationFocus.eyebrow || focusEyebrow,
             title: baseRouteTransformationFocus.title || focusTitle,

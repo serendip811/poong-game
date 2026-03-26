@@ -38,14 +38,14 @@ assert.equal(game.getPlayerFacingActLabelForWave(9).shortLabel, "Act 2");
 assert.equal(game.getPlayerFacingActLabelForWave(13).shortLabel, "Act 2");
 assert.equal(game.getPlayerFacingActLabelForWave(19).shortLabel, "Act 2");
 const titleFocus = game.getBaseRouteTransformationFocus(1, { stage: "title" });
-assert.equal(titleFocus.windowLabel, "짧은 승리 랩");
-assert.ok(titleFocus.title.includes("Weapon Break"));
-assert.ok(titleFocus.title.includes("Chassis Lock"));
-assert.ok(titleFocus.detail.includes("Wave 3"));
-assert.ok(titleFocus.detail.includes("Wave 5"));
-assert.ok(titleFocus.detail.includes("Wave 7"));
-assert.ok(titleFocus.windowLabel.includes("승리 랩"));
-assert.ok(!titleFocus.detail.includes("Wave 9"));
+assert.equal(titleFocus.eyebrow, "Bare Hull");
+assert.equal(titleFocus.windowLabel, "회로 투입");
+assert.ok(titleFocus.title.includes("Wave 3"));
+assert.ok(titleFocus.title.includes("무기 도약"));
+assert.ok(titleFocus.detail.includes("세 웨이브"));
+assert.ok(!titleFocus.detail.includes("Wave 5"));
+assert.ok(!titleFocus.detail.includes("Wave 7"));
+assert.ok(!titleFocus.title.includes("Chassis Lock"));
 const shippedPresentationBeats = game.getShippedRoutePresentationBeats();
 assert.equal(shippedPresentationBeats.length, 8);
 assert.equal(
@@ -334,12 +334,13 @@ assert.ok(!compactFocusMarkup.includes("다음 도약"));
 const forgeContextMarkup = game.createBaseRouteForgeContextMarkup({
   eyebrow: "주력",
   title: "Prism Crown",
-  detail: "이번 정지에서 처음으로 총열과 화면 점유가 크게 바뀐다.",
+  detail: "총열과 화면 점유가 처음 크게 열린다.",
 });
 assert.ok(forgeContextMarkup.includes("주력"));
 assert.ok(forgeContextMarkup.includes("Prism Crown"));
-assert.ok(forgeContextMarkup.includes("이번 정지에서 처음으로 총열과 화면 점유가 크게 바뀐다."));
-assert.ok(forgeContextMarkup.includes("forge-focus__hint"));
+assert.ok(forgeContextMarkup.includes("총열과 화면 점유가 처음 크게 열린다."));
+assert.ok(forgeContextMarkup.includes("route-contract__pulse"));
+assert.ok(forgeContextMarkup.includes("route-contract--forge"));
 assert.ok(!forgeContextMarkup.includes("summary-head"));
 assert.ok(!forgeContextMarkup.includes("Next Proof"));
 assert.ok(!forgeContextMarkup.includes("Route Payoff"));
@@ -348,6 +349,7 @@ assert.ok(!forgeContextMarkup.includes("forge-card__pivot--bill"));
 assert.ok(!forgeContextMarkup.includes("세 장 중 하나만"));
 assert.ok(!forgeContextMarkup.includes("다음 시험"));
 assert.ok(!forgeContextMarkup.includes("보조 결"));
+assert.ok(!forgeContextMarkup.includes("forge-focus__hint"));
 const openerFocus = game.getBaseRouteTransformationFocus(1);
 assert.equal(openerFocus.windowLabel, "다음 포지");
 assert.equal(openerFocus.title, "첫 무기 도약");

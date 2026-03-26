@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop compressing the real build fantasy into `Wave 6-8`; move one visible secondary path into anticipation earlier, then give the first support/body payoff two cleaner combat proof windows before the finale layer lands.
+- Immediate priority: protect the `Wave 5` power spike by stripping title/forge roadmap language and turning `Wave 6-8` into one readable proof arc, not three stacked first-time explanations.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 07:30:54 KST
+  Findings:
+  - The run finally has enough arena space to breathe, but it is still spending that room poorly. `Wave 5` opens a real payoff window, then `Wave 7-8` jump to `activeCap 26 -> 28` with relay pressure in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), so the first support/body identity is proven under crowd escalation almost immediately instead of getting one luxurious ownership lap.
+  - The opener is still too itinerary-driven for player feedback that already says the start is too wordy. [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html) and `renderTitleLaunchPanel()` in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still put a roadmap-like `titleFocus.detail` in front of the player before they have felt the base gun.
+  - The forge remains the clearest release-feeling blocker. `renderForgeOverlay()` in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still wraps picks in focus cards, prompts, proof labels, preview rows, and slot admin. Compared with `Nova Drift`, `Brotato`, or `Hades`, this is still too much interface ceremony around what should be a fast hunger moment.
+  - The project is starting to drift from the current red flags by moving verbosity around instead of removing it. `Tab` itself is no longer the main issue, but the same document-like density has migrated into the title, forge, and combat feed, so the player still reads the run more than they feel it.
+  Top Priority: Remove roadmap/detail language from the shipped title and base-route forge so those screens communicate only the immediate next spike, then let `Wave 6-7` prove that spike before `Wave 8` adds a new pressure pattern.
+  Why Now: The game has enough structure now that readability and payoff discipline matter more than another branch or another promise.
+  Do Not Repeat: Do not answer this with a lighter wording pass that leaves the same focus cards, preview stacks, and late-route tease intact.
+  Release Gate: UX/UI
 
 - 2026-03-27 11:05:00 KST
   Findings:
@@ -3310,6 +3321,14 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 07:42:49 KST
+  Changed: stripped one bounded layer of roadmap/admin presentation from the shipped title and base-route forge in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css), and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs). `getBaseRouteTransformationFocus(..., { stage: "title" })` now sells only the immediate `Wave 3` weapon break instead of spelling out `Wave 5-8`, `renderTitleLaunchPanel()` now shows that `Bare Hull -> first break` read directly, and the base-route forge no longer mounts its old `forge-focus` context card. The recurring contract header now resolves through a smaller `route-contract--forge` block with one short title and one short pulse line, so the reward stop stops re-briefing proof windows and route structure before the player picks.
+  Why: the latest critique's `Top Priority` said the shipped title and forge were still behaving like a roadmap even after earlier cleanup. The highest-value concrete interpretation was to delete one more wrapper layer from the actual render path, not just trim wording again, so those screens now communicate only the next spike the player is about to earn or pick.
+  Follow-up risk: this makes the shipped route faster to parse, but it also removes another thin layer of forecasting. If later critique says the title or forge now feel too abstract, the next bounded pass should strengthen visual pick confirmation or on-pick spectacle inside the same reward moment, not restore roadmap copy, proof labels, or focus-card ceremony.
+  UI reference direction: followed the appetite-first reward/title hierarchy from `Hades`, `Brotato`, and `Nova Drift`: one dominant hook, one short supporting line, and no route board around the pick.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: UX/UI
 
 - 2026-03-27 15:00:00 KST
   Changed: retimed one bounded piece of the shipped mid-run contract in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 6` is now a chassis-only lock and the first real support rider does not arrive until `Wave 7`. `SUPPORT_SYSTEM_START_WAVE` now starts at `7`, the shipped three-lane branch now opens only on the stop feeding `Wave 5`, and `buildWave6ChassisBreakpointChoices(...)` now returns `bayUnlock: false` chassis cards that hold support installation for the next forge instead of bundling body and system payoff together. I also updated the shipped-route focus text and beat labels so player-facing copy now sells `Wave 5` as the big gun spike, `Wave 6` as body lock, and `Wave 7` as the first rider, with late-form structure reduced to a short tease rather than a visible contract. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) was updated to lock the new support timing, two-card `Wave 6` forge, and doctrine/support visibility rules.
