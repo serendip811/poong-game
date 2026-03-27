@@ -14665,6 +14665,111 @@
       };
       return nextConfig;
     }
+    if (primarySupport.id === "seeker_array") {
+      nextConfig.mix = blendEnemyMix(
+        nextConfig.mix,
+        waveNumber === 6
+          ? {
+              skimmer: 0.24,
+              shrike: 0.16,
+              mortar: 0.14,
+              brander: 0.08,
+            }
+          : waveNumber === 7
+            ? {
+                shrike: 0.22,
+                skimmer: 0.18,
+                lancer: 0.18,
+                mortar: 0.12,
+                brander: 0.08,
+              }
+            : {
+                shrike: 0.14,
+                skimmer: 0.16,
+                lancer: 0.18,
+                mortar: 0.16,
+                warden: 0.14,
+              },
+        waveNumber === 8 ? 0.26 : 0.22
+      );
+      nextConfig.driveGainFactor = Math.max(
+        nextConfig.driveGainFactor || 1,
+        waveNumber === 8 ? 1.4 : waveNumber === 7 ? 1.34 : 1.28
+      );
+      nextConfig.activeCap = Math.max(
+        waveNumber === 8 ? 18 : 17,
+        (nextConfig.activeCap || 18) - (waveNumber === 8 ? 0 : 1)
+      );
+      nextConfig.arena = {
+        width: Math.max(waveNumber === 8 ? 1840 : waveNumber === 7 ? 1760 : 1700, nextConfig.arena?.width || 0),
+        height: Math.max(waveNumber === 8 ? 1030 : waveNumber === 7 ? 980 : 940, nextConfig.arena?.height || 0),
+      };
+      if (nextConfig.hazard) {
+        if (Number.isFinite(nextConfig.hazard.interval)) {
+          nextConfig.hazard.interval =
+            nextConfig.hazard.interval * (waveNumber === 8 ? 1.04 : 0.94);
+        }
+        if (Number.isFinite(nextConfig.hazard.telegraph)) {
+          nextConfig.hazard.telegraph =
+            nextConfig.hazard.telegraph * (waveNumber === 8 ? 0.92 : 0.96);
+        }
+        if (Number.isFinite(nextConfig.hazard.duration)) {
+          nextConfig.hazard.duration += waveNumber === 8 ? 0.7 : 0.32;
+        }
+        if (Number.isFinite(nextConfig.hazard.relayRange)) {
+          nextConfig.hazard.relayRange = Math.max(330, nextConfig.hazard.relayRange - 60);
+        }
+        if (Number.isFinite(nextConfig.hazard.relayWidth)) {
+          nextConfig.hazard.relayWidth += waveNumber === 8 ? 18 : 10;
+        }
+        if (Number.isFinite(nextConfig.hazard.driftSpeed)) {
+          nextConfig.hazard.driftSpeed += waveNumber === 8 ? 8 : 4;
+        }
+        if (Number.isFinite(nextConfig.hazard.driftOrbit)) {
+          nextConfig.hazard.driftOrbit += waveNumber === 8 ? 0.06 : 0.03;
+        }
+        if (Number.isFinite(nextConfig.hazard.turretInterval)) {
+          nextConfig.hazard.turretInterval = Math.max(
+            waveNumber === 8 ? 0.68 : 0.76,
+            nextConfig.hazard.turretInterval - (waveNumber === 8 ? 0.16 : 0.08)
+          );
+        }
+      }
+      nextConfig.note =
+        waveNumber === 6
+          ? `${config.note} Seeker Array proof가 중앙 점거보다 외곽 정리 순서를 먼저 묻는 미사일 lap으로 바뀌어, skimmer와 mortar가 벌린 측면 포켓을 바깥부터 비우고 안쪽 코어로 접어드는지 본다.`
+          : waveNumber === 7
+            ? `${config.note} Seeker Array proof가 drift 회피전을 교차 화선 절단 시험으로 바꿔, lancer와 shrike가 세운 두 갈래 사선을 미사일이 먼저 찢는 flank를 따라 회전하게 만든다.`
+            : `${config.note} Seeker Array overclock payoff가 마지막 hold를 장거리 포격 결산으로 키워, Mk.II 랙이 warden과 mortar 후열을 자동 삭제하는 동안 플레이어가 열린 corridor를 계속 바꿔 쓰게 만든다.`;
+      nextConfig.directive =
+        waveNumber === 6
+          ? "중앙으로 바로 파고들지 말고 Seeker Array가 먼저 건 outer pocket을 따라 skimmer와 mortar를 지운다. 한 외곽을 완전히 비운 뒤 안쪽 relay 코어로 접어들어 미사일 정리선을 살린다."
+          : waveNumber === 7
+            ? "drift를 크게 도는 대신 미사일이 먼저 자른 flank로 회전해 lancer 교차선을 끊는다. 한 번 비운 측면을 바로 버리지 말고 같은 flank를 두 번 이어 써 crossfire를 눌러야 한다."
+            : "과급된 미사일 랙이 먼 후열을 지우는 동안 가장 넓게 열린 corridor만 번갈아 붙든다. warden과 mortar가 살아 있는 먼 lane을 직접 쫓기보다, 이미 열린 외곽 corridor를 계속 재사용하는 편이 맞다.";
+      nextConfig.supportProof =
+        waveNumber === 6
+          ? {
+              label: "Seeker Sweep",
+              status: "outer lane delete",
+              note:
+                "추적 미사일이 먼저 외곽 pocket을 비우게 해야 한다. 중앙 점거보다 한 측면을 끝까지 삭제한 뒤 안쪽으로 접는 순서가 핵심이다.",
+            }
+          : waveNumber === 7
+            ? {
+                label: "Seeker Shear",
+                status: "crosslane shear",
+                note:
+                  "미사일이 자른 flank를 따라 같은 측면을 두 번 이어 써야 lancer 교차선이 무너진다. drift를 길게 도는 순간 crossfire가 다시 닫힌다.",
+              }
+            : {
+                label: "Seeker Overclock",
+                status: "barrage corridor chain",
+                note:
+                  "강화된 미사일 랙이 먼 후열을 지우는 동안 열린 corridor를 연속으로 갈아타야 한다. outer lane chain이 끊기면 overclock payoff도 사라진다.",
+              };
+      return nextConfig;
+    }
     return config;
   }
 

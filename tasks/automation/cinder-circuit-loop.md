@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: turn Wave 6-8 support installs into distinct proof fights and clean stale route copy so the game sells real rerun identities instead of generic branch labels.
+- Immediate priority: finish the remaining Wave 6-8 support-specific proof routes and collapse forge/inspect framing to one installed object plus one immediate threat so midrun identity reads instantly.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 06:00:35 KST
+  Findings:
+  - The run is still not at repeat-play standard until every Wave 6-8 support install changes movement decisions as clearly as a different build in strong arena roguelites. Halo/Sentry may now have sharper asks, but the file still carries shared `support_lap` / `support_proof` scaffolding, which is a warning that Seeker Array and Volt Drones can still collapse back into generic lane-hold combat instead of distinct rerun fantasies.
+  - The current support ladder is too short and too flat for the longer `20-30 wave` ambition. A release-feeling route needs a reusable three-beat template `install -> new habit under pressure -> visible overclock payoff`; if midrun proof is still mostly one bracket with renamed copy, the future longer run will just become more of the same rather than a true escalation spine.
+  - `renderForgeOverlay()` still behaves more like a route brief than a craving spike. `현재 형태`, `즉시 위협`, and branch/payoff framing are all fighting for attention at once, while strong references usually make the reward moment read as one obvious power object first and the next combat ask second.
+  - This means the game is still at risk of overbuilding systems while underdelivering payoff. More support families, more labels, or more route prose would deepen prototype breadth, but they would not make a player hungry to rerun a missile route versus a drone route.
+  Top Priority: Replace the remaining shared support-proof usage with Seeker Array and Volt Drones-specific Wave 6-8 proof scripts built around clearly different positioning lessons and one unmistakable Wave 8 overclock payoff.
+  Why Now: Until all four support families create different space-claiming behavior, the run still reads like one build with alternate card art.
+  Do Not Repeat: Do not answer this with more support catalog content or by trimming wording around the same shared proof bracket.
+  Release Gate: Balance
 
 - 2026-03-28 06:45:00 KST
   Findings:
@@ -3807,6 +3818,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-28 06:11:07 KST
+  Changed: replaced the shipped `Seeker Array` fallback on the shared `Claim Space` support ladder in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) with its own `Wave 6-8` proof script inside `applySupportProofEncounterConfig(...)`. An installed missile rack now drives `Seeker Sweep` on `Wave 6` for outer-pocket skimmer/mortar deletion, `Seeker Shear` on `Wave 7` for repeated same-flank crosslane cuts through shrike/lancer pressure, and `Seeker Overclock` on `Wave 8` for a visible barrage-corridor payoff that lets the Array delete warden/mortar backlines while the player chains opened lanes. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock all three proof labels, directives, mix expectations, and the live `Seeker Overclock` HUD status.
+  Why: the latest critique's `Top Priority` was still open because `Seeker Array` and `Volt Drones` were the remaining support families collapsing back into the shared proof bracket. The highest-value bounded interpretation was to finish one offensive support route end-to-end instead of adding more catalog content, because missile builds specifically needed a different positioning lesson and a Wave 8 payoff that players could immediately feel.
+  Follow-up Risk: `Seeker Array` now owns a distinct outer-lane missile route, but `Volt Drones` still falls back to generic support-proof behavior. If the next critique still says support reruns feel too samey, the next bounded balance pass should give drones their own rear-screening / re-entry proof ladder rather than adding another support family or more route prose.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Balance
 
 - 2026-03-28 07:05:00 KST
   Changed: split the shipped `Aegis Halo` midrun proof band in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) away from the shared `Claim Space` ladder so an installed halo now drives its own `Wave 6-8` encounter script: `Halo Scissor` on `Wave 6` teaches bullet-lane cutting through a tighter relay seam, `Halo Re-entry` on `Wave 7` turns drift into a narrow re-entry test instead of a wide orbit, and `Halo Bastion` on `Wave 8` overclocks the pocket hold with heavier turret/warden pressure. I also moved live combat status priority so active `supportProof` labels surface before the generic installed-support spotlight, and updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock all three Halo proof beats plus the overclock readout.

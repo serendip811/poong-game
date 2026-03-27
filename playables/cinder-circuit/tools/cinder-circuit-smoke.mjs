@@ -396,6 +396,38 @@ const kilnLiveStatus = game.getLiveSideBetSummary({
 });
 assert.equal(kilnLiveStatus?.label, "Kiln Crosshold");
 assert.equal(kilnLiveStatus?.status, "forward pocket hold");
+const seekerProofBuild = game.createInitialBuild("rail_zeal");
+seekerProofBuild.chassisId = "vector_thrusters";
+seekerProofBuild.supportSystems = [{ id: "seeker_array", tier: 1 }];
+const seekerWave6Config = game.resolveWaveConfig(5, seekerProofBuild);
+assert.equal(seekerWave6Config.supportProof?.label, "Seeker Sweep");
+assert.equal(seekerWave6Config.supportProof?.status, "outer lane delete");
+assert.ok(seekerWave6Config.directive.includes("outer pocket"));
+assert.ok((seekerWave6Config.mix.skimmer || 0) >= 0.17);
+assert.ok((seekerWave6Config.mix.mortar || 0) >= 0.05);
+const seekerWave7Config = game.resolveWaveConfig(6, seekerProofBuild);
+assert.equal(seekerWave7Config.supportProof?.label, "Seeker Shear");
+assert.equal(seekerWave7Config.supportProof?.status, "crosslane shear");
+assert.ok(seekerWave7Config.directive.includes("같은 flank"));
+assert.ok((seekerWave7Config.mix.lancer || 0) >= 0.14);
+assert.ok((seekerWave7Config.mix.shrike || 0) >= 0.2);
+const seekerWave8Config = game.resolveWaveConfig(7, seekerProofBuild);
+assert.equal(seekerWave8Config.supportProof?.label, "Seeker Overclock");
+assert.equal(seekerWave8Config.supportProof?.status, "barrage corridor chain");
+assert.ok(seekerWave8Config.directive.includes("corridor"));
+assert.ok((seekerWave8Config.mix.warden || 0) >= 0.12);
+assert.ok((seekerWave8Config.mix.mortar || 0) >= 0.08);
+const seekerProofLiveStatus = game.getLiveSideBetSummary({
+  build: seekerProofBuild,
+  waveIndex: 7,
+  phase: "wave",
+  wave: seekerWave8Config,
+  catalystCrucible: { active: false },
+  overcommit: { active: false },
+  doctrinePursuit: { active: false },
+});
+assert.equal(seekerProofLiveStatus?.label, "Seeker Overclock");
+assert.equal(seekerProofLiveStatus?.status, "barrage corridor chain");
 const wave7FieldGrantChoices = game.buildFieldGrantChoices(chassisBranchBuild, () => 0, 7);
 assert.equal(wave7FieldGrantChoices.find((choice) => choice.contractRole === "gamble"), undefined);
 assert.ok(wave7FieldGrantChoices.every((choice) => choice.type !== "system"));

@@ -12,9 +12,9 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate remains `Balance`: support installs now arrive early enough, but `Wave 6-8` still validates Halo, Sentry, Missile, and Drone routes through mostly shared proof asks instead of distinct movement and targeting lessons.
-- Secondary pressure is `Rewards/UX`: forge and pause/status surfaces still rely on route-contract framing. Once proof fights diverge, collapse presentation toward one installed object plus one immediate threat line.
-- Do not repeat the old `support comes too late` critique unless the route regresses. The current failure is sameness of proof and a flat escalation beat after the install lands.
-- Current structural failure: the support catalog and Mk-tier fantasy are ahead of the shipped proof cadence. The run needs a small first habit change at install, then a visibly larger Wave 8 overclock payoff.
-- Repeated false solutions: adding more support families, more Mk labels, or more roadmap/copy polish before each existing support family earns its own memorable proof script.
-- Keep pressure on consolidation over expansion: support-specific proof fights and clearer midrun payoff presentation first, then balance the current `8-wave` slice before pushing longer-run ambition.
+- The most fragile gate remains `Balance`: Halo/Sentry have moved forward, but the route is not repeatable enough until Seeker Array and Volt Drones also get unmistakably different `Wave 6-8` proof behavior instead of shared lane-hold scaffolding.
+- Secondary pressure is `Rewards/UX`: forge and inspect still explain the run too much. Keep pushing toward one installed-object headline plus one immediate threat line, closer to strong roguelite reward/readout patterns.
+- Do not repeat the old `support comes too late` critique unless the route regresses. The current failure is remaining support-route sameness and a midrun escalation template that is too short for future `20-30 wave` growth.
+- Current structural failure: the support catalog promises more than the proof ladder delivers. Each support family needs `install -> new habit -> Wave 8 overclock payoff`, not renamed variants of the same bracket.
+- Repeated false solutions: adding more support families, more Mk labels, more route prose, or superficial wording trims before the remaining support routes earn different combat questions.
+- Keep pressure on consolidation over expansion: finish distinct support proof fights, then strip forge/inspect framing down further before chasing longer-run structure.
