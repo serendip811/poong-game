@@ -12,9 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The sharpest next gate is still `Builds`, but the failure mode is now contradiction more than absence: Wave 6 single-axis intent exists in `buildWave6ChassisBreakpointChoices(...)` while nearby transformation/copy layers still advertise `body/support bracket` and reserved Wave 8 bay payoff.
-- `Rewards` is still the adjacent problem: forge context remains too briefing-shaped with `current form + immediate threat + branch tail` instead of one obvious installed object and one next danger.
-- Do not keep leading with the older `support proof sameness` critique unless the route clearly regresses. The higher-value criticism now is honest breakpoint structure and appetite-first presentation.
-- Current structural rule: shipped runs need `one earned form -> proof -> later visible add-on`, and every player-facing surface must agree on that order.
-- Repeated false solutions: shorter wording around the same contract shell, more support branches, more bay/flex promises, more Mk labels, or more long-run roadmap language.
-- Keep pressure on consolidation: remove bundled Wave 6 promises before reopening broader escalation or content expansion.
+- The sharpest next gate is `UX/UI` adjacent to `Builds`: the shipped route still explains an old bundled contract through roadmap, status strip, forge shell, and design doc even when Wave 6 chooser copy now aims for single-axis chassis proof.
+- Highest-value critique now is screen-by-screen agreement on `lean start -> one earned form -> proof -> later visible add-on`. If docs, HUD, forge, and status disagree, the run still feels like admin instead of appetite.
+- Keep attacking the triple-slot contract shell (`current form + immediate threat + branch tail`) and bay-reservation language. Empty slots, future bays, and support-lock promises are not payoff silhouettes.
+- Do not fall back to generic `support proof sameness` unless the combat routes clearly regress; the bigger current problem is that the player is still being taught the wrong progression grammar.
+- Repeated false solutions: shorter labels around the same shell, more support modules, more flex/bay promises, more Mk taxonomy, or reopening long-run roadmap copy before the shipped route reads cleanly.

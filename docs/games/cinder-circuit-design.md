@@ -32,8 +32,8 @@
 
 - shipped route는 총 `Wave 1-8`와 웨이브 사이 포지로 이루어진 한 번의 닫힌 계약이다.
 - `Wave 1-4`: 기본 코어로 버티며 첫 무기 도약을 만든다.
-- `Wave 5-6`: 주무장/차체 break와 첫 실제 분기를 잠그고 mid-run bracket을 연다.
-- `Wave 7-8`: 잠긴 gun/body line과 branch payoff를 domination proof로 길게 증명한다.
+- `Wave 5-6`: 주무장 도약 뒤 차체 break를 잠가 mid-run identity를 한 축으로 세운다.
+- `Wave 7-8`: 잠긴 gun/body line을 domination proof로 길게 증명하고, 이후 보조 실루엣을 얹을 여지만 남긴다.
 - 각 웨이브는 대체로 `50~75초` 내외, 밴드에 따라 아레나 크기와 압박 리듬이 달라진다.
 - Wave 8 proof와 짧은 승리 랩 종료 후 생존 시 승리
 - HP가 0이 되면 즉시 패배
@@ -101,7 +101,7 @@
 - 중반부터 느리지만 버티는 `Brute`와 흔들리는 진입선을 만드는 `Shrike`가 섞이며 첫 ownership window를 시험한다.
 - 각 웨이브마다 엘리트가 끼어들어 코어 드랍 기회를 만든다.
 - 각 시대의 첫 밴드는 새 form을 즐기는 `payoff/proof` 창, 다음 밴드는 같은 생태에서 압박을 올리는 `escalation` 창으로 읽혀야 한다.
-- 현재 shipped slice는 `Wave 5` 분기와 `Wave 6` 차체/support 잠금이 바로 run identity를 바꾸는지 증명해야 하며, 이후 `20-30웨이브` 구조 확장은 이 8-wave appetite loop가 먼저 반복 플레이 가능한지 확인한 뒤 연다.
+- 현재 shipped slice는 `Wave 5` 주포 변이와 `Wave 6` 차체 잠금이 바로 run identity를 바꾸는지 증명해야 하며, 이후 `20-30웨이브` 구조 확장은 이 8-wave appetite loop가 먼저 반복 플레이 가능한지 확인한 뒤 연다.
 
 ## Content Scope
 

@@ -8735,7 +8735,7 @@
       ? activeForm
       : (wave3LeapPreview && wave3LeapPreview.weaponChoice.title) || "첫 무기 도약";
     const stageOneDetail = build.bastionDoctrineId
-      ? `${pathLabel}이(가) 현재 주력 실루엣이다. 다음 큰 약속은 Wave 6 차체 잠금이며, 첫 support rider는 Wave 8 마무리 포지까지 눌러 두어 몸체 리듬부터 먼저 증명한다.`
+      ? `${pathLabel}이(가) 현재 주력 실루엣이다. 다음 큰 약속은 Wave 6 차체 잠금이며, 그 뒤 두 전투는 새 몸체 리듬과 복귀 각을 증명하는 proof lap이 된다.`
       : wave3LeapPreview
         ? `Wave ${ARCHITECTURE_DRAFT_WAVE}에서 ${wave3LeapPreview.weaponChoice.title}을(를) 먼저 붙여 첫 주포 도약을 만든다. support나 운영 패키지는 숨기고 이 무기 변화만 먼저 전장에 남긴다.`
         : `Wave ${ARCHITECTURE_DRAFT_WAVE}에서 첫 주포 도약을 붙여 빈 선체 구간을 끝낸다.`;
@@ -8749,15 +8749,15 @@
       (previewChassis && (previewChassis.label || previewChassis.title)) ||
       "첫 차체 잠금";
     let stageTwoDetail =
-      "Wave 6에서는 차체 잠금만 먼저 붙여 dive, hold, exit 리듬을 두 번의 proof lap으로 먼저 굳힌다. 첫 support rider는 Wave 8 마무리 포지까지 뒤로 미룬다.";
+      "Wave 6에서는 차체 잠금만 먼저 붙여 dive, hold, exit 리듬을 두 번의 proof lap으로 먼저 굳힌다.";
     let stageTwoState = "planned";
     if (activeChassis) {
       stageTwoDetail = installedSupportIdentity
-        ? `${stageTwoTitle} 차체 위에 ${installedSupportIdentity.payoffValue}까지 얹혔다. 몸체 proof를 통과한 뒤 열어 둔 support slot이 이제야 같은 실루엣을 넓히기 시작한다.`
-        : `${stageTwoTitle} 차체가 잠겼다. 이제 Wave 6-7 proof lap은 이 몸체 리듬만 시험하고, 첫 support rider는 Wave 8 마무리 포지에서 다시 연다.`;
+        ? `${stageTwoTitle} 차체가 proof를 통과했고 ${installedSupportIdentity.payoffValue}가 같은 실루엣을 더 넓게 민다.`
+        : `${stageTwoTitle} 차체가 잠겼다. 이제 Wave 6-7 proof lap은 이 몸체 리듬만 시험한다.`;
       stageTwoState = "locked";
     } else if (boundedWave >= 5) {
-      stageTwoDetail = `${stageTwoTitle}이(가) 다음 큰 약속이다. Wave 6에서는 차체만 먼저 잠가 mid-run identity를 한 축으로 세우고, support는 Wave 8에 다시 연다.`;
+      stageTwoDetail = `${stageTwoTitle}이(가) 다음 큰 약속이다. Wave 6에서는 차체만 먼저 잠가 mid-run identity를 한 축으로 세운다.`;
       stageTwoState = "primed";
     }
     const baseRouteFinale = getBaseRouteFinaleRoadmap(build, currentWeapon, boundedWave);
@@ -8934,12 +8934,11 @@
         <span class="summary-chip ${activeStep && activeStep.state === "live" ? "summary-chip--hot" : ""}">${roadmap.doctrineTag}</span>
       </div>
       ${createBaseRouteStatusStripMarkup({
-        leadLabel: "현재 형태",
-        leadValue: roadmap.pathLabel,
-        titleLabel: "다음 증명",
-        titleValue: activeStep ? activeStep.title : roadmap.activeForm,
-        tailLabel: "현재 약속",
-        tailValue: activeStep ? activeStep.detail : roadmap.note,
+        leadLabel: "즉시 증명",
+        leadValue: activeStep ? activeStep.title : roadmap.activeForm,
+        titleLabel: "현재 형태",
+        titleValue: roadmap.pathLabel,
+        headlineFirst: true,
       })}
     `;
   }
@@ -8988,9 +8987,9 @@
         state: stageState(6),
         detail: chassis
           ? supportIdentity
-            ? `${chassis.label} 차체 위에 ${supportIdentity.payoffValue}까지 올라왔다. 몸체 proof를 끝낸 뒤 열린 support slot이 이제 같은 실루엣을 더 넓게 밀어붙인다.`
-            : `${chassis.label} 차체가 첫 방호 약속으로 잠긴다. Wave 6-7은 이 몸체 리듬만 증명하고, 첫 support rider는 Wave 8 마무리 포지에서 다시 연다.`
-          : "Wave 6에서는 차체 잠금만 먼저 붙인다. Wave 6-7이 그 몸체 proof를 맡고, 첫 support rider는 Wave 8 마무리 포지로 미룬다.",
+            ? `${chassis.label} 차체가 proof를 통과했고 ${supportIdentity.payoffValue}가 같은 실루엣을 더 넓게 밀어붙인다.`
+            : `${chassis.label} 차체가 첫 방호 약속으로 잠긴다. Wave 6-7은 이 몸체 리듬만 증명한다.`
+          : "Wave 6에서는 차체 잠금만 먼저 붙인다. Wave 6-7이 그 몸체 proof를 맡는다.",
       },
     ];
   }
@@ -9010,23 +9009,17 @@
     const focus = getShippingLadderFocus(build, weapon, boundedWave);
     const dominantForm = getDominantFormSummary(build, weapon || computeWeaponStats(build), boundedWave);
     const proofWindow = getImmediateProofWindowSummary(build, boundedWave);
-    const branchPayoff = getBaseRouteBranchPayoffSummary({
-      build,
-      supportSystem: computeSupportSystemStats(build),
-      waveNumber: boundedWave,
-    });
     return `
       <div class="summary-head">
         <strong>런 상태</strong>
         <span class="summary-chip ${focus.state === "live" ? "summary-chip--hot" : ""}">${focus.windowLabel || focus.label}</span>
       </div>
       ${createBaseRouteStatusStripMarkup({
-        leadLabel: "현재 전장",
+        leadLabel: "즉시 증명",
         leadValue: proofWindow.label,
         titleLabel: "현재 형태",
         titleValue: dominantForm.label,
-        tailLabel: branchPayoff ? branchPayoff.label : "",
-        tailValue: branchPayoff ? branchPayoff.value : "",
+        headlineFirst: true,
       })}
     `;
   }
@@ -10010,11 +10003,17 @@
     titleValue = "-",
     tailLabel = "",
     tailValue = "",
+    headlineFirst = false,
   }) {
-    const slots = [
-      { label: leadLabel, value: leadValue, headline: false },
-      { label: titleLabel, value: titleValue, headline: true },
-    ];
+    const slots = headlineFirst
+      ? [
+          { label: titleLabel, value: titleValue, headline: true },
+          { label: leadLabel, value: leadValue, headline: false },
+        ]
+      : [
+          { label: leadLabel, value: leadValue, headline: false },
+          { label: titleLabel, value: titleValue, headline: true },
+        ];
     if (tailLabel || tailValue) {
       slots.push({ label: tailLabel || "다음 급등", value: tailValue || "-", headline: false });
     }
@@ -10234,12 +10233,13 @@
     branchPayoffValue = "",
   }) {
     return createBaseRouteStatusStripMarkup({
-      leadLabel: waveAskLabel || eyebrow || "현재 전장",
-      leadValue: waveAskValue || "-",
       titleLabel,
       titleValue: currentFormLabel || title || "-",
+      leadLabel: waveAskLabel || eyebrow || "즉시 증명",
+      leadValue: waveAskValue || "-",
       tailLabel: branchPayoffLabel,
       tailValue: branchPayoffValue,
+      headlineFirst: true,
     });
   }
 
@@ -17081,6 +17081,7 @@
     getForgeEraPlan,
     getShippingLadderSteps,
     getShippingLadderFocus,
+    createShippingLadderMarkup,
     getImmediateProofWindowSummary,
     getLateAscensionDef,
     getStandardLateRouteBeatSummary,
@@ -18262,12 +18263,6 @@
     const waveConfig = resolveWaveConfig(trackWaveNumber - 1, state.build);
     const currentWeapon = state.weapon || computeWeaponStats(state.build);
     const dominantForm = getDominantFormSummary(state.build, currentWeapon, trackWaveNumber);
-    const branchPayoff = getBaseRouteBranchPayoffSummary({
-      build: state.build,
-      supportSystem: state.supportSystem,
-      waveNumber: trackWaveNumber,
-      currentState: state,
-    });
     const currentAskValue =
       state.phase === "result"
         ? "짧은 지배 구간 완료"
@@ -18284,20 +18279,18 @@
             : `W${trackWaveNumber}`;
     elements.runTrackLabel.textContent = label;
     elements.waveTrack.innerHTML = createBaseRouteStatusStripMarkup({
+      titleLabel: "현재 형태",
+      titleValue: dominantForm.label,
       leadLabel:
         state.phase === "result"
           ? "마무리"
           : state.phase === "forge"
-            ? "다음 전장"
+            ? "즉시 증명"
             : state.wave && state.wave.baseRouteVictoryLap
               ? "현재 랩"
-              : "현재 전장",
+              : "즉시 위협",
       leadValue: currentAskValue,
-      titleLabel: "현재 형태",
-      titleValue: dominantForm.label,
-      tailLabel: branchPayoff && shouldShowLiveBranchPayoff(state) ? branchPayoff.label : "",
-      tailValue:
-        branchPayoff && shouldShowLiveBranchPayoff(state) ? branchPayoff.value : "",
+      headlineFirst: true,
     });
   }
 

@@ -298,7 +298,7 @@ const shippedLadderWave6 = game.getShippingLadderSteps(
   6
 );
 assert.ok(shippedLadderWave6[2].detail.includes("Wave 6-7"));
-assert.ok(shippedLadderWave6[2].detail.includes("Wave 8"));
+assert.ok(!shippedLadderWave6[2].detail.includes("Wave 8"));
 assert.ok(!shippedLadderWave6[2].detail.includes("Wave 7-8"));
 const shippedRoadmapWave6 = game.getBuildRoadmap(
   chassisBranchBuild,
@@ -306,8 +306,17 @@ const shippedRoadmapWave6 = game.getBuildRoadmap(
   6
 );
 assert.ok(shippedRoadmapWave6.steps[1].detail.includes("Wave 6-7"));
-assert.ok(shippedRoadmapWave6.steps[1].detail.includes("Wave 8"));
+assert.ok(!shippedRoadmapWave6.steps[1].detail.includes("Wave 8"));
 assert.ok(!shippedRoadmapWave6.steps[1].detail.includes("Wave 7-8"));
+const shippedRoadmapMarkup = game.createShippingLadderMarkup(
+  chassisBranchBuild,
+  game.computeWeaponStats(chassisBranchBuild),
+  6
+);
+assert.ok(shippedRoadmapMarkup.includes("현재 형태"));
+assert.ok(shippedRoadmapMarkup.includes("즉시 증명"));
+assert.ok(!shippedRoadmapMarkup.includes("분기 보상"));
+assert.ok(shippedRoadmapMarkup.includes("route-contract--double"));
 const aegisSpotlightBuild = game.createInitialBuild("rail_zeal");
 game.applyForgeChoice(
   {
@@ -818,6 +827,8 @@ assert.ok(forgeHeadlineMarkup.includes("주력 변이"));
 assert.ok(forgeHeadlineMarkup.includes("Afterglow"));
 assert.ok(forgeHeadlineMarkup.includes("다음 시험"));
 assert.ok(forgeHeadlineMarkup.includes("Payoff Run"));
+assert.ok(forgeHeadlineMarkup.includes("route-contract--double"));
+assert.ok(!forgeHeadlineMarkup.includes("분기 보상"));
 const summarizedFeed = game.summarizeCombatFeedEntry({
   stamp: "W6",
   text: "Wave 6 진입. 가장 먼 relay를 먼저 끊고 뚫린 corridor 하나를 길게 지킨다.",

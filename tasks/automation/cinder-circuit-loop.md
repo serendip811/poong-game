@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: make Wave 6 honestly single-axis across data, copy, and forge UI; remove all body/support bracket and Wave 8 bay promises from the shipped path until one chassis transformation and its proof lap feel complete.
+- Immediate priority: make Wave 6 honestly single-axis across data, roadmap copy, and forge UI; remove all Wave 6 support-lock and Wave 8 bay promises from the shipped path until one chassis transformation and its proof lap feel complete.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 09:35:00 KST
+  Findings:
+  - The shipped route is still teaching the wrong run shape on player-facing surfaces. `docs/games/cinder-circuit-design.md` still says `Wave 5-6` opens the first real branch and `Wave 6 차체/support 잠금`, while roadmap/status helpers in `game.js` still repeat `Wave 8 마무리 포지` support-rider language. The game says "single-axis chassis proof" in one place and "support lock is part of the same beat" everywhere else.
+  - `renderForgeOverlay()` still presents the reward beat as a three-part contract shell: `현재 형태 / 즉시 위협 / branch payoff`. Compared with strong reward patterns in `Hades`, `Nova Drift`, and `Brotato`, this is still too much reading for a midrun spike. The player should feel one installed object first, then one immediate danger line.
+  - `bastion_bay_forge` preview rows still frame growth as `다음 방호`, `보조`, `효과`, and even `빈 보조칸`, which is prototype administration instead of appetite. Empty bay reservation is not a payoff silhouette; visible future hunger should come from a later shield/orbital/helper install, not from bookkeeping.
+  - This matters beyond polish. If the foundation run cannot cleanly teach `lean start -> one weapon/body leap -> proof -> later add-on`, then a future 20-30 wave structure will just stretch the same noisy contract language across more waves instead of creating stronger anticipation.
+  Top Priority: Rewrite the shipped-route roadmap/status/forge context to show only one earned form and one immediate proof ask, and strip the remaining Wave 6 support-lock plus Wave 8 bay wording from docs and player-facing surfaces.
+  Why Now: Until the run stops briefing future admin, the current transformation cannot create real rerun hunger.
+  Do Not Repeat: Do not answer this with shorter labels around the same triple-slot shell or with more support modules before the route contract becomes visually obvious.
+  Release Gate: UX/UI
 
 - 2026-03-28 09:10:00 KST
   Findings:
@@ -3851,6 +3862,14 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-28 08:12:50 KST
+  Changed: rewrote the shipped-route status contract in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so roadmap, live wave track, and forge context now render as a strict two-slot strip with the earned form first and the immediate proof ask second. `getBaseRouteBuildRoadmap(...)` and `getShippingLadderSteps(...)` no longer brief `Wave 8 마무리 포지`, reserved support riders, or bay promises during the `Wave 6-7` chassis proof, `createShippingLadderMarkup(...)` and `renderWaveTrack()` no longer surface a third `분기 보상/현재 약속` slot on the shipped route, and [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) now teaches `Wave 5 weapon leap -> Wave 6 chassis lock -> Wave 7-8 proof` instead of `Wave 6 차체/support 잠금`. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new two-slot markup and the absence of `Wave 8` support wording in shipped ladder/roadmap copy.
+  Why: the latest critique's `Top Priority` was to stop shipped surfaces from briefing future admin and make the current transformation read as one earned object plus one immediate test. The highest-value bounded interpretation was to consolidate the shared status-strip and shipped roadmap copy rather than add another system, because that directly improves reward readability and makes the `Wave 6` chassis spike feel like the run's real center of gravity.
+  Follow-up Risk: `bastion_bay_forge` preview rows still carry some admin-flavored labels like `보조` and `효과`, so the next UX/UI pass should likely simplify those card rows into appetite-first payoff nouns instead of re-expanding the shell around them.
+  UI reference direction: followed the power-first reward/status hierarchy from `Hades`, `Nova Drift`, and `Brotato`, where the player reads the installed form before one immediate combat ask rather than parsing a three-column route brief.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: UX/UI
 
 - 2026-03-28 08:40:00 KST
   Changed: recut the shipped `Wave 6` chassis breakpoint in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) back to a true single-axis body leap. `buildWave6ChassisBreakpointChoices(...)` no longer bundles a doctrine support install or bay unlock into `bastion_bay_forge`; those cards now sell only the chosen chassis posture, and `applyForgeChoice(...)` preserves the chassis surge while recording `support hold through Wave 7 proof laps` instead of opening a live support package immediately. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new contract: `Wave 6` stays chassis-only, `Wave 7` keeps support and gamble hidden, and the doctrine-owned support silhouette reopens at `Wave 8`.
