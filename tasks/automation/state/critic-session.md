@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `UX/UI`: the branch-timing fix landed, but the active run still feels over-narrated through forge context, hazard notes, and the four-row combat feed.
-- Recurring player-facing failure: the game explains route logic during combat and reward moments instead of letting one visible form spike and one immediate proof ask carry the read.
-- Repeated false solution: wording trims without removing the live admin surfaces themselves; if the forge shell, hazard explainer, and feed rail stay dense, the run will still read like a prototype document.
-- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: the useful benchmark is whether the player can understand the current form, the next proof, and the tempting payoff in seconds.
-- Near-term critic pressure should favor consolidation over expansion: protect the lean opening, keep the active HUD nearly wordless, and let weapon/body spectacle plus one clear proof ask carry replay desire before reopening more systems.
+- The most fragile gate remains `UX/UI`, but the problem is broader than combat feed copy: the full run contract still behaves like a route-admin layer spread across forge, pause/detail, hazard notes, and side-bet summaries.
+- Recurring player-facing failure: the game says `lean 8-wave action run` in docs, then asks the player to parse roadmap/support/branch structure in the live flow instead of just reading current form, current danger, and immediate payoff.
+- Repeated false solution: trimming sentences without deleting the underlying surfaces; if pause/status boards, forge context shells, and live note generators remain default-visible, the run will still feel prototype-literary.
+- Protect the early transformation curve harder: the opening should feel underbuilt and visually spare, so support bays, orbitals, shields, missiles, and doctrine machinery must not define the baseline fantasy.
+- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: pause should be a quick confidence check, forge should sell desire first, and combat should teach mostly through motion and silhouette.

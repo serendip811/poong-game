@@ -9830,7 +9830,7 @@
   }
 
   function shouldUseMinimalBaseRouteHud(run = state) {
-    return Boolean(run && CONSOLIDATED_12_WAVE_ROUTE && !run.paused);
+    return Boolean(run && CONSOLIDATED_12_WAVE_ROUTE && run.phase !== "forge" && run.phase !== "result");
   }
 
   function getMinimalBaseRouteHudVisibility(run = state) {
@@ -9877,8 +9877,93 @@
     });
   }
 
+  function createBaseRoutePauseSnapshotMarkup(currentState = state) {
+    const activeState = currentState && typeof currentState === "object" ? currentState : state;
+    const build = activeState && activeState.build ? activeState.build : null;
+    if (!build) {
+      return "";
+    }
+    const waveNumber = clamp(
+      activeState.phase === "result"
+        ? activeState.stats?.wavesCleared || 1
+        : activeState.phase === "forge"
+          ? (activeState.waveIndex || 0) + 2
+          : (activeState.waveIndex || 0) + 1,
+      1,
+      DEFAULT_ROUTE_WAVE_COUNT
+    );
+    const weapon = activeState.weapon || computeWeaponStats(build);
+    const supportSystem =
+      activeState.supportSystem && activeState.supportSystem.label
+        ? activeState.supportSystem
+        : computeSupportSystemStats(build);
+    const dominantForm = getDominantFormSummary(build, weapon, waveNumber);
+    const proofWindow = getImmediateProofWindowSummary(build, waveNumber);
+    const supportTrack = getForgeSupportTrackSnapshot(build, supportSystem);
+    const branchPayoff = getBaseRouteBranchPayoffSummary({
+      build,
+      supportSystem,
+      waveNumber,
+      currentState: activeState,
+    });
+    const waveConfig = resolveWaveConfig(waveNumber - 1, build);
+    const currentAsk =
+      activeState.phase === "result"
+        ? "짧은 지배 구간 완료"
+        : waveConfig.bandLabel || waveConfig.label || `Wave ${waveNumber}`;
+    const laneEntries = [
+      {
+        label: "주력 변이",
+        value: trimInspectNote(dominantForm.label, dominantForm.label),
+        tone: "hot",
+      },
+      {
+        label: "방호·보조",
+        value: trimInspectNote(supportTrack.label, supportTrack.label),
+        tone: "cool",
+      },
+      {
+        label: "판돈·유틸",
+        value: trimInspectNote(branchPayoff ? branchPayoff.value : "조용한 계약", "조용한 계약"),
+        tone: branchPayoff ? "accent" : "",
+      },
+    ];
+    return `
+      <div class="pause-summary__hero">
+        ${createBaseRouteFocusMarkup({
+          eyebrow: "현재 형태",
+          chipLabel: `W${waveNumber}`,
+          title: dominantForm.label,
+          currentFormLabel: dominantForm.label,
+          spotlightLabel: "다음 시험",
+          spotlightValue: proofWindow.label,
+          tradeoffLabel: "현재 전장",
+          tradeoffValue: currentAsk,
+          tradeoffTone: "accent",
+          compact: true,
+        })}
+      </div>
+      <div class="pause-summary__lanes">
+        ${laneEntries
+          .map(
+            (lane) => `
+              <article class="pause-summary__lane" data-tone="${lane.tone}">
+                <span class="pause-summary__lane-label">${lane.label}</span>
+                <strong class="pause-summary__lane-value">${lane.value}</strong>
+              </article>
+            `
+          )
+          .join("")}
+      </div>
+    `;
+  }
+
   function shouldShowLiveBranchPayoff(currentState = state) {
-    return Boolean(currentState && (currentState.paused || currentState.phase === "result"));
+    return Boolean(
+      currentState &&
+        (currentState.phase === "result" ||
+          (currentState.paused && !shouldUseMinimalBaseRouteHud(currentState)))
+    );
   }
 
   function summarizeCombatFeedEntry(entry) {
@@ -15958,6 +16043,7 @@
     getBaseRouteForgeStage,
     getBaseRoutePostWaveTransition,
     createBaseRouteForgeContextMarkup,
+    createBaseRoutePauseSnapshotMarkup,
     createMinimalCombatAskMarkup,
     summarizeCombatFeedEntry,
     getBaseRouteTransformationFocus,
@@ -16012,6 +16098,7 @@
     forgeContext: document.getElementById("forge-context"),
     forgeCards: document.getElementById("forge-cards"),
     pauseOverlay: document.getElementById("pause-overlay"),
+    pauseSummary: document.getElementById("pause-summary"),
     resumeRun: document.getElementById("resume-run"),
     pauseRestart: document.getElementById("pause-restart"),
     pauseTitle: document.getElementById("pause-title"),
@@ -17021,7 +17108,10 @@
     if (!elements.arenaStage) {
       return;
     }
-    elements.arenaStage.classList.toggle("arena-stage--hud-detail", state.paused);
+    elements.arenaStage.classList.toggle(
+      "arena-stage--hud-detail",
+      state.paused && !shouldUseMinimalBaseRouteHud(state)
+    );
   }
 
   function pushCombatFeed(text, stamp) {
@@ -17047,14 +17137,15 @@
     const items = state.feed.length
       ? state.feed
       : [{ stamp: "BOOT", text: "전투 중에는 가장 최근 전개 하나만 남는다." }];
-    const visibleItems = state.paused ? items : [items[0]];
+    const expandedPauseFeed = state.paused && !shouldUseMinimalBaseRouteHud(state);
+    const visibleItems = expandedPauseFeed ? items : [items[0]];
     elements.combatFeed.innerHTML = visibleItems
       .map(
         (entry) => `
           <article class="combat-feed__row">
             <span class="combat-feed__stamp">${entry.stamp}</span>
             <div class="combat-feed__text">${
-              state.paused
+              expandedPauseFeed
                 ? `<strong class="combat-feed__headline">${entry.text}</strong>`
                 : (() => {
                     const summary = summarizeCombatFeedEntry(entry);
@@ -17127,6 +17218,9 @@
       return;
     }
     elements.pauseOverlay.classList.toggle("hidden", !state.paused);
+    if (elements.pauseSummary) {
+      elements.pauseSummary.innerHTML = state.paused ? createBaseRoutePauseSnapshotMarkup(state) : "";
+    }
   }
 
   function togglePause(force) {

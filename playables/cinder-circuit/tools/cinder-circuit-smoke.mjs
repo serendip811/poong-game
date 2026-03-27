@@ -228,6 +228,14 @@ assert.equal(
   }),
   null
 );
+assert.equal(
+  game.getMinimalBaseRouteHudVisibility({ paused: true, phase: "combat" }).minimal,
+  true
+);
+assert.equal(
+  game.getMinimalBaseRouteHudVisibility({ paused: false, phase: "forge" }).minimal,
+  false
+);
 const greedBuild = game.createInitialBuild("rail_zeal");
 game.applyForgeChoice(
   { build: greedBuild, resources: { scrap: 999 }, stats: { scrapSpent: 0 }, feed: [] },
@@ -272,6 +280,20 @@ const branchForgeContextMarkup = game.createBaseRouteForgeContextMarkup({
 });
 assert.ok(branchForgeContextMarkup.includes("분기 보상"));
 assert.ok(branchForgeContextMarkup.includes("Scrapline Raid"));
+const pauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
+  build: greedBuild,
+  weapon: game.computeWeaponStats(greedBuild),
+  supportSystem: game.computeSupportSystemStats(greedBuild),
+  waveIndex: 4,
+  phase: "combat",
+  paused: true,
+});
+assert.ok(pauseSnapshotMarkup.includes("다음 시험"));
+assert.ok(pauseSnapshotMarkup.includes("주력 변이"));
+assert.ok(pauseSnapshotMarkup.includes("방호·보조"));
+assert.ok(pauseSnapshotMarkup.includes("판돈·유틸"));
+assert.ok(pauseSnapshotMarkup.includes("Scrapline Raid"));
+assert.ok(!pauseSnapshotMarkup.includes("Era III"));
 const wave5GambleChoice = wave5ForgeChoices.find((choice) => choice.contractRole === "gamble");
 assert.equal(wave5GambleChoice, undefined);
 const scriptedMidrunGreedChoice = game.createFieldGreedContractChoice(
@@ -551,6 +573,7 @@ const indexMarkup = fs.readFileSync(indexPath, "utf8");
 assert.ok(indexMarkup.includes('id="run-track-label"'));
 assert.ok(indexMarkup.includes('id="wave-track"'));
 assert.ok(indexMarkup.includes('id="combat-feed"'));
+assert.ok(indexMarkup.includes('id="pause-summary"'));
 assert.ok(indexMarkup.includes('status-board status-board--overlay'));
 assert.ok(!indexMarkup.includes('roadmap-card roadmap-card--contract'));
 const minimalHudVisibility = game.getMinimalBaseRouteHudVisibility({
@@ -564,12 +587,13 @@ assert.equal(minimalHudVisibility.showScrap, false);
 assert.equal(minimalHudVisibility.showRoadmap, false);
 const pausedHudVisibility = game.getMinimalBaseRouteHudVisibility({
   paused: true,
+  phase: "combat",
 });
-assert.equal(pausedHudVisibility.minimal, false);
-assert.equal(pausedHudVisibility.showWave, true);
-assert.equal(pausedHudVisibility.showDash, true);
-assert.equal(pausedHudVisibility.showTimer, true);
-assert.equal(pausedHudVisibility.showRoadmap, true);
+assert.equal(pausedHudVisibility.minimal, true);
+assert.equal(pausedHudVisibility.showWave, false);
+assert.equal(pausedHudVisibility.showDash, false);
+assert.equal(pausedHudVisibility.showTimer, false);
+assert.equal(pausedHudVisibility.showRoadmap, false);
 const openingCombatAsk = game.getBaseRouteCombatAsk({
   waveIndex: 0,
   wave: { directive: "", hazard: null },

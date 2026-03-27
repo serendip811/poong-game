@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: turn the shipped 8-wave route from a narrated prototype into an appetite-first readable run by collapsing live HUD/feed/forge messaging to one clear ask and one proof cue before adding more branch breadth.
+- Immediate priority: make the shipped 8-wave route read like a lean action run by stripping live HUD/pause/forge route-admin noise and protecting a visibly small opening form before adding new branch breadth.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 19:31:12 KST
+  Findings:
+  - The game is still presenting a lean 8-wave contract in docs while the runtime mentally behaves like a larger route manager. `CONSOLIDATED_12_WAVE_ROUTE` is true, but `renderForgeOverlay()` still computes dominant form, next breakpoint, proof window, branch payoff, support track, and even `12-wave spine` language in the live stop. That is too much planning overhead for a short rerun-focused reward beat. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L4088) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22973)
+  - The pause/detail surface is still not a status board, it is a hidden document. Outside pause the CSS suppresses roadmap/status detail, but pausing simply re-expands those structures instead of collapsing them into a quick build snapshot. Strong references use pause to confirm loadout and survival state in seconds, not to reveal another design layer the player was spared during combat. [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css#L1050) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L17024)
+  - Early growth is still too visually pre-spent at the system layer. `BASE_BUILD` starts with `supportBayCap: 2`, and the runtime already carries orbitals, shields, missiles, drones, doctrine chase, cache bets, and ascension scaffolding as part of the active build grammar. Even if some of it is gated, the opening fantasy is not a bare machine earning spectacle; it is a busy machine waiting to explain which extra layer matters. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L5330) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L16195)
+  - Hazard and side-bet communication still trusts prose over hierarchy. `describeHazardState()` and `getLiveSideBetSummary()` generate long descriptive notes for relay, vault, caravan, pursuit, cache, and risk states, which means the game keeps inventing reasons to read instead of letting arena geometry, enemy pressure, and one short cue teach the ask. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L16069) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L16388)
+  Top Priority: Rebuild the active run UI contract so combat, forge, and pause each expose only one primary ask plus one proof/readout, and push roadmap/support/side-bet explanation fully out of the default run flow.
+  Why Now: Until the run stops behaving like a hidden systems document, added waves or build branches will still feel like prototype administration instead of replay hunger.
+  Do Not Repeat: Do not answer this with smaller text blocks while pause/status boards and forge logic still surface roadmap, support, and side-bet structure by default.
+  Release Gate: UX/UI
 
 - 2026-03-27 19:01:53 KST
   Findings:
@@ -3574,6 +3585,14 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 23:45:00 KST
+  Changed: rebuilt the shipped pause contract in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html), and [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) so `Tab` no longer re-expands the hidden HUD document. `shouldUseMinimalBaseRouteHud(...)` now stays minimal during paused combat on the consolidated route, `renderHudPanels()` and `renderCombatFeed()` stop reopening the full detail/feed stack during pause, the live wave strip no longer reintroduces `분기 보상` just because the player paused, and the pause overlay now renders `#pause-summary` through `createBaseRoutePauseSnapshotMarkup(...)` as one current-form/proof card plus three short lanes `주력 변이 / 방호·보조 / 판돈·유틸`. Added smoke coverage in [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) for the paused minimal-HUD contract, the new pause snapshot markup, and the new DOM anchor.
+  Why: the latest critique's `Top Priority` asked for combat, forge, and pause to expose one primary ask plus one proof/readout instead of behaving like a hidden systems document. The highest-value bounded interpretation was to fix pause first, because `Tab` was explicitly called out in current red flags and was still undoing the live HUD cleanup by reopening route/support/admin structure the moment the player stopped moving.
+  Follow-up Risk: pause now reads much faster, but the forge overlay still computes more route state than this new contract ideally wants, and the underlying hazard/side-bet writers still generate long source prose. If the next critique still sees prototype administration in the run flow, the next bounded pass should collapse forge context or trim hazard/state emitters rather than letting pause regrow detail.
+  UI reference direction: followed the quick-stop loadout confirmation pattern from `Hades` and `Brotato`, where pause confirms form, next proof, and build lanes in seconds instead of unfolding a second document.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: UX/UI
 
 - 2026-03-27 23:05:00 KST
   Changed: collapsed the shipped live-read contract in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so active combat now renders only the newest summarized feed entry, the base-route HUD status strip hides `분기 보상` unless the player explicitly pauses or reaches the result state, and the base-route forge context now reads as `pick headline -> next proof` instead of `current form + next ask + branch payoff`. Added one bounded export-backed smoke assertion in [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) for the new forge header contract and feed summarizer, and updated [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) so the live feed visually separates the headline cue from its short proof line.
