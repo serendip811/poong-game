@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Progression`: the shipped 8-wave spine still starts too complete while support and greed arrive too late to create real anticipation and payoff.
-- Current structural failure: the run is trying to protect a lean opener in the UI, but `BASE_BUILD`, support-bay capacity, and live Wave 9+ runtime grammar still make the slice feel authored for a larger game before the small-hull growth curve is proven.
-- Repeated false solution: adding more late-form systems, debt wrappers, or route copy trims while the opener is still over-prepared and support/utility proof still lands near the end.
-- Keep pressure on underbuilt starts: a good run should earn helpers, shields, orbitals, and greed-routing spectacle instead of implying them from frame one.
-- Next high-value critique should test whether the starting hull is actually quieter and whether one support or greed path now gets two full combat proofs before the run closes.
+- The most fragile gate is now `UX/UI`: combat, pause, and forge still explain route structure harder than they sell immediate threat, current form, and earned payoff.
+- Current structural failure: the shipped 8-wave slice still leaks Wave 9-12 / afterburn ambition into live readouts and result language, so the current run feels like a roadmap teaser instead of a closed appetite loop.
+- Repeated false solution: trimming copy without deleting the underlying three-slot contract (`current ask + current form + branch payoff`) or the dormant late-run grammar behind it.
+- Keep pressure on the opener contract: a small hull should look and read small, which means no pre-spent support structure and no lane narration before the player installs that lane.
+- Next high-value critique should verify whether HUD/Tab/forge now behave like fast status surfaces and whether late-run/admin language has actually been cut out of the shipped route.

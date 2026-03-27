@@ -9859,6 +9859,39 @@
     return `${source.slice(0, 75).trimEnd()}...`;
   }
 
+  function formatPauseRecentUpgradeLabel(upgradeText) {
+    const source = String(upgradeText || "").replace(/\s+/g, " ").trim();
+    if (!source) {
+      return "";
+    }
+    if (!/[가-힣]/.test(source)) {
+      return "";
+    }
+    const colonIndex = source.indexOf(":");
+    const value = colonIndex >= 0 ? source.slice(colonIndex + 1).trim() : source;
+    return trimInspectNote(value, value);
+  }
+
+  function getBaseRoutePauseRecentGainSummary(build, supportSystem = null, waveNumber = 1) {
+    if (!build) {
+      return "아직 새 획득 없음";
+    }
+    const upgrades = Array.isArray(build.upgrades) ? build.upgrades : [];
+    for (let index = upgrades.length - 1; index >= 0; index -= 1) {
+      const formatted = formatPauseRecentUpgradeLabel(upgrades[index]);
+      if (formatted) {
+        return formatted;
+      }
+    }
+    if (supportSystem && supportSystem.label) {
+      return trimInspectNote(supportSystem.label, supportSystem.label);
+    }
+    if (build.midrunGreedRouteUntilWave >= clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT)) {
+      return "Scrapline Raid";
+    }
+    return "첫 포지 전";
+  }
+
   function shouldUseMinimalBaseRouteHud(run = state) {
     return Boolean(run && CONSOLIDATED_12_WAVE_ROUTE && run.phase !== "forge" && run.phase !== "result");
   }
@@ -9953,7 +9986,6 @@
         ? activeState.supportSystem
         : computeSupportSystemStats(build);
     const dominantForm = getDominantFormSummary(build, weapon, waveNumber);
-    const proofWindow = getImmediateProofWindowSummary(build, waveNumber);
     const supportTrack = getForgeSupportTrackSnapshot(build, supportSystem);
     const branchPayoff = getBaseRouteBranchPayoffSummary({
       build,
@@ -9967,18 +9999,23 @@
     const currentAsk =
       activeState.phase === "result"
         ? "짧은 지배 구간 완료"
-        : waveConfig.bandLabel || waveConfig.label || `Wave ${waveNumber}`;
+        : getBaseRouteCombatAsk(activeState, waveConfig, null);
     const laneEntries = [];
+    laneEntries.push({
+      label: "최근 획득",
+      value: getBaseRoutePauseRecentGainSummary(build, supportSystem, waveNumber),
+      tone: "hot",
+    });
     if (supportLaneCommitted) {
       laneEntries.push({
-        label: "방호·보조",
+        label: "활성 보조",
         value: trimInspectNote(supportTrack.label, supportTrack.label),
         tone: "cool",
       });
     }
     if (greedLaneCommitted && branchPayoff) {
       laneEntries.push({
-        label: "판돈·유틸",
+        label: "활성 판돈",
         value: trimInspectNote(branchPayoff.value, branchPayoff.value),
         tone: "accent",
       });
@@ -9990,11 +10027,8 @@
           chipLabel: `W${waveNumber}`,
           title: dominantForm.label,
           currentFormLabel: dominantForm.label,
-          spotlightLabel: "다음 시험",
-          spotlightValue: proofWindow.label,
-          tradeoffLabel: "현재 전장",
-          tradeoffValue: currentAsk,
-          tradeoffTone: "accent",
+          spotlightLabel: "즉시 위협",
+          spotlightValue: currentAsk,
           compact: true,
         })}
       </div>

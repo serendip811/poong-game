@@ -290,8 +290,9 @@ const pauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   phase: "combat",
   paused: true,
 });
-assert.ok(pauseSnapshotMarkup.includes("다음 시험"));
-assert.ok(pauseSnapshotMarkup.includes("판돈·유틸"));
+assert.ok(pauseSnapshotMarkup.includes("즉시 위협"));
+assert.ok(pauseSnapshotMarkup.includes("최근 획득"));
+assert.ok(pauseSnapshotMarkup.includes("활성 판돈"));
 assert.ok(pauseSnapshotMarkup.includes("Entry Vault"));
 assert.ok(!pauseSnapshotMarkup.includes("Era III"));
 assert.ok(!pauseSnapshotMarkup.includes("주력 변이"));
@@ -304,8 +305,10 @@ const openingPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   phase: "combat",
   paused: true,
 });
-assert.ok(openingPauseSnapshotMarkup.includes("다음 시험"));
-assert.ok(!openingPauseSnapshotMarkup.includes("pause-summary__lanes"));
+assert.ok(openingPauseSnapshotMarkup.includes("즉시 위협"));
+assert.ok(openingPauseSnapshotMarkup.includes("최근 획득"));
+assert.ok(openingPauseSnapshotMarkup.includes("첫 포지 전"));
+assert.ok(openingPauseSnapshotMarkup.includes("pause-summary__lanes"));
 assert.ok(!openingPauseSnapshotMarkup.includes("Bare Hull"));
 assert.ok(!openingPauseSnapshotMarkup.includes("조용한 계약"));
 const supportPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
@@ -316,9 +319,9 @@ const supportPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   phase: "combat",
   paused: true,
 });
-assert.ok(supportPauseSnapshotMarkup.includes("방호·보조"));
+assert.ok(supportPauseSnapshotMarkup.includes("활성 보조"));
 assert.ok(supportPauseSnapshotMarkup.includes(chassisSupportChoice.systemChoice.title));
-assert.ok(!supportPauseSnapshotMarkup.includes("판돈·유틸"));
+assert.ok(!supportPauseSnapshotMarkup.includes("활성 판돈"));
 const wave5GambleChoice = wave5ForgeChoices.find((choice) => choice.contractRole === "gamble");
 assert.equal(wave5GambleChoice, undefined);
 const scriptedMidrunGreedChoice = game.createFieldGreedContractChoice(
