@@ -5909,6 +5909,14 @@
     );
   }
 
+  function getMidrunGreedRaidTier(build, waveNumber = null) {
+    if (!isMidrunGreedRaidFrameActive(build, waveNumber)) {
+      return 0;
+    }
+    const resolvedWave = Number.isFinite(waveNumber) ? waveNumber : getResolvedWaveNumber();
+    return clamp(resolvedWave - 4, 1, 4);
+  }
+
   function shouldUseSalvageSurgeKit(build, waveNumber = null) {
     return (
       getChassisBreakpointDef(build)?.id === "salvage_winch" ||
@@ -9749,9 +9757,19 @@
         activeState && activeState.wave && activeState.wave.midrunGreedRoute
           ? activeState.wave.midrunGreedRoute
           : null;
+      const routeLabel =
+        routeConfig && routeConfig.label
+          ? routeConfig.label
+          : boundedWave <= 5
+            ? "Entry Vault"
+            : boundedWave === 7
+              ? "Caravan Hook"
+              : boundedWave >= 8
+                ? "Jackpot Fork"
+                : "Tow Fork";
       return {
         label: "분기 보상",
-        value: routeConfig && routeConfig.label ? routeConfig.label : "Scrapline Raid",
+        value: routeLabel,
       };
     }
     const activeSupport =
@@ -13679,6 +13697,14 @@
     }
     const routeStage = waveNumber - 5;
     const salvageStage = waveNumber === 7 ? "caravan" : "salvage";
+    const routeLabel =
+      waveNumber === 5
+        ? "Entry Vault"
+        : salvageStage === "caravan"
+          ? "Caravan Hook"
+          : waveNumber >= 8
+            ? "Jackpot Fork"
+            : "Tow Fork";
     const hazard =
       salvageStage === "caravan"
         ? {
@@ -13767,6 +13793,7 @@
           ? "도주하는 caravan을 짧게 끊고 곧바로 열린 외곽으로 복귀한다. chase를 오래 끌수록 반대 flank가 먼저 무너진다."
           : "열린 vault pocket을 빠르게 찢고 곧바로 바깥 lane으로 빠져나온다. payout 욕심이 길어질수록 퇴로가 먼저 닫힌다.",
       midrunGreedRoute: {
+        label: routeLabel,
         waveNumber,
         hazardType: salvageStage,
         payoutScrap: hazard.salvageScrap,
@@ -18059,26 +18086,65 @@
       return { cooldownMultiplier: 1, heatMultiplier: 1 };
     }
 
-    [-1, 1].forEach((direction) => {
+    const raidTier = getMidrunGreedRaidTier(state.build);
+    const forkAngles =
+      raidTier >= 4
+        ? [-2, -1, 1, 2]
+        : raidTier >= 3
+          ? [-1.5, -0.5, 0.5, 1.5]
+          : [-1, 1];
+    const spread = raidTier >= 3 ? 0.15 : 0.2;
+    const chainBonus = raidTier >= 4 ? 2 : 1;
+    const damageMultiplier = 0.42 + Math.max(0, raidTier - 1) * 0.05;
+    forkAngles.forEach((forkIndex) => {
+      const direction = Math.sign(forkIndex) || 1;
       state.projectiles.push(
-        createOffsetPlayerProjectile(baseAngle + 0.2 * direction, weapon, driveActive, {
-          lateral: 16 * direction,
-          forward: 16,
+        createOffsetPlayerProjectile(baseAngle + spread * forkIndex, weapon, driveActive, {
+          lateral: 13 * forkIndex,
+          forward: 16 + Math.abs(forkIndex) * 1.5,
           overrides: {
-            vx: Math.cos(baseAngle + 0.2 * direction) * weapon.projectileSpeed * 1.08,
-            vy: Math.sin(baseAngle + 0.2 * direction) * weapon.projectileSpeed * 1.08,
-            damage: round((weapon.damage + (driveActive ? 8 : 0)) * 0.42, 1),
+            vx:
+              Math.cos(baseAngle + spread * forkIndex) *
+              weapon.projectileSpeed *
+              (1.08 + Math.max(0, raidTier - 2) * 0.04),
+            vy:
+              Math.sin(baseAngle + spread * forkIndex) *
+              weapon.projectileSpeed *
+              (1.08 + Math.max(0, raidTier - 2) * 0.04),
+            damage: round((weapon.damage + (driveActive ? 8 : 0)) * damageMultiplier, 1),
             radius: Math.max(4, weapon.core.id === "lance" ? 5.1 : 4.2),
-            life: 1,
-            chain: weapon.chain + 1,
-            chainRange: Math.max(weapon.chainRange || 0, 116),
+            life: 1 + Math.max(0, raidTier - 2) * 0.08,
+            chain: weapon.chain + chainBonus,
+            chainRange: Math.max(weapon.chainRange || 0, 116 + raidTier * 10),
             color: "#9fffcf",
           },
         })
       );
     });
 
-    return { cooldownMultiplier: 0.94, heatMultiplier: 1.04 };
+    if (raidTier >= 2) {
+      state.projectiles.push(
+        createOffsetPlayerProjectile(baseAngle, weapon, driveActive, {
+          forward: 26,
+          overrides: {
+            vx: Math.cos(baseAngle) * weapon.projectileSpeed * (1.12 + raidTier * 0.03),
+            vy: Math.sin(baseAngle) * weapon.projectileSpeed * (1.12 + raidTier * 0.03),
+            damage: round((weapon.damage + (driveActive ? 8 : 0)) * (0.48 + raidTier * 0.06), 1),
+            radius: weapon.core.id === "lance" ? 5.6 : 4.8,
+            life: 0.96 + raidTier * 0.04,
+            pierce: weapon.pierce + (raidTier >= 4 ? 2 : 1),
+            chain: weapon.chain + (raidTier >= 3 ? 1 : 0),
+            chainRange: Math.max(weapon.chainRange || 0, 124 + raidTier * 10),
+            color: raidTier >= 4 ? "#eafff3" : "#c5ffdf",
+          },
+        })
+      );
+    }
+
+    return {
+      cooldownMultiplier: raidTier >= 4 ? 0.88 : raidTier >= 2 ? 0.91 : 0.94,
+      heatMultiplier: 1.04 + Math.max(0, raidTier - 2) * 0.03,
+    };
   }
 
   function triggerChassisPulse(x, y, radius, damage, color, options = {}) {
@@ -24368,16 +24434,23 @@
 
       if (state.player.chassisSalvageBurstTime > 0) {
         context.strokeStyle = "rgba(159, 255, 207, 0.62)";
-        context.lineWidth = 3;
-        context.beginPath();
-        context.arc(
-          state.player.x,
-          state.player.y,
-          state.player.radius + 12 + Math.sin(performance.now() * 0.02) * 1.5,
-          0,
-          Math.PI * 2
-        );
-        context.stroke();
+        const raidTier = getMidrunGreedRaidTier(state.build);
+        const ringCount = Math.max(1, raidTier >= 4 ? 3 : raidTier >= 2 ? 2 : 1);
+        for (let ringIndex = 0; ringIndex < ringCount; ringIndex += 1) {
+          context.lineWidth = Math.max(1.6, 3 - ringIndex * 0.55);
+          context.beginPath();
+          context.arc(
+            state.player.x,
+            state.player.y,
+            state.player.radius +
+              12 +
+              ringIndex * 4 +
+              Math.sin(performance.now() * 0.02 + ringIndex * 0.8) * (1.5 + ringIndex * 0.4),
+            0,
+            Math.PI * 2
+          );
+          context.stroke();
+        }
       }
 
       if (state.player.overdriveActiveTime > 0) {
@@ -24510,20 +24583,38 @@
         context.stroke();
       });
     } else if (raidFrameActive) {
-      [-1, 1].forEach((direction) => {
-        const fork = getOffsetPoint(state.player.x, state.player.y, facing, 8, 13 * direction);
+      const raidTier = getMidrunGreedRaidTier(state.build);
+      const forkOffsets =
+        raidTier >= 4
+          ? [-2, -1, 1, 2]
+          : raidTier >= 3
+            ? [-1.5, -0.5, 0.5, 1.5]
+            : [-1, 1];
+      forkOffsets.forEach((offset) => {
+        const direction = Math.sign(offset) || 1;
+        const fork = getOffsetPoint(state.player.x, state.player.y, facing, 8, 13 * offset);
         context.strokeStyle =
           state.player.chassisSalvageBurstTime > 0 ? "rgba(159, 255, 207, 0.78)" : "rgba(90, 176, 138, 0.62)";
-        context.lineWidth = 2.1;
+        context.lineWidth = raidTier >= 3 ? 2.3 : 2.1;
         context.beginPath();
         context.moveTo(state.player.x + Math.cos(facing) * 4, state.player.y + Math.sin(facing) * 4);
         context.lineTo(fork.x, fork.y);
         context.lineTo(
-          fork.x + Math.cos(facing + 0.18 * direction) * 8,
-          fork.y + Math.sin(facing + 0.18 * direction) * 8
+          fork.x + Math.cos(facing + 0.14 * offset) * (7 + Math.abs(offset) * 1.5),
+          fork.y + Math.sin(facing + 0.14 * offset) * (7 + Math.abs(offset) * 1.5)
         );
         context.stroke();
       });
+      if (raidTier >= 2) {
+        const spineTip = getOffsetPoint(state.player.x, state.player.y, facing, 18, 0);
+        context.strokeStyle =
+          state.player.chassisSalvageBurstTime > 0 ? "rgba(197, 255, 223, 0.84)" : "rgba(132, 214, 176, 0.58)";
+        context.lineWidth = raidTier >= 4 ? 2.8 : 2.4;
+        context.beginPath();
+        context.moveTo(state.player.x + Math.cos(facing) * 4, state.player.y + Math.sin(facing) * 4);
+        context.lineTo(spineTip.x, spineTip.y);
+        context.stroke();
+      }
     }
   }
 

@@ -247,7 +247,7 @@ const greedPayoff = game.getBaseRouteBranchPayoffSummary({
   waveNumber: 5,
 });
 assert.equal(greedPayoff?.label, "분기 보상");
-assert.equal(greedPayoff?.value, "Scrapline Raid");
+assert.equal(greedPayoff?.value, "Entry Vault");
 const wave6Choices = game.buildWave6ChassisBreakpointChoices(game.createInitialBuild("rail_zeal"), 6);
 const chassisOnlyChoice = wave6Choices.find((choice) => choice.chassisTitle);
 assert.ok(chassisOnlyChoice);
@@ -292,7 +292,7 @@ assert.ok(pauseSnapshotMarkup.includes("다음 시험"));
 assert.ok(pauseSnapshotMarkup.includes("주력 변이"));
 assert.ok(pauseSnapshotMarkup.includes("방호·보조"));
 assert.ok(pauseSnapshotMarkup.includes("판돈·유틸"));
-assert.ok(pauseSnapshotMarkup.includes("Scrapline Raid"));
+assert.ok(pauseSnapshotMarkup.includes("Entry Vault"));
 assert.ok(!pauseSnapshotMarkup.includes("Era III"));
 const wave5GambleChoice = wave5ForgeChoices.find((choice) => choice.contractRole === "gamble");
 assert.equal(wave5GambleChoice, undefined);
@@ -342,12 +342,40 @@ assert.equal(greedWave5.hazard?.label, "Scrapline Entry Vault");
 assert.ok(greedWave5.note.includes("entry vault pocket"));
 assert.ok(greedWave5.directive.includes("entry vault pocket"));
 assert.ok(greedWave5.midrunGreedRoute);
+assert.equal(greedWave5.midrunGreedRoute?.label, "Entry Vault");
 assert.equal(greedWave6.hazard?.type, "salvage");
+assert.equal(greedWave6.midrunGreedRoute?.label, "Tow Fork");
 assert.equal(greedWave7.hazard?.type, "caravan");
+assert.equal(greedWave7.midrunGreedRoute?.label, "Caravan Hook");
 assert.equal(greedWave8.hazard?.type, "salvage");
 assert.ok(greedWave6.note.includes("Greed route"));
 assert.ok(greedWave7.directive.includes("caravan"));
 assert.ok(greedWave8.midrunGreedRoute);
+assert.equal(greedWave8.midrunGreedRoute?.label, "Jackpot Fork");
+assert.equal(
+  game.getBaseRouteBranchPayoffSummary({
+    build: midrunGreedRun.build,
+    supportSystem: game.computeSupportSystemStats(midrunGreedRun.build),
+    waveNumber: 6,
+  })?.value,
+  "Tow Fork"
+);
+assert.equal(
+  game.getBaseRouteBranchPayoffSummary({
+    build: midrunGreedRun.build,
+    supportSystem: game.computeSupportSystemStats(midrunGreedRun.build),
+    waveNumber: 7,
+  })?.value,
+  "Caravan Hook"
+);
+assert.equal(
+  game.getBaseRouteBranchPayoffSummary({
+    build: midrunGreedRun.build,
+    supportSystem: game.computeSupportSystemStats(midrunGreedRun.build),
+    waveNumber: 8,
+  })?.value,
+  "Jackpot Fork"
+);
 const wave5FieldGrantChoices = game.buildFieldGrantChoices(game.createInitialBuild("rail_zeal"), Math.random, 5);
 assert.equal(wave5FieldGrantChoices.length, 2);
 assert.equal(wave5FieldGrantChoices.find((choice) => choice.contractRole === "headline")?.contractLabel, "주력");

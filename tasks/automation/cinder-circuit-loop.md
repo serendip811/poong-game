@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: turn the shipped Wave 5-8 slice into three genuinely replayable appetites by giving offense, defense/support, and greed/utility each a visible combat identity with at least two proof laps before adding more route machinery.
+- Immediate priority: freeze new Wave 9+ ambition and make the shipped Wave 5-8 slice prove defense/support and greed/utility as persistent, replayable combat identities before any more route machinery lands.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 20:30:54 KST
+  Findings:
+  - The project is still drifting upward in system scope while the shipped contract is supposed to be `8웨이브 + 짧은 승리 랩`. The runtime still carries Wave 9+ ladders, illegal overclock, live ascension, catalyst crucible, and afterburn machinery, which means design energy is still being spent beyond the slice that has not yet proven repeat-run hunger. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L33) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L16980) [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L6)
+  - Defense and greed now have bespoke encounter profiles, but they still read more like scenario wrappers than run-defining forms. `mutation / aegis / ledger` each get a custom arena ask, yet the visible long-term silhouette is still dominated by the headline gun/body path, so the player is testing one special fight more than chasing a whole build identity. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L80) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L23360)
+  - Greed remains the weakest fantasy because its pressure is mostly expressed as scrap, payload, debt, and vault timing. That can create routing tension, but it does not yet produce the same visible chassis/projectile transformation that makes a player think "I want the greed run again" instead of "I took the economy modifier this time." [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L72) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22557)
+  - The pause/forge surfaces are leaner than before, but the hidden build grammar is still too large for the amount of payoff currently delivered. Strong references can hide depth because each lane cashes out fast; here the player is still being asked to trust a broad system stack before support and greed have each earned two memorable proof combats. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L9944) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L17419)
+  Top Priority: Stop expanding Wave 9+ and spend the next improvement pass turning one defense/support route and one greed/utility route into two-combat identities with persistent visual/mechanical carryover inside Wave 5-8.
+  Why Now: If non-offense lanes are still wrappers instead of fantasies in the shipped slice, every extra late-route system just hides the real pacing failure.
+  Do Not Repeat: Do not answer this with another cache, doctrine, or economy subsystem until an aegis run and a ledger run are both worth replaying on their own.
+  Release Gate: Builds
 
 - 2026-03-27 20:12:00 KST
   Findings:
@@ -3596,6 +3607,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 23:59:00 KST
+  Changed: turned the shipped `Scrapline Raid` into a staged greed identity in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). `applyMidrunGreedRouteConfig(...)` now names each proof lap `Entry Vault -> Tow Fork -> Caravan Hook -> Jackpot Fork`, `getBaseRouteBranchPayoffSummary(...)` now surfaces that active raid phase instead of a generic greed contract label, and the midrun greed raid frame now escalates its visible carryover with a growing tow-fork silhouette, extra salvage rings, and a stronger harpoon/fork volley as the route advances through `Wave 6-8`. Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the staged labels and the branch-payoff readout.
+  Why: the latest critique's `Top Priority` was to stop answering greed with economy wrappers and make one greed/utility route feel like a replayable two-combat fantasy inside the shipped slice. The highest-value bounded interpretation was to deepen the existing ledger raid frame so the player can see and feel it evolving across multiple combats, rather than adding another subsystem or pushing more work into Wave `9+`.
+  Follow-up Risk: the greed line now reads much more clearly in combat, but aegis still lacks the same level of visible multi-fight escalation inside `Wave 5-8`. If the next critique still says non-offense lanes feel asymmetric, the next bounded pass should give one defense/support route an equally persistent silhouette/proof escalation instead of widening greed again.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Builds
 
 - 2026-03-27 23:58:00 KST
   Changed: gave the shipped `Wave 6` chassis breakpoint an immediate two-fight proof window in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). `resolveWaveConfig(...)` now applies a bounded `applyChassisBreakpointEncounterConfig(...)` overlay for non-greed `Wave 6-7` runs, so `Vector Thrusters`, `Bulwark Treads`, and `Salvage Winch` each bend arena size, enemy mix, hazard tempo, and directives into a different support/defense read before any real support install arrives. Added a small `chassisProof` surfacing hook to the live wave state/feed/side-bet summary so the branch is named in combat, and extended [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the three overlays plus the rule that active greed routes suppress this proof layer.

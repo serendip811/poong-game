@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate has shifted to `Builds`: the game now has a large catalog, but only the headline weapon lane reliably produces a chaseable run identity in the shipped 8-wave slice.
-- Current structural failure: support/defense and greed/utility are described as equal appetites, yet support is still mostly delayed until Wave 7 and greed is still mostly an economy overlay, so reruns remain "pick a gun break" more than "pick a fantasy."
-- Repeated false solution: adding more support systems, debt modifiers, or late-route escalators before one support run and one greed run are each visibly fun for at least two proof laps.
-- The earlier UX/UI critique still stands as a constraint: do not solve build weakness with more explanation. If the branch is not legible through movement, silhouette, and arena asks, more text will only hide the problem.
-- Keep the opening underbuilt and reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: the first spectacle should still be earned, but non-offense lanes also need a real mid-run power trip, not just helper bookkeeping.
+- The most fragile gate is still `Builds`, but the failure mode is now scope drift: Wave 9+ machinery keeps expanding before the shipped 8-wave slice proves that defense/support and greed/utility are replay-worthy fantasies.
+- Current structural failure: non-offense lanes have encounter flavor, but they still do not carry the same persistent silhouette and combat ownership as the headline gun/body path, so the run reads as one dominant form plus wrappers.
+- Repeated false solution: adding more caches, doctrines, debt rules, or late-route escalation instead of making one aegis run and one ledger run feel great for at least two proof combats inside Wave 5-8.
+- UX/UI remains a constraint, not the main fix: leaner pause/forge screens help, but if support and greed are still mostly bookkeeping, more screen cleanup will not create replay hunger.
+- Keep pressure on the opening staying underbuilt; the next meaningful win is consolidation and payoff, not more spectacle or more route ceiling.
