@@ -14586,26 +14586,6 @@
     pushChoice(doctrineChoices[0]);
     pushChoice(wildcardChoices[0]);
     [...doctrineChoices.slice(1), ...wildcardChoices.slice(1)].forEach(pushChoice);
-    if (CONSOLIDATED_12_WAVE_ROUTE) {
-      return Object.values(CHASSIS_BREAKPOINT_DEFS).map((chassisDef) => {
-        return {
-          type: "utility",
-          action: "bastion_bay_forge",
-          id: `utility:bastion_chassis_break:${chassisDef.id}:body_only`,
-          verb: "접합",
-          tag: chassisDef.tag,
-          title: chassisDef.title,
-          description: `${chassisDef.description} 이번 정지에서는 이 차체 리듬만 먼저 잠가 Wave 6 전장을 몸체 기억으로 먹게 만든다. support rider는 한 랩 뒤 Wave 7부터 붙어 새 움직임 위에만 얹힌다.`,
-          slotText: `섀시 breakpoint · ${chassisDef.slotText} · body first`,
-          cost: 0,
-          originalCost: 0,
-          laneLabel: "섀시 breakpoint",
-          forgeLaneLabel: "섀시 breakpoint",
-          chassisId: chassisDef.id,
-          chassisTitle: chassisDef.title,
-        };
-      });
-    }
     const chassisDefs = Object.values(CHASSIS_BREAKPOINT_DEFS);
     const fallbackSystemChoice = ordered[0] || null;
     const chassisChoices = chassisDefs.map((chassisDef, index) => {
@@ -14617,9 +14597,15 @@
         verb: "접합",
         tag: chassisDef.tag,
         title: chassisDef.title,
-        description: `${chassisDef.description} 세 번째 support bay는 즉시 교리 reserve를 무시하는 flex lane으로 열리고${choice ? ` ${choice.title}을(를) 함께 직결한다.` : " flex subsystem lane만 먼저 확보한다."} Wave 8에서는 정지 없이 네 번째 bay까지 자동 uplink되어 Late Break Armory를 건너뛴다.`,
-        slotText: `섀시 breakpoint · ${chassisDef.slotText}${choice ? ` · ${choice.title}` : ""}`,
-        cost: Math.max(12, Math.round(((choice && choice.cost) || 0) * 0.7)),
+        description: CONSOLIDATED_12_WAVE_ROUTE
+          ? `${chassisDef.description} 이번 정지에서 ${choice ? `${choice.title}을(를) 함께 직결해` : "작은 support uplink를 바로 열어"} Wave 6부터 body/support bracket을 같이 굴린다. 새 rider는 교리 reserve를 무시하는 flex lane으로 붙고, Wave 8에서는 정지 없이 다음 bay까지 자동 uplink되어 두 번 더 proof lap을 이어 간다.`
+          : `${chassisDef.description} 세 번째 support bay는 즉시 교리 reserve를 무시하는 flex lane으로 열리고${choice ? ` ${choice.title}을(를) 함께 직결한다.` : " flex subsystem lane만 먼저 확보한다."} Wave 8에서는 정지 없이 네 번째 bay까지 자동 uplink되어 Late Break Armory를 건너뛴다.`,
+        slotText: CONSOLIDATED_12_WAVE_ROUTE
+          ? `섀시 breakpoint · ${chassisDef.slotText}${choice ? ` · ${choice.title}` : " · flex rider"}`
+          : `섀시 breakpoint · ${chassisDef.slotText}${choice ? ` · ${choice.title}` : ""}`,
+        cost: CONSOLIDATED_12_WAVE_ROUTE
+          ? Math.max(10, Math.round(((choice && choice.cost) || 0) * 0.55))
+          : Math.max(12, Math.round(((choice && choice.cost) || 0) * 0.7)),
         originalCost: (choice && choice.cost) || 0,
         laneLabel: "섀시 breakpoint",
         forgeLaneLabel: "섀시 breakpoint",

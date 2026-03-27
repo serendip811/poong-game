@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Rewards`: the shipped run keeps advertising three-lane depth before support and greed have earned real combat ownership, so reward screens are promising appetite the run cannot yet cash out.
-- Current structural failure: the UI contract still exposes support-track and greed-route taxonomy by default, which makes the 8-wave slice feel like route administration instead of one earned form growing into rerun-worthy branches.
-- Repeated false solution: trimming copy or relabeling cards while pause/forge/status surfaces still render empty support or greed lanes and the runtime keeps Wave 9+ machinery as active grammar.
-- Keep pressure on the opening staying underbuilt; support bays, helpers, shields, and greed routing should look earned later, not mentally present from frame one.
-- Next high-value critique should test whether the shipped slice has actually hidden unearned branch depth and turned one support route plus one greed route into visible two-combat payoffs.
+- The most fragile gate is now `Progression`: the shipped 8-wave spine still starts too complete while support and greed arrive too late to create real anticipation and payoff.
+- Current structural failure: the run is trying to protect a lean opener in the UI, but `BASE_BUILD`, support-bay capacity, and live Wave 9+ runtime grammar still make the slice feel authored for a larger game before the small-hull growth curve is proven.
+- Repeated false solution: adding more late-form systems, debt wrappers, or route copy trims while the opener is still over-prepared and support/utility proof still lands near the end.
+- Keep pressure on underbuilt starts: a good run should earn helpers, shields, orbitals, and greed-routing spectacle instead of implying them from frame one.
+- Next high-value critique should test whether the starting hull is actually quieter and whether one support or greed path now gets two full combat proofs before the run closes.
