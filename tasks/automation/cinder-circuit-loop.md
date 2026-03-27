@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: pick one honest shipped run contract and make title, HUD, forge, docs, and wave structure all say the same thing before adding or tuning more progression breadth.
+- Immediate priority: freeze new route branches and make the shipped run one truthful, replayable escalation spine with an earned domination window before adding more support or late-game breadth.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 12:01:38 KST
+  Findings:
+  - The shipped run still does not earn repeated-play hunger because too much of its short arc is spent previewing breadth instead of cashing out one dominant form. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8302) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8535) still frame the route as a three-step roadmap product, so the player is asked to track plan states while the run is supposedly lean and immediate.
+  - The build ceiling is being advertised through helper-tech taxonomy before the base chassis arc is memorable. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2520) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3067) already define satellites, shield halos, sentries, missiles, drones, and even preview primers, which means the early game is still mentally built from support layers backward instead of from a weak gun becoming an unmistakable machine.
+  - Mid-run combat space is finally wide enough to support stronger movement decisions, but the route spends that breathing room on support proof instead of a longer domination lap. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L445) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L543) give Waves 5-8 larger arenas and lighter caps, yet Wave 7-8 are still explicitly framed as `support rider` validation rather than letting the first real gun/body break bully the arena long enough to become replay-worthy.
+  - The project is still carrying long-run prototype ambition inside the live runtime, so every short-run reward risks feeling fake. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8) and [docs/games/cinder-circuit-source-analysis.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-analysis.md#L30) still sell a `12웨이브` spine, while [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L46) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L82) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3114) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3185) still keep overclock, ascension, cache, and wildcard scaffolding live around it.
+  Top Priority: Recut the shipped route so Wave 3 is the first obvious weapon leap, Wave 6 starts a real domination window, and helper-tech/support systems do not enter the live reward grammar until that gun/body arc already feels worth replaying.
+  Why Now: A run that never lingers on one earned power state cannot build anticipation for a longer 20-30 wave future.
+  Do Not Repeat: Do not answer this by adding another support branch, primer, or roadmap wrapper around the same short arc.
+  Release Gate: Progression
 
 - 2026-03-27 11:30:59 KST
   Findings:
@@ -3409,6 +3420,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 12:16:27 KST
+  Changed: pushed one bounded pacing cut through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the shipped `Wave 6-8` band now lingers on the first gun/body domination state instead of pivoting into early support validation. `SUPPORT_SYSTEM_START_WAVE` now moves to `Wave 8`, the `Wave 7-8` recurring cells were rewritten from `Support Sweep/Support Proof` to `Dominion Sweep/Dominion Proof`, the shipped presentation beat at `Wave 7` now reads `지배 연장`, and base-route roadmap/forge/chassis text that used to promise a `Wave 7` rider now points at `Wave 8` instead. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks the delayed support visibility, the new wave labels/directives, and the updated roadmap timing.
+  Why: the newest critique's `Top Priority` was to make `Wave 6` open a real domination window and keep helper-tech out of the live reward grammar until the core weapon/body arc feels replay-worthy. The highest-value concrete interpretation that fit one bounded pass was to delay the visible support unlock by one rung and spend `Wave 7-8` on proving the same main form in a larger, cleaner ownership lap.
+  Follow-up risk: this makes the short route more truthful and gives the first body break longer airtime, but it also pushes standalone support spectacle almost completely out of the shipped `8-wave` path. If the next critique says the close now lacks enough build variance, the right follow-up is a stronger `Wave 8` gun/body payoff or a better late-route handoff, not reopening `Wave 7` support grammar.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Progression
 
 - 2026-03-27 18:10:00 KST
   Changed: rewired one bounded contract source in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the consolidated shipped route now computes its shared roadmap as the actual live `Wave 3 first weapon break -> Wave 6 chassis lock -> Wave 8 proof/lap` spine instead of falling back to generic `Monster Form Lock / Midform Spike` staging. I added `getBaseRouteBuildRoadmap(...)`, made `getBuildRoadmap(...)` delegate to it for the base route, updated the legacy `createShippingLadderMarkup()` summary line to the same cadence, and trimmed the empty combat-feed placeholder away from stale `시동 회로` wording. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks the new roadmap titles, states, and prompt behavior.

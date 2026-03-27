@@ -258,24 +258,24 @@
         "한 flank를 먼저 비운 뒤 반대 lane으로 짧게 갈아타며 sweep 폭을 유지한다.",
     },
     support_lap: {
-      title: "Support Sweep",
+      title: "Dominion Sweep",
       ladderStepId: "claim_space",
       ladderStepLabel: "Claim Space",
       pressureFamily: "domination",
       note: (stageText, focusText) =>
-        `${stageText} 첫 support rider를 upkeep tax 없이 눌러 보는 shared support lap cell이다. 열린 외곽을 넓게 남겨, ${focusText} 같은 lane ownership을 더 오래 유지하는지 먼저 보여 준다.`,
+        `${stageText} 새 upkeep를 덧씌우지 않고 첫 gun/body break를 더 오래 눌러 보는 shared domination sweep cell이다. 열린 외곽을 넓게 남겨, ${focusText} 같은 lane ownership을 더 오래 유지하는지 먼저 보여 준다.`,
       directive:
-        "가장 넓은 flank를 먼저 비우고 rider가 덧난 lane 하나를 오래 붙들며 점유 시간을 늘린다.",
+        "가장 넓은 flank를 먼저 비우고 같은 gun/body lane 하나를 오래 붙들며 점유 시간을 늘린다.",
     },
     support_proof: {
-      title: "Support Proof",
+      title: "Dominion Proof",
       ladderStepId: "claim_space",
       ladderStepLabel: "Claim Space",
       pressureFamily: "domination",
       note: (stageText, focusText) =>
-        `${stageText} 첫 support rider가 실제로 화면을 먹는지 결산하는 shared support proof cell이다. relay upkeep와 tether tax를 비워 두고 열린 외곽을 길게 남겨, ${focusText} 같은 lane을 오래 지배하는지 마지막으로 확인한다.`,
+        `${stageText} 첫 support rider를 얹기 직전 같은 dominance contract를 크게 결산하는 shared domination proof cell이다. relay upkeep와 tether tax를 비워 두고 열린 외곽을 길게 남겨, ${focusText} 같은 lane을 오래 지배하는지 마지막으로 확인한다.`,
       directive:
-        "가장 넓은 외곽 lane을 먼저 비우고 rider가 잡은 화선을 끝까지 밀어 점유 시간을 늘린다.",
+        "가장 넓은 외곽 lane을 먼저 비우고 같은 gun/body 화선을 끝까지 밀어 점유 시간을 늘린다.",
     },
     proof: {
       title: "Crown Proof",
@@ -493,8 +493,8 @@
       id: "crownfire",
       waveNumber: 7,
       cellId: "support_lap",
-      stageText: "Wave 7은 새 판을 열지 않고 첫 support rider를 같은 midform 위에 얹어 눌러 보는",
-      focusText: "방금 잠근 form과 rider가",
+      stageText: "Wave 7은 새 판을 열지 않고 막 잠근 gun/body line을 같은 midform 위에서 더 길게 누르는",
+      focusText: "방금 잠근 form이",
       duration: 86,
       spawnBudget: 112,
       activeCap: 20,
@@ -518,8 +518,8 @@
       id: "forgecross",
       waveNumber: 8,
       cellId: "support_proof",
-      stageText: "Wave 8 결산도 finale squeeze 대신 첫 support rider를 한 번 더 크게 눌러 보는",
-      focusText: "막 열린 rider ownership이",
+      stageText: "Wave 8 결산도 finale squeeze 대신 첫 support rider를 얹기 직전 같은 domination window를 한 번 더 크게 누르는",
+      focusText: "막 잠근 gun/body ownership이",
       duration: 90,
       spawnBudget: 126,
       activeCap: 23,
@@ -2517,7 +2517,7 @@
   const LEAN_START_CORE_ID = "ember";
   const MAX_SUPPORT_BAYS = 2;
   const MAX_SUPPORT_BAY_LIMIT = 4;
-  const SUPPORT_SYSTEM_START_WAVE = 7;
+  const SUPPORT_SYSTEM_START_WAVE = 8;
   const BASE_ROUTE_MIDRUN_SUPPORT_WAVE = SUPPORT_SYSTEM_START_WAVE;
   const PREVIEW_SUPPORT_PRIMER_CREDIT = 10;
   const SUPPORT_SYSTEM_DEFS = {
@@ -7448,7 +7448,7 @@
         ? `${defenseTitle}만 먼저 잠가 버티는 선을 굵게 만든다.`
         : `${defenseTitle} 위에 ${supportTitle}를 얹어 버티는 선을 먼저 연다.`;
       const proof = !choice.bayUnlock && CONSOLIDATED_12_WAVE_ROUTE
-        ? "다음 전투는 새 차체 리듬만 읽는 짧은 proof window가 되고, 첫 보조 rider는 Wave 7 포지에서 한 장만 붙는다."
+        ? "다음 전투는 새 차체 리듬만 읽는 짧은 proof window가 되고, 첫 보조 rider는 Wave 8 포지에서 한 장만 붙는다."
         : choice.systemChoice
           ? `${supportTitle}가 다음 전투의 생존선과 복귀 각을 바로 다듬는다.`
           : "지금은 빈 보조칸만 열어 두고, 다음 전투에서 숨 쉴 공간부터 확보한다.";
@@ -8317,7 +8317,7 @@
       ? activeForm
       : (wave3LeapPreview && wave3LeapPreview.weaponChoice.title) || "첫 무기 도약";
     const stageOneDetail = build.bastionDoctrineId
-      ? `${pathLabel}이(가) 현재 주력 실루엣이다. 다음 큰 약속은 Wave 6 차체 잠금 하나뿐이며, support rider는 Wave 7까지 뒤로 민다.`
+      ? `${pathLabel}이(가) 현재 주력 실루엣이다. 다음 큰 약속은 Wave 6 차체 잠금 하나뿐이며, support rider는 Wave 8까지 뒤로 민다.`
       : wave3LeapPreview
         ? `Wave ${ARCHITECTURE_DRAFT_WAVE}에서 ${wave3LeapPreview.weaponChoice.title}을(를) 먼저 붙여 첫 주포 도약을 만든다. support나 운영 패키지는 숨기고 이 무기 변화만 먼저 전장에 남긴다.`
         : `Wave ${ARCHITECTURE_DRAFT_WAVE}에서 첫 주포 도약을 붙여 빈 선체 구간을 끝낸다.`;
@@ -8331,13 +8331,13 @@
       (previewChassis && (previewChassis.label || previewChassis.title)) ||
       "첫 차체 잠금";
     let stageTwoDetail =
-      "Wave 6에서 차체 하나를 잠가 dive, hold, exit 리듬을 몸체 선택으로 갈라 놓는다. 첫 보조 rider는 Wave 7 포지에서 한 장만 이어 붙는다.";
+      "Wave 6에서 차체 하나를 잠가 dive, hold, exit 리듬을 몸체 선택으로 갈라 놓는다. 첫 보조 rider는 Wave 8 포지에서 한 장만 이어 붙는다.";
     let stageTwoState = "planned";
     if (activeChassis) {
-      stageTwoDetail = `${stageTwoTitle} 차체가 잠겼다. 이제 몸체 리듬이 런의 버티는 선이 되고, support rider는 Wave 7에서 한 줄만 얹힌다.`;
+      stageTwoDetail = `${stageTwoTitle} 차체가 잠겼다. 이제 몸체 리듬이 런의 버티는 선이 되고, support rider는 Wave 8에서 한 줄만 얹힌다.`;
       stageTwoState = "locked";
     } else if (boundedWave >= 5) {
-      stageTwoDetail = `${stageTwoTitle}이(가) 다음 큰 약속이다. Wave 6에서는 차체만 잠그고 support 시스템은 Wave 7까지 열지 않는다.`;
+      stageTwoDetail = `${stageTwoTitle}이(가) 다음 큰 약속이다. Wave 6에서는 차체만 잠그고 support 시스템은 Wave 8까지 열지 않는다.`;
       stageTwoState = "primed";
     }
     const baseRouteFinale = getBaseRouteFinaleRoadmap(build, currentWeapon, boundedWave);
@@ -8572,8 +8572,8 @@
         title: chassis ? chassis.label : "방호 약속",
         state: stageState(6),
         detail: chassis
-          ? `${chassis.label} 차체가 첫 방호 약속으로 잠긴다. 여기서 dive, hold, exit 리듬이 몸체 선택에 따라 갈라지고 첫 보조 rider는 Wave 7에 한 장만 이어 붙는다.`
-          : "Wave 6에서 몸체 하나를 골라 버티는 선을 만든다. 지원 하드웨어는 Wave 7까지 뒤로 밀고 첫 방호 약속만 먼저 굳힌다.",
+          ? `${chassis.label} 차체가 첫 방호 약속으로 잠긴다. 여기서 dive, hold, exit 리듬이 몸체 선택에 따라 갈라지고 첫 보조 rider는 Wave 8에 한 장만 이어 붙는다.`
+          : "Wave 6에서 몸체 하나를 골라 버티는 선을 만든다. 지원 하드웨어는 Wave 8까지 뒤로 밀고 첫 방호 약속만 먼저 굳힌다.",
       },
     ];
   }
@@ -8698,7 +8698,7 @@
       { waveNumber: 4, shortLabel: "PRESS", title: "도약 시험" },
       { waveNumber: 5, shortLabel: "SPIKE", title: "주포 폭주" },
       { waveNumber: 6, shortLabel: "LOCK", title: "차체 잠금" },
-      { waveNumber: 7, shortLabel: "RIDER", title: "보조 연결" },
+      { waveNumber: 7, shortLabel: "LAP", title: "지배 연장" },
       { waveNumber: 8, shortLabel: "FINISH", title: "완성 시험" },
     ];
   }
@@ -13917,8 +13917,8 @@
           verb: "접합",
           tag: chassisDef.tag,
           title: chassisDef.title,
-          description: `${chassisDef.description} 이번 정지에서는 support bay를 열지 않고 body line만 먼저 잠근다. Wave 7 포지에서 그 차체를 받쳐 줄 첫 보조 rider 한 장만 이어 붙여, Wave 6-7이 같은 실루엣을 읽는 짧은 proof window로 남게 만든다.`,
-          slotText: `섀시 breakpoint · ${chassisDef.slotText} · Wave 7 rider`,
+          description: `${chassisDef.description} 이번 정지에서는 support bay를 열지 않고 body line만 먼저 잠근다. Wave 8 포지에서 그 차체를 받쳐 줄 첫 보조 rider 한 장만 이어 붙여, Wave 6-7이 같은 실루엣을 길게 읽는 domination window로 남게 만든다.`,
+          slotText: `섀시 breakpoint · ${chassisDef.slotText} · Wave 8 rider`,
           cost: 0,
           originalCost: 0,
           laneLabel: "섀시 breakpoint",

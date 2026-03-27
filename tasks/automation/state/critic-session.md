@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `UX/UI`: the game is advertising an `8-wave` lean route while docs/runtime still operate as a `12-wave / three-era` product, so the player contract is not trustworthy.
-- Current drift bundle: title, HUD, forge, and docs disagree on run length and payoff cadence; roadmap cards and forge context shells still expose system taxonomy before the game has one honest escalation spine.
-- Repeated false solution: trimming copy or changing a single screen's labels while leaving conflicting route structure active elsewhere.
+- The most fragile gate is now `Progression`: the short shipped route still spends too much of its arc previewing support breadth and roadmap states instead of letting one weapon/body break dominate long enough to become replay-worthy.
+- Current drift bundle: docs/runtime still disagree on `8-wave` versus `12-wave`, and the live reward grammar still exposes support systems, wildcard caches, and late-route scaffolding before the base escalation spine feels complete.
+- Repeated false solution: trimming copy or reorganizing HUD/forge wrappers while leaving helper-tech primers, roadmap beats, and long-run scaffolding active underneath the lean route.
 - Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: the bar is desire-first rewards, immediate hierarchy, and earned spectacle, not comprehensive explanation.
-- Near-term critic pressure should stay on enforcing one readable shipped contract first, then on deleting reward-screen taxonomy and protecting the early arc so the first weapon break, chassis break, and support layer land as earned steps instead of contradictory roadmap beats.
+- Near-term critic pressure should stay on enforcing one honest escalation spine: first weapon leap, then chassis domination window, then support/helper-tech only after that base form already feels fun enough to rerun.

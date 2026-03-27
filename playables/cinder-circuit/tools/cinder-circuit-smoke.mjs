@@ -50,7 +50,7 @@ const shippedPresentationBeats = game.getShippedRoutePresentationBeats();
 assert.equal(shippedPresentationBeats.length, 8);
 assert.equal(
   JSON.stringify(shippedPresentationBeats.map((entry) => entry.title)),
-  JSON.stringify(["Ember Hull", "버티기", "무장 도약", "도약 시험", "주포 폭주", "차체 잠금", "보조 연결", "완성 시험"])
+  JSON.stringify(["Ember Hull", "버티기", "무장 도약", "도약 시험", "주포 폭주", "차체 잠금", "지배 연장", "완성 시험"])
 );
 assert.equal(game.POST_CAPSTONE_WAVE_COUNT, 7);
 assert.equal(game.shouldAllowCombatRewardDrops(), false);
@@ -127,7 +127,7 @@ assert.equal(game.WAVE_CONFIG[5].arena.width, 1640);
 assert.equal(game.WAVE_CONFIG[5].arena.height, 920);
 assert.equal(game.WAVE_CONFIG[4].label, "Wave 5 · Payoff Run");
 assert.equal(game.WAVE_CONFIG[5].label, "Wave 6 · Payoff Run+");
-assert.equal(game.WAVE_CONFIG[6].label, "Wave 7 · Support Sweep");
+assert.equal(game.WAVE_CONFIG[6].label, "Wave 7 · Dominion Sweep");
 const baseRouteVictoryLap = game.createBaseRouteVictoryLapWave(game.createInitialBuild("rail_zeal"));
 assert.equal(baseRouteVictoryLap.label, "Victory Lap · Dominion Run");
 assert.equal(baseRouteVictoryLap.completesRun, true);
@@ -140,18 +140,18 @@ assert.equal(baseRouteVictoryLap.arena.width, 1820);
 assert.equal(baseRouteVictoryLap.arena.height, 1020);
 assert.equal(baseRouteVictoryLap.spawnBudget, 66);
 assert.equal(baseRouteVictoryLap.activeCap, 18);
-assert.equal(game.WAVE_CONFIG[7].label, "Wave 8 · Support Proof");
+assert.equal(game.WAVE_CONFIG[7].label, "Wave 8 · Dominion Proof");
 assert.equal(game.WAVE_CONFIG[8].label, "Wave 9 · Payoff Run+");
 assert.equal(game.WAVE_CONFIG[9].label, "Wave 10 · Crown Proof+");
 assert.equal(game.WAVE_CONFIG[4].directive, "가장 넓은 flank부터 비우고 열린 lane 둘 중 하나를 오래 붙든다.");
 assert.equal(game.WAVE_CONFIG[5].directive, "가장 넓은 lane을 먼저 열고 반대 flank까지 이어 붙이며 지배 시간을 늘린다.");
 assert.equal(
   game.WAVE_CONFIG[6].directive,
-  "가장 넓은 flank를 먼저 비우고 rider가 덧난 lane 하나를 오래 붙들며 점유 시간을 늘린다."
+  "가장 넓은 flank를 먼저 비우고 같은 gun/body lane 하나를 오래 붙들며 점유 시간을 늘린다."
 );
 assert.equal(
   game.WAVE_CONFIG[7].directive,
-  "가장 넓은 외곽 lane을 먼저 비우고 rider가 잡은 화선을 끝까지 밀어 점유 시간을 늘린다."
+  "가장 넓은 외곽 lane을 먼저 비우고 같은 gun/body 화선을 끝까지 밀어 점유 시간을 늘린다."
 );
 assert.equal(game.WAVE_CONFIG[5].mix.mortar || 0, 0);
 assert.ok((game.WAVE_CONFIG[5].mix.binder || 0) === 0);
@@ -301,7 +301,7 @@ assert.equal(primedRoadmap.steps[0].state, "locked");
 assert.equal(primedRoadmap.steps[1].title, "Bulwark Treads");
 assert.equal(primedRoadmap.steps[1].state, "primed");
 assert.ok(primedRoadmap.steps[1].detail.includes("Wave 6"));
-assert.ok(primedRoadmap.steps[1].detail.includes("Wave 7"));
+assert.ok(primedRoadmap.steps[1].detail.includes("Wave 8"));
 assert.equal(primedRoadmap.steps[2].title, "완성 시험");
 roadmapBuild.lateBreakProfileId = "mutation";
 const consolidatedLateRoadmap = game.getBuildRoadmap(
@@ -357,7 +357,7 @@ assert.ok(compactFocusMarkup.includes("Cataclysm Arsenal"));
 assert.ok(!compactFocusMarkup.includes("다음 도약"));
 const statusStripMarkup = game.createBaseRouteStatusStripMarkup({
   leadLabel: "현재 전장",
-  leadValue: "Support Sweep",
+  leadValue: "Dominion Sweep",
   titleLabel: "현재 형태",
   titleValue: "Prism Crown",
   tailLabel: "다음 급등",
@@ -365,19 +365,19 @@ const statusStripMarkup = game.createBaseRouteStatusStripMarkup({
 });
 assert.ok(statusStripMarkup.includes("route-contract--triple"));
 assert.ok(statusStripMarkup.includes("현재 전장"));
-assert.ok(statusStripMarkup.includes("Support Sweep"));
+assert.ok(statusStripMarkup.includes("Dominion Sweep"));
 assert.ok(statusStripMarkup.includes("Prism Crown"));
 assert.ok(statusStripMarkup.includes("첫 차체 잠금"));
 assert.ok(!statusStripMarkup.includes("summary-head"));
 const forgeContextMarkup = game.createBaseRouteForgeContextMarkup({
   currentFormLabel: "Prism Crown",
   waveAskLabel: "다음 전장",
-  waveAskValue: "Support Sweep",
+  waveAskValue: "Dominion Sweep",
   nextSpikeLabel: "다음 급등",
   nextSpikeValue: "첫 차체 잠금",
 });
 assert.ok(forgeContextMarkup.includes("다음 전장"));
-assert.ok(forgeContextMarkup.includes("Support Sweep"));
+assert.ok(forgeContextMarkup.includes("Dominion Sweep"));
 assert.ok(forgeContextMarkup.includes("Prism Crown"));
 assert.ok(forgeContextMarkup.includes("첫 차체 잠금"));
 assert.ok(forgeContextMarkup.includes("route-contract__slot"));
@@ -464,8 +464,9 @@ const relayCombatAsk = game.getBaseRouteCombatAsk({
 });
 assert.equal(relayCombatAsk, "가장 먼 relay를 먼저 끊고 뚫린 corridor 하나를 길게 지킨다.");
 const genericWave7Build = game.createInitialBuild("rail_zeal");
+assert.deepEqual(Array.from(game.getVisibleSupportOfferSystemIds(genericWave7Build, 7)), []);
 assert.deepEqual(
-  Array.from(game.getVisibleSupportOfferSystemIds(genericWave7Build, 7)),
+  Array.from(game.getVisibleSupportOfferSystemIds(genericWave7Build, 8)),
   ["ember_ring", "aegis_halo", "kiln_sentry", "seeker_array", "volt_drones"]
 );
 const genericWave7Choices = game.buildForgeChoices(genericWave7Build, () => 0.1, 999, {
@@ -475,12 +476,12 @@ const genericWave7Choices = game.buildForgeChoices(genericWave7Build, () => 0.1,
 });
 const genericWave7RiderChoice = genericWave7Choices.find((choice) => choice.contractRole === "rider");
 assert.ok(genericWave7RiderChoice);
-assert.equal(genericWave7RiderChoice.type, "system");
+assert.notEqual(genericWave7RiderChoice.type, "system");
 const midrunSupportBuild = game.createInitialBuild("rail_zeal");
 midrunSupportBuild.architectureForecastId = "mirror_hunt";
 midrunSupportBuild.bastionDoctrineId = "mirror_hunt";
 midrunSupportBuild.chassisId = "vector_thrusters";
-assert.deepEqual(Array.from(game.getVisibleSupportOfferSystemIds(midrunSupportBuild, 7)), ["volt_drones"]);
+assert.deepEqual(Array.from(game.getVisibleSupportOfferSystemIds(midrunSupportBuild, 7)), []);
 assert.deepEqual(Array.from(game.getVisibleSupportOfferSystemIds(midrunSupportBuild, 8)), ["volt_drones"]);
 assert.deepEqual(Array.from(game.getVisibleSupportOfferSystemIds(midrunSupportBuild, 9)), ["seeker_array"]);
 const wave7ForgeChoices = game.buildForgeChoices(midrunSupportBuild, () => 0.1, 999, {
@@ -490,8 +491,7 @@ const wave7ForgeChoices = game.buildForgeChoices(midrunSupportBuild, () => 0.1, 
 assert.equal(game.createWildcardProtocolChoice(midrunSupportBuild, 7), null);
 const wave7RiderChoice = wave7ForgeChoices.find((choice) => choice.contractRole === "rider");
 assert.ok(wave7RiderChoice);
-assert.equal(wave7RiderChoice.type, "system");
-assert.equal(wave7RiderChoice.systemId, "volt_drones");
+assert.notEqual(wave7RiderChoice.type, "system");
 const wave8ForgeChoices = game.buildForgeChoices(midrunSupportBuild, () => 0.1, 999, {
   nextWave: 8,
   finalForge: false,
@@ -671,12 +671,9 @@ const mirrorWave7Choices = game.buildForgeChoices(mirrorPrimerRun.build, Math.ra
 const mirrorWave7RiderChoice =
   mirrorWave7Choices.find((choice) => choice.contractRole === "rider") || mirrorWave7Choices[1];
 assert.ok(mirrorWave7RiderChoice);
-assert.equal(mirrorWave7RiderChoice.type, "system");
-assert.equal(mirrorWave7RiderChoice.systemId, "volt_drones");
-assert.equal(mirrorWave7RiderChoice.title, "Volt Drones");
-assert.ok(!/예열 완성/.test(mirrorWave7RiderChoice.slotText));
+assert.notEqual(mirrorWave7RiderChoice.type, "system");
 game.applyForgeChoice(mirrorPrimerRun, mirrorWave7RiderChoice);
-assert.ok(game.computeSupportSystemStats(mirrorPrimerRun.build));
+assert.equal(game.computeSupportSystemStats(mirrorPrimerRun.build), null);
 const mirrorWave8Choices = game.buildForgeChoices(mirrorPrimerRun.build, Math.random, 64, {
   nextWave: 8,
   finalForge: false,
@@ -688,9 +685,9 @@ assert.ok(mirrorWave8RiderChoice);
 assert.notEqual(mirrorWave8RiderChoice.type, "system");
 game.applyForgeChoice(mirrorPrimerRun, mirrorWave8RiderChoice);
 const mirrorWave8SupportStats = game.computeSupportSystemStats(mirrorPrimerRun.build);
-assert.ok(mirrorWave8SupportStats);
+assert.equal(mirrorWave8SupportStats, null);
 const supportTrackSnapshot = game.getForgeSupportTrackSnapshot(mirrorPrimerRun.build);
-assert.equal(supportTrackSnapshot.label, "Volt Drones");
+assert.equal(supportTrackSnapshot.label, "Bare Hull");
 assert.ok(!/Bay Package|Wildcard Rail|Catalyst/.test(supportTrackSnapshot.label));
 const shippingLadderWave4 = game.getShippingLadderSteps(roadmapBuild, null, 4);
 assert.equal(shippingLadderWave4.length, 3);
@@ -861,7 +858,7 @@ assert.equal(crownfireSpike.pressureFamily, "domination");
 assert.equal(crownfireSpike.hazard, undefined);
 assert.equal(forgecrossSpike.pressureFamily, "domination");
 assert.equal(forgecrossSpike.hazard, undefined);
-assert.equal(forgecrossSpike.label, "Wave 8 · Support Proof");
+assert.equal(forgecrossSpike.label, "Wave 8 · Dominion Proof");
 assert.ok(afterglowWindow.activeCap <= breaklineFollowthrough.activeCap);
 assert.ok(breaklineFollowthrough.activeCap < crownfireSpike.activeCap);
 assert.ok(crownfireSpike.activeCap < forgecrossSpike.activeCap);
@@ -1826,11 +1823,11 @@ assert.equal(
   JSON.stringify(Object.keys(game.SUPPORT_SYSTEM_DEFS).sort()),
   JSON.stringify(["aegis_halo", "ember_ring", "kiln_sentry", "seeker_array", "volt_drones"])
 );
-assert.equal(game.SUPPORT_SYSTEM_DEFS.aegis_halo.forgeWaveMin, 7);
-assert.equal(game.SUPPORT_SYSTEM_DEFS.ember_ring.forgeWaveMin, 7);
-assert.equal(game.SUPPORT_SYSTEM_DEFS.volt_drones.forgeWaveMin, 7);
-assert.equal(game.SUPPORT_SYSTEM_DEFS.kiln_sentry.forgeWaveMin, 7);
-assert.equal(game.SUPPORT_SYSTEM_DEFS.seeker_array.forgeWaveMin, 7);
+assert.equal(game.SUPPORT_SYSTEM_DEFS.aegis_halo.forgeWaveMin, 8);
+assert.equal(game.SUPPORT_SYSTEM_DEFS.ember_ring.forgeWaveMin, 8);
+assert.equal(game.SUPPORT_SYSTEM_DEFS.volt_drones.forgeWaveMin, 8);
+assert.equal(game.SUPPORT_SYSTEM_DEFS.kiln_sentry.forgeWaveMin, 8);
+assert.equal(game.SUPPORT_SYSTEM_DEFS.seeker_array.forgeWaveMin, 8);
 assert.equal(
   JSON.stringify(Object.keys(game.CHASSIS_BREAKPOINT_DEFS).sort()),
   JSON.stringify(["bulwark_treads", "salvage_winch", "vector_thrusters"])
@@ -2159,18 +2156,14 @@ const doctrinePrimaryChoices = game.buildForgeChoices(
   bastionDoctrineBuild,
   () => 0.99,
   180,
-  { nextWave: 7, finalForge: false }
+  { nextWave: 8, finalForge: false }
 );
-assert.ok(
-  doctrinePrimaryChoices.some(
-    (choice) => choice.type === "system" && choice.systemId === "volt_drones"
-  )
-);
+assert.ok(!doctrinePrimaryChoices.some((choice) => choice.type === "system"));
 const doctrineCommitChoice = doctrinePrimaryChoices.find((choice) => choice.contractRole === "headline");
 assert.ok(doctrineCommitChoice);
 const doctrineWave7RiderChoice = doctrinePrimaryChoices.find((choice) => choice.contractRole === "rider");
 assert.ok(doctrineWave7RiderChoice);
-assert.equal(doctrineWave7RiderChoice.type, "system");
+assert.notEqual(doctrineWave7RiderChoice.type, "system");
 const doctrineWave8Choices = game.buildForgeChoices(
   bastionDoctrineBuild,
   () => 0.99,
@@ -2191,7 +2184,7 @@ const doctrineFollowupChoices = game.buildForgeFollowupChoices(
 );
 assert.ok(doctrineFollowupChoices.every((choice) => choice.contractRole !== "headline"));
 assert.equal(doctrineFollowupChoices.length, 1);
-assert.equal(doctrineFollowupChoices[0].type, "fallback");
+assert.notEqual(doctrineFollowupChoices[0].type, "system");
 const doctrineCapstoneBuild = game.createInitialBuild("relay_oath");
 doctrineCapstoneBuild.pendingCores = [];
 const mirrorArchitectureChoice = game
@@ -2290,14 +2283,14 @@ const artilleryAscensionChoice = game
   .find((choice) => choice.action === "bastion_bay_forge" && choice.chassisId === "vector_thrusters");
 assert.ok(artilleryAscensionChoice);
 assert.ok(artilleryAscensionChoice.description.includes("support bay를 열지 않고 body line만 먼저 잠근다"));
-assert.ok(artilleryAscensionChoice.description.includes("Wave 7 포지"));
+assert.ok(artilleryAscensionChoice.description.includes("Wave 8 포지"));
 assert.ok(!artilleryAscensionChoice.description.includes("contraband salvage"));
 game.applyForgeChoice(
   { build: artilleryDoctrineBuild, player: null, resources: { scrap: 999 }, stats: {} },
   artilleryAscensionChoice
 );
 assert.equal(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "seeker_array", 7), false);
-assert.equal(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "ember_ring", 7), true);
+assert.equal(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "ember_ring", 7), false);
 assert.ok(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "seeker_array", 9));
 assert.equal(
   JSON.stringify(game.getVisibleSupportOfferSystemIds(artilleryDoctrineBuild, 8).sort()),
@@ -2355,8 +2348,8 @@ const fortressFollowupChoices = game.buildForgeFollowupChoices(
   { nextWave: 7, finalForge: false },
   fortressDoctrineChoice.doctrineChoice
 );
-assert.equal(fortressFollowupChoices.length, 1);
-assert.ok(["fallback", "evolution", "utility", "mod", "affix"].includes(fortressFollowupChoices[0].type));
+assert.ok(fortressFollowupChoices.length >= 1);
+assert.ok(fortressFollowupChoices.every((choice) => ["fallback", "evolution", "utility", "mod", "affix"].includes(choice.type)));
 assert.ok(!fortressFollowupChoices.some((choice) => choice.laneLabel === "Support Rider"));
 const fieldGrantBuild = game.createInitialBuild("relay_oath");
 fieldGrantBuild.pendingCores = [];
@@ -3400,8 +3393,8 @@ assert.ok(actTwoLadder[1].arena.height > actTwoLadder[0].arena.height);
 assert.ok(actTwoLadder[2].arena.width > actTwoLadder[1].arena.width);
 assert.ok(actTwoLadder[2].arena.height > actTwoLadder[1].arena.height);
 assert.ok(actTwoLadder[2].activeCap < actTwoLadder[3].activeCap);
-assert.ok(actTwoLadder[2].note.includes("shared support lap cell"));
-assert.ok(actTwoLadder[3].note.includes("shared support proof cell"));
+assert.ok(actTwoLadder[2].note.includes("shared domination sweep cell"));
+assert.ok(actTwoLadder[3].note.includes("shared domination proof cell"));
 
 const lateBreakSmokeBuild = game.createInitialBuild("scrap_pact");
 lateBreakSmokeBuild.bastionDoctrineId = "kiln_bastion";
