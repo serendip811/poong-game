@@ -233,6 +233,7 @@ const scriptedMidrunGreedChoice = game.createFieldGreedContractChoice(
   5
 );
 assert.equal(scriptedMidrunGreedChoice.midrunGreedRouteUntilWave, 8);
+assert.match(scriptedMidrunGreedChoice.slotText, /twin tow fork/i);
 const midrunGreedBuild = game.createInitialBuild("rail_zeal");
 const midrunGreedRun = {
   build: midrunGreedBuild,
@@ -242,6 +243,10 @@ const midrunGreedRun = {
 };
 game.applyForgeChoice(midrunGreedRun, scriptedMidrunGreedChoice);
 assert.equal(midrunGreedRun.build.midrunGreedRouteUntilWave, 8);
+assert.equal(game.isMidrunGreedRaidFrameActive(midrunGreedRun.build, 6), true);
+assert.equal(game.isMidrunGreedRaidFrameActive(midrunGreedRun.build, 8), true);
+assert.equal(game.isMidrunGreedRaidFrameActive(midrunGreedRun.build, 9), false);
+assert.equal(midrunGreedRun.player.chassisSalvageBurstTime, 0.95);
 const greedWave6 = game.applyMidrunGreedRouteConfig(
   game.resolveWaveConfig(5, midrunGreedRun.build),
   midrunGreedRun.build,

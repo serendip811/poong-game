@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop widening the module catalog and prove one honest 8-wave spine where Wave 5 opens a real three-lane branch and Wave 6-8 let the chosen support/utility identity dominate enough combat to create replay hunger.
+- Immediate priority: stop simulating branch depth with primers, roadmap language, and late unlock promises; prove one honest 8-wave spine where Wave 5 opens a real three-lane branch and Wave 6-8 let the chosen support/utility identity visibly own combat.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 15:00:53 KST
+  Findings:
+  - The run is still faking branch depth instead of delivering it. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2520) keeps real support systems locked to `Wave 7`, but [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2980) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3070) spend design space on support primers that merely preview orbitals/drones instead of letting a branch actually change play by Wave 5-6.
+  - The base-route roadmap is still overselling future structure and hiding the honest run under planning language. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8269) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8361) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8566) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8634) still explain a three-step silhouette contract in detail, even though the shipped route only has one real midrun branch window to prove.
+  - The forge remains too administrative relative to strong references. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22669) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22885) still stack shell context, proof labels, preview rows, contract labels, and slot language around each pick. Compared against `Nova Drift`, `Brotato`, or `Hades`, the pause is still doing too much explaining for a run that should be selling one obvious power spike fast.
+  - Wave 5-8 combat space is finally roomy enough, but the route still spends that room on the same gun/body proof instead of a new playstyle ask. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L447) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L545) give the player generous arenas and moderate caps, yet the first true support ownership remains delayed until the run is nearly over.
+  Top Priority: Replace the Wave 5-6 primer/roadmap fakeout with one real defense, support, or greed branch that immediately changes movement and pickup behavior for the rest of the shipped run.
+  Why Now: Until the player gets a branch they can actually pilot instead of merely read about, replay desire stays theoretical.
+  Do Not Repeat: Do not answer this with more primer variants, roadmap widgets, or card copy trims while the first real non-gun identity still waits until Wave 7.
+  Release Gate: Rewards
 
 - 2026-03-27 15:02:00 KST
   Findings:
@@ -3475,6 +3486,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 18:42:00 KST
+  Changed: turned the shipped `Wave 5` greed card into a real midrun combat form in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and locked the new contract in [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs). `createFieldGreedContractChoice(...)` now sells `pickup surge + twin tow fork`, `isMidrunGreedRaidFrameActive(...)` and `shouldUseSalvageSurgeKit(...)` keep that greed state alive through `Wave 6-8`, and the live runtime now reuses the salvage-winch burst hooks so greed pickups pull harder, trigger raid surges, add visible tow-fork volleys, and draw a distinct raid silhouette even before the regular chassis lock resolves.
+  Why: the newest critique's `Top Priority` was to replace the `Wave 5-6` primer/roadmap fakeout with one real defense/support/greed branch that immediately changes movement and pickup behavior for the rest of the shipped run. The highest-value concrete interpretation that fit one bounded pass was to cash the existing greed route into a temporary raid frame, because the route already had `salvage -> caravan -> salvage` combat asks but still lacked a chassis-level playstyle hook the player could feel and rerun for.
+  Follow-up Risk: the greed lane now has real combat texture, but the borrowed salvage-surge kit may stack too efficiently with some `Wave 6` chassis picks or high-clear cores and turn `판돈` into the default best lane. If playtesting shows that happening, the next bounded pass should trim the midrun tow-fork damage/cooldown or burst uptime rather than removing the branch identity again.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Rewards
 
 - 2026-03-27 15:32:00 KST
   Changed: turned one bounded `Wave 5` greed pick into a real `Wave 6-8` combat route in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and locked it in with new smoke coverage in [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs). `createFieldGreedContractChoice(...)` now marks the shipped route with a persistent `midrunGreedRouteUntilWave`, `applyMidrunGreedRouteConfig(...)` turns that branch into `Wave 6 salvage vaults -> Wave 7 caravan chase -> Wave 8 bigger salvage pocket` hazards, and `beginWave()` now feeds that route to the player as a live `Scrapline Route` instead of leaving `판돈` as a pure scrap/pickup stat card.

@@ -5816,6 +5816,33 @@
     return chassisId ? CHASSIS_BREAKPOINT_DEFS[chassisId] || null : null;
   }
 
+  function getResolvedWaveNumber(currentState = state) {
+    if (!currentState || !Number.isFinite(currentState.waveIndex)) {
+      return 0;
+    }
+    return currentState.waveIndex + 1;
+  }
+
+  function isMidrunGreedRaidFrameActive(build, waveNumber = null) {
+    const resolvedWave = Number.isFinite(waveNumber) ? waveNumber : getResolvedWaveNumber();
+    return (
+      CONSOLIDATED_12_WAVE_ROUTE &&
+      !!build &&
+      Number.isFinite(resolvedWave) &&
+      resolvedWave >= 6 &&
+      resolvedWave < LATE_BREAK_ARMORY_WAVE &&
+      Number.isFinite(build.midrunGreedRouteUntilWave) &&
+      build.midrunGreedRouteUntilWave >= resolvedWave
+    );
+  }
+
+  function shouldUseSalvageSurgeKit(build, waveNumber = null) {
+    return (
+      getChassisBreakpointDef(build)?.id === "salvage_winch" ||
+      isMidrunGreedRaidFrameActive(build, waveNumber)
+    );
+  }
+
   function getIllegalOverclockDef(buildOrId) {
     const overclockId =
       typeof buildOrId === "string"
@@ -12928,8 +12955,8 @@
       tag: "PACT",
       title: "Greed Contract",
       description:
-        "현장에서 바로 scrap credit를 당겨 고철과 회수 효율을 먼저 챙긴다. 대신 다음 웨이브 하나는 Siege Debt가 붙어 적 밀도와 hazard가 함께 거칠어지고, 몸체도 조금 찢긴 채 들어간다.",
-      slotText: "고철 +34 · 회수 +10% · 1웨이브 Siege Debt",
+        "현장에서 바로 scrap credit를 당겨 고철과 회수 효율을 먼저 챙기고, 남은 mid-run 동안 회수품을 물 때마다 chassis surge와 twin tow fork가 붙는 raid frame을 켠다. 대신 다음 웨이브 하나는 Siege Debt가 붙어 적 밀도와 hazard가 함께 거칠어지고, 몸체도 조금 찢긴 채 들어간다.",
+      slotText: "고철 +34 · 회수 +10% · pickup surge + twin tow fork · 1웨이브 Siege Debt",
       cost: 0,
       scrapGain: 34,
       scrapMultiplierGain: 0.1,
@@ -15551,6 +15578,10 @@
         run.player.hp = Math.max(1, run.player.hp - Math.max(0, choice.hpLoss || 0));
         run.player.heat = Math.max(0, run.player.heat - 22);
         run.player.overheated = false;
+        if (choice.midrunGreedRouteUntilWave) {
+          run.player.chassisSalvageBurstTime = Math.max(run.player.chassisSalvageBurstTime || 0, 0.95);
+          run.player.chassisPickupPulseCooldown = 0;
+        }
       }
       return choice;
     }
@@ -15682,6 +15713,7 @@
     applyChassisBreakpoint,
     getSupportBayCapacity,
     getChassisBreakpointDef,
+    isMidrunGreedRaidFrameActive,
     getIllegalOverclockDef,
     doctrineAllowsSystemInstall,
     getVisibleSupportOfferSystemIds,
@@ -17000,7 +17032,8 @@
 
   function getChassisMoveSpeedBonus() {
     const chassis = getChassisBreakpointDef(state.build);
-    if (!state.player || !chassis) {
+    const raidFrameActive = isMidrunGreedRaidFrameActive(state.build);
+    if (!state.player || (!chassis && !raidFrameActive)) {
       return 0;
     }
     const ascensionProfile = getWave6AscensionProfile();
@@ -17011,18 +17044,22 @@
     if (ascensionSurging && ascensionProfile?.id === "kiln_bastion") {
       return 54;
     }
-    if (chassis.id === "vector_thrusters" && state.player.chassisVectorTime > 0) {
+    if (chassis && chassis.id === "vector_thrusters" && state.player.chassisVectorTime > 0) {
       return 54;
     }
-    if (chassis.id === "salvage_winch" && state.player.chassisSalvageBurstTime > 0) {
+    if (chassis && chassis.id === "salvage_winch" && state.player.chassisSalvageBurstTime > 0) {
       return 42;
+    }
+    if (raidFrameActive && state.player.chassisSalvageBurstTime > 0) {
+      return 28;
     }
     return 0;
   }
 
   function getChassisCooldownFactor() {
     const chassis = getChassisBreakpointDef(state.build);
-    if (!state.player || !chassis) {
+    const raidFrameActive = isMidrunGreedRaidFrameActive(state.build);
+    if (!state.player || (!chassis && !raidFrameActive)) {
       return 1;
     }
     const ascensionProfile = getWave6AscensionProfile();
@@ -17036,14 +17073,17 @@
     if (ascensionSurging && ascensionProfile?.id === "storm_artillery") {
       return 1.16;
     }
-    if (chassis.id === "vector_thrusters" && state.player.chassisVectorTime > 0) {
+    if (chassis && chassis.id === "vector_thrusters" && state.player.chassisVectorTime > 0) {
       return 1.18;
     }
-    if (chassis.id === "bulwark_treads" && state.player.chassisAnchorActiveTime > 0) {
+    if (chassis && chassis.id === "bulwark_treads" && state.player.chassisAnchorActiveTime > 0) {
       return 1.12;
     }
-    if (chassis.id === "salvage_winch" && state.player.chassisSalvageBurstTime > 0) {
+    if (chassis && chassis.id === "salvage_winch" && state.player.chassisSalvageBurstTime > 0) {
       return 1.14;
+    }
+    if (raidFrameActive && state.player.chassisSalvageBurstTime > 0) {
+      return 1.08;
     }
     return 1;
   }
@@ -17489,6 +17529,37 @@
     return { cooldownMultiplier: 1, heatMultiplier: 1 };
   }
 
+  function fireMidrunGreedRaidVolley(weapon, baseAngle, driveActive) {
+    if (
+      !state.player ||
+      !isMidrunGreedRaidFrameActive(state.build) ||
+      state.player.chassisSalvageBurstTime <= 0
+    ) {
+      return { cooldownMultiplier: 1, heatMultiplier: 1 };
+    }
+
+    [-1, 1].forEach((direction) => {
+      state.projectiles.push(
+        createOffsetPlayerProjectile(baseAngle + 0.2 * direction, weapon, driveActive, {
+          lateral: 16 * direction,
+          forward: 16,
+          overrides: {
+            vx: Math.cos(baseAngle + 0.2 * direction) * weapon.projectileSpeed * 1.08,
+            vy: Math.sin(baseAngle + 0.2 * direction) * weapon.projectileSpeed * 1.08,
+            damage: round((weapon.damage + (driveActive ? 8 : 0)) * 0.42, 1),
+            radius: Math.max(4, weapon.core.id === "lance" ? 5.1 : 4.2),
+            life: 1,
+            chain: weapon.chain + 1,
+            chainRange: Math.max(weapon.chainRange || 0, 116),
+            color: "#9fffcf",
+          },
+        })
+      );
+    });
+
+    return { cooldownMultiplier: 0.94, heatMultiplier: 1.04 };
+  }
+
   function triggerChassisPulse(x, y, radius, damage, color, options = {}) {
     applyPlayerAreaDamage(x, y, radius, damage, {
       hazardDamageFactor: Number.isFinite(options.hazardDamageFactor)
@@ -17529,7 +17600,8 @@
 
   function updatePlayerChassisState(dt, moveMagnitude) {
     const chassis = getChassisBreakpointDef(state.build);
-    if (!state.player || !chassis) {
+    const raidFrameActive = isMidrunGreedRaidFrameActive(state.build);
+    if (!state.player) {
       return;
     }
     const ascensionProfile = getWave6AscensionProfile();
@@ -17549,7 +17621,10 @@
         state.player.chassisAnchorActiveTime = Math.max(state.player.chassisAnchorActiveTime, 0.22);
       }
     }
-    if (chassis.id !== "bulwark_treads") {
+    if (!chassis && !raidFrameActive) {
+      return;
+    }
+    if (!chassis || chassis.id !== "bulwark_treads") {
       state.player.chassisAnchorCharge = 0;
       return;
     }
@@ -17858,6 +17933,10 @@
     state.postCapstone.active = false;
     state.postCapstone.stageIndex = 0;
     state.arena = arena;
+    if (isMidrunGreedRaidFrameActive(state.build, waveNumber)) {
+      state.player.chassisSalvageBurstTime = Math.max(state.player.chassisSalvageBurstTime || 0, 0.95);
+      state.player.chassisPickupPulseCooldown = 0;
+    }
     state.wave = {
       index,
       timeLeft: config.duration,
@@ -20937,6 +21016,7 @@
     fireWeaponPattern(weapon.apexMutationFirePattern, weapon, baseAngle, driveActive);
     const ascensionFireProfile = fireWave6AscensionVolley(weapon, baseAngle, driveActive);
     const chassisFireProfile = fireChassisWeaponPosture(weapon, baseAngle, driveActive);
+    const greedRaidFireProfile = fireMidrunGreedRaidVolley(weapon, baseAngle, driveActive);
 
     if (weapon.capstoneFire) {
       if (weapon.capstoneFire.kind === "temper_slug") {
@@ -21009,7 +21089,8 @@
         weapon.heatPerShot *
           (driveActive ? 0.58 : 1) *
           (ascensionFireProfile.heatMultiplier || 1) *
-          (chassisFireProfile.heatMultiplier || 1),
+          (chassisFireProfile.heatMultiplier || 1) *
+          (greedRaidFireProfile.heatMultiplier || 1),
       0,
       100
     );
@@ -21017,7 +21098,8 @@
       weapon.cooldown *
       (driveActive ? 0.6 : 1) *
       (ascensionFireProfile.cooldownMultiplier || 1) *
-      (chassisFireProfile.cooldownMultiplier || 1);
+      (chassisFireProfile.cooldownMultiplier || 1) *
+      (greedRaidFireProfile.cooldownMultiplier || 1);
     if (state.player.heat >= 100) {
       state.player.overheated = true;
       pushCombatFeed("과열 발생. 사격 회복 전까지 회피와 냉각이 우선이다.", "HEAT");
@@ -21975,10 +22057,8 @@
 
   function updateDrops(dt) {
     const nextDrops = [];
-    const chassis = getChassisBreakpointDef(state.build);
     const winchBurstActive =
-      chassis &&
-      chassis.id === "salvage_winch" &&
+      shouldUseSalvageSurgeKit(state.build) &&
       state.player &&
       state.player.chassisSalvageBurstTime > 0;
     for (const drop of state.drops) {
@@ -22076,13 +22156,13 @@
   }
 
   function collectDrop(drop) {
-    const chassis = getChassisBreakpointDef(state.build);
+    const salvageSurgeKitActive = shouldUseSalvageSurgeKit(state.build);
     if (drop.kind === "scrap") {
       const value = round(drop.value * state.player.scrapMultiplier, 0);
       state.resources.scrap += value;
       state.stats.scrapCollected += value;
       gainDrive(value * 0.24);
-      if (chassis && chassis.id === "salvage_winch") {
+      if (salvageSurgeKitActive) {
         triggerSalvageWinchSurge(1.35, 16);
       }
       setBanner(`고철 +${value}`, 0.45);
@@ -22108,7 +22188,7 @@
         gainDrive(CORE_OVERFLOW_SCRAP * 0.24);
         setBanner(`${CORE_DEFS[drop.coreId].short} 초과분 분해 +${CORE_OVERFLOW_SCRAP}`, 0.8);
       }
-      if (chassis && chassis.id === "salvage_winch") {
+      if (salvageSurgeKitActive) {
         triggerSalvageWinchSurge(1.6, 0);
       }
       return true;
@@ -22125,7 +22205,7 @@
         );
         setBanner(`${CORE_DEFS[drop.coreId].short} 촉매 확보`, 0.9);
       }
-      if (chassis && chassis.id === "salvage_winch") {
+      if (salvageSurgeKitActive) {
         triggerSalvageWinchSurge(1.6, 0);
       }
       return true;
@@ -22157,7 +22237,7 @@
         "MOLT"
       );
       setBanner(choice.title, 0.85);
-      if (chassis && chassis.id === "salvage_winch") {
+      if (salvageSurgeKitActive) {
         triggerSalvageWinchSurge(1.65, 0);
       }
       return true;
@@ -22169,7 +22249,7 @@
       state.stats.scrapCollected += value;
       state.overcommit.salvageCollected += 1;
       gainDrive(value * 0.3);
-      if (chassis && chassis.id === "salvage_winch") {
+      if (salvageSurgeKitActive) {
         triggerSalvageWinchSurge(1.45, 18);
       }
       setBanner(
@@ -22189,7 +22269,7 @@
       state.stats.scrapCollected += value;
       state.build.doctrinePursuitProgress += 1;
       gainDrive(value * 0.34);
-      if (chassis && chassis.id === "salvage_winch") {
+      if (salvageSurgeKitActive) {
         triggerSalvageWinchSurge(1.45, 18);
       }
       setBanner(
@@ -23848,11 +23928,12 @@
 
   function drawPlayerChassisFrame(context) {
     const chassis = getChassisBreakpointDef(state.build);
-    if (!state.player || !chassis) {
+    const raidFrameActive = isMidrunGreedRaidFrameActive(state.build);
+    if (!state.player || (!chassis && !raidFrameActive)) {
       return;
     }
     const facing = state.player.facing || 0;
-    if (chassis.id === "vector_thrusters") {
+    if (chassis && chassis.id === "vector_thrusters") {
       [-1, 1].forEach((direction) => {
         const pod = getOffsetPoint(state.player.x, state.player.y, facing, 4, 15 * direction);
         context.fillStyle =
@@ -23870,10 +23951,7 @@
         context.closePath();
         context.fill();
       });
-      return;
-    }
-
-    if (chassis.id === "bulwark_treads") {
+    } else if (chassis && chassis.id === "bulwark_treads") {
       [-1, 0, 1].forEach((lane) => {
         const barrel = getOffsetPoint(state.player.x, state.player.y, facing, 10, lane * 8);
         context.fillStyle =
@@ -23885,15 +23963,29 @@
           6
         );
       });
-      return;
     }
 
-    if (chassis.id === "salvage_winch") {
+    if (chassis && chassis.id === "salvage_winch") {
       [-1, 1].forEach((direction) => {
         const fork = getOffsetPoint(state.player.x, state.player.y, facing, 8, 13 * direction);
         context.strokeStyle =
           state.player.chassisSalvageBurstTime > 0 ? "rgba(159, 255, 207, 0.95)" : "rgba(90, 176, 138, 0.84)";
         context.lineWidth = 2.5;
+        context.beginPath();
+        context.moveTo(state.player.x + Math.cos(facing) * 4, state.player.y + Math.sin(facing) * 4);
+        context.lineTo(fork.x, fork.y);
+        context.lineTo(
+          fork.x + Math.cos(facing + 0.18 * direction) * 8,
+          fork.y + Math.sin(facing + 0.18 * direction) * 8
+        );
+        context.stroke();
+      });
+    } else if (raidFrameActive) {
+      [-1, 1].forEach((direction) => {
+        const fork = getOffsetPoint(state.player.x, state.player.y, facing, 8, 13 * direction);
+        context.strokeStyle =
+          state.player.chassisSalvageBurstTime > 0 ? "rgba(159, 255, 207, 0.78)" : "rgba(90, 176, 138, 0.62)";
+        context.lineWidth = 2.1;
         context.beginPath();
         context.moveTo(state.player.x + Math.cos(facing) * 4, state.player.y + Math.sin(facing) * 4);
         context.lineTo(fork.x, fork.y);
