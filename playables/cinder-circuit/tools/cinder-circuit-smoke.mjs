@@ -597,6 +597,18 @@ assert.equal(
   ),
   JSON.stringify({ label: "새 보조", value: "Seeker Array" })
 );
+const aegisRiderPreviewRows = game.createForgePreviewRows({
+  type: "utility",
+  action: "bastion_bay_forge",
+  chassisTitle: "Bulwark Treads",
+  systemChoice: {
+    systemId: "aegis_halo",
+    systemTier: 1,
+    title: "Aegis Halo",
+  },
+});
+assert.equal(aegisRiderPreviewRows[1].label, "방호 고리");
+assert.equal(aegisRiderPreviewRows[2].value, "탄막 절개 + 방호 파동");
 const forgeHeadlineMarkup = game.createBaseRouteForgeContextMarkup({
   title: "주력 변이",
   titleLabel: "다음 시험",
@@ -2889,6 +2901,7 @@ game.applyForgeChoice(
 );
 const sentryTierTwo = game.computeSupportSystemStats(sentryBuild);
 assert.ok(sentryTierTwo.interceptRange > 0);
+assert.ok(sentryTierTwo.interceptPulseDamage > 0);
 const aegisTierOne = game.computeSupportSystemStats(aegisBuild);
 assert.equal(aegisTierOne, null);
 
@@ -2931,6 +2944,9 @@ const aegisTierTwoChoice = game
   );
 assert.ok(aegisTierTwoChoice);
 assert.equal(aegisTierTwoChoice.systemTier, 1);
+const aegisTierTwoPreviewRows = game.createForgePreviewRows(aegisTierTwoChoice);
+assert.equal(aegisTierTwoPreviewRows[0].label, "방호 고리");
+assert.equal(aegisTierTwoPreviewRows[1].value, "탄막 절개 + 방호 파동");
 game.applyForgeChoice(
   { build: aegisBuild, player: null, resources: { scrap: 999 }, stats: {} },
   aegisTierTwoChoice
@@ -2938,7 +2954,7 @@ game.applyForgeChoice(
 const aegisTierTwo = game.computeSupportSystemStats(aegisBuild);
 assert.ok(aegisTierTwo.orbitCount >= aegisTierOnePlusArsenal.orbitCount);
 assert.ok(aegisTierTwo.interceptRange >= aegisTierOnePlusArsenal.interceptRange);
-assert.ok(aegisTierTwo.interceptPulseDamage >= 0);
+assert.ok(aegisTierTwo.interceptPulseDamage > 0);
 
 const actTwoModuleBuild = game.createInitialBuild("relay_oath");
 actTwoModuleBuild.pendingCores = [];

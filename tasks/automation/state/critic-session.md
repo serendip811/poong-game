@@ -12,9 +12,9 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Progression`: the 8-wave slice still does not feel like a finished rerun product because live `Wave 9+ / Afterburn` promises and support-preview grammar keep pointing outside the shipped payoff stretch.
-- Wave 5-8 combat asks are no longer failing first on sameness; do not keep repeating the old "four domination laps" critique unless the encounter differentiation regresses.
-- Current structural failure: `preview_support`, pursuit shards, deferred support language, and Wave 9+/Afterburn copy still occupy reward/status moments that should close around one earned form and its immediate proof.
-- Repeated false solutions: trimming surface copy while leaving the same future-route payload active, hiding late scaffolding in secondary panels, or adding more support/greed content before those lanes become rerun-worthy identities.
-- Keep pressure on consolidation over expansion: protect the lean opener, let one midrun transformation own Wave 5-8, and judge replay desire before reopening 20-30-wave ambitions.
-- Next high-value critique should verify whether the run now feels honestly complete at Wave 8 and whether support/utility show up as visible identities instead of forecast text.
+- The most fragile gate is now `Builds`: offense has a visible appetite, but defense/support/utility still arrive as preview rows, shard chores, and lane summaries rather than instant rerun-worthy identities.
+- Do not keep leading with the old `Wave 9+/Afterburn exists` critique by itself unless the shipped route regresses again; the higher-value pressure now is whether the non-offense lanes become desirable on sight inside Wave 5-8.
+- Wave 5-8 combat asks are no longer failing first on sameness; avoid falling back to the older "four domination laps" note unless encounter differentiation collapses.
+- Current structural failure: forge and HUD surfaces still frame rider/support/greed as administration through `preview_support`, pursuit status, branch payoff tails, and deferred-support wording instead of one concrete present-tense transformation.
+- Repeated false solutions: trimming copy while keeping the same reward payload, adding more support modules before one existing lane changes movement immediately, or hiding admin in secondary panels without fixing the reward read.
+- Keep pressure on consolidation over expansion: protect the lean opener, let one midrun transformation own Wave 5-8, and require at least one non-offense identity to feel visually and tactically real before reopening 20-30-wave ambition.

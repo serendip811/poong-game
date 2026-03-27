@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: lock the shipped route to an honest Wave 1-8 appetite loop and strip Wave 6-8 doctrine/shard/support administration until one earned midrun form can carry the proof laps by itself.
+- Immediate priority: make Wave 5-8 sell one dominant main-form payoff plus one immediately legible rider identity, and strip preview/shard/future-route administration until non-offense lanes change movement on sight.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 04:05:00 KST
+  Findings:
+  - Purely repeating the old `Wave 9+/Afterburn still exists` critique is now too shallow. Some closure copy does point to `Wave 8 완성 시험 -> 짧은 승리 랩`, but the actual reward grammar still sells support/utility as future admin through `preview_support`, `doctrine_chase`, `다음 보조`, and shard-goal rows instead of as an immediate power identity the player wants to chase. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2068) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L7383) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L7399) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L7414)
+  - The forge still treats the rider beat like route administration. `activeSupportTrack`, `branchPreviewPayoff`, and the contract shell package `현재 형태 + 즉시 위협 + branch payoff`, which is weaker than the reward clarity strong references like `Hades`, `Nova Drift`, or `Brotato` use when a secondary layer should read as one obvious new toy or survival answer, not a lane summary. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L23572) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L23587) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L23632)
+  - Combat-state UI keeps reinforcing that problem. `renderWaveTrack()` still reserves live space for branch payoff tails, and the wave-focus logic still surfaces pursuit/debt/admin status notes, so defense/support is framed as maintenance work during combat instead of visible movement leverage or screen control. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L17024) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L17616)
+  - That leaves the run with one appetizing offense fantasy and several paperwork lanes. If support, shields, orbitals, satellites, missiles, or utility modules do not become instantly legible identities inside `Wave 5-8`, then any future `20-30 wave` expansion will only stretch shallow branches longer instead of deepening replay hunger.
+  Top Priority: Recast one existing Wave 5-8 rider lane into a visibly immediate defense/support identity that changes pathing or screen control the moment it is picked, and present it as a concrete module/form payoff instead of preview/shard/admin setup.
+  Why Now: Until one non-offense lane is desirable on sight, longer escalation and extra branches will just widen the prototype surface area.
+  Do Not Repeat: Do not answer this by adding more support catalog entries or renaming lanes while the reward beat still describes future support instead of granting a present transformation.
+  Release Gate: Builds
 
 - 2026-03-28 03:10:00 KST
   Findings:
@@ -3741,6 +3752,14 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-28 04:25:00 KST
+  Changed: recast the shipped defense rider in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) around `Aegis Halo` as an immediate `방호 고리` payoff instead of a future support/admin promise. Tier 1 now fires a real intercept pulse the moment it deletes a shot, that pulse can clear nearby enemy bullets through `triggerChassisPulse(...)`, and the `Mk.II/Mk.III` descriptions/status notes were rewritten around cutting bullet lanes and opening dive-return angles. Added `getSupportSystemIdentitySummary(...)` so forge preview rows and the live rider contract sell concrete module names like `방호 고리` and `탄막 절개 + 방호 파동` rather than generic `보조`/`다음 보조`. Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock both the pulse-enabled Aegis stats and the new preview grammar.
+  Why: the latest critique's `Top Priority` was to make one existing `Wave 5-8` rider lane desirable on sight by turning it into an immediate defense/support identity that visibly changes pathing or screen control. The highest-value bounded interpretation was to strengthen the already-shipped shield lane instead of adding another branch: `Aegis Halo` now immediately cuts firing lines in combat and reads as one obvious defensive toy on the reward surface.
+  Follow-up Risk: this fixes one concrete support lane, but other rider/support reads can still fall back to generic lane labels or weaker screen impact. If the next critique still says non-offense appetites read like paperwork, the next bounded pass should give one more existing lane the same `concrete module + immediate arena behavior` treatment rather than widening the catalog.
+  UI reference direction: followed the reward read pattern from `Hades` and `Nova Drift`, where a secondary defensive pickup is sold as one obvious survival toy with a fast noun-first label instead of route administration.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Builds
 
 - 2026-03-28 03:40:00 KST
   Changed: hard-froze lingering shipped late-break reward copy in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so any consolidated-route fallback/helper path now resolves to `Wave 8 완성 시험 -> 짧은 승리 랩` instead of previewing `Wave 9-12` or `Afterburn`. Added `getBaseRouteWave8ClosureCopy(...)` and routed `getLateBreakCadenceSummary(...)`, `getLateBreakHeadline(...)`, `getLateBreakRoutePreview(...)`, consolidated late-break card `description/roadmapDetail`, late-break forge proof copy, and late-break status notes through that fail-closed text. Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new late-break card, preview-row, and status-note contract against `Wave 9-12` regressions.

@@ -2766,8 +2766,8 @@
           title: "Aegis Halo",
           cost: 34,
           description:
-            "요격 위성 1기를 설치한다. 위성이 플레이어 주변을 돌며 날아오는 적 탄환을 먼저 지워 위험한 사격 각을 끊는다.",
-          slotText: "보조 시스템 설치 · 요격 위성 1기",
+            "방호 위성 1기를 설치한다. 위성이 플레이어 주변을 돌며 날아오는 적 탄환을 먼저 끊고, 끊긴 자리마다 짧은 방호 파동을 터뜨려 돌진 각을 바로 연다.",
+          slotText: "보조 시스템 설치 · 방호 고리 1기 + 절개 파동",
           orbitCount: 1,
           orbitRadius: 44,
           orbitSpeed: 1.7,
@@ -2780,10 +2780,11 @@
           shotSpeed: 0,
           interceptRange: 26,
           interceptCooldown: 0.16,
-          interceptPulseDamage: 0,
-          interceptPulseRadius: 0,
-          previewText: "요격 위성",
-          statusNote: "Aegis Halo가 들어오는 탄환을 먼저 지워 사격 압박을 끊는다.",
+          interceptPulseDamage: 8,
+          interceptPulseRadius: 34,
+          interceptPulseClearsShots: true,
+          previewText: "방호 고리 + 절개 파동",
+          statusNote: "Aegis Halo가 탄막을 끊은 자리마다 짧은 방호 파동을 터뜨려 복귀 각과 돌진 각을 같이 만든다.",
         },
         2: {
           tier: 2,
@@ -2791,8 +2792,8 @@
           title: "Aegis Halo Mk.II",
           cost: 50,
           description:
-            "Aegis Halo를 2기 편대로 증설한다. 요격 범위가 넓어지고 탄환을 끊을 때마다 짧은 방호 충격파로 근접 적까지 밀어낸다.",
-          slotText: "보조 시스템 증설 · 요격 위성 2기 + 방호 파동",
+            "Aegis Halo를 2기 편대로 증설한다. 요격 범위가 넓어지고 탄환을 끊을 때마다 더 두꺼운 방호 파동이 퍼져 근접 추격선과 교차 탄막을 함께 걷어낸다.",
+          slotText: "보조 시스템 증설 · 방호 고리 2기 + 절개 파동",
           orbitCount: 2,
           orbitRadius: 52,
           orbitSpeed: 1.95,
@@ -2807,8 +2808,9 @@
           interceptCooldown: 0.12,
           interceptPulseDamage: 14,
           interceptPulseRadius: 48,
-          previewText: "요격 2기 + 방호 파동",
-          statusNote: "Aegis Halo Mk.II가 탄환을 끊을 때마다 방호 파동을 터뜨려 근접 압박까지 밀어낸다.",
+          interceptPulseClearsShots: true,
+          previewText: "방호 고리 2기 + 절개 파동",
+          statusNote: "Aegis Halo Mk.II가 탄환을 끊을 때마다 더 넓은 방호 파동으로 교차 탄막과 근접 압박을 같이 비운다.",
         },
         3: {
           tier: 3,
@@ -2816,8 +2818,8 @@
           title: "Aegis Halo Mk.III",
           cost: 66,
           description:
-            "Aegis Halo를 3기 삼각 방호진으로 증설한다. 요격 범위와 반응 속도가 다시 늘고, 파동이 더 멀리 퍼져 탄막과 근접 적을 함께 비운다.",
-          slotText: "보조 시스템 증설 · 요격 3기 + 확장 방호 파동",
+            "Aegis Halo를 3기 삼각 방호진으로 증설한다. 요격 범위와 반응 속도가 다시 늘고, 파동이 더 멀리 퍼져 탄막과 근접 적을 함께 비우는 이동식 방호 고리가 된다.",
+          slotText: "보조 시스템 증설 · 방호 고리 3기 + 대형 파동",
           orbitCount: 3,
           orbitRadius: 58,
           orbitSpeed: 2.15,
@@ -2832,8 +2834,9 @@
           interceptCooldown: 0.09,
           interceptPulseDamage: 20,
           interceptPulseRadius: 62,
-          previewText: "요격 3기 + 대형 파동",
-          statusNote: "Aegis Halo Mk.III가 삼각 방호진으로 탄막을 지우고 더 큰 파동으로 주변 적까지 밀어낸다.",
+          interceptPulseClearsShots: true,
+          previewText: "방호 고리 3기 + 대형 파동",
+          statusNote: "Aegis Halo Mk.III가 삼각 방호진으로 탄막을 비우고 대형 방호 파동으로 주변 추격선까지 뜯어낸다.",
         },
       },
     },
@@ -6571,6 +6574,7 @@
           interceptCooldown: system.interceptCooldown,
           interceptPulseDamage: system.interceptPulseDamage,
           interceptPulseRadius: system.interceptPulseRadius,
+          interceptPulseClearsShots: Boolean(system.interceptPulseClearsShots),
           localIndex: index,
           localCount: system.orbitCount,
         });
@@ -7407,24 +7411,35 @@
     }
     if (choice.type === "utility" && choice.action === "bastion_bay_forge") {
       const deferredSupport = CONSOLIDATED_12_WAVE_ROUTE && !choice.bayUnlock && !choice.systemChoice;
+      const supportIdentity = choice.systemChoice
+        ? getSupportSystemIdentitySummary(choice.systemChoice.systemId, choice.systemChoice.systemTier)
+        : null;
       return [
         {
           label: "버팀",
           value: choice.chassisTitle || "유틸리티 레이어",
         },
         {
-          label: deferredSupport ? "다음 보조" : "보조",
-          value: choice.systemChoice ? choice.systemChoice.title : choice.bayUnlock ? "빈 보조칸" : "후속 보조 선택",
+          label: deferredSupport
+            ? "다음 방호"
+            : supportIdentity
+              ? supportIdentity.payoffLabel
+              : "보조",
+          value: choice.systemChoice
+            ? supportIdentity?.payoffValue || choice.systemChoice.title
+            : choice.bayUnlock
+              ? "빈 보조칸"
+              : "후속 보조 선택",
         },
         {
-          label: "효과",
+          label: supportIdentity?.effectLabel || "효과",
           value: deferredSupport
             ? "차체 리듬 선점"
             : choice.systemChoice
-            ? choice.systemChoice.slotText || choice.systemChoice.title
-            : choice.bayUnlock
-              ? "방호선 확장"
-              : "버티는 선 정비",
+              ? supportIdentity?.effectValue || choice.systemChoice.slotText || choice.systemChoice.title
+              : choice.bayUnlock
+                ? "방호선 확장"
+                : "버티는 선 정비",
         },
         ...finaleRows,
       ];
@@ -7473,11 +7488,19 @@
     if (choice.type === "system") {
       const systemDef = SUPPORT_SYSTEM_DEFS[choice.systemId];
       const tierDef = systemDef && systemDef.tiers[choice.systemTier];
+      const systemIdentity = getSupportSystemIdentitySummary(choice.systemId, choice.systemTier);
       return [
-        { label: "계층", value: choice.systemTier === 1 ? "설치" : `Mk.${choice.systemTier}` },
         {
-          label: "효과",
-          value: tierDef ? tierDef.previewText : "보조 시스템 증설",
+          label: systemIdentity ? systemIdentity.payoffLabel : "계층",
+          value: systemIdentity
+            ? systemIdentity.payoffValue
+            : choice.systemTier === 1
+              ? "설치"
+              : `Mk.${choice.systemTier}`,
+        },
+        {
+          label: systemIdentity?.effectLabel || "효과",
+          value: systemIdentity?.effectValue || (tierDef ? tierDef.previewText : "보조 시스템 증설"),
         },
         ...finaleRows,
       ];
@@ -12039,6 +12062,60 @@
       bayAction: targetTier > 1 ? "upgrade" : "install",
       forgeLaneLabel: getSupportSystemForgeLane(system.id),
       cost: tierDef.cost,
+    };
+  }
+
+  function getSupportSystemIdentitySummary(systemId, targetTier = 1) {
+    const systemDef = SUPPORT_SYSTEM_DEFS[systemId];
+    const tierDef = systemDef && systemDef.tiers ? systemDef.tiers[targetTier] : null;
+    if (!systemDef || !tierDef) {
+      return null;
+    }
+    if (systemId === "aegis_halo") {
+      return {
+        payoffLabel: "방호 고리",
+        payoffValue: tierDef.title,
+        effectLabel: "효과",
+        effectValue: "탄막 절개 + 방호 파동",
+      };
+    }
+    if (systemId === "kiln_sentry") {
+      return {
+        payoffLabel: "거점 포탑",
+        payoffValue: tierDef.title,
+        effectLabel: "효과",
+        effectValue: "전방 거점 + 교차 사격",
+      };
+    }
+    if (systemId === "ember_ring") {
+      return {
+        payoffLabel: "절단 고리",
+        payoffValue: tierDef.title,
+        effectLabel: "효과",
+        effectValue: "근접 요격 + 외곽 소각",
+      };
+    }
+    if (systemId === "seeker_array") {
+      return {
+        payoffLabel: "추적 랙",
+        payoffValue: tierDef.title,
+        effectLabel: "효과",
+        effectValue: "자동 미사일 + 외곽 정리",
+      };
+    }
+    if (systemId === "volt_drones") {
+      return {
+        payoffLabel: "자율 편대",
+        payoffValue: tierDef.title,
+        effectLabel: "효과",
+        effectValue: "후방 절단 + 자동 전격",
+      };
+    }
+    return {
+      payoffLabel: systemDef.forgeLane || "보조 모듈",
+      payoffValue: tierDef.title,
+      effectLabel: "효과",
+      effectValue: tierDef.previewText || tierDef.slotText || tierDef.title,
     };
   }
 
@@ -21720,21 +21797,22 @@
       state.supportSystemRuntime.interceptCooldowns[index] = satellite.interceptCooldown;
       state.particles.push(createParticle(hostileProjectile.x, hostileProjectile.y, satellite.color, 1));
       state.particles.push(createParticle(satellite.x, satellite.y, "#f3feff", 0.8));
-      if (satellite.interceptPulseDamage > 0 && satellite.interceptPulseRadius > 0) {
-        for (const enemy of state.enemies) {
-          if (enemy.defeated || enemy.hp <= 0) {
-            continue;
+      if (
+        (satellite.interceptPulseDamage > 0 && satellite.interceptPulseRadius > 0) ||
+        (satellite.interceptPulseClearsShots && satellite.interceptPulseRadius > 0)
+      ) {
+        triggerChassisPulse(
+          hostileProjectile.x,
+          hostileProjectile.y,
+          satellite.interceptPulseRadius,
+          Math.max(0, satellite.interceptPulseDamage || 0),
+          "#8bf0ff",
+          {
+            hazardDamageFactor: 0.3,
+            clearEnemyShots: Boolean(satellite.interceptPulseClearsShots),
+            shake: satellite.interceptPulseDamage > 0 ? 3 : 2,
           }
-          const distance = Math.hypot(enemy.x - hostileProjectile.x, enemy.y - hostileProjectile.y);
-          if (distance > satellite.interceptPulseRadius + enemy.radius) {
-            continue;
-          }
-          enemy.hp -= satellite.interceptPulseDamage;
-          state.particles.push(createParticle(enemy.x, enemy.y, "#c7fbff", 0.6));
-          if (enemy.hp <= 0) {
-            destroyEnemy(enemy);
-          }
-        }
+        );
       }
     });
 
@@ -23586,19 +23664,46 @@
     const branchPreviewPayoff =
       useBaseRouteContract && riderStep && riderContractChoice
         ? riderContractChoice.type === "utility" && riderContractChoice.action === "bastion_bay_forge"
-          ? {
-              label: "새 보조",
-              value:
-                riderContractChoice.systemChoice?.title ||
-                riderContractChoice.chassisTitle ||
-                riderContractChoice.title ||
-                "방호 변이",
-            }
-          : riderContractChoice.type === "system"
-            ? {
-                label: riderContractChoice.forgeLaneLabel === "공세 모듈" ? "새 공세" : "새 보조",
-                value: riderContractChoice.title || riderContractChoice.slotText || "보조 시스템",
+          ? riderContractChoice.systemChoice
+            ? (() => {
+                const identity = getSupportSystemIdentitySummary(
+                  riderContractChoice.systemChoice.systemId,
+                  riderContractChoice.systemChoice.systemTier
+                );
+                return {
+                  label: identity?.payoffLabel || "새 보조",
+                  value:
+                    identity?.payoffValue ||
+                    riderContractChoice.systemChoice.title ||
+                    riderContractChoice.chassisTitle ||
+                    riderContractChoice.title ||
+                    "방호 변이",
+                };
+              })()
+            : {
+                label: "다음 방호",
+                value:
+                  riderContractChoice.chassisTitle ||
+                  riderContractChoice.title ||
+                  "방호 변이",
               }
+          : riderContractChoice.type === "system"
+            ? (() => {
+                const identity = getSupportSystemIdentitySummary(
+                  riderContractChoice.systemId,
+                  riderContractChoice.systemTier
+                );
+                return {
+                  label:
+                    identity?.payoffLabel ||
+                    (riderContractChoice.forgeLaneLabel === "공세 모듈" ? "새 공세" : "새 보조"),
+                  value:
+                    identity?.payoffValue ||
+                    riderContractChoice.title ||
+                    riderContractChoice.slotText ||
+                    "보조 시스템",
+                };
+              })()
             : riderContractChoice.type === "utility" && riderContractChoice.action === "field_greed"
               ? {
                   label: "새 판돈",
