@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Rewards`, because the forge and roadmap still explain branch structure better than the run actually delivers it.
-- Recurring player-facing failure: the shipped 8-wave route simulates depth with primers, roadmap steps, and future-form language while real non-gun identity still lands too late to drive reruns.
-- Repeated false solution: adding preview/primer layers or trimming wording without replacing them with one honest Wave 5-6 branch that changes piloting immediately.
-- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: the useful benchmark is whether the reward pause sells one irresistible, instantly legible power spike with minimal reading.
-- Near-term critic pressure should favor consolidation over expansion: less roadmap/admin, one real three-lane choice by Wave 5, and visible movement/pickup behavior divergence across Wave 6-8.
+- The most fragile gate is now `Progression`, because the shipped route still explains future build structure more clearly than it delivers a branch the player can actually pilot.
+- Recurring player-facing failure: the 8-wave slice still uses roadmap cards, status-strip scaffolding, and support primers to simulate depth while real support/utility ownership lands too late.
+- Repeated false solution: polishing copy or card presentation without deleting the explanatory scaffolding and replacing the first fake preview beat with one honest Wave 5 branch.
+- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: the useful benchmark is whether the player can grasp the run’s next power spike almost instantly and then spend the next combat room enjoying it.
+- Near-term critic pressure should favor consolidation over expansion: fewer route explainers, no more primer-style rewards, and clearer movement/pickup/space-control divergence starting in Wave 5.

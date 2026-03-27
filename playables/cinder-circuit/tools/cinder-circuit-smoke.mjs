@@ -219,20 +219,14 @@ assert.ok(
       wave5RiderChoice.type === "fallback")
 );
 const wave5GambleChoice = wave5ForgeChoices.find((choice) => choice.contractRole === "gamble");
-assert.ok(
-  wave5GambleChoice &&
-    ((wave5GambleChoice.type === "utility" &&
-      ["field_greed", "recycle"].includes(wave5GambleChoice.action)) ||
-      (wave5GambleChoice.type === "affix" && wave5GambleChoice.affixId === "salvage_link") ||
-      (wave5GambleChoice.type === "mod" &&
-        ["magnet_rig", "reactor_cap"].includes(wave5GambleChoice.modId)) ||
-      wave5GambleChoice.type === "fallback")
-);
+assert.equal(wave5GambleChoice?.action, "field_greed");
+assert.equal(wave5GambleChoice?.title, "Scrapline Raid");
 const scriptedMidrunGreedChoice = game.createFieldGreedContractChoice(
   game.createInitialBuild("rail_zeal"),
   5
 );
 assert.equal(scriptedMidrunGreedChoice.midrunGreedRouteUntilWave, 8);
+assert.equal(scriptedMidrunGreedChoice.title, "Scrapline Raid");
 assert.match(scriptedMidrunGreedChoice.slotText, /twin tow fork/i);
 const midrunGreedBuild = game.createInitialBuild("rail_zeal");
 const midrunGreedRun = {

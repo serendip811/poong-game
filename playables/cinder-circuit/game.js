@@ -7559,6 +7559,18 @@
         accent: "twin tow fork + vault raid",
       };
     }
+    if (choice.type === "utility" && choice.action === "field_greed") {
+      return {
+        laneLabel: choice.forgeLaneLabel || choice.laneLabel || "Forge Lane",
+        title: choice.title || choice.slotText || "Unnamed Shift",
+        tone: "greed",
+        promise: "회수 루트를 scrapline raid로 바꿔 pocket을 찍고 빠질 때마다 pickup surge와 twin tow fork를 다시 켠다.",
+        proof: "Wave 6-8은 vault와 caravan payout을 따라 깊게 들어갈지 짧게 긁고 외곽으로 복귀할지가 바로 갈라진다.",
+        riderLabel: "Defense / Utility",
+        riderNote: "욕심으로 벌린 진입선은 방호 한 줄과 짧은 복귀 각이 있어야 오래 버틴다.",
+        accent: "pickup surge + twin tow fork",
+      };
+    }
     const descriptionSentences = splitForgeSentences(choice.description);
     const previewRows = createForgePreviewRows(choice).filter(Boolean);
     const primaryPreview = previewRows[0];
@@ -11144,6 +11156,9 @@
       : 0;
     if (choice.type === "utility" && choice.action === "field_greed") {
       let score = 172;
+      if (CONSOLIDATED_12_WAVE_ROUTE && nextWave === 5) {
+        score += 260;
+      }
       if (!debtActive) {
         score += 36;
       }
@@ -12543,6 +12558,17 @@
     const adaptiveGambleChoice =
       twoCardBaseRouteContract
         ? null
+        : recurringBaseRouteContract && nextWave === 5
+          ? takeFirstAvailableChoice(
+              gamblePool.filter(
+                (choice) => choice && choice.type === "utility" && choice.action === "field_greed"
+              ),
+              takenIds,
+              "탐욕/유틸"
+            ) ||
+            takeBestScoredChoice(gamblePool, takenIds, "탐욕/유틸", (choice) =>
+              scoreBaseRouteGambleChoice(choice, build, scrapBank, nextWave)
+            )
         : recurringBaseRouteContract && nextWave <= 10
           ? takeBestScoredChoice(gamblePool, takenIds, "탐욕/유틸", (choice) =>
               scoreBaseRouteGambleChoice(choice, build, scrapBank, nextWave)
@@ -12943,6 +12969,7 @@
     if (!build || !Number.isFinite(nextWave) || nextWave < FORGE_PACKAGE_START_WAVE) {
       return null;
     }
+    const openingRaidWindow = CONSOLIDATED_12_WAVE_ROUTE && nextWave === 5;
     const midrunGreedRouteUntilWave =
       CONSOLIDATED_12_WAVE_ROUTE && nextWave < LATE_BREAK_ARMORY_WAVE
         ? DEFAULT_ROUTE_WAVE_COUNT
@@ -12953,10 +12980,14 @@
       id: `utility:field_greed:${nextWave}`,
       verb: "계약",
       tag: "PACT",
-      title: "Greed Contract",
+      title: openingRaidWindow ? "Scrapline Raid" : "Greed Contract",
       description:
-        "현장에서 바로 scrap credit를 당겨 고철과 회수 효율을 먼저 챙기고, 남은 mid-run 동안 회수품을 물 때마다 chassis surge와 twin tow fork가 붙는 raid frame을 켠다. 대신 다음 웨이브 하나는 Siege Debt가 붙어 적 밀도와 hazard가 함께 거칠어지고, 몸체도 조금 찢긴 채 들어간다.",
-      slotText: "고철 +34 · 회수 +10% · pickup surge + twin tow fork · 1웨이브 Siege Debt",
+        openingRaidWindow
+          ? "이번 포지의 판돈 슬롯을 바로 scrapline raid frame으로 바꾼다. 현장에서 scrap credit를 당겨 오고, Wave 6-8 동안 회수품을 물 때마다 chassis surge와 twin tow fork가 다시 켜져 cash-out pocket을 직접 찍고 빠지게 만든다. 대신 바로 다음 웨이브 하나는 Siege Debt가 붙어 적 밀도와 hazard가 함께 거칠어지고, 몸체도 조금 찢긴 채 들어간다."
+          : "현장에서 바로 scrap credit를 당겨 고철과 회수 효율을 먼저 챙기고, 남은 mid-run 동안 회수품을 물 때마다 chassis surge와 twin tow fork가 붙는 raid frame을 켠다. 대신 다음 웨이브 하나는 Siege Debt가 붙어 적 밀도와 hazard가 함께 거칠어지고, 몸체도 조금 찢긴 채 들어간다.",
+      slotText: openingRaidWindow
+        ? "raid frame · 고철 +34 · 회수 +10% · pickup surge + twin tow fork · 1웨이브 Siege Debt"
+        : "고철 +34 · 회수 +10% · pickup surge + twin tow fork · 1웨이브 Siege Debt",
       cost: 0,
       scrapGain: 34,
       scrapMultiplierGain: 0.1,
