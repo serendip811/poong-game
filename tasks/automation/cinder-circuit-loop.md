@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: consolidate the shipped `8-wave` spine into one readable reward loop by stripping dormant `12-wave / final-form / late-ascension` framing from title/forge/docs and protecting `Wave 7-8` as payoff, not future-content spill.
+- Immediate priority: make the shipped `8-wave` route honest and replayable by stripping dormant `12-wave / final-form / late-ascension` framing from live docs/UI and retuning `Wave 7-8` into a real support payoff band instead of a compressed finale.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 09:01:03 KST
+  Findings:
+  - The live game still behaves like an `8-wave` route wearing a `12-wave` costume. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) still sells `12웨이브 / 세 시대`, while [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) keeps `Act 3`, `Wave 9`, `Late Break Armory`, and `Final Form` language alive in forge/result/combat feed paths. That keeps the run pointed at future breadth instead of one satisfying rerun loop.
+  - `Wave 7-8` is still the clearest gameplay failure. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) labels `Wave 7` as the first support lap, then immediately turns `Wave 8` into a cramped finale jump: `activeCap 20 -> 28`, arena `1720x960 -> 1500x820`, plus `lancer + binder + warden` and relay hazard pressure. The first support identity is being judged as panic maintenance, not celebrated as domination.
+  - The forge still explains too much relative to strong references. In [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), `renderForgeOverlay()` still wraps picks in contract shell, proof labels, preview rows, rider framing, and hidden `12-wave` wording. Compared with `Nova Drift`, `Brotato`, or `Hades`, the player is still parsing a planning document when the pause should mostly ask which visible power spike they want.
+  - The build ceiling is being advertised faster than the run earns it. The live route still carries full missile/shield/drone/orbital support language and tier previews in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), so the fantasy arrives as catalog breadth before the base gun -> midform -> first rider arc has fully landed.
+  Top Priority: Retune `Wave 8` into a true support proof lap by keeping Wave 7-scale space, cutting at least one high-tax threat layer from the `lancer/binder/warden/relay` stack, and letting one newly unlocked rider visibly dominate before any finale-grade compression returns.
+  Why Now: If the first support payoff still feels like endgame panic, players never get the rerun-driving memory that their build actually came online.
+  Do Not Repeat: Do not answer this with softer wording or prettier forge cards while `Wave 8` still shrinks the arena and cashes out like `Wave 12`.
+  Release Gate: Combat
 
 - 2026-03-27 08:46:12 KST
   Findings:
@@ -3343,6 +3354,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 17:35:00 KST
+  Changed: retuned one bounded combat rung in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 8` now resolves as `Support Proof` instead of a finale-style `Crown Proof` squeeze. The wave now keeps `Wave 7`-scale space with a larger `1760x980` arena, drops the `relay` hazard and `binder` tax entirely, reduces `lancer` weight, and steps pressure up only modestly from `Wave 7` (`activeCap 23`, `spawnBudget 126`) so the newly unlocked rider gets one real domination lap before `Wave 9` resumes breach grammar. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks the new `Wave 8` label, directive, pressure family, arena size, and reduced threat stack.
+  Why: the newest critique's `Top Priority` explicitly called out `Wave 8` as the clearest gameplay failure: the first support payoff was still being judged under `lancer + binder + warden + relay` compression in a shrunken arena. The highest-value concrete interpretation was to change the combat cell itself, not just soften copy, so the first rider can actually own space before the route asks for a true breach proof.
+  Follow-up risk: `Wave 8` should now feel better to dominate with support online, but this also means the shipped `Wave 7-8` band is less of a sharp finale spike. If later critique says the close has become too flat, the next bounded pass should add a clearer elite cadence or enemy-side punctuation inside this same open-lane support proof, not restore relay upkeep or shrink the arena back down.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Combat
 
 - 2026-03-27 16:55:00 KST
   Changed: collapsed one more bounded layer of reward/title admin in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css), and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs). The shipped title launch panel now renders only the hull silhouette plus a single `Wave 3 첫 무기 도약` focus line, and the recurring base-route forge context now resolves to one inline `eyebrow + form` line with no pulse/detail sentence, leaving the three cards themselves to sell the pick.

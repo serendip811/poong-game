@@ -140,7 +140,7 @@ assert.equal(baseRouteVictoryLap.arena.width, 1820);
 assert.equal(baseRouteVictoryLap.arena.height, 1020);
 assert.equal(baseRouteVictoryLap.spawnBudget, 66);
 assert.equal(baseRouteVictoryLap.activeCap, 18);
-assert.equal(game.WAVE_CONFIG[7].label, "Wave 8 · Crown Proof");
+assert.equal(game.WAVE_CONFIG[7].label, "Wave 8 · Support Proof");
 assert.equal(game.WAVE_CONFIG[8].label, "Wave 9 · Payoff Run+");
 assert.equal(game.WAVE_CONFIG[9].label, "Wave 10 · Crown Proof+");
 assert.equal(game.WAVE_CONFIG[4].directive, "가장 넓은 flank부터 비우고 열린 lane 둘 중 하나를 오래 붙든다.");
@@ -149,7 +149,10 @@ assert.equal(
   game.WAVE_CONFIG[6].directive,
   "가장 넓은 flank를 먼저 비우고 rider가 덧난 lane 하나를 오래 붙들며 점유 시간을 늘린다."
 );
-assert.equal(game.WAVE_CONFIG[7].directive, "가장 얇은 입구를 짧게 찢고 열린 crownline을 오래 붙든다.");
+assert.equal(
+  game.WAVE_CONFIG[7].directive,
+  "가장 넓은 외곽 lane을 먼저 비우고 rider가 잡은 화선을 끝까지 밀어 점유 시간을 늘린다."
+);
 assert.equal(game.WAVE_CONFIG[5].mix.mortar || 0, 0);
 assert.ok((game.WAVE_CONFIG[5].mix.binder || 0) === 0);
 assert.equal(game.WAVE_CONFIG[5].mix.lancer || 0, 0);
@@ -162,6 +165,14 @@ assert.equal(game.WAVE_CONFIG[6].arena.width, 1720);
 assert.equal(game.WAVE_CONFIG[6].arena.height, 960);
 assert.ok(game.WAVE_CONFIG[6].arena.width > game.WAVE_CONFIG[5].arena.width);
 assert.ok(game.WAVE_CONFIG[6].activeCap < game.WAVE_CONFIG[7].activeCap);
+assert.equal(game.WAVE_CONFIG[7].pressureFamily, "domination");
+assert.equal(game.WAVE_CONFIG[7].activeCap, 23);
+assert.equal(game.WAVE_CONFIG[7].spawnBudget, 126);
+assert.equal(game.WAVE_CONFIG[7].arena.width, 1760);
+assert.equal(game.WAVE_CONFIG[7].arena.height, 980);
+assert.equal(game.WAVE_CONFIG[7].hazard, undefined);
+assert.ok((game.WAVE_CONFIG[7].mix.binder || 0) === 0);
+assert.ok((game.WAVE_CONFIG[7].mix.lancer || 0) < 0.2);
 assert.equal(game.WAVE_CONFIG[8].activeCap, 26);
 assert.equal(game.WAVE_CONFIG[9].activeCap, 30);
 assert.equal(game.WAVE_CONFIG[10].activeCap, 28);
@@ -791,16 +802,16 @@ assert.ok(game.computeSupportSystemStats(pollutedShippingBuild));
 assert.ok(game.WAVE_CONFIG[7].spawnBudget > game.WAVE_CONFIG[4].spawnBudget);
 assert.ok(game.WAVE_CONFIG[7].mix.warden > 0);
 assert.equal(game.WAVE_CONFIG[7].mix.mortar || 0, 0);
-assert.ok(game.WAVE_CONFIG[7].hazard.coreHp > 0);
-assert.equal(game.WAVE_CONFIG[7].hazard.type, "relay");
-assert.ok(game.WAVE_CONFIG[7].hazard.relayWidth > 0);
+assert.equal(game.WAVE_CONFIG[7].hazard, undefined);
+assert.equal(game.WAVE_CONFIG[7].pressureFamily, "domination");
+assert.ok((game.WAVE_CONFIG[7].mix.binder || 0) === 0);
 assert.ok(game.WAVE_CONFIG[7].activeCap > game.WAVE_CONFIG[5].activeCap);
-assert.equal(game.WAVE_CONFIG[7].hazard.count, 1);
+assert.ok(game.WAVE_CONFIG[7].arena.width >= game.WAVE_CONFIG[6].arena.width);
 assert.equal(game.WAVE_CONFIG[8].arena.width, 1700);
 assert.equal(game.WAVE_CONFIG[8].hazard, undefined);
 assert.ok(game.WAVE_CONFIG[8].mix.skimmer > game.WAVE_CONFIG[8].mix.warden);
 assert.ok(game.WAVE_CONFIG[8].mix.lancer > game.WAVE_CONFIG[8].mix.mortar);
-assert.ok(game.WAVE_CONFIG[8].activeCap <= game.WAVE_CONFIG[7].activeCap);
+assert.ok(game.WAVE_CONFIG[8].activeCap > game.WAVE_CONFIG[7].activeCap);
 assert.ok(game.WAVE_CONFIG[9].hazard.count >= 1);
 assert.equal(game.ENEMY_DEFS.brander.label, "Brander");
 assert.equal(game.WAVE_CONFIG[9].arena.height, 940);
@@ -841,13 +852,14 @@ assert.equal(breaklineFollowthrough.pressureFamily, "domination");
 assert.equal(breaklineFollowthrough.label, "Wave 6 · Payoff Run+");
 assert.equal(crownfireSpike.pressureFamily, "domination");
 assert.equal(crownfireSpike.hazard, undefined);
-assert.equal(forgecrossSpike.hazard.type, "relay");
-assert.equal(forgecrossSpike.hazard.label, "Crown Proof Relay");
+assert.equal(forgecrossSpike.pressureFamily, "domination");
+assert.equal(forgecrossSpike.hazard, undefined);
+assert.equal(forgecrossSpike.label, "Wave 8 · Support Proof");
 assert.ok(afterglowWindow.activeCap <= breaklineFollowthrough.activeCap);
 assert.ok(breaklineFollowthrough.activeCap < crownfireSpike.activeCap);
 assert.ok(crownfireSpike.activeCap < forgecrossSpike.activeCap);
 assert.ok(afterglowWindow.arena.width < breaklineFollowthrough.arena.width);
-assert.ok(crownfireSpike.arena.width >= forgecrossSpike.arena.width);
+assert.ok(crownfireSpike.arena.width <= forgecrossSpike.arena.width);
 assert.ok(crownfireSpike.mix.skimmer > crownfireSpike.mix.brute);
 assert.ok(forgecrossSpike.mix.warden > 0);
 const lateCacheBuild = game.createInitialBuild("relay_oath");
@@ -3193,7 +3205,7 @@ const lowBankChoices = game.buildForgeChoices(build, rng, 0);
 assert.ok(lowBankChoices.some((choice) => choice.contractRole === "gamble"));
 assert.ok(lowBankChoices.some((choice) => choice.cost === 0));
 
-const hazardConfig = game.WAVE_CONFIG[7].hazard;
+const hazardConfig = game.WAVE_CONFIG[9].hazard;
 const eliteHazard = game.chooseHazardSpawn(
   hazardConfig,
   {
@@ -3384,11 +3396,11 @@ const waveSummary = game.WAVE_CONFIG.map((wave) => ({
 const actTwoLadder = game.WAVE_CONFIG.slice(4, 8);
 assert.equal(
   actTwoLadder.map((wave) => wave.pressureFamily).join("|"),
-  "domination|domination|domination|breach"
+  "domination|domination|domination|domination"
 );
 assert.equal(
   actTwoLadder.map((wave) => (wave.hazard ? wave.hazard.type : "none")).join("|"),
-  "none|none|none|relay"
+  "none|none|none|none"
 );
 assert.ok(actTwoLadder[1].arena.width > actTwoLadder[0].arena.width);
 assert.ok(actTwoLadder[1].arena.height > actTwoLadder[0].arena.height);
@@ -3396,7 +3408,7 @@ assert.ok(actTwoLadder[2].arena.width > actTwoLadder[1].arena.width);
 assert.ok(actTwoLadder[2].arena.height > actTwoLadder[1].arena.height);
 assert.ok(actTwoLadder[2].activeCap < actTwoLadder[3].activeCap);
 assert.ok(actTwoLadder[2].note.includes("shared support lap cell"));
-assert.ok(actTwoLadder[3].note.includes("shared proof cell"));
+assert.ok(actTwoLadder[3].note.includes("shared support proof cell"));
 
 const lateBreakSmokeBuild = game.createInitialBuild("scrap_pact");
 lateBreakSmokeBuild.bastionDoctrineId = "kiln_bastion";

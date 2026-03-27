@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Rewards`: the forge/title loop still reads like route administration instead of a fast, desire-first power pick, so the run does not yet sell repeat-play hunger.
-- Current drift bundle: the shipped `8-wave` slice still carries `12-wave`, `final form`, `late ascension`, and other future-route language in docs/title/forge, while `Wave 8` spends the first support payoff window like a finale.
-- Repeated false solution: copy trims that leave contract-shell markup, preview stacks, and dormant Wave `9+` framing alive, or adding more systems before the reward read and support proof lap are clean.
-- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: the useful lesson is immediate desire, strong hierarchy, and visible transformation, not explaining future structure.
-- Near-term critic pressure should stay on shipped-route honesty, reward clarity, and protecting a simple base-gun-to-support escalation arc before asking for more systems.
+- The most fragile gate is now `Combat`: the first real support payoff window still collapses into `Wave 8` finale pressure, so the run lacks a clean "my build came online" memory.
+- Current drift bundle: the shipped `8-wave` slice still carries `12-wave`, `Wave 9+`, `final form`, and `late ascension` framing across docs, forge, combat feed, and result copy while also overstacking `Wave 8`.
+- Repeated false solution: trimming copy without removing contract-shell/proof/admin structure, or adding more support catalog breadth before the base gun -> midform -> rider arc and `Wave 7-8` pacing are clean.
+- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: the relevant bar is desire-first rewards, readable breathing room, and visible power spikes, not extra terminology or future-route promises.
+- Near-term critic pressure should stay on shipped-route honesty, forge simplification, and especially turning `Wave 8` into a support dominance lap rather than an early final exam.
