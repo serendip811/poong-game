@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: make the shipped `8-wave` route honest and singular by centering one weapon arc, one chassis/defense commitment, and one greed fork while removing `Wave 9+` / late-branch promises from the live contract until the base run earns expansion.
+- Immediate priority: strip the shipped `8-wave` route back to one desire-first reward contract by deleting planner-style roadmap/preview clutter and helper-tech future hooks until one weapon spike, one chassis break, and one greed bend read instantly.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 11:42:00 KST
+  Findings:
+  - The reward layer still reads like a build-planning document instead of a hunger machine. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L7039) `createForgePreviewRows()`, [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L7345) `getForgeChoiceTransformation()`, and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22480) `renderForgeOverlay()` still stack promise/proof/preview/impact-strip/context-shell layers around each pick. Against `Nova Drift` or `Brotato`, the player should mostly see one dominant spike and buy it on silhouette and immediate payoff, not parse a mini design pitch each wave.
+  - The shipped `8-wave` route is still mentally framed as a roadmap product. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8436) `createShippingLadderMarkup()` and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8768) `getForgeEvolutionLadder()` still generate multi-step ladders, `Next/Then` payoff rows, and offense/defense/greed future tracks even while the live route is supposed to be singular and short. That keeps the player reading futures instead of craving the next live power break.
+  - Early growth is still being spent too early at the mental level. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L4030) sets `FORGE_PACKAGE_START_WAVE = 3`, and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12904) / [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L7424) still let preview-support language enter the forge well before support systems actually unlock at Wave 7. Even when the hardware is gated, the fantasy is already busy with satellites, shields, sentries, and side rails before the base gun/body arc has become memorable.
+  - Screen messaging is still carrying stale prototype contract noise. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8) and [docs/games/cinder-circuit-source-analysis.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-analysis.md#L30) still define the game around `12웨이브`, signatures, and three eras, while [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L16628) still boots the combat feed with `시동 회로` copy. The opening contract is cleaner than before, but the supporting language still sounds like a broader prototype system that has not been cut down to the shipped fantasy.
+  Top Priority: Collapse the forge/HUD reward presentation to one headline payoff line plus one compact stat proof per card, and remove roadmap ladders, future-track rows, and pre-Wave-7 support previews from the shipped route.
+  Why Now: If every between-wave pause still feels like reading a planner, players will not feel the urgency or appetite to rerun the current combat loop.
+  Do Not Repeat: Do not solve this with copy trimming alone while the forge still renders roadmap structures, future lanes, and helper-tech teaser rows around every pick.
+  Release Gate: Rewards
 
 - 2026-03-27 11:18:00 KST
   Findings:
@@ -3387,6 +3398,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 11:12:04 KST
+  Changed: removed one bounded early-support teaser from the shipped forge path in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and updated the matching expectation in [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs). `createPreviewSupportChoice(...)` now fails closed on the consolidated `Wave 1-8` route until `SUPPORT_SYSTEM_START_WAVE`, so the live `Wave 5` rider lane can no longer surface `preview_support` cards, halos, drones, or other support-preview wording before the real rider unlock at `Wave 7`.
+  Why: the newest critique's `Top Priority` explicitly called out pre-`Wave 7` support previews as part of why the forge still reads like a planner. The highest-value concrete interpretation that fit one bounded pass was to cut the teaser card itself from the shipped route, because that removes both a future-track row and an early helper-tech fantasy leak without adding another wrapper or copy-only patch.
+  Follow-up risk: this restores a leaner gun/body-first opening, but it also reduces defensive variety at the `Wave 5` rider slot. If the next critique says that stop has become too samey, the right follow-up is another chassis-or-defense card that pays off immediately, not reintroducing preview support language before `Wave 7`.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Rewards
 
 - 2026-03-27 12:05:00 KST
   Changed: removed one bounded layer of fake late-route promise from the shipped base-route helpers in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and refreshed the matching smoke expectations in [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs). `getBuildRoadmap(...)` and `getForgeEraPlan(...)` now hard-clamp the consolidated route to `Wave 1-8`, the third roadmap step now reads as `완성 시험 -> 짧은 승리 랩` instead of `Crown Break / Wave 9-12`, the era plan now closes on `Wave 8 + Lap`, and the base-route forge/combat feed no longer tells the player that `Wave 8` opens a `Wave 9-12` proof band or `12-wave spine`.

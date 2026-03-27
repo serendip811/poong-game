@@ -214,8 +214,7 @@ assert.equal(wave5ForgeChoices.find((choice) => choice.contractRole === "headlin
 const wave5RiderChoice = wave5ForgeChoices.find((choice) => choice.contractRole === "rider");
 assert.ok(
   wave5RiderChoice &&
-    ((wave5RiderChoice.type === "utility" && wave5RiderChoice.action === "preview_support") ||
-      (wave5RiderChoice.type === "affix" && wave5RiderChoice.affixId === "thermal_weave") ||
+    ((wave5RiderChoice.type === "affix" && wave5RiderChoice.affixId === "thermal_weave") ||
       (wave5RiderChoice.type === "mod" &&
         ["armor_mesh", "step_servos", "coolant_purge"].includes(wave5RiderChoice.modId)) ||
       wave5RiderChoice.type === "fallback")

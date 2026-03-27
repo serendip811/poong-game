@@ -12888,6 +12888,7 @@
   function createPreviewSupportChoice(build, nextWave) {
     if (
       !build ||
+      (CONSOLIDATED_12_WAVE_ROUTE && nextWave < SUPPORT_SYSTEM_START_WAVE) ||
       nextWave !== 5 ||
       Boolean(build.previewSupportSystemId) ||
       getInstalledSupportSystems(build).length > 0

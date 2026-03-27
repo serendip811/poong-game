@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Progression`: the shipped `8-wave` run still advertises `Wave 9+ / Act 3 / Crown Break` payoff and too many side contracts, so the player cannot cleanly feel or trust the current escalation spine.
-- Current drift bundle: docs, forge, and combat-feed language still sell a larger `12-wave / three-era` product while the live path still exposes wildcard, doctrine-pursuit, catalyst, and other medium-scope futures that crowd out one memorable rerun arc.
-- Repeated false solution: trimming wording or card chrome without deleting the `Wave 9+` promises and branch systems from the shipped contract itself.
-- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: the relevant bar is desire-first rewards, readable breathing room, and visible power spikes, not extra terminology or future-route promises.
-- Near-term critic pressure should stay on shipped-route honesty and rerun-worthy arc clarity: the live build should advertise only one weapon spike, one defensive/body spike, and one greed deviation before late branches or longer-run scaffolding come back.
+- The most fragile gate is now `Rewards`: the shipped `8-wave` run still pauses like a planner, with forge cards, ladders, and future-track rows explaining too much instead of making one visible spike feel irresistible.
+- Current drift bundle: even after route consolidation, forge/HUD surfaces still expose roadmap structures, offense-defense-greed ladders, preview-support teases, and stale `12-wave / signature / three-era` language that keep the run feeling broader and wordier than the playable fantasy.
+- Repeated false solution: shortening copy or polishing card layout while leaving roadmap markup, future payoff rows, and helper-tech teaser grammar intact.
+- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: the bar is desire-first rewards, immediate hierarchy, and earned spectacle, not comprehensive explanation.
+- Near-term critic pressure should stay on deleting reward-screen taxonomy and protecting the early arc: let the player start with a bare hull, earn one unmistakable weapon break, then one chassis/support break, without previewing the whole system tree first.
