@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop adding branch breadth; give Seeker Array and Volt Drones their own Wave 6-8 proof asks, then cut forge/inspect readouts to one installed object plus one immediate threat.
+- Immediate priority: recut Wave 6 into one earned transformation at a time and collapse forge/inspect to one installed object plus one immediate threat; stop advertising extra bays or route tails before the current payoff loop feels clean.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 08:05:00 KST
+  Findings:
+  - The support families are no longer the main illusion problem; `Seeker Array` and `Volt Drones` now have bespoke Wave 6-8 proof framing in `game.js`. The sharper failure is that `buildWave6ChassisBreakpointChoices(...)` still packages chassis lock, support install, and future bay promise into one Wave 6 beat, which front-loads spectacle and weakens the feeling of later transformation.
+  - This breaks the early-growth rule the docs and red flags are trying to protect. A release-feeling roguelite starts with one lean weapon/body answer, then earns orbitals, shields, helpers, or missile racks later. Here the run is still too eager to say `body/support bracket` and `Wave 8 bay` before the player has fully inhabited a single new form.
+  - `renderForgeOverlay()` is still too contract-shaped for a strong reward moment. The shipped route keeps a `현재 형태 / 즉시 위협 / branch payoff` shell plus proof copy on cards, which is closer to a tactical briefing than the one-object hunger beat stronger references use. `Hades` boon picks, `Brotato` shops, and `Nova Drift` upgrade beats all read power first, explanation second.
+  - The file also still carries shared `support_lap` / `support_proof` grammar beside the new bespoke support proof logic. Even if some of it is fallback scaffolding, that is a warning that the escalation spine is still being built as layered copy variants instead of a clean reusable `install -> new habit -> overclock payoff` structure that could actually scale to a future 20-30 wave run.
+  Top Priority: Make Wave 6 a true single-axis breakpoint again: pick either the chassis/body leap or the first visible support install there, not both, and rewrite the forge shell so it shows one installed object first and one immediate threat second.
+  Why Now: Until the run stops pre-spending both complexity and spectacle at the same breakpoint, later upgrades cannot feel like real transformation.
+  Do Not Repeat: Do not answer this with more support variants, more bay promises, or shorter wording around the same three-slot forge shell.
+  Release Gate: Builds
 
 - 2026-03-28 07:20:00 KST
   Findings:
@@ -3829,6 +3840,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-28 08:40:00 KST
+  Changed: recut the shipped `Wave 6` chassis breakpoint in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) back to a true single-axis body leap. `buildWave6ChassisBreakpointChoices(...)` no longer bundles a doctrine support install or bay unlock into `bastion_bay_forge`; those cards now sell only the chosen chassis posture, and `applyForgeChoice(...)` preserves the chassis surge while recording `support hold through Wave 7 proof laps` instead of opening a live support package immediately. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new contract: `Wave 6` stays chassis-only, `Wave 7` keeps support and gamble hidden, and the doctrine-owned support silhouette reopens at `Wave 8`.
+  Why: the latest critique's `Top Priority` said the current failure was not missing support content but the fact that `Wave 6` was still pre-spending chassis lock, support install, and future bay promise in one reward beat. The highest-value bounded interpretation was to reverse that packaging and make the body leap stand on its own for two proof laps, because that directly improves build identity and later transformation appetite without adding another system branch.
+  Follow-up Risk: this restores the lean `Wave 6 -> Wave 7` proof rhythm, but the critique's reward-shell half is still open. If the next pass says the forge stop still reads like a route brief, the next bounded change should simplify `renderForgeOverlay()` to one installed object first and one immediate threat second rather than reopening support timing again.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Builds
 
 - 2026-03-28 07:45:00 KST
   Changed: replaced the shipped `Volt Drones` fallback on the shared `Claim Space` support ladder in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) with its own `Wave 6-8` proof script inside `applySupportProofEncounterConfig(...)`. An installed drone wing now drives `Drone Screen` on `Wave 6` for rear-screen resets against shrike/brander chase pressure, `Drone Re-entry` on `Wave 7` for binder tail-seam pocket retakes instead of long drift kiting, and `Drone Overclock` on `Wave 8` for a visible rolling-refuge payoff where the overclocked wing chews through brute/binder pursuers while the player chains forward pockets. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock all three proof labels, directives, mix expectations, and the live `Drone Overclock` HUD status.

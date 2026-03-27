@@ -7706,7 +7706,7 @@
           : CONSOLIDATED_12_WAVE_ROUTE && choice.systemChoice
           ? `${supportTitle}가 다음 전투부터 복귀 각과 근접 정리선을 바로 받쳐 Wave 6-7 proof lap에서 같은 bracket을 길게 읽게 만들고, Wave 8 마무리 포지까지 같은 실루엣을 이어 붙인다.`
           : !choice.bayUnlock && CONSOLIDATED_12_WAVE_ROUTE
-            ? "다음 전투는 새 차체 리듬만 읽는 proof window가 되고, 첫 support rider는 Wave 7부터 그 위에 얹힌다."
+            ? "다음 전투는 새 차체 리듬만 읽는 proof window가 되고, 첫 support rider는 Wave 8 마무리 포지에서 다시 연다."
             : choice.systemChoice
           ? `${supportTitle}가 다음 전투의 생존선과 복귀 각을 바로 다듬는다.`
           : "지금은 빈 보조칸만 열어 두고, 다음 전투에서 숨 쉴 공간부터 확보한다.";
@@ -8731,7 +8731,7 @@
       ? activeForm
       : (wave3LeapPreview && wave3LeapPreview.weaponChoice.title) || "첫 무기 도약";
     const stageOneDetail = build.bastionDoctrineId
-      ? `${pathLabel}이(가) 현재 주력 실루엣이다. 다음 큰 약속은 Wave 6 차체 잠금이며, 첫 support rider도 그 자리에서 함께 붙어 body/support bracket을 바로 연다.`
+      ? `${pathLabel}이(가) 현재 주력 실루엣이다. 다음 큰 약속은 Wave 6 차체 잠금이며, 첫 support rider는 Wave 8 마무리 포지까지 눌러 두어 몸체 리듬부터 먼저 증명한다.`
       : wave3LeapPreview
         ? `Wave ${ARCHITECTURE_DRAFT_WAVE}에서 ${wave3LeapPreview.weaponChoice.title}을(를) 먼저 붙여 첫 주포 도약을 만든다. support나 운영 패키지는 숨기고 이 무기 변화만 먼저 전장에 남긴다.`
         : `Wave ${ARCHITECTURE_DRAFT_WAVE}에서 첫 주포 도약을 붙여 빈 선체 구간을 끝낸다.`;
@@ -8745,15 +8745,15 @@
       (previewChassis && (previewChassis.label || previewChassis.title)) ||
       "첫 차체 잠금";
     let stageTwoDetail =
-      "Wave 6에서는 차체 잠금과 첫 support rider를 함께 붙여 dive, hold, exit 리듬과 보조 실루엣을 같은 proof lap에서 바로 읽게 만든다.";
+      "Wave 6에서는 차체 잠금만 먼저 붙여 dive, hold, exit 리듬을 두 번의 proof lap으로 먼저 굳힌다. 첫 support rider는 Wave 8 마무리 포지까지 뒤로 미룬다.";
     let stageTwoState = "planned";
     if (activeChassis) {
       stageTwoDetail = installedSupportIdentity
-        ? `${stageTwoTitle} 차체가 ${installedSupportIdentity.payoffValue}와 함께 잠겼다. 이제 Wave 6-7 proof lap은 body/support bracket을 바로 시험하고, Wave 8에서는 같은 실루엣에 bay 확장이나 증설 한 번을 더 얹는다.`
-        : `${stageTwoTitle} 차체가 잠겼다. 이제 이 몸체 리듬과 첫 support rider가 같은 proof lap에서 함께 시험된다.`;
+        ? `${stageTwoTitle} 차체 위에 ${installedSupportIdentity.payoffValue}까지 얹혔다. 몸체 proof를 통과한 뒤 열어 둔 support slot이 이제야 같은 실루엣을 넓히기 시작한다.`
+        : `${stageTwoTitle} 차체가 잠겼다. 이제 Wave 6-7 proof lap은 이 몸체 리듬만 시험하고, 첫 support rider는 Wave 8 마무리 포지에서 다시 연다.`;
       stageTwoState = "locked";
     } else if (boundedWave >= 5) {
-      stageTwoDetail = `${stageTwoTitle}이(가) 다음 큰 약속이다. Wave 6에서는 차체 잠금과 첫 support rider를 함께 붙여 mid-run identity를 바로 두 겹으로 세운다.`;
+      stageTwoDetail = `${stageTwoTitle}이(가) 다음 큰 약속이다. Wave 6에서는 차체만 먼저 잠가 mid-run identity를 한 축으로 세우고, support는 Wave 8에 다시 연다.`;
       stageTwoState = "primed";
     }
     const baseRouteFinale = getBaseRouteFinaleRoadmap(build, currentWeapon, boundedWave);
@@ -8984,9 +8984,9 @@
         state: stageState(6),
         detail: chassis
           ? supportIdentity
-            ? `${chassis.label} 차체가 ${supportIdentity.payoffValue}와 함께 잠겼다. 이제 Wave 6-7 proof lap이 body/support bracket을 바로 시험하고, Wave 8 마무리 포지에서 같은 실루엣에 bay 확장이나 증설 한 번을 더 얹는다.`
-            : `${chassis.label} 차체가 첫 방호 약속으로 잠긴다. 여기서 dive, hold, exit 리듬과 첫 support rider가 같은 proof lap에서 함께 갈라진다.`
-          : "Wave 6에서는 차체 잠금과 첫 support rider가 함께 붙어 body/support bracket을 바로 연다. Wave 7이 그 실루엣을 한 번 더 증명하고, Wave 8 마무리 포지가 뒤따른다.",
+            ? `${chassis.label} 차체 위에 ${supportIdentity.payoffValue}까지 올라왔다. 몸체 proof를 끝낸 뒤 열린 support slot이 이제 같은 실루엣을 더 넓게 밀어붙인다.`
+            : `${chassis.label} 차체가 첫 방호 약속으로 잠긴다. Wave 6-7은 이 몸체 리듬만 증명하고, 첫 support rider는 Wave 8 마무리 포지에서 다시 연다.`
+          : "Wave 6에서는 차체 잠금만 먼저 붙인다. Wave 6-7이 그 몸체 proof를 맡고, 첫 support rider는 Wave 8 마무리 포지로 미룬다.",
       },
     ];
   }
@@ -15406,13 +15406,6 @@
     if (!build) {
       return [];
     }
-    const doctrine = getBastionDoctrineDef(build);
-    const systemChoice = doctrine
-      ? createDoctrineChaseSystemChoice(build, doctrine, { nextWave })
-      : null;
-    const supportIdentity = systemChoice
-      ? getSupportSystemIdentitySummary(systemChoice.systemId, systemChoice.systemTier)
-      : null;
     const chassisDefs = Object.values(CHASSIS_BREAKPOINT_DEFS);
     const chassisChoices = chassisDefs.map((chassisDef) => ({
       type: "utility",
@@ -15422,13 +15415,9 @@
       tag: chassisDef.tag,
       title: chassisDef.title,
       description: CONSOLIDATED_12_WAVE_ROUTE
-        ? systemChoice
-          ? `${chassisDef.description} 이번 정지는 ${chassisDef.title}와 ${systemChoice.title}를 함께 잠가 Wave 6-7 proof lap부터 body/support bracket을 바로 연다. ${supportIdentity ? `${supportIdentity.effectValue}를 즉시 붙인 채` : "보조 실루엣을 즉시 붙인 채"} Wave 8 마무리 포지에서 세 번째 bay나 증설 한 번을 더 얹을 여지를 남긴다.`
-          : `${chassisDef.description} 이번 정지는 차체 하나만 잠가 Wave 6-7 proof lap 전체를 이 포즈로 버틴다. support bay와 rider install은 Wave 8 마무리 포지까지 닫아 두어, 먼저 몸체 리듬만 화면을 먹게 만든다.`
+        ? `${chassisDef.description} 이번 정지는 차체 하나만 잠가 Wave 6-7 proof lap 전체를 이 포즈로 버틴다. support bay와 rider install은 Wave 8 마무리 포지까지 닫아 두어, 먼저 몸체 리듬만 화면을 먹게 만든다.`
         : `${chassisDef.description} 이번 정지에서는 차체 실루엣만 먼저 확정하고 support bay 증설은 뒤로 미룬다.`,
-      slotText: systemChoice
-        ? `섀시 breakpoint · ${chassisDef.slotText} + ${systemChoice.title}`
-        : `섀시 breakpoint · ${chassisDef.slotText}`,
+      slotText: `섀시 breakpoint · ${chassisDef.slotText}`,
       cost: 0,
       laneLabel: "섀시 breakpoint",
       forgeLaneLabel: "섀시 breakpoint",
@@ -15436,8 +15425,6 @@
       chassisTitle: chassisDef.title,
       skipNextAdminStop: true,
       singleAxisBreakpoint: true,
-      bayUnlock: Boolean(systemChoice),
-      systemChoice,
     }));
     if (chassisChoices.length > 0) {
       return chassisChoices;
@@ -15459,8 +15446,6 @@
       chassisTitle: CHASSIS_BREAKPOINT_DEFS.vector_thrusters.title,
       skipNextAdminStop: true,
       singleAxisBreakpoint: true,
-      bayUnlock: Boolean(systemChoice),
-      systemChoice,
     }];
   }
 
@@ -16603,11 +16588,7 @@
         if (CONSOLIDATED_12_WAVE_ROUTE) {
           if (choice.singleAxisBreakpoint) {
             run.build.wave6ChassisBreakpoint = true;
-            run.build.upgrades.push(
-              choice.systemChoice
-                ? "Chassis Breakpoint: support online now, auto Wave 8 uplink"
-                : "Chassis Breakpoint: support hold through Wave 7 proof laps"
-            );
+            run.build.upgrades.push("Chassis Breakpoint: support hold through Wave 7 proof laps");
           } else if (!choice.bayUnlock) {
             run.build.upgrades.push("Chassis Breakpoint: small support held for mid-run forge");
           }

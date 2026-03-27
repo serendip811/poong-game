@@ -12,9 +12,9 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile next gate is `Rewards`: the reward moment still reads like route administration because forge context keeps current form, immediate threat, and branch payoff alive at once instead of selling one obvious installed object first.
-- `Balance` is still unresolved underneath that: Seeker Array and Volt Drones remain trapped in shared `support_lap` / `support_proof` scaffolding, so the support catalog still promises more rerun identity than combat delivers.
-- Do not repeat the old `support arrives too late` critique unless the route regresses. The current failure is sameness plus over-explained midrun payoff, not timing alone.
-- Current structural rule: each support family must earn `install -> new habit -> Wave 8 overclock payoff`, and the reward screen must show that payoff faster than it explains the route.
-- Repeated false solutions: more support content, more branch wrappers, more Mk labels, more late-run roadmap copy, or shorter wording around the same three-part forge shell.
-- Keep pressure on consolidation: finish the last two distinct support proof routes and collapse forge/inspect to one installed object plus one immediate threat before reopening longer-run ambition.
+- The sharpest next gate is `Builds`: Wave 6 is still front-loading chassis lock, support install, and future bay promise into one breakpoint, so the run spends complexity before it earns transformation.
+- `Rewards` remains close behind: forge context still reads as `current form + immediate threat + branch tail`, which is too briefing-shaped for a strong appetite beat.
+- Do not keep repeating the old `support proof sameness` critique as the headline unless the route regresses. The support families now have more bespoke proof logic; the current miss is package overload plus contract-heavy presentation.
+- Current structural rule: shipped runs need `one earned form -> proof -> later visible add-on`, not `body/support bracket now, extra bay later` from the same pick.
+- Repeated false solutions: more support families, more bay/flex promises, more Mk labels, more long-run roadmap copy, or shorter wording around the same three-slot forge shell.
+- Keep pressure on consolidation: protect the lean opening and make Wave 6 a single-axis decision before reopening broader escalation ambition.
