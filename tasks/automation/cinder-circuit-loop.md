@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: make the shipped 8-wave route read like a lean action run by stripping live HUD/pause/forge route-admin noise and protecting a visibly small opening form before adding new branch breadth.
+- Immediate priority: turn the shipped Wave 5-8 slice into three genuinely replayable appetites by giving offense, defense/support, and greed/utility each a visible combat identity with at least two proof laps before adding more route machinery.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 20:12:00 KST
+  Findings:
+  - The shipped run says it offers `주력 변이 / 방호·보조 / 판돈·유틸`, but only the headline lane currently gets true monster-form payoff. `Wave 5-8` headline mutations and doctrine forms rewrite firing geometry, while rider/support is still gated to `Wave 7` and greed is mostly a scrap/debt overlay, so reruns are still really about "which gun break" rather than "which build fantasy." [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2581) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L4450) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L13195)
+  - `Wave 6` protects the lean opening by locking a body-first breakpoint, but that leaves defense/support identity with almost no runway to become desirable. In the consolidated route the chassis choices explicitly delay support until `Wave 7`, which means shields, orbitals, drones, or missile shells never get the same anticipation-plus-proof cycle the main gun receives. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L14338)
+  - The greed lane still changes economy more than piloting. `Scrapline Raid` adds scrap, pickup, and debt pressure, but its combat expression is an overlay on the same headline form instead of a visibly distinct route with its own screen-reading reward, so it feels like accounting risk rather than a run identity a player would chase again. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L13205) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L13747)
+  - The catalog ceiling is now ahead of the appetite loop. There are already multiple satellites, shields, missiles, drones, chassis breaks, mutations, and late-route escalators in runtime, but the honest 8-wave route still cannot prove one memorable support run and one memorable greed run before ending. That is content breadth without replay conviction. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2591) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2885) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2966)
+  Top Priority: Rebuild the shipped branch curve so by `Wave 6` the player can already commit to one real defense/support identity or one real greed/utility identity that visibly changes pathing, targeting, and arena priorities for the next two combats.
+  Why Now: Until all three forge appetites create distinct proof laps, the game cannot earn repeat-run hunger or justify a future `20-30 wave` expansion.
+  Do Not Repeat: Do not answer this with more support catalog entries, more debt modifiers, or more late-route systems while support and greed still ride behind the same main-gun fantasy.
+  Release Gate: Builds
 
 - 2026-03-27 19:31:12 KST
   Findings:
@@ -3585,6 +3596,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 23:58:00 KST
+  Changed: gave the shipped `Wave 6` chassis breakpoint an immediate two-fight proof window in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). `resolveWaveConfig(...)` now applies a bounded `applyChassisBreakpointEncounterConfig(...)` overlay for non-greed `Wave 6-7` runs, so `Vector Thrusters`, `Bulwark Treads`, and `Salvage Winch` each bend arena size, enemy mix, hazard tempo, and directives into a different support/defense read before any real support install arrives. Added a small `chassisProof` surfacing hook to the live wave state/feed/side-bet summary so the branch is named in combat, and extended [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the three overlays plus the rule that active greed routes suppress this proof layer.
+  Why: the latest critique's `Top Priority` was to make `Wave 6` already feel like a real defense/support or greed/utility commitment that changes pathing, targeting, and arena priorities for the next two combats. The highest-value bounded interpretation was to cash out the existing chassis break into encounter geometry and target-priority changes instead of adding more support catalog content or more late-route systems.
+  Follow-up Risk: the lane is now more legible, but the three chassis proofs still share the same underlying `Wave 6 relay -> Wave 7 drift` skeleton. If later feedback says support runs still blur together, the next bounded pass should deepen one chassis' on-arena ask or pickup interaction instead of widening the reward grammar again.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Builds
 
 - 2026-03-27 23:45:00 KST
   Changed: rebuilt the shipped pause contract in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html), and [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) so `Tab` no longer re-expands the hidden HUD document. `shouldUseMinimalBaseRouteHud(...)` now stays minimal during paused combat on the consolidated route, `renderHudPanels()` and `renderCombatFeed()` stop reopening the full detail/feed stack during pause, the live wave strip no longer reintroduces `분기 보상` just because the player paused, and the pause overlay now renders `#pause-summary` through `createBaseRoutePauseSnapshotMarkup(...)` as one current-form/proof card plus three short lanes `주력 변이 / 방호·보조 / 판돈·유틸`. Added smoke coverage in [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) for the paused minimal-HUD contract, the new pause snapshot markup, and the new DOM anchor.

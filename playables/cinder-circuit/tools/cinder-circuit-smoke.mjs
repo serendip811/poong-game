@@ -1651,6 +1651,12 @@ const chassisRun = {
   stats: { scrapCollected: 0, scrapSpent: 0 },
   player: { hp: 100, maxHp: 100, heat: 0, overheated: false },
 };
+const vectorChassisChoice = wave6ChassisPackages.find((choice) => choice.chassisId === "vector_thrusters");
+const bulwarkChassisChoice = wave6ChassisPackages.find((choice) => choice.chassisId === "bulwark_treads");
+const salvageChassisChoice = wave6ChassisPackages.find((choice) => choice.chassisId === "salvage_winch");
+assert.ok(vectorChassisChoice);
+assert.ok(bulwarkChassisChoice);
+assert.ok(salvageChassisChoice);
 const wave6AscensionRun = {
   build: game.createInitialBuild("scrap_pact"),
   resources: { scrap: 0 },
@@ -1666,12 +1672,41 @@ assert.equal(wave6AscensionRun.build.supportBayCap, 2);
 assert.equal(wave6AscensionRun.build.chassisId, fallbackWave6AscensionChoices[0].chassisId);
 assert.equal(game.shouldSkipOwnershipAdminStop(wave6AscensionRun.build, 9), false);
 chassisRun.build.bastionDoctrineId = "kiln_bastion";
-game.applyForgeChoice(chassisRun, wave6ChassisPackages[0]);
+game.applyForgeChoice(chassisRun, vectorChassisChoice);
 assert.equal(chassisRun.build.wave6ChassisBreakpoint, false);
 assert.equal(chassisRun.build.supportBayCap, 2);
 assert.equal(chassisRun.build.supportSystems.length, 0);
-assert.equal(chassisRun.build.chassisId, wave6ChassisPackages[0].chassisId);
+assert.equal(chassisRun.build.chassisId, vectorChassisChoice.chassisId);
 assert.equal(game.shouldSkipOwnershipAdminStop(chassisRun.build, 9), false);
+const vectorWave6Proof = game.resolveWaveConfig(5, chassisRun.build);
+const vectorWave7Proof = game.resolveWaveConfig(6, chassisRun.build);
+const baseWave7Proof = game.resolveWaveConfig(6, game.createInitialBuild("scrap_pact"));
+assert.equal(vectorWave6Proof.chassisProof?.label, "Slipstream Breach");
+assert.equal(vectorWave7Proof.chassisProof?.label, "Slipstream Pursuit");
+assert.match(vectorWave6Proof.directive, /relay/);
+assert.ok(vectorWave7Proof.hazard?.driftSpeed > baseWave7Proof.hazard?.driftSpeed);
+const bulwarkProofBuild = game.createInitialBuild("scrap_pact");
+bulwarkProofBuild.bastionDoctrineId = "kiln_bastion";
+game.applyForgeChoice(
+  { build: bulwarkProofBuild, resources: { scrap: 0 }, stats: {}, player: null },
+  bulwarkChassisChoice
+);
+const bulwarkWave7Proof = game.resolveWaveConfig(6, bulwarkProofBuild);
+assert.equal(bulwarkWave7Proof.chassisProof?.label, "Bulwark Refuge");
+assert.match(bulwarkWave7Proof.directive, /hold|버틴/);
+assert.ok(bulwarkWave7Proof.hazard?.driftSpeed < baseWave7Proof.hazard?.driftSpeed);
+const salvageProofBuild = game.createInitialBuild("scrap_pact");
+salvageProofBuild.bastionDoctrineId = "kiln_bastion";
+game.applyForgeChoice(
+  { build: salvageProofBuild, resources: { scrap: 0 }, stats: {}, player: null },
+  salvageChassisChoice
+);
+const salvageWave6Proof = game.resolveWaveConfig(5, salvageProofBuild);
+const baseWave6Proof = game.resolveWaveConfig(5, game.createInitialBuild("scrap_pact"));
+assert.equal(salvageWave6Proof.chassisProof?.label, "Towchain Sweep");
+assert.ok(salvageWave6Proof.driveGainFactor > baseWave6Proof.driveGainFactor);
+salvageProofBuild.midrunGreedRouteUntilWave = 8;
+assert.equal(game.resolveWaveConfig(5, salvageProofBuild).chassisProof, undefined);
 const predatorCacheChoices = game.buildFieldGrantChoices(predatorBaitRun.build, () => 0, 10);
 assert.equal(game.isArsenalBreakpointWave(10), true);
 assert.ok(predatorCacheChoices.some((choice) => choice.action === "field_mutation"));

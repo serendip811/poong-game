@@ -2144,20 +2144,32 @@
   function resolveWaveConfig(index, build = null) {
     const baseConfig = WAVE_CONFIG[clamp(index, 0, MAX_WAVES - 1)];
     if (!baseConfig || index < LATE_BREAK_ARMORY_WAVE - 1 || !build) {
-      return applyEncounterPressureFamily(baseConfig);
+      return applyChassisBreakpointEncounterConfig(
+        applyEncounterPressureFamily(baseConfig),
+        build,
+        index + 1
+      );
     }
     const directLateBreakOverride = getDirectLateBreakWaveOverride(index, build);
     const override =
       directLateBreakOverride || SHARED_LATE_ACT_ENCOUNTER_POOL[index] || null;
     if (!override) {
-      return applyEncounterPressureFamily(baseConfig);
+      return applyChassisBreakpointEncounterConfig(
+        applyEncounterPressureFamily(baseConfig),
+        build,
+        index + 1
+      );
     }
     let config = applyEncounterOverride(baseConfig, override);
     const arsenalBreakpointProfile = getArsenalBreakpointEncounterProfile(build, index + 1);
     if (arsenalBreakpointProfile) {
       config = applyEncounterOverride(config, arsenalBreakpointProfile);
     }
-    return applyEncounterPressureFamily(config);
+    return applyChassisBreakpointEncounterConfig(
+      applyEncounterPressureFamily(config),
+      build,
+      index + 1
+    );
   }
 
   function getActLabelForWave(waveNumber) {
@@ -13769,6 +13781,190 @@
     return nextConfig;
   }
 
+  function applyChassisBreakpointEncounterConfig(config, build, waveNumber) {
+    if (
+      !CONSOLIDATED_12_WAVE_ROUTE ||
+      !config ||
+      !build ||
+      !Number.isFinite(waveNumber) ||
+      waveNumber < 6 ||
+      waveNumber > 7 ||
+      isMidrunGreedRaidFrameActive(build, waveNumber)
+    ) {
+      return config;
+    }
+    const chassis = getChassisBreakpointDef(build);
+    if (!chassis) {
+      return config;
+    }
+    const nextConfig = {
+      ...config,
+      arena: config.arena ? { ...config.arena } : null,
+      hazard: config.hazard ? { ...config.hazard } : null,
+      mix: { ...(config.mix || {}) },
+    };
+    if (chassis.id === "vector_thrusters") {
+      nextConfig.arena = {
+        width: Math.max(1720, nextConfig.arena?.width || 0),
+        height: Math.max(960, nextConfig.arena?.height || 0),
+      };
+      nextConfig.mix = blendEnemyMix(
+        nextConfig.mix,
+        waveNumber === 6
+          ? {
+              skimmer: 0.24,
+              lancer: 0.22,
+              shrike: 0.2,
+            }
+          : {
+              skimmer: 0.26,
+              shrike: 0.22,
+              lancer: 0.16,
+            },
+        0.2
+      );
+      nextConfig.driveGainFactor = Math.max(nextConfig.driveGainFactor || 1, waveNumber === 6 ? 1.3 : 1.34);
+      nextConfig.activeCap = Math.max(14, nextConfig.activeCap - 1);
+      if (nextConfig.hazard) {
+        if (Number.isFinite(nextConfig.hazard.interval)) {
+          nextConfig.hazard.interval = Math.max(4.8, nextConfig.hazard.interval * 0.92);
+        }
+        if (Number.isFinite(nextConfig.hazard.telegraph)) {
+          nextConfig.hazard.telegraph = Math.max(0.6, nextConfig.hazard.telegraph - 0.06);
+        }
+        if (Number.isFinite(nextConfig.hazard.relayRange)) {
+          nextConfig.hazard.relayRange += 72;
+        }
+        if (Number.isFinite(nextConfig.hazard.driftSpeed)) {
+          nextConfig.hazard.driftSpeed += 20;
+        }
+        if (Number.isFinite(nextConfig.hazard.driftOrbit)) {
+          nextConfig.hazard.driftOrbit += 0.08;
+        }
+      }
+      nextConfig.note =
+        waveNumber === 6
+          ? `${config.note} Vector Thrusters proof가 가장 먼 relay flank를 먼저 찢고 반대 corridor로 즉시 재진입하는 dash loop를 강제한다.`
+          : `${config.note} Vector Thrusters proof가 drift wake 사이를 길게 가로질러 얇아진 외곽 pocket 두 곳을 연속으로 갈아타게 만든다.`;
+      nextConfig.directive =
+        waveNumber === 6
+          ? "가장 먼 relay를 먼저 끊고, 열린 corridor 하나를 대시 두 번으로 길게 점유한 뒤 반대 flank로 즉시 꺾는다."
+          : "drift wake 바깥 pocket을 짧게 비우고 바로 다음 pocket으로 갈아탄다. 같은 자리 hold보다 연속 재진입 각이 더 중요하다.";
+      nextConfig.chassisProof = {
+        label: waveNumber === 6 ? "Slipstream Breach" : "Slipstream Pursuit",
+        status: waveNumber === 6 ? "far relay dive" : "double pocket reset",
+        note:
+          waveNumber === 6
+            ? "먼 relay를 먼저 따고 열린 corridor를 대시로 길게 먹는 방호 proof다."
+            : "drift wake 사이 pocket 둘을 연속으로 갈아타며 복귀 각을 유지하는 방호 proof다.",
+      };
+      return nextConfig;
+    }
+    if (chassis.id === "bulwark_treads") {
+      nextConfig.mix = blendEnemyMix(
+        nextConfig.mix,
+        waveNumber === 6
+          ? {
+              brute: 0.24,
+              binder: 0.18,
+              warden: 0.18,
+            }
+          : {
+              brute: 0.22,
+              binder: 0.2,
+              warden: 0.2,
+            },
+        0.22
+      );
+      nextConfig.driveGainFactor = Math.max(nextConfig.driveGainFactor || 1, 1.22);
+      if (nextConfig.hazard) {
+        if (Number.isFinite(nextConfig.hazard.interval)) {
+          nextConfig.hazard.interval = nextConfig.hazard.interval * 1.06;
+        }
+        if (Number.isFinite(nextConfig.hazard.duration)) {
+          nextConfig.hazard.duration += 0.6;
+        }
+        if (Number.isFinite(nextConfig.hazard.coreHp)) {
+          nextConfig.hazard.coreHp += 14;
+        }
+        if (Number.isFinite(nextConfig.hazard.relayRange)) {
+          nextConfig.hazard.relayRange -= 54;
+        }
+        if (Number.isFinite(nextConfig.hazard.driftSpeed)) {
+          nextConfig.hazard.driftSpeed = Math.max(96, nextConfig.hazard.driftSpeed - 14);
+        }
+      }
+      nextConfig.note =
+        waveNumber === 6
+          ? `${config.note} Bulwark Treads proof가 relay 코어 주변 한 corridor를 오래 붙잡게 만들어 anchor timing이 바로 생존선이 된다.`
+          : `${config.note} Bulwark Treads proof가 느린 drift 틈에 refuge pocket 하나를 열고 버리는 hold cadence를 먼저 묻는다.`;
+      nextConfig.directive =
+        waveNumber === 6
+          ? "가장 가까운 relay 코어를 먼저 지우고 그 corridor 하나를 오래 붙잡는다. 넓게 도는 대신 anchor로 전면을 잠그는 쪽이 맞다."
+          : "느린 drift 틈에 refuge pocket 하나를 열고 버틴 뒤, 다음 pocket으로 짧게만 이동한다. 과한 추격보다 hold 시간이 더 중요하다.";
+      nextConfig.chassisProof = {
+        label: waveNumber === 6 ? "Bulwark Hold" : "Bulwark Refuge",
+        status: waveNumber === 6 ? "anchor corridor" : "refuge pocket hold",
+        note:
+          waveNumber === 6
+            ? "relay 코어 주변 corridor 하나를 오래 붙잡아 anchor 타이밍을 증명하는 방호 proof다."
+            : "drift 틈에 refuge pocket 하나를 열고 버티는 방호 proof다.",
+      };
+      return nextConfig;
+    }
+    if (chassis.id === "salvage_winch") {
+      nextConfig.arena = {
+        width: Math.max(1700, nextConfig.arena?.width || 0),
+        height: Math.max(940, nextConfig.arena?.height || 0),
+      };
+      nextConfig.mix = blendEnemyMix(
+        nextConfig.mix,
+        waveNumber === 6
+          ? {
+              skimmer: 0.24,
+              shrike: 0.2,
+              lancer: 0.16,
+            }
+          : {
+              skimmer: 0.22,
+              shrike: 0.2,
+              brander: 0.16,
+            },
+        0.18
+      );
+      nextConfig.driveGainFactor = Math.max(nextConfig.driveGainFactor || 1, waveNumber === 6 ? 1.28 : 1.32);
+      if (nextConfig.hazard) {
+        if (Number.isFinite(nextConfig.hazard.interval)) {
+          nextConfig.hazard.interval = Math.max(4.8, nextConfig.hazard.interval * 0.94);
+        }
+        if (Number.isFinite(nextConfig.hazard.coreHp)) {
+          nextConfig.hazard.coreHp = Math.max(30, nextConfig.hazard.coreHp - 6);
+        }
+        if (Number.isFinite(nextConfig.hazard.driftSpeed)) {
+          nextConfig.hazard.driftSpeed += 14;
+        }
+      }
+      nextConfig.note =
+        waveNumber === 6
+          ? `${config.note} Salvage Winch proof가 relay를 짧게 끊고 흩어진 drop line을 밟아 chassis surge를 유지하는 회수 루프를 만든다.`
+          : `${config.note} Salvage Winch proof가 drift 바깥 drop route를 짧게 긁고 다시 안쪽 pocket으로 복귀하는 회수 cadence를 강제한다.`;
+      nextConfig.directive =
+        waveNumber === 6
+          ? "relay를 빨리 끊고 바깥 drop line을 짧게 밟아 surge를 유지한 뒤 다시 전열 안으로 꺾는다. 회수 동선이 곧 진입선이다."
+          : "drift 바깥 drop route를 짧게 긁고 곧바로 안쪽 pocket으로 복귀한다. 오래 chase하기보다 surge를 여러 번 다시 켜는 편이 맞다.";
+      nextConfig.chassisProof = {
+        label: waveNumber === 6 ? "Towchain Sweep" : "Towchain Reset",
+        status: waveNumber === 6 ? "drop-line breach" : "surge reset loop",
+        note:
+          waveNumber === 6
+            ? "relay 절개 뒤 drop line을 밟아 surge를 유지하는 회수 proof다."
+            : "drift 바깥 drop route를 짧게 긁고 pocket으로 복귀하는 회수 proof다.",
+      };
+      return nextConfig;
+    }
+    return config;
+  }
+
   function shouldEnableBlackLedgerDebt(build, waveNumber) {
     return Boolean(
       build &&
@@ -16545,6 +16741,13 @@
           : "이번 웨이브 첫 elite가 live cache를 떨어뜨린다.",
       };
     }
+    if (currentState.phase === "wave" && currentState.wave && currentState.wave.chassisProof) {
+      return {
+        label: currentState.wave.chassisProof.label,
+        status: currentState.wave.chassisProof.status,
+        note: currentState.wave.chassisProof.note,
+      };
+    }
     if (
       currentState.phase === "wave" &&
       currentState.wave &&
@@ -18278,6 +18481,7 @@
       driveGainFactor: config.driveGainFactor || 1,
       hazard: config.hazard,
       hazardTimer: config.hazard ? config.hazard.interval * 0.8 : Number.POSITIVE_INFINITY,
+      chassisProof: config.chassisProof || null,
       midrunGreedRoute: config.midrunGreedRoute || null,
       blackLedgerRaid: config.blackLedgerRaid || null,
       blackLedgerDebt: createBlackLedgerDebtState(state.build, waveNumber),
@@ -18371,6 +18575,11 @@
           ? "Scrapline Route 활성화. caravan chase가 열려 payout을 쫓을수록 복귀 flank가 급하게 얇아진다."
           : "Scrapline Route 활성화. vault pocket이 열려 greed line을 짧게 긁고 빠지는 운영을 직접 요구한다.",
         "SCRAP"
+      );
+    } else if (state.wave.chassisProof) {
+      pushCombatFeed(
+        `${state.wave.chassisProof.label} 활성화. ${state.wave.chassisProof.note}`,
+        "FRAME"
       );
     }
     if (predatorBaitArmed) {

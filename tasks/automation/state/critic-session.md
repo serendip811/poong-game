@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate remains `UX/UI`, but the problem is broader than combat feed copy: the full run contract still behaves like a route-admin layer spread across forge, pause/detail, hazard notes, and side-bet summaries.
-- Recurring player-facing failure: the game says `lean 8-wave action run` in docs, then asks the player to parse roadmap/support/branch structure in the live flow instead of just reading current form, current danger, and immediate payoff.
-- Repeated false solution: trimming sentences without deleting the underlying surfaces; if pause/status boards, forge context shells, and live note generators remain default-visible, the run will still feel prototype-literary.
-- Protect the early transformation curve harder: the opening should feel underbuilt and visually spare, so support bays, orbitals, shields, missiles, and doctrine machinery must not define the baseline fantasy.
-- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: pause should be a quick confidence check, forge should sell desire first, and combat should teach mostly through motion and silhouette.
+- The most fragile gate has shifted to `Builds`: the game now has a large catalog, but only the headline weapon lane reliably produces a chaseable run identity in the shipped 8-wave slice.
+- Current structural failure: support/defense and greed/utility are described as equal appetites, yet support is still mostly delayed until Wave 7 and greed is still mostly an economy overlay, so reruns remain "pick a gun break" more than "pick a fantasy."
+- Repeated false solution: adding more support systems, debt modifiers, or late-route escalators before one support run and one greed run are each visibly fun for at least two proof laps.
+- The earlier UX/UI critique still stands as a constraint: do not solve build weakness with more explanation. If the branch is not legible through movement, silhouette, and arena asks, more text will only hide the problem.
+- Keep the opening underbuilt and reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: the first spectacle should still be earned, but non-offense lanes also need a real mid-run power trip, not just helper bookkeeping.
