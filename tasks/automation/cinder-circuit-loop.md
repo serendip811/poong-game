@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: make the shipped `8-wave` route honest and replayable by stripping dormant `12-wave / final-form / late-ascension` framing from live docs/UI and retuning `Wave 7-8` into a real support payoff band instead of a compressed finale.
+- Immediate priority: collapse the shipped `8-wave` route into one-glance title/forge/HUD communication by removing roadmap/admin-heavy `12-wave / era / support-track` framing that still makes the live build read like a future design document.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 09:31:04 KST
+  Findings:
+  - The loop's current priority is stale. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) now gives `Wave 8` an honest support-proof shape with `activeCap 23`, a larger `1760x980` arena, and no `binder/relay` squeeze, so repeating the old "fix Wave 8 first" critique is now noise. The stronger failure is that the shipped route still talks like a roadmap instead of feeling like a run.
+  - The forge is still too document-like even after the route cleanup. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) `renderForgeOverlay()` still builds context-shell copy, prompt text, proof framing, preview rows, and slot admin around every stop, and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) `createBaseRouteForgeContextMarkup()` still leads with eyebrow/title/detail structure. Against `Hades`, `Brotato`, or `Nova Drift`, the player is still reading a choice justification before wanting the form.
+  - The in-run status layer is still a mini design doc. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) `createShippingLadderMarkup()` renders `START / 도약 / 방호` roadmap steps with paragraph detail, [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) `renderWaveTrack()` still gives every node eyebrow + title + short label, and the combat ask card still adds focus-detail text on top. Strong arena-shooter references keep this layer to one glance so the eye goes back to movement and threat reads immediately.
+  - The game still front-loads support/future-system thinking before the base run has fully earned it. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) `getForgeSupportTrackSnapshot()` and `getForgeEraPlan()` still surface `Bay Package`, `Wildcard Rail`, `Catalyst`, and `Era III / Crown Break` language, while [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) still defines the product as a `12웨이브 / 세 시대 계약`. That keeps the fantasy mentally crowded before the player has simply fallen in love with one gun break and one chassis break.
+  Top Priority: Strip the shipped route UI down to three things only, everywhere it matters: current wave ask, current dominant form, and one next-spike tease; remove roadmap-step paragraphs, era-plan framing, support-track summaries, and extra proof/admin copy from title, HUD, and forge.
+  Why Now: Combat has enough breathing room now that interface density is the clearest thing muting intensity, clarity, and replay hunger.
+  Do Not Repeat: Do not answer this with shorter prose while leaving roadmap widgets, preview rows, and support-track explanation shells in place.
+  Release Gate: UX/UI
 
 - 2026-03-27 09:01:03 KST
   Findings:
@@ -3354,6 +3365,14 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 09:44:19 KST
+  Changed: restored one bounded missing HUD surface and collapsed it to the same three-part contract as the shipped forge in [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html), [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css), and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs). The game screen now mounts the previously missing bottom overlay again through `run-track-label`, `wave-track`, and `combat-feed`; `renderWaveTrack()` no longer builds roadmap nodes and instead renders one compact `현재 전장 / 현재 형태 / 다음 급등` strip via `createBaseRouteStatusStripMarkup()`; and the shipped forge context now uses that same three-slot read so HUD and reward pauses stop disagreeing about what matters.
+  Why: the newest critique's `Top Priority` said the shipped route UI should show only the current ask, dominant form, and one next-spike tease, and the highest-value concrete interpretation still open was the live status layer. The existing code was still prepared to render a lower HUD card but the DOM slot was gone, which meant the run either showed nothing there or fell back to document-like ladder markup instead of one-glance action reads.
+  Follow-up risk: the bottom HUD and forge now align around one terse contract, but some combat-feed and transition strings still read like route administration. If critique stays on the same issue, the next bounded pass should trim those remaining feed/transition lines rather than add another surface or a richer summary card.
+  UI reference direction: followed the one-glance combat/readout hierarchy from `Nova Drift` and `Brotato`, where live HUD surfaces stay on immediate battlefield pressure and current form instead of a node-by-node route board.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: UX/UI
 
 - 2026-03-27 17:35:00 KST
   Changed: retuned one bounded combat rung in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 8` now resolves as `Support Proof` instead of a finale-style `Crown Proof` squeeze. The wave now keeps `Wave 7`-scale space with a larger `1760x980` arena, drops the `relay` hazard and `binder` tax entirely, reduces `lancer` weight, and steps pressure up only modestly from `Wave 7` (`activeCap 23`, `spawnBudget 126`) so the newly unlocked rider gets one real domination lap before `Wave 9` resumes breach grammar. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks the new `Wave 8` label, directive, pressure family, arena size, and reduced threat stack.

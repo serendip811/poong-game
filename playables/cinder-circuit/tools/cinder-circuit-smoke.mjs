@@ -353,17 +353,33 @@ assert.ok(compactFocusMarkup.includes("판돈·유틸"));
 assert.ok(compactFocusMarkup.includes("고철 42"));
 assert.ok(compactFocusMarkup.includes("Cataclysm Arsenal"));
 assert.ok(!compactFocusMarkup.includes("다음 도약"));
-const forgeContextMarkup = game.createBaseRouteForgeContextMarkup({
-  eyebrow: "주력",
-  title: "Prism Crown",
-  detail: "총열과 화면 점유가 처음 크게 열린다.",
+const statusStripMarkup = game.createBaseRouteStatusStripMarkup({
+  leadLabel: "현재 전장",
+  leadValue: "Support Sweep",
+  titleLabel: "현재 형태",
+  titleValue: "Prism Crown",
+  tailLabel: "다음 급등",
+  tailValue: "첫 차체 잠금",
 });
-assert.ok(forgeContextMarkup.includes("주력"));
+assert.ok(statusStripMarkup.includes("route-contract--triple"));
+assert.ok(statusStripMarkup.includes("현재 전장"));
+assert.ok(statusStripMarkup.includes("Support Sweep"));
+assert.ok(statusStripMarkup.includes("Prism Crown"));
+assert.ok(statusStripMarkup.includes("첫 차체 잠금"));
+assert.ok(!statusStripMarkup.includes("summary-head"));
+const forgeContextMarkup = game.createBaseRouteForgeContextMarkup({
+  currentFormLabel: "Prism Crown",
+  waveAskLabel: "다음 전장",
+  waveAskValue: "Support Sweep",
+  nextSpikeLabel: "다음 급등",
+  nextSpikeValue: "첫 차체 잠금",
+});
+assert.ok(forgeContextMarkup.includes("다음 전장"));
+assert.ok(forgeContextMarkup.includes("Support Sweep"));
 assert.ok(forgeContextMarkup.includes("Prism Crown"));
-assert.ok(!forgeContextMarkup.includes("총열과 화면 점유가 처음 크게 열린다."));
-assert.ok(forgeContextMarkup.includes("route-contract__line"));
-assert.ok(forgeContextMarkup.includes("route-contract__eyebrow"));
-assert.ok(forgeContextMarkup.includes("route-contract--forge"));
+assert.ok(forgeContextMarkup.includes("첫 차체 잠금"));
+assert.ok(forgeContextMarkup.includes("route-contract__slot"));
+assert.ok(forgeContextMarkup.includes("route-contract--triple"));
 assert.ok(!forgeContextMarkup.includes("summary-head"));
 assert.ok(!forgeContextMarkup.includes("Next Proof"));
 assert.ok(!forgeContextMarkup.includes("Route Payoff"));
@@ -410,6 +426,11 @@ assert.ok(minimalCombatAskMarkup.includes("중계기 1"));
 assert.ok(minimalCombatAskMarkup.includes("combat-ask-card__focus"));
 assert.ok(!minimalCombatAskMarkup.includes("mini-pill-row"));
 assert.ok(!minimalCombatAskMarkup.includes("summary-head"));
+const indexPath = path.join(repoRoot, "index.html");
+const indexMarkup = fs.readFileSync(indexPath, "utf8");
+assert.ok(indexMarkup.includes('id="run-track-label"'));
+assert.ok(indexMarkup.includes('id="wave-track"'));
+assert.ok(indexMarkup.includes('id="combat-feed"'));
 const minimalHudVisibility = game.getMinimalBaseRouteHudVisibility({
   paused: false,
 });

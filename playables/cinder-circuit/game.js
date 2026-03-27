@@ -9401,6 +9401,32 @@
     return `<span class="forge-card__slot">${slotLabel}</span>`;
   }
 
+  function createBaseRouteStatusStripMarkup({
+    leadLabel = "현재 전장",
+    leadValue = "-",
+    titleLabel = "현재 형태",
+    titleValue = "-",
+    tailLabel = "다음 급등",
+    tailValue = "-",
+  }) {
+    return `
+      <div class="route-contract route-contract--triple">
+        <article class="route-contract__slot">
+          <span class="route-contract__slot-label">${leadLabel}</span>
+          <strong class="route-contract__slot-value">${leadValue}</strong>
+        </article>
+        <article class="route-contract__slot route-contract__slot--headline">
+          <span class="route-contract__slot-label">${titleLabel}</span>
+          <strong class="route-contract__slot-value">${titleValue}</strong>
+        </article>
+        <article class="route-contract__slot">
+          <span class="route-contract__slot-label">${tailLabel}</span>
+          <strong class="route-contract__slot-value">${tailValue}</strong>
+        </article>
+      </div>
+    `;
+  }
+
   function createBaseRouteForgeCompactCardMarkup({
     choice,
     index,
@@ -9499,15 +9525,20 @@
   function createBaseRouteForgeContextMarkup({
     eyebrow = "",
     title = "",
+    currentFormLabel = "",
+    waveAskLabel = "",
+    waveAskValue = "",
+    nextSpikeLabel = "",
+    nextSpikeValue = "",
   }) {
-    return `
-      <div class="route-contract route-contract--forge">
-        <p class="route-contract__line">
-          <span class="route-contract__eyebrow">${eyebrow || "변이"}</span>
-          <strong class="route-contract__title">${title || "-"}</strong>
-        </p>
-      </div>
-    `;
+    return createBaseRouteStatusStripMarkup({
+      leadLabel: waveAskLabel || eyebrow || "현재 전장",
+      leadValue: waveAskValue || "-",
+      titleLabel: "현재 형태",
+      titleValue: currentFormLabel || title || "-",
+      tailLabel: nextSpikeLabel || "다음 급등",
+      tailValue: nextSpikeValue || title || "-",
+    });
   }
 
   function createMinimalCombatAskMarkup({
@@ -15374,6 +15405,7 @@
     createForgePreviewRows,
     getForgeChoiceTransformation,
     createBaseRouteFocusMarkup,
+    createBaseRouteStatusStripMarkup,
     getBaseRouteCombatAsk,
     getMinimalBaseRouteHudVisibility,
     getBaseRouteForgeStage,
@@ -16484,35 +16516,47 @@
       return;
     }
     const totalTrackWaves = DEFAULT_ROUTE_WAVE_COUNT;
+    const trackWaveNumber =
+      state.phase === "forge"
+        ? clamp(state.waveIndex + 2, 1, totalTrackWaves)
+        : state.phase === "result"
+          ? clamp(state.stats.wavesCleared, 1, totalTrackWaves)
+          : clamp(state.waveIndex + 1, 1, totalTrackWaves);
+    const waveConfig = resolveWaveConfig(trackWaveNumber - 1, state.build);
+    const currentWeapon = state.weapon || computeWeaponStats(state.build);
+    const dominantForm = getDominantFormSummary(state.build, currentWeapon, trackWaveNumber);
+    const focusStage = state.phase === "forge" ? "forge" : "combat";
+    const nextSpike = getBaseRouteTransformationFocus(trackWaveNumber, { stage: focusStage });
+    const currentAskValue =
+      state.phase === "result"
+        ? "짧은 지배 구간 완료"
+        : state.phase === "forge"
+          ? getImmediateProofWindowSummary(state.build, trackWaveNumber).label
+          : waveConfig.bandLabel || waveConfig.label || `Wave ${trackWaveNumber}`;
     const label =
       state.phase === "forge"
-        ? `Forge Stop · Wave ${state.waveIndex + 1} Clear`
+        ? `Wave ${state.waveIndex + 1} 정리 후 선택`
         : state.phase === "result"
           ? "Run Clear"
           : state.wave && state.wave.baseRouteVictoryLap
             ? "Victory Lap"
-            : `Wave ${state.waveIndex + 1} / ${totalTrackWaves}`;
+            : `Wave ${trackWaveNumber} / ${totalTrackWaves}`;
     elements.runTrackLabel.textContent = label;
-    const trackEntries = getShippedRoutePresentationBeats();
-    elements.waveTrack.innerHTML = trackEntries.map((entry, index) => {
-      const stateName =
+    elements.waveTrack.innerHTML = createBaseRouteStatusStripMarkup({
+      leadLabel:
         state.phase === "result"
-          ? index < state.stats.wavesCleared
-            ? "done"
-            : "upcoming"
-          : index < state.waveIndex
-            ? "done"
-            : index === state.waveIndex
-              ? "current"
-              : "upcoming";
-      return `
-        <article class="wave-track__node" data-state="${stateName}">
-          <p class="panel__eyebrow">Wave ${entry.waveNumber}</p>
-          <strong>${entry.title}</strong>
-          <span>${entry.shortLabel}</span>
-        </article>
-      `;
-    }).join("");
+          ? "마무리"
+          : state.phase === "forge"
+            ? "다음 전장"
+            : state.wave && state.wave.baseRouteVictoryLap
+              ? "현재 랩"
+              : "현재 전장",
+      leadValue: currentAskValue,
+      titleLabel: "현재 형태",
+      titleValue: dominantForm.label,
+      tailLabel: "다음 급등",
+      tailValue: nextSpike.title,
+    });
   }
 
   function renderPauseOverlay() {
@@ -22389,7 +22433,16 @@
           ${createBaseRouteForgeContextMarkup({
             eyebrow: baseRouteTransformationFocus.eyebrow || focusEyebrow,
             title: baseRouteTransformationFocus.title || focusTitle,
-            detail: baseRouteTransformationFocus.detail,
+            currentFormLabel: dominantFormSummary.label,
+            waveAskLabel:
+              state.pendingFinalForge
+                ? "마지막 시험"
+                : riderStep
+                  ? "다음 시험"
+                  : "다음 전장",
+            waveAskValue: proofWindow.label,
+            nextSpikeLabel: state.pendingFinalForge ? "지금 고정" : "다음 급등",
+            nextSpikeValue: baseRouteTransformationFocus.title || focusTitle,
           })}
         </article>
       `
