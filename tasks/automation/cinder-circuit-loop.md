@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: hard-hide the live Wave 9+ / Afterburn route from the shipped run and make the 8-wave branch curve read through gameplay silhouette, not status-strip explanation.
+- Immediate priority: purge Wave 9+ / Afterburn / Late Break scaffolding from shipped-route surfaces and stop early support/package admin from showing up before one Wave 5-6 transformation owns multiple fights.
 
 ## Release Gates
 
@@ -61,6 +61,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 00:17:00 KST
+  Findings:
+  - The shipped run is still structurally dishonest. `CONSOLIDATED_12_WAVE_ROUTE = true` sits beside live `Late Break Armory`, `Afterburn`, and `Act 4` labels, so the player is still reading a hidden longer game under the supposed 8-wave contract instead of a closed rerunnable slice. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L4095) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L4121)
+  - The opener is still over-provisioned for future complexity. `FORGE_PACKAGE_START_WAVE = 3` and `supportBayCap: 2` mean the run is architected to talk about package lanes and support capacity before the player has earned a single truly hungry transformation, which weakens the later feeling of growth. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L4103) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L5389)
+  - Wave 5-8 combat space is finally large enough to breathe, but the game keeps spending that room proving the same gun/body silhouette instead of creating a new piloting layer. The wave set reads like extended ownership rehearsal while support/utility still arrives as administration, so the arena gains scale without gaining rerun hunger. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L458) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L567)
+  - The HUD and forge still explain too much because the run identity is not clean enough yet. `현재 전장`, `현재 형태`, branch payoff, preview rows, and contract shells are still carrying meaning that stronger references like `Hades`, `Nova Drift`, and `Brotato` usually let the build silhouette carry by itself. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L17544) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L23575)
+  - `preview_support` is still alive in the forge path, so the game continues to teaser support fantasy instead of making the player fully own one weapon/chassis break first. That is prototype behavior: it broadens the menu before it creates desire. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L7285) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L13439)
+  Top Priority: Strip all shipped-route Wave 9+/Afterburn/Late Break messaging and preview-support/package scaffolding, then rebuild Wave 5-8 so one real weapon-or-chassis transformation carries the screen before support/admin layers reappear.
+  Why Now: Until the run feels honest and the midrun break actually transforms piloting, more content only makes repetition feel longer rather than better.
+  Do Not Repeat: Do not spend another pass polishing forge copy or adding new module types while the opener still advertises future complexity it does not pay off.
+  Release Gate: Progression
 
 - 2026-03-27 23:59:30 KST
   Findings:
@@ -3674,6 +3686,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-28 00:45:00 KST
+  Changed: hardened the shipped support-capacity curve in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the consolidated `8-wave` route now starts with only `1` support bay, opens the second bay at the `Wave 6` chassis breakpoint, and tops out at `3` bays instead of carrying the old `2 -> 3 -> 4` ladder from the longer prototype route. `getSupportBayCapacity(...)`, `applyAuxiliaryJunction(...)`, `unlockLateSupportBay(...)`, and the shipped `Wave 6` breakpoint descriptions/feed strings now all speak the same `1 -> 2 -> 3` contract, which keeps the opener from feeling pre-wired for support/admin complexity before the first real body break lands. Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new base cap and shifted milestone expectations, and adjusted the multi-system support tests to opt into extra bay capacity explicitly when they are testing later-route support stacking rather than the shipped opener.
+  Why: the latest critique's `Top Priority` explicitly called out `supportBayCap: 2` as part of the shipped route's early package/support scaffolding. The highest-value bounded interpretation was to make the hull itself start smaller, because that protects the early growth curve without adding new UI wrappers and makes the `Wave 6` chassis transformation feel like the first time the build truly grows a second lane.
+  Follow-up Risk: the capacity curve is now honest, but `preview_support` and some dormant package-era helpers still exist in the non-shipped path. If the next critique still says the opener advertises future complexity, the next bounded pass should remove or hard-hide one more preview/package surface instead of moving more spectacle into `Wave 1-5`.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Progression
 
 - 2026-03-27 23:48:09 KST
   Changed: hard-hid more dormant late-route scaffolding from the shipped `8-wave` surfaces in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). `sanitizeConsolidatedBuildState(...)` now clears not just preview support and wildcard state but also stale `lateBreak`, `lateAscension`, `Afterburn`, illegal overclock, and late-field mutation flags, while new surface-only `getSanitizedConsolidatedBuild(...)` copies keep shipped `buildForgeChoices(...)`, `getBuildRoadmap(...)`, `getForgeEraPlan(...)`, `createBaseRoutePauseSnapshotMarkup(...)`, `getSupportSystemDef(...)`, and `computeSupportSystemStats(...)` from reading those late-route leftovers in the first place. `refreshDerivedStats(...)` now also scrubs the live run state before HUD/runtime stat refresh so an old polluted build cannot drag `Afterburn` silhouettes back onto the actual shipped route. Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to inject a deliberately polluted shipped build and assert that `Wave 5` forge choices, roadmap text, pause markup, and support stats stay free of `preview_support`, `wildcard_protocol`, `late_ascension`, `Afterburn`, `Wave 9`, and `Cataclysm`.

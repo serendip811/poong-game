@@ -1713,7 +1713,7 @@ game.applyForgeChoice(architecturePreviewRun, architectureChoices[0]);
 assert.equal(architecturePreviewRun.build.bastionDoctrineId, null);
 assert.equal(architecturePreviewRun.build.architectureForecastId, architectureChoices[0].doctrineId);
 assert.equal(architecturePreviewRun.build.wave6ChassisBreakpoint, false);
-assert.equal(game.getSupportBayCapacity(architecturePreviewRun.build), 2);
+assert.equal(game.getSupportBayCapacity(architecturePreviewRun.build), 1);
 assert.equal(architecturePreviewRun.build.supportSystems.length, 0);
 const wave6DoctrineChoices = game.buildBastionDraftChoices(architecturePreviewRun.build, () => 0, 6);
 assert.equal(wave6DoctrineChoices.length, 3);
@@ -1770,13 +1770,13 @@ assert.ok(fallbackWave6AscensionChoices.every((choice) => choice.action === "wav
 game.applyForgeChoice(wave6AscensionRun, fallbackWave6AscensionChoices[0]);
 assert.equal(wave6AscensionRun.build.bastionDoctrineId, fallbackWave6AscensionChoices[0].doctrineId);
 assert.equal(wave6AscensionRun.build.wave6ChassisBreakpoint, false);
-assert.equal(wave6AscensionRun.build.supportBayCap, 2);
+assert.equal(wave6AscensionRun.build.supportBayCap, 1);
 assert.equal(wave6AscensionRun.build.chassisId, fallbackWave6AscensionChoices[0].chassisId);
 assert.equal(game.shouldSkipOwnershipAdminStop(wave6AscensionRun.build, 9), false);
 chassisRun.build.bastionDoctrineId = "kiln_bastion";
 game.applyForgeChoice(chassisRun, vectorChassisChoice);
 assert.equal(chassisRun.build.wave6ChassisBreakpoint, true);
-assert.equal(chassisRun.build.supportBayCap, 3);
+assert.equal(chassisRun.build.supportBayCap, 2);
 assert.equal(chassisRun.build.supportSystems.length, 1);
 assert.equal(chassisRun.build.supportSystems[0].id, vectorChassisChoice.systemChoice.systemId);
 assert.equal(chassisRun.build.chassisId, vectorChassisChoice.chassisId);
@@ -2137,7 +2137,7 @@ assert.equal(signatureBuild.attunedCoreId, "ember");
 assert.equal(signatureBuild.maxHpBonus, 0);
 assert.equal(signatureBuild.pickupBonus, 0);
 assert.equal(signatureBuild.scrapMultiplier, 1);
-assert.equal(signatureBuild.supportBayCap, 2);
+assert.equal(signatureBuild.supportBayCap, 1);
 assert.equal(JSON.stringify(signatureBuild.affixes), JSON.stringify([]));
 assert.equal(JSON.stringify(signatureBuild.pendingCores), JSON.stringify([]));
 assert.equal(JSON.stringify(signatureBuild.upgrades), JSON.stringify([]));
@@ -2309,7 +2309,7 @@ assert.ok(
 assert.equal(architectureRun.build.coreId, "ricochet");
 assert.equal(game.computeWeaponStats(architectureRun.build).evolutionTier, 0);
 assert.equal(architectureRun.build.supportSystems.length, 0);
-assert.equal(game.getSupportBayCapacity(architectureRun.build), 2);
+assert.equal(game.getSupportBayCapacity(architectureRun.build), 1);
 const doctrineChaseChoices = game.buildForgeChoices(
   architectureRun.build,
   () => 0,
@@ -2331,7 +2331,7 @@ assert.equal(bastionOvercommitChoices.length, 3);
 assert.ok(bastionOvercommitChoices.every((choice) => choice.action === "bastion_bay_forge"));
 assert.ok(bastionOvercommitChoices.every((choice) => choice.bayUnlock));
 game.applyForgeChoice(architectureRun, bastionOvercommitChoices[0]);
-assert.equal(game.getSupportBayCapacity(architectureRun.build), 3);
+assert.equal(game.getSupportBayCapacity(architectureRun.build), 2);
 assert.equal(architectureRun.build.auxiliaryJunctionLevel, 1);
 assert.equal(architectureRun.build.wave6ChassisBreakpoint, true);
 assert.equal(architectureRun.build.supportSystems.length, 1);
@@ -2345,11 +2345,11 @@ assert.ok(
   )
 );
 assert.ok(
-  architectureRun.build.upgrades.includes("Chassis Breakpoint: flex bay +1 now, auto Wave 8 uplink")
+  architectureRun.build.upgrades.includes("Chassis Breakpoint: support bay +1 now, auto Wave 8 uplink")
 );
 assert.equal(game.shouldSkipOwnershipAdminStop(architectureRun.build, 9), false);
 assert.equal(game.unlockLateSupportBay(architectureRun.build), true);
-assert.equal(game.getSupportBayCapacity(architectureRun.build), 4);
+assert.equal(game.getSupportBayCapacity(architectureRun.build), 3);
 assert.equal(game.doctrineAllowsSystemInstall(architectureRun.build, "seeker_array", 8), false);
 assert.equal(game.doctrineAllowsSystemInstall(architectureRun.build, "volt_drones", 8), true);
 assert.equal(game.doctrineAllowsSystemInstall(architectureRun.build, "aegis_halo"), false);
@@ -2805,6 +2805,7 @@ assert.equal(
 
 const aegisBuild = game.createInitialBuild("relay_oath");
 aegisBuild.pendingCores = [];
+aegisBuild.supportBayCap = 2;
 const aegisInstallChoices = game.buildForgeFollowupChoices(
   aegisBuild,
   () => 0.99,
@@ -2816,6 +2817,7 @@ assert.ok(aegisInstallChoices.every((choice) => choice.contractRole !== "headlin
 assert.ok(aegisInstallChoices.length >= 1);
 const sentryBuild = game.createInitialBuild("relay_oath");
 sentryBuild.pendingCores = [];
+sentryBuild.supportBayCap = 2;
 game.applyForgeChoice(
   { build: sentryBuild, player: null, resources: { scrap: 999 }, stats: {} },
   { type: "system", systemId: "kiln_sentry", systemTier: 1 }

@@ -5386,7 +5386,7 @@
     bastionPactDebtWaves: 0,
     wave6ChassisBreakpoint: false,
     chassisId: null,
-    supportBayCap: 2,
+    supportBayCap: CONSOLIDATED_12_WAVE_ROUTE ? 1 : 2,
     auxiliaryJunctionLevel: 0,
     supportSystemId: null,
     supportSystemTier: 0,
@@ -6328,14 +6328,30 @@
     return SUPPORT_SYSTEM_DEFS[installedSystems[0].id] || null;
   }
 
+  function getStartingSupportBayCapacity() {
+    return CONSOLIDATED_12_WAVE_ROUTE ? 1 : MAX_SUPPORT_BAYS;
+  }
+
+  function getMidrunSupportBayCapacityTarget() {
+    return CONSOLIDATED_12_WAVE_ROUTE ? 2 : MAX_SUPPORT_BAYS + 1;
+  }
+
+  function getOwnershipSupportBayCapacityTarget(build) {
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
+      return 3;
+    }
+    return build && build.auxiliaryJunctionLevel > 0 ? MAX_SUPPORT_BAY_LIMIT : MAX_SUPPORT_BAYS + 1;
+  }
+
   function getSupportBayCapacity(build) {
+    const minimumCapacity = getStartingSupportBayCapacity();
     if (!build) {
-      return MAX_SUPPORT_BAYS;
+      return minimumCapacity;
     }
     return clamp(
-      Math.round(build.supportBayCap || MAX_SUPPORT_BAYS),
-      MAX_SUPPORT_BAYS,
-      MAX_SUPPORT_BAY_LIMIT
+      Math.round(build.supportBayCap || minimumCapacity),
+      minimumCapacity,
+      CONSOLIDATED_12_WAVE_ROUTE ? getOwnershipSupportBayCapacityTarget(build) : MAX_SUPPORT_BAY_LIMIT
     );
   }
 
@@ -6922,8 +6938,7 @@
     if (!build) {
       return false;
     }
-    const targetCap =
-      build.auxiliaryJunctionLevel > 0 ? MAX_SUPPORT_BAY_LIMIT : MAX_SUPPORT_BAYS + 1;
+    const targetCap = getOwnershipSupportBayCapacityTarget(build);
     if (getSupportBayCapacity(build) >= targetCap) {
       return false;
     }
@@ -6948,8 +6963,8 @@
       return false;
     }
     build.auxiliaryJunctionLevel = Math.max(1, Math.round(build.auxiliaryJunctionLevel || 0));
-    if (getSupportBayCapacity(build) < MAX_SUPPORT_BAYS + 1) {
-      build.supportBayCap = MAX_SUPPORT_BAYS + 1;
+    if (getSupportBayCapacity(build) < getMidrunSupportBayCapacityTarget()) {
+      build.supportBayCap = getMidrunSupportBayCapacityTarget();
     }
     return true;
   }
@@ -8270,6 +8285,11 @@
     if (build.blackLedgerRaidWaves) {
       build.blackLedgerRaidWaves = 0;
     }
+    build.supportBayCap = clamp(
+      Math.round(build.supportBayCap || getStartingSupportBayCapacity()),
+      getStartingSupportBayCapacity(),
+      getOwnershipSupportBayCapacityTarget(build)
+    );
     return build;
   }
 
@@ -14366,7 +14386,10 @@
     const expandedBuild = {
       ...build,
       bastionDoctrineId: doctrine.id,
-      supportBayCap: Math.min(MAX_SUPPORT_BAY_LIMIT, Math.max(getSupportBayCapacity(build), MAX_SUPPORT_BAYS + 1)),
+      supportBayCap: Math.min(
+        MAX_SUPPORT_BAY_LIMIT,
+        Math.max(getSupportBayCapacity(build), getMidrunSupportBayCapacityTarget())
+      ),
       auxiliaryJunctionLevel: Math.max(1, Math.round(build.auxiliaryJunctionLevel || 0)),
     };
     const preferredSystemIds = new Set(getDoctrinePreferredSystemIds(doctrine));
@@ -14659,7 +14682,10 @@
     const expandedBuild = {
       ...build,
       bastionDoctrineId: build.bastionDoctrineId || build.architectureForecastId || build.bastionDoctrineId,
-      supportBayCap: Math.min(MAX_SUPPORT_BAY_LIMIT, Math.max(getSupportBayCapacity(build), MAX_SUPPORT_BAYS + 1)),
+      supportBayCap: Math.min(
+        MAX_SUPPORT_BAY_LIMIT,
+        Math.max(getSupportBayCapacity(build), getMidrunSupportBayCapacityTarget())
+      ),
       auxiliaryJunctionLevel: Math.max(1, Math.round(build.auxiliaryJunctionLevel || 0)),
     };
     const excludedIds = new Set(
@@ -14704,7 +14730,7 @@
         tag: chassisDef.tag,
         title: chassisDef.title,
         description: CONSOLIDATED_12_WAVE_ROUTE
-          ? `${chassisDef.description} 이번 정지에서 ${choice ? `${choice.title}을(를) 함께 직결해` : "작은 support uplink를 바로 열어"} Wave 6부터 body/support bracket을 같이 굴린다. 새 rider는 교리 reserve를 무시하는 flex lane으로 붙고, Wave 8에서는 정지 없이 다음 bay까지 자동 uplink되어 두 번 더 proof lap을 이어 간다.`
+          ? `${chassisDef.description} 이번 정지에서 ${choice ? `${choice.title}을(를) 함께 직결해` : "작은 support uplink를 바로 열어"} Wave 6부터 body/support bracket을 같이 굴린다. 새 rider는 교리 reserve를 무시하는 두 번째 flex lane으로 붙고, Wave 8에서는 정지 없이 세 번째 bay까지 자동 uplink되어 두 번 더 proof lap을 이어 간다.`
           : `${chassisDef.description} 세 번째 support bay는 즉시 교리 reserve를 무시하는 flex lane으로 열리고${choice ? ` ${choice.title}을(를) 함께 직결한다.` : " flex subsystem lane만 먼저 확보한다."} Wave 8에서는 정지 없이 네 번째 bay까지 자동 uplink되어 Late Break Armory를 건너뛴다.`,
         slotText: CONSOLIDATED_12_WAVE_ROUTE
           ? `섀시 breakpoint · ${chassisDef.slotText}${choice ? ` · ${choice.title}` : " · flex rider"}`
@@ -14733,8 +14759,8 @@
       tag: CHASSIS_BREAKPOINT_DEFS.vector_thrusters.tag,
       title: CHASSIS_BREAKPOINT_DEFS.vector_thrusters.title,
       description:
-        "대시 충격파와 slipstream을 여는 Vector Thrusters를 장착하고, 세 번째 support bay를 즉시 교리 reserve와 무관한 flex lane으로 확보한다. Wave 8에서는 전장 정지 없이 네 번째 bay까지 자동 uplink되어 ownership bracket을 이어 간다.",
-      slotText: "섀시 breakpoint · Vector Thrusters · flex bay 즉시 개방",
+        "대시 충격파와 slipstream을 여는 Vector Thrusters를 장착하고, 두 번째 support bay를 즉시 교리 reserve와 무관한 flex lane으로 확보한다. Wave 8에서는 전장 정지 없이 세 번째 bay까지 자동 uplink되어 ownership bracket을 이어 간다.",
+      slotText: "섀시 breakpoint · Vector Thrusters · 두 번째 bay 즉시 개방",
       cost: 0,
       laneLabel: "섀시 breakpoint",
       forgeLaneLabel: "섀시 breakpoint",
@@ -15871,7 +15897,7 @@
         applyAuxiliaryJunction(run.build);
         run.build.upgrades.push(
           choice.skipNextAdminStop
-            ? "Chassis Breakpoint: flex bay +1 now, auto Wave 8 uplink"
+            ? "Chassis Breakpoint: support bay +1 now, auto Wave 8 uplink"
             : "Auxiliary Junction: support bay +1 now, reserve Wave 8 bay"
         );
         if (choice.skipNextAdminStop) {
@@ -19750,8 +19776,8 @@
                 ? !choice.bayUnlock && CONSOLIDATED_12_WAVE_ROUTE
                   ? `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}만 먼저 잠가 hold, dive, exit 리듬을 바꿨다. 다음 웨이브 시작부터 해당 차체 포즈가 바로 켜지고, 작은 support 실루엣은 다음 mid-run 포지에서만 열리게 묶어 둔다.`
                   : wave6AscensionDraft || choice.skipNextAdminStop
-                  ? `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}를 잠그고 세 번째 support bay를 flex lane으로 즉시 열어 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 장착했다. Wave 8에서는 정지 없이 네 번째 bay가 자동 uplink되어 Wave 6-9 bracket을 그대로 이어 간다.`
-                  : `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}와 함께 세 번째 support bay를 즉시 열고 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 먼저 장착한 채, Wave 8 네 번째 bay까지 예약하고 다음 웨이브를 연다.`
+                  ? `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}를 잠그고 두 번째 support bay를 flex lane으로 즉시 열어 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 장착했다. Wave 8에서는 정지 없이 세 번째 bay가 자동 uplink되어 Wave 6-8 bracket을 그대로 이어 간다.`
+                  : `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}와 함께 두 번째 support bay를 즉시 열고 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 먼저 장착한 채, Wave 8 세 번째 bay까지 예약하고 다음 웨이브를 연다.`
                 : choice.action === "bastion_doctrine"
                 ? `${choice.doctrineLabel} 적용. 즉시 ${choice.doctrineChoice ? choice.doctrineChoice.title : "spike"}를 확보하고 이후 포지를 해당 교리 쪽으로 기울인 채 다음 웨이브를 연다.`
               : `${grantLabel} 적용. 고철 ${choice.cost}을 태워 ${choice.title}을 일찍 확보하고 다음 웨이브를 강행한다.`

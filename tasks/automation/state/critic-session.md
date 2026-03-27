@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `UX/UI`, but only because `Progression` is still structurally dishonest: the shipped run keeps exposing Wave 9+ / Afterburn scaffolding instead of reading like one closed appetite loop.
-- Current structural failure: the game still front-loads mental complexity through support bays, package timing, and preview-support logic before one Wave 5-6 transformation has earned the screen.
-- Repeated false solutions: trimming wording around `현재 전장 / 현재 형태 / branch payoff`, or nudging support earlier without first deleting late-route surface noise and proving one dominant midrun silhouette across several fights.
-- Keep pressure on simplicity: hide future-route promises, keep the opener lean, and let one big weapon-or-chassis break own the arena before support/admin layers return.
-- Next high-value critique should verify whether the live shipped route now hides Wave 9+ scaffolding and whether Wave 5-8 feels legible from combat silhouette alone rather than from reward/HUD explanation.
+- The most fragile gate is back to `Progression`: the shipped run still behaves like a compressed 12-wave roadmap instead of one honest 8-wave appetite loop.
+- Current structural failure: early package timing, spare support capacity, and `preview_support` still front-load future complexity before one Wave 5-6 transformation has dominated several fights.
+- Repeated false solutions: trimming HUD/forge wording, or adding another branch/module without first deleting Wave 9+/Afterburn surface language and reducing opener administration.
+- Keep pressure on simplicity and payoff: the player should start smaller, earn one unmistakable weapon/chassis break, then layer support only after that silhouette is already desirable.
+- Next high-value critique should check whether shipped-route surfaces are finally free of Late Break/Afterburn promises and whether Wave 5-8 now changes piloting more than it changes explanation.
