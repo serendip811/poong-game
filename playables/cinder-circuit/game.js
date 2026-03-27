@@ -8891,6 +8891,30 @@
         detail: getSupportSystemSummary(supportSystem),
       };
     }
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
+      if (installedSupport.length > 0) {
+        const primarySupport = installedSupport[0];
+        const systemDef = primarySupport ? SUPPORT_SYSTEM_DEFS[primarySupport.id] : null;
+        const tierDef = systemDef && systemDef.tiers ? systemDef.tiers[primarySupport.tier] : null;
+        return {
+          label: (tierDef && tierDef.title) || (systemDef && systemDef.label) || "Support Link",
+          detail:
+            (tierDef && tierDef.statusNote) ||
+            (systemDef && systemDef.summary) ||
+            "현재 보조선이 빈 lane 복귀와 압박 완충을 맡는다.",
+        };
+      }
+      if (chassis) {
+        return {
+          label: chassis.label,
+          detail: chassis.statusNote,
+        };
+      }
+      return {
+        label: "Bare Hull",
+        detail: "차체와 보조선이 아직 비어 있다. 먼저 몸체를 잠가 버티는 선을 만든다.",
+      };
+    }
     if (wildcardIds.length > 0) {
       return {
         label: "Wildcard Rail",
@@ -11040,7 +11064,7 @@
       return true;
     }
     if (choice.type === "utility") {
-      return ["field_greed", "recycle", "reforge", "affix_reforge"].includes(choice.action);
+      return ["field_greed", "recycle"].includes(choice.action);
     }
     if (choice.type === "affix") {
       return choice.affixId === "salvage_link";
@@ -11074,8 +11098,7 @@
     }
     return [
       "afterglow_mutation",
-      "bastion_doctrine",
-      "architecture_forecast",
+      "crownfire_overdrive",
     ].includes(choice.action);
   }
 
@@ -12163,7 +12186,9 @@
     sortChoicesForDoctrine(sustainCandidates, doctrine);
     sortChoicesForDoctrine(chassisBreakpointChoices, doctrine);
 
-    pushChoiceIfOpen(subsystemCandidates, previewSupportChoice, choiceCatalog);
+    if (!(recurringBaseRouteContract && nextWave < SUPPORT_SYSTEM_START_WAVE)) {
+      pushChoiceIfOpen(subsystemCandidates, previewSupportChoice, choiceCatalog);
+    }
 
     if (sustainCandidates.length === 0) {
       sustainCandidates.push({
@@ -12274,26 +12299,36 @@
     const strictBaseRouteRiderContract =
       recurringBaseRouteContract &&
       nextWave === DEFAULT_ROUTE_WAVE_COUNT;
-    const defensePool =
+    const unconstrainedDefensePool =
       recurringBaseRouteContract && nextWave === 6
         ? [...chassisBreakpointChoices, ...subsystemCandidates, ...sustainCandidates]
         : [...subsystemCandidates, ...sustainCandidates];
+    const defensePool =
+      recurringBaseRouteContract && nextWave < SUPPORT_SYSTEM_START_WAVE
+        ? unconstrainedDefensePool.filter((choice) => isBaseRouteDefenseRiderChoice(choice, nextWave))
+        : unconstrainedDefensePool;
     const unconstrainedHeadlinePool = reserveMidrunSupportForRider
       ? [...evolutionCandidates, ...commitCandidates, ...pivotCandidates]
       : [...evolutionCandidates, ...commitCandidates, ...offensiveModuleCandidates, ...pivotCandidates];
-    const headlinePool = strictBaseRouteRiderContract
+    const baseRouteHeadlinePool = recurringBaseRouteContract
       ? unconstrainedHeadlinePool.filter((choice) => isBaseRouteHeadlineChoice(choice, nextWave))
       : unconstrainedHeadlinePool;
+    const headlinePool = strictBaseRouteRiderContract
+      ? baseRouteHeadlinePool.filter((choice) => isBaseRouteHeadlineChoice(choice, nextWave))
+      : baseRouteHeadlinePool;
     const riderPool = strictBaseRouteRiderContract
       ? defensePool.filter((choice) => isBaseRouteDefenseRiderChoice(choice, nextWave))
       : reserveMidrunSupportForRider
         ? [...supportSystemChoices, ...defensePool]
         : defensePool;
-    const gamblePool = strictBaseRouteRiderContract
-      ? [...gambleCandidates, ...sustainCandidates].filter((choice) => isBaseRouteGreedChoice(choice))
+    const unconstrainedGamblePool = strictBaseRouteRiderContract
+      ? [...gambleCandidates, ...sustainCandidates]
       : reserveMidrunSupportForRider
         ? [...gambleCandidates, ...pivotCandidates, ...sustainCandidates]
         : [...gambleCandidates, ...pivotCandidates, ...sustainCandidates, ...offensiveModuleCandidates];
+    const gamblePool = recurringBaseRouteContract
+      ? unconstrainedGamblePool.filter((choice) => isBaseRouteGreedChoice(choice))
+      : unconstrainedGamblePool;
     const twoCardBaseRouteContract =
       recurringBaseRouteContract &&
       nextWave >= 1 &&
@@ -15392,6 +15427,7 @@
     getDoctrineBodyForm,
     getDoctrineCapstoneDef,
     getBuildRoadmap,
+    getForgeSupportTrackSnapshot,
     getForgeEraPlan,
     getShippingLadderSteps,
     getShippingLadderFocus,

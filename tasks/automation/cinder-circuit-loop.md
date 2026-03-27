@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: collapse the shipped `8-wave` route into one-glance title/forge/HUD communication by removing roadmap/admin-heavy `12-wave / era / support-track` framing that still makes the live build read like a future design document.
+- Immediate priority: stop widening the shipped `8-wave` run and recut it around one memorable weapon arc, one chassis/defense commitment, and one greed fork before more support-track or late-route branches are allowed to compete for attention.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 10:00:58 KST
+  Findings:
+  - The live build still advertises a bigger product than it has earned. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) and [docs/games/cinder-circuit-source-analysis.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-analysis.md) still define success as a `12웨이브 / 세 시대` ladder, while [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) `getLateBreakCadenceSummary()` and `getForgeEraPlan()` keep `Wave 9-12`, `Act 3`, and `Crown Break` promises alive inside the shipped route language. That makes anticipation feel theoretical instead of making the current 8-wave spine replayable.
+  - The build game is too branchy for how short and fragile the run still is. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) `getForgeSupportTrackSnapshot()` can already surface `Bay Package`, `Wildcard Rail`, `Catalyst`, and chassis/support summaries, while the forge and combat systems still carry missiles, satellites, deployables, caches, ascension lanes, and doctrine variants. This is breadth without enough proven hunger; the player is being offered taxonomy before one weapon evolution becomes unforgettable.
+  - The early-to-mid curve is still at risk of feeling too complete too soon. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) `createShippingLadderMarkup()` now says the 8-wave route should peak around Wave 5-7, but the surrounding system layer still frames support and late-form machinery as co-equal progression instead of late amplifiers. That weakens the crucial release-feeling arc where the run should begin with a smaller hull and earn spectacle in obvious steps.
+  - UI cleanup alone will not solve replay desire if the underlying choice pool stays this diffuse. Strong references like `Nova Drift`, `Brotato`, and `Hades` make players chase a few distinct form spikes; [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) `renderForgeOverlay()` is still trying to sell too many medium-scope futures at once, so even cleaner cards would still mask a shallow run-shaping contract.
+  Top Priority: Freeze new support/late-route branches for the shipped path and narrow the live forge economy to three rerun-driving lanes only: one visible weapon transformation line, one chassis-or-defense commitment line, and one greed/utility fork that meaningfully bends risk.
+  Why Now: Until the player can want a specific build arc again after one run, readability work is only making system sprawl easier to browse.
+  Do Not Repeat: Do not answer this by trimming copy while leaving `Bay Package`, `Wildcard Rail`, `Catalyst`, ascension caches, and other future-route promises competing inside the live 8-wave loop.
+  Release Gate: Builds
 
 - 2026-03-27 09:31:04 KST
   Findings:
@@ -3365,6 +3376,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 10:16:45 KST
+  Changed: narrowed one bounded slice of the shipped forge economy in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the live `Wave 1-8` route now fails closed harder to three rerun-driving lanes only. Early base-route `headline` picks are now filtered down to visible weapon mutations instead of doctrine/forecast/core/recipe sidegrades, `preview_support` no longer appears before `Wave 7`, and the `gamble` lane now excludes `reforge`/`affix_reforge` so `Wave 5` reads as an actual greed-or-utility bend instead of bench admin. The same pass also collapses the shipped support snapshot away from `Bay Package / Wildcard Rail / Catalyst` labeling and back onto plain chassis or the currently installed support identity. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks the new `Wave 5` contract, the absence of early support preview/reforge drift, and the cleaner support-track label.
+  Why: the newest critique's `Top Priority` was to freeze support/late-route side promises and narrow the shipped forge economy to one visible weapon line, one chassis-or-defense line, and one greed fork. The highest-value concrete interpretation still open was the actual card pool itself: even with cleaner UI, the live route could still surface preview support, pivot/recipe noise, and reforge admin before the short run had earned hunger for one build arc.
+  Follow-up risk: this makes the shipped forge hungrier and less branchy, but it also means some early stops can now fall back to `Emergency Vent` when the build has not yet unlocked a real weapon mutation. If later critique says the opener feels too austere, the next bounded pass should add one more visible early weapon/body payoff inside these same three lanes, not reintroduce preview support, pivot branches, or reforge admin.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Builds
 
 - 2026-03-27 09:44:19 KST
   Changed: restored one bounded missing HUD surface and collapsed it to the same three-part contract as the shipped forge in [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html), [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css), and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs). The game screen now mounts the previously missing bottom overlay again through `run-track-label`, `wave-track`, and `combat-feed`; `renderWaveTrack()` no longer builds roadmap nodes and instead renders one compact `현재 전장 / 현재 형태 / 다음 급등` strip via `createBaseRouteStatusStripMarkup()`; and the shipped forge context now uses that same three-slot read so HUD and reward pauses stop disagreeing about what matters.

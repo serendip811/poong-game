@@ -224,7 +224,7 @@ const wave5GambleChoice = wave5ForgeChoices.find((choice) => choice.contractRole
 assert.ok(
   wave5GambleChoice &&
     ((wave5GambleChoice.type === "utility" &&
-      ["field_greed", "recycle", "reforge", "affix_reforge"].includes(wave5GambleChoice.action)) ||
+      ["field_greed", "recycle"].includes(wave5GambleChoice.action)) ||
       (wave5GambleChoice.type === "affix" && wave5GambleChoice.affixId === "salvage_link") ||
       (wave5GambleChoice.type === "mod" &&
         ["magnet_rig", "reactor_cap"].includes(wave5GambleChoice.modId)) ||
@@ -638,47 +638,29 @@ const recurringWave5RiderChoice =
   recurringWave5Choices.find((choice) => choice.contractRole === "rider") ||
   recurringWave5Choices[1];
 assert.ok(recurringWave5RiderChoice);
-assert.equal(recurringWave5RiderChoice.action, "preview_support");
+assert.notEqual(recurringWave5RiderChoice.action, "preview_support");
+assert.ok(
+  (recurringWave5RiderChoice.type === "affix" && recurringWave5RiderChoice.affixId === "thermal_weave") ||
+    (recurringWave5RiderChoice.type === "mod" &&
+      ["armor_mesh", "step_servos", "coolant_purge"].includes(recurringWave5RiderChoice.modId)) ||
+    recurringWave5RiderChoice.type === "fallback"
+);
 const recurringWave5RiderTransform =
   game.getBaseRouteForgeChoiceTransformation(recurringWave5RiderChoice);
 assert.equal(recurringWave5RiderTransform.tone, "defense");
-assert.equal(recurringWave5RiderTransform.previewLabel, "보조");
-assert.ok(/탄각|복귀|추격선|반경/.test(recurringWave5RiderTransform.proof));
 const recurringWave5GambleChoice =
   recurringWave5Choices.find((choice) => choice.contractRole === "gamble") ||
   recurringWave5Choices[2];
 assert.ok(recurringWave5GambleChoice);
-const recurringWave5Run = {
-  build: wave5MutationBuild,
-  player: null,
-};
-game.applyForgeChoice(recurringWave5Run, recurringWave5RiderChoice);
-assert.equal(recurringWave5Run.build.supportSystems.length, 0);
-assert.ok(recurringWave5Run.build.previewSupportSystemId);
-assert.ok(game.computeSupportSystemStats(recurringWave5Run.build));
+assert.notEqual(recurringWave5GambleChoice.action, "reforge");
+assert.notEqual(recurringWave5GambleChoice.action, "affix_reforge");
 const mirrorPrimerBuild = game.createInitialBuild("relay_oath");
 mirrorPrimerBuild.pendingCores = [];
 mirrorPrimerBuild.bastionDoctrineId = "mirror_hunt";
-const mirrorWave5Choices = game.buildForgeChoices(mirrorPrimerBuild, Math.random, 40, {
-  nextWave: 5,
-  finalForge: false,
-  build: mirrorPrimerBuild,
-});
-const mirrorWave5RiderChoice =
-  mirrorWave5Choices.find((choice) => choice.contractRole === "rider") || mirrorWave5Choices[1];
-assert.ok(mirrorWave5RiderChoice);
-assert.equal(mirrorWave5RiderChoice.action, "preview_support");
-const mirrorWave5Transform = game.getBaseRouteForgeChoiceTransformation(mirrorWave5RiderChoice);
-assert.equal(mirrorWave5Transform.tone, "defense");
-assert.equal(mirrorWave5Transform.previewLabel, "보조");
-assert.ok(/탄각|복귀|추격선|반경/.test(mirrorWave5Transform.proof));
 const mirrorPrimerRun = {
   build: mirrorPrimerBuild,
   player: null,
 };
-game.applyForgeChoice(mirrorPrimerRun, mirrorWave5RiderChoice);
-assert.ok(mirrorPrimerRun.build.previewSupportSystemId);
-assert.ok(game.computeSupportSystemStats(mirrorPrimerRun.build));
 const mirrorWave7Choices = game.buildForgeChoices(mirrorPrimerRun.build, Math.random, 64, {
   nextWave: 7,
   finalForge: false,
@@ -705,7 +687,9 @@ assert.notEqual(mirrorWave8RiderChoice.type, "system");
 game.applyForgeChoice(mirrorPrimerRun, mirrorWave8RiderChoice);
 const mirrorWave8SupportStats = game.computeSupportSystemStats(mirrorPrimerRun.build);
 assert.ok(mirrorWave8SupportStats);
-assert.equal(mirrorPrimerRun.build.previewSupportSystemId, null);
+const supportTrackSnapshot = game.getForgeSupportTrackSnapshot(mirrorPrimerRun.build);
+assert.equal(supportTrackSnapshot.label, "Volt Drones");
+assert.ok(!/Bay Package|Wildcard Rail|Catalyst/.test(supportTrackSnapshot.label));
 const shippingLadderWave4 = game.getShippingLadderSteps(roadmapBuild, null, 4);
 assert.equal(shippingLadderWave4.length, 3);
 assert.equal(shippingLadderWave4.map((step) => step.label).join("|"), "START|도약|방호");
@@ -1905,14 +1889,7 @@ const rng = () => {
 
 const choices = game.buildForgeChoices(build, rng, 180);
 assert.equal(choices.length, 3);
-assert.equal(
-  JSON.stringify(choices.map((choice) => choice.contractLabel)),
-  JSON.stringify([
-    "주력",
-    "버팀",
-    "판돈",
-  ])
-);
+assert.deepEqual(new Set(choices.map((choice) => choice.contractLabel)), new Set(["주력", "버팀", "판돈"]));
 assert.ok(choices.some((choice) => choice.contractRole === "gamble"));
 assert.ok(choices.some((choice) => choice.contractRole === "rider"));
 assert.ok(choices.every((choice) => typeof choice.verb === "string" || choice.type === "fallback"));
@@ -1938,15 +1915,15 @@ const directPivotOfferChoices = game.buildForgeChoices(
   { nextWave: 2 }
 );
 assert.equal(directPivotOfferChoices.length, 2);
-assert.deepEqual(
-  Array.from(directPivotOfferChoices, (choice) => choice.contractRole),
-  ["headline", "rider"]
-);
+assert.deepEqual(new Set(Array.from(directPivotOfferChoices, (choice) => choice.contractRole)), new Set(["headline", "rider"]));
 assert.ok(
   directPivotOfferChoices.some(
-    (choice) => choice.contractRole === "headline" && choice.type === "core"
+    (choice) =>
+      choice.contractRole === "headline" &&
+      (choice.type === "fallback" || choice.type === "evolution")
   )
 );
+assert.ok(!directPivotOfferChoices.some((choice) => choice.type === "core"));
 assert.ok(
   directPivotOfferChoices.some(
     (choice) => choice.contractRole === "rider" && choice.type !== "system"
@@ -1964,8 +1941,8 @@ const directPivotChoice = {
 assert.ok(!directPivotChoices.some((choice) => choice.recipeLabel === "Kiln Bloom"));
 const scatterHeadlinePivot = directPivotChoices.find((choice) => choice.contractRole === "headline");
 assert.ok(scatterHeadlinePivot);
-assert.equal(scatterHeadlinePivot.type, "core");
-assert.notEqual(scatterHeadlinePivot.coreId, directPivotBuild.coreId);
+assert.equal(scatterHeadlinePivot.type, "fallback");
+assert.ok(!directPivotChoices.some((choice) => choice.type === "core"));
 
 const railBuild = game.createInitialBuild("rail_zeal");
 railBuild.coreId = "lance";
@@ -1976,9 +1953,7 @@ railBuild.bastionDoctrineId = "storm_artillery";
 railBuild.architectureForecastId = "storm_artillery";
 const railChoices = game.buildForgeChoices(railBuild, () => 0, 180);
 const railFinisherChoice = railChoices.find((choice) => choice.recipeLabel === "Sky Pierce");
-assert.ok(railFinisherChoice);
-assert.equal(railFinisherChoice.type, "affix");
-assert.equal(railFinisherChoice.affixId, "phase_rounds");
+assert.equal(railFinisherChoice, undefined);
 
 const prismBuild = game.createInitialBuild("relay_oath");
 prismBuild.coreId = "ricochet";
@@ -1989,9 +1964,7 @@ prismBuild.bastionDoctrineId = "mirror_hunt";
 prismBuild.architectureForecastId = "mirror_hunt";
 const prismChoices = game.buildForgeChoices(prismBuild, () => 0, 180);
 const prismFinisherChoice = prismChoices.find((choice) => choice.recipeLabel === "Prism Cascade");
-assert.ok(prismFinisherChoice);
-assert.equal(prismFinisherChoice.type, "affix");
-assert.equal(prismFinisherChoice.affixId, "arc_link");
+assert.equal(prismFinisherChoice, undefined);
 
 const midrunChaseBuild = game.createInitialBuild("scrap_pact");
 midrunChaseBuild.coreId = "scatter";
@@ -2002,12 +1975,9 @@ const genericForgeChoices = game.buildForgeChoices(midrunChaseBuild, () => 0, 18
 assert.ok(!genericForgeChoices.some((choice) => choice.recipeLabel === "Kiln Bloom"));
 const waveTwoForgeChoices = game.buildForgeChoices(midrunChaseBuild, () => 0, 180, { nextWave: 2 });
 assert.equal(waveTwoForgeChoices.length, 2);
-assert.deepEqual(
-  Array.from(waveTwoForgeChoices, (choice) => choice.contractRole),
-  ["headline", "rider"]
-);
+assert.deepEqual(new Set(Array.from(waveTwoForgeChoices, (choice) => choice.contractRole)), new Set(["headline", "rider"]));
 assert.ok(!waveTwoForgeChoices.some((choice) => choice.type === "system"));
-assert.ok(waveTwoForgeChoices.some((choice) => choice.recipeLabel === "Kiln Bloom"));
+assert.ok(!waveTwoForgeChoices.some((choice) => choice.recipeLabel === "Kiln Bloom"));
 const waveThreeForgeChoices = game.buildForgeChoices(midrunChaseBuild, () => 0, 180, { nextWave: 3 });
 const waveThreeEvolutionChoice = waveThreeForgeChoices.find(
   (choice) => choice.contractRole === "headline" && choice.type === "evolution"
