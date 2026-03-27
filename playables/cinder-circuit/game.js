@@ -12201,6 +12201,26 @@
     return null;
   }
 
+  function getSupportSystemInstalledPayoff(systemId, targetTier = 1) {
+    const spotlight = getSupportSystemSpotlight(systemId, targetTier);
+    if (spotlight) {
+      return {
+        label: spotlight.hudLabel,
+        value: spotlight.hudValue,
+        feed: spotlight.feed,
+      };
+    }
+    const identity = getSupportSystemIdentitySummary(systemId, targetTier);
+    if (!identity) {
+      return null;
+    }
+    return {
+      label: identity.payoffLabel,
+      value: identity.effectValue || identity.payoffValue,
+      feed: `${identity.payoffLabel} 설치.`,
+    };
+  }
+
   function getInstalledSupportSpotlight(build) {
     const supportSnapshot = getInstalledSupportSnapshot(build);
     if (!supportSnapshot || !supportSnapshot.primary) {
@@ -16636,6 +16656,7 @@
     getBuildRoadmap,
     getForgeSupportTrackSnapshot,
     getSupportSystemSpotlight,
+    getSupportSystemInstalledPayoff,
     getForgeEraPlan,
     getShippingLadderSteps,
     getShippingLadderFocus,
@@ -20019,6 +20040,15 @@
       state.stats.scrapSpent += choice.cost;
     }
     applyForgeChoice(state, choice);
+    const supportInstallPayoff =
+      choice.type === "system"
+        ? getSupportSystemInstalledPayoff(choice.systemId, choice.systemTier)
+        : choice.systemChoice
+          ? getSupportSystemInstalledPayoff(
+              choice.systemChoice.systemId,
+              choice.systemChoice.systemTier
+            )
+          : null;
     if (instantDraft) {
       const grantLabel = choice.forgeLaneLabel || choice.laneLabel || choice.tag || "CACHE";
       pushCombatFeed(
@@ -20034,11 +20064,13 @@
             : choice.action === "wave6_ascension"
                 ? `${grantLabel} 적용. ${choice.doctrineLabel}를 잠가 ${choice.doctrineChoice ? choice.doctrineChoice.title : "주포 mutation"}과 ${choice.chassisTitle || "utility chassis"}를 함께 켰다. 이번 break는 주포/차체 형태를 확정하는 데만 쓰고 다음 rider 갈림길은 뒤로 미룬다.`
                 : choice.action === "bastion_bay_forge"
-                ? !choice.bayUnlock && CONSOLIDATED_12_WAVE_ROUTE
-                  ? `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}만 먼저 잠가 hold, dive, exit 리듬을 바꿨다. 다음 웨이브 시작부터 해당 차체 포즈가 바로 켜지고, 작은 support 실루엣은 다음 mid-run 포지에서만 열리게 묶어 둔다.`
-                  : wave6AscensionDraft || choice.skipNextAdminStop
-                  ? `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}를 잠그고 두 번째 support bay를 flex lane으로 즉시 열어 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 장착했다. Wave 8에서는 정지 없이 세 번째 bay가 자동 uplink되어 Wave 6-8 bracket을 그대로 이어 간다.`
-                  : `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}와 함께 두 번째 support bay를 즉시 열고 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 먼저 장착한 채, Wave 8 세 번째 bay까지 예약하고 다음 웨이브를 연다.`
+                ? supportInstallPayoff
+                  ? supportInstallPayoff.feed
+                  : !choice.bayUnlock && CONSOLIDATED_12_WAVE_ROUTE
+                    ? `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}만 먼저 잠가 hold, dive, exit 리듬을 바꿨다. 다음 웨이브 시작부터 해당 차체 포즈가 바로 켜지고, 작은 support 실루엣은 다음 mid-run 포지에서만 열리게 묶어 둔다.`
+                    : wave6AscensionDraft || choice.skipNextAdminStop
+                      ? `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}를 잠그고 두 번째 support bay를 flex lane으로 즉시 열어 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 장착했다. Wave 8에서는 정지 없이 세 번째 bay가 자동 uplink되어 Wave 6-8 bracket을 그대로 이어 간다.`
+                      : `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}와 함께 두 번째 support bay를 즉시 열고 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 먼저 장착한 채, Wave 8 세 번째 bay까지 예약하고 다음 웨이브를 연다.`
                 : choice.action === "bastion_doctrine"
                 ? `${choice.doctrineLabel} 적용. 즉시 ${choice.doctrineChoice ? choice.doctrineChoice.title : "spike"}를 확보하고 이후 포지를 해당 교리 쪽으로 기울인 채 다음 웨이브를 연다.`
               : `${grantLabel} 적용. 고철 ${choice.cost}을 태워 ${choice.title}을 일찍 확보하고 다음 웨이브를 강행한다.`
@@ -23784,14 +23816,14 @@
         ? riderContractChoice.type === "utility" && riderContractChoice.action === "bastion_bay_forge"
           ? riderContractChoice.systemChoice
             ? (() => {
-                const identity = getSupportSystemIdentitySummary(
+                const payoff = getSupportSystemInstalledPayoff(
                   riderContractChoice.systemChoice.systemId,
                   riderContractChoice.systemChoice.systemTier
                 );
                 return {
-                  label: identity?.payoffLabel || "새 보조",
+                  label: payoff?.label || "새 보조",
                   value:
-                    identity?.payoffValue ||
+                    payoff?.value ||
                     riderContractChoice.systemChoice.title ||
                     riderContractChoice.chassisTitle ||
                     riderContractChoice.title ||
@@ -23807,16 +23839,16 @@
               }
           : riderContractChoice.type === "system"
             ? (() => {
-                const identity = getSupportSystemIdentitySummary(
+                const payoff = getSupportSystemInstalledPayoff(
                   riderContractChoice.systemId,
                   riderContractChoice.systemTier
                 );
                 return {
                   label:
-                    identity?.payoffLabel ||
+                    payoff?.label ||
                     (riderContractChoice.forgeLaneLabel === "공세 모듈" ? "새 공세" : "새 보조"),
                   value:
-                    identity?.payoffValue ||
+                    payoff?.value ||
                     riderContractChoice.title ||
                     riderContractChoice.slotText ||
                     "보조 시스템",

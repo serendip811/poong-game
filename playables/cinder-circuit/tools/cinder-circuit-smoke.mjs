@@ -311,6 +311,10 @@ const aegisPayoff = game.getBaseRouteBranchPayoffSummary({
 });
 assert.equal(aegisPayoff?.label, "방호 고리");
 assert.equal(aegisPayoff?.value, "탄막 절개 + 방호 파동");
+const aegisInstalledPayoff = game.getSupportSystemInstalledPayoff("aegis_halo", 1);
+assert.equal(aegisInstalledPayoff?.label, "방호 고리");
+assert.equal(aegisInstalledPayoff?.value, "탄막 절개 + 방호 파동");
+assert.ok(aegisInstalledPayoff?.feed.includes("방호 파동"));
 const aegisLiveStatus = game.getLiveSideBetSummary({
   build: aegisSpotlightBuild,
   waveIndex: 6,
@@ -649,6 +653,15 @@ assert.equal(aegisSpotlight?.hudLabel, "방호 고리");
 assert.equal(aegisSpotlight?.hudValue, "탄막 절개 + 방호 파동");
 assert.ok(aegisSpotlight?.promise.includes("방호 고리"));
 assert.ok(!aegisSpotlight?.feed.includes("Wave 8"));
+assert.equal(
+  JSON.stringify(
+    game.getBaseRouteForgeContextTailSummary({
+      riderStep: true,
+      branchPreviewPayoff: game.getSupportSystemInstalledPayoff("aegis_halo", 1),
+    })
+  ),
+  JSON.stringify({ label: "방호 고리", value: "탄막 절개 + 방호 파동" })
+);
 const forgeHeadlineMarkup = game.createBaseRouteForgeContextMarkup({
   title: "주력 변이",
   titleLabel: "다음 시험",

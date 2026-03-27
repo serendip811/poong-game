@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: strip late-route/cache/admin framing from Wave 5-8 reward/HUD beats and make one rider lane land as an installed shield/orbital/missile-style identity that changes movement on sight.
+- Immediate priority: strip live side-bet/admin grammar out of Wave 5-8 combat/feed/forge readouts so one rider payoff lands as an installed shield/orbital/missile identity the player reads on sight.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 04:00:46 KST
+  Findings:
+  - The run is still too operational during the exact moments that should feel most appetizing. `getLiveSideBetSummary()` keeps filling the live readout with `Live Ascension`, `Combat Cache`, `Dominion Break`, debt, pursuit, and other contract states, so mid-run attention is still being pulled toward route administration instead of survival, target priority, and present power. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L17089)
+  - The forge contract has been cleaned in spots, but the shell still insists on a three-slot briefing: `현재 전장 / 현재 형태 / 분기 보상`. That is still too much taxonomy for an 8-wave alpha slice, especially when the branch payoff is often just support-track naming instead of a vivid installed object like a halo, drone ring, or missile rack. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L23762) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L10020)
+  - The pause view is finally closer to the right discipline, which makes the remaining problem clearer: combat feed and reward context are still carrying too much explanatory burden. `renderCombatFeed()` and forge copy continue to summarize systems with sentence-level narration when stronger arena roguelite UI patterns usually let one short noun-phrase plus the visible module do the selling. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L17757) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L23916)
+  - This keeps non-offense builds weak even when the underlying mechanics are real. Satellites, intercept shields, drones, and missiles exist in runtime, but the player is still more likely to read "support track/proof/branch payoff" than "I installed a ring that now lets me cut through bullets and hold tighter pockets." That kills build hunger and movement imagination. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21898) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L24625)
+  Top Priority: Collapse Wave 5-8 rider presentation down to one visible installed support identity across forge card, live HUD, and combat feed, and demote side-bet/cache/admin state to secondary or hidden text.
+  Why Now: If the player still has to parse run administration to understand a support pick, the game cannot earn repeat-run desire no matter how many later waves get added.
+  Do Not Repeat: Do not answer this with another renamed branch-payoff strip or a shorter sentence version of the same contract shell.
+  Release Gate: UX/UI
 
 - 2026-03-28 05:15:00 KST
   Findings:
@@ -3763,6 +3774,14 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-28 05:35:00 KST
+  Changed: tightened the shipped `Wave 5-8` rider read in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) around one shared installed-support payoff helper, `getSupportSystemInstalledPayoff(...)`. The rider-step forge tail for `Aegis Halo` now resolves to the same `방호 고리 / 탄막 절개 + 방호 파동` identity the live HUD uses instead of falling back to raw system titles, and the instant bastion draft confirmation feed now prints that installed shield payoff directly instead of a long `support bay/uplink` admin sentence when the support actually lands. Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the shared payoff helper plus the rider-tail payload.
+  Why: the latest critique's `Top Priority` was to collapse one Wave 5-8 rider into a single installed support identity across forge card, live HUD, and combat feed. The highest-value bounded interpretation was to unify the already-shipped `Aegis Halo` payoff wording at the helper layer, because the remaining break was not missing mechanics but the fact that rider confirmation still reverted to bay/admin language exactly when the player should feel "I installed a shield ring."
+  Follow-up Risk: this closes the `Aegis Halo` reward/readout mismatch, but other live side-bet and cache states can still occupy the HUD when no installed support is active. If the next critique still says combat attention is being spent on operations language, the next bounded pass should demote one of those non-support live summaries rather than adding more rider copy.
+  UI reference direction: followed the fast noun-first support payoff pattern from `Hades` and `Nova Drift`, where the reward beat repeats one obvious installed object across card, HUD, and pickup confirmation instead of switching back to route taxonomy.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: UX/UI
 
 - 2026-03-28 04:25:00 KST
   Changed: recast the shipped defense rider in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) around `Aegis Halo` as an immediate `방호 고리` payoff instead of a future support/admin promise. Tier 1 now fires a real intercept pulse the moment it deletes a shot, that pulse can clear nearby enemy bullets through `triggerChassisPulse(...)`, and the `Mk.II/Mk.III` descriptions/status notes were rewritten around cutting bullet lanes and opening dive-return angles. Added `getSupportSystemIdentitySummary(...)` so forge preview rows and the live rider contract sell concrete module names like `방호 고리` and `탄막 절개 + 방호 파동` rather than generic `보조`/`다음 보조`. Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock both the pulse-enabled Aegis stats and the new preview grammar.
