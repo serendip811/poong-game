@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: collapse the Wave 5 forge/reward stop into one appetite-first mid-run spike so the improved Wave 5-8 combat band proves a dominant gun/body form before rider or greed breadth reopens.
+- Immediate priority: turn the shipped 8-wave route from a narrated prototype into an appetite-first readable run by collapsing live HUD/feed/forge messaging to one clear ask and one proof cue before adding more branch breadth.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 19:01:53 KST
+  Findings:
+  - The last reward-structure fix landed: `shouldOpenBaseRouteSecondaryBranch()` now delays the third lane until `Wave 6`, and the `Wave 4 -> Wave 5` forge copy now frames the stop as `주력 변이 하나 + 버티는 답 하나`. That means the loop is no longer failing first on branch timing; repeating that critique would be stale. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L11392) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L18387)
+  - The run still talks too much during the exact moments that should feel immediate. `renderForgeOverlay()` still fills the contract shell with current form, next ask, and branch payoff before the pick resolves, so even the cleaner Wave 5 stop reads like a status briefing instead of a craving spike. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22924)
+  - Combat readability is being spent on narration. `renderCombatFeed()` permanently renders a 4-row log, while `describeHazardState()` and the many `pushCombatFeed()` calls keep injecting multi-clause explanations about relay pylons, vaults, uplinks, and armory transitions. Strong reference patterns from `Hades`, `Nova Drift`, and `Brotato` do not keep a live paragraph rail on screen; they trust one short cue, stronger iconography, and the encounter itself to teach. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L16035) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L17005)
+  - This is now a consolidation problem, not a content shortage. The 8-wave slice has enough weapon/body/support structure to test replay desire, but the interface keeps surfacing route administration faster than fantasy, which makes the run feel prototype-literary instead of release-feeling.
+  Top Priority: Collapse the live HUD/feed/forge context to one headline instruction plus one proof cue per state, and move branch/support/admin explanation out of the active run unless the player explicitly pauses.
+  Why Now: The reward cadence improved, so text density is now the main thing muting impact and replay appetite.
+  Do Not Repeat: Do not answer this with lighter wording while the four-row feed, hazard explainers, and forge context shell still narrate the run in full sentences.
+  Release Gate: UX/UI
 
 - 2026-03-27 18:48:23 KST
   Findings:
@@ -3563,6 +3574,14 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 23:05:00 KST
+  Changed: collapsed the shipped live-read contract in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so active combat now renders only the newest summarized feed entry, the base-route HUD status strip hides `분기 보상` unless the player explicitly pauses or reaches the result state, and the base-route forge context now reads as `pick headline -> next proof` instead of `current form + next ask + branch payoff`. Added one bounded export-backed smoke assertion in [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) for the new forge header contract and feed summarizer, and updated [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) so the live feed visually separates the headline cue from its short proof line.
+  Why: the latest critique's `Top Priority` was to stop the live HUD/feed/forge from narrating route administration during the exact moments that should feel immediate. The highest-value bounded interpretation was to move support/branch/admin explanation behind pause while keeping active play aligned to the one-glance reference direction used by `Hades`, `Nova Drift`, and `Brotato`: one dominant cue, one short proof, then back to piloting.
+  Follow-up Risk: the active run now reads faster, but the underlying `pushCombatFeed()` writers still emit long source strings and `describeHazardState()` still carries full note text for paused/inspect contexts. If later feedback says active waves are still too wordy, the next pass should trim the source feed emitters or hazard note generation rather than re-expanding the live shell.
+  UI reference direction: followed the live-read hierarchy from `Hades`, `Nova Drift`, and `Brotato`, where the on-run layer trusts one recent cue and one immediate proof instead of a permanent paragraph log.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: UX/UI
 
 - 2026-03-27 18:42:40 KST
   Changed: narrowed the shipped `Wave 5` forge in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `shouldOpenBaseRouteSecondaryBranch(nextWave)` now delays the extra branch slot until `Wave 6`, which makes the first midrun stop resolve to only `headline + rider` instead of `headline + rider + gamble`. Rewrote the `Wave 4 -> Wave 5` forge feed to explicitly sell `one dominant mutation + one survival answer`, and updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock `Wave 5` expectations to `headline|rider` with no live `gamble` card.

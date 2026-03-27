@@ -2534,9 +2534,24 @@ body[data-overdrive="true"] .backdrop__glow--right {
 }
 
 .combat-feed__text {
+  display: grid;
+  gap: 4px;
   color: var(--muted-strong);
   font-size: 0.82rem;
   line-height: 1.38;
+}
+
+.combat-feed__headline {
+  color: var(--text);
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.combat-feed__proof {
+  color: var(--muted);
+  font-size: 0.74rem;
+  line-height: 1.32;
 }
 
 @media (max-width: 900px) {

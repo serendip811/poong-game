@@ -488,6 +488,24 @@ assert.ok(!forgeContextMarkup.includes("세 장 중 하나만"));
 assert.ok(!forgeContextMarkup.includes("다음 시험"));
 assert.ok(!forgeContextMarkup.includes("보조 결"));
 assert.ok(!forgeContextMarkup.includes("forge-focus__hint"));
+const forgeHeadlineMarkup = game.createBaseRouteForgeContextMarkup({
+  title: "주력 변이",
+  titleLabel: "다음 시험",
+  currentFormLabel: "Payoff Run",
+  waveAskLabel: "주력 변이",
+  waveAskValue: "Afterglow",
+});
+assert.ok(forgeHeadlineMarkup.includes("주력 변이"));
+assert.ok(forgeHeadlineMarkup.includes("Afterglow"));
+assert.ok(forgeHeadlineMarkup.includes("다음 시험"));
+assert.ok(forgeHeadlineMarkup.includes("Payoff Run"));
+const summarizedFeed = game.summarizeCombatFeedEntry({
+  stamp: "W6",
+  text: "Wave 6 진입. 가장 먼 relay를 먼저 끊고 뚫린 corridor 하나를 길게 지킨다.",
+});
+assert.equal(summarizedFeed.stamp, "W6");
+assert.equal(summarizedFeed.headline, "Wave 6 진입.");
+assert.ok(summarizedFeed.proof.includes("relay"));
 const openerFocus = game.getBaseRouteTransformationFocus(1);
 assert.equal(openerFocus.windowLabel, "다음 포지");
 assert.equal(openerFocus.title, "첫 무기 도약");

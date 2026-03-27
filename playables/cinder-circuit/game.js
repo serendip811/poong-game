@@ -9860,6 +9860,7 @@
   function createBaseRouteForgeContextMarkup({
     eyebrow = "",
     title = "",
+    titleLabel = "현재 형태",
     currentFormLabel = "",
     waveAskLabel = "",
     waveAskValue = "",
@@ -9869,11 +9870,47 @@
     return createBaseRouteStatusStripMarkup({
       leadLabel: waveAskLabel || eyebrow || "현재 전장",
       leadValue: waveAskValue || "-",
-      titleLabel: "현재 형태",
+      titleLabel,
       titleValue: currentFormLabel || title || "-",
       tailLabel: branchPayoffLabel,
       tailValue: branchPayoffValue,
     });
+  }
+
+  function shouldShowLiveBranchPayoff(currentState = state) {
+    return Boolean(currentState && (currentState.paused || currentState.phase === "result"));
+  }
+
+  function summarizeCombatFeedEntry(entry) {
+    const stamp = entry && entry.stamp ? entry.stamp : "RUN";
+    const source = entry && entry.text ? String(entry.text).replace(/\s+/g, " ").trim() : "";
+    if (!source) {
+      return { stamp, headline: "", proof: "" };
+    }
+    const sentenceBreak = source.match(/^(.+?[.!?])(?:\s+(.*))?$/);
+    if (sentenceBreak) {
+      return {
+        stamp,
+        headline: sentenceBreak[1].trim(),
+        proof: trimInspectNote(sentenceBreak[2] || "", ""),
+      };
+    }
+    const clauseBreak = source.match(/^(.+?[,:;])(?:\s+(.*))?$/);
+    if (clauseBreak) {
+      return {
+        stamp,
+        headline: clauseBreak[1].trim(),
+        proof: trimInspectNote(clauseBreak[2] || "", ""),
+      };
+    }
+    if (source.length <= 88) {
+      return { stamp, headline: source, proof: "" };
+    }
+    return {
+      stamp,
+      headline: `${source.slice(0, 85).trimEnd()}...`,
+      proof: "",
+    };
   }
 
   function createMinimalCombatAskMarkup({
@@ -15922,6 +15959,7 @@
     getBaseRoutePostWaveTransition,
     createBaseRouteForgeContextMarkup,
     createMinimalCombatAskMarkup,
+    summarizeCombatFeedEntry,
     getBaseRouteTransformationFocus,
     getShippedRoutePresentationBeats,
     getBaseRouteForgeChoiceTransformation,
@@ -17008,13 +17046,23 @@
     }
     const items = state.feed.length
       ? state.feed
-      : [{ stamp: "BOOT", text: "전투가 시작되면 핵심 전개만 여기에 남는다." }];
-    elements.combatFeed.innerHTML = items
+      : [{ stamp: "BOOT", text: "전투 중에는 가장 최근 전개 하나만 남는다." }];
+    const visibleItems = state.paused ? items : [items[0]];
+    elements.combatFeed.innerHTML = visibleItems
       .map(
         (entry) => `
           <article class="combat-feed__row">
             <span class="combat-feed__stamp">${entry.stamp}</span>
-            <div class="combat-feed__text">${entry.text}</div>
+            <div class="combat-feed__text">${
+              state.paused
+                ? `<strong class="combat-feed__headline">${entry.text}</strong>`
+                : (() => {
+                    const summary = summarizeCombatFeedEntry(entry);
+                    return `${summary.headline ? `<strong class="combat-feed__headline">${summary.headline}</strong>` : ""}${
+                      summary.proof ? `<span class="combat-feed__proof">${summary.proof}</span>` : ""
+                    }`;
+                  })()
+            }</div>
           </article>
         `
       )
@@ -17068,8 +17116,9 @@
       leadValue: currentAskValue,
       titleLabel: "현재 형태",
       titleValue: dominantForm.label,
-      tailLabel: branchPayoff ? branchPayoff.label : "",
-      tailValue: branchPayoff ? branchPayoff.value : "",
+      tailLabel: branchPayoff && shouldShowLiveBranchPayoff(state) ? branchPayoff.label : "",
+      tailValue:
+        branchPayoff && shouldShowLiveBranchPayoff(state) ? branchPayoff.value : "",
     });
   }
 
@@ -23011,21 +23060,10 @@
           ${createBaseRouteForgeContextMarkup({
             eyebrow: baseRouteTransformationFocus.eyebrow || focusEyebrow,
             title: baseRouteTransformationFocus.title || focusTitle,
-            currentFormLabel: dominantFormSummary.label,
-            waveAskLabel:
-              state.pendingFinalForge
-                ? "마지막 시험"
-                : riderStep
-                  ? "다음 시험"
-                  : "다음 전장",
-            waveAskValue: proofWindow.label,
-            branchPayoffLabel: branchPayoff ? branchPayoff.label : "",
-            branchPayoffValue:
-              riderStep && activeSupportTrack && activeSupportTrack.label
-                ? activeSupportTrack.label
-                : branchPayoff
-                  ? branchPayoff.value
-                  : "",
+            titleLabel: state.pendingFinalForge ? "형태 고정" : "다음 시험",
+            currentFormLabel: state.pendingFinalForge ? dominantFormSummary.label : proofWindow.label,
+            waveAskLabel: baseRouteTransformationFocus.eyebrow || focusEyebrow,
+            waveAskValue: baseRouteTransformationFocus.title || focusTitle,
           })}
         </article>
       `

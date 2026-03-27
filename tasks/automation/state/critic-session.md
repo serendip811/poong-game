@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Rewards`: `Wave 5-8` combat asks are healthier, but the first real payoff still lands as branch management because `Wave 5` opens rider and greed breadth too early.
-- Recurring player-facing failure: reward moments still explain route structure and support tracks before they sell one dominant form the player wants to try immediately.
-- Repeated false solution: trimming copy or adding shinier cards while the `Wave 5` forge still structurally presents three appetites at once.
+- The most fragile gate is now `UX/UI`: the branch-timing fix landed, but the active run still feels over-narrated through forge context, hazard notes, and the four-row combat feed.
+- Recurring player-facing failure: the game explains route logic during combat and reward moments instead of letting one visible form spike and one immediate proof ask carry the read.
+- Repeated false solution: wording trims without removing the live admin surfaces themselves; if the forge shell, hazard explainer, and feed rail stay dense, the run will still read like a prototype document.
 - Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: the useful benchmark is whether the player can understand the current form, the next proof, and the tempting payoff in seconds.
-- Near-term critic pressure should favor consolidation over expansion: protect the lean opening, let one mid-run spike monopolize the reward moment, then reopen rider/greed breadth only after a full proof lap has made that spike memorable.
+- Near-term critic pressure should favor consolidation over expansion: protect the lean opening, keep the active HUD nearly wordless, and let weapon/body spectacle plus one clear proof ask carry replay desire before reopening more systems.
