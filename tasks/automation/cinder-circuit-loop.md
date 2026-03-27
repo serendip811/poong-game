@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: strip the shipped `8-wave` route back to one desire-first reward contract by deleting planner-style roadmap/preview clutter and helper-tech future hooks until one weapon spike, one chassis break, and one greed bend read instantly.
+- Immediate priority: pick one honest shipped run contract and make title, HUD, forge, docs, and wave structure all say the same thing before adding or tuning more progression breadth.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 11:30:59 KST
+  Findings:
+  - The game is now presenting two incompatible products at once. [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L100) still says `Wave 1 / 8`, [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8535) still frames the shipped silhouette as an `8웨이브` route, but [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1122) still define and run a `12-wave / three-era` ladder. That is not anticipation; it is a broken player contract.
+  - The forge and HUD still explain a roadmap instead of selling a spike. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8301) `getBuildRoadmap()`, [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8508) `createShippingLadderMarkup()`, and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22560) `renderForgeOverlay()` still keep route cards, staged ladders, and context shells alive. Strong references use one dominant offer and one immediate test, not a visible theory of the whole run.
+  - The beat map is contradictory even inside the supposed lean route. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8556) says the title fantasy is `Wave 3 첫 무기 도약`, while [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8535) sells `Wave 5 주포 폭주, Wave 6 차체 잠금, Wave 7 보조 rider`. If the player cannot tell where the first real power break lives, the run cannot build hunger cleanly.
+  - The project is still trying to judge pacing and build depth before its readable contract is stable. Late-act overclock, ascension, doctrine, and support-bay machinery remain live in the runtime around the same moment the UI is pretending to be a stripped route. Until that contradiction is removed, combat escalation, replay desire, and between-wave choice quality are all being measured through noise.
+  Top Priority: Decide whether the shipped game is an honest `8-wave` route or an honest `12-wave` route, then make every player-facing surface and live system obey that single answer.
+  Why Now: Until the run length and payoff cadence are truthful, no amount of balance or content tuning will feel intentionally paced.
+  Do Not Repeat: Do not “fix” this by editing one label set while leaving the opposite route active in docs, HUD, forge logic, or wave progression.
+  Release Gate: UX/UI
 
 - 2026-03-27 11:42:00 KST
   Findings:
@@ -3398,6 +3409,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 18:10:00 KST
+  Changed: rewired one bounded contract source in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the consolidated shipped route now computes its shared roadmap as the actual live `Wave 3 first weapon break -> Wave 6 chassis lock -> Wave 8 proof/lap` spine instead of falling back to generic `Monster Form Lock / Midform Spike` staging. I added `getBaseRouteBuildRoadmap(...)`, made `getBuildRoadmap(...)` delegate to it for the base route, updated the legacy `createShippingLadderMarkup()` summary line to the same cadence, and trimmed the empty combat-feed placeholder away from stale `시동 회로` wording. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks the new roadmap titles, states, and prompt behavior.
+  Why: the newest critique's `Top Priority` was to make the shipped game obey one honest route contract, and the highest-value concrete interpretation still open inside `playables/cinder-circuit/` was the roadmap helper layer that several title/HUD/forge summaries already share. Even after earlier UI cleanup, those helpers were still calculating the base route like a generic midform/capstone ladder, which meant visible surfaces could quietly drift back into the wrong payoff order.
+  Follow-up risk: this makes the live helper text much more truthful, but docs and deeper non-base-route scaffolding still exist elsewhere in the project. If the next critique stays on contract honesty, the next bounded pass should scrub remaining player-facing `12-wave` surfaces or remove more dormant late-route wrappers from the shipped path rather than reworking this helper again.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: UX/UI
 
 - 2026-03-27 11:12:04 KST
   Changed: removed one bounded early-support teaser from the shipped forge path in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and updated the matching expectation in [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs). `createPreviewSupportChoice(...)` now fails closed on the consolidated `Wave 1-8` route until `SUPPORT_SYSTEM_START_WAVE`, so the live `Wave 5` rider lane can no longer surface `preview_support` cards, halos, drones, or other support-preview wording before the real rider unlock at `Wave 7`.

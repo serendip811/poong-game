@@ -8299,7 +8299,72 @@
     };
   }
 
+  function getBaseRouteBuildRoadmap(build, weapon = null, waveNumber = 1) {
+    const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
+    const currentWeapon = weapon || computeWeaponStats(build);
+    const doctrineBodyForm = getDoctrineBodyForm(build);
+    const activeForm =
+      getPresentationHeadlineLabel(currentWeapon, boundedWave) ||
+      (currentWeapon && currentWeapon.doctrineFormLabel) ||
+      (currentWeapon && currentWeapon.evolutionLabel) ||
+      CORE_DEFS[build.coreId].label;
+    const activeBodyLabel = doctrineBodyForm ? doctrineBodyForm.label : null;
+    const pathLabel = activeBodyLabel ? `${activeForm} / ${activeBodyLabel}` : activeForm;
+    const wave3LeapPreview = getArchitectureWeaponLeapPreview(build, getBastionDoctrineDef(build));
+    const previewChassis = wave3LeapPreview && wave3LeapPreview.chassis ? wave3LeapPreview.chassis : null;
+    const activeChassis = getChassisBreakpointDef(build);
+    const stageOneTitle = build.bastionDoctrineId
+      ? activeForm
+      : (wave3LeapPreview && wave3LeapPreview.weaponChoice.title) || "첫 무기 도약";
+    const stageOneDetail = build.bastionDoctrineId
+      ? `${pathLabel}이(가) 현재 주력 실루엣이다. 다음 큰 약속은 Wave 6 차체 잠금 하나뿐이며, support rider는 Wave 7까지 뒤로 민다.`
+      : wave3LeapPreview
+        ? `Wave ${ARCHITECTURE_DRAFT_WAVE}에서 ${wave3LeapPreview.weaponChoice.title}을(를) 먼저 붙여 첫 주포 도약을 만든다. support나 운영 패키지는 숨기고 이 무기 변화만 먼저 전장에 남긴다.`
+        : `Wave ${ARCHITECTURE_DRAFT_WAVE}에서 첫 주포 도약을 붙여 빈 선체 구간을 끝낸다.`;
+    const stageOneState = build.bastionDoctrineId
+      ? "locked"
+      : boundedWave >= ARCHITECTURE_DRAFT_WAVE
+        ? "primed"
+        : "planned";
+    const stageTwoTitle =
+      (activeChassis && (activeChassis.label || activeChassis.title)) ||
+      (previewChassis && (previewChassis.label || previewChassis.title)) ||
+      "첫 차체 잠금";
+    let stageTwoDetail =
+      "Wave 6에서 차체 하나를 잠가 dive, hold, exit 리듬을 몸체 선택으로 갈라 놓는다. 첫 보조 rider는 Wave 7 포지에서 한 장만 이어 붙는다.";
+    let stageTwoState = "planned";
+    if (activeChassis) {
+      stageTwoDetail = `${stageTwoTitle} 차체가 잠겼다. 이제 몸체 리듬이 런의 버티는 선이 되고, support rider는 Wave 7에서 한 줄만 얹힌다.`;
+      stageTwoState = "locked";
+    } else if (boundedWave >= 5) {
+      stageTwoDetail = `${stageTwoTitle}이(가) 다음 큰 약속이다. Wave 6에서는 차체만 잠그고 support 시스템은 Wave 7까지 열지 않는다.`;
+      stageTwoState = "primed";
+    }
+    const baseRouteFinale = getBaseRouteFinaleRoadmap(build, currentWeapon, boundedWave);
+    const steps = [
+      createRoadmapStep("I", stageOneTitle, stageOneDetail, stageOneState),
+      createRoadmapStep("II", stageTwoTitle, stageTwoDetail, stageTwoState),
+      createRoadmapStep("III", baseRouteFinale.title, baseRouteFinale.detail, baseRouteFinale.state),
+    ];
+    const nextStep = steps.find((step) => step.state !== "locked") || steps[2];
+    const prompt =
+      nextStep && nextStep.state !== "locked"
+        ? `${pathLabel}. 다음 큰 점프는 ${nextStep.title}이며, ${nextStep.detail}`
+        : `${pathLabel}. gun/body 실루엣이 모두 잠겨 남은 구간은 Wave 8 proof와 짧은 승리 랩에서 이 형태를 오래 증명하는 일뿐이다.`;
+    return {
+      pathLabel,
+      activeForm,
+      doctrineTag: "ROUTE",
+      prompt,
+      note: `${steps[0].title} -> ${steps[1].title} -> ${steps[2].title}`,
+      steps,
+    };
+  }
+
   function getBuildRoadmap(build, weapon = null, waveNumber = 1) {
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
+      return getBaseRouteBuildRoadmap(build, weapon, waveNumber);
+    }
     const boundedWave = clamp(
       Math.round(waveNumber || 1),
       1,
@@ -8532,7 +8597,7 @@
         <strong>런 실루엣</strong>
         <span class="summary-chip ${focus.state === "live" ? "summary-chip--hot" : ""}">${focus.windowLabel || focus.label}</span>
       </div>
-      <p class="summary-copy roadmap-card__path">기본 8웨이브 런에서는 Wave 5 주포 폭주, Wave 6 차체 잠금, Wave 7 보조 rider만 또렷하게 세우고 그 이후 형태는 짧게만 암시한다.</p>
+      <p class="summary-copy roadmap-card__path">기본 8웨이브 런은 Wave 3 무기 도약, Wave 6 차체 잠금, Wave 8 완성 시험만 크게 세우고 그 사이는 같은 실루엣을 증명한다.</p>
       <div class="roadmap-card__steps">
         ${steps
           .map(
@@ -16626,7 +16691,7 @@
     }
     const items = state.feed.length
       ? state.feed
-      : [{ stamp: "BOOT", text: "시동 회로를 고르면 전개 로그가 여기에 누적된다." }];
+      : [{ stamp: "BOOT", text: "전투가 시작되면 핵심 전개만 여기에 남는다." }];
     elements.combatFeed.innerHTML = items
       .map(
         (entry) => `
