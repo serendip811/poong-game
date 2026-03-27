@@ -2517,7 +2517,7 @@
   const LEAN_START_CORE_ID = "ember";
   const MAX_SUPPORT_BAYS = 2;
   const MAX_SUPPORT_BAY_LIMIT = 4;
-  const SUPPORT_SYSTEM_START_WAVE = 8;
+  const SUPPORT_SYSTEM_START_WAVE = 7;
   const BASE_ROUTE_MIDRUN_SUPPORT_WAVE = SUPPORT_SYSTEM_START_WAVE;
   const PREVIEW_SUPPORT_PRIMER_CREDIT = 10;
   const SUPPORT_SYSTEM_DEFS = {
@@ -11236,7 +11236,8 @@
     return (
       CONSOLIDATED_12_WAVE_ROUTE &&
       Number.isFinite(nextWave) &&
-      nextWave === 5
+      nextWave >= 5 &&
+      nextWave < LATE_BREAK_ARMORY_WAVE
     );
   }
 
