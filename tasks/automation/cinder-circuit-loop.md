@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: purge Wave 9+ / Afterburn / Late Break scaffolding from shipped-route surfaces and stop early support/package admin from showing up before one Wave 5-6 transformation owns multiple fights.
+- Immediate priority: unbundle Wave 6 so one weapon/body transformation owns Wave 5-8 by itself before support, greed, and branch-admin layers reopen the menu.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 00:41:00 KST
+  Findings:
+  - The run is now hiding more of the old late-route wrapper, but the replacement is still structurally wrong: `enterBastionDraft()` tells the player this stop is "몸체 하나만" and support is delayed, while `buildWave6ChassisBreakpointChoices()` bakes a support install into every chassis card and promises automatic extra bays right in the same pick. That kills the clean "small start -> one big break" fantasy and turns the first real spike into package administration. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L15313) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L14675)
+  - The base-route reward contract is still widening too early. `shouldOpenBaseRouteSecondaryBranch()` opens the secondary lane from Wave 6 onward, and `buildFieldGrantChoices()` stops being a two-card headline/survival contract at that point, so greed/utility appetite comes back before the chosen gun/body line has even cleared multiple proof fights on its own. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L11701) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L14814)
+  - Wave 5-8 has better breathing room and hazard variety, but the escalation grammar is still too narrow for reruns: payoff open lane, corridor hold, pocket reset, pocket hold are all still variants of "keep the same ownership shape alive a little longer." That is not enough spine for a future 20-30 wave game, because the current midrun still rehearses one space-control answer instead of forcing distinct piloting adaptations. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L445) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L562)
+  - The HUD/forge still has to explain "현재 전장 / 현재 형태 / branch payoff" because the actual branch silhouette is not yet allowed to stand on its own. Compared with strong references like `Hades`, `Nova Drift`, and `Brotato`, the game is still narrating the build state at the exact moment it should be visually obvious from one earned transformation. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L10018) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L10212) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L23590)
+  Top Priority: Make Wave 6 a true single-axis breakpoint: choose body or support, not both, then force at least two full proof fights where that lone transformation carries the run before greed/support breadth reappears.
+  Why Now: Until one midrun leap is memorable by itself, every added branch reads like catalog size instead of replay fuel.
+  Do Not Repeat: Do not answer this with more card copy or one more branch family while Wave 6 still bundles chassis, support, and future bay automation into the same reward moment.
+  Release Gate: Builds
 
 - 2026-03-28 00:17:00 KST
   Findings:
@@ -3686,6 +3697,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-28 01:05:00 KST
+  Changed: turned the shipped `Wave 6` bastion breakpoint back into a true chassis-only leap in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). `buildWave6ChassisBreakpointChoices(...)` now returns `singleAxisBreakpoint` cards with no bundled `bayUnlock` or `systemChoice`, `applyForgeChoice(...)` records the chassis proof hold without silently installing support, and the new `shouldHoldWave6SingleAxisBreakpoint(...)` gate keeps both support offers and the secondary gamble lane closed through `Wave 7` so the picked body has to carry two full proof fights before breadth reopens at `Wave 8`. Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new `Wave 6 -> Wave 7` contract, including no immediate support install, no `Wave 7` gamble after a chassis breakpoint, and support visibility returning on `Wave 8`.
+  Why: the latest critique's `Top Priority` was to make `Wave 6` a real single-axis breakpoint instead of a body/support package. The highest-value bounded interpretation was to stop the chassis card from also doing support administration and then hold the extra lane closed for one more stop, because that creates a cleaner `small start -> one body break -> prove it twice` arc without adding new content or more text.
+  Follow-up Risk: the underlying pause/branch summary still labels the active chassis lane under `활성 보조`, so the reward structure is cleaner than the inspect language. If the next critique still says the run is narrating the build instead of showing it, the next bounded pass should retune that pause/HUD branch label to reflect a chassis proof lane rather than reopening support breadth earlier.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Builds
 
 - 2026-03-28 00:45:00 KST
   Changed: hardened the shipped support-capacity curve in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the consolidated `8-wave` route now starts with only `1` support bay, opens the second bay at the `Wave 6` chassis breakpoint, and tops out at `3` bays instead of carrying the old `2 -> 3 -> 4` ladder from the longer prototype route. `getSupportBayCapacity(...)`, `applyAuxiliaryJunction(...)`, `unlockLateSupportBay(...)`, and the shipped `Wave 6` breakpoint descriptions/feed strings now all speak the same `1 -> 2 -> 3` contract, which keeps the opener from feeling pre-wired for support/admin complexity before the first real body break lands. Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new base cap and shifted milestone expectations, and adjusted the multi-system support tests to opt into extra bay capacity explicitly when they are testing later-route support stacking rather than the shipped opener.

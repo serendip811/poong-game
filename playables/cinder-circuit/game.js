@@ -6675,6 +6675,9 @@
       return false;
     }
     const nextWave = options && Number.isFinite(options.nextWave) ? options.nextWave : 0;
+    if (shouldHoldWave6SingleAxisBreakpoint(build, nextWave)) {
+      return false;
+    }
     const unlockedSupportExists = Object.keys(SUPPORT_SYSTEM_DEFS).some((systemId) =>
       isSupportSystemUnlocked(systemId, nextWave)
     );
@@ -10768,6 +10771,9 @@
 
   function getVisibleSupportOfferSystemIds(build, nextWave = 0) {
     const allSystemIds = Object.keys(SUPPORT_SYSTEM_DEFS);
+    if (shouldHoldWave6SingleAxisBreakpoint(build, nextWave)) {
+      return [];
+    }
     if (
       CONSOLIDATED_12_WAVE_ROUTE &&
       Number.isFinite(nextWave) &&
@@ -11698,11 +11704,23 @@
     return false;
   }
 
-  function shouldOpenBaseRouteSecondaryBranch(nextWave) {
+  function shouldHoldWave6SingleAxisBreakpoint(build, nextWave = 0) {
+    return Boolean(
+      CONSOLIDATED_12_WAVE_ROUTE &&
+      build &&
+      build.wave6ChassisBreakpoint &&
+      Number.isFinite(nextWave) &&
+      nextWave > 6 &&
+      nextWave < DEFAULT_ROUTE_WAVE_COUNT
+    );
+  }
+
+  function shouldOpenBaseRouteSecondaryBranch(nextWave, build = null) {
     return (
       CONSOLIDATED_12_WAVE_ROUTE &&
       Number.isFinite(nextWave) &&
-      nextWave >= 6 &&
+      !shouldHoldWave6SingleAxisBreakpoint(build, nextWave) &&
+      nextWave >= DEFAULT_ROUTE_WAVE_COUNT &&
       nextWave < LATE_BREAK_ARMORY_WAVE
     );
   }
@@ -12919,7 +12937,7 @@
       nextWave > 6 &&
       nextWave >= SUPPORT_SYSTEM_START_WAVE &&
       supportSystemChoices.length > 0;
-    const openSecondaryBranch = shouldOpenBaseRouteSecondaryBranch(nextWave);
+    const openSecondaryBranch = shouldOpenBaseRouteSecondaryBranch(nextWave, build);
     const strictBaseRouteRiderContract =
       recurringBaseRouteContract &&
       nextWave === DEFAULT_ROUTE_WAVE_COUNT;
@@ -14676,98 +14694,46 @@
     if (!build) {
       return [];
     }
-    const random = typeof rng === "function" ? rng : Math.random;
-    const doctrine = getBastionDoctrineDef(build);
-    const preferredSystemIds = new Set(getDoctrinePreferredSystemIds(doctrine));
-    const expandedBuild = {
-      ...build,
-      bastionDoctrineId: build.bastionDoctrineId || build.architectureForecastId || build.bastionDoctrineId,
-      supportBayCap: Math.min(
-        MAX_SUPPORT_BAY_LIMIT,
-        Math.max(getSupportBayCapacity(build), getMidrunSupportBayCapacityTarget())
-      ),
-      auxiliaryJunctionLevel: Math.max(1, Math.round(build.auxiliaryJunctionLevel || 0)),
-    };
-    const excludedIds = new Set(
-      excludedChoiceIds instanceof Set
-        ? Array.from(excludedChoiceIds)
-        : Array.isArray(excludedChoiceIds)
-          ? excludedChoiceIds
-          : []
-    );
-    const supportInstallWave =
-      CONSOLIDATED_12_WAVE_ROUTE && nextWave === 6 ? SUPPORT_SYSTEM_START_WAVE : nextWave;
-    const installChoices = createSupportSystemChoices(expandedBuild, random, {
-      nextWave: supportInstallWave,
-      finalForge: false,
-    })
-      .filter((choice) => choice && choice.bayAction === "install" && !excludedIds.has(choice.id));
-    const wildcardChoices = installChoices.filter((choice) => !preferredSystemIds.has(choice.systemId));
-    const doctrineChoices = installChoices.filter((choice) => preferredSystemIds.has(choice.systemId));
-    sortChoicesForDoctrine(wildcardChoices, doctrine);
-    sortChoicesForDoctrine(doctrineChoices, doctrine);
-    const ordered = [];
-    const takenIds = new Set();
-    const pushChoice = (choice) => {
-      if (!choice || takenIds.has(choice.id)) {
-        return;
-      }
-      takenIds.add(choice.id);
-      ordered.push(choice);
-    };
-    pushChoice(doctrineChoices[0]);
-    pushChoice(wildcardChoices[0]);
-    [...doctrineChoices.slice(1), ...wildcardChoices.slice(1)].forEach(pushChoice);
     const chassisDefs = Object.values(CHASSIS_BREAKPOINT_DEFS);
-    const fallbackSystemChoice = ordered[0] || null;
-    const chassisChoices = chassisDefs.map((chassisDef, index) => {
-      const choice = ordered[index] || fallbackSystemChoice;
-      return {
-        type: "utility",
-        action: "bastion_bay_forge",
-        id: `utility:bastion_chassis_break:${chassisDef.id}:${choice ? choice.systemId : "flex_unlock"}`,
-        verb: "접합",
-        tag: chassisDef.tag,
-        title: chassisDef.title,
-        description: CONSOLIDATED_12_WAVE_ROUTE
-          ? `${chassisDef.description} 이번 정지에서 ${choice ? `${choice.title}을(를) 함께 직결해` : "작은 support uplink를 바로 열어"} Wave 6부터 body/support bracket을 같이 굴린다. 새 rider는 교리 reserve를 무시하는 두 번째 flex lane으로 붙고, Wave 8에서는 정지 없이 세 번째 bay까지 자동 uplink되어 두 번 더 proof lap을 이어 간다.`
-          : `${chassisDef.description} 세 번째 support bay는 즉시 교리 reserve를 무시하는 flex lane으로 열리고${choice ? ` ${choice.title}을(를) 함께 직결한다.` : " flex subsystem lane만 먼저 확보한다."} Wave 8에서는 정지 없이 네 번째 bay까지 자동 uplink되어 Late Break Armory를 건너뛴다.`,
-        slotText: CONSOLIDATED_12_WAVE_ROUTE
-          ? `섀시 breakpoint · ${chassisDef.slotText}${choice ? ` · ${choice.title}` : " · flex rider"}`
-          : `섀시 breakpoint · ${chassisDef.slotText}${choice ? ` · ${choice.title}` : ""}`,
-        cost: CONSOLIDATED_12_WAVE_ROUTE
-          ? Math.max(10, Math.round(((choice && choice.cost) || 0) * 0.55))
-          : Math.max(12, Math.round(((choice && choice.cost) || 0) * 0.7)),
-        originalCost: (choice && choice.cost) || 0,
-        laneLabel: "섀시 breakpoint",
-        forgeLaneLabel: "섀시 breakpoint",
-        bayUnlock: true,
-        chassisId: chassisDef.id,
-        chassisTitle: chassisDef.title,
-        systemChoice: choice,
-        skipNextAdminStop: true,
-      };
-    });
+    const chassisChoices = chassisDefs.map((chassisDef) => ({
+      type: "utility",
+      action: "bastion_bay_forge",
+      id: `utility:bastion_chassis_break:${chassisDef.id}:single_axis`,
+      verb: "접합",
+      tag: chassisDef.tag,
+      title: chassisDef.title,
+      description: CONSOLIDATED_12_WAVE_ROUTE
+        ? `${chassisDef.description} 이번 정지는 차체 하나만 잠가 Wave 6-7 proof lap 전체를 이 포즈로 버틴다. support bay와 rider install은 Wave 8 마무리 포지까지 닫아 두어, 먼저 몸체 리듬만 화면을 먹게 만든다.`
+        : `${chassisDef.description} 이번 정지에서는 차체 실루엣만 먼저 확정하고 support bay 증설은 뒤로 미룬다.`,
+      slotText: `섀시 breakpoint · ${chassisDef.slotText}`,
+      cost: 0,
+      laneLabel: "섀시 breakpoint",
+      forgeLaneLabel: "섀시 breakpoint",
+      chassisId: chassisDef.id,
+      chassisTitle: chassisDef.title,
+      skipNextAdminStop: true,
+      singleAxisBreakpoint: true,
+    }));
     if (chassisChoices.length > 0) {
       return chassisChoices;
     }
     return [{
       type: "utility",
       action: "bastion_bay_forge",
-      id: "utility:bastion_chassis_break:flex_unlock",
+      id: "utility:bastion_chassis_break:vector_thrusters:single_axis",
       verb: "접합",
       tag: CHASSIS_BREAKPOINT_DEFS.vector_thrusters.tag,
       title: CHASSIS_BREAKPOINT_DEFS.vector_thrusters.title,
       description:
-        "대시 충격파와 slipstream을 여는 Vector Thrusters를 장착하고, 두 번째 support bay를 즉시 교리 reserve와 무관한 flex lane으로 확보한다. Wave 8에서는 전장 정지 없이 세 번째 bay까지 자동 uplink되어 ownership bracket을 이어 간다.",
-      slotText: "섀시 breakpoint · Vector Thrusters · 두 번째 bay 즉시 개방",
+        "대시 충격파와 slipstream을 여는 Vector Thrusters를 장착하고, support bay 증설은 뒤로 미뤄 Wave 6-7 두 번의 proof lap을 차체 리듬만으로 버티게 만든다.",
+      slotText: "섀시 breakpoint · Vector Thrusters",
       cost: 0,
       laneLabel: "섀시 breakpoint",
       forgeLaneLabel: "섀시 breakpoint",
-      bayUnlock: true,
       chassisId: CHASSIS_BREAKPOINT_DEFS.vector_thrusters.id,
       chassisTitle: CHASSIS_BREAKPOINT_DEFS.vector_thrusters.title,
       skipNextAdminStop: true,
+      singleAxisBreakpoint: true,
     }];
   }
 
@@ -14817,7 +14783,7 @@
       Number.isFinite(nextWave) &&
       nextWave >= 1 &&
       nextWave <= DEFAULT_ROUTE_WAVE_COUNT &&
-      !shouldOpenBaseRouteSecondaryBranch(nextWave);
+      !shouldOpenBaseRouteSecondaryBranch(nextWave, build);
     if (shouldUseLateFieldCache(nextWave)) {
       if (isArsenalBreakpointWave(nextWave)) {
         return [
@@ -15908,7 +15874,12 @@
         const chassis = getChassisBreakpointDef(choice.chassisId);
         run.build.upgrades.push(`유틸리티 섀시: ${(chassis && chassis.label) || choice.chassisTitle || choice.chassisId}`);
         if (!choice.bayUnlock && CONSOLIDATED_12_WAVE_ROUTE) {
-          run.build.upgrades.push("Chassis Breakpoint: small support held for mid-run forge");
+          if (choice.singleAxisBreakpoint) {
+            run.build.wave6ChassisBreakpoint = true;
+            run.build.upgrades.push("Chassis Breakpoint: support hold through Wave 7 proof laps");
+          } else {
+            run.build.upgrades.push("Chassis Breakpoint: small support held for mid-run forge");
+          }
           activateChassisBreakpointSurge(run, choice.chassisId);
         }
       }
