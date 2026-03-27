@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze new Wave 9+ ambition and make the shipped Wave 5-8 slice prove defense/support and greed/utility as persistent, replayable combat identities before any more route machinery lands.
+- Immediate priority: make Wave 5-8 prove one support route and one greed route through visible two-combat payoff, while stripping shipped-run HUD/forge/pause grammar that keeps advertising unearned three-lane depth.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 21:01:05 KST
+  Findings:
+  - The game is still authored like the front half of a longer route instead of a closed `8웨이브 + 짧은 승리 랩` run. Wave 9+ ladders, afterburn, illegal overclock, and late ascension scaffolding are still first-class runtime grammar, so the shipped slice keeps inheriting long-run admin pressure before it has earned repeat hunger. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L33) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L16700) [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L6)
+  - The shipped UI is still selling three build lanes before the run has actually made three build fantasies real. Pause always renders `주력 변이 / 방호·보조 / 판돈·유틸`, support snapshots still surface placeholder states like `Bare Hull`, and branch payoff summaries invent route labels even when the player has not earned a distinct support or greed form yet. Against strong references like `Nova Drift`, `Brotato`, and `Hades`, this reads like taxonomy, not appetite. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L9100) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L9910) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L9741)
+  - The forge contract is still overcommitting to branch administration. `renderForgeOverlay()` computes active support track, dominant form, next breakpoint, proof window, and branch payoff together, so even the cleaned-up reward stop still behaves like a route explainer instead of a craving spike around one obvious transformation. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L23342)
+  - The opening remains too mechanically pre-loaded for the fantasy it wants. `BASE_BUILD` still starts with `supportBayCap: 2`, and the game keeps an always-available support grammar around a run that should begin as a smaller, hungrier chassis and earn helpers, shields, orbitals, or greed routing later. That weakens the payoff of later transformation even before balance enters the picture. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L5342) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L5389)
+  Top Priority: Recut the shipped reward/readout contract so combat, forge, and pause only show the current dominant form plus the immediate next proof, and hide support/greed lane summaries until the player has actually committed to or installed them.
+  Why Now: A replayable run cannot build hunger if the interface advertises branch depth earlier than the combat actually pays it off.
+  Do Not Repeat: Do not answer this with shorter copy or renamed labels while empty support/greed lanes are still rendered by default.
+  Release Gate: Rewards
 
 - 2026-03-27 20:30:54 KST
   Findings:
@@ -3607,6 +3618,14 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 23:59:59 KST
+  Changed: tightened the shipped pause/readout contract in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `createBaseRoutePauseSnapshotMarkup(...)` no longer renders a fixed three-lane board with placeholder states like `Bare Hull` or `조용한 계약`. The pause hero now carries the dominant form plus immediate next proof by itself, `hasCommittedBaseRouteSupportLane(...)` only reveals `방호·보조` after the player has actually locked a chassis or installed support, and `hasCommittedBaseRouteGreedLane(...)` only reveals `판돈·유틸` while a real greed route is active. Updated [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) so the optional lane cards still lay out cleanly at one or two entries, and extended [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new hidden-by-default pause behavior for opener, greed, and chassis-commit states.
+  Why: the latest critique's `Top Priority` was to stop combat/forge/pause from advertising support and greed depth before the run has actually paid those fantasies off. The highest-value bounded interpretation was to make pause fail closed first, because it was still surfacing empty lane taxonomy even after earlier HUD cleanup and directly violated the current red-flag guidance against text-heavy `Tab`.
+  Follow-up Risk: pause now reads much cleaner, but `BASE_BUILD` still carries `supportBayCap: 2` and other latent support grammar under the hood, so later surfaces could regrow premature helper-tech framing if they key off capacity instead of real installs/commits. If the next critique still says the opener feels pre-loaded, the next bounded pass should harden the underlying build-state contract rather than reopening pause labels.
+  UI reference direction: followed the quick-stop snapshot pattern from `Hades` and `Brotato`, where pause confirms the current form and immediate proof first, then only shows subordinate lanes that are actually live.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Rewards
 
 - 2026-03-27 23:59:00 KST
   Changed: turned the shipped `Scrapline Raid` into a staged greed identity in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). `applyMidrunGreedRouteConfig(...)` now names each proof lap `Entry Vault -> Tow Fork -> Caravan Hook -> Jackpot Fork`, `getBaseRouteBranchPayoffSummary(...)` now surfaces that active raid phase instead of a generic greed contract label, and the midrun greed raid frame now escalates its visible carryover with a growing tow-fork silhouette, extra salvage rings, and a stronger harpoon/fork volley as the route advances through `Wave 6-8`. Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the staged labels and the branch-payoff readout.

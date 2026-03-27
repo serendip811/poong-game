@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is still `Builds`, but the failure mode is now scope drift: Wave 9+ machinery keeps expanding before the shipped 8-wave slice proves that defense/support and greed/utility are replay-worthy fantasies.
-- Current structural failure: non-offense lanes have encounter flavor, but they still do not carry the same persistent silhouette and combat ownership as the headline gun/body path, so the run reads as one dominant form plus wrappers.
-- Repeated false solution: adding more caches, doctrines, debt rules, or late-route escalation instead of making one aegis run and one ledger run feel great for at least two proof combats inside Wave 5-8.
-- UX/UI remains a constraint, not the main fix: leaner pause/forge screens help, but if support and greed are still mostly bookkeeping, more screen cleanup will not create replay hunger.
-- Keep pressure on the opening staying underbuilt; the next meaningful win is consolidation and payoff, not more spectacle or more route ceiling.
+- The most fragile gate is now `Rewards`: the shipped run keeps advertising three-lane depth before support and greed have earned real combat ownership, so reward screens are promising appetite the run cannot yet cash out.
+- Current structural failure: the UI contract still exposes support-track and greed-route taxonomy by default, which makes the 8-wave slice feel like route administration instead of one earned form growing into rerun-worthy branches.
+- Repeated false solution: trimming copy or relabeling cards while pause/forge/status surfaces still render empty support or greed lanes and the runtime keeps Wave 9+ machinery as active grammar.
+- Keep pressure on the opening staying underbuilt; support bays, helpers, shields, and greed routing should look earned later, not mentally present from frame one.
+- Next high-value critique should test whether the shipped slice has actually hidden unearned branch depth and turned one support route plus one greed route into visible two-combat payoffs.

@@ -289,11 +289,34 @@ const pauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   paused: true,
 });
 assert.ok(pauseSnapshotMarkup.includes("다음 시험"));
-assert.ok(pauseSnapshotMarkup.includes("주력 변이"));
-assert.ok(pauseSnapshotMarkup.includes("방호·보조"));
 assert.ok(pauseSnapshotMarkup.includes("판돈·유틸"));
 assert.ok(pauseSnapshotMarkup.includes("Entry Vault"));
 assert.ok(!pauseSnapshotMarkup.includes("Era III"));
+assert.ok(!pauseSnapshotMarkup.includes("주력 변이"));
+assert.ok(!pauseSnapshotMarkup.includes("방호·보조"));
+const openingPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
+  build: roadmapBuild,
+  weapon: game.computeWeaponStats(roadmapBuild),
+  supportSystem: game.computeSupportSystemStats(roadmapBuild),
+  waveIndex: 1,
+  phase: "combat",
+  paused: true,
+});
+assert.ok(openingPauseSnapshotMarkup.includes("다음 시험"));
+assert.ok(!openingPauseSnapshotMarkup.includes("pause-summary__lanes"));
+assert.ok(!openingPauseSnapshotMarkup.includes("Bare Hull"));
+assert.ok(!openingPauseSnapshotMarkup.includes("조용한 계약"));
+const supportPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
+  build: supportBranchBuild,
+  weapon: game.computeWeaponStats(supportBranchBuild),
+  supportSystem: game.computeSupportSystemStats(supportBranchBuild),
+  waveIndex: 6,
+  phase: "combat",
+  paused: true,
+});
+assert.ok(supportPauseSnapshotMarkup.includes("방호·보조"));
+assert.ok(supportPauseSnapshotMarkup.includes(chassisOnlyChoice.chassisTitle));
+assert.ok(!supportPauseSnapshotMarkup.includes("판돈·유틸"));
 const wave5GambleChoice = wave5ForgeChoices.find((choice) => choice.contractRole === "gamble");
 assert.equal(wave5GambleChoice, undefined);
 const scriptedMidrunGreedChoice = game.createFieldGreedContractChoice(

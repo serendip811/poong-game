@@ -9907,6 +9907,31 @@
     });
   }
 
+  function hasCommittedBaseRouteSupportLane(build, supportSystem = null) {
+    if (!build) {
+      return false;
+    }
+    const installedSupport = getInstalledSupportSystems(build);
+    if (installedSupport.length > 0) {
+      return true;
+    }
+    if (supportSystem && supportSystem.label) {
+      return true;
+    }
+    return Boolean(getChassisBreakpointDef(build));
+  }
+
+  function hasCommittedBaseRouteGreedLane(build, waveNumber = 1) {
+    if (!build) {
+      return false;
+    }
+    const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
+    return Boolean(
+      Number.isFinite(build.midrunGreedRouteUntilWave) &&
+        build.midrunGreedRouteUntilWave >= boundedWave
+    );
+  }
+
   function createBaseRoutePauseSnapshotMarkup(currentState = state) {
     const activeState = currentState && typeof currentState === "object" ? currentState : state;
     const build = activeState && activeState.build ? activeState.build : null;
@@ -9936,28 +9961,28 @@
       waveNumber,
       currentState: activeState,
     });
+    const supportLaneCommitted = hasCommittedBaseRouteSupportLane(build, supportSystem);
+    const greedLaneCommitted = hasCommittedBaseRouteGreedLane(build, waveNumber);
     const waveConfig = resolveWaveConfig(waveNumber - 1, build);
     const currentAsk =
       activeState.phase === "result"
         ? "짧은 지배 구간 완료"
         : waveConfig.bandLabel || waveConfig.label || `Wave ${waveNumber}`;
-    const laneEntries = [
-      {
-        label: "주력 변이",
-        value: trimInspectNote(dominantForm.label, dominantForm.label),
-        tone: "hot",
-      },
-      {
+    const laneEntries = [];
+    if (supportLaneCommitted) {
+      laneEntries.push({
         label: "방호·보조",
         value: trimInspectNote(supportTrack.label, supportTrack.label),
         tone: "cool",
-      },
-      {
+      });
+    }
+    if (greedLaneCommitted && branchPayoff) {
+      laneEntries.push({
         label: "판돈·유틸",
-        value: trimInspectNote(branchPayoff ? branchPayoff.value : "조용한 계약", "조용한 계약"),
-        tone: branchPayoff ? "accent" : "",
-      },
-    ];
+        value: trimInspectNote(branchPayoff.value, branchPayoff.value),
+        tone: "accent",
+      });
+    }
     return `
       <div class="pause-summary__hero">
         ${createBaseRouteFocusMarkup({
@@ -9973,18 +9998,24 @@
           compact: true,
         })}
       </div>
-      <div class="pause-summary__lanes">
-        ${laneEntries
-          .map(
-            (lane) => `
-              <article class="pause-summary__lane" data-tone="${lane.tone}">
-                <span class="pause-summary__lane-label">${lane.label}</span>
-                <strong class="pause-summary__lane-value">${lane.value}</strong>
-              </article>
-            `
-          )
-          .join("")}
-      </div>
+      ${
+        laneEntries.length
+          ? `
+            <div class="pause-summary__lanes">
+              ${laneEntries
+                .map(
+                  (lane) => `
+                    <article class="pause-summary__lane" data-tone="${lane.tone}">
+                      <span class="pause-summary__lane-label">${lane.label}</span>
+                      <strong class="pause-summary__lane-value">${lane.value}</strong>
+                    </article>
+                  `
+                )
+                .join("")}
+            </div>
+          `
+          : ""
+      }
     `;
   }
 
