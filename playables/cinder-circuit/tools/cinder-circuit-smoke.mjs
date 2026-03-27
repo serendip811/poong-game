@@ -310,8 +310,8 @@ const pauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
 });
 assert.ok(pauseSnapshotMarkup.includes("즉시 위협"));
 assert.ok(pauseSnapshotMarkup.includes("최근 획득"));
-assert.ok(pauseSnapshotMarkup.includes("활성 판돈"));
-assert.ok(pauseSnapshotMarkup.includes("Entry Vault"));
+assert.ok(pauseSnapshotMarkup.includes("고철 +34 / 회수 +10% / Siege Debt 1웨이브"));
+assert.ok(!pauseSnapshotMarkup.includes("활성 판돈"));
 assert.ok(!pauseSnapshotMarkup.includes("Era III"));
 assert.ok(!pauseSnapshotMarkup.includes("주력 변이"));
 assert.ok(!pauseSnapshotMarkup.includes("방호·보조"));
@@ -337,8 +337,8 @@ const supportPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   phase: "combat",
   paused: true,
 });
-assert.ok(supportPauseSnapshotMarkup.includes("활성 보조"));
 assert.ok(supportPauseSnapshotMarkup.includes(chassisOnlyChoice.title));
+assert.ok(!supportPauseSnapshotMarkup.includes("활성 보조"));
 assert.ok(!supportPauseSnapshotMarkup.includes("활성 판돈"));
 const wave5GambleChoice = wave5ForgeChoices.find((choice) => choice.contractRole === "gamble");
 assert.equal(wave5GambleChoice, undefined);

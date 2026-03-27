@@ -10080,31 +10080,6 @@
     };
   }
 
-  function hasCommittedBaseRouteSupportLane(build, supportSystem = null) {
-    if (!build) {
-      return false;
-    }
-    const installedSupport = getInstalledSupportSystems(build);
-    if (installedSupport.length > 0) {
-      return true;
-    }
-    if (supportSystem && supportSystem.label) {
-      return true;
-    }
-    return Boolean(getChassisBreakpointDef(build));
-  }
-
-  function hasCommittedBaseRouteGreedLane(build, waveNumber = 1) {
-    if (!build) {
-      return false;
-    }
-    const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
-    return Boolean(
-      Number.isFinite(build.midrunGreedRouteUntilWave) &&
-        build.midrunGreedRouteUntilWave >= boundedWave
-    );
-  }
-
   function createBaseRoutePauseSnapshotMarkup(currentState = state) {
     const activeState = currentState && typeof currentState === "object" ? currentState : state;
     const build = activeState && activeState.build ? getSanitizedConsolidatedBuild(activeState.build) : null;
@@ -10126,40 +10101,18 @@
         ? activeState.supportSystem
         : computeSupportSystemStats(build);
     const dominantForm = getDominantFormSummary(build, weapon, waveNumber);
-    const supportTrack = getForgeSupportTrackSnapshot(build, supportSystem);
-    const branchPayoff = getBaseRouteBranchPayoffSummary({
-      build,
-      supportSystem,
-      waveNumber,
-      currentState: activeState,
-    });
-    const supportLaneCommitted = hasCommittedBaseRouteSupportLane(build, supportSystem);
-    const greedLaneCommitted = hasCommittedBaseRouteGreedLane(build, waveNumber);
     const waveConfig = resolveWaveConfig(waveNumber - 1, build);
     const currentAsk =
       activeState.phase === "result"
         ? "짧은 지배 구간 완료"
         : getBaseRouteCombatAsk(activeState, waveConfig, null);
-    const laneEntries = [];
-    laneEntries.push({
+    const laneEntries = [
+      {
       label: "최근 획득",
       value: getBaseRoutePauseRecentGainSummary(build, supportSystem, waveNumber),
       tone: "hot",
-    });
-    if (supportLaneCommitted) {
-      laneEntries.push({
-        label: "활성 보조",
-        value: trimInspectNote(supportTrack.label, supportTrack.label),
-        tone: "cool",
-      });
-    }
-    if (greedLaneCommitted && branchPayoff) {
-      laneEntries.push({
-        label: "활성 판돈",
-        value: trimInspectNote(branchPayoff.value, branchPayoff.value),
-        tone: "accent",
-      });
-    }
+      },
+    ];
     return `
       <div class="pause-summary__hero">
         ${createBaseRouteFocusMarkup({
