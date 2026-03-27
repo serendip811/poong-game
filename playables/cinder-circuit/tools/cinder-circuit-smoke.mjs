@@ -481,8 +481,6 @@ roadmapBuild.previewSupportSystemId = "volt_drones";
 roadmapBuild.wildcardProtocolIds = ["rogue_lattice"];
 const previewRoadmapSupportStats = game.computeSupportSystemStats(roadmapBuild);
 assert.equal(previewRoadmapSupportStats, null);
-assert.equal(roadmapBuild.previewSupportSystemId, null);
-assert.equal(roadmapBuild.wildcardProtocolIds.length, 0);
 const primedRoadmap = game.getBuildRoadmap(roadmapBuild, game.computeWeaponStats(roadmapBuild), 6);
 assert.equal(primedRoadmap.steps[0].title, "Ember Spindle");
 assert.equal(primedRoadmap.steps[0].state, "locked");
@@ -1005,19 +1003,58 @@ assert.equal(rogueLatticeChoice, null);
 const pollutedShippingBuild = game.createInitialBuild("rail_zeal");
 pollutedShippingBuild.previewSupportSystemId = "volt_drones";
 pollutedShippingBuild.wildcardProtocolIds = ["rogue_lattice"];
+pollutedShippingBuild.lateBreakProfileId = "mutation";
+pollutedShippingBuild.lateAscensionId = "crownsplitter_array";
+pollutedShippingBuild.afterburnAscensionOffered = true;
+pollutedShippingBuild.afterburnOverdriveId = "cataclysm_crown";
+pollutedShippingBuild.afterburnDominionId = "ember";
+pollutedShippingBuild.afterburnDominionVictoryLapWaves = 2;
+pollutedShippingBuild.illegalOverclockId = "predator_bait";
+pollutedShippingBuild.illegalOverclockMutationLevel = 3;
+pollutedShippingBuild.riskMutationLevel = 2;
+pollutedShippingBuild.riskMutationQueuedLevel = 1;
+pollutedShippingBuild.apexMutationLevel = 2;
+pollutedShippingBuild.predatorBaitCharges = 1;
+pollutedShippingBuild.lateFieldMutationLevel = 4;
+pollutedShippingBuild.lateFieldAegisLevel = 2;
+pollutedShippingBuild.lateFieldConvergenceId = "towchain_reaver";
+pollutedShippingBuild.arsenalBreakpointProfileId = "mutation";
+pollutedShippingBuild.blackLedgerRaidWaves = 3;
 const pollutedWave5Choices = game.buildForgeChoices(pollutedShippingBuild, Math.random, 40, {
   nextWave: 5,
   finalForge: false,
   build: pollutedShippingBuild,
 });
-assert.equal(pollutedShippingBuild.previewSupportSystemId, null);
-assert.equal(pollutedShippingBuild.wildcardProtocolIds.length, 0);
 assert.ok(
   !pollutedWave5Choices.some(
     (choice) =>
       choice.action === "preview_support" || choice.action === "wildcard_protocol"
   )
 );
+assert.ok(
+  !pollutedWave5Choices.some((choice) =>
+    ["field_mutation", "field_aegis", "late_ascension", "afterburn_overdrive", "afterburn_dominion"].includes(
+      choice.action
+    )
+  )
+);
+const pollutedShippingRoadmap = game.getBuildRoadmap(
+  pollutedShippingBuild,
+  game.computeWeaponStats(game.createInitialBuild("rail_zeal")),
+  8
+);
+assert.ok(!pollutedShippingRoadmap.prompt.includes("Wave 9"));
+assert.ok(!pollutedShippingRoadmap.prompt.includes("Afterburn"));
+assert.ok(!pollutedShippingRoadmap.steps[2].detail.includes("Cataclysm"));
+const pollutedPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
+  build: pollutedShippingBuild,
+  waveIndex: 4,
+  phase: "combat",
+  paused: true,
+});
+assert.ok(!pollutedPauseSnapshotMarkup.includes("Afterburn"));
+assert.ok(!pollutedPauseSnapshotMarkup.includes("Wave 9"));
+assert.ok(!pollutedPauseSnapshotMarkup.includes("Cataclysm"));
 assert.equal(game.computeSupportSystemStats(pollutedShippingBuild), null);
 assert.ok(game.WAVE_CONFIG[7].spawnBudget > game.WAVE_CONFIG[4].spawnBudget);
 assert.ok(game.WAVE_CONFIG[7].mix.warden > 0);

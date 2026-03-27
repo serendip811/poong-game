@@ -6317,7 +6317,7 @@
   }
 
   function getSupportSystemDef(build) {
-    sanitizeConsolidatedBuildState(build);
+    build = getSanitizedConsolidatedBuild(build);
     const installedSystems = getInstalledSupportSystems(build);
     if (installedSystems.length === 0) {
       if (build && build.previewSupportSystemId) {
@@ -6398,7 +6398,7 @@
   }
 
   function computeSupportSystemStats(build) {
-    sanitizeConsolidatedBuildState(build);
+    build = getSanitizedConsolidatedBuild(build);
     const installedSystems = getInstalledSupportSystems(build);
     const doctrineCapstone = getDoctrineCapstoneDef(build);
     const previewSystemId =
@@ -8213,7 +8213,77 @@
     if (Array.isArray(build.wildcardProtocolIds) && build.wildcardProtocolIds.length > 0) {
       build.wildcardProtocolIds = [];
     }
+    if (build.lateBreakProfileId) {
+      build.lateBreakProfileId = null;
+    }
+    if (build.lateAscensionId) {
+      build.lateAscensionId = null;
+    }
+    if (build.lateAscensionOffered) {
+      build.lateAscensionOffered = false;
+    }
+    if (build.afterburnAscensionOffered) {
+      build.afterburnAscensionOffered = false;
+    }
+    if (build.afterburnOverdriveId) {
+      build.afterburnOverdriveId = null;
+    }
+    if (build.afterburnDominionId) {
+      build.afterburnDominionId = null;
+    }
+    if (build.afterburnDominionVictoryLapWaves) {
+      build.afterburnDominionVictoryLapWaves = 0;
+    }
+    if (build.illegalOverclockId) {
+      build.illegalOverclockId = null;
+    }
+    if (build.illegalOverclockOffered) {
+      build.illegalOverclockOffered = false;
+    }
+    if (build.illegalOverclockMutationLevel) {
+      build.illegalOverclockMutationLevel = 0;
+    }
+    if (build.riskMutationLevel) {
+      build.riskMutationLevel = 0;
+    }
+    if (build.riskMutationQueuedLevel) {
+      build.riskMutationQueuedLevel = 0;
+    }
+    if (build.apexMutationLevel) {
+      build.apexMutationLevel = 0;
+    }
+    if (build.predatorBaitCharges) {
+      build.predatorBaitCharges = 0;
+    }
+    if (build.lateFieldMutationLevel) {
+      build.lateFieldMutationLevel = 0;
+    }
+    if (build.lateFieldAegisLevel) {
+      build.lateFieldAegisLevel = 0;
+    }
+    if (build.lateFieldConvergenceId) {
+      build.lateFieldConvergenceId = null;
+    }
+    if (build.arsenalBreakpointProfileId) {
+      build.arsenalBreakpointProfileId = null;
+    }
+    if (build.blackLedgerRaidWaves) {
+      build.blackLedgerRaidWaves = 0;
+    }
     return build;
+  }
+
+  function getSanitizedConsolidatedBuild(build) {
+    if (!CONSOLIDATED_12_WAVE_ROUTE || !build) {
+      return build;
+    }
+    const sanitizedBuild = {
+      ...build,
+      wildcardProtocolIds: Array.isArray(build.wildcardProtocolIds)
+        ? build.wildcardProtocolIds.slice()
+        : [],
+    };
+    return sanitizeConsolidatedBuildState(sanitizedBuild);
   }
 
   function getSignatureDef(signatureId) {
@@ -8502,6 +8572,7 @@
   }
 
   function getBuildRoadmap(build, weapon = null, waveNumber = 1) {
+    build = getSanitizedConsolidatedBuild(build);
     if (CONSOLIDATED_12_WAVE_ROUTE) {
       return getBaseRouteBuildRoadmap(build, weapon, waveNumber);
     }
@@ -9164,6 +9235,7 @@
   }
 
   function getForgeEraPlan(build, weapon = null, supportSystem = null, waveNumber = 1) {
+    build = getSanitizedConsolidatedBuild(build);
     const boundedWave = clamp(
       Math.round(waveNumber || 1),
       1,
@@ -9967,7 +10039,7 @@
 
   function createBaseRoutePauseSnapshotMarkup(currentState = state) {
     const activeState = currentState && typeof currentState === "object" ? currentState : state;
-    const build = activeState && activeState.build ? activeState.build : null;
+    const build = activeState && activeState.build ? getSanitizedConsolidatedBuild(activeState.build) : null;
     if (!build) {
       return "";
     }
@@ -10469,7 +10541,6 @@
 
   function getClaimedWildcardProtocolIds(build) {
     if (CONSOLIDATED_12_WAVE_ROUTE) {
-      sanitizeConsolidatedBuildState(build);
       return [];
     }
     if (!build || !Array.isArray(build.wildcardProtocolIds)) {
@@ -12578,7 +12649,7 @@
   }
 
   function buildForgeChoices(build, rng, scrapBank, options = null) {
-    sanitizeConsolidatedBuildState(build);
+    build = getSanitizedConsolidatedBuild(build);
     if (options && options.finalForge) {
       const finalChoices = buildFinalForgeChoices(build);
       if (finalChoices) {
@@ -15439,7 +15510,6 @@
   }
 
   function applyForgeChoice(run, choice) {
-    sanitizeConsolidatedBuildState(run && run.build);
     if (!run || !run.build || !choice) {
       return null;
     }
@@ -17580,6 +17650,7 @@
   }
 
   function refreshDerivedStats(preserveRatio) {
+    sanitizeConsolidatedBuildState(state.build);
     state.weapon = computeWeaponStats(state.build);
     state.playerStats = computePlayerStats(state.build);
     state.supportSystem = computeSupportSystemStats(state.build);

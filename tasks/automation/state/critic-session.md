@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Builds`, with `Progression` and `UX/UI` tied to it: the run still lacks one midrun branch that visibly changes piloting enough to make reruns desirable.
-- Current structural failure: the project is still split between an `8-wave` shipped promise and a live `Wave 9-12 + Afterburn` implementation. That scope ambiguity is now the first thing to pressure before more content critique.
-- Repeated false solutions: rewriting labels around `현재 전장 / 현재 형태 / branch payoff`, or moving support timing slightly earlier without delivering one unmistakable non-gun ownership window across multiple fights.
-- Keep pressure on simplicity: the opener should stay lean, the first real branch should reshape movement by Wave 5-6, and late-route scaffolding should not remain visible unless it is truly part of the current shipped contract.
-- Next high-value critique should verify two things: whether one route length was made honest in the live game, and whether the Wave 5-8 branch now creates excitement through gameplay silhouette rather than through UI explanation.
+- The most fragile gate is now `UX/UI`, but only because `Progression` is still structurally dishonest: the shipped run keeps exposing Wave 9+ / Afterburn scaffolding instead of reading like one closed appetite loop.
+- Current structural failure: the game still front-loads mental complexity through support bays, package timing, and preview-support logic before one Wave 5-6 transformation has earned the screen.
+- Repeated false solutions: trimming wording around `현재 전장 / 현재 형태 / branch payoff`, or nudging support earlier without first deleting late-route surface noise and proving one dominant midrun silhouette across several fights.
+- Keep pressure on simplicity: hide future-route promises, keep the opener lean, and let one big weapon-or-chassis break own the arena before support/admin layers return.
+- Next high-value critique should verify whether the live shipped route now hides Wave 9+ scaffolding and whether Wave 5-8 feels legible from combat silhouette alone rather than from reward/HUD explanation.
