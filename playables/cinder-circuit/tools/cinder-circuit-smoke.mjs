@@ -228,6 +228,41 @@ assert.ok(
         ["magnet_rig", "reactor_cap"].includes(wave5GambleChoice.modId)) ||
       wave5GambleChoice.type === "fallback")
 );
+const scriptedMidrunGreedChoice = game.createFieldGreedContractChoice(
+  game.createInitialBuild("rail_zeal"),
+  5
+);
+assert.equal(scriptedMidrunGreedChoice.midrunGreedRouteUntilWave, 8);
+const midrunGreedBuild = game.createInitialBuild("rail_zeal");
+const midrunGreedRun = {
+  build: midrunGreedBuild,
+  resources: { scrap: 0 },
+  stats: { scrapCollected: 0, scrapSpent: 0 },
+  player: { hp: 100, maxHp: 100, heat: 18, overheated: false },
+};
+game.applyForgeChoice(midrunGreedRun, scriptedMidrunGreedChoice);
+assert.equal(midrunGreedRun.build.midrunGreedRouteUntilWave, 8);
+const greedWave6 = game.applyMidrunGreedRouteConfig(
+  game.resolveWaveConfig(5, midrunGreedRun.build),
+  midrunGreedRun.build,
+  6
+);
+const greedWave7 = game.applyMidrunGreedRouteConfig(
+  game.resolveWaveConfig(6, midrunGreedRun.build),
+  midrunGreedRun.build,
+  7
+);
+const greedWave8 = game.applyMidrunGreedRouteConfig(
+  game.resolveWaveConfig(7, midrunGreedRun.build),
+  midrunGreedRun.build,
+  8
+);
+assert.equal(greedWave6.hazard?.type, "salvage");
+assert.equal(greedWave7.hazard?.type, "caravan");
+assert.equal(greedWave8.hazard?.type, "salvage");
+assert.ok(greedWave6.note.includes("Greed route"));
+assert.ok(greedWave7.directive.includes("caravan"));
+assert.ok(greedWave8.midrunGreedRoute);
 const wave5FieldGrantChoices = game.buildFieldGrantChoices(game.createInitialBuild("rail_zeal"), Math.random, 5);
 assert.equal(wave5FieldGrantChoices.length, 3);
 assert.equal(wave5FieldGrantChoices.find((choice) => choice.contractRole === "headline")?.contractLabel, "주력");

@@ -5308,6 +5308,7 @@
     lateFieldConvergenceId: null,
     lateBreakProfileId: null,
     arsenalBreakpointProfileId: null,
+    midrunGreedRouteUntilWave: 0,
     blackLedgerRaidWaves: 0,
     bastionPactDebtWaves: 0,
     wave6ChassisBreakpoint: false,
@@ -8004,6 +8005,7 @@
         lateFieldConvergenceId: BASE_BUILD.lateFieldConvergenceId,
         lateBreakProfileId: BASE_BUILD.lateBreakProfileId,
         arsenalBreakpointProfileId: BASE_BUILD.arsenalBreakpointProfileId,
+        midrunGreedRouteUntilWave: BASE_BUILD.midrunGreedRouteUntilWave,
         blackLedgerRaidWaves: BASE_BUILD.blackLedgerRaidWaves,
         bastionPactDebtWaves: BASE_BUILD.bastionPactDebtWaves,
         wave6ChassisBreakpoint: BASE_BUILD.wave6ChassisBreakpoint,
@@ -12914,6 +12916,10 @@
     if (!build || !Number.isFinite(nextWave) || nextWave < FORGE_PACKAGE_START_WAVE) {
       return null;
     }
+    const midrunGreedRouteUntilWave =
+      CONSOLIDATED_12_WAVE_ROUTE && nextWave < LATE_BREAK_ARMORY_WAVE
+        ? DEFAULT_ROUTE_WAVE_COUNT
+        : 0;
     return {
       type: "utility",
       action: "field_greed",
@@ -12931,6 +12937,7 @@
       hpLoss: 10,
       maxHpPenalty: 8,
       debtWaves: 1,
+      midrunGreedRouteUntilWave,
     };
   }
 
@@ -13354,6 +13361,95 @@
       note: salvageWave
         ? "Black Ledger Raid가 금고 objective를 jackpot 돌진으로 바꿨다. 금고를 찢어 payout을 캐낼수록 brander/lancer 압박도 같이 올라온다."
         : "Black Ledger Raid 후유증으로 이번 웨이브 템포가 빨라졌다. payout을 노릴지 안전하게 lane을 비울지 계속 갈라진다.",
+    };
+    return nextConfig;
+  }
+
+  function applyMidrunGreedRouteConfig(config, build, waveNumber) {
+    if (
+      !CONSOLIDATED_12_WAVE_ROUTE ||
+      !config ||
+      !build ||
+      !Number.isFinite(waveNumber) ||
+      waveNumber < 6 ||
+      waveNumber >= LATE_BREAK_ARMORY_WAVE ||
+      !Number.isFinite(build.midrunGreedRouteUntilWave) ||
+      build.midrunGreedRouteUntilWave < waveNumber
+    ) {
+      return config;
+    }
+    const routeStage = waveNumber - 5;
+    const salvageStage = waveNumber === 7 ? "caravan" : "salvage";
+    const hazard =
+      salvageStage === "caravan"
+        ? {
+            label: routeStage >= 3 ? "Scrapline Convoy+" : "Scrapline Convoy",
+            type: "caravan",
+            interval: routeStage >= 3 ? 9.8 : 10.8,
+            count: routeStage >= 3 ? 2 : 1,
+            radius: 86 + routeStage * 4,
+            telegraph: 0.72,
+            duration: 7 + routeStage * 0.3,
+            damage: 13 + routeStage,
+            coreHp: 58 + routeStage * 8,
+            coreRadius: 16 + routeStage,
+            salvageScrap: 22 + routeStage * 5,
+            salvageBurstCount: 4 + routeStage,
+            salvageBurstRadius: 68 + routeStage * 6,
+            salvageDropLife: 8.8 + routeStage * 0.35,
+            driftSpeed: 136 + routeStage * 10,
+            driftOrbit: 0.16,
+          }
+        : {
+            label: routeStage >= 3 ? "Scrapline Vaults+" : "Scrapline Vaults",
+            type: "salvage",
+            interval: routeStage >= 3 ? 9.2 : 10.2,
+            count: routeStage >= 3 ? 2 : 1,
+            radius: 80 + routeStage * 6,
+            telegraph: 0.78,
+            duration: 6.2 + routeStage * 0.4,
+            damage: 12 + routeStage,
+            coreHp: 54 + routeStage * 10,
+            coreRadius: 17 + routeStage,
+            salvageScrap: 24 + routeStage * 6,
+            salvageBurstCount: 5 + routeStage,
+            salvageBurstRadius: 72 + routeStage * 6,
+            salvageDropLife: 8.6 + routeStage * 0.4,
+          };
+    const nextConfig = {
+      ...config,
+      hazard,
+      mix: blendEnemyMix(
+        config.mix || {},
+        waveNumber >= 8
+          ? {
+              skimmer: 0.24,
+              lancer: 0.14,
+              shrike: 0.1,
+            }
+          : {
+              skimmer: 0.22,
+              shrike: 0.12,
+            },
+        waveNumber >= 8 ? 0.24 : 0.18
+      ),
+      note:
+        salvageStage === "caravan"
+          ? `${config.note} Greed route가 외곽 caravan chase를 열어 회수 동선이 바로 도주선이 된다. payout을 따라 깊게 들어갈지, 얇아진 flank만 짧게 긁고 빠질지 계속 갈라진다.`
+          : `${config.note} Greed route가 scrap vault pocket을 끼워 넣어 열린 lane만 먹는 대신 cash-out pocket을 찍고 빠지는 운영을 요구한다.`,
+      directive:
+        salvageStage === "caravan"
+          ? "도주하는 caravan을 짧게 끊고 곧바로 열린 외곽으로 복귀한다. chase를 오래 끌수록 반대 flank가 먼저 무너진다."
+          : "열린 vault pocket을 빠르게 찢고 곧바로 바깥 lane으로 빠져나온다. payout 욕심이 길어질수록 퇴로가 먼저 닫힌다.",
+      midrunGreedRoute: {
+        waveNumber,
+        hazardType: salvageStage,
+        payoutScrap: hazard.salvageScrap,
+        note:
+          salvageStage === "caravan"
+            ? "Scrapline caravan이 외곽으로 달아난다. chase 각을 내면 payout은 크지만 복귀 flank가 급하게 얇아진다."
+            : "Scrapline vault가 크게 열린다. pocket을 빨리 찢고 빠질수록 greed payout이 깔끔하게 남는다.",
+      },
     };
     return nextConfig;
   }
@@ -15436,6 +15532,12 @@
         run.build.bastionPactDebtWaves || 0,
         Math.max(0, choice.debtWaves || 0)
       );
+      if (choice.midrunGreedRouteUntilWave) {
+        run.build.midrunGreedRouteUntilWave = Math.max(
+          run.build.midrunGreedRouteUntilWave || 0,
+          choice.midrunGreedRouteUntilWave
+        );
+      }
       if (choice.arsenalBreakpointProfileId) {
         run.build.arsenalBreakpointProfileId = choice.arsenalBreakpointProfileId;
       }
@@ -15559,6 +15661,7 @@
     buildHazardCandidates,
     buildForgeChoices,
     buildForgeFollowupChoices,
+    createFieldGreedContractChoice,
     getCombatCacheChoicesForWave,
     buildArchitectureDraftChoices,
     buildFieldGrantChoices,
@@ -15592,6 +15695,7 @@
     isArsenalBreakpointWave,
     shouldRunCatalystDraft,
     applyBlackLedgerRaidConfig,
+    applyMidrunGreedRouteConfig,
     createBlackLedgerDebtState,
     applyBlackLedgerDebtSurge,
     getDoctrineWeaponForm,
@@ -17715,6 +17819,7 @@
       state.build
     );
     const waveNumber = index + 1;
+    config = applyMidrunGreedRouteConfig(config, state.build, waveNumber);
     config = applyBlackLedgerRaidConfig(config, state.build, waveNumber);
     const arena = getArenaSize(config);
     const pactDebtWavesBefore = Math.max(0, state.build.bastionPactDebtWaves || 0);
@@ -17776,6 +17881,7 @@
       driveGainFactor: config.driveGainFactor || 1,
       hazard: config.hazard,
       hazardTimer: config.hazard ? config.hazard.interval * 0.8 : Number.POSITIVE_INFINITY,
+      midrunGreedRoute: config.midrunGreedRoute || null,
       blackLedgerRaid: config.blackLedgerRaid || null,
       blackLedgerDebt: createBlackLedgerDebtState(state.build, waveNumber),
       bastionPactDebt: pactDebtActive
@@ -17860,6 +17966,14 @@
           ? "Black Ledger Raid 활성화. Scrapline pocket payout이 커졌지만, brander/lancer가 greed pocket을 곧바로 덮친다."
           : "Black Ledger Raid 활성화. 이번 웨이브는 payout을 미끼로 적 밀도와 hazard 템포가 같이 올라간다.",
         "LEDGER"
+      );
+    }
+    if (state.wave.midrunGreedRoute) {
+      pushCombatFeed(
+        state.wave.midrunGreedRoute.hazardType === "caravan"
+          ? "Scrapline Route 활성화. caravan chase가 열려 payout을 쫓을수록 복귀 flank가 급하게 얇아진다."
+          : "Scrapline Route 활성화. vault pocket이 열려 greed line을 짧게 긁고 빠지는 운영을 직접 요구한다.",
+        "SCRAP"
       );
     }
     if (predatorBaitArmed) {
