@@ -218,6 +218,56 @@ assert.ok(
         ["armor_mesh", "step_servos", "coolant_purge"].includes(wave5RiderChoice.modId)) ||
       wave5RiderChoice.type === "fallback")
 );
+assert.equal(
+  game.getBaseRouteBranchPayoffSummary({
+    build: roadmapBuild,
+    supportSystem: game.computeSupportSystemStats(roadmapBuild),
+    waveNumber: 5,
+  }),
+  null
+);
+const greedBuild = game.createInitialBuild("rail_zeal");
+game.applyForgeChoice(
+  { build: greedBuild, resources: { scrap: 999 }, stats: { scrapSpent: 0 }, feed: [] },
+  game.createFieldGreedContractChoice(greedBuild, 5)
+);
+const greedPayoff = game.getBaseRouteBranchPayoffSummary({
+  build: greedBuild,
+  supportSystem: game.computeSupportSystemStats(greedBuild),
+  waveNumber: 5,
+});
+assert.equal(greedPayoff?.label, "분기 보상");
+assert.equal(greedPayoff?.value, "Scrapline Raid");
+const wave6Choices = game.buildWave6ChassisBreakpointChoices(game.createInitialBuild("rail_zeal"), 6);
+const bundledSupportChoice = wave6Choices.find((choice) => choice.bayUnlock && choice.chassisTitle);
+assert.ok(bundledSupportChoice);
+const supportBranchBuild = game.createInitialBuild("rail_zeal");
+game.applyForgeChoice(
+  {
+    build: supportBranchBuild,
+    resources: { scrap: 999 },
+    stats: { scrapSpent: 0 },
+    feed: [],
+    supportSystem: game.computeSupportSystemStats(supportBranchBuild),
+  },
+  bundledSupportChoice
+);
+const supportPayoff = game.getBaseRouteBranchPayoffSummary({
+  build: supportBranchBuild,
+  supportSystem: game.computeSupportSystemStats(supportBranchBuild),
+  waveNumber: 7,
+});
+assert.equal(supportPayoff?.label, "분기 보상");
+assert.equal(supportPayoff?.value, bundledSupportChoice.chassisTitle);
+const branchForgeContextMarkup = game.createBaseRouteForgeContextMarkup({
+  currentFormLabel: "Twin Spine / Vector Thrusters",
+  waveAskLabel: "다음 전장",
+  waveAskValue: "Dominion Sweep",
+  branchPayoffLabel: "분기 보상",
+  branchPayoffValue: "Scrapline Raid",
+});
+assert.ok(branchForgeContextMarkup.includes("분기 보상"));
+assert.ok(branchForgeContextMarkup.includes("Scrapline Raid"));
 const wave5GambleChoice = wave5ForgeChoices.find((choice) => choice.contractRole === "gamble");
 assert.equal(wave5GambleChoice?.action, "field_greed");
 assert.equal(wave5GambleChoice?.title, "Scrapline Raid");

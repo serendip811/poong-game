@@ -5,15 +5,15 @@
 - Working title: `Cinder Circuit`
 - Genre: 탑다운 아레나 슈터 + 웨이브 로그라이트
 - Platform: Desktop-first Canvas browser game
-- Session length: `12웨이브`, `12~15분` 내외
-- Core promise: 세 시대 `12웨이브` 러닝 동안 포지에서 `Headline Form` 하나와 `Survival Rider` 하나를 반복해서 잠그고, 직후 전투의 `Proof Window`에서 그 변신이 정말 전장을 먹는지 바로 증명한다.
+- Session length: shipped slice 기준 `8웨이브 + 짧은 승리 랩`, `8~10분` 내외
+- Core promise: 현재 shipped 러닝은 `Wave 1-8` 동안 `주력 변이`, `방호·보조`, `판돈·유틸` 중 하나를 반복해서 고르고, 직후 전투의 `Proof Window`에서 그 선택이 정말 전장을 먹는지 바로 증명한다.
 
 ## Pillars
 
 - 읽히는 회피: 플레이어는 항상 무엇을 피해야 하고 어디로 빠져야 하는지 즉시 알아야 한다.
 - 변신의 갈증: 다음 세 웨이브 안에 기계가 얼마나 달라질지 기대하게 만들어야 한다.
 - 드랍의 가치: 웨이브 중 얻은 코어와 스크랩이 다음 포지의 headline/rider 선택을 흔들어야 한다.
-- 세 시대 계약: `Wave 1-4`, `Wave 5-8`, `Wave 9-12`가 각각 다른 지배 감각과 증명 창을 가져야 한다.
+- 단계 계약: `Wave 1-4`는 lean start와 첫 무기 도약, `Wave 5-8`은 실제 분기와 domination proof를 맡는다.
 
 ## Core Fantasy
 
@@ -26,16 +26,16 @@
 3. 스크랩과 코어 드랍을 주워 다음 시대의 `Headline Leap`과 `Survival Rider` 선택지를 넓힌다.
 4. 포지 구간에서 스크랩을 써 다음 전투를 바꿀 `Headline Form` 한 장과 필요 시 이를 받칠 `Rider` 한 장을 고른다.
 5. 직후 웨이브의 `Proof Window`에서 새 형태가 실제로 lane, pocket, greed route를 얼마나 넓히는지 확인한다.
-6. `Wave 12`를 버티면 한 번의 완성된 세 시대 런을 닫고, 다른 form/rider 조합으로 다시 돈다.
+6. `Wave 8`과 짧은 승리 랩을 닫으면 한 번의 shipped run을 끝내고, 다른 form/rider/greed 조합으로 다시 돈다.
 
 ## Match Structure
 
-- 총 `Wave 1-12`와 웨이브 사이 포지로 이루어진 세 시대 계약
-- `Era I · Wave 1-4`: 기본 코어와 초반 chassis를 정하고 첫 domination window를 만든다.
-- `Era II · Wave 5-8`: 주무장/차체 break를 잠그고 support/defense rider를 붙여 중반 ownership을 증명한다.
-- `Era III · Wave 9-12`: late-form promise를 고르고 `payoff band -> spike band`로 런을 마감한다.
+- shipped route는 총 `Wave 1-8`와 웨이브 사이 포지로 이루어진 한 번의 닫힌 계약이다.
+- `Wave 1-4`: 기본 코어로 버티며 첫 무기 도약을 만든다.
+- `Wave 5-6`: 주무장/차체 break와 첫 실제 분기를 잠그고 mid-run bracket을 연다.
+- `Wave 7-8`: 잠긴 gun/body line과 branch payoff를 domination proof로 길게 증명한다.
 - 각 웨이브는 대체로 `50~75초` 내외, 밴드에 따라 아레나 크기와 압박 리듬이 달라진다.
-- Wave 12 종료 후 생존 시 승리
+- Wave 8 proof와 짧은 승리 랩 종료 후 생존 시 승리
 - HP가 0이 되면 즉시 패배
 
 ## Controls
@@ -101,7 +101,7 @@
 - 중반부터 느리지만 버티는 `Brute`와 흔들리는 진입선을 만드는 `Shrike`가 섞이며 첫 ownership window를 시험한다.
 - 각 웨이브마다 엘리트가 끼어들어 코어 드랍 기회를 만든다.
 - 각 시대의 첫 밴드는 새 form을 즐기는 `payoff/proof` 창, 다음 밴드는 같은 생태에서 압박을 올리는 `escalation` 창으로 읽혀야 한다.
-- `Wave 9-12`는 새 late form을 고른 뒤 `payoff band -> spike band`로 닫히며, 장기적으로 `20-30웨이브` 구조로 늘릴 수 있는 기본 골격이 된다.
+- 현재 shipped slice는 `Wave 5` 분기와 `Wave 6` 차체/support 잠금이 바로 run identity를 바꾸는지 증명해야 하며, 이후 `20-30웨이브` 구조 확장은 이 8-wave appetite loop가 먼저 반복 플레이 가능한지 확인한 뒤 연다.
 
 ## Content Scope
 
@@ -164,8 +164,8 @@
 ## Alpha Slice Acceptance Criteria
 
 - [ ] 시작, 플레이, 결과 흐름이 끊기지 않는다.
-- [ ] `12웨이브 + 세 시대 포지` 루프가 완주된다.
-- [ ] 각 시대가 `Headline Form`, `Survival Rider`, `Proof Window`로 구분되어 읽힌다.
+- [ ] `8웨이브 + 짧은 승리 랩` 루프가 완주된다.
+- [ ] `주력 변이`, `방호·보조`, `판돈·유틸` 중 적어도 한 실제 분기가 `Wave 5-8` 구간에서 즉시 읽힌다.
 - [ ] 최소 3가지 이상 다른 주무장/차체 변신 감각이 실제로 체감된다.
 - [ ] 과열과 대시가 단순 장식이 아니라 생존 판단에 영향을 준다.
 - [ ] 스크랩 소비와 오버드라이브가 실제 선택 압박을 만든다.
@@ -192,9 +192,9 @@
 
 ## Next Build Target
 
-현재 구현 목표는 `반복 플레이 가능한 세 시대 12웨이브 알파 슬라이스`다.
+현재 구현 목표는 `반복 플레이 가능한 8웨이브 shipped 알파 슬라이스`다.
 
-- 필수: 타이틀, `Wave 1-12`, 세 시대 포지 계약, 4종 이상 적, 코어/차체/지원 계열 빌드 변화, 드라이브, 폭주 지형, 결과 화면
+- 필수: 타이틀, `Wave 1-8`, 반복 포지 계약, 4종 이상 적, 코어/차체/지원 계열 빌드 변화, 드라이브, 폭주 지형, 결과 화면
 - 선택: 화면 흔들림, 파편 파티클, 최소한의 합성 사운드, 이후 `Afterburn` 확장 검증
 
 세부 적용 원칙과 밸런스 계획은 [cinder-circuit-source-application.md](/Users/seren.kim/work_personal/poong_game/docs/games/cinder-circuit-source-application.md#L1)에 정리한다.

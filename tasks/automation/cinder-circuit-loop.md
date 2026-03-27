@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop carrying 12-wave docs, Wave 9+ reward framing, and late-breakpoint scaffolding inside the shipped 8-wave slice; consolidate around one honest rerun loop where Wave 5 branching changes piloting immediately and the rest of the route simply proves it.
+- Immediate priority: cut the shipped 8-wave route down to one honest contract across docs, forge, and HUD; remove roadmap/document UI and Wave 9+ promises, then let one Wave 5-6 branch change piloting immediately.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 16:31:26 KST
+  Findings:
+  - The project is still drifting at the product-contract level. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8) and [docs/games/cinder-circuit-source-analysis.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-analysis.md#L46) still sell a `12웨이브 / 세 시대` game, so the live 8-wave slice keeps inheriting reward framing and HUD language for payoffs it cannot deliver.
+  - The forge pause is still too document-like to create rerun hunger. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22808) still stacks contract shell, focus prompt, proof copy, preview rows, impact strips, and slot/admin labels. Compared with `Hades`, `Nova Drift`, or `Brotato`, this is still a briefing screen when it should be an appetite screen.
+  - The status layer is still over-explaining the run. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8253) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8665) keep roadmap steps, paragraph detail, and summary notes alive inside the shipped route, so the `Tab`-style readout behaves like a mini design doc instead of a quick combat board.
+  - The game now has enough breathing room to prove a branch, but it is still spending that room on future-system narration. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L4030) still carries `LATE_BREAK_ARMORY_WAVE = 9`, and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3118) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3166) still keep wildcard roadmapping alive. That means the run keeps hinting at later structure instead of making Wave 5-8 ownership immediately exciting.
+  Top Priority: Remove roadmap-step paragraphs, future-lane labels, and Wave 9+ promise language from the shipped docs/HUD/forge stack, then present the live route as only `current form + next proof + one real branch payoff` everywhere.
+  Why Now: Until the player can parse the run in one glance and feel one branch own the arena early, more systems only make the prototype look busier instead of stronger.
+  Do Not Repeat: Do not spend another pass polishing card visuals or copy rhythm while the shipped route still renders roadmap widgets and late-route promises.
+  Release Gate: UX/UI
 
 - 2026-03-27 16:01:16 KST
   Findings:
@@ -3508,6 +3519,14 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 21:05:00 KST
+  Changed: collapsed one bounded shipped-route contract layer into a real three-slot status board in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), aligned the smoke expectations in [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs), and rewrote the top-level shipped contract in [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) plus [docs/games/cinder-circuit-source-analysis.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-analysis.md). `renderWaveTrack()` and the base-route forge context now show only `현재 전장 / 현재 형태 / 분기 보상`, `getBaseRouteBranchPayoffSummary(...)` surfaces only live greed raid/support/chassis payoff instead of roadmap promises, and the old roadmap/shipping-ladder helpers were cut down so they no longer carry paragraph-length step narration back into the shipped path.
+  Why: the newest critique's `Top Priority` was to remove roadmap-step paragraphs, future-lane labels, and Wave 9+ promise language from the shipped docs/HUD/forge stack, then present the live route as only `current form + next proof + one real branch payoff`. The highest-value bounded interpretation was to unify the actual high-frequency surfaces around one honest status-board grammar before adding or retuning more content, because the run was still over-explaining itself even after earlier cleanup.
+  Follow-up Risk: the shipped route now reads faster, but the new `분기 보상` slot depends on the underlying branch state being truly interesting. If later playtests say the board feels empty or repetitive on non-greed runs, the next bounded pass should strengthen the branch payoff itself or its label source, not reintroduce roadmap copy or future-wave teasers.
+  UI reference direction: followed the one-glance combat/reward hierarchy from `Nova Drift` and `Brotato`, where the wrapper shows immediate battlefield state and owned power instead of a visible future plan.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: UX/UI
 
 - 2026-03-27 20:05:00 KST
   Changed: made the shipped `Wave 5` greed fork cash in immediately in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and locked the new expectation in [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs). `isMidrunGreedRaidFrameActive(...)` now starts at `Wave 5` instead of waiting until `Wave 6`, `beginWave()` therefore seeds the raid-frame pickup surge on the first payoff lap, and `applyMidrunGreedRouteConfig(...)` now injects a new `Scrapline Entry Vault` pocket into `Wave 5` before the existing `Wave 6-8` salvage/caravan sequence so the greed lane changes movement and target priority the instant the player takes it.

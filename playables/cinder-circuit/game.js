@@ -8549,37 +8549,24 @@
     if (!roadmap) {
       return "";
     }
-    const steps = roadmap.steps.length
-      ? roadmap.steps
-          .map(
-            (step) => `
-              <article class="roadmap-step" data-state="${step.state}">
-                <span class="roadmap-step__state">${step.label}</span>
-                <div>
-                  <strong>${step.title}</strong>
-                  <p>${step.detail}</p>
-                </div>
-              </article>
-            `
-          )
-          .join("")
-      : `
-        <article class="roadmap-step" data-state="locked">
-          <span class="roadmap-step__state">LIVE</span>
-          <div>
-            <strong>${roadmap.activeForm}</strong>
-            <p>주요 breakpoint가 모두 잠겨 남은 연전은 현재 형태를 실제 전장에서 증명하는 구간이다.</p>
-          </div>
-        </article>
-      `;
+    const activeStep =
+      roadmap.steps.find((step) => step.state === "live") ||
+      roadmap.steps.find((step) => step.state === "primed") ||
+      roadmap.steps.find((step) => step.state === "planned") ||
+      roadmap.steps[roadmap.steps.length - 1] || null;
     return `
       <div class="summary-head">
-        <strong>Build Roadmap</strong>
-        <span class="summary-chip ${roadmap.steps[0] && roadmap.steps[0].state === "primed" ? "summary-chip--hot" : roadmap.steps.length === 0 ? "summary-chip--cool" : ""}">${roadmap.doctrineTag}</span>
+        <strong>현재 계약</strong>
+        <span class="summary-chip ${activeStep && activeStep.state === "live" ? "summary-chip--hot" : ""}">${roadmap.doctrineTag}</span>
       </div>
-      <p class="summary-copy roadmap-card__path">${roadmap.pathLabel}</p>
-      <div class="roadmap-card__steps">${steps}</div>
-      <p class="summary-note">${roadmap.note}</p>
+      ${createBaseRouteStatusStripMarkup({
+        leadLabel: "현재 형태",
+        leadValue: roadmap.pathLabel,
+        titleLabel: "다음 증명",
+        titleValue: activeStep ? activeStep.title : roadmap.activeForm,
+        tailLabel: "현재 약속",
+        tailValue: activeStep ? activeStep.detail : roadmap.note,
+      })}
     `;
   }
 
@@ -8639,30 +8626,27 @@
 
   function createShippingLadderMarkup(build, weapon = null, waveNumber = 1) {
     const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
-    const steps = getShippingLadderSteps(build, weapon, boundedWave);
     const focus = getShippingLadderFocus(build, weapon, boundedWave);
+    const dominantForm = getDominantFormSummary(build, weapon || computeWeaponStats(build), boundedWave);
+    const proofWindow = getImmediateProofWindowSummary(build, boundedWave);
+    const branchPayoff = getBaseRouteBranchPayoffSummary({
+      build,
+      supportSystem: computeSupportSystemStats(build),
+      waveNumber: boundedWave,
+    });
     return `
       <div class="summary-head">
-        <strong>런 실루엣</strong>
+        <strong>런 상태</strong>
         <span class="summary-chip ${focus.state === "live" ? "summary-chip--hot" : ""}">${focus.windowLabel || focus.label}</span>
       </div>
-      <p class="summary-copy roadmap-card__path">기본 8웨이브 런은 Wave 3 무기 도약, Wave 6 차체 잠금, Wave 8 완성 시험만 크게 세우고 그 사이는 같은 실루엣을 증명한다.</p>
-      <div class="roadmap-card__steps">
-        ${steps
-          .map(
-            (step) => `
-              <article class="roadmap-step" data-state="${step.state}">
-                <span class="roadmap-step__state">${step.label}</span>
-                <div>
-                  <strong>${step.title}</strong>
-                  <p>${step.detail}</p>
-                </div>
-              </article>
-            `
-          )
-          .join("")}
-      </div>
-      <p class="summary-note">${focus.title}: ${focus.detail}</p>
+      ${createBaseRouteStatusStripMarkup({
+        leadLabel: "현재 전장",
+        leadValue: proofWindow.label,
+        titleLabel: "현재 형태",
+        titleValue: dominantForm.label,
+        tailLabel: branchPayoff ? branchPayoff.label : "",
+        tailValue: branchPayoff ? branchPayoff.value : "",
+      })}
     `;
   }
 
@@ -9661,6 +9645,50 @@
     `;
   }
 
+  function getBaseRouteBranchPayoffSummary({
+    build,
+    supportSystem = null,
+    waveNumber = 1,
+    currentState = null,
+  }) {
+    if (!build) {
+      return null;
+    }
+    const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
+    const activeState = currentState && typeof currentState === "object" ? currentState : null;
+    if (
+      Number.isFinite(build.midrunGreedRouteUntilWave) &&
+      build.midrunGreedRouteUntilWave >= boundedWave
+    ) {
+      const routeConfig =
+        activeState && activeState.wave && activeState.wave.midrunGreedRoute
+          ? activeState.wave.midrunGreedRoute
+          : null;
+      return {
+        label: "분기 보상",
+        value: routeConfig && routeConfig.label ? routeConfig.label : "Scrapline Raid",
+      };
+    }
+    const activeSupport =
+      supportSystem && supportSystem.label
+        ? supportSystem
+        : computeSupportSystemStats(build);
+    if (activeSupport && activeSupport.label) {
+      return {
+        label: "분기 보상",
+        value: activeSupport.label,
+      };
+    }
+    const chassis = getChassisBreakpointDef(build);
+    if (chassis && boundedWave >= 6) {
+      return {
+        label: "분기 보상",
+        value: chassis.label,
+      };
+    }
+    return null;
+  }
+
   function createBaseRouteForgeCompactCardMarkup({
     choice,
     index,
@@ -9762,12 +9790,16 @@
     currentFormLabel = "",
     waveAskLabel = "",
     waveAskValue = "",
+    branchPayoffLabel = "",
+    branchPayoffValue = "",
   }) {
     return createBaseRouteStatusStripMarkup({
       leadLabel: waveAskLabel || eyebrow || "현재 전장",
       leadValue: waveAskValue || "-",
       titleLabel: "현재 형태",
       titleValue: currentFormLabel || title || "-",
+      tailLabel: branchPayoffLabel,
+      tailValue: branchPayoffValue,
     });
   }
 
@@ -15808,6 +15840,7 @@
     getForgeChoiceTransformation,
     createBaseRouteFocusMarkup,
     createBaseRouteStatusStripMarkup,
+    getBaseRouteBranchPayoffSummary,
     getBaseRouteCombatAsk,
     getMinimalBaseRouteHudVisibility,
     getBaseRouteForgeStage,
@@ -16927,6 +16960,12 @@
     const waveConfig = resolveWaveConfig(trackWaveNumber - 1, state.build);
     const currentWeapon = state.weapon || computeWeaponStats(state.build);
     const dominantForm = getDominantFormSummary(state.build, currentWeapon, trackWaveNumber);
+    const branchPayoff = getBaseRouteBranchPayoffSummary({
+      build: state.build,
+      supportSystem: state.supportSystem,
+      waveNumber: trackWaveNumber,
+      currentState: state,
+    });
     const currentAskValue =
       state.phase === "result"
         ? "짧은 지배 구간 완료"
@@ -16954,6 +16993,8 @@
       leadValue: currentAskValue,
       titleLabel: "현재 형태",
       titleValue: dominantForm.label,
+      tailLabel: branchPayoff ? branchPayoff.label : "",
+      tailValue: branchPayoff ? branchPayoff.value : "",
     });
   }
 
@@ -22815,6 +22856,12 @@
     const dominantFormSummary = getDominantFormSummary(state.build, state.weapon, state.waveIndex + 2);
     const nextFormStep = getNextBreakpointSummary(state.build, state.weapon, state.waveIndex + 2);
     const proofWindow = getImmediateProofWindowSummary(state.build, state.waveIndex + 2);
+    const branchPayoff = getBaseRouteBranchPayoffSummary({
+      build: state.build,
+      supportSystem: state.supportSystem,
+      waveNumber: state.waveIndex + 2,
+      currentState: state,
+    });
     const riderStep = state.forgeMaxSteps > 1 && state.forgeStep === 2;
     const baseRouteTransformationFocus = getBaseRouteTransformationFocus(state.waveIndex + 2, {
       stage: "forge",
@@ -22897,6 +22944,13 @@
                   ? "다음 시험"
                   : "다음 전장",
             waveAskValue: proofWindow.label,
+            branchPayoffLabel: branchPayoff ? branchPayoff.label : "",
+            branchPayoffValue:
+              riderStep && activeSupportTrack && activeSupportTrack.label
+                ? activeSupportTrack.label
+                : branchPayoff
+                  ? branchPayoff.value
+                  : "",
           })}
         </article>
       `

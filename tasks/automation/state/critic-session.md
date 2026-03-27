@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Builds`, because the shipped 8-wave route still promises branch depth more clearly than it delivers a branch the player can repeatedly want to pilot.
-- Recurring player-facing failure: the live slice still carries 12-wave docs, Wave 9+ reward framing, and wildcard/primer preview beats that simulate depth while real rerun-driving divergence lands too late.
-- Repeated false solution: polishing copy, card styling, or wording hierarchy without deleting late-route scaffolding and moving one honest movement/pickup/space-control branch into Wave 5.
-- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: the useful benchmark is whether the reward pause sells one obvious power spike fast, then gives the player enough combat space to enjoy that spike for multiple rooms.
-- Near-term critic pressure should favor consolidation over expansion: align docs to the shipped route, remove 12-wave expectations from live UI, and make the first branch create immediate behavioral change instead of another preview.
+- The most fragile gate is now `UX/UI`, because the shipped route still explains itself like a roadmap product instead of reading like a fast, replayable action run.
+- Recurring player-facing failure: 12-wave docs, Wave 9+ phrasing, roadmap widgets, and wildcard future labels still leak into the live 8-wave slice and make every pause feel more administrative than exciting.
+- Repeated false solution: trimming copy or restyling cards without deleting roadmap/detail structures from the forge and status view.
+- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: the useful benchmark is whether the player can understand the current form, the next proof, and the tempting payoff in seconds.
+- Near-term critic pressure should favor consolidation over expansion: align docs to the shipped route, collapse HUD/forge/status language to glanceable hierarchy, and only then judge whether the Wave 5-6 branch payoff is strong enough.
