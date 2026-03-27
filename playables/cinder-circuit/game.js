@@ -5829,7 +5829,7 @@
       CONSOLIDATED_12_WAVE_ROUTE &&
       !!build &&
       Number.isFinite(resolvedWave) &&
-      resolvedWave >= 6 &&
+      resolvedWave >= 5 &&
       resolvedWave < LATE_BREAK_ARMORY_WAVE &&
       Number.isFinite(build.midrunGreedRouteUntilWave) &&
       build.midrunGreedRouteUntilWave >= resolvedWave
@@ -13429,7 +13429,7 @@
       !config ||
       !build ||
       !Number.isFinite(waveNumber) ||
-      waveNumber < 6 ||
+      waveNumber < 5 ||
       waveNumber >= LATE_BREAK_ARMORY_WAVE ||
       !Number.isFinite(build.midrunGreedRouteUntilWave) ||
       build.midrunGreedRouteUntilWave < waveNumber
@@ -13458,6 +13458,23 @@
             driftSpeed: 136 + routeStage * 10,
             driftOrbit: 0.16,
           }
+        : waveNumber === 5
+          ? {
+              label: "Scrapline Entry Vault",
+              type: "salvage",
+              interval: 11.2,
+              count: 1,
+              radius: 78,
+              telegraph: 0.82,
+              duration: 5.8,
+              damage: 11,
+              coreHp: 52,
+              coreRadius: 16,
+              salvageScrap: 22,
+              salvageBurstCount: 4,
+              salvageBurstRadius: 68,
+              salvageDropLife: 8.4,
+            }
         : {
             label: routeStage >= 3 ? "Scrapline Vaults+" : "Scrapline Vaults",
             type: "salvage",
@@ -13479,7 +13496,12 @@
       hazard,
       mix: blendEnemyMix(
         config.mix || {},
-        waveNumber >= 8
+        waveNumber === 5
+          ? {
+              skimmer: 0.2,
+              shrike: 0.14,
+            }
+          : waveNumber >= 8
           ? {
               skimmer: 0.24,
               lancer: 0.14,
@@ -13489,14 +13511,18 @@
               skimmer: 0.22,
               shrike: 0.12,
             },
-        waveNumber >= 8 ? 0.24 : 0.18
+        waveNumber === 5 ? 0.14 : waveNumber >= 8 ? 0.24 : 0.18
       ),
       note:
-        salvageStage === "caravan"
+        waveNumber === 5
+          ? `${config.note} Greed route가 첫 payoff lap부터 entry vault pocket을 끼워 넣어 열린 lane을 비우는 대신 payout core를 먼저 찍고 빠지게 만든다.`
+          : salvageStage === "caravan"
           ? `${config.note} Greed route가 외곽 caravan chase를 열어 회수 동선이 바로 도주선이 된다. payout을 따라 깊게 들어갈지, 얇아진 flank만 짧게 긁고 빠질지 계속 갈라진다.`
           : `${config.note} Greed route가 scrap vault pocket을 끼워 넣어 열린 lane만 먹는 대신 cash-out pocket을 찍고 빠지는 운영을 요구한다.`,
       directive:
-        salvageStage === "caravan"
+        waveNumber === 5
+          ? "가장 넓은 lane을 다 비우기 전에 entry vault pocket을 짧게 찢고 payout만 챙긴 뒤 바로 바깥 flank로 복귀한다."
+          : salvageStage === "caravan"
           ? "도주하는 caravan을 짧게 끊고 곧바로 열린 외곽으로 복귀한다. chase를 오래 끌수록 반대 flank가 먼저 무너진다."
           : "열린 vault pocket을 빠르게 찢고 곧바로 바깥 lane으로 빠져나온다. payout 욕심이 길어질수록 퇴로가 먼저 닫힌다.",
       midrunGreedRoute: {
@@ -13504,7 +13530,9 @@
         hazardType: salvageStage,
         payoutScrap: hazard.salvageScrap,
         note:
-          salvageStage === "caravan"
+          waveNumber === 5
+            ? "첫 payoff lap부터 entry vault가 열린다. pocket payout을 먼저 찢으면 즉시 raid frame이 붙어 flank 복귀가 빨라진다."
+            : salvageStage === "caravan"
             ? "Scrapline caravan이 외곽으로 달아난다. chase 각을 내면 payout은 크지만 복귀 flank가 급하게 얇아진다."
             : "Scrapline vault가 크게 열린다. pocket을 빨리 찢고 빠질수록 greed payout이 깔끔하게 남는다.",
       },

@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Progression`, because the shipped route still explains future build structure more clearly than it delivers a branch the player can actually pilot.
-- Recurring player-facing failure: the 8-wave slice still uses roadmap cards, status-strip scaffolding, and support primers to simulate depth while real support/utility ownership lands too late.
-- Repeated false solution: polishing copy or card presentation without deleting the explanatory scaffolding and replacing the first fake preview beat with one honest Wave 5 branch.
-- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: the useful benchmark is whether the player can grasp the run’s next power spike almost instantly and then spend the next combat room enjoying it.
-- Near-term critic pressure should favor consolidation over expansion: fewer route explainers, no more primer-style rewards, and clearer movement/pickup/space-control divergence starting in Wave 5.
+- The most fragile gate is now `Builds`, because the shipped 8-wave route still promises branch depth more clearly than it delivers a branch the player can repeatedly want to pilot.
+- Recurring player-facing failure: the live slice still carries 12-wave docs, Wave 9+ reward framing, and wildcard/primer preview beats that simulate depth while real rerun-driving divergence lands too late.
+- Repeated false solution: polishing copy, card styling, or wording hierarchy without deleting late-route scaffolding and moving one honest movement/pickup/space-control branch into Wave 5.
+- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: the useful benchmark is whether the reward pause sells one obvious power spike fast, then gives the player enough combat space to enjoy that spike for multiple rooms.
+- Near-term critic pressure should favor consolidation over expansion: align docs to the shipped route, remove 12-wave expectations from live UI, and make the first branch create immediate behavioral change instead of another preview.

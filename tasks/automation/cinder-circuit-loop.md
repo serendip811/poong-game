@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop spending the shipped 8-wave route on roadmap/status-strip explanation and primer fakeouts; cut to one honest Wave 5 branch that changes piloting immediately and let Wave 6-8 prove that identity with minimal reading.
+- Immediate priority: stop carrying 12-wave docs, Wave 9+ reward framing, and late-breakpoint scaffolding inside the shipped 8-wave slice; consolidate around one honest rerun loop where Wave 5 branching changes piloting immediately and the rest of the route simply proves it.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 16:01:16 KST
+  Findings:
+  - The project is still drifting because the shipped slice is an 8-wave run wearing 12-wave design language. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8) and [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L31) still define the product around `12웨이브 / 세 시대`, which keeps encouraging UI and reward framing that the live route cannot pay off yet.
+  - The forge still behaves more like a contract dashboard than a hunger screen. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22780) still builds a context shell, proof-window callouts, mode labels, rider labels, preview rows, and 12-wave phrasing. Against `Nova Drift`, `Brotato`, and `Hades`, this is still too much ceremony around a pick that should be readable in seconds.
+  - The run still delays true rerun-driving divergence too long. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2520) keeps support ownership starting at `Wave 7`, while [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3126) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3145) still spend earlier reward beats on roadmap-like wildcard previews instead of a branch that immediately changes movement, pickup greed, or space control.
+  - Combat space is finally large enough to support distinct playstyles, but the route still uses that breathing room to continue one main-gun proof instead of cashing in a new identity. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L447) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L545) give Waves 5-8 the right arena scale and density for stronger piloting asks, yet the player is still mostly repeating the same ownership test until the run is nearly over.
+  Top Priority: Collapse the shipped route to one honest Wave 5 branch with immediate arena behavior change, and delete any remaining 12-wave or late-breakpoint reward framing from the live title/forge flow until that branch is carrying replay desire by itself.
+  Why Now: The game has enough room and enough systems; the blocker is that the current slice still promises more structure than it actually lets the player enjoy.
+  Do Not Repeat: Do not spend another pass on softer wording or prettier cards while wildcard previews and Wave 9+ expectations still sit inside the 8-wave route.
+  Release Gate: Builds
 
 - 2026-03-27 15:24:00 KST
   Findings:
@@ -3497,6 +3508,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 20:05:00 KST
+  Changed: made the shipped `Wave 5` greed fork cash in immediately in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and locked the new expectation in [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs). `isMidrunGreedRaidFrameActive(...)` now starts at `Wave 5` instead of waiting until `Wave 6`, `beginWave()` therefore seeds the raid-frame pickup surge on the first payoff lap, and `applyMidrunGreedRouteConfig(...)` now injects a new `Scrapline Entry Vault` pocket into `Wave 5` before the existing `Wave 6-8` salvage/caravan sequence so the greed lane changes movement and target priority the instant the player takes it.
+  Why: the newest critique's `Top Priority` asked for one honest `Wave 5` branch with immediate arena behavior change. The highest-value bounded interpretation was to finish the already-authored `Scrapline Raid` route instead of adding another branch, because the greed lane already had the right pickup-surge and pocket-chase runtime hooks but was still delaying the first real combat ask until a wave later.
+  Follow-up Risk: `Wave 5` greed now becomes a real rerun-driving bet, but the new immediate vault pocket may over-favor cores that already clear open lanes fastest and turn `판돈` into the default best answer. If playtesting shows that, the next bounded pass should tune the `Wave 5` pocket payout/core HP or raid volley uptime rather than pushing the branch back into delayed admin value.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Builds
 
 - 2026-03-27 19:05:00 KST
   Changed: locked the shipped `Wave 5` `판돈` slot to one real branch in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and tightened the expectation in [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs). `buildForgeChoices(...)` now hard-prefers `field_greed` for the first three-lane contract instead of letting `recycle` or other tidy utility outs steal that lane, `scoreBaseRouteGambleChoice(...)` gives `Wave 5` greed a strong bias even if the pool broadens later, and `createFieldGreedContractChoice(...)` now presents that opener as `Scrapline Raid` with raid-frame-forward copy so the card reads like a movement/pickup takeover instead of a scrap coupon.

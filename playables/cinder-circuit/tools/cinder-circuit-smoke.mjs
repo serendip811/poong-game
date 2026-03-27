@@ -237,10 +237,16 @@ const midrunGreedRun = {
 };
 game.applyForgeChoice(midrunGreedRun, scriptedMidrunGreedChoice);
 assert.equal(midrunGreedRun.build.midrunGreedRouteUntilWave, 8);
+assert.equal(game.isMidrunGreedRaidFrameActive(midrunGreedRun.build, 5), true);
 assert.equal(game.isMidrunGreedRaidFrameActive(midrunGreedRun.build, 6), true);
 assert.equal(game.isMidrunGreedRaidFrameActive(midrunGreedRun.build, 8), true);
 assert.equal(game.isMidrunGreedRaidFrameActive(midrunGreedRun.build, 9), false);
 assert.equal(midrunGreedRun.player.chassisSalvageBurstTime, 0.95);
+const greedWave5 = game.applyMidrunGreedRouteConfig(
+  game.resolveWaveConfig(4, midrunGreedRun.build),
+  midrunGreedRun.build,
+  5
+);
 const greedWave6 = game.applyMidrunGreedRouteConfig(
   game.resolveWaveConfig(5, midrunGreedRun.build),
   midrunGreedRun.build,
@@ -256,6 +262,11 @@ const greedWave8 = game.applyMidrunGreedRouteConfig(
   midrunGreedRun.build,
   8
 );
+assert.equal(greedWave5.hazard?.type, "salvage");
+assert.equal(greedWave5.hazard?.label, "Scrapline Entry Vault");
+assert.ok(greedWave5.note.includes("entry vault pocket"));
+assert.ok(greedWave5.directive.includes("entry vault pocket"));
+assert.ok(greedWave5.midrunGreedRoute);
 assert.equal(greedWave6.hazard?.type, "salvage");
 assert.equal(greedWave7.hazard?.type, "caravan");
 assert.equal(greedWave8.hazard?.type, "salvage");
