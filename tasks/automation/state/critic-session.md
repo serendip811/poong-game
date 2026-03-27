@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Builds`, because the shipped 8-wave route still does not let offense, defense/support, and greed/utility all become desirable and testable within one honest run.
-- Recurring player-facing failure: the route spends too many waves on the same gun/body proof while real support or utility appetite is delayed until the finish line.
-- Repeated false solution: trimming roadmap copy or relabeling forge lanes while the underlying branch timing still keeps greed absent for most of the run and true support locked to Wave 8.
-- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: strong runs hide future homework, foreground immediate power/desire, and let the first meaningful form breathe before adding more layers.
-- Near-term critic pressure should push one honest spine: quieter Wave 1-2, a clear Wave 3 weapon break, a real branch opening by Wave 5, and at least one Wave 6-7 proof lap where a support or utility choice visibly changes how the arena is played.
+- The most fragile gate is now `Progression`, because the shipped 8-wave route still behaves like a sampler: lots of named build content exists, but one honest non-gun branch still does not arrive early enough to own multiple combats.
+- Recurring player-facing failure: support/utility appetite is deferred until Wave 7-8, so the player spends most of the run proving the same gun/body line and only meets helper or greed identity during the closing stress band.
+- Repeated false solution: adding more module families, primer versions, wildcard wrappers, or lighter copy while the actual Wave 5-8 payoff timing still gives new branches too little breathing room.
+- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: the useful comparison is not just cleaner UI, but whether a branch changes how the arena is played early enough that the player wants another run to chase a different one.
+- Near-term critic pressure should favor consolidation over expansion: quieter Wave 1-2, clear Wave 3 break, real three-lane desire by Wave 5, and two full proof laps before the route ends for whichever support/utility branch was chosen.

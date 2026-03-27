@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: make the shipped 8-wave path earn replay hunger with a quiet weak-start -> Wave 3 weapon break -> Wave 5 real branch opening -> Wave 6-8 proof window, without roadmap grammar or helper-tech promise front-loading the run.
+- Immediate priority: stop widening the module catalog and prove one honest 8-wave spine where Wave 5 opens a real three-lane branch and Wave 6-8 let the chosen support/utility identity dominate enough combat to create replay hunger.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 14:20:00 KST
+  Findings:
+  - The project is still adding breadth before proving appetite. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2502) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3140) now contain a large support/module catalog, but [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2487) still sets `SUPPORT_SYSTEM_START_WAVE = 7`, so the shipped run spends more time defining fantasies than letting the player own one.
+  - The forge contract is technically three-lane by Wave 5, but the third lane still does not feel like a run-shaping combat bet. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L11196) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L11214) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12486) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12538) mostly keep `판돈` in scrap/flow/admin territory, so repeated runs still read as `main gun + survive` rather than offense/defense/greed identities colliding.
+  - Wave 7-8 are still the wrong moment to debut a meaningful helper identity. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L474) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L543) raise arena pressure with skimmers, lancers, and wardens right where support systems finally open, which makes the first satellite/shield/drone fantasy feel like panic stabilization instead of a power trip the player wants to rerun.
+  - The product contract is still split between a future 12-wave game and a shipped 8-wave sampler. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L18) and [docs/games/cinder-circuit-source-analysis.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-analysis.md#L46) through [docs/games/cinder-circuit-source-analysis.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-analysis.md#L54) still sell the bigger spine, while [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L16716) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L16749) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L17552) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L17574) still frame the live run through form/admin language. It still feels provisional instead of complete.
+  Top Priority: Freeze new support/module additions and rebuild the shipped Wave 5-8 spine so one defense/support or greed/utility branch arrives by Wave 5-6 and gets two full combat proof laps with visible on-screen payoff before the route ends.
+  Why Now: Until one non-gun branch visibly owns the arena for more than a single crisis lap, extra systems only increase taxonomy, not replay desire.
+  Do Not Repeat: Do not answer this with more module families, primers, wildcard wrappers, or wording trims while the honest run still proves almost everything in the last two waves.
+  Release Gate: Progression
 
 - 2026-03-27 13:31:05 KST
   Findings:
@@ -3453,6 +3464,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 15:05:00 KST
+  Changed: moved one bounded non-gun payoff earlier in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and refreshed the matching assertions in [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs). On the shipped `Wave 1-8` route, `buildWave6ChassisBreakpointChoices(...)` now bundles one doctrine-filtered tier-1 support install into the `Wave 6` `버팀` chassis card instead of delaying the first real support silhouette until `Wave 7-8`, while still keeping the broader support catalog locked behind the existing `SUPPORT_SYSTEM_START_WAVE === 7` filter. I also updated the base-route forge transformation copy, roadmap step copy, and shipping-ladder detail so the player-facing contract now consistently says `Wave 6 body/support bracket -> Wave 7-8 proof` instead of claiming the first rider only appears at `Wave 8`.
+  Why: the newest critique's `Top Priority` was to make one defense/support or greed/utility branch arrive by `Wave 5-6` and get two full proof laps before the route ends. The highest-value concrete interpretation that fit one bounded pass was to reopen the already-authored `Wave 6` chassis-plus-support bundle in a tightly filtered way, because that creates immediate on-screen payoff without adding a new module family, new wrapper UI, or opening the whole support taxonomy too early.
+  Follow-up Risk: some doctrine/system pairings may now spike harder than others because their tier-1 support effect was originally tuned for a later handoff. If playtesting shows one `Wave 6` bundle stealing too much spectacle from the chassis break, the next bounded pass should retune that doctrine's bundled system choice or tier-1 numbers, not push the whole branch back to `Wave 7-8`.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Progression
 
 - 2026-03-27 14:05:00 KST
   Changed: reopened one bounded slice of the shipped build ladder in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs). `shouldOpenBaseRouteSecondaryBranch(nextWave)` now keeps the base-route forge on a real three-lane `주력 / 버팀 / 판돈` contract from `Wave 5` through `Wave 8` instead of collapsing back to two cards after one stop, and `SUPPORT_SYSTEM_START_WAVE` now moves to `Wave 7` so the first honest rider payoff arrives before the run ends. On the shipped route, that earlier unlock is still tightly gated through the existing doctrine filter, so `Wave 7` only offers one tier-1 doctrine-aligned support install rather than reopening the whole support catalog or adding a new preview wrapper.
