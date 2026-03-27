@@ -1214,7 +1214,7 @@ const cataclysmChoice = mutationLateBreakChoices.find((choice) => choice.action 
 assert.ok(cataclysmChoice);
 assert.equal(cataclysmChoice.title, "Cataclysm Arsenal");
 assert.equal(cataclysmChoice.lateFieldMutationLevel, 4);
-assert.ok(cataclysmChoice.roadmapDetail.includes("Wave 9 open-lane"));
+assert.equal(cataclysmChoice.roadmapDetail, "Wave 8 완성 시험 -> 짧은 승리 랩");
 const cataclysmRun = {
   build: mutationLateBandBuild,
   resources: { scrap: 999 },
@@ -1303,15 +1303,13 @@ const lateBreakArmoryChoices = game.buildForgeChoices(lateCacheBuild, Math.rando
   build: lateCacheBuild,
 });
 assert.equal(lateBreakArmoryChoices.length, 3);
-assert.ok(lateBreakArmoryChoices.every((choice) => choice.roadmapDetail?.includes("Wave 9")));
 assert.ok(
-  lateBreakArmoryChoices.every(
-    (choice) =>
-      choice.roadmapDetail?.includes("Wave 10") || choice.roadmapDetail?.includes("Wave 9-10")
-  )
+  lateBreakArmoryChoices.every((choice) => choice.roadmapDetail === "Wave 8 완성 시험 -> 짧은 승리 랩")
 );
-assert.ok(lateBreakArmoryChoices.every((choice) => choice.roadmapDetail?.includes("Wave 11")));
-assert.ok(lateBreakArmoryChoices.every((choice) => choice.roadmapDetail?.includes("Wave 12")));
+assert.ok(lateBreakArmoryChoices.every((choice) => !choice.roadmapDetail?.includes("Wave 9")));
+assert.ok(lateBreakArmoryChoices.every((choice) => !choice.roadmapDetail?.includes("Wave 10")));
+assert.ok(lateBreakArmoryChoices.every((choice) => !choice.roadmapDetail?.includes("Wave 11")));
+assert.ok(lateBreakArmoryChoices.every((choice) => !choice.roadmapDetail?.includes("Wave 12")));
 const afterburnBreakpointChoices = game.getCombatCacheChoicesForWave(lateCacheBuild, 14);
 assert.equal(afterburnBreakpointChoices.length, 0);
 const crownWindowBuild = game.createInitialBuild("scrap_pact");
@@ -3775,7 +3773,17 @@ assert.ok(lateBreakDefense.slotText.includes("bastion hull"));
 assert.ok(lateBreakGreed.slotText.includes("twin tow fork"));
 const lateBreakGreedTransform = game.getForgeChoiceTransformation(lateBreakGreed);
 assert.ok(lateBreakGreedTransform.promise.includes("tow fork"));
-assert.ok(lateBreakGreedTransform.proof.includes("Wave 9 vaultline"));
+assert.ok(lateBreakGreedTransform.proof.includes("Wave 8 완성 시험"));
+assert.ok(!lateBreakGreedTransform.proof.includes("Wave 9"));
+const lateBreakPreviewRows = game.createForgePreviewRows(lateBreakGreed);
+assert.equal(
+  JSON.stringify(lateBreakPreviewRows),
+  JSON.stringify([
+    { label: "분기", value: "Greed Contract" },
+    { label: "Wave 8", value: "완성 시험" },
+    { label: "그 뒤", value: "짧은 승리 랩" },
+  ])
+);
 const lateBreakRun = {
   build: lateBreakSmokeBuild,
   resources: { scrap: 0 },
@@ -3789,7 +3797,9 @@ const lateBreakLedgerWeapon = game.computeWeaponStats(lateBreakRun.build);
 assert.equal(lateBreakLedgerWeapon.headlineFormLabel, "Black Ledger Heist");
 assert.ok(lateBreakLedgerWeapon.lateBreakLedgerFirePattern);
 assert.ok(lateBreakLedgerWeapon.lateBreakStatusNote.includes("twin tow fork"));
-assert.ok(lateBreakLedgerWeapon.lateBreakStatusNote.includes("vaultline"));
+assert.ok(lateBreakLedgerWeapon.lateBreakStatusNote.includes("완성 시험"));
+assert.ok(lateBreakLedgerWeapon.lateBreakStatusNote.includes("짧은 승리 랩"));
+assert.ok(!lateBreakLedgerWeapon.lateBreakStatusNote.includes("Wave 9"));
 const lateBreakDebt = game.createBlackLedgerDebtState(lateBreakRun.build, 12);
 assert.ok(lateBreakDebt);
 assert.equal(lateBreakDebt.stacks, 0);

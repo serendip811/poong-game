@@ -2040,7 +2040,62 @@
     return LATE_BREAK_FOLLOWTHROUGH_PROFILES[build.lateBreakProfileId] || null;
   }
 
+  function getBaseRouteWave8ClosureCopy(profileId) {
+    if (profileId === "mutation") {
+      return {
+        cadenceDetail:
+          "Wave 8 완성 시험에서 열린 lane 둘을 얼마나 오래 잠그는지 먼저 보고, 끝나면 짧은 승리 랩에서 같은 sweep를 더 오래 누른다.",
+        headlineDetail:
+          "Wave 8 완성 시험에서 열린 lane 둘을 먹고, 끝나면 짧은 승리 랩에서 같은 cataclysm sweep를 더 오래 밀어붙인다.",
+        roadmapDetail: "Wave 8 완성 시험 -> 짧은 승리 랩",
+        proof: "Wave 8 완성 시험에서 넓어진 화망이 열린 lane 둘을 얼마나 오래 비우는지 바로 본다.",
+        statusNote:
+          "Wave 8 Cataclysm Arsenal이 전면 cataclysm fan과 측면 포드를 한 번에 잠가 주포 실루엣을 갈아엎었다. 완성 시험에서 이 화망이 열린 lane 둘을 얼마나 오래 비우는지 바로 증명하고, 끝나면 짧은 승리 랩에서 같은 sweep를 더 오래 누른다.",
+      };
+    }
+    if (profileId === "aegis") {
+      return {
+        cadenceDetail:
+          "Wave 8 완성 시험에서 pocket hold를 얼마나 오래 버티는지 먼저 보고, 끝나면 짧은 승리 랩에서 같은 bastion cadence를 더 오래 굴린다.",
+        headlineDetail:
+          "Wave 8 완성 시험에서 작은 pocket에 얼마나 깊게 들어갔다가 살아 나오는지 보고, 끝나면 짧은 승리 랩에서 같은 bastion hull을 더 오래 굴린다.",
+        roadmapDetail: "Wave 8 완성 시험 -> 짧은 승리 랩",
+        proof: "Wave 8 완성 시험에서 plate timing이 버티는 선을 얼마나 오래 여는지 바로 드러난다.",
+        statusNote:
+          "Wave 8 Warplate Halo가 재충전 warplate 두 겹과 burst pulse를 붙여 몸체를 bastion hull로 바꿨다. 완성 시험에서 plate timing으로 얼마나 깊게 들어갔다가 살아 나오는지 바로 드러나고, 끝나면 짧은 승리 랩에서 같은 hold cadence를 더 오래 굴린다.",
+      };
+    }
+    if (profileId === "ledger") {
+      return {
+        cadenceDetail:
+          "Wave 8 완성 시험에서 얼마까지 더 긁고 빠질지 먼저 가르고, 끝나면 짧은 승리 랩에서 같은 raid cadence를 더 오래 누른다.",
+        headlineDetail:
+          "Wave 8 완성 시험에서 payout pocket을 얼마나 깊게 긁을지 먼저 가르고, 끝나면 짧은 승리 랩에서 같은 raid frame을 더 오래 몰아본다.",
+        roadmapDetail: "Wave 8 완성 시험 -> 짧은 승리 랩",
+        proof: "Wave 8 완성 시험에서 더 긁을지 끊고 살아남을지 바로 갈라진다.",
+        statusNote:
+          "Wave 8 Black Ledger Heist가 주포 양옆에 twin tow fork를 열어 payout lane을 긁는 raid frame으로 바꿨다. 완성 시험에서 더 긁을지 끊고 살아남을지 바로 갈라지고, 끝나면 짧은 승리 랩에서 같은 raid cadence를 더 오래 누른다.",
+      };
+    }
+    return {
+      cadenceDetail:
+        "Wave 8 완성 시험에서 잠근 실루엣을 바로 증명하고, 끝나면 짧은 승리 랩으로 이번 런을 닫는다.",
+      headlineDetail:
+        "Wave 8 완성 시험에서 잠근 실루엣을 바로 증명하고, 끝나면 짧은 승리 랩 하나로 sweep 폭을 더 오래 누른다.",
+      roadmapDetail: "Wave 8 완성 시험 -> 짧은 승리 랩",
+      proof: "Wave 8 완성 시험에서 방금 잠근 실루엣이 실제로 얼마나 오래 전장을 먹는지 바로 본다.",
+      statusNote:
+        "Wave 8 완성 시험에서 방금 잠근 실루엣을 바로 증명하고, 끝나면 짧은 승리 랩으로 이번 런을 닫는다.",
+    };
+  }
+
   function getLateBreakCadenceSummary(profileId) {
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
+      return {
+        label: "완성 계약",
+        detail: getBaseRouteWave8ClosureCopy(profileId).cadenceDetail,
+      };
+    }
     if (profileId === "mutation") {
       return {
         label: "Late Break cadence",
@@ -2070,6 +2125,20 @@
   }
 
   function getLateBreakHeadline(profileId) {
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
+      const closureCopy = getBaseRouteWave8ClosureCopy(profileId);
+      return {
+        title:
+          profileId === "mutation"
+            ? "Cataclysm Arsenal"
+            : profileId === "aegis"
+              ? "Warplate Halo"
+              : profileId === "ledger"
+                ? "Black Ledger Heist"
+                : "완성 시험",
+        detail: closureCopy.headlineDetail,
+      };
+    }
     if (profileId === "mutation") {
       return {
         title: "Cataclysm Arsenal",
@@ -7194,6 +7263,13 @@
     if (!choice || !choice.lateBreakProfileId) {
       return [];
     }
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
+      const closureCopy = getBaseRouteWave8ClosureCopy(choice.lateBreakProfileId);
+      return [
+        { label: "Wave 8", value: "완성 시험" },
+        { label: "그 뒤", value: closureCopy.roadmapDetail.replace("Wave 8 완성 시험 -> ", "") },
+      ];
+    }
     const previewBuild = { lateBreakProfileId: choice.lateBreakProfileId };
     const wave11Profile = resolveWaveConfig(10, previewBuild);
     const wave12Profile = resolveWaveConfig(11, previewBuild);
@@ -7633,36 +7709,45 @@
       };
     }
     if (choice.type === "utility" && choice.action === "field_mutation" && choice.lateBreakProfileId === "mutation") {
+      const closureCopy = getBaseRouteWave8ClosureCopy("mutation");
       return {
         laneLabel: choice.forgeLaneLabel || choice.laneLabel || "Forge Lane",
         title: choice.title || choice.slotText || "Unnamed Shift",
         tone: "main",
         promise: "전면 cataclysm fan과 측면 포드를 잠가 lane 둘을 동시에 찢는 주포로 바꾼다.",
-        proof: "Wave 9 open-lane에서 넓어진 화망이 flank 둘을 얼마나 오래 비우는지 바로 본다.",
+        proof: CONSOLIDATED_12_WAVE_ROUTE
+          ? closureCopy.proof
+          : "Wave 9 open-lane에서 넓어진 화망이 flank 둘을 얼마나 오래 비우는지 바로 본다.",
         riderLabel: "Defense / Utility",
         riderNote: "커진 화망 뒤에 방호선 한 줄만 붙여 열린 lane을 오래 점유한다.",
         accent: "cataclysm fan + broadside pods",
       };
     }
     if (choice.type === "utility" && choice.action === "field_aegis" && choice.lateBreakProfileId === "aegis") {
+      const closureCopy = getBaseRouteWave8ClosureCopy("aegis");
       return {
         laneLabel: choice.forgeLaneLabel || choice.laneLabel || "Forge Lane",
         title: choice.title || choice.slotText || "Unnamed Shift",
         tone: "defense",
         promise: "재충전 warplate 두 겹과 burst pulse를 붙여 몸체를 bastion hull로 바꾼다.",
-        proof: "Wave 9 pocket fight에서 plate timing이 버티는 선을 얼마나 오래 여는지 바로 드러난다.",
+        proof: CONSOLIDATED_12_WAVE_ROUTE
+          ? closureCopy.proof
+          : "Wave 9 pocket fight에서 plate timing이 버티는 선을 얼마나 오래 여는지 바로 드러난다.",
         riderLabel: "Support Rider",
         riderNote: "plate가 열어 준 pocket에 작은 자동 화력만 얹어 정착 시간을 늘린다.",
         accent: "warplate + burst pulse",
       };
     }
     if (choice.type === "utility" && choice.action === "field_greed" && choice.lateBreakProfileId === "ledger") {
+      const closureCopy = getBaseRouteWave8ClosureCopy("ledger");
       return {
         laneLabel: choice.forgeLaneLabel || choice.laneLabel || "Forge Lane",
         title: choice.title || choice.slotText || "Unnamed Shift",
         tone: "greed",
         promise: "쌍갈래 tow fork를 주포에 덧대고 금고 습격 계약을 함께 걸어 raid frame으로 바꾼다.",
-        proof: "Wave 9 vaultline에서 더 긁을지 끊고 살아남을지 바로 갈라진다.",
+        proof: CONSOLIDATED_12_WAVE_ROUTE
+          ? closureCopy.proof
+          : "Wave 9 vaultline에서 더 긁을지 끊고 살아남을지 바로 갈라진다.",
         riderLabel: "Defense / Utility",
         riderNote: "탐욕으로 벌린 진입선은 방호나 회복 한 줄로만 받쳐도 실패 비용이 크게 줄어든다.",
         accent: "twin tow fork + vault raid",
@@ -11289,8 +11374,9 @@
                 : [-0.62, -0.4, -0.18, 0.18, 0.4, 0.62];
         stats.lateFieldMutationTraitLabel = `Cataclysm Arsenal · MK ${lateFieldMutationLevel}`;
         stats.headlineFormLabel = "Cataclysm Arsenal";
-        stats.lateBreakStatusNote =
-          "Wave 8 Cataclysm Arsenal이 전면 cataclysm fan과 측면 포드를 한 번에 잠가 주포 실루엣을 갈아엎었다. Wave 9 open-lane에서 이 화망이 flank 둘을 동시에 오래 비우는지 바로 증명한다.";
+        stats.lateBreakStatusNote = CONSOLIDATED_12_WAVE_ROUTE
+          ? getBaseRouteWave8ClosureCopy("mutation").statusNote
+          : "Wave 8 Cataclysm Arsenal이 전면 cataclysm fan과 측면 포드를 한 번에 잠가 주포 실루엣을 갈아엎었다. Wave 9 open-lane에서 이 화망이 flank 둘을 동시에 오래 비우는지 바로 증명한다.";
         stats.lateFieldMutationStatusNote = stats.lateBreakStatusNote;
         stats.lateBreakCataclysmFirePattern = {
           kind: "late_break_cataclysm",
@@ -11326,16 +11412,18 @@
     }
     if (build.lateBreakProfileId === "aegis" && lateFieldAegisLevel >= 2) {
       stats.headlineFormLabel = "Warplate Halo";
-      stats.lateBreakStatusNote =
-        "Wave 8 Warplate Halo가 재충전 warplate 두 겹과 burst pulse를 붙여 몸체를 bastion hull로 바꿨다. Wave 9 pocket fight에서 plate timing으로 얼마나 깊게 들어갔다가 살아 나오는지 바로 드러난다.";
+      stats.lateBreakStatusNote = CONSOLIDATED_12_WAVE_ROUTE
+        ? getBaseRouteWave8ClosureCopy("aegis").statusNote
+        : "Wave 8 Warplate Halo가 재충전 warplate 두 겹과 burst pulse를 붙여 몸체를 bastion hull로 바꿨다. Wave 9 pocket fight에서 plate timing으로 얼마나 깊게 들어갔다가 살아 나오는지 바로 드러난다.";
       stats.maxHp += 6;
       stats.moveSpeed += 6;
       stats.hazardMitigation = clamp(stats.hazardMitigation + 0.03, 0, 0.45);
     }
     if (build.lateBreakProfileId === "ledger" && (build.blackLedgerRaidWaves || 0) > 0) {
       stats.headlineFormLabel = "Black Ledger Heist";
-      stats.lateBreakStatusNote =
-        "Wave 8 Black Ledger Heist가 주포 양옆에 twin tow fork를 열어 payout lane을 긁는 raid frame으로 바꿨다. Wave 9 vaultline에서 더 긁을지 끊고 살아남을지 바로 갈라진다.";
+      stats.lateBreakStatusNote = CONSOLIDATED_12_WAVE_ROUTE
+        ? getBaseRouteWave8ClosureCopy("ledger").statusNote
+        : "Wave 8 Black Ledger Heist가 주포 양옆에 twin tow fork를 열어 payout lane을 긁는 raid frame으로 바꿨다. Wave 9 vaultline에서 더 긁을지 끊고 살아남을지 바로 갈라진다.";
       stats.lateBreakLedgerFirePattern = {
         kind: "late_break_ledger",
         offsets: core.id === "ricochet" ? [-0.28, 0.28] : [-0.22, 0.22],
@@ -13722,8 +13810,12 @@
       verb: "변이",
       tag: "ARSENAL",
       title: "Cataclysm Arsenal",
-      description: `${CORE_DEFS[build.coreId].label}에 전면 cataclysm fan과 측면 브로드사이드 포드를 한 번에 잠가 support 없이도 주포 firing geometry를 monster form으로 갈아엎는다. 이번 pick의 rider는 보조 증폭일 뿐이고, 진짜 payoff는 Wave 9-10에서 주포가 열린 lane 둘을 동시에 잠그는 새 화망 자체다.`,
-      roadmapDetail: "Wave 9 open-lane -> Wave 10 breach proof -> Wave 11 pursuit run -> Wave 12 final stand",
+      description: CONSOLIDATED_12_WAVE_ROUTE
+        ? `${CORE_DEFS[build.coreId].label}에 전면 cataclysm fan과 측면 브로드사이드 포드를 한 번에 잠가 support 없이도 주포 firing geometry를 monster form으로 갈아엎는다. 이번 pick의 rider는 보조 증폭일 뿐이고, 진짜 payoff는 Wave 8 완성 시험과 이어지는 짧은 승리 랩에서 이 화망이 화면을 얼마나 오래 먹는지 직접 누르는 데 있다.`
+        : `${CORE_DEFS[build.coreId].label}에 전면 cataclysm fan과 측면 브로드사이드 포드를 한 번에 잠가 support 없이도 주포 firing geometry를 monster form으로 갈아엎는다. 이번 pick의 rider는 보조 증폭일 뿐이고, 진짜 payoff는 Wave 9-10에서 주포가 열린 lane 둘을 동시에 잠그는 새 화망 자체다.`,
+      roadmapDetail: CONSOLIDATED_12_WAVE_ROUTE
+        ? getBaseRouteWave8ClosureCopy("mutation").roadmapDetail
+        : "Wave 9 open-lane -> Wave 10 breach proof -> Wave 11 pursuit run -> Wave 12 final stand",
       slotText: "cataclysm fan + 브로드사이드 포드 · 열린 lane 절단",
       cost: 34,
       laneLabel: "Main Weapon Mutation",
@@ -13749,8 +13841,12 @@
       tag: "HALO",
       title: "Warplate Halo",
       description:
-        "Act 3 진입 전에 재충전식 warplate를 두 겹까지 예열해 큰 한 방을 지우고, plate가 터질 때마다 주변 탄막과 추격선을 같이 뜯어낸다. 이 선택의 headline은 support가 아니라 몸체 자체가 bastion hull로 바뀌는 점이고, 다음 proof는 작은 pocket에 얼마나 깊게 들어갔다가 살아 나오는지다.",
-      roadmapDetail: "Wave 9 bastion pocket -> Wave 10 crownproof -> Wave 11 pursuit run -> Wave 12 final stand",
+        CONSOLIDATED_12_WAVE_ROUTE
+          ? "재충전식 warplate를 두 겹까지 예열해 큰 한 방을 지우고, plate가 터질 때마다 주변 탄막과 추격선을 같이 뜯어낸다. 이 선택의 headline은 support가 아니라 몸체 자체가 bastion hull로 바뀌는 점이고, 다음 proof는 Wave 8 완성 시험과 이어지는 짧은 승리 랩에서 pocket hold를 얼마나 오래 버티는지다."
+          : "Act 3 진입 전에 재충전식 warplate를 두 겹까지 예열해 큰 한 방을 지우고, plate가 터질 때마다 주변 탄막과 추격선을 같이 뜯어낸다. 이 선택의 headline은 support가 아니라 몸체 자체가 bastion hull로 바뀌는 점이고, 다음 proof는 작은 pocket에 얼마나 깊게 들어갔다가 살아 나오는지다.",
+      roadmapDetail: CONSOLIDATED_12_WAVE_ROUTE
+        ? getBaseRouteWave8ClosureCopy("aegis").roadmapDetail
+        : "Wave 9 bastion pocket -> Wave 10 crownproof -> Wave 11 pursuit run -> Wave 12 final stand",
       slotText: `warplate ${getLateFieldAegisMaxCharges({ lateFieldAegisLevel: nextLevel })}충전 · bastion hull`,
       cost: 26,
       laneLabel: "Defense / Utility",
@@ -13772,8 +13868,12 @@
       tag: "LEDGER",
       title: "Black Ledger Heist",
       description:
-        "Act 3 개막 자금을 먼저 당겨 고철과 회수 효율을 크게 올리고, 주포 양옆에 twin tow fork를 열어 payout lane을 긁는 raid frame으로 바꾼다. 대신 Wave 9 vaultline에서 더 오래 cash-out할수록 청구서도 같이 커져, greed 판단이 바로 몸의 움직임과 사격 각을 바꾸게 만든다.",
-      roadmapDetail: "Wave 9 vaultline -> Wave 10 crownproof -> Wave 11 pursuit run -> Wave 12 final stand",
+        CONSOLIDATED_12_WAVE_ROUTE
+          ? "개막 자금을 먼저 당겨 고철과 회수 효율을 크게 올리고, 주포 양옆에 twin tow fork를 열어 payout lane을 긁는 raid frame으로 바꾼다. 대신 Wave 8 완성 시험과 이어지는 짧은 승리 랩에서 더 오래 cash-out할수록 청구서도 같이 커져, greed 판단이 바로 몸의 움직임과 사격 각을 바꾸게 만든다."
+          : "Act 3 개막 자금을 먼저 당겨 고철과 회수 효율을 크게 올리고, 주포 양옆에 twin tow fork를 열어 payout lane을 긁는 raid frame으로 바꾼다. 대신 Wave 9 vaultline에서 더 오래 cash-out할수록 청구서도 같이 커져, greed 판단이 바로 몸의 움직임과 사격 각을 바꾸게 만든다.",
+      roadmapDetail: CONSOLIDATED_12_WAVE_ROUTE
+        ? getBaseRouteWave8ClosureCopy("ledger").roadmapDetail
+        : "Wave 9 vaultline -> Wave 10 crownproof -> Wave 11 pursuit run -> Wave 12 final stand",
       slotText: "고철 +52 · 회수 +16% · twin tow fork · 2웨이브 Siege Debt",
       cost: 0,
       scrapGain: 52,
