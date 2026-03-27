@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: cut the shipped 8-wave route down to one honest contract across docs, forge, and HUD; remove roadmap/document UI and Wave 9+ promises, then let one Wave 5-6 branch change piloting immediately.
+- Immediate priority: make one Wave 5-6 branch visibly change piloting and screen control immediately, while keeping forge/HUD to `current form + next proof + one branch payoff` with no extra route scaffolding.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 17:01:04 KST
+  Findings:
+  - The docs now sell the shipped `8-wave` contract more honestly, but the live run still hides its real problem behind summary machinery. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8248) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8680) still spend major status logic on roadmap-step generation, ladder states, and promise text instead of just making the current build identity feel undeniable.
+  - The first real branch still does too much at once and therefore owns the run too weakly. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8452) makes `Wave 6` about chassis plus preferred support together, so the player gets a layered package before one movement or firing change has had time to become memorable on its own.
+  - The forge is still framing choices as a managed contract instead of a craving spike. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22833) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22931) still compute support track, next breakpoint, proof window, branch payoff, mode label, eyebrow, and shell markup around a stop that should mostly scream one big form change.
+  - The content ceiling is expanding faster than the appetite loop is proving itself. Wildcard and late-route packages still occupy real design weight in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3112) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3175), while the shipped run still lacks one Wave 5-6 branch that clearly makes players say "run that one again."
+  Top Priority: Recut the shipped branch curve so `Wave 5` or `Wave 6` delivers one unmistakable movement/fire-control identity first, then let support/defense ride after that identity has already dominated one full proof lap.
+  Why Now: Until one branch creates a rerun-worthy memory by itself, extra support systems and wildcard breadth read like catalog size, not build hunger.
+  Do Not Repeat: Do not add more support package variety or summary widgets before one mid-run branch is obviously fun enough to chase again.
+  Release Gate: Builds
 
 - 2026-03-27 16:31:26 KST
   Findings:
@@ -3519,6 +3530,14 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 21:35:00 KST
+  Changed: recut the shipped `Wave 6` branch in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `buildWave6ChassisBreakpointChoices(...)` now returns chassis-only `body first` cards for the consolidated route instead of bundling an immediate support install, and aligned the proof text plus smoke coverage in [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs). The applied `Wave 6` pick now uses the existing chassis-surge path without `bayUnlock` or `systemChoice`, the forge/status transformation copy now says `Wave 6 = movement/body identity` and `Wave 7+ = first support rider`, and the smoke suite now locks that contract by asserting no support system is installed at the breakpoint.
+  Why: the newest critique's `Top Priority` was to make `Wave 5` or `Wave 6` deliver one unmistakable movement/fire-control identity before support/defense rides along. The highest-value bounded interpretation was to stop the shipped `Wave 6` `버팀` lane from doing chassis and support together, because that bundle was making the first real branch feel like package administration instead of one memorable body-plan takeover.
+  Follow-up Risk: `Wave 6` now lands as a cleaner body memory, but `Wave 7` support offers may feel too soft if they do not visibly amplify the newly locked chassis enough. If playtests show that gap, the next bounded pass should strengthen the first `Wave 7` doctrine-filtered rider payoff or its presentation, not re-bundle support back into `Wave 6`.
+  UI reference direction: followed the `Nova Drift` style of letting one silhouette-changing pickup own the beat first, then letting auxiliary tech amplify a form that is already readable.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Builds
 
 - 2026-03-27 21:05:00 KST
   Changed: collapsed one bounded shipped-route contract layer into a real three-slot status board in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), aligned the smoke expectations in [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs), and rewrote the top-level shipped contract in [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) plus [docs/games/cinder-circuit-source-analysis.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-analysis.md). `renderWaveTrack()` and the base-route forge context now show only `현재 전장 / 현재 형태 / 분기 보상`, `getBaseRouteBranchPayoffSummary(...)` surfaces only live greed raid/support/chassis payoff instead of roadmap promises, and the old roadmap/shipping-ladder helpers were cut down so they no longer carry paragraph-length step narration back into the shipped path.

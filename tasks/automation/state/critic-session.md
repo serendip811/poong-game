@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `UX/UI`, because the shipped route still explains itself like a roadmap product instead of reading like a fast, replayable action run.
-- Recurring player-facing failure: 12-wave docs, Wave 9+ phrasing, roadmap widgets, and wildcard future labels still leak into the live 8-wave slice and make every pause feel more administrative than exciting.
-- Repeated false solution: trimming copy or restyling cards without deleting roadmap/detail structures from the forge and status view.
+- The most fragile gate is now `Builds`: the shipped route still lacks one Wave 5-6 branch that changes piloting hard enough to create rerun hunger on its own.
+- Recurring player-facing failure: the game keeps bundling chassis/support/payoff explanation together, so the player gets layered systems before one dominant form has fully taken over the arena.
+- Repeated false solution: adding more support packages, wildcard variety, or better card wording before one mid-run branch is viscerally stronger and simpler to read.
 - Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: the useful benchmark is whether the player can understand the current form, the next proof, and the tempting payoff in seconds.
-- Near-term critic pressure should favor consolidation over expansion: align docs to the shipped route, collapse HUD/forge/status language to glanceable hierarchy, and only then judge whether the Wave 5-6 branch payoff is strong enough.
+- Near-term critic pressure should favor consolidation over expansion: keep player-facing UI to glanceable hierarchy, but judge every change by whether one Wave 5-6 branch now produces a memorable movement/fire-control identity worth rerunning.

@@ -7227,18 +7227,21 @@
       ];
     }
     if (choice.type === "utility" && choice.action === "bastion_bay_forge") {
+      const deferredSupport = CONSOLIDATED_12_WAVE_ROUTE && !choice.bayUnlock && !choice.systemChoice;
       return [
         {
           label: "버팀",
           value: choice.chassisTitle || "유틸리티 레이어",
         },
         {
-          label: "보조",
-          value: choice.systemChoice ? choice.systemChoice.title : choice.bayUnlock ? "빈 보조칸" : "후속 보조 선택",
+          label: deferredSupport ? "다음 보조" : "보조",
+          value: choice.systemChoice ? choice.systemChoice.title : choice.bayUnlock ? "빈 보조칸" : "Wave 7 rider",
         },
         {
           label: "효과",
-          value: choice.systemChoice
+          value: deferredSupport
+            ? "차체 리듬 선점"
+            : choice.systemChoice
             ? choice.systemChoice.slotText || choice.systemChoice.title
             : choice.bayUnlock
               ? "방호선 확장"
@@ -7476,13 +7479,13 @@
         CONSOLIDATED_12_WAVE_ROUTE && choice.systemChoice
           ? `${defenseTitle}와 ${supportTitle}를 함께 잠가 Wave 6부터 body/support bracket을 바로 연다.`
           : !choice.bayUnlock && CONSOLIDATED_12_WAVE_ROUTE
-            ? `${defenseTitle}만 먼저 잠가 버티는 선을 굵게 만든다.`
+            ? `${defenseTitle}만 먼저 잠가 Wave 6의 move rhythm과 복귀 각을 통째로 바꾼다.`
             : `${defenseTitle} 위에 ${supportTitle}를 얹어 버티는 선을 먼저 연다.`;
       const proof =
         CONSOLIDATED_12_WAVE_ROUTE && choice.systemChoice
           ? `${supportTitle}가 다음 전투부터 복귀 각과 근접 정리선을 바로 받쳐 Wave 7-8 proof lap까지 같은 bracket을 길게 읽게 만든다.`
           : !choice.bayUnlock && CONSOLIDATED_12_WAVE_ROUTE
-            ? "다음 전투는 새 차체 리듬만 읽는 짧은 proof window가 되고, 첫 보조 rider는 Wave 8 포지에서 한 장만 붙는다."
+            ? "다음 전투는 새 차체 리듬만 읽는 proof window가 되고, 첫 support rider는 Wave 7부터 그 위에 얹힌다."
             : choice.systemChoice
           ? `${supportTitle}가 다음 전투의 생존선과 복귀 각을 바로 다듬는다.`
           : "지금은 빈 보조칸만 열어 두고, 다음 전투에서 숨 쉴 공간부터 확보한다.";
@@ -7494,7 +7497,10 @@
         proof,
         riderLabel: "Support Rider",
         riderNote: "버티는 선을 연 뒤 자동 화력이나 보호막을 얹어 전장을 넓힌다.",
-        accent: `${defenseTitle} · ${supportTitle}`,
+        accent:
+          CONSOLIDATED_12_WAVE_ROUTE && !choice.bayUnlock && !choice.systemChoice
+            ? defenseTitle
+            : `${defenseTitle} · ${supportTitle}`,
       };
     }
     if (choice.type === "utility" && choice.action === "doctrine_chase") {
@@ -8364,7 +8370,7 @@
       ? activeForm
       : (wave3LeapPreview && wave3LeapPreview.weaponChoice.title) || "첫 무기 도약";
     const stageOneDetail = build.bastionDoctrineId
-      ? `${pathLabel}이(가) 현재 주력 실루엣이다. 다음 큰 약속은 Wave 6 차체 잠금이며, 교리 선호 support 한 줄이 함께 붙어 mid-run bracket을 바로 연다.`
+      ? `${pathLabel}이(가) 현재 주력 실루엣이다. 다음 큰 약속은 Wave 6 차체 잠금이며, support rider는 이 몸체가 한 번 전장을 먹은 뒤에 따라온다.`
       : wave3LeapPreview
         ? `Wave ${ARCHITECTURE_DRAFT_WAVE}에서 ${wave3LeapPreview.weaponChoice.title}을(를) 먼저 붙여 첫 주포 도약을 만든다. support나 운영 패키지는 숨기고 이 무기 변화만 먼저 전장에 남긴다.`
         : `Wave ${ARCHITECTURE_DRAFT_WAVE}에서 첫 주포 도약을 붙여 빈 선체 구간을 끝낸다.`;
@@ -8378,13 +8384,13 @@
       (previewChassis && (previewChassis.label || previewChassis.title)) ||
       "첫 차체 잠금";
     let stageTwoDetail =
-      "Wave 6에서 차체 하나를 잠그며 교리 선호 support 한 줄도 함께 직결한다. 그 뒤 Wave 7-8은 같은 body/support bracket을 길게 증명하는 domination window가 된다.";
+      "Wave 6에서는 차체 하나만 먼저 잠가 dive, hold, exit 리듬부터 갈라지게 만든다. support rider는 그 새 몸체가 한 랩을 먹은 뒤 Wave 7-8에서 따라붙는다.";
     let stageTwoState = "planned";
     if (activeChassis) {
-      stageTwoDetail = `${stageTwoTitle} 차체가 잠겼다. 이제 몸체 리듬 위에 교리 선호 support까지 함께 올라와 Wave 7-8 proof lap에서 같은 bracket을 계속 밀어붙인다.`;
+      stageTwoDetail = `${stageTwoTitle} 차체가 잠겼다. 이제 이 몸체 리듬 하나로 먼저 전장을 먹고, support rider는 Wave 7-8 proof lap에서 뒤따라 붙는다.`;
       stageTwoState = "locked";
     } else if (boundedWave >= 5) {
-      stageTwoDetail = `${stageTwoTitle}이(가) 다음 큰 약속이다. Wave 6에서는 차체와 교리 선호 support 한 줄을 함께 잠가 mid-run bracket을 바로 연다.`;
+      stageTwoDetail = `${stageTwoTitle}이(가) 다음 큰 약속이다. Wave 6에서는 차체 하나만 먼저 잠가 mid-run identity를 또렷하게 세운다.`;
       stageTwoState = "primed";
     }
     const baseRouteFinale = getBaseRouteFinaleRoadmap(build, currentWeapon, boundedWave);
@@ -8608,8 +8614,8 @@
         title: chassis ? chassis.label : "방호 약속",
         state: stageState(6),
         detail: chassis
-          ? `${chassis.label} 차체가 첫 방호 약속으로 잠긴다. 여기서 dive, hold, exit 리듬이 몸체 선택에 따라 갈라지고 교리 선호 support가 함께 붙어 Wave 7-8 proof lap까지 같은 bracket을 민다.`
-          : "Wave 6에서 몸체 하나와 교리 선호 support 한 줄을 함께 골라 버티는 선을 만든다. 이후 Wave 7-8은 그 bracket을 길게 증명하는 구간이 된다.",
+          ? `${chassis.label} 차체가 첫 방호 약속으로 잠긴다. 여기서 dive, hold, exit 리듬이 몸체 선택에 따라 갈라지고 support rider는 그다음 proof lap에서 올라탄다.`
+          : "Wave 6에서는 몸체 하나만 먼저 골라 버티는 선을 만든다. 이후 Wave 7-8이 그 몸체 위에 support rider를 얹는 첫 proof 구간이 된다.",
       },
     ];
   }
@@ -14136,25 +14142,22 @@
     pushChoice(wildcardChoices[0]);
     [...doctrineChoices.slice(1), ...wildcardChoices.slice(1)].forEach(pushChoice);
     if (CONSOLIDATED_12_WAVE_ROUTE) {
-      const bundledSystemChoice = ordered[0] || null;
       return Object.values(CHASSIS_BREAKPOINT_DEFS).map((chassisDef) => {
         return {
           type: "utility",
           action: "bastion_bay_forge",
-          id: `utility:bastion_chassis_break:${chassisDef.id}:${bundledSystemChoice ? bundledSystemChoice.systemId : "midrun_hold"}`,
+          id: `utility:bastion_chassis_break:${chassisDef.id}:body_only`,
           verb: "접합",
           tag: chassisDef.tag,
           title: chassisDef.title,
-          description: `${chassisDef.description} 이번 정지에서는 차체 리듬을 먼저 잠그고${bundledSystemChoice ? ` 교리 선호 ${bundledSystemChoice.title}을(를) 함께 직결해 Wave 6부터 바로 support silhouette를 켠다.` : " 작은 support silhouette 한 줄만 함께 켠다."} 이후 Wave 7-8은 새 body/support bracket을 같은 전장에서 길게 증명하는 domination window가 된다.`,
-          slotText: `섀시 breakpoint · ${chassisDef.slotText}${bundledSystemChoice ? ` · ${bundledSystemChoice.title}` : " · mid-run support"}`,
-          cost: Math.max(10, Math.round(((bundledSystemChoice && bundledSystemChoice.cost) || 0) * 0.55)),
-          originalCost: (bundledSystemChoice && bundledSystemChoice.cost) || 0,
+          description: `${chassisDef.description} 이번 정지에서는 이 차체 리듬만 먼저 잠가 Wave 6 전장을 몸체 기억으로 먹게 만든다. support rider는 한 랩 뒤 Wave 7부터 붙어 새 움직임 위에만 얹힌다.`,
+          slotText: `섀시 breakpoint · ${chassisDef.slotText} · body first`,
+          cost: 0,
+          originalCost: 0,
           laneLabel: "섀시 breakpoint",
           forgeLaneLabel: "섀시 breakpoint",
-          bayUnlock: true,
           chassisId: chassisDef.id,
           chassisTitle: chassisDef.title,
-          systemChoice: bundledSystemChoice,
         };
       });
     }
