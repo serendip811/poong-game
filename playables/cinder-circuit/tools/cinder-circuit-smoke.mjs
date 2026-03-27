@@ -344,6 +344,37 @@ const aegisLiveStatus = game.getLiveSideBetSummary({
 assert.equal(aegisLiveStatus?.label, "방호 고리");
 assert.equal(aegisLiveStatus?.status, "1기 전개");
 assert.ok(aegisLiveStatus?.note.includes("방호 파동"));
+const aegisProofBuild = game.createInitialBuild("rail_zeal");
+aegisProofBuild.chassisId = "vector_thrusters";
+aegisProofBuild.supportSystems = [{ id: "aegis_halo", tier: 1 }];
+const aegisWave6Config = game.resolveWaveConfig(5, aegisProofBuild);
+assert.equal(aegisWave6Config.supportProof?.label, "Halo Scissor");
+assert.equal(aegisWave6Config.supportProof?.status, "bullet seam breach");
+assert.ok(aegisWave6Config.directive.includes("Halo가 자른 탄선 틈"));
+assert.ok((aegisWave6Config.mix.shrike || 0) >= 0.2);
+assert.ok((aegisWave6Config.mix.lancer || 0) >= 0.14);
+const aegisWave7Config = game.resolveWaveConfig(6, aegisProofBuild);
+assert.equal(aegisWave7Config.supportProof?.label, "Halo Re-entry");
+assert.equal(aegisWave7Config.supportProof?.status, "tight pocket re-entry");
+assert.ok(aegisWave7Config.directive.includes("재진입 seam"));
+assert.ok((aegisWave7Config.mix.shrike || 0) >= 0.22);
+assert.ok((aegisWave7Config.mix.brander || 0) >= 0.06);
+const aegisWave8Config = game.resolveWaveConfig(7, aegisProofBuild);
+assert.equal(aegisWave8Config.supportProof?.label, "Halo Bastion");
+assert.equal(aegisWave8Config.supportProof?.status, "overclock pocket hold");
+assert.ok(aegisWave8Config.directive.includes("pocket hold"));
+assert.ok((aegisWave8Config.mix.warden || 0) >= 0.12);
+const aegisProofLiveStatus = game.getLiveSideBetSummary({
+  build: aegisProofBuild,
+  waveIndex: 7,
+  phase: "wave",
+  wave: aegisWave8Config,
+  catalystCrucible: { active: false },
+  overcommit: { active: false },
+  doctrinePursuit: { active: false },
+});
+assert.equal(aegisProofLiveStatus?.label, "Halo Bastion");
+assert.equal(aegisProofLiveStatus?.status, "overclock pocket hold");
 const kilnProofBuild = game.createInitialBuild("scrap_pact");
 kilnProofBuild.chassisId = "bulwark_treads";
 kilnProofBuild.supportSystems = [{ id: "kiln_sentry", tier: 1 }];

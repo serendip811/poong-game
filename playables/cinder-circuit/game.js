@@ -14485,7 +14485,7 @@
       !build ||
       !Number.isFinite(waveNumber) ||
       waveNumber < 6 ||
-      waveNumber > 7
+      waveNumber > 8
     ) {
       return config;
     }
@@ -14501,6 +14501,111 @@
       mix: { ...(config.mix || {}) },
       supportProof: config.supportProof ? { ...config.supportProof } : null,
     };
+    if (primarySupport.id === "aegis_halo") {
+      nextConfig.mix = blendEnemyMix(
+        nextConfig.mix,
+        waveNumber === 6
+          ? {
+              shrike: 0.24,
+              skimmer: 0.18,
+              lancer: 0.16,
+              warden: 0.08,
+            }
+          : waveNumber === 7
+            ? {
+                shrike: 0.24,
+                skimmer: 0.14,
+                lancer: 0.16,
+                brander: 0.14,
+                warden: 0.1,
+              }
+            : {
+                shrike: 0.18,
+                skimmer: 0.16,
+                lancer: 0.18,
+                warden: 0.18,
+                brander: 0.08,
+              },
+        waveNumber === 8 ? 0.24 : 0.22
+      );
+      nextConfig.driveGainFactor = Math.max(
+        nextConfig.driveGainFactor || 1,
+        waveNumber === 8 ? 1.38 : waveNumber === 7 ? 1.34 : 1.3
+      );
+      nextConfig.activeCap = Math.max(
+        16,
+        (nextConfig.activeCap || 17) - (waveNumber === 8 ? 1 : 2)
+      );
+      nextConfig.arena = {
+        width: Math.max(waveNumber === 8 ? 1800 : 1700, nextConfig.arena?.width || 0),
+        height: Math.max(waveNumber === 8 ? 1010 : 960, nextConfig.arena?.height || 0),
+      };
+      if (nextConfig.hazard) {
+        if (Number.isFinite(nextConfig.hazard.interval)) {
+          nextConfig.hazard.interval =
+            nextConfig.hazard.interval * (waveNumber === 8 ? 0.96 : 0.92);
+        }
+        if (Number.isFinite(nextConfig.hazard.telegraph)) {
+          nextConfig.hazard.telegraph =
+            nextConfig.hazard.telegraph * (waveNumber === 8 ? 0.94 : 0.9);
+        }
+        if (Number.isFinite(nextConfig.hazard.duration)) {
+          nextConfig.hazard.duration += waveNumber === 8 ? 0.4 : 0.2;
+        }
+        if (Number.isFinite(nextConfig.hazard.relayRange)) {
+          nextConfig.hazard.relayRange = Math.max(344, nextConfig.hazard.relayRange - 72);
+        }
+        if (Number.isFinite(nextConfig.hazard.relayWidth)) {
+          nextConfig.hazard.relayWidth += 6;
+        }
+        if (Number.isFinite(nextConfig.hazard.driftSpeed)) {
+          nextConfig.hazard.driftSpeed += 10;
+        }
+        if (Number.isFinite(nextConfig.hazard.driftOrbit)) {
+          nextConfig.hazard.driftOrbit += 0.04;
+        }
+        if (Number.isFinite(nextConfig.hazard.turretInterval)) {
+          nextConfig.hazard.turretInterval = Math.max(0.72, nextConfig.hazard.turretInterval - 0.12);
+        }
+        if (Number.isFinite(nextConfig.hazard.enemyPullRadius)) {
+          nextConfig.hazard.enemyPullRadius += 14;
+        }
+      }
+      nextConfig.note =
+        waveNumber === 6
+          ? `${config.note} Aegis Halo proof가 relay breach를 탄막 절개 진입으로 바꿔, shrike와 lancer가 엮은 탄선을 먼저 가르고 고리 안쪽 seam으로 다시 파고드는지 묻는다.`
+          : waveNumber === 7
+            ? `${config.note} Aegis Halo proof가 drift pocket을 넓게 도는 회피전이 아니라 좁은 재진입 시험으로 바꿔, brander와 shrike가 남긴 교차선 사이를 고리 절개 틈으로 다시 접게 만든다.`
+            : `${config.note} Aegis Halo overclock payoff가 마지막 pocket hold를 이동식 방호진 결산으로 바꿔, wardens와 turret fire를 끊으며 열린 pocket 하나를 더 오래 붙들게 만든다.`;
+      nextConfig.directive =
+        waveNumber === 6
+          ? "첫 relay를 정면으로 길게 돌지 말고, Halo가 자른 탄선 틈으로 짧게 찢어 들어간다. shrike와 lancer를 먼저 끊고 같은 seam으로 바로 재진입해 corridor를 붙든다."
+          : waveNumber === 7
+            ? "drift 바깥을 오래 돌지 말고, Halo가 비운 틈으로 안쪽 pocket에 짧게 다시 꽂힌다. brander 화선이 열리기 전에 재진입 seam을 두 번 연속 쓰는 편이 맞다."
+            : "열린 pocket 하나만 정하고 Halo 파동으로 turret fire와 wardens를 같이 끊는다. 멀리 도망치기보다 절개된 안쪽 seam을 계속 재사용해 pocket hold 시간을 늘린다.";
+      nextConfig.supportProof =
+        waveNumber === 6
+          ? {
+              label: "Halo Scissor",
+              status: "bullet seam breach",
+              note:
+                "방호 고리가 shrike/lancer 탄선을 자른 틈으로 진입해야 한다. 넓게 돌기보다 같은 seam으로 두 번 들어가는지가 핵심이다.",
+            }
+          : waveNumber === 7
+            ? {
+                label: "Halo Re-entry",
+                status: "tight pocket re-entry",
+                note:
+                  "drift가 밀어낸 pocket을 버리지 말고 절개된 틈으로 바로 되찾아야 한다. 재진입 각이 곧 생존선이다.",
+                }
+            : {
+                label: "Halo Bastion",
+                status: "overclock pocket hold",
+                note:
+                  "강화된 방호 파동으로 turret fire와 wardens를 같이 잘라야 pocket이 열린다. 같은 pocket을 오래 붙들수록 overclock payoff가 선명해진다.",
+              };
+      return nextConfig;
+    }
     if (primarySupport.id === "kiln_sentry") {
       nextConfig.mix = blendEnemyMix(
         nextConfig.mix,
@@ -17245,6 +17350,13 @@
       currentState && typeof currentState.waveIndex === "number"
         ? clamp(currentState.waveIndex + 1, 1, DEFAULT_ROUTE_WAVE_COUNT)
         : 1;
+    if (currentState.phase === "wave" && currentState.wave && currentState.wave.supportProof) {
+      return {
+        label: currentState.wave.supportProof.label,
+        status: currentState.wave.supportProof.status,
+        note: currentState.wave.supportProof.note,
+      };
+    }
     const supportSpotlight =
       CONSOLIDATED_12_WAVE_ROUTE &&
       liveWaveNumber >= 5 &&
@@ -17326,13 +17438,6 @@
         note: combatCache.deployed
           ? "현장 cache 하나를 집으면 다음 웨이브가 포지 정지 없이 직결된다."
           : "이번 웨이브 첫 elite가 live cache를 떨어뜨린다.",
-      };
-    }
-    if (currentState.phase === "wave" && currentState.wave && currentState.wave.supportProof) {
-      return {
-        label: currentState.wave.supportProof.label,
-        status: currentState.wave.supportProof.status,
-        note: currentState.wave.supportProof.note,
       };
     }
     if (currentState.phase === "wave" && currentState.wave && currentState.wave.chassisProof) {

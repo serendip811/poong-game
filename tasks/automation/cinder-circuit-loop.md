@@ -62,6 +62,17 @@ This file is shared by two recurring Codex CLI jobs.
 
 ## Latest Critique
 
+- 2026-03-28 06:45:00 KST
+  Findings:
+  - `RECURRING_COMBAT_CELL_DEFS.support_lap` and `support_proof` are still shared `Claim Space` tests, so Aegis Halo, Kiln Sentry, Seeker Array, and Volt Drones mostly read as different card copy wrapped around the same midrun ask.
+  - The support catalog promises stronger rerun identities than the shipped proof loop delivers. Halo should teach bullet-cutting and tighter re-entry, Sentry should teach anchor rotation, Missile should teach outer-lane deletion, and Drones should teach rear-screening; right now Wave 6-8 still collapses them into one generic lane-ownership lesson.
+  - Forge and pause/status framing still spend too much space on route-contract explanation (`현재 형태`, `다음 증명`, `현재 약속`) instead of one obvious installed object plus one immediate threat line. Compared with strong arena roguelite reward screens, this still makes the player read the run more than feel it.
+  - The escalation beat is also too flat for a future `20-30` wave spine. Support installs arrive with Mk-tier fantasy in the data, but the shipped `Wave 6 -> Wave 8` cadence does not stage a small first habit change followed by a visibly bigger overclock payoff.
+  Top Priority: Replace the shared Wave 6-8 support proof cells with four support-specific proof scripts, each with one unique arena question and one Wave 8 overclock payoff, then reduce forge/status framing to a single installed-object headline plus one immediate threat line.
+  Why Now: Midrun identity is finally online, so the next failure is sameness and over-explanation rather than timing.
+  Do Not Repeat: Do not answer this with more support definitions, more Mk labels, or more roadmap prose while Halo/Sentry/Missile/Drone still pass through the same proof ladder.
+  Release Gate: Balance
+
 - 2026-03-28 06:20:00 KST
   Findings:
   - The old runway complaint is partly fixed in code, but the shipped contract has not caught up. `buildWave6ChassisBreakpointChoices(...)` now locks chassis and a support system together for `Wave 6-7 proof lap`, while the shipped ladder text still says support rider only comes online in `Wave 7-8`. That means the game is teaching the player the wrong growth curve right when anticipation should sharpen. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L14995) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8958)
@@ -3796,6 +3807,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-28 07:05:00 KST
+  Changed: split the shipped `Aegis Halo` midrun proof band in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) away from the shared `Claim Space` ladder so an installed halo now drives its own `Wave 6-8` encounter script: `Halo Scissor` on `Wave 6` teaches bullet-lane cutting through a tighter relay seam, `Halo Re-entry` on `Wave 7` turns drift into a narrow re-entry test instead of a wide orbit, and `Halo Bastion` on `Wave 8` overclocks the pocket hold with heavier turret/warden pressure. I also moved live combat status priority so active `supportProof` labels surface before the generic installed-support spotlight, and updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock all three Halo proof beats plus the overclock readout.
+  Why: the latest critique's `Top Priority` said `Wave 6-8` support installs still collapsed into one generic proof ladder, and called out Halo specifically as needing a bullet-cutting / tighter re-entry lesson with a Wave 8 payoff. The highest-value bounded interpretation was to deepen one already-shipped support family end-to-end instead of adding more catalog breadth, because that directly improves rerun identity and midrun combat asks inside the current slice.
+  Follow-up Risk: `Kiln Sentry` and `Aegis Halo` now have real proof identities, but `Seeker Array` and `Volt Drones` still do not. If the next critique still says support reruns feel too samey, the next bounded balance pass should give missile and drone installs their own `Wave 6-8` proof ladders before adding any new support family or more route copy.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Balance
 
 - 2026-03-28 06:20:00 KST
   Changed: recut the shipped `Wave 6` chassis breakpoint in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so consolidated `bastion_bay_forge` cards now bundle one doctrine-preferred live `systemChoice` with the chassis lock instead of staying `차체 하나만`. Every forecasted/adopted Wave 6 chassis pick now opens the second bay immediately, installs a real support identity such as `Seeker Array`/`Kiln Sentry` on pick, still triggers the chassis proof surge, and preserves the `Wave 8` late bay unlock. The follow-up `Wave 7` field grant can now prove that branch with a tier-up on the installed system instead of leaving support to the finale. Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new Wave 6 install, the retained chassis surge, and the Wave 7 tier-up proof window.
