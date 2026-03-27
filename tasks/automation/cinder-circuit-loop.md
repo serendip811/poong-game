@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop widening the shipped `8-wave` run and recut it around one memorable weapon arc, one chassis/defense commitment, and one greed fork before more support-track or late-route branches are allowed to compete for attention.
+- Immediate priority: make the shipped `8-wave` route honest and singular by centering one weapon arc, one chassis/defense commitment, and one greed fork while removing `Wave 9+` / late-branch promises from the live contract until the base run earns expansion.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 11:18:00 KST
+  Findings:
+  - The project target is still split between the playable run and the advertised run. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) and [docs/games/cinder-circuit-source-analysis.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-analysis.md) still define success as a `12-wave / three-era` ladder, so the shipped `8-wave` route is being judged against a fantasy it cannot currently deliver.
+  - The live forge contract still points the player at absent payoff. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) `getLateBreakCadenceSummary()`, `getForgeEraPlan()`, and `renderForgeOverlay()` still keep `Wave 9-12`, `Act 3`, `Crown Break`, and `12-wave spine` language active, which turns anticipation into roadmap-reading instead of making the next live spike feel urgent.
+  - The shipped path still carries too many side bets for its length. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still maintains wildcard protocols, doctrine pursuit, catalyst/late-break ladders, and late ascension wrappers around the `8-wave` route, so the run keeps offering medium-scope futures instead of one rerun-driving transformation chase.
+  - The early growth curve is still being weakened at the system layer. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) `BASE_BUILD`, `getForgeSupportTrackSnapshot()`, and the doctrine scaffolding still frame support bays and downstream rider rails as part of the default build grammar, which blunts the release-feeling contrast between a bare opening hull and a later earned helper/shield/orbit spike.
+  Top Priority: Recut the shipped route into an honest `8-wave` progression contract by removing `Wave 9+` promise language from docs, forge, and combat feed, and by freezing wildcard/doctrine/catalyst late-branch systems out of the live path until one weapon spike, one chassis/defense spike, and one greed bend carry reruns on their own.
+  Why Now: A run cannot create real build hunger if its reward language keeps pointing outside the playable arc.
+  Do Not Repeat: Do not answer this by shortening wording while `Act 3`, `Late Break`, doctrine pursuit, and other future-route hooks still occupy the shipped loop.
+  Release Gate: Progression
 
 - 2026-03-27 10:00:58 KST
   Findings:
@@ -3376,6 +3387,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 12:05:00 KST
+  Changed: removed one bounded layer of fake late-route promise from the shipped base-route helpers in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and refreshed the matching smoke expectations in [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs). `getBuildRoadmap(...)` and `getForgeEraPlan(...)` now hard-clamp the consolidated route to `Wave 1-8`, the third roadmap step now reads as `완성 시험 -> 짧은 승리 랩` instead of `Crown Break / Wave 9-12`, the era plan now closes on `Wave 8 + Lap`, and the base-route forge/combat feed no longer tells the player that `Wave 8` opens a `Wave 9-12` proof band or `12-wave spine`.
+  Why: the newest critique's `Top Priority` was to make the shipped route an honest `8-wave` contract, and the highest-value concrete interpretation still open inside the allowed files was the helper text the forge/HUD/feed were reusing. Even after earlier UI cleanup, those summaries were still pointing at an absent late arc, which turned anticipation into roadmap-reading instead of making the live `Wave 8` finish feel final.
+  Follow-up risk: the live route language is now more honest inside `playables/cinder-circuit/`, but the critique also called out stale docs and some deeper late-branch scaffolding. If the next pass stays on progression honesty, it should either scrub the remaining docs or cut more dormant late-branch wrappers from the shipped path rather than rewording these helpers again.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Progression
 
 - 2026-03-27 10:16:45 KST
   Changed: narrowed one bounded slice of the shipped forge economy in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the live `Wave 1-8` route now fails closed harder to three rerun-driving lanes only. Early base-route `headline` picks are now filtered down to visible weapon mutations instead of doctrine/forecast/core/recipe sidegrades, `preview_support` no longer appears before `Wave 7`, and the `gamble` lane now excludes `reforge`/`affix_reforge` so `Wave 5` reads as an actual greed-or-utility bend instead of bench admin. The same pass also collapses the shipped support snapshot away from `Bay Package / Wildcard Rail / Catalyst` labeling and back onto plain chassis or the currently installed support identity. [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks the new `Wave 5` contract, the absence of early support preview/reforge drift, and the cleaner support-track label.

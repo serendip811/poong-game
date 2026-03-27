@@ -8269,11 +8269,41 @@
     };
   }
 
+  function getBaseRouteFinaleRoadmap(build, currentWeapon, boundedWave) {
+    const doctrineBodyForm = getDoctrineBodyForm(build);
+    const dominantFormLabel = doctrineBodyForm
+      ? `${getPresentationHeadlineLabel(currentWeapon, boundedWave) || currentWeapon.doctrineFormLabel || currentWeapon.evolutionLabel || CORE_DEFS[build.coreId].label} / ${doctrineBodyForm.label}`
+      : getPresentationHeadlineLabel(currentWeapon, boundedWave) ||
+        currentWeapon.doctrineFormLabel ||
+        currentWeapon.evolutionLabel ||
+        CORE_DEFS[build.coreId].label;
+    const finalTitle = boundedWave >= DEFAULT_ROUTE_WAVE_COUNT ? "짧은 승리 랩" : "완성 시험";
+    if (boundedWave >= DEFAULT_ROUTE_WAVE_COUNT) {
+      return {
+        title: finalTitle,
+        detail: `${dominantFormLabel}이(가) 런의 마지막 실루엣으로 잠겼다. 남은 건 새 갈림길이 아니라 Wave 8 proof 뒤 짧은 승리 랩에서 이 형태가 lane을 얼마나 넓게 쓸어 담는지 직접 누르는 일뿐이다.`,
+        state: "live",
+      };
+    }
+    if (boundedWave >= DEFAULT_ROUTE_WAVE_COUNT - 1) {
+      return {
+        title: finalTitle,
+        detail: `다음 정지는 새 시대 예고가 아니라 완성 시험이다. Wave 8에서 잠긴 gun/body line을 바로 증명하고, 끝나면 짧은 승리 랩 하나로 이번 실루엣을 더 오래 몰아본다.`,
+        state: "primed",
+      };
+    }
+    return {
+      title: finalTitle,
+      detail: "첫 무기 도약과 차체 잠금을 지나면 남는 약속은 하나다. Wave 8에서 잠긴 실루엣을 증명하고, 결과 직전 짧은 승리 랩으로 sweep 폭을 직접 누른다.",
+      state: "planned",
+    };
+  }
+
   function getBuildRoadmap(build, weapon = null, waveNumber = 1) {
     const boundedWave = clamp(
       Math.round(waveNumber || 1),
       1,
-      CONSOLIDATED_12_WAVE_ROUTE ? MAX_WAVES : MAX_WAVES + POST_CAPSTONE_WAVE_COUNT
+      CONSOLIDATED_12_WAVE_ROUTE ? DEFAULT_ROUTE_WAVE_COUNT : MAX_WAVES + POST_CAPSTONE_WAVE_COUNT
     );
     const doctrine = getBastionDoctrineDef(build);
     const pursuit = getDoctrineForgePursuitDef(doctrine || build);
@@ -8343,29 +8373,26 @@
 
     let stageThreeTitle =
       (CONSOLIDATED_12_WAVE_ROUTE
-        ? (currentWeapon && currentWeapon.lateAscensionLabel) || null
+        ? null
         : (currentWeapon && currentWeapon.afterburnDominionLabel) ||
           (currentWeapon && currentWeapon.afterburnOverdriveLabel) ||
           (currentWeapon && currentWeapon.lateAscensionLabel) ||
           null) ||
       (lateBreakHeadline && lateBreakHeadline.title) ||
-      "Crown Break";
+      (CONSOLIDATED_12_WAVE_ROUTE ? "완성 시험" : "Crown Break");
     let stageThreeDetail = lateBreakHeadline
       ? CONSOLIDATED_12_WAVE_ROUTE
-        ? `${lateBreakHeadline.detail} Wave 9-12는 이 late staircase 하나만 증명하는 고정 finale다.`
+        ? "Wave 8 proof와 짧은 승리 랩만 남는다. 새 예외 분기는 닫고, 지금까지 잠근 실루엣을 바로 오래 증명한다."
         : `${lateBreakHeadline.detail} Wave 8 이후에는 이 계단 하나만 남고 live ascension이나 Afterburn 예외는 열리지 않는다.`
-      : "Wave 8 Late Break Armory에서 하나의 late-form staircase를 고르면 Wave 9-10 payoff band -> Wave 11 refuge run -> Wave 12 finale로 고정된다.";
+      : CONSOLIDATED_12_WAVE_ROUTE
+        ? "Wave 8 proof와 짧은 승리 랩만 남는다. 새 시대 예고 없이 잠긴 gun/body line을 끝까지 눌러 본다."
+        : "Wave 8 Late Break Armory에서 하나의 late-form staircase를 고르면 Wave 9-10 payoff band -> Wave 11 refuge run -> Wave 12 finale로 고정된다.";
     let stageThreeState = boundedWave >= LATE_BREAK_ARMORY_WAVE ? "primed" : "planned";
     if (CONSOLIDATED_12_WAVE_ROUTE) {
-      const shippingLateFinale = getShippingRouteLateFinaleRoadmap(
-        build,
-        currentWeapon,
-        lateBreakHeadline,
-        boundedWave
-      );
-      stageThreeTitle = shippingLateFinale.title;
-      stageThreeDetail = shippingLateFinale.detail;
-      stageThreeState = shippingLateFinale.state;
+      const baseRouteFinale = getBaseRouteFinaleRoadmap(build, currentWeapon, boundedWave);
+      stageThreeTitle = baseRouteFinale.title;
+      stageThreeDetail = baseRouteFinale.detail;
+      stageThreeState = baseRouteFinale.state;
     } else if (build.afterburnDominionId) {
       stageThreeDetail = `${stageThreeTitle}이(가) 이미 최종 지배 형태로 잠겼다. 남은 bracket은 판돈보다 압도감이 먼저 오는 victory lap이다.`;
       stageThreeState = "locked";
@@ -8946,7 +8973,11 @@
   }
 
   function getForgeEraPlan(build, weapon = null, supportSystem = null, waveNumber = 1) {
-    const boundedWave = clamp(Math.round(waveNumber || 1), 1, MAX_WAVES + POST_CAPSTONE_WAVE_COUNT);
+    const boundedWave = clamp(
+      Math.round(waveNumber || 1),
+      1,
+      CONSOLIDATED_12_WAVE_ROUTE ? DEFAULT_ROUTE_WAVE_COUNT : MAX_WAVES + POST_CAPSTONE_WAVE_COUNT
+    );
     const currentWeapon = weapon || computeWeaponStats(build);
     const roadmap = getBuildRoadmap(build, currentWeapon, boundedWave);
     const doctrine = getBastionDoctrineDef(build);
@@ -8982,15 +9013,6 @@
         detail: resolvedWave.directive || resolvedWave.note || fallbackDetail,
       };
     };
-    const getEraState = (start, end) => {
-      if (boundedWave > end) {
-        return "locked";
-      }
-      if (boundedWave >= start) {
-        return "live";
-      }
-      return boundedWave + 1 >= start ? "primed" : "planned";
-    };
     const eraOneProof = getEraProofWindow(
       4,
       "First Proof Window",
@@ -9001,6 +9023,71 @@
       "Act II Proof Window",
       "Wave 5-6의 이어진 open-lane payoff에서 headline midform이 공간 점유를 얼마나 길게 끌고 가는지 확인한다."
     );
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
+      const dominantForm = getDominantFormSummary(build, currentWeapon, boundedWave);
+      const finalProof = getEraProofWindow(
+        8,
+        "Wave 8 Proof",
+        "Wave 8에서 잠긴 gun/body line이 마지막 압박을 밀어내고, 이어지는 짧은 승리 랩까지 sweep 폭을 유지하는지 본다."
+      );
+      const getEraState = (start, end = start) => {
+        if (boundedWave > end) {
+          return "locked";
+        }
+        if (boundedWave >= start) {
+          return "live";
+        }
+        return boundedWave + 1 >= start ? "primed" : "planned";
+      };
+      return [
+        {
+          label: "Era I",
+          title: "Ignition Frame",
+          waveLabel: "Wave 1-4",
+          state: getEraState(1, 4),
+          primaryLabel: primaryOpenLabel,
+          primaryDetail: roadmap.steps[0] ? roadmap.steps[0].detail : "첫 변신 실루엣을 잠그는 구간.",
+          secondaryLabel: supportTrack.label,
+          secondaryDetail: ignitionSupportDetail,
+          proofLabel: eraOneProof.label,
+          proofDetail: eraOneProof.detail,
+        },
+        {
+          label: "Era II",
+          title: "Bastion Lock",
+          waveLabel: "Wave 5-7",
+          state: getEraState(5, 7),
+          primaryLabel: primaryBreakLabel,
+          primaryDetail: roadmap.steps[1] ? roadmap.steps[1].detail : "중반 break를 앞당겨 doctrine form을 전장에 고정한다.",
+          secondaryLabel: supportTrack.label,
+          secondaryDetail: siegeSupportDetail,
+          proofLabel: eraTwoProof.label,
+          proofDetail: eraTwoProof.detail,
+        },
+        {
+          label: "Finale",
+          title: "Wave 8 Proof",
+          waveLabel: "Wave 8 + Lap",
+          state: boundedWave >= 8 ? "live" : boundedWave >= 7 ? "primed" : "planned",
+          primaryLabel: dominantForm.label,
+          primaryDetail:
+            roadmap.steps[2] ? roadmap.steps[2].detail : "잠긴 body/gun line을 Wave 8 proof와 짧은 승리 랩으로 닫는다.",
+          secondaryLabel: supportTrack.label,
+          secondaryDetail: `${supportTrack.detail} 이 축은 새 갈림길이 아니라 final proof와 짧은 승리 랩에서 주력 실루엣을 받쳐 주는 rider로만 남는다.`,
+          proofLabel: finalProof.label,
+          proofDetail: finalProof.detail,
+        },
+      ];
+    }
+    const getEraState = (start, end) => {
+      if (boundedWave > end) {
+        return "locked";
+      }
+      if (boundedWave >= start) {
+        return "live";
+      }
+      return boundedWave + 1 >= start ? "primed" : "planned";
+    };
     const eraThreeProof = getEraProofWindow(
       9,
       "Act III Proof Window",
@@ -9104,10 +9191,14 @@
     const act = getPlayerFacingActLabelForWave(clamp(Math.round(waveNumber || 1), 1, MAX_WAVES));
     return `
       <div class="summary-head">
-        <strong>12-Wave Contract</strong>
+        <strong>${CONSOLIDATED_12_WAVE_ROUTE ? "8-Wave Contract" : "12-Wave Contract"}</strong>
         <span class="summary-chip ${currentEra.state === "live" ? "summary-chip--hot" : ""}">${act.shortLabel}</span>
       </div>
-      <p class="summary-copy roadmap-card__path">세 시대 모두 form 하나, rider 하나, proof 하나만 먼저 판다.</p>
+      <p class="summary-copy roadmap-card__path">${
+        CONSOLIDATED_12_WAVE_ROUTE
+          ? "기본 런은 Wave 8 proof와 짧은 승리 랩까지 한 실루엣만 판다."
+          : "세 시대 모두 form 하나, rider 하나, proof 하나만 먼저 판다."
+      }</p>
       <div class="status-list">
         ${eras
           .map(
@@ -17842,7 +17933,7 @@
           : "최종 웨이브 정리 완료. 마지막 포지에서 최종 각인과 7연속 afterburn survival ladder의 시작 형태를 마감한다."
         : isLateBreakArmory(forgeOptions)
           ? CONSOLIDATED_12_WAVE_ROUTE
-            ? "Wave 8 돌파. 이번 정지는 런의 마지막 큰 형태 하나를 고른다. Wave 9-12는 새 관리 단계 없이 그 형태를 끝까지 증명하는 구간이다."
+            ? "Wave 8 돌파. 이번 정지는 런의 마지막 큰 잠금 하나를 고른다. 새 시대 예고 없이 이 형태를 바로 증명하고, 끝나면 짧은 승리 랩 하나만 더 몰아본다."
             : state.build.auxiliaryJunctionLevel > 0
               ? "Wave 8 돌파. Late Break Armory를 단일 breakpoint로 재절단했다. 이제 정확히 세 장만 뜨며, Cataclysm Arsenal, Warplate Halo, Black Ledger Heist 중 하나를 고르면 Wave 9-10은 payoff band, Wave 11은 그 선택 전용 proof, Wave 12는 최종 finale로 꺾인다."
               : "Wave 8 돌파. Late Break Armory를 단일 breakpoint로 재절단했다. 이제 정확히 세 장만 뜨며, Cataclysm Arsenal, Warplate Halo, Black Ledger Heist 중 하나를 고르면 Wave 9-10은 payoff band, Wave 11은 그 선택 전용 proof, Wave 12는 최종 finale로 꺾인다."
@@ -22252,12 +22343,12 @@
           pushCombatFeed(
             unlocked
               ? CONSOLIDATED_12_WAVE_ROUTE
-                ? "주력 변이를 전장에 바로 고정했다. 이번 정지 없이 다음 웨이브로 밀어붙이고, 남은 실루엣 증명은 전투 안에서 바로 치른다."
+                ? "주력 변이를 전장에 바로 고정했다. 이번 정지 없이 다음 시험으로 밀어붙이고, 남은 실루엣 증명은 전투 안에서 바로 치른다."
                 : state.build.auxiliaryJunctionLevel > 0
                   ? `Wave 8 돌파. Late Break Armory를 ${liveLabel} live ascension lane으로 교체했다. 네 번째 support bay와 추가 flex lane은 즉시 uplink되고, Wave 9 marked elite가 doctrine cache를 떨어뜨린다.`
                   : `Wave 8 돌파. Late Break Armory를 ${liveLabel} live ascension lane으로 교체했다. 세 번째 support bay와 교리 우회 flex lane은 즉시 uplink되고, Wave 9 marked elite가 doctrine cache를 떨어뜨린다.`
               : CONSOLIDATED_12_WAVE_ROUTE
-                ? "주력 변이 추격이 열렸다. 정지 없이 Wave 9로 밀어붙이고, 남은 힘은 다음 전투 안에서 직접 끌어낸다."
+                ? "주력 변이 추격이 열렸다. 정지 없이 다음 시험으로 밀어붙이고, 남은 힘은 전투 안에서 직접 끌어낸다."
                 : `Wave 8 돌파. Late Break Armory를 건너뛰고 ${liveLabel} live ascension lane으로 진입한다. Wave 9 marked elite를 추적해 doctrine cache를 직접 회수해야 한다.`,
             "ASCEND"
           );
@@ -22271,12 +22362,12 @@
           pushCombatFeed(
             unlocked
               ? CONSOLIDATED_12_WAVE_ROUTE
-                ? "방호·보조선이 즉시 연결됐다. 정지 없이 Wave 9 보상 구간으로 바로 진입한다."
+                ? "방호·보조선이 즉시 연결됐다. 정지 없이 마지막 proof로 바로 진입한다."
                 : state.build.auxiliaryJunctionLevel > 0
                   ? "Wave 8 돌파. Ownership Relay가 네 번째 support bay와 두 번째 교리 우회 flex lane을 전장 정지 없이 연결한다. Late Break Armory는 건너뛰고 Wave 9로 바로 진입한다."
                   : "Wave 8 돌파. Ownership Relay가 세 번째 support bay와 교리 우회 flex lane을 전장 정지 없이 연결한다. Late Break Armory는 건너뛰고 Wave 9로 바로 진입한다."
               : CONSOLIDATED_12_WAVE_ROUTE
-                ? "정지 없이 Wave 9 보상 구간으로 바로 진입한다."
+                ? "정지 없이 마지막 proof로 바로 진입한다."
                 : "Wave 8 돌파. Late Break Armory를 생략하고 ownership bracket을 유지한 채 Wave 9로 바로 진입한다.",
             "ARMORY"
           );

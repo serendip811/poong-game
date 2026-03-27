@@ -284,7 +284,8 @@ assert.equal(earlyRoadmap.steps[0].title, "Monster Form Lock");
 assert.equal(earlyRoadmap.steps[1].title, "Midform Spike");
 assert.ok(earlyRoadmap.steps[1].detail.includes("Wave 6 몸체 도약"));
 assert.ok(earlyRoadmap.steps[1].detail.includes("weapon/body leap"));
-assert.equal(earlyRoadmap.steps[2].title, "Crown Break");
+assert.equal(earlyRoadmap.steps[2].title, "완성 시험");
+assert.ok(earlyRoadmap.steps[2].detail.includes("Wave 8"));
 assert.ok(!earlyRoadmap.prompt.includes("Lance"));
 assert.ok(!earlyRoadmap.note.includes("Lance"));
 roadmapBuild.bastionDoctrineId = "storm_artillery";
@@ -302,14 +303,15 @@ assert.ok(primedRoadmap.steps[1].title.includes("Sky Lance Battery"));
 assert.equal(primedRoadmap.steps[1].state, "primed");
 assert.ok(primedRoadmap.steps[1].detail.includes("중반 도약"));
 assert.ok(!primedRoadmap.steps[1].detail.includes("Field Cache"));
-assert.equal(primedRoadmap.steps[2].title, "Crown Break");
+assert.equal(primedRoadmap.steps[2].title, "완성 시험");
 roadmapBuild.lateBreakProfileId = "mutation";
 const consolidatedLateRoadmap = game.getBuildRoadmap(
   roadmapBuild,
   game.computeWeaponStats(roadmapBuild),
   9
 );
-assert.ok(consolidatedLateRoadmap.steps[2].detail.includes("Wave 9-12"));
+assert.ok(consolidatedLateRoadmap.steps[2].detail.includes("짧은 승리 랩"));
+assert.ok(!consolidatedLateRoadmap.steps[2].detail.includes("Wave 9-12"));
 assert.ok(!consolidatedLateRoadmap.steps[2].detail.includes("Afterburn"));
 assert.ok(!consolidatedLateRoadmap.steps[2].detail.includes("live ascension"));
 const latePayoffSummary = game.getStandardLateRouteBeatSummary(roadmapBuild, 9);
@@ -327,8 +329,8 @@ assert.ok(lockgridRoadmap.note.includes("->"));
 const eraOnePlan = game.getForgeEraPlan(roadmapBuild, game.computeWeaponStats(roadmapBuild), null, 1);
 assert.equal(eraOnePlan.length, 3);
 assert.equal(eraOnePlan[0].waveLabel, "Wave 1-4");
-assert.equal(eraOnePlan[1].waveLabel, "Wave 5-8");
-assert.equal(eraOnePlan[2].waveLabel, "Wave 9-12");
+assert.equal(eraOnePlan[1].waveLabel, "Wave 5-7");
+assert.equal(eraOnePlan[2].waveLabel, "Wave 8 + Lap");
 assert.equal(eraOnePlan[0].state, "live");
 assert.equal(eraOnePlan[1].state, "planned");
 assert.equal(eraOnePlan[2].state, "planned");
