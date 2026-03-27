@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: keep the shipped route lean, but recut Wave 5-8 into distinct combat asks so one gun/body break proves itself through varied movement decisions before more support breadth returns.
+- Immediate priority: collapse the Wave 5 forge/reward stop into one appetite-first mid-run spike so the improved Wave 5-8 combat band proves a dominant gun/body form before rider or greed breadth reopens.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 18:48:23 KST
+  Findings:
+  - `Wave 5-8` now finally read like different movement exams instead of four near-identical domination laps, but that improvement exposes the new bottleneck: the first real payoff is still diluted by opening secondary branch breadth too early. `shouldOpenBaseRouteSecondaryBranch()` turns on from `Wave 5`, and the base-route forge immediately assembles `headline + rider + gamble` at the same stop where the run should be selling one dominant spike first. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L11392) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12613)
+  - The game is explicitly announcing the wrong fantasy. The `Wave 4 -> Wave 5` forge feed says it opens `주력 하나 뒤에 버팀과 판돈을 함께` so the player immediately evaluates three appetites at once, which is weaker than the reward cadence strong references use when the first mid-run leap should dominate the whole stop. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L18389)
+  - The forge overlay still behaves like a route manager even in the lean route. `renderForgeOverlay()` computes support track, next breakpoint, proof window, and branch payoff before the player even commits, so the stop still asks for build administration instead of the faster `this form will own the next room` read that a release-feeling reward screen needs. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22924)
+  - The actual weapon growth is becoming worth chasing: `Afterglow` and `Crownfire` now add visible wings, rails, and extra firing geometry instead of tiny stat nudges. That is the right direction, but those visual spikes still do not get full anticipation value while support/greed lanes are presented as equal neighbors at the same moment. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L4448) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L4545)
+  Top Priority: Collapse the `Wave 5` forge into one dominant main-form pick plus, at most, one clearly subordinate survival fallback; hold greed/rider breadth until the player has already enjoyed one full post-spike proof lap.
+  Why Now: The combat spine is stronger now, so replay desire will rise or fall on whether the first real payoff lands as craving instead of bookkeeping.
+  Do Not Repeat: Do not answer this with copy trims while `Wave 5` still structurally opens three appetites at once.
+  Release Gate: Rewards
 
 - 2026-03-27 18:00:59 KST
   Findings:
@@ -3552,6 +3563,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 18:42:40 KST
+  Changed: narrowed the shipped `Wave 5` forge in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `shouldOpenBaseRouteSecondaryBranch(nextWave)` now delays the extra branch slot until `Wave 6`, which makes the first midrun stop resolve to only `headline + rider` instead of `headline + rider + gamble`. Rewrote the `Wave 4 -> Wave 5` forge feed to explicitly sell `one dominant mutation + one survival answer`, and updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock `Wave 5` expectations to `headline|rider` with no live `gamble` card.
+  Why: the latest critique's `Top Priority` was to stop the first real payoff from opening offense, defense, and greed at the same time. The highest-value bounded interpretation was to change the actual reward structure, not just its copy, so the newly stronger weapon form gets one full proof lap before `판돈` breadth reopens.
+  Follow-up Risk: `Wave 6` now becomes the first stop where the delayed `판돈` lane can reappear. If that chassis breakpoint starts reading as body choice plus branch administration all at once, the next pass should trim `Wave 6` reward breadth rather than re-opening `Wave 5`.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Rewards
 
 - 2026-03-27 22:10:00 KST
   Changed: hardened the shipped `Wave 1-8` route in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so stale `previewSupportSystemId` and `wildcardProtocolIds` are scrubbed by `sanitizeConsolidatedBuildState(...)`, `createPreviewSupportChoice(...)` now fails closed immediately under consolidation, `createForgeRiderSupportChoice(...)` stops checking primer/contraband rider cards on the shipped path, and `applyForgeChoice(...)` now rejects `preview_support` picks outright when the consolidated route is active. Aligned [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert that polluted shipped builds no longer revive preview support stats or wildcard branches and that Wave 5 choices stay free of both actions.

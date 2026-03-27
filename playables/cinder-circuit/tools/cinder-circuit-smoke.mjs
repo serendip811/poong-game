@@ -209,7 +209,7 @@ const wave5ForgeChoices = game.buildForgeChoices(roadmapBuild, Math.random, 999,
   nextWave: 5,
   finalForge: false,
 });
-assert.equal(wave5ForgeChoices.length, 3);
+assert.equal(wave5ForgeChoices.length, 2);
 assert.equal(wave5ForgeChoices.find((choice) => choice.contractRole === "headline")?.action, "afterglow_mutation");
 assert.equal(wave5ForgeChoices.find((choice) => choice.contractRole === "headline")?.type, "utility");
 const wave5RiderChoice = wave5ForgeChoices.find((choice) => choice.contractRole === "rider");
@@ -273,8 +273,7 @@ const branchForgeContextMarkup = game.createBaseRouteForgeContextMarkup({
 assert.ok(branchForgeContextMarkup.includes("분기 보상"));
 assert.ok(branchForgeContextMarkup.includes("Scrapline Raid"));
 const wave5GambleChoice = wave5ForgeChoices.find((choice) => choice.contractRole === "gamble");
-assert.equal(wave5GambleChoice?.action, "field_greed");
-assert.equal(wave5GambleChoice?.title, "Scrapline Raid");
+assert.equal(wave5GambleChoice, undefined);
 const scriptedMidrunGreedChoice = game.createFieldGreedContractChoice(
   game.createInitialBuild("rail_zeal"),
   5
@@ -328,10 +327,10 @@ assert.ok(greedWave6.note.includes("Greed route"));
 assert.ok(greedWave7.directive.includes("caravan"));
 assert.ok(greedWave8.midrunGreedRoute);
 const wave5FieldGrantChoices = game.buildFieldGrantChoices(game.createInitialBuild("rail_zeal"), Math.random, 5);
-assert.equal(wave5FieldGrantChoices.length, 3);
+assert.equal(wave5FieldGrantChoices.length, 2);
 assert.equal(wave5FieldGrantChoices.find((choice) => choice.contractRole === "headline")?.contractLabel, "주력");
 assert.equal(wave5FieldGrantChoices.find((choice) => choice.contractRole === "rider")?.contractLabel, "버팀");
-assert.equal(wave5FieldGrantChoices.find((choice) => choice.contractRole === "gamble")?.contractLabel, "판돈");
+assert.equal(wave5FieldGrantChoices.find((choice) => choice.contractRole === "gamble"), undefined);
 const wave6ForgeChoices = game.buildForgeChoices(game.createInitialBuild("rail_zeal"), () => 0, 999, {
   nextWave: 6,
   finalForge: false,
@@ -730,10 +729,10 @@ const recurringWave5Choices = game.buildForgeChoices(wave5MutationBuild, Math.ra
   finalForge: false,
   build: wave5MutationBuild,
 });
-assert.equal(recurringWave5Choices.length, 3);
+assert.equal(recurringWave5Choices.length, 2);
 assert.equal(
   recurringWave5Choices.map((choice) => choice.contractRole).join("|"),
-  "headline|rider|gamble"
+  "headline|rider"
 );
 const recurringWave5HeadlineChoice =
   recurringWave5Choices.find((choice) => choice.contractRole === "headline") ||
@@ -757,11 +756,8 @@ const recurringWave5RiderTransform =
   game.getBaseRouteForgeChoiceTransformation(recurringWave5RiderChoice);
 assert.equal(recurringWave5RiderTransform.tone, "defense");
 const recurringWave5GambleChoice =
-  recurringWave5Choices.find((choice) => choice.contractRole === "gamble") ||
-  recurringWave5Choices[2];
-assert.ok(recurringWave5GambleChoice);
-assert.notEqual(recurringWave5GambleChoice.action, "reforge");
-assert.notEqual(recurringWave5GambleChoice.action, "affix_reforge");
+  recurringWave5Choices.find((choice) => choice.contractRole === "gamble");
+assert.equal(recurringWave5GambleChoice, undefined);
 const mirrorPrimerBuild = game.createInitialBuild("relay_oath");
 mirrorPrimerBuild.pendingCores = [];
 mirrorPrimerBuild.bastionDoctrineId = "mirror_hunt";
@@ -1192,7 +1188,7 @@ const actBreakRiderChoices = game.buildForgeFollowupChoices(
 );
 assert.equal(
   actBreakRiderChoices.map((choice) => choice.contractRole).join("|"),
-  "headline|rider|gamble"
+  "headline|rider"
 );
 const packageProbeRun = { waveIndex: 7, pendingFinalForge: false };
 assert.equal(game.shouldOpenForgePackage(packageProbeRun, lateBreakChoices[0]), false);
@@ -2722,10 +2718,10 @@ const actBreakArmoryChoices = game.buildForgeChoices(
   180,
   { nextWave: 5, finalForge: false }
 );
-assert.equal(actBreakArmoryChoices.length, 3);
+assert.equal(actBreakArmoryChoices.length, 2);
 assert.equal(
   actBreakArmoryChoices.map((choice) => choice.contractRole).join("|"),
-  "headline|rider|gamble"
+  "headline|rider"
 );
 const armoryFirstPick = actBreakArmoryChoices.find((choice) => choice.contractRole === "headline");
 assert.ok(armoryFirstPick);
@@ -2742,7 +2738,7 @@ const actBreakFollowupChoices = game.buildForgeFollowupChoices(
 );
 assert.equal(
   actBreakFollowupChoices.map((choice) => choice.contractRole).join("|"),
-  "headline|rider|gamble"
+  "headline|rider"
 );
 assert.ok(!actBreakFollowupChoices.some((choice) => choice.id === armoryFirstPick.id));
 const lateArmoryBuild = game.createInitialBuild("relay_oath");

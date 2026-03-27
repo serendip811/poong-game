@@ -11393,7 +11393,7 @@
     return (
       CONSOLIDATED_12_WAVE_ROUTE &&
       Number.isFinite(nextWave) &&
-      nextWave >= 5 &&
+      nextWave >= 6 &&
       nextWave < LATE_BREAK_ARMORY_WAVE
     );
   }
@@ -18387,7 +18387,7 @@
             : "Wave 4 돌파. Act Break Armory는 이제 headline breakpoint 1장 뒤에 support/defense/greed rider 1장을 얹어, Act 2 빌드 정체성을 더 빨리 조립하게 만든다."
           : CONSOLIDATED_12_WAVE_ROUTE
             ? forgeOptions.nextWave === 5
-              ? "Wave 4 돌파. 이번 정지는 주력 하나 뒤에 버팀과 판돈을 함께 열어 첫 rerun 갈림길을 바로 시험하게 만든다."
+              ? "Wave 4 돌파. 이번 정지는 주력 변이 하나와 버티는 답 하나만 남긴다. 판돈 갈림길은 Wave 5 proof lap 뒤, body break 정지에서 다시 연다."
               : "웨이브 종료. 눈에 띄게 큰 한 장과 버티는 답 한 장만 남기고 바로 다음 전투로 이어진다."
             : "웨이브 종료. 먼저 headline 변신을 고르고, 이어서 작은 rider slot으로 support/defense/greed를 한 장 더 얹는다.",
       "FORGE"
