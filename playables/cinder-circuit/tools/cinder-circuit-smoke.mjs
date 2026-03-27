@@ -70,6 +70,9 @@ assert.equal(game.getCombatCacheChoicesForWave(game.createInitialBuild("rail_zea
 assert.equal(game.SUPPORT_SYSTEM_DEFS.ember_ring.forgeWaveMin, 6);
 assert.ok(!game.getVisibleSupportOfferSystemIds(game.createInitialBuild("rail_zeal"), 5).includes("ember_ring"));
 assert.ok(game.getVisibleSupportOfferSystemIds(game.createInitialBuild("rail_zeal"), 6).includes("ember_ring"));
+assert.ok(!game.SUPPORT_SYSTEM_DEFS.seeker_array.tiers[1].description.includes("Late Break Armory"));
+assert.ok(!game.SUPPORT_SYSTEM_DEFS.seeker_array.tiers[1].description.includes("Wave 9"));
+assert.ok(game.SUPPORT_SYSTEM_DEFS.seeker_array.tiers[1].description.includes("차체 잠금"));
 assert.equal(
   game.getBaseRoutePostWaveTransition({ waveIndex: 4, wave: { completesRun: false } }, 6).action,
   "forge"
@@ -256,6 +259,9 @@ const chassisSupportChoice = wave6Choices.find((choice) => choice.chassisTitle &
 assert.ok(chassisSupportChoice);
 assert.ok(wave6Choices.every((choice) => choice.bayUnlock));
 assert.ok(wave6Choices.every((choice) => choice.systemChoice));
+assert.ok(!chassisSupportChoice.description.includes("Late Break Armory"));
+assert.ok(!chassisSupportChoice.description.includes("Wave 9"));
+assert.ok(chassisSupportChoice.description.includes("Wave 8"));
 const supportBranchBuild = game.createInitialBuild("rail_zeal");
 game.applyForgeChoice(
   {

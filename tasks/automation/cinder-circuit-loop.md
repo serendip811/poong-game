@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze post-Wave-8/afterburn scaffolding and consolidate the shipped 8-wave run into a clean current-threat + current-form + earned-payoff loop before adding any more route language or support wrappers.
+- Immediate priority: stop straddling an 8-wave shipped slice and a live 12-wave-plus-afterburn route; choose one honest current contract and delete or hard-hide the other before adding more build branches.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 23:58:00 KST
+  Findings:
+  - The game is still failing the core release-feeling test because the run contract is split in half. The docs and loop constraints still insist on an `8-wave` shipped slice, while `game.js` actively authors `Wave 9-12`, `Late Break`, and `Afterburn` as live structure, so the player experience keeps reading like a prototype that cannot decide what game is shipping. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L607) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1188) [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8)
+  - The midrun build curve still lacks hunger because the first support branch arrives as administration, not transformation. `SUPPORT_SYSTEM_START_WAVE = 6` technically moves support earlier, but the live offers still read as system catalog management while the most visibly exciting ordnance is reserved for `Wave 8 Late Break Armory`, so the player still spends too much of the run proving the main gun before a true rerun-driving branch owns movement space. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2588) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2907)
+  - The HUD and forge are cleaner than before, but they still inherit a three-part briefing habit: `현재 전장`, `현재 형태`, and branch payoff remain the default framing in both combat and forge. Strong references earn this kind of extra lane readout only after the build fantasy is already obvious; here it is still compensating for a branch curve that has not become self-evident. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L17449) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L23404)
+  - Pause/status readability is improved, but it is still doing too much explanatory recovery for a run that should be legible at a glance. The `Tab` snapshot now focuses on immediate threat and recent gain, yet it still needs multiple helper lanes because the build state and wave ask are not producing a strong enough visual/gameplay identity on their own. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L9961)
+  Top Priority: Cut the live route down to one honest shipped length, then make Wave 5-8 carry one unmistakable support/defense/utility branch that visibly changes piloting for multiple consecutive fights without relying on Late Break or Afterburn language.
+  Why Now: Until the run has one clear scope and one midrun branch players actively want to chase again, every extra wave and wrapper dilutes replay desire instead of increasing it.
+  Do Not Repeat: Do not spend another pass refining labels around `Late Break`, `Afterburn`, or three-slot status strips unless one of those scopes is actually removed from the live contract.
+  Release Gate: Builds
 
 - 2026-03-27 23:40:00 KST
   Findings:
@@ -3652,6 +3663,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 23:59:59 KST
+  Changed: hard-hid late-route language from the shipped support branch in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). The live `Wave 6-8` support-facing text no longer tells the player they are buying into `Late Break Armory` or `Wave 9-12`: doctrine `supportDoctrineText` now frames the branch as `Wave 6 support online -> Wave 8 마무리 포지`, `Seeker Array`'s first install now reads as an immediate post-chassis missile rack instead of a `Wave 8` teaser, and `Auxiliary Junction` now promises the fourth bay through the shipped finale stop rather than a hidden later route. Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock those shipped descriptions against `Late Break Armory` / `Wave 9` regressions.
+  Why: the latest critique's `Top Priority` was to cut the live route down to one honest shipped length and make `Wave 5-8` support/defense/utility appetite stand on its own without leaning on `Late Break` or `Afterburn` wording. The highest-value bounded interpretation was to remove late-route promises from the actual support cards players see in the current run, because those strings were still making the live branch feel like administration for a different game instead of a build identity that matters now.
+  Follow-up Risk: the shipped support branch now reads like part of the current run, but the dormant `Wave 9-12`/`Afterburn` code and docs still exist behind the scenes. If a future critique still says the contract feels split, the next bounded pass should hide one more player-facing roadmap/result surface or retire one unused late-route presentation path rather than widening support copy again.
+  Validation: `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Builds
 
 - 2026-03-27 23:59:59 KST
   Changed: pulled the shipped support branch's official unlock forward to `Wave 6` in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) by changing `SUPPORT_SYSTEM_START_WAVE` from `7` to `6`, which makes the real support families enter the live route at the same breakpoint where the chassis branch already locks. Kept the `Wave 6-8` offer band narrow through `getVisibleSupportOfferSystemIds(...)` so the player sees one doctrine-owned support silhouette instead of the whole module catalog, rewrote the lingering `Wave 7 rider` preview copy, and recut the base-route forge context in `renderForgeOverlay()` to show only `즉시 위협 / 현재 형태 / 새 보조` when the rider step is live. Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new `Wave 5`/`Wave 6` support-offer boundary and the new unlock wave on all shipped support defs.

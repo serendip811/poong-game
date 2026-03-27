@@ -2904,7 +2904,7 @@
           title: "Seeker Array",
           cost: 46,
           description:
-            "Wave 8 Late Break Armory부터 해금되는 추적 미사일 랙 1기를 설치한다. 멀리 벌어진 적에게 자동 사격을 꽂아 열린 작업장에서 화력 회수를 돕는다.",
+            "차체 잠금 뒤 첫 보조 베이에 추적 미사일 랙 1기를 설치한다. 멀리 벌어진 적에게 자동 사격을 꽂아 열린 작업장에서 화력 회수를 돕는다.",
           slotText: "공세 모듈 설치 · 추적 미사일 랙",
           orbitCount: 1,
           orbitRadius: 76,
@@ -3570,7 +3570,7 @@
       preferredModIds: ["drive_sync", "arc_array", "step_servos"],
       preferredAffixIds: ["arc_link", "overclock"],
       supportDoctrineText:
-        "Late Break Armory 이후 열린 베이는 추적/공세 하드웨어를 우선 받아 pursuit form을 두껍게 만든다.",
+        "Wave 6부터 열린 보조 베이는 추적/공세 하드웨어를 우선 받아 pursuit form을 두껍게 만들고, Wave 8 마무리 포지에서 그 실루엣을 한 번 더 굳힌다.",
       favoredCoreId: "ricochet",
       lateCapstoneId: "relay_storm_lattice",
       apply(build) {
@@ -3592,7 +3592,7 @@
       preferredModIds: ["armor_mesh", "magnet_rig", "reactor_cap"],
       preferredAffixIds: ["salvage_link", "thermal_weave"],
       supportDoctrineText:
-        "Late Break Armory 이후 열린 베이는 포탑/방호 회로를 우선 받아 pocket 유지력을 더 오래 끌어낸다.",
+        "Wave 6부터 열린 보조 베이는 포탑/방호 회로를 우선 받아 pocket 유지력을 더 오래 끌어내고, Wave 8 마무리 포지에서 버팀선을 더 두껍게 만든다.",
       favoredCoreId: "scatter",
       lateCapstoneId: "bulwark_foundry",
       apply(build) {
@@ -3614,7 +3614,7 @@
       preferredModIds: ["rail_sleeve", "arc_array", "heat_sink"],
       preferredAffixIds: ["phase_rounds", "arc_link"],
       supportDoctrineText:
-        "Late Break Armory 이후 열린 베이는 포격/근접 방호 보강을 우선 받아 긴 사선을 끝까지 유지하게 만든다.",
+        "Wave 6부터 열린 보조 베이는 포격/근접 방호 보강을 우선 받아 긴 사선을 끝까지 유지하게 만들고, Wave 8 마무리 포지에서 화망을 한 번 더 다듬는다.",
       favoredCoreId: "lance",
       lateCapstoneIds: ["sky_lance_battery", "stormspire_needle"],
       apply(build) {
@@ -14518,7 +14518,7 @@
         tag: "BAY",
         title: "Auxiliary Junction",
         description:
-          "보조 섀시를 영구 증설해 세 번째 support bay를 지금 바로 열고, Wave 8 Late Break Armory에서 네 번째 bay까지 보장한다. 추가로 열린 bay 중 최소 1칸은 교리 reserve와 무관한 flex lane으로 유지된다.",
+          "보조 섀시를 영구 증설해 세 번째 support bay를 지금 바로 열고, Wave 8 마무리 포지에서 네 번째 bay까지 보장한다. 추가로 열린 bay 중 최소 1칸은 교리 reserve와 무관한 flex lane으로 유지된다.",
         slotText: "섀시 증설 · support bay +1 now, +1 at Wave 8",
         cost: 0,
         laneLabel: "시스템 포지",
@@ -14533,7 +14533,7 @@
       verb: "주조",
       tag: "BAY",
       title: "Auxiliary Junction",
-      description: `보조 섀시를 영구 증설해 세 번째 support bay를 Wave 6부터 즉시 열고 ${systemChoice.title}을(를) 꽂아 넣는다. ${systemChoice.description} 이후 Wave 8 Late Break Armory에서 네 번째 bay가 추가로 열려 교리 reserve에 묶이지 않는 flex lane까지 확보한다.`,
+      description: `보조 섀시를 영구 증설해 세 번째 support bay를 Wave 6부터 즉시 열고 ${systemChoice.title}을(를) 꽂아 넣는다. ${systemChoice.description} 이후 Wave 8 마무리 포지에서 네 번째 bay가 추가로 열려 교리 reserve에 묶이지 않는 flex lane까지 확보한다.`,
       slotText: `섀시 증설 · ${systemChoice.title} + Wave 8 bay`,
       cost: Math.max(16, Math.round((systemChoice.cost || 0) * 0.7)),
       originalCost: systemChoice.cost || 0,
