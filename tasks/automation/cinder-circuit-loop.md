@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: make the shipped run honest again by locking the default player-facing slice to a clean Wave 1-8 contract, then let one earned Wave 6 transformation carry that slice before any late-route/admin language returns.
+- Immediate priority: lock the shipped route to an honest Wave 1-8 appetite loop and strip Wave 6-8 doctrine/shard/support administration until one earned midrun form can carry the proof laps by itself.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 01:35:00 KST
+  Findings:
+  - The run is still not behaving like a closed 8-wave rerun machine. `game.js` continues to ship full `Afterburn`, `Act 4`, and Wave 9-12 cadence definitions, so the player-facing slice still reads like a parked expansion instead of a finished run contract. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1193) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2046) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L4121)
+  - Even before those late-route promises, Wave 6-8 is still overloaded with admin. Doctrine `supportDoctrineText`, pursuit shard quests, and wildcard roadmap details keep framing the midrun as lane management and future unlock prep when it should simply be "my gun/body just changed, now let me own space with it." [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3572) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3690) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3199)
+  - The HUD/forge/pause stack is cleaner than earlier, but it is still too document-minded for a game that needs hunger and speed. `renderWaveTrack()`, `renderForgeOverlay()`, and the pause snapshot still foreground `현재 전장 / 현재 형태 / 즉시 위협 / 활성 보조 / 활성 판돈`, which is more status-board hierarchy than strong arena-shooter payoff; better references keep one dominant form and one immediate test, not a mini run report. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L17521) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L23476) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L10132)
+  - The opening-growth rule is still at risk because the game keeps mentally pre-spending support spectacle. The design docs correctly say the start should be lean and the real branch should prove itself in Wave 5-8, but the live implementation still spends midrun fantasy on support bays, satellites, and pursuit rewards before the primary transformation has enjoyed enough uninterrupted proof time. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L12) [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L109) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L7587)
+  Top Priority: Recut Wave 6-8 so the default route delivers one major gun/body transformation and two clean proof laps before any shard chase, support-bay doctrine text, or wildcard roadmap language is allowed back on screen.
+  Why Now: If the player is still administrating the build during the supposed payoff stretch, the run cannot generate rerun hunger.
+  Do Not Repeat: Do not answer this with more hidden late-route scaffolding or more compact wording for the same shard/support chores.
+  Release Gate: Builds
 
 - 2026-03-28 01:12:00 KST
   Findings:
@@ -3708,6 +3719,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-28 01:35:00 KST
+  Changed: hardened the shipped `Wave 6-8` proof window in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the default route no longer silently arms doctrine pursuit/admin scaffolding right after the midrun form lock. Consolidated `wave6_ascension` picks now skip `autoCommitDoctrinePursuit(...)`, `sanitizeConsolidatedBuildState(...)` now clears stale `doctrineChaseClaimed / doctrinePursuit* / overcommit*` state plus upgrade-log leftovers like `교리 추격`, `Forge Pursuit`, `Contraband Overcommit`, and `Ascension Relay`, and shipped support/doctrine descriptions no longer append shard-chase or `supportDoctrineText` admin copy during the same proof band. Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock both the `Wave 6 Ascension keeps pursuit off` rule and the polluted-build scrub.
+  Why: the latest critique's `Top Priority` was to make `Wave 6-8` read as one major gun/body transformation followed by two clean proof laps, before shard chase, support-bay doctrine text, or wildcard-style admin language is allowed back on screen. The highest-value bounded interpretation was to remove the hidden pursuit commitment and scrub stale admin state, because that leftover machinery was still capable of reframing the payoff stretch as homework instead of ownership.
+  Follow-up Risk: the shipped route now fails closed against pursuit/admin leakage, but the `Wave 8` finale and late-route code still share some doctrine naming underneath. If the next critique still says the midrun is too document-minded, the next bounded pass should trim one more player-facing doctrine/support sentence from the `Wave 8` finish state rather than reopening any shard or overcommit wrapper.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Builds
 
 - 2026-03-28 01:35:00 KST
   Changed: tightened the shipped forge header in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the default `Wave 1-8` reward read no longer keeps resurfacing an already-owned branch payoff while the player is choosing a headline or final pick. `renderForgeOverlay()` now routes the header tail through new `getBaseRouteForgeContextTailSummary(...)`, which returns a third slot only on the live rider step with a concrete immediate payoff like `새 보조`; headline and final stops now stay on the lean `즉시 위협 + 현재 형태` shell instead of drifting back toward route administration. Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock that fail-closed behavior.

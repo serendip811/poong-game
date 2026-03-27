@@ -6621,7 +6621,11 @@
             primerCompletion && previewDef
               ? `${previewDef.title}에서 바로 ${tierDef.title}로 완성한다. Wave 5에 먼저 띄운 약식 실루엣이 이번 정지에서 완전한 편대/파동으로 열린다. ${tierDef.description}`
               : installedSystems.length > 0
-              ? `${tierDef.description} 기존 ${installedSystems.map((entry) => SUPPORT_SYSTEM_DEFS[entry.id].tiers[entry.tier].label).join(" + ")}와 병렬 베이에 탑재된다.${doctrine && doctrine.supportDoctrineText ? ` ${doctrine.supportDoctrineText}` : ""}`
+              ? `${tierDef.description} 기존 ${installedSystems.map((entry) => SUPPORT_SYSTEM_DEFS[entry.id].tiers[entry.tier].label).join(" + ")}와 병렬 베이에 탑재된다.${
+                  !CONSOLIDATED_12_WAVE_ROUTE && doctrine && doctrine.supportDoctrineText
+                    ? ` ${doctrine.supportDoctrineText}`
+                    : ""
+                }`
               : tierDef.description,
           slotText:
             primerCompletion
@@ -8221,6 +8225,34 @@
   function sanitizeConsolidatedBuildState(build) {
     if (!CONSOLIDATED_12_WAVE_ROUTE || !build) {
       return build;
+    }
+    if (build.doctrineChaseClaimed) {
+      build.doctrineChaseClaimed = false;
+    }
+    if (build.doctrinePursuitCommitted) {
+      build.doctrinePursuitCommitted = false;
+    }
+    if (build.doctrinePursuitProgress) {
+      build.doctrinePursuitProgress = 0;
+    }
+    if (build.doctrinePursuitExpired) {
+      build.doctrinePursuitExpired = false;
+    }
+    if (build.overcommitUnlocked) {
+      build.overcommitUnlocked = false;
+    }
+    if (build.overcommitResolved) {
+      build.overcommitResolved = false;
+    }
+    if (Array.isArray(build.upgrades) && build.upgrades.length > 0) {
+      build.upgrades = build.upgrades.filter(
+        (entry) =>
+          typeof entry !== "string" ||
+          (!entry.includes("교리 추격") &&
+            !entry.includes("Forge Pursuit") &&
+            !entry.includes("Contraband Overcommit") &&
+            !entry.startsWith("Ascension Relay:"))
+      );
     }
     if (
       build.previewSupportSystemId &&
@@ -14395,7 +14427,11 @@
       tag: "DOCTRINE",
       title: doctrine.label,
       description:
-        `${doctrine.description} 즉시 ${weaponChoice.title}을(를) 할인 장착해 core gun lock을 먼저 굳히고, 이어지는 Chassis Breakpoint에서 body plan만 추가로 잠근다. 별도 support 하드웨어는 late-form lock 직전까지 숨기고, opening과 mid-run은 주포 각과 차체 리듬이 먼저 화면을 먹게 둔다.${forecastConfirmed ? " Wave 3 forecast와 맞아 더 싸게 확정된다." : ""}${lateCapstoneLabel ? ` 이후 Wave 6-8 marked elite shard를 모으는 장기 forge pursuit가 열리고, 완성 시 ${lateCapstoneLabel} 계열 교리 monster form이 즉시 잠긴다.` : ""}`,
+        `${doctrine.description} 즉시 ${weaponChoice.title}을(를) 할인 장착해 core gun lock을 먼저 굳히고, 이어지는 Chassis Breakpoint에서 body plan만 추가로 잠근다. 별도 support 하드웨어는 late-form lock 직전까지 숨기고, opening과 mid-run은 주포 각과 차체 리듬이 먼저 화면을 먹게 둔다.${forecastConfirmed ? " Wave 3 forecast와 맞아 더 싸게 확정된다." : ""}${
+          !CONSOLIDATED_12_WAVE_ROUTE && lateCapstoneLabel
+            ? ` 이후 Wave 6-8 marked elite shard를 모으는 장기 forge pursuit가 열리고, 완성 시 ${lateCapstoneLabel} 계열 교리 monster form이 즉시 잠긴다.`
+            : ""
+        }`,
       slotText: `교리 채택 · ${weaponChoice.title} · core lock`,
       cost: Math.max(0, Math.round((weaponChoice.cost || 0) * (forecastConfirmed ? 0.45 : 0.72))),
       laneLabel: "교리 채택",
@@ -15916,7 +15952,7 @@
         const chassis = getChassisBreakpointDef(choice.chassisId);
         run.build.upgrades.push(`유틸리티 섀시: ${(chassis && chassis.label) || choice.chassisTitle || choice.chassisId}`);
       }
-      const pursuit = autoCommitDoctrinePursuit(run.build);
+      const pursuit = CONSOLIDATED_12_WAVE_ROUTE ? null : autoCommitDoctrinePursuit(run.build);
       const surgeProfile = activateWave6AscensionSurge(run, WAVE6_ASCENSION_ONLINE_SURGE_DURATION);
       run.build.upgrades.push(`Wave 6 Ascension: ${choice.title}`);
       if (surgeProfile) {
@@ -16356,6 +16392,7 @@
     applyChassisBreakpoint,
     getSupportBayCapacity,
     getChassisBreakpointDef,
+    sanitizeConsolidatedBuildState,
     isMidrunGreedRaidFrameActive,
     getIllegalOverclockDef,
     doctrineAllowsSystemInstall,

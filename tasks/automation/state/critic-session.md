@@ -12,9 +12,9 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Progression`: the shipped route still behaves like a teaser for a larger Wave 9+/Afterburn game instead of a closed 8-wave loop worth rerunning on its own.
+- The most fragile gate is now `Builds`: the run still interrupts its own payoff stretch with shard/support/doctrine administration before one midrun transformation has been allowed to dominate the screen long enough to create rerun desire.
 - Wave 6 single-axis chassis language has partially landed, so do not keep spending critiques on the old bundled-breakpoint complaint unless the implementation regresses.
-- Current structural failure: player-facing run flow still advertises late-route support bays, flex lanes, Late Break, and Afterburn while the active slice is supposed to end at Wave 8.
-- Repeated false solutions: adding more late-form systems, trimming copy without removing route-admin surfaces, or treating hidden future ladder as acceptable because it is "for later."
-- Keep pressure on simplicity and payoff: the opener should stay lean, one midrun transformation should own the screen, and UI should confirm that fantasy in seconds instead of briefing future structure.
-- Next high-value critique should check whether the shipped slice now closes honestly at Wave 8 and whether wave track / forge / pause read like quick status tools rather than route-planning documents.
+- Current structural failure: the shipped slice still advertises Wave 9+/Afterburn future structure, and even inside Wave 6-8 it keeps spending player attention on support bays, shard pursuit, wildcard roadmap, and branch admin instead of direct form payoff.
+- Repeated false solutions: adding more late-form systems, hiding future scaffolding without deleting it from player-facing flow, or trimming wording while keeping the same shard/support chores alive.
+- Keep pressure on simplicity and payoff: the opener should stay lean, one midrun transformation should own the screen, and HUD/forge/pause should collapse to current form plus immediate test instead of small run reports.
+- Next high-value critique should check whether Wave 6-8 has become a clean proof stretch with minimal admin and whether the default route finally feels worth replaying before any longer escalation is rebuilt.
