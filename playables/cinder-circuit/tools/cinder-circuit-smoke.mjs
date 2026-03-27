@@ -291,6 +291,20 @@ assert.equal(game.getSupportBayCapacity(chassisBranchBuild), 2);
 assert.equal(chassisBranchBuild.supportSystems.length, 1);
 assert.equal(chassisBranchBuild.wave6ChassisBreakpoint, true);
 assert.equal(JSON.stringify(game.getVisibleSupportOfferSystemIds(chassisBranchBuild, 7)), JSON.stringify([]));
+const shippedLadderWave6 = game.getShippingLadderSteps(
+  chassisBranchBuild,
+  game.computeWeaponStats(chassisBranchBuild),
+  6
+);
+assert.ok(shippedLadderWave6[2].detail.includes("Wave 6-7 proof lap"));
+assert.ok(!shippedLadderWave6[2].detail.includes("Wave 7-8"));
+const shippedRoadmapWave6 = game.getBuildRoadmap(
+  chassisBranchBuild,
+  game.computeWeaponStats(chassisBranchBuild),
+  6
+);
+assert.ok(shippedRoadmapWave6.steps[1].detail.includes("Wave 6-7 proof lap"));
+assert.ok(!shippedRoadmapWave6.steps[1].detail.includes("Wave 7-8"));
 const aegisSpotlightBuild = game.createInitialBuild("rail_zeal");
 game.applyForgeChoice(
   {
@@ -330,6 +344,27 @@ const aegisLiveStatus = game.getLiveSideBetSummary({
 assert.equal(aegisLiveStatus?.label, "방호 고리");
 assert.equal(aegisLiveStatus?.status, "1기 전개");
 assert.ok(aegisLiveStatus?.note.includes("방호 파동"));
+const kilnProofBuild = game.createInitialBuild("scrap_pact");
+kilnProofBuild.chassisId = "bulwark_treads";
+kilnProofBuild.supportSystems = [{ id: "kiln_sentry", tier: 1 }];
+const kilnWave6Config = game.resolveWaveConfig(5, kilnProofBuild);
+assert.equal(kilnWave6Config.supportProof?.label, "Kiln Crosshold");
+assert.ok(kilnWave6Config.directive.includes("binder와 warden"));
+assert.ok((kilnWave6Config.mix.binder || 0) >= 0.16);
+const kilnWave7Config = game.resolveWaveConfig(6, kilnProofBuild);
+assert.equal(kilnWave7Config.supportProof?.label, "Kiln Reclaim");
+assert.ok(kilnWave7Config.directive.includes("brander"));
+const kilnLiveStatus = game.getLiveSideBetSummary({
+  build: kilnProofBuild,
+  waveIndex: 5,
+  phase: "wave",
+  wave: kilnWave6Config,
+  catalystCrucible: { active: false },
+  overcommit: { active: false },
+  doctrinePursuit: { active: false },
+});
+assert.equal(kilnLiveStatus?.label, "Kiln Crosshold");
+assert.equal(kilnLiveStatus?.status, "forward pocket hold");
 const wave7FieldGrantChoices = game.buildFieldGrantChoices(chassisBranchBuild, () => 0, 7);
 assert.equal(wave7FieldGrantChoices.find((choice) => choice.contractRole === "gamble"), undefined);
 assert.ok(wave7FieldGrantChoices.every((choice) => choice.type !== "system"));
@@ -1923,7 +1958,7 @@ game.applyForgeChoice(
 );
 const bulwarkWave7Proof = game.resolveWaveConfig(6, bulwarkProofBuild);
 assert.equal(bulwarkWave7Proof.chassisProof?.label, "Bulwark Refuge");
-assert.match(bulwarkWave7Proof.directive, /hold|버틴/);
+assert.match(bulwarkWave7Proof.directive, /hold|버틴|거점 재확보/);
 assert.ok(bulwarkWave7Proof.hazard?.driftSpeed < baseWave7Proof.hazard?.driftSpeed);
 const salvageProofBuild = game.createInitialBuild("scrap_pact");
 salvageProofBuild.bastionDoctrineId = "kiln_bastion";

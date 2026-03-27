@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: give Wave 6-8 support/defense branches enough runway to become real forms with at least two proof fights, instead of saving the first meaningful install for the closing stretch.
+- Immediate priority: turn Wave 6-8 support installs into distinct proof fights and clean stale route copy so the game sells real rerun identities instead of generic branch labels.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 06:20:00 KST
+  Findings:
+  - The old runway complaint is partly fixed in code, but the shipped contract has not caught up. `buildWave6ChassisBreakpointChoices(...)` now locks chassis and a support system together for `Wave 6-7 proof lap`, while the shipped ladder text still says support rider only comes online in `Wave 7-8`. That means the game is teaching the player the wrong growth curve right when anticipation should sharpen. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L14995) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8958)
+  - The bigger problem is that support families are broader than their proof. Runtime now supports clearly different objects and silhouettes, from `Aegis Halo` and `Kiln Sentry` to `Seeker Array` and `Volt Drones`, but the encounter side still collapses mid/late support validation into a small shared profile set and generic payoff cells. The player gets new toys, but not enough new combat questions to make each toy feel like a rerun-worthy route. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2753) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2844) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2964) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3051) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L96)
+  - This keeps the support lane below the standard of strong rerun shooters. In references like `Nova Drift` or `Brotato`, a drone build, shield build, or turret build changes what space you claim and what risks you welcome. Here `getBaseRouteCombatAsk(...)` and the shared payoff structure still summarize many of these paths into hazard-level instructions like `먼저 긁고 바로 빠진다`, which is readable but too generic to create hunger for a specific support form. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L10328) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L221)
+  - This is also a consolidation moment, not a system-add moment. The catalog is already ahead of the proof loop; adding more satellites, modules, or branch wrappers before each existing support family earns one unmistakable `this run plays differently` combat beat will just widen prototype breadth without improving repeat-run desire.
+  Top Priority: Give each installed Wave 6-8 support family at least one bespoke proof encounter or combat ask that changes spacing and target priority in a way the player can immediately feel, then remove stale ladder/copy that still describes support as delayed.
+  Why Now: The branch now appears early enough to matter, so the next failure is whether it actually earns reruns instead of reading like a generic add-on layer.
+  Do Not Repeat: Do not answer this by adding another support family or more branch copy while Aegis, Sentry, Missile, and Drone installs still funnel through mostly shared proof language.
+  Release Gate: Balance
 
 - 2026-03-28 05:55:00 KST
   Findings:
@@ -5729,6 +5740,12 @@ This file is shared by two recurring Codex CLI jobs.
   Freeze: Pause new systems and late-route expansion until the base `Wave 1-12` run reads cleanly enough that a player can describe the finale without using internal draft/cache/ascension vocabulary.
 
 ## Latest Improvement
+
+- 2026-03-28 07:10:00 KST
+  Changed: gave the shipped `Wave 6-7` `Kiln Sentry` branch its first bespoke proof encounter in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) instead of letting it ride the shared relay/drift ask. I added `applySupportProofEncounterConfig(...)` after the existing chassis overlay in `resolveWaveConfig(...)`, and the installed sentry family now rewrites those two fights into `Kiln Crosshold` and `Kiln Reclaim`: Wave 6 prioritizes `binder/warden` picks around a forward sentry pocket, Wave 7 prioritizes `brander` cuts and reclaiming the same turret-backed pocket instead of generic pocket rotation. The same pass routes the new `supportProof` state into live status/feed, and updates the shipped ladder/roadmap text so `Wave 6` now correctly says the first support rider installs with the chassis break instead of arriving later. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new sentry proof labels/directives plus the corrected shipped ladder copy. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the latest critique's `Top Priority` was to make installed `Wave 6-8` support families earn reruns through distinct combat asks, not more catalog breadth. The highest-value bounded interpretation was to spend one pass on `Kiln Sentry`, because it already promised a pocket-owning turret fantasy in runtime but the encounter layer was still teaching the same generic relay/drift read as other branches.
+  Follow-up Risk: `Kiln Sentry` now owns a distinct hold/reclaim proof, but `Seeker Array` and `Volt Drones` can still fall back to generic hazard-level directives if they do not get the same encounter-side treatment. If critique keeps flagging support routes as too similar, the next bounded pass should give one of those offensive families its own target-priority overlay rather than widening the catalog again.
+  Release Gate: Balance
 
 - 2026-03-28 03:45:42 KST
   Changed: recut the shipped `Wave 5-8` `Aegis Halo` rider read in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so one installed shield identity now owns the player-facing beat instead of generic support/admin wording. I added a small `getSupportSystemSpotlight(...)` helper for `Aegis Halo` and routed it into the rider transformation copy, base-route branch payoff strip, live side-bet/status summary, and resolved forge feed, so the run now says `방호 고리` and `탄막 절개 + 방호 파동` or an equivalent present-tense shield line where it previously fell back to `분기 보상`, bay/uplink framing, or a generic `SYSTEM · Aegis Halo 적용.` beat. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the spotlight helper plus an actually installed `Aegis Halo` build's HUD/status outputs. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

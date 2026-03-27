@@ -2213,8 +2213,12 @@
   function resolveWaveConfig(index, build = null) {
     const baseConfig = WAVE_CONFIG[clamp(index, 0, MAX_WAVES - 1)];
     if (!baseConfig || index < LATE_BREAK_ARMORY_WAVE - 1 || !build) {
-      return applyChassisBreakpointEncounterConfig(
-        applyEncounterPressureFamily(baseConfig),
+      return applySupportProofEncounterConfig(
+        applyChassisBreakpointEncounterConfig(
+          applyEncounterPressureFamily(baseConfig),
+          build,
+          index + 1
+        ),
         build,
         index + 1
       );
@@ -2223,8 +2227,12 @@
     const override =
       directLateBreakOverride || SHARED_LATE_ACT_ENCOUNTER_POOL[index] || null;
     if (!override) {
-      return applyChassisBreakpointEncounterConfig(
-        applyEncounterPressureFamily(baseConfig),
+      return applySupportProofEncounterConfig(
+        applyChassisBreakpointEncounterConfig(
+          applyEncounterPressureFamily(baseConfig),
+          build,
+          index + 1
+        ),
         build,
         index + 1
       );
@@ -2234,8 +2242,12 @@
     if (arsenalBreakpointProfile) {
       config = applyEncounterOverride(config, arsenalBreakpointProfile);
     }
-    return applyChassisBreakpointEncounterConfig(
-      applyEncounterPressureFamily(config),
+    return applySupportProofEncounterConfig(
+      applyChassisBreakpointEncounterConfig(
+        applyEncounterPressureFamily(config),
+        build,
+        index + 1
+      ),
       build,
       index + 1
     );
@@ -7692,7 +7704,7 @@
         supportSpotlight
           ? supportSpotlight.proof
           : CONSOLIDATED_12_WAVE_ROUTE && choice.systemChoice
-          ? `${supportTitle}가 다음 전투부터 복귀 각과 근접 정리선을 바로 받쳐 Wave 7-8 proof lap까지 같은 bracket을 길게 읽게 만든다.`
+          ? `${supportTitle}가 다음 전투부터 복귀 각과 근접 정리선을 바로 받쳐 Wave 6-7 proof lap에서 같은 bracket을 길게 읽게 만들고, Wave 8 마무리 포지까지 같은 실루엣을 이어 붙인다.`
           : !choice.bayUnlock && CONSOLIDATED_12_WAVE_ROUTE
             ? "다음 전투는 새 차체 리듬만 읽는 proof window가 되고, 첫 support rider는 Wave 7부터 그 위에 얹힌다."
             : choice.systemChoice
@@ -8710,11 +8722,16 @@
     const wave3LeapPreview = getArchitectureWeaponLeapPreview(build, getBastionDoctrineDef(build));
     const previewChassis = wave3LeapPreview && wave3LeapPreview.chassis ? wave3LeapPreview.chassis : null;
     const activeChassis = getChassisBreakpointDef(build);
+    const supportSnapshot = getInstalledSupportSnapshot(build);
+    const installedSupportIdentity =
+      supportSnapshot && supportSnapshot.primary
+        ? getSupportSystemIdentitySummary(supportSnapshot.primary.id, supportSnapshot.primary.tier)
+        : null;
     const stageOneTitle = build.bastionDoctrineId
       ? activeForm
       : (wave3LeapPreview && wave3LeapPreview.weaponChoice.title) || "첫 무기 도약";
     const stageOneDetail = build.bastionDoctrineId
-      ? `${pathLabel}이(가) 현재 주력 실루엣이다. 다음 큰 약속은 Wave 6 차체 잠금이며, support rider는 이 몸체가 한 번 전장을 먹은 뒤에 따라온다.`
+      ? `${pathLabel}이(가) 현재 주력 실루엣이다. 다음 큰 약속은 Wave 6 차체 잠금이며, 첫 support rider도 그 자리에서 함께 붙어 body/support bracket을 바로 연다.`
       : wave3LeapPreview
         ? `Wave ${ARCHITECTURE_DRAFT_WAVE}에서 ${wave3LeapPreview.weaponChoice.title}을(를) 먼저 붙여 첫 주포 도약을 만든다. support나 운영 패키지는 숨기고 이 무기 변화만 먼저 전장에 남긴다.`
         : `Wave ${ARCHITECTURE_DRAFT_WAVE}에서 첫 주포 도약을 붙여 빈 선체 구간을 끝낸다.`;
@@ -8728,13 +8745,15 @@
       (previewChassis && (previewChassis.label || previewChassis.title)) ||
       "첫 차체 잠금";
     let stageTwoDetail =
-      "Wave 6에서는 차체 하나만 먼저 잠가 dive, hold, exit 리듬부터 갈라지게 만든다. support rider는 그 새 몸체가 한 랩을 먹은 뒤 Wave 7-8에서 따라붙는다.";
+      "Wave 6에서는 차체 잠금과 첫 support rider를 함께 붙여 dive, hold, exit 리듬과 보조 실루엣을 같은 proof lap에서 바로 읽게 만든다.";
     let stageTwoState = "planned";
     if (activeChassis) {
-      stageTwoDetail = `${stageTwoTitle} 차체가 잠겼다. 이제 이 몸체 리듬 하나로 먼저 전장을 먹고, support rider는 Wave 7-8 proof lap에서 뒤따라 붙는다.`;
+      stageTwoDetail = installedSupportIdentity
+        ? `${stageTwoTitle} 차체가 ${installedSupportIdentity.payoffValue}와 함께 잠겼다. 이제 Wave 6-7 proof lap은 body/support bracket을 바로 시험하고, Wave 8에서는 같은 실루엣에 bay 확장이나 증설 한 번을 더 얹는다.`
+        : `${stageTwoTitle} 차체가 잠겼다. 이제 이 몸체 리듬과 첫 support rider가 같은 proof lap에서 함께 시험된다.`;
       stageTwoState = "locked";
     } else if (boundedWave >= 5) {
-      stageTwoDetail = `${stageTwoTitle}이(가) 다음 큰 약속이다. Wave 6에서는 차체 하나만 먼저 잠가 mid-run identity를 또렷하게 세운다.`;
+      stageTwoDetail = `${stageTwoTitle}이(가) 다음 큰 약속이다. Wave 6에서는 차체 잠금과 첫 support rider를 함께 붙여 mid-run identity를 바로 두 겹으로 세운다.`;
       stageTwoState = "primed";
     }
     const baseRouteFinale = getBaseRouteFinaleRoadmap(build, currentWeapon, boundedWave);
@@ -8926,6 +8945,11 @@
     const currentWeapon = weapon || computeWeaponStats(build);
     const dominantForm = getDominantFormSummary(build, currentWeapon, boundedWave);
     const chassis = getChassisBreakpointDef(build);
+    const supportSnapshot = getInstalledSupportSnapshot(build);
+    const supportIdentity =
+      supportSnapshot && supportSnapshot.primary
+        ? getSupportSystemIdentitySummary(supportSnapshot.primary.id, supportSnapshot.primary.tier)
+        : null;
     const stageState = (start, end = start) => {
       if (boundedWave > end) {
         return "locked";
@@ -8959,8 +8983,10 @@
         title: chassis ? chassis.label : "방호 약속",
         state: stageState(6),
         detail: chassis
-          ? `${chassis.label} 차체가 첫 방호 약속으로 잠긴다. 여기서 dive, hold, exit 리듬이 몸체 선택에 따라 갈라지고 support rider는 그다음 proof lap에서 올라탄다.`
-          : "Wave 6에서는 몸체 하나만 먼저 골라 버티는 선을 만든다. 이후 Wave 7-8이 그 몸체 위에 support rider를 얹는 첫 proof 구간이 된다.",
+          ? supportIdentity
+            ? `${chassis.label} 차체가 ${supportIdentity.payoffValue}와 함께 잠겼다. 이제 Wave 6-7 proof lap이 body/support bracket을 바로 시험하고, Wave 8 마무리 포지에서 같은 실루엣에 bay 확장이나 증설 한 번을 더 얹는다.`
+            : `${chassis.label} 차체가 첫 방호 약속으로 잠긴다. 여기서 dive, hold, exit 리듬과 첫 support rider가 같은 proof lap에서 함께 갈라진다.`
+          : "Wave 6에서는 차체 잠금과 첫 support rider가 함께 붙어 body/support bracket을 바로 연다. Wave 7이 그 실루엣을 한 번 더 증명하고, Wave 8 마무리 포지가 뒤따른다.",
       },
     ];
   }
@@ -14452,6 +14478,91 @@
     return config;
   }
 
+  function applySupportProofEncounterConfig(config, build, waveNumber) {
+    if (
+      !CONSOLIDATED_12_WAVE_ROUTE ||
+      !config ||
+      !build ||
+      !Number.isFinite(waveNumber) ||
+      waveNumber < 6 ||
+      waveNumber > 7
+    ) {
+      return config;
+    }
+    const supportSnapshot = getInstalledSupportSnapshot(build);
+    const primarySupport = supportSnapshot && supportSnapshot.primary ? supportSnapshot.primary : null;
+    if (!primarySupport) {
+      return config;
+    }
+    const nextConfig = {
+      ...config,
+      arena: config.arena ? { ...config.arena } : null,
+      hazard: config.hazard ? { ...config.hazard } : null,
+      mix: { ...(config.mix || {}) },
+      supportProof: config.supportProof ? { ...config.supportProof } : null,
+    };
+    if (primarySupport.id === "kiln_sentry") {
+      nextConfig.mix = blendEnemyMix(
+        nextConfig.mix,
+        waveNumber === 6
+          ? {
+              brute: 0.24,
+              binder: 0.2,
+              warden: 0.14,
+              brander: 0.08,
+            }
+          : {
+              brute: 0.22,
+              binder: 0.18,
+              brander: 0.14,
+              shrike: 0.12,
+            },
+        waveNumber === 6 ? 0.22 : 0.2
+      );
+      nextConfig.driveGainFactor = Math.max(nextConfig.driveGainFactor || 1, waveNumber === 6 ? 1.28 : 1.32);
+      nextConfig.activeCap = Math.max(17, (nextConfig.activeCap || 17) - 1);
+      nextConfig.arena = {
+        width: Math.max(1680, nextConfig.arena?.width || 0),
+        height: Math.max(940, nextConfig.arena?.height || 0),
+      };
+      if (nextConfig.hazard) {
+        if (Number.isFinite(nextConfig.hazard.interval)) {
+          nextConfig.hazard.interval = nextConfig.hazard.interval * 1.04;
+        }
+        if (Number.isFinite(nextConfig.hazard.duration)) {
+          nextConfig.hazard.duration += waveNumber === 6 ? 0.45 : 0.55;
+        }
+        if (Number.isFinite(nextConfig.hazard.relayRange)) {
+          nextConfig.hazard.relayRange = Math.max(320, nextConfig.hazard.relayRange - 56);
+        }
+        if (Number.isFinite(nextConfig.hazard.driftSpeed)) {
+          nextConfig.hazard.driftSpeed = Math.max(92, nextConfig.hazard.driftSpeed - 16);
+        }
+        if (Number.isFinite(nextConfig.hazard.driftOrbit)) {
+          nextConfig.hazard.driftOrbit = Math.max(0.22, nextConfig.hazard.driftOrbit - 0.05);
+        }
+      }
+      nextConfig.note =
+        waveNumber === 6
+          ? `${config.note} Kiln Sentry proof가 relay 절개를 전방 거점 방어전으로 바꿔, binder와 warden을 먼저 끊고 포탑 교차선 안 corridor 하나를 오래 붙들게 만든다.`
+          : `${config.note} Kiln Sentry proof가 drift pocket을 움직이는 도주선이 아니라 되찾을 거점으로 바꿔, brander 압박을 끊고 포탑 사이 pocket을 다시 연결하게 만든다.`;
+      nextConfig.directive =
+        waveNumber === 6
+          ? "첫 relay를 포탑 전방 pocket 옆에서 끊고, binder와 warden을 먼저 지워 교차 사격선을 살린다. 넓게 도는 대신 sentry 사거리 안 corridor를 오래 붙든다."
+          : "drift가 밀어낸 pocket을 brander부터 끊어 되찾고, 포탑 사이 열린 pocket 두 곳만 번갈아 쓴다. chase보다 거점 재확보가 먼저다.";
+      nextConfig.supportProof = {
+        label: waveNumber === 6 ? "Kiln Crosshold" : "Kiln Reclaim",
+        status: waveNumber === 6 ? "forward pocket hold" : "reclaim pocket loop",
+        note:
+          waveNumber === 6
+            ? "전방 포탑이 잡은 pocket을 지키려면 binder/warden을 먼저 끊고 교차 사격 corridor를 오래 유지해야 한다."
+            : "밀린 pocket을 포탑 교차선까지 되찾아야 한다. brander를 먼저 자르고 같은 거점을 두 번 이어 쓰는지가 핵심이다.",
+      };
+      return nextConfig;
+    }
+    return config;
+  }
+
   function shouldEnableBlackLedgerDebt(build, waveNumber) {
     return Boolean(
       build &&
@@ -17217,6 +17328,13 @@
           : "이번 웨이브 첫 elite가 live cache를 떨어뜨린다.",
       };
     }
+    if (currentState.phase === "wave" && currentState.wave && currentState.wave.supportProof) {
+      return {
+        label: currentState.wave.supportProof.label,
+        status: currentState.wave.supportProof.status,
+        note: currentState.wave.supportProof.note,
+      };
+    }
     if (currentState.phase === "wave" && currentState.wave && currentState.wave.chassisProof) {
       return {
         label: currentState.wave.chassisProof.label,
@@ -18998,6 +19116,7 @@
       hazard: config.hazard,
       hazardTimer: config.hazard ? config.hazard.interval * 0.8 : Number.POSITIVE_INFINITY,
       chassisProof: config.chassisProof || null,
+      supportProof: config.supportProof || null,
       midrunGreedRoute: config.midrunGreedRoute || null,
       blackLedgerRaid: config.blackLedgerRaid || null,
       blackLedgerDebt: createBlackLedgerDebtState(state.build, waveNumber),
@@ -19091,6 +19210,11 @@
           ? "Scrapline Route 활성화. caravan chase가 열려 payout을 쫓을수록 복귀 flank가 급하게 얇아진다."
           : "Scrapline Route 활성화. vault pocket이 열려 greed line을 짧게 긁고 빠지는 운영을 직접 요구한다.",
         "SCRAP"
+      );
+    } else if (state.wave.supportProof) {
+      pushCombatFeed(
+        `${state.wave.supportProof.label} 활성화. ${state.wave.supportProof.note}`,
+        "RIDER"
       );
     } else if (state.wave.chassisProof) {
       pushCombatFeed(
