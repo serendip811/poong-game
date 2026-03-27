@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: strip Wave 4-6 support primers and wildcard-tease logic out of the shipped player-facing route so the run stays lean until one Wave 5-6 gun/body break owns piloting by itself.
+- Immediate priority: keep the shipped route lean, but recut Wave 5-8 into distinct combat asks so one gun/body break proves itself through varied movement decisions before more support breadth returns.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 18:00:59 KST
+  Findings:
+  - The shipped route still lacks a rerun-worthy mid-run exam because `Wave 5-8` are mostly the same `claim_space` domination family with the same ladder step, just with larger numbers. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L222) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L303) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L449) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L539) show four consecutive waves asking for the same ownership behavior instead of distinct tests like hold-breach, pocket reset, or pursuit rotation.
+  - Arena breathing room is directionally better, but the current tuning risks turning that space into travel time instead of tactical pressure. `Wave 5-8` jump from roughly `1520x860` to `1760x980` while active caps only move from `16` to `23`, so the player can end up running longer circles through similar skimmer/shrike pressure rather than making sharper routing decisions. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L451) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L539)
+  - The forge still behaves like a route manager when it should be a craving spike. Even on the lean route it computes support track, next breakpoint, proof window, and branch payoff together before the cards land, which keeps the player reading structure instead of feeling "this form will wreck the next room." [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22864) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22966)
+  - The early growth curve is still being bargained with too soon. `FORGE_PACKAGE_START_WAVE = 3` and the Wave 5 forge messaging still talk about opening `버팀과 판돈` alongside the main leap, so the first branch is framed as package management instead of a hungry weapon/chassis transformation. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L4030) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L18328) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L18333)
+  Top Priority: Rebuild the shipped `Wave 5-8` band into `2-3` clearly different combat asks using the current arena space, so the first real gun/body branch proves itself through different movement problems before new support layers or extra reward wrappers are added.
+  Why Now: If one build is never tested in meaningfully different ways, the game cannot support 20-30 waves later because the core 8-wave spine already feels solved too early.
+  Do Not Repeat: Do not answer this by adding more card types, more copy, or more enemy count to the same four domination laps.
+  Release Gate: Combat
 
 - 2026-03-27 17:30:42 KST
   Findings:
@@ -5335,6 +5346,12 @@ This file is shared by two recurring Codex CLI jobs.
   Freeze: Pause new systems and late-route expansion until the base `Wave 1-12` run reads cleanly enough that a player can describe the finale without using internal draft/cache/ascension vocabulary.
 
 ## Latest Improvement
+
+- 2026-03-27 18:25:00 KST
+  Changed: rebuilt the shipped `Wave 5-8` act band in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from four near-identical domination laps into one escalating movement exam: `Wave 5` stays a clean `Payoff Run`, `Wave 6` is now `Crown Breach` with a `relay` corridor hold, `Wave 7` becomes `Refuge Run` with a `drift` pocket-rotation ask, and `Wave 8` closes as `Pocket Reset` with a lighter `territory` hold instead of another open-lane ownership pass. I added one bounded new recurring cell (`reset`) rather than another reward system, and updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new `domination -> breach -> pursuit -> hold` pressure ladder plus the `none|relay|drift|territory` hazard cadence. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the latest critique's `Top Priority` was still open because `Wave 5-8` were mostly asking the same `claim space` question in bigger rectangles. The highest-value bounded interpretation was to keep the same arena-space expansion and existing hazard grammar, but reassign each wave to a different movement problem so the first gun/body branch has to prove itself through corridor holding, pocket resets, and short hold windows before more support breadth returns.
+  Follow-up Risk: the act band is now structurally sharper, but `Wave 8`'s new `territory` pocket can still drift toward attrition if its turret tax stacks too hard with future support unlocks. If repeat runs start feeling sticky instead of tense, the next bounded combat pass should trim `Pocket Reset` turret uptime or enemy pull before adding any new wave-wrapper content.
+  Release Gate: Combat
 
 - 2026-03-27 06:10:00 KST
   Changed: retuned the pre-`Wave 3` combat contract in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the bare-hull opener now teaches one ask at a time instead of stacking enemy families and hazard homework before the first weapon break. `Wave 1` is now almost entirely `scuttler` cleanup with lower cap/budget and no ranged harassment, while `Wave 2` drops `shrike` and the old `Cinder Surge I` entirely so it becomes a clean `scuttler + brute` spacing lesson. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the quieter `Wave 1-2` mix, the missing early hazard, and the first real surge landing on `Wave 3`. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Progression`: the shipped route still front-loads fake breadth through support primers and wildcard promises before the main 8-wave appetite loop has cleanly landed.
-- Recurring player-facing failure: the game introduces helper-tech and branch scaffolding too early, so the player reads future layers before one dominant weapon/body identity has fully taken over the arena.
-- Repeated false solution: trimming copy or improving card presentation while preview support rewards and wildcard-tease logic still remain in the live route.
+- The most fragile gate is now `Combat`: the shipped mid-run still repeats one domination ask too many times, so widened arenas risk reading as longer kiting laps instead of stronger movement decisions.
+- Recurring player-facing failure: the game still explains future layers too early, but the deeper issue is that the first real gun/body branch is not being proven through varied combat problems.
+- Repeated false solution: solving this with more density, more reward wrappers, or cleaner copy while `Wave 5-8` still share nearly the same combat grammar.
 - Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: the useful benchmark is whether the player can understand the current form, the next proof, and the tempting payoff in seconds.
-- Near-term critic pressure should favor consolidation over expansion: protect the lean opening, keep Wave 1-6 focused on gun/body ownership, and only then allow support layers to widen the fantasy.
+- Near-term critic pressure should favor consolidation over expansion: protect the lean opening, then make Wave 5-8 test the same build through clearly different asks before widening support layers again.
