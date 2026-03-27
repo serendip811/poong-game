@@ -8623,8 +8623,8 @@
     if (stage === "title") {
       return {
         eyebrow: "Bare Hull",
-        title: "Wave 3 첫 무기 도약",
-        detail: "세 웨이브만 버티면 된다.",
+        title: "빈 선체 돌입",
+        detail: "약한 화선으로 첫 전장을 버틴다.",
         windowLabel: "회로 투입",
       };
     }
@@ -9586,23 +9586,28 @@
     leadValue = "-",
     titleLabel = "현재 형태",
     titleValue = "-",
-    tailLabel = "다음 급등",
-    tailValue = "-",
+    tailLabel = "",
+    tailValue = "",
   }) {
+    const slots = [
+      { label: leadLabel, value: leadValue, headline: false },
+      { label: titleLabel, value: titleValue, headline: true },
+    ];
+    if (tailLabel || tailValue) {
+      slots.push({ label: tailLabel || "다음 급등", value: tailValue || "-", headline: false });
+    }
     return `
-      <div class="route-contract route-contract--triple">
-        <article class="route-contract__slot">
-          <span class="route-contract__slot-label">${leadLabel}</span>
-          <strong class="route-contract__slot-value">${leadValue}</strong>
-        </article>
-        <article class="route-contract__slot route-contract__slot--headline">
-          <span class="route-contract__slot-label">${titleLabel}</span>
-          <strong class="route-contract__slot-value">${titleValue}</strong>
-        </article>
-        <article class="route-contract__slot">
-          <span class="route-contract__slot-label">${tailLabel}</span>
-          <strong class="route-contract__slot-value">${tailValue}</strong>
-        </article>
+      <div class="route-contract route-contract--${slots.length === 2 ? "double" : "triple"}">
+        ${slots
+          .map(
+            (slot) => `
+              <article class="route-contract__slot${slot.headline ? " route-contract__slot--headline" : ""}">
+                <span class="route-contract__slot-label">${slot.label}</span>
+                <strong class="route-contract__slot-value">${slot.value}</strong>
+              </article>
+            `
+          )
+          .join("")}
       </div>
     `;
   }
@@ -9708,16 +9713,12 @@
     currentFormLabel = "",
     waveAskLabel = "",
     waveAskValue = "",
-    nextSpikeLabel = "",
-    nextSpikeValue = "",
   }) {
     return createBaseRouteStatusStripMarkup({
       leadLabel: waveAskLabel || eyebrow || "현재 전장",
       leadValue: waveAskValue || "-",
       titleLabel: "현재 형태",
       titleValue: currentFormLabel || title || "-",
-      tailLabel: nextSpikeLabel || "다음 급등",
-      tailValue: nextSpikeValue || title || "-",
     });
   }
 
@@ -16718,8 +16719,6 @@
     const waveConfig = resolveWaveConfig(trackWaveNumber - 1, state.build);
     const currentWeapon = state.weapon || computeWeaponStats(state.build);
     const dominantForm = getDominantFormSummary(state.build, currentWeapon, trackWaveNumber);
-    const focusStage = state.phase === "forge" ? "forge" : "combat";
-    const nextSpike = getBaseRouteTransformationFocus(trackWaveNumber, { stage: focusStage });
     const currentAskValue =
       state.phase === "result"
         ? "짧은 지배 구간 완료"
@@ -16747,8 +16746,6 @@
       leadValue: currentAskValue,
       titleLabel: "현재 형태",
       titleValue: dominantForm.label,
-      tailLabel: "다음 급등",
-      tailValue: nextSpike.title,
     });
   }
 
@@ -22634,8 +22631,6 @@
                   ? "다음 시험"
                   : "다음 전장",
             waveAskValue: proofWindow.label,
-            nextSpikeLabel: state.pendingFinalForge ? "지금 고정" : "다음 급등",
-            nextSpikeValue: baseRouteTransformationFocus.title || focusTitle,
           })}
         </article>
       `

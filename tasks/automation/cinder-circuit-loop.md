@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: remove live 12-wave/support-system scaffolding from the shipped route so the run reads as one honest weak-start -> weapon break -> chassis domination spine before any helper-tech returns.
+- Immediate priority: stop teaching the route during play; make the shipped path read as a quiet weak-start -> Wave 3 weapon break -> longer domination proof, with no title/HUD/forge roadmap grammar or helper-tech promise until that spine is fun on its own.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 13:01:07 KST
+  Findings:
+  - The game still spends scarce screen space on future-route administration instead of present-tense combat information. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L16736) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L16748) keep `현재 형태 / 다음 급등` live in the bottom strip during combat, which is weaker than the reference pattern from `Nova Drift`, `Brotato`, or `Hades` where the player reads current danger, current health, and current power first, not the next roadmap beat.
+  - The opener is still pre-spending anticipation. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L17560) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L17574) reduce the title to one line, but that line is still `Wave 3 첫 무기 도약`. The run is still briefing the first payoff before the player survives long enough to want it.
+  - The forge remains a route-planning shell even in the stripped contract. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22623) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22639) still render `다음 전장`, `다음 급등`, and current-form context framing above the pick. That is still too much explanation around a reward stop that should sell one obvious leap at a glance.
+  - The product contract is still split between a supposedly lean shipped run and a much bigger declared game. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8597) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8614) still describe an `8웨이브` silhouette, while [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L17) and [docs/games/cinder-circuit-source-analysis.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-analysis.md#L46) through [docs/games/cinder-circuit-source-analysis.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-analysis.md#L54) still openly sell a `12웨이브 / 세 시대` product. That keeps every short-run payoff feeling provisional instead of final.
+  Top Priority: Recut the shipped route so Waves 1-6 teach almost nothing beyond movement and one weapon break, with title/HUD/forge all showing only current threat and current form until a longer post-break domination window is proven fun.
+  Why Now: Until the player gets to enjoy one earned form without roadmap noise, the run cannot build the hunger needed for repeated runs or a future 20-30 wave expansion.
+  Do Not Repeat: Do not answer this with lighter copy on the same `next spike` panels or by exposing more support paths before the first domination lap is satisfying.
+  Release Gate: Progression
 
 - 2026-03-27 12:30:56 KST
   Findings:
@@ -3431,6 +3442,14 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 13:24:40 KST
+  Changed: removed one bounded remaining future-route tease from the shipped title/HUD/forge contract surfaces in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css), and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs). The title launch line now reads `빈 선체 돌입` instead of briefing `Wave 3 첫 무기 도약`, `createBaseRouteStatusStripMarkup()` now fails closed to a two-slot `현재 전장 / 현재 형태` board unless a caller explicitly asks for more, and the base-route forge context reuses that same two-slot read so the shipped pause no longer carries a live `다음 급등` promise above the cards.
+  Why: the newest critique's `Top Priority` was to make Waves 1-6 teach almost nothing beyond movement and one earned weapon break, with title/HUD/forge all showing only current threat and current form until that post-break domination window is actually fun. The highest-value concrete interpretation that fit one bounded pass was to remove the last always-visible future-facing slot and title tease, because those surfaces were still pre-spending anticipation even after earlier roadmap cleanup.
+  Follow-up risk: this makes the route more honest and quieter, but it also means the reward stop now relies even more on the cards themselves to create desire. If a later critique says the forge has become too flat, the next bounded pass should strengthen card silhouette or immediate payoff proof inside the cards, not restore a `next spike` header lane.
+  UI reference direction: followed the one-glance current-state hierarchy from `Nova Drift`, `Brotato`, and `Hades`, where live HUD/reward wrappers emphasize immediate danger and owned power rather than a visible future beat.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Progression
 
 - 2026-03-27 12:42:19 KST
   Changed: removed one bounded remaining roadmap surface from the live combat HUD in [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html), [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css), [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs). The bottom-left panel now mounts as a neutral `status-board` instead of a `roadmap-card`, the shipped combat stamp was shortened from sentence-like labels to `Wn / FORGE Wn / LAP / RUN CLEAR`, and the compact board styling now reads like a terse battlefield status board rather than a route contract card.

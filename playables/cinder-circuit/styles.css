@@ -2397,6 +2397,12 @@ body[data-overdrive="true"] .backdrop__glow--right {
   display: block;
 }
 
+.route-contract--double {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
 .route-contract--triple {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -2475,6 +2481,7 @@ body[data-overdrive="true"] .backdrop__glow--right {
   margin-top: 0;
 }
 
+.status-board--overlay .route-contract--double,
 .status-board--overlay .route-contract--triple {
   gap: 0;
 }
@@ -2533,6 +2540,7 @@ body[data-overdrive="true"] .backdrop__glow--right {
 }
 
 @media (max-width: 900px) {
+  .route-contract--double,
   .route-contract--triple {
     grid-template-columns: 1fr;
   }

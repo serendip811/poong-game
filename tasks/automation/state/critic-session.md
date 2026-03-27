@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `UX/UI`: the player-facing path still reads like route administration, with roadmap panels and forge ceremony obscuring the weak-start -> weapon break -> chassis domination fantasy.
-- Current drift bundle: docs still define a `12-wave` three-era game, while the shipped route tries to look shorter; support/helper-tech ladders and late scaffolding remain live in runtime and keep the reward grammar feeling provisional.
-- Repeated false solution: trimming copy or reshuffling layout while leaving the roadmap panel, proof-shell forge framing, and helper-tech primers active underneath.
-- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: the bar is desire-first rewards, immediate hierarchy, and earned spectacle, not comprehensive explanation.
-- Near-term critic pressure should stay on removing player-facing administration first: combat HUD should show current threat/power only, forge should show one obvious spike and one fallback, and support/helper-tech should stay hidden until the base form already feels rerunnable.
+- The most fragile gate is now `Progression`, because the route contract is still split: the playable pretends to be a lean short run while docs and runtime grammar still advertise a larger 12-wave product.
+- Recurring player-facing failure: title, combat HUD, and forge still expose `next spike` thinking before the player has enjoyed the current form. That keeps the first weapon break from landing as a rerun-worthy payoff.
+- Repeated false solution: shortening copy while preserving the same roadmap shell, forge context framing, and future-beat labels underneath.
+- Keep reference checks anchored to `Nova Drift`, `Brotato`, and `Hades`: strong runs hide future homework, foreground immediate power/desire, and let the first meaningful form breathe before adding more layers.
+- Near-term critic pressure should push one honest spine: quieter Wave 1-2, a clear Wave 3 weapon break, then a longer domination proof window with no helper-tech promise until that alone feels fun.
