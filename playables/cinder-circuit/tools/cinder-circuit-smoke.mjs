@@ -433,6 +433,8 @@ const indexMarkup = fs.readFileSync(indexPath, "utf8");
 assert.ok(indexMarkup.includes('id="run-track-label"'));
 assert.ok(indexMarkup.includes('id="wave-track"'));
 assert.ok(indexMarkup.includes('id="combat-feed"'));
+assert.ok(indexMarkup.includes('status-board status-board--overlay'));
+assert.ok(!indexMarkup.includes('roadmap-card roadmap-card--contract'));
 const minimalHudVisibility = game.getMinimalBaseRouteHudVisibility({
   paused: false,
 });

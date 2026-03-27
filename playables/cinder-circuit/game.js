@@ -16728,12 +16728,12 @@
           : waveConfig.bandLabel || waveConfig.label || `Wave ${trackWaveNumber}`;
     const label =
       state.phase === "forge"
-        ? `Wave ${state.waveIndex + 1} 정리 후 선택`
+        ? `FORGE W${trackWaveNumber}`
         : state.phase === "result"
-          ? "Run Clear"
+          ? "RUN CLEAR"
           : state.wave && state.wave.baseRouteVictoryLap
-            ? "Victory Lap"
-            : `Wave ${trackWaveNumber} / ${totalTrackWaves}`;
+            ? "LAP"
+            : `W${trackWaveNumber}`;
     elements.runTrackLabel.textContent = label;
     elements.waveTrack.innerHTML = createBaseRouteStatusStripMarkup({
       leadLabel:

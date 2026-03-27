@@ -725,7 +725,7 @@ body[data-overdrive="true"] .backdrop__glow--right {
 }
 
 .hud-overlay--bottom-minimal {
-  grid-template-columns: minmax(220px, 0.82fr) minmax(240px, 1fr);
+  grid-template-columns: minmax(220px, 0.72fr) minmax(240px, 1fr);
 }
 
 .hud-strip {
@@ -886,14 +886,16 @@ body[data-overdrive="true"] .backdrop__glow--right {
   justify-self: end;
 }
 
-.roadmap-card {
+.roadmap-card,
+.status-board {
   border-color: rgba(255, 179, 117, 0.2);
   background:
     linear-gradient(180deg, rgba(255, 153, 89, 0.12), transparent 58%),
     rgba(11, 10, 9, 0.76);
 }
 
-.roadmap-card--contract {
+.roadmap-card--contract,
+.status-board--overlay {
   border-color: rgba(255, 190, 124, 0.26);
   background:
     linear-gradient(180deg, rgba(255, 153, 89, 0.18), transparent 62%),
@@ -1067,8 +1069,9 @@ body[data-overdrive="true"] .backdrop__glow--right {
   width: min(100%, 260px);
 }
 
-.arena-stage:not(.arena-stage--hud-detail) .roadmap-card--contract {
-  width: min(100%, 320px);
+.arena-stage:not(.arena-stage--hud-detail) .roadmap-card--contract,
+.arena-stage:not(.arena-stage--hud-detail) .status-board--overlay {
+  width: min(100%, 288px);
 }
 
 .arena-stage:not(.arena-stage--hud-detail) .roadmap-card__steps {
@@ -1140,6 +1143,10 @@ body[data-overdrive="true"] .backdrop__glow--right {
   background:
     linear-gradient(180deg, rgba(255, 145, 88, 0.1), transparent 100%),
     rgba(11, 10, 9, 0.76);
+}
+
+.hud-overlay--bottom-minimal .status-board--overlay {
+  width: min(100%, 288px);
 }
 
 .combat-ask-card {
@@ -2452,6 +2459,48 @@ body[data-overdrive="true"] .backdrop__glow--right {
 
 .wave-track {
   margin-top: 2px;
+}
+
+.status-board--overlay .summary-head {
+  padding: 10px 12px 0;
+}
+
+.status-board--overlay .summary-head strong {
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.status-board--overlay .wave-track {
+  margin-top: 0;
+}
+
+.status-board--overlay .route-contract--triple {
+  gap: 0;
+}
+
+.status-board--overlay .route-contract__slot {
+  min-height: 62px;
+  padding: 10px 12px;
+  border: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 0;
+  background: transparent;
+}
+
+.status-board--overlay .route-contract__slot:last-child {
+  border-right: 0;
+}
+
+.status-board--overlay .route-contract__slot-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+}
+
+.status-board--overlay .route-contract__slot-value {
+  font-size: 0.8rem;
+  line-height: 1.25;
 }
 
 .combat-feed {
