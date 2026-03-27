@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: finish the remaining Wave 6-8 support-specific proof routes and collapse forge/inspect framing to one installed object plus one immediate threat so midrun identity reads instantly.
+- Immediate priority: stop adding branch breadth; give Seeker Array and Volt Drones their own Wave 6-8 proof asks, then cut forge/inspect readouts to one installed object plus one immediate threat.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 07:20:00 KST
+  Findings:
+  - The run is still below rerun-worthy standard because `support_lap` and `support_proof` remain shared `Claim Space` cells. Seeker Array and Volt Drones now have visible kit fantasy, but midrun combat still tests them like the same lane-hold build with different art.
+  - Forge presentation is still too administrative for a strong reward beat. `renderForgeOverlay()` keeps `현재 형태`, `즉시 위협`, and branch payoff in the same shell, so the player is still reading the run contract instead of feeling one obvious power object and the next danger.
+  - The codebase is still carrying long-run grammar (`Late Break Armory`, Wave 9-12 copy) around an 8-wave shipped loop. That keeps the run sounding like a prelude, which weakens payoff and invites more scope before the current appetite loop is actually fun to replay.
+  - This is a consolidation pass, not a content pass. More support families, more branch wrappers, or more Mk-tier labeling would only widen prototype breadth while the core midrun choice still fails to create distinct movement habits.
+  Top Priority: Replace shared support Wave 6-8 cells with Seeker Array and Volt Drones-specific proof fights, and trim forge context to a single installed-object headline plus one immediate threat line.
+  Why Now: Until the last two support routes change how the player moves and the reward screen stops briefing the build, repeated runs will keep blending together.
+  Do Not Repeat: Do not answer this with more support content, more late-run roadmap copy, or shorter wording around the same three-part forge shell.
+  Release Gate: Rewards
 
 - 2026-03-28 06:00:35 KST
   Findings:
@@ -3818,6 +3829,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-28 07:45:00 KST
+  Changed: replaced the shipped `Volt Drones` fallback on the shared `Claim Space` support ladder in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) with its own `Wave 6-8` proof script inside `applySupportProofEncounterConfig(...)`. An installed drone wing now drives `Drone Screen` on `Wave 6` for rear-screen resets against shrike/brander chase pressure, `Drone Re-entry` on `Wave 7` for binder tail-seam pocket retakes instead of long drift kiting, and `Drone Overclock` on `Wave 8` for a visible rolling-refuge payoff where the overclocked wing chews through brute/binder pursuers while the player chains forward pockets. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock all three proof labels, directives, mix expectations, and the live `Drone Overclock` HUD status.
+  Why: the latest critique's `Top Priority` was still open because `Volt Drones` remained the last support route collapsing back into the shared proof bracket even after Halo, Sentry, and Seeker had bespoke movement asks. The highest-value bounded interpretation was to finish the remaining support identity end-to-end instead of widening forge UI work in the same pass, because repeated runs needed one more unmistakably different movement habit now.
+  Follow-up Risk: all four shipped support families now have bespoke `Wave 6-8` proof ladders, but the critique's second half about forge still stands. If the next consolidation pass says reward beats still read like a route brief, the next bounded change should trim `renderForgeOverlay()` to one installed-object headline plus one immediate threat line instead of reopening support breadth.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Balance
 
 - 2026-03-28 06:11:07 KST
   Changed: replaced the shipped `Seeker Array` fallback on the shared `Claim Space` support ladder in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) with its own `Wave 6-8` proof script inside `applySupportProofEncounterConfig(...)`. An installed missile rack now drives `Seeker Sweep` on `Wave 6` for outer-pocket skimmer/mortar deletion, `Seeker Shear` on `Wave 7` for repeated same-flank crosslane cuts through shrike/lancer pressure, and `Seeker Overclock` on `Wave 8` for a visible barrage-corridor payoff that lets the Array delete warden/mortar backlines while the player chains opened lanes. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock all three proof labels, directives, mix expectations, and the live `Seeker Overclock` HUD status.

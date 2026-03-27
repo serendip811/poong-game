@@ -14767,6 +14767,108 @@
                 status: "barrage corridor chain",
                 note:
                   "강화된 미사일 랙이 먼 후열을 지우는 동안 열린 corridor를 연속으로 갈아타야 한다. outer lane chain이 끊기면 overclock payoff도 사라진다.",
+      };
+      return nextConfig;
+    }
+    if (primarySupport.id === "volt_drones") {
+      nextConfig.mix = blendEnemyMix(
+        nextConfig.mix,
+        waveNumber === 6
+          ? {
+              shrike: 0.24,
+              skimmer: 0.16,
+              brander: 0.14,
+              binder: 0.08,
+            }
+          : waveNumber === 7
+            ? {
+                shrike: 0.22,
+                skimmer: 0.18,
+                lancer: 0.16,
+                brander: 0.12,
+                binder: 0.1,
+              }
+            : {
+                shrike: 0.18,
+                lancer: 0.18,
+                brute: 0.14,
+                binder: 0.12,
+                brander: 0.12,
+              },
+        waveNumber === 8 ? 0.24 : 0.21
+      );
+      nextConfig.driveGainFactor = Math.max(
+        nextConfig.driveGainFactor || 1,
+        waveNumber === 8 ? 1.38 : waveNumber === 7 ? 1.33 : 1.28
+      );
+      nextConfig.activeCap = Math.max(
+        waveNumber === 8 ? 18 : 17,
+        (nextConfig.activeCap || 18) - (waveNumber === 8 ? 0 : 1)
+      );
+      nextConfig.arena = {
+        width: Math.max(waveNumber === 8 ? 1800 : waveNumber === 7 ? 1740 : 1680, nextConfig.arena?.width || 0),
+        height: Math.max(waveNumber === 8 ? 1010 : waveNumber === 7 ? 970 : 930, nextConfig.arena?.height || 0),
+      };
+      if (nextConfig.hazard) {
+        if (Number.isFinite(nextConfig.hazard.interval)) {
+          nextConfig.hazard.interval =
+            nextConfig.hazard.interval * (waveNumber === 8 ? 0.98 : 0.94);
+        }
+        if (Number.isFinite(nextConfig.hazard.telegraph)) {
+          nextConfig.hazard.telegraph =
+            nextConfig.hazard.telegraph * (waveNumber === 8 ? 0.9 : 0.95);
+        }
+        if (Number.isFinite(nextConfig.hazard.duration)) {
+          nextConfig.hazard.duration += waveNumber === 8 ? 0.56 : 0.28;
+        }
+        if (Number.isFinite(nextConfig.hazard.relayRange)) {
+          nextConfig.hazard.relayRange = Math.max(324, nextConfig.hazard.relayRange - 48);
+        }
+        if (Number.isFinite(nextConfig.hazard.relayWidth)) {
+          nextConfig.hazard.relayWidth += waveNumber === 8 ? 14 : 8;
+        }
+        if (Number.isFinite(nextConfig.hazard.driftSpeed)) {
+          nextConfig.hazard.driftSpeed += waveNumber === 8 ? 12 : 6;
+        }
+        if (Number.isFinite(nextConfig.hazard.driftOrbit)) {
+          nextConfig.hazard.driftOrbit += waveNumber === 8 ? 0.07 : 0.04;
+        }
+        if (Number.isFinite(nextConfig.hazard.enemyPullRadius)) {
+          nextConfig.hazard.enemyPullRadius += waveNumber === 8 ? 22 : 10;
+        }
+      }
+      nextConfig.note =
+        waveNumber === 6
+          ? `${config.note} Volt Drones proof가 lane 점거보다 후방 추격선 절단을 먼저 묻는 편대 lap으로 바뀌어, shrike와 brander가 꼬리를 물기 전에 드론이 비운 뒤쪽 pocket으로 짧게 복귀하는지 본다.`
+          : waveNumber === 7
+            ? `${config.note} Volt Drones proof가 drift 도주선을 rear-screening 재진입 시험으로 바꿔, lancer 교차선보다 binder와 brander가 닫는 꼬리쪽 seam을 먼저 끊고 같은 pocket을 다시 여는지 묻는다.`
+            : `${config.note} Volt Drones overclock payoff가 마지막 hold를 움직이는 전격막 결산으로 키워, Mk.II 편대가 뒤를 닫는 brute/binder를 자동으로 찢는 동안 플레이어가 앞쪽 refuge를 연속으로 갈아타게 만든다.`;
+      nextConfig.directive =
+        waveNumber === 6
+          ? "앞으로만 밀지 말고 Volt Drones가 먼저 비운 뒤쪽 pocket으로 짧게 복귀한다. shrike와 brander가 꼬리를 물기 전에 후방 추격선을 잘라 놓고 다시 전방 lane으로 꺾는 편이 맞다."
+          : waveNumber === 7
+            ? "drift에 밀려도 바깥으로 길게 도망치지 말고, 드론이 자른 꼬리 seam으로 같은 pocket에 다시 꽂힌다. binder와 brander부터 끊어 rear screen을 열고 그 틈으로 재진입해야 crossfire가 무너지지 않는다."
+            : "과급된 드론 편대가 뒤를 닫는 brute와 binder를 끊는 동안 앞쪽 refuge 둘만 번갈아 쓴다. 후방 추격선을 직접 오래 kite하기보다, 이미 열린 앞 pocket을 연속으로 갈아타며 전격막을 계속 뒤에 남긴다.";
+      nextConfig.supportProof =
+        waveNumber === 6
+          ? {
+              label: "Drone Screen",
+              status: "rear screen reset",
+              note:
+                "드론이 자른 뒤쪽 추격선을 이용해 짧게 복귀해야 한다. 계속 전진하기보다 후방 seam을 열고 다시 앞 lane으로 꺾는 순서가 핵심이다.",
+            }
+          : waveNumber === 7
+            ? {
+                label: "Drone Re-entry",
+                status: "tail seam re-entry",
+                note:
+                  "binder와 brander가 닫는 꼬리 seam을 드론이 먼저 비워야 같은 pocket에 다시 꽂힐 수 있다. rear screen을 잃으면 재진입도 같이 무너진다.",
+              }
+            : {
+                label: "Drone Overclock",
+                status: "rolling refuge chain",
+                note:
+                  "강화된 드론 편대가 뒤쪽 추격선을 자동으로 찢는 동안 앞 refuge를 연속으로 갈아타야 한다. pocket 전환이 끊기면 overclock payoff도 약해진다.",
               };
       return nextConfig;
     }

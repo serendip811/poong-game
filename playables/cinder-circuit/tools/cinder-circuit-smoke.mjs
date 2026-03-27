@@ -428,6 +428,38 @@ const seekerProofLiveStatus = game.getLiveSideBetSummary({
 });
 assert.equal(seekerProofLiveStatus?.label, "Seeker Overclock");
 assert.equal(seekerProofLiveStatus?.status, "barrage corridor chain");
+const droneProofBuild = game.createInitialBuild("scrap_pact");
+droneProofBuild.chassisId = "bulwark_treads";
+droneProofBuild.supportSystems = [{ id: "volt_drones", tier: 1 }];
+const droneWave6Config = game.resolveWaveConfig(5, droneProofBuild);
+assert.equal(droneWave6Config.supportProof?.label, "Drone Screen");
+assert.equal(droneWave6Config.supportProof?.status, "rear screen reset");
+assert.ok(droneWave6Config.directive.includes("뒤쪽 pocket"));
+assert.ok((droneWave6Config.mix.shrike || 0) >= 0.15);
+assert.ok((droneWave6Config.mix.binder || 0) >= 0.18);
+const droneWave7Config = game.resolveWaveConfig(6, droneProofBuild);
+assert.equal(droneWave7Config.supportProof?.label, "Drone Re-entry");
+assert.equal(droneWave7Config.supportProof?.status, "tail seam re-entry");
+assert.ok(droneWave7Config.directive.includes("rear screen"));
+assert.ok((droneWave7Config.mix.binder || 0) >= 0.18);
+assert.ok((droneWave7Config.mix.brander || 0) >= 0.05);
+const droneWave8Config = game.resolveWaveConfig(7, droneProofBuild);
+assert.equal(droneWave8Config.supportProof?.label, "Drone Overclock");
+assert.equal(droneWave8Config.supportProof?.status, "rolling refuge chain");
+assert.ok(droneWave8Config.directive.includes("refuge"));
+assert.ok((droneWave8Config.mix.brute || 0) >= 0.18);
+assert.ok((droneWave8Config.mix.binder || 0) >= 0.14);
+const droneProofLiveStatus = game.getLiveSideBetSummary({
+  build: droneProofBuild,
+  waveIndex: 7,
+  phase: "wave",
+  wave: droneWave8Config,
+  catalystCrucible: { active: false },
+  overcommit: { active: false },
+  doctrinePursuit: { active: false },
+});
+assert.equal(droneProofLiveStatus?.label, "Drone Overclock");
+assert.equal(droneProofLiveStatus?.status, "rolling refuge chain");
 const wave7FieldGrantChoices = game.buildFieldGrantChoices(chassisBranchBuild, () => 0, 7);
 assert.equal(wave7FieldGrantChoices.find((choice) => choice.contractRole === "gamble"), undefined);
 assert.ok(wave7FieldGrantChoices.every((choice) => choice.type !== "system"));
