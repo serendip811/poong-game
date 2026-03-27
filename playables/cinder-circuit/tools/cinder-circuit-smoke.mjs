@@ -353,9 +353,7 @@ const aegisLiveStatus = game.getLiveSideBetSummary({
   overcommit: { active: false },
   doctrinePursuit: { active: false },
 });
-assert.equal(aegisLiveStatus?.label, "방호 고리");
-assert.equal(aegisLiveStatus?.status, "1기 전개");
-assert.ok(aegisLiveStatus?.note.includes("방호 파동"));
+assert.equal(aegisLiveStatus, null);
 const aegisProofBuild = game.createInitialBuild("rail_zeal");
 aegisProofBuild.chassisId = "vector_thrusters";
 aegisProofBuild.supportSystems = [{ id: "aegis_halo", tier: 1 }];
@@ -493,8 +491,8 @@ const pauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   paused: true,
 });
 assert.ok(pauseSnapshotMarkup.includes("즉시 위협"));
-assert.ok(pauseSnapshotMarkup.includes("최근 획득"));
-assert.ok(pauseSnapshotMarkup.includes("고철 +34 / 회수 +10% / Siege Debt 1웨이브"));
+assert.ok(!pauseSnapshotMarkup.includes("최근 획득"));
+assert.ok(!pauseSnapshotMarkup.includes("고철 +34 / 회수 +10% / Siege Debt 1웨이브"));
 assert.ok(!pauseSnapshotMarkup.includes("활성 판돈"));
 assert.ok(!pauseSnapshotMarkup.includes("Era III"));
 assert.ok(!pauseSnapshotMarkup.includes("주력 변이"));
@@ -508,9 +506,9 @@ const openingPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   paused: true,
 });
 assert.ok(openingPauseSnapshotMarkup.includes("즉시 위협"));
-assert.ok(openingPauseSnapshotMarkup.includes("최근 획득"));
-assert.ok(openingPauseSnapshotMarkup.includes("첫 포지 전"));
-assert.ok(openingPauseSnapshotMarkup.includes("pause-summary__lanes"));
+assert.ok(!openingPauseSnapshotMarkup.includes("최근 획득"));
+assert.ok(!openingPauseSnapshotMarkup.includes("첫 포지 전"));
+assert.ok(!openingPauseSnapshotMarkup.includes("pause-summary__lanes"));
 assert.ok(!openingPauseSnapshotMarkup.includes("Bare Hull"));
 assert.ok(!openingPauseSnapshotMarkup.includes("조용한 계약"));
 const supportPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
@@ -521,9 +519,41 @@ const supportPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   phase: "combat",
   paused: true,
 });
-assert.ok(supportPauseSnapshotMarkup.includes(chassisOnlyChoice.chassisTitle));
+assert.ok(supportPauseSnapshotMarkup.includes("route-contract__title"));
+assert.ok(supportPauseSnapshotMarkup.includes("즉시 위협"));
 assert.ok(!supportPauseSnapshotMarkup.includes("활성 보조"));
 assert.ok(!supportPauseSnapshotMarkup.includes("활성 판돈"));
+const hiddenCombatCacheStatus = game.getLiveSideBetSummary({
+  build: game.createInitialBuild("rail_zeal"),
+  waveIndex: 4,
+  phase: "wave",
+  wave: {
+    combatCache: {
+      deployed: false,
+      claimed: false,
+    },
+  },
+  catalystCrucible: { active: false },
+  overcommit: { active: false },
+  doctrinePursuit: { active: false },
+});
+assert.equal(hiddenCombatCacheStatus, null);
+const liveCombatCacheStatus = game.getLiveSideBetSummary({
+  build: game.createInitialBuild("rail_zeal"),
+  waveIndex: 4,
+  phase: "wave",
+  wave: {
+    combatCache: {
+      deployed: true,
+      claimed: false,
+    },
+  },
+  catalystCrucible: { active: false },
+  overcommit: { active: false },
+  doctrinePursuit: { active: false },
+});
+assert.equal(liveCombatCacheStatus?.label, "Combat Cache");
+assert.equal(liveCombatCacheStatus?.status, "live");
 const wave5GambleChoice = wave5ForgeChoices.find((choice) => choice.contractRole === "gamble");
 assert.equal(wave5GambleChoice, undefined);
 const scriptedMidrunGreedChoice = game.createFieldGreedContractChoice(

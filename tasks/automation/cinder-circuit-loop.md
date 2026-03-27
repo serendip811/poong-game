@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: make Wave 6 honestly single-axis across data, roadmap copy, and forge UI; remove all Wave 6 support-lock and Wave 8 bay promises from the shipped path until one chassis transformation and its proof lap feel complete.
+- Immediate priority: collapse the shipped-route contract across forge, HUD, and status surfaces to `one current form + one immediate ask`; strip branch-tail, side-bet, and future-admin language until the 8-wave appetite loop reads cleanly at a glance.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 10:10:00 KST
+  Findings:
+  - The project is drifting from `alpha consolidation` into UI taxonomy creep. `docs/games/cinder-circuit-design.md` still describes the core promise as repeatedly choosing `주력 변이 / 방호·보조 / 판돈·유틸`, which normalizes breadth and reading load before the shipped slice has earned a single dominant midrun silhouette.
+  - `renderForgeOverlay()` and the base-route status helpers still preserve a three-slot contract shape: `현재 전장 / 현재 형태 / 분기 보상` or `현재 형태 / 즉시 위협 / branch tail`. Compared with stronger reward/read patterns in `Hades`, `Nova Drift`, and `Brotato`, this is still dashboard language, not appetite language.
+  - The status/inspection layer is still carrying too much route administration for an 8-wave shipped run. `getLiveSideBetSummary(...)` keeps surfacing labels like `Live Ascension`, `Dominion Break`, `Combat Cache`, and long explanatory notes, so checking state feels like reading systems metadata instead of confirming a combat plan.
+  - This also hurts the long-game ambition. A 20-30 wave version needs more escalation beats, but the current slice still front-loads visual completeness through labels and context cards instead of letting the player start lean and earn later spectacle.
+  Top Priority: Reduce the shipped-route HUD/forge/status contract to two ideas max, `current form` and `immediate ask`, and hide branch-payoff or side-bet text unless a live pickup or active branch decision is actually on screen.
+  Why Now: If every pause or status check reads like a design document, reruns lose pace before build hunger can form.
+  Do Not Repeat: Do not solve this with shorter synonyms for the same triple-shell or by adding more named support/cache layers.
+  Release Gate: UX/UI
 
 - 2026-03-28 09:35:00 KST
   Findings:
@@ -3862,6 +3873,14 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-28 10:35:00 KST
+  Changed: tightened the shipped status layer in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so pause and live side-readouts now obey the same `current form + immediate ask` contract as the forge strip. `createBaseRoutePauseSnapshotMarkup(...)` no longer appends the lower `최근 획득` lane, and `getLiveSideBetSummary(...)` now stays quiet on the consolidated route unless there is an active support/chassis proof or a cache/ascension object is already live on the field; passive installed-support spotlights and undeployed `Combat Cache` / `Dominion Break` / `Live Ascension` teasers no longer reopen route-admin text during normal checks. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the absent pause lane, the hidden passive support spotlight, and the new `deployed-only` cache summary rule.
+  Why: the latest critique's `Top Priority` was to reduce shipped HUD/forge/status surfaces to two ideas max and hide side-bet text unless a real live event is on screen. The highest-value bounded interpretation was to remove the remaining `pause document` behavior and suppress pre-trigger side-bet chatter, because that directly improves rerun pace without reopening progression scope or adding more UI wrappers.
+  Follow-up Risk: the live combat feed can still summarize longer cache/pursuit events once they actually fire, so a later UX/UI pass may still need to shorten those headlines if status checks feel cleaner than the feed itself.
+  UI reference direction: followed the fast status-board discipline from `Hades`, `Nova Drift`, and `Brotato`, where pause/default HUD confirms one build state and one live problem instead of previewing dormant branches.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: UX/UI
 
 - 2026-03-28 08:12:50 KST
   Changed: rewrote the shipped-route status contract in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so roadmap, live wave track, and forge context now render as a strict two-slot strip with the earned form first and the immediate proof ask second. `getBaseRouteBuildRoadmap(...)` and `getShippingLadderSteps(...)` no longer brief `Wave 8 마무리 포지`, reserved support riders, or bay promises during the `Wave 6-7` chassis proof, `createShippingLadderMarkup(...)` and `renderWaveTrack()` no longer surface a third `분기 보상/현재 약속` slot on the shipped route, and [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) now teaches `Wave 5 weapon leap -> Wave 6 chassis lock -> Wave 7-8 proof` instead of `Wave 6 차체/support 잠금`. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new two-slot markup and the absence of `Wave 8` support wording in shipped ladder/roadmap copy.

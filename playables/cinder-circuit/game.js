@@ -10276,13 +10276,6 @@
       activeState.phase === "result"
         ? "짧은 지배 구간 완료"
         : getBaseRouteCombatAsk(activeState, waveConfig, null);
-    const laneEntries = [
-      {
-      label: "최근 획득",
-      value: getBaseRoutePauseRecentGainSummary(build, supportSystem, waveNumber),
-      tone: "hot",
-      },
-    ];
     return `
       <div class="pause-summary__hero">
         ${createBaseRouteFocusMarkup({
@@ -10295,24 +10288,6 @@
           compact: true,
         })}
       </div>
-      ${
-        laneEntries.length
-          ? `
-            <div class="pause-summary__lanes">
-              ${laneEntries
-                .map(
-                  (lane) => `
-                    <article class="pause-summary__lane" data-tone="${lane.tone}">
-                      <span class="pause-summary__lane-label">${lane.label}</span>
-                      <strong class="pause-summary__lane-value">${lane.value}</strong>
-                    </article>
-                  `
-                )
-                .join("")}
-            </div>
-          `
-          : ""
-      }
     `;
   }
 
@@ -17550,7 +17525,7 @@
       liveWaveNumber <= DEFAULT_ROUTE_WAVE_COUNT
         ? getInstalledSupportSpotlight(currentState.build)
         : null;
-    if (supportSpotlight) {
+    if (supportSpotlight && !CONSOLIDATED_12_WAVE_ROUTE) {
       return {
         label: supportSpotlight.hudLabel,
         status: supportSpotlight.status,
@@ -17569,62 +17544,68 @@
     }
     if (currentState.phase === "wave" && currentState.wave && currentState.wave.doctrineAscension) {
       const ascension = currentState.wave.doctrineAscension;
+      if (!ascension.deployed) {
+        return null;
+      }
       return {
         label: "Live Ascension",
-        status: ascension.claimed ? "claimed" : ascension.deployed ? "split live" : "elite trigger",
-        note: ascension.deployed
-          ? "전장에 떨어진 cache 중 하나만 회수할 수 있다."
-          : "이번 웨이브 첫 elite가 doctrine ascension cache를 떨어뜨린다.",
+        status: ascension.claimed ? "claimed" : "split live",
+        note: "전장에 떨어진 cache 중 하나만 회수할 수 있다.",
       };
     }
     if (currentState.phase === "wave" && currentState.wave && currentState.wave.afterburnAscension) {
       const ascension = currentState.wave.afterburnAscension;
+      if (!ascension.deployed) {
+        return null;
+      }
       return {
         label: "Afterburn Ascension",
-        status: ascension.claimed ? "claimed" : ascension.deployed ? "split live" : "elite trigger",
-        note: ascension.deployed
-          ? "둘 중 하나를 집는 순간 남은 endform split은 닫힌다."
-          : "이번 afterburn 첫 elite가 endform split cache를 떨어뜨린다.",
+        status: ascension.claimed ? "claimed" : "split live",
+        note: "둘 중 하나를 집는 순간 남은 endform split은 닫힌다.",
       };
     }
     if (currentState.phase === "wave" && currentState.wave && currentState.wave.lateAscension) {
       const lateAscension = currentState.wave.lateAscension;
+      if (!lateAscension.deployed) {
+        return null;
+      }
       return {
         label: "Ascension Core",
-        status: lateAscension.claimed ? "claimed" : lateAscension.deployed ? "split live" : "elite trigger",
-        note: lateAscension.deployed
-          ? "둘 중 하나를 회수해야 남은 run의 주포/차체가 굳는다."
-          : "이번 late wave 첫 elite가 Ascension Core split을 떨어뜨린다.",
+        status: lateAscension.claimed ? "claimed" : "split live",
+        note: "둘 중 하나를 회수해야 남은 run의 주포/차체가 굳는다.",
       };
     }
     if (currentState.phase === "wave" && currentState.wave && currentState.wave.afterburnOverdrive) {
       const overdrive = currentState.wave.afterburnOverdrive;
+      if (!overdrive.deployed) {
+        return null;
+      }
       return {
         label: "Endform Overdrive",
-        status: overdrive.claimed ? "claimed" : overdrive.deployed ? "cache live" : "elite trigger",
-        note: overdrive.deployed
-          ? "전장 cache 하나만 집어 마지막 jump를 잠가야 한다."
-          : "중반 afterburn elite가 마지막 jump cache를 떨어뜨린다.",
+        status: overdrive.claimed ? "claimed" : "cache live",
+        note: "전장 cache 하나만 집어 마지막 jump를 잠가야 한다.",
       };
     }
     if (currentState.phase === "wave" && currentState.wave && currentState.wave.afterburnDominion) {
       const dominion = currentState.wave.afterburnDominion;
+      if (!dominion.deployed) {
+        return null;
+      }
       return {
         label: "Dominion Break",
-        status: dominion.claimed ? "claimed" : dominion.deployed ? "cache live" : "elite trigger",
-        note: dominion.deployed
-          ? "cache를 집으면 다음 bracket 하나가 victory lap으로 바뀐다."
-          : "이번 전투 첫 elite가 dominion cache를 떨어뜨린다.",
+        status: dominion.claimed ? "claimed" : "cache live",
+        note: "cache를 집으면 다음 bracket 하나가 victory lap으로 바뀐다.",
       };
     }
     if (currentState.phase === "wave" && currentState.wave && currentState.wave.combatCache) {
       const combatCache = currentState.wave.combatCache;
+      if (!combatCache.deployed) {
+        return null;
+      }
       return {
         label: shouldUseLateFieldCache(currentState.waveIndex + 2) ? "Arsenal Cache" : "Combat Cache",
-        status: combatCache.claimed ? "claimed" : combatCache.deployed ? "live" : "elite trigger",
-        note: combatCache.deployed
-          ? "현장 cache 하나를 집으면 다음 웨이브가 포지 정지 없이 직결된다."
-          : "이번 웨이브 첫 elite가 live cache를 떨어뜨린다.",
+        status: combatCache.claimed ? "claimed" : "live",
+        note: "현장 cache 하나를 집으면 다음 웨이브가 포지 정지 없이 직결된다.",
       };
     }
     if (currentState.phase === "wave" && currentState.wave && currentState.wave.chassisProof) {
