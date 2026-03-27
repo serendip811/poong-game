@@ -2590,7 +2590,7 @@
   const LEAN_START_CORE_ID = "ember";
   const MAX_SUPPORT_BAYS = 2;
   const MAX_SUPPORT_BAY_LIMIT = 4;
-  const SUPPORT_SYSTEM_START_WAVE = 7;
+  const SUPPORT_SYSTEM_START_WAVE = 6;
   const BASE_ROUTE_MIDRUN_SUPPORT_WAVE = SUPPORT_SYSTEM_START_WAVE;
   const PREVIEW_SUPPORT_PRIMER_CREDIT = 10;
   const SUPPORT_SYSTEM_DEFS = {
@@ -7316,7 +7316,7 @@
         },
         {
           label: deferredSupport ? "다음 보조" : "보조",
-          value: choice.systemChoice ? choice.systemChoice.title : choice.bayUnlock ? "빈 보조칸" : "Wave 7 rider",
+          value: choice.systemChoice ? choice.systemChoice.title : choice.bayUnlock ? "빈 보조칸" : "후속 보조 선택",
         },
         {
           label: "효과",
@@ -10697,8 +10697,9 @@
     ) {
       return allSystemIds;
     }
-    // Keep the shipped route on weapon/body payoff through Wave 8 so standalone
-    // support hardware does not steal the late mid-run takeover.
+    // Keep the shipped route lean through Wave 5, then narrow Wave 6-8 offers
+    // to one doctrine-owned support silhouette instead of reopening the whole
+    // hardware catalog at once.
     if (nextWave < SUPPORT_SYSTEM_START_WAVE) {
       return [];
     }
@@ -23413,6 +23414,32 @@
       pendingFinalForge: state.pendingFinalForge,
     });
     const useBaseRouteContract = shouldUseBaseRouteForgeContract();
+    const riderContractChoice = useBaseRouteContract
+      ? state.forgeChoices.find((choice) => choice && choice.contractRole === "rider")
+      : null;
+    const branchPreviewPayoff =
+      useBaseRouteContract && riderStep && riderContractChoice
+        ? riderContractChoice.type === "utility" && riderContractChoice.action === "bastion_bay_forge"
+          ? {
+              label: "새 보조",
+              value:
+                riderContractChoice.systemChoice?.title ||
+                riderContractChoice.chassisTitle ||
+                riderContractChoice.title ||
+                "방호 변이",
+            }
+          : riderContractChoice.type === "system"
+            ? {
+                label: riderContractChoice.forgeLaneLabel === "공세 모듈" ? "새 공세" : "새 보조",
+                value: riderContractChoice.title || riderContractChoice.slotText || "보조 시스템",
+              }
+            : riderContractChoice.type === "utility" && riderContractChoice.action === "field_greed"
+              ? {
+                  label: "새 판돈",
+                  value: riderContractChoice.title || "판돈 계약",
+                }
+              : null
+        : null;
     const featuredForgeChoice = riderStep || useBaseRouteContract
       ? { showcase: null, featuredIndex: -1 }
       : getForgeFeaturedChoice(state.forgeChoices, state.build, state.waveIndex + 2);
@@ -23479,11 +23506,19 @@
         <article class="forge-context__card forge-context__card--span-two forge-context__card--contract-shell">
           ${createBaseRouteForgeContextMarkup({
             eyebrow: baseRouteTransformationFocus.eyebrow || focusEyebrow,
-            title: baseRouteTransformationFocus.title || focusTitle,
-            titleLabel: state.pendingFinalForge ? "형태 고정" : "다음 시험",
-            currentFormLabel: state.pendingFinalForge ? dominantFormSummary.label : proofWindow.label,
-            waveAskLabel: baseRouteTransformationFocus.eyebrow || focusEyebrow,
-            waveAskValue: baseRouteTransformationFocus.title || focusTitle,
+            title: dominantFormSummary.label,
+            titleLabel: state.pendingFinalForge ? "형태 고정" : "현재 형태",
+            currentFormLabel: dominantFormSummary.label,
+            waveAskLabel: state.pendingFinalForge ? "마무리" : "즉시 위협",
+            waveAskValue: state.pendingFinalForge
+              ? baseRouteTransformationFocus.title || focusTitle
+              : proofWindow.label,
+            branchPayoffLabel:
+              (branchPreviewPayoff && branchPreviewPayoff.label) ||
+              (branchPayoff && shouldShowLiveBranchPayoff(state) ? branchPayoff.label : ""),
+            branchPayoffValue:
+              (branchPreviewPayoff && branchPreviewPayoff.value) ||
+              (branchPayoff && shouldShowLiveBranchPayoff(state) ? branchPayoff.value : ""),
           })}
         </article>
       `

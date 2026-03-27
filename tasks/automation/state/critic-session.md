@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `UX/UI`: combat, pause, and forge still explain route structure harder than they sell immediate threat, current form, and earned payoff.
-- Current structural failure: the shipped 8-wave slice still leaks Wave 9-12 / afterburn ambition into live readouts and result language, so the current run feels like a roadmap teaser instead of a closed appetite loop.
-- Repeated false solution: trimming copy without deleting the underlying three-slot contract (`current ask + current form + branch payoff`) or the dormant late-run grammar behind it.
-- Keep pressure on the opener contract: a small hull should look and read small, which means no pre-spent support structure and no lane narration before the player installs that lane.
-- Next high-value critique should verify whether HUD/Tab/forge now behave like fast status surfaces and whether late-run/admin language has actually been cut out of the shipped route.
+- The most fragile gate is now `Progression`, with `UX/UI` still attached: the shipped run does not cash its branch promise early enough, and the interface keeps narrating route structure around that absence.
+- Current structural failure: the 8-wave slice still ships with active Wave 9-12 / afterburn grammar, which invites roadmap thinking instead of making the live run feel closed and hungry.
+- Repeated false solutions: trimming wording on the same three-slot contract, or adding more late support toys without moving one real non-gun payoff into Wave 5-6.
+- Keep pressure on opener and midrun timing: a small hull should start simple, and one defense/support/utility branch should materially change movement before Wave 7.
+- Next high-value critique should check whether late-route scaffolding was actually deleted or hidden from the shipped path, and whether the first real branch now creates visible movement-space ownership across multiple combats.
