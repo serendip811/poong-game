@@ -766,13 +766,11 @@ assert.equal(
   null
 );
 assert.equal(
-  JSON.stringify(
-    game.getBaseRouteForgeContextTailSummary({
-      riderStep: true,
-      branchPreviewPayoff: { label: "새 보조", value: "Seeker Array" },
-    })
-  ),
-  JSON.stringify({ label: "새 보조", value: "Seeker Array" })
+  game.getBaseRouteForgeContextTailSummary({
+    riderStep: true,
+    branchPreviewPayoff: { label: "새 보조", value: "Seeker Array" },
+  }),
+  null
 );
 const aegisRiderPreviewRows = game.createForgePreviewRows({
   type: "utility",
@@ -792,14 +790,23 @@ assert.equal(aegisSpotlight?.hudValue, "탄막 절개 + 방호 파동");
 assert.ok(aegisSpotlight?.promise.includes("방호 고리"));
 assert.ok(!aegisSpotlight?.feed.includes("Wave 8"));
 assert.equal(
-  JSON.stringify(
-    game.getBaseRouteForgeContextTailSummary({
-      riderStep: true,
-      branchPreviewPayoff: game.getSupportSystemInstalledPayoff("aegis_halo", 1),
-    })
-  ),
-  JSON.stringify({ label: "방호 고리", value: "탄막 절개 + 방호 파동" })
+  game.getBaseRouteForgeContextTailSummary({
+    riderStep: true,
+    branchPreviewPayoff: game.getSupportSystemInstalledPayoff("aegis_halo", 1),
+  }),
+  null
 );
+const wave6SingleAxisTransformation = game.getBaseRouteForgeChoiceTransformation({
+  type: "utility",
+  action: "bastion_bay_forge",
+  chassisTitle: "Bulwark Treads",
+  singleAxisBreakpoint: true,
+  bayUnlock: false,
+});
+assert.equal(wave6SingleAxisTransformation.accent, "Bulwark Treads");
+assert.equal(wave6SingleAxisTransformation.previewValue, "차체 리듬 선점");
+assert.ok(!wave6SingleAxisTransformation.promise.includes("body/support bracket"));
+assert.ok(!wave6SingleAxisTransformation.proof.includes("Wave 8 마무리 포지"));
 const forgeHeadlineMarkup = game.createBaseRouteForgeContextMarkup({
   title: "주력 변이",
   titleLabel: "다음 시험",

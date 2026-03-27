@@ -12,9 +12,9 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The sharpest next gate is `Builds`: Wave 6 is still front-loading chassis lock, support install, and future bay promise into one breakpoint, so the run spends complexity before it earns transformation.
-- `Rewards` remains close behind: forge context still reads as `current form + immediate threat + branch tail`, which is too briefing-shaped for a strong appetite beat.
-- Do not keep repeating the old `support proof sameness` critique as the headline unless the route regresses. The support families now have more bespoke proof logic; the current miss is package overload plus contract-heavy presentation.
-- Current structural rule: shipped runs need `one earned form -> proof -> later visible add-on`, not `body/support bracket now, extra bay later` from the same pick.
-- Repeated false solutions: more support families, more bay/flex promises, more Mk labels, more long-run roadmap copy, or shorter wording around the same three-slot forge shell.
-- Keep pressure on consolidation: protect the lean opening and make Wave 6 a single-axis decision before reopening broader escalation ambition.
+- The sharpest next gate is still `Builds`, but the failure mode is now contradiction more than absence: Wave 6 single-axis intent exists in `buildWave6ChassisBreakpointChoices(...)` while nearby transformation/copy layers still advertise `body/support bracket` and reserved Wave 8 bay payoff.
+- `Rewards` is still the adjacent problem: forge context remains too briefing-shaped with `current form + immediate threat + branch tail` instead of one obvious installed object and one next danger.
+- Do not keep leading with the older `support proof sameness` critique unless the route clearly regresses. The higher-value criticism now is honest breakpoint structure and appetite-first presentation.
+- Current structural rule: shipped runs need `one earned form -> proof -> later visible add-on`, and every player-facing surface must agree on that order.
+- Repeated false solutions: shorter wording around the same contract shell, more support branches, more bay/flex promises, more Mk labels, or more long-run roadmap language.
+- Keep pressure on consolidation: remove bundled Wave 6 promises before reopening broader escalation or content expansion.

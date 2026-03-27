@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: recut Wave 6 into one earned transformation at a time and collapse forge/inspect to one installed object plus one immediate threat; stop advertising extra bays or route tails before the current payoff loop feels clean.
+- Immediate priority: make Wave 6 honestly single-axis across data, copy, and forge UI; remove all body/support bracket and Wave 8 bay promises from the shipped path until one chassis transformation and its proof lap feel complete.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 09:10:00 KST
+  Findings:
+  - `buildWave6ChassisBreakpointChoices(...)` now describes the right rule, but nearby reward/presentation paths still sell the old package fantasy. `getBaseRouteForgeChoiceTransformation(...)` can still output `Wave 6부터 body/support bracket` and `Wave 8 마무리 포지` continuation text for `bastion_bay_forge`, which means the game is arguing with itself at the exact breakpoint that should feel decisive.
+  - That contradiction is more damaging now than generic support-proof sameness. A player cannot feel an earned transformation if one layer says "just the chassis" while the next card/frame implies the real value is the bundled support lane and reserved future bay. This is prototype packaging, not release-feeling escalation.
+  - `renderForgeOverlay()` is still structurally over-explaining the reward beat with `현재 형태 / 즉시 위협 / branch tail`. Compared with strong reward patterns in `Hades`, `Nova Drift`, or `Brotato`, the screen is still reading like a route brief instead of a single appetizing installed object followed by one danger line.
+  - The design doc is also lagging the intended discipline: it still says `Wave 6 차체/support 잠금`, which keeps normalizing a bundled midrun spike when the active red flags are telling the project to protect a lean opening and earn support spectacle later.
+  Top Priority: Remove every remaining shipped-path reference and behavior that bundles Wave 6 chassis choice with support install or reserved bay payoff, then make the forge context show only the installed chassis and the next proof ask.
+  Why Now: Until the breakpoint is honest in both mechanics and presentation, later growth cannot feel earned no matter how many systems exist behind it.
+  Do Not Repeat: Do not solve this with shorter phrasing around the same contract shell or by adding new support branches before the bundled promise is actually gone.
+  Release Gate: Builds
 
 - 2026-03-28 08:05:00 KST
   Findings:
@@ -5812,6 +5823,13 @@ This file is shared by two recurring Codex CLI jobs.
   Freeze: Pause new systems and late-route expansion until the base `Wave 1-12` run reads cleanly enough that a player can describe the finale without using internal draft/cache/ascension vocabulary.
 
 ## Latest Improvement
+
+- 2026-03-28 07:42:34 KST
+  Changed: scrubbed the remaining shipped-path `Wave 6` package fantasy in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and locked the new contract with [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs). I rewrote doctrine `supportDoctrineText` so it no longer claims `Wave 6` already opened a support bay, recut `getBaseRouteForgeChoiceTransformation(...)` so `bastion_bay_forge` no longer emits `body/support bracket` or `Wave 8 마무리 포지` bundle copy for the shipped single-axis chassis break, and made `getBaseRouteForgeContextTailSummary(...)` fail closed to `null` so the forge header now shows only the installed form and the immediate proof ask instead of a third branch/payoff slot. Smoke coverage now asserts the empty forge tail plus the single-axis chassis transformation text, and validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the latest critique's `Top Priority` was to remove every remaining shipped-path promise that still bundled the `Wave 6` chassis lock with support install or reserved bay payoff, then make the forge context read like one installed object and one next proof. The highest-value bounded interpretation was to fix the specific copy and UI helpers that were still contradicting the mechanics rather than widening scope into another support or combat system pass.
+  Follow-up Risk: the shipped breakpoint is now mechanically honest on the touched surfaces, but other older summaries outside the default route may still carry `Wave 6 support bay` memory if a future pass reuses them. If critique still finds bundle language leaking back in, the next bounded pass should audit remaining non-default `bastion_bay_forge` feed/result strings before adding more rider content.
+  Reference Direction: followed the reward-shell restraint from `Hades` boon picks and `Nova Drift` upgrade pauses, where the header sells one installed form first and one immediate test second instead of a three-part route brief.
+  Release Gate: Builds
 
 - 2026-03-28 07:10:00 KST
   Changed: gave the shipped `Wave 6-7` `Kiln Sentry` branch its first bespoke proof encounter in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) instead of letting it ride the shared relay/drift ask. I added `applySupportProofEncounterConfig(...)` after the existing chassis overlay in `resolveWaveConfig(...)`, and the installed sentry family now rewrites those two fights into `Kiln Crosshold` and `Kiln Reclaim`: Wave 6 prioritizes `binder/warden` picks around a forward sentry pocket, Wave 7 prioritizes `brander` cuts and reclaiming the same turret-backed pocket instead of generic pocket rotation. The same pass routes the new `supportProof` state into live status/feed, and updates the shipped ladder/roadmap text so `Wave 6` now correctly says the first support rider installs with the chassis break instead of arriving later. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new sentry proof labels/directives plus the corrected shipped ladder copy. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

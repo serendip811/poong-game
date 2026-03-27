@@ -3654,7 +3654,7 @@
       preferredModIds: ["drive_sync", "arc_array", "step_servos"],
       preferredAffixIds: ["arc_link", "overclock"],
       supportDoctrineText:
-        "Wave 6부터 열린 보조 베이는 추적/공세 하드웨어를 우선 받아 pursuit form을 두껍게 만들고, Wave 8 마무리 포지에서 그 실루엣을 한 번 더 굳힌다.",
+        "Wave 8에서 첫 support rider가 다시 열리면 추적/공세 하드웨어를 우선 받아 pursuit form을 두껍게 만든다.",
       favoredCoreId: "ricochet",
       lateCapstoneId: "relay_storm_lattice",
       apply(build) {
@@ -3676,7 +3676,7 @@
       preferredModIds: ["armor_mesh", "magnet_rig", "reactor_cap"],
       preferredAffixIds: ["salvage_link", "thermal_weave"],
       supportDoctrineText:
-        "Wave 6부터 열린 보조 베이는 포탑/방호 회로를 우선 받아 pocket 유지력을 더 오래 끌어내고, Wave 8 마무리 포지에서 버팀선을 더 두껍게 만든다.",
+        "Wave 8에서 첫 support rider가 다시 열리면 포탑/방호 회로를 우선 받아 pocket 유지력을 더 오래 끌어낸다.",
       favoredCoreId: "scatter",
       lateCapstoneId: "bulwark_foundry",
       apply(build) {
@@ -3698,7 +3698,7 @@
       preferredModIds: ["rail_sleeve", "arc_array", "heat_sink"],
       preferredAffixIds: ["phase_rounds", "arc_link"],
       supportDoctrineText:
-        "Wave 6부터 열린 보조 베이는 포격/근접 방호 보강을 우선 받아 긴 사선을 끝까지 유지하게 만들고, Wave 8 마무리 포지에서 화망을 한 번 더 다듬는다.",
+        "Wave 8에서 첫 support rider가 다시 열리면 포격/근접 방호 보강을 우선 받아 긴 사선을 끝까지 유지하게 만든다.",
       favoredCoreId: "lance",
       lateCapstoneIds: ["sky_lance_battery", "stormspire_needle"],
       apply(build) {
@@ -7695,18 +7695,22 @@
       const promise =
         supportSpotlight
           ? supportSpotlight.promise
-          : CONSOLIDATED_12_WAVE_ROUTE && choice.systemChoice
-          ? `${defenseTitle}와 ${supportTitle}를 함께 잠가 Wave 6부터 body/support bracket을 바로 연다.`
-          : !choice.bayUnlock && CONSOLIDATED_12_WAVE_ROUTE
+          : CONSOLIDATED_12_WAVE_ROUTE && choice.singleAxisBreakpoint
             ? `${defenseTitle}만 먼저 잠가 Wave 6의 move rhythm과 복귀 각을 통째로 바꾼다.`
+            : CONSOLIDATED_12_WAVE_ROUTE && choice.systemChoice
+              ? `${defenseTitle} 위에 ${supportTitle}를 얹어 같은 실루엣의 빈틈을 메운다.`
+              : CONSOLIDATED_12_WAVE_ROUTE && choice.bayUnlock
+                ? `${defenseTitle} 뒤에 열린 보조칸 하나를 확보해 다음 방호 선택 폭을 넓힌다.`
             : `${defenseTitle} 위에 ${supportTitle}를 얹어 버티는 선을 먼저 연다.`;
       const proof =
         supportSpotlight
           ? supportSpotlight.proof
-          : CONSOLIDATED_12_WAVE_ROUTE && choice.systemChoice
-          ? `${supportTitle}가 다음 전투부터 복귀 각과 근접 정리선을 바로 받쳐 Wave 6-7 proof lap에서 같은 bracket을 길게 읽게 만들고, Wave 8 마무리 포지까지 같은 실루엣을 이어 붙인다.`
-          : !choice.bayUnlock && CONSOLIDATED_12_WAVE_ROUTE
-            ? "다음 전투는 새 차체 리듬만 읽는 proof window가 되고, 첫 support rider는 Wave 8 마무리 포지에서 다시 연다."
+          : CONSOLIDATED_12_WAVE_ROUTE && choice.singleAxisBreakpoint
+            ? "다음 전투는 새 차체 리듬만 읽는 proof window가 되고, support rider는 몸체 proof 뒤에 다시 연다."
+            : CONSOLIDATED_12_WAVE_ROUTE && choice.systemChoice
+              ? `${supportTitle}가 다음 전투의 복귀 각과 근접 정리선을 바로 받쳐 같은 pocket을 얼마나 오래 버티는지 드러난다.`
+              : CONSOLIDATED_12_WAVE_ROUTE && choice.bayUnlock
+                ? "다음 전투는 새 차체 포즈와 열린 보조칸이 얼마나 오래 숨통을 만드는지 바로 드러난다."
             : choice.systemChoice
           ? `${supportTitle}가 다음 전투의 생존선과 복귀 각을 바로 다듬는다.`
           : "지금은 빈 보조칸만 열어 두고, 다음 전투에서 숨 쉴 공간부터 확보한다.";
@@ -10243,13 +10247,7 @@
     riderStep = false,
     branchPreviewPayoff = null,
   } = {}) {
-    if (!riderStep || !branchPreviewPayoff) {
-      return null;
-    }
-    return {
-      label: branchPreviewPayoff.label || "",
-      value: branchPreviewPayoff.value || "",
-    };
+    return null;
   }
 
   function createBaseRoutePauseSnapshotMarkup(currentState = state) {
