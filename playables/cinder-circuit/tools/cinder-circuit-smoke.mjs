@@ -581,6 +581,22 @@ assert.ok(!forgeContextMarkup.includes("세 장 중 하나만"));
 assert.ok(!forgeContextMarkup.includes("다음 시험"));
 assert.ok(!forgeContextMarkup.includes("보조 결"));
 assert.ok(!forgeContextMarkup.includes("forge-focus__hint"));
+assert.equal(
+  game.getBaseRouteForgeContextTailSummary({
+    riderStep: false,
+    branchPreviewPayoff: { label: "새 보조", value: "Seeker Array" },
+  }),
+  null
+);
+assert.equal(
+  JSON.stringify(
+    game.getBaseRouteForgeContextTailSummary({
+      riderStep: true,
+      branchPreviewPayoff: { label: "새 보조", value: "Seeker Array" },
+    })
+  ),
+  JSON.stringify({ label: "새 보조", value: "Seeker Array" })
+);
 const forgeHeadlineMarkup = game.createBaseRouteForgeContextMarkup({
   title: "주력 변이",
   titleLabel: "다음 시험",

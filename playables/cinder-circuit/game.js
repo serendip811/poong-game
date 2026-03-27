@@ -10035,6 +10035,19 @@
     });
   }
 
+  function getBaseRouteForgeContextTailSummary({
+    riderStep = false,
+    branchPreviewPayoff = null,
+  } = {}) {
+    if (!riderStep || !branchPreviewPayoff) {
+      return null;
+    }
+    return {
+      label: branchPreviewPayoff.label || "",
+      value: branchPreviewPayoff.value || "",
+    };
+  }
+
   function hasCommittedBaseRouteSupportLane(build, supportSystem = null) {
     if (!build) {
       return false;
@@ -16384,6 +16397,7 @@
     getMinimalBaseRouteHudVisibility,
     getBaseRouteForgeStage,
     getBaseRoutePostWaveTransition,
+    getBaseRouteForgeContextTailSummary,
     createBaseRouteForgeContextMarkup,
     createBaseRoutePauseSnapshotMarkup,
     createMinimalCombatAskMarkup,
@@ -23469,12 +23483,6 @@
     const dominantFormSummary = getDominantFormSummary(state.build, state.weapon, state.waveIndex + 2);
     const nextFormStep = getNextBreakpointSummary(state.build, state.weapon, state.waveIndex + 2);
     const proofWindow = getImmediateProofWindowSummary(state.build, state.waveIndex + 2);
-    const branchPayoff = getBaseRouteBranchPayoffSummary({
-      build: state.build,
-      supportSystem: state.supportSystem,
-      waveNumber: state.waveIndex + 2,
-      currentState: state,
-    });
     const riderStep = state.forgeMaxSteps > 1 && state.forgeStep === 2;
     const baseRouteTransformationFocus = getBaseRouteTransformationFocus(state.waveIndex + 2, {
       stage: "forge",
@@ -23508,6 +23516,10 @@
                 }
               : null
         : null;
+    const forgeContextTail = getBaseRouteForgeContextTailSummary({
+      riderStep,
+      branchPreviewPayoff,
+    });
     const featuredForgeChoice = riderStep || useBaseRouteContract
       ? { showcase: null, featuredIndex: -1 }
       : getForgeFeaturedChoice(state.forgeChoices, state.build, state.waveIndex + 2);
@@ -23581,12 +23593,8 @@
             waveAskValue: state.pendingFinalForge
               ? baseRouteTransformationFocus.title || focusTitle
               : proofWindow.label,
-            branchPayoffLabel:
-              (branchPreviewPayoff && branchPreviewPayoff.label) ||
-              (branchPayoff && shouldShowLiveBranchPayoff(state) ? branchPayoff.label : ""),
-            branchPayoffValue:
-              (branchPreviewPayoff && branchPreviewPayoff.value) ||
-              (branchPayoff && shouldShowLiveBranchPayoff(state) ? branchPayoff.value : ""),
+            branchPayoffLabel: forgeContextTail ? forgeContextTail.label : "",
+            branchPayoffValue: forgeContextTail ? forgeContextTail.value : "",
           })}
         </article>
       `

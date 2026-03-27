@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: unbundle Wave 6 so one weapon/body transformation owns Wave 5-8 by itself before support, greed, and branch-admin layers reopen the menu.
+- Immediate priority: make the shipped run honest again by locking the default player-facing slice to a clean Wave 1-8 contract, then let one earned Wave 6 transformation carry that slice before any late-route/admin language returns.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 01:12:00 KST
+  Findings:
+  - The implementation is still selling a future game inside the shipped slice. `game.js` still carries live `Late Break`, `Act 4 · Afterburn`, `Afterburn Ascension`, and related wave labels, cache beats, and player-facing banners, so the current run reads like a teaser for a bigger route instead of a closed loop worth replaying now. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1193) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L4121) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L15128)
+  - The old Wave 6 complaint is no longer the sharpest blocker by itself. `buildWave6ChassisBreakpointChoices()` now correctly frames a single-axis body lock, but the surrounding game still keeps promising later support bays, flex lanes, and extra brackets, which steals the payoff back before the player can simply enjoy the new silhouette. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L14693) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L18889)
+  - The HUD/forge contract still behaves like a route brief instead of a hunger machine. `renderWaveTrack()` and `renderForgeOverlay()` keep surfacing `현재 전장 / 현재 형태 / branch payoff / 다음 시험` shells at the exact moment stronger references like `Hades`, `Nova Drift`, and `Brotato` usually trust one dominant silhouette and one immediate ask. The player is still reading structure faster than feeling growth. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L17512) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L23462)
+  - This is the point where adding more 20-30-wave scaffolding is actively harmful. A longer escalation curve is the right long-term ambition, but until the current 8-wave appetite loop is honest, legible, and transformation-led, every extra late-form system just advertises debt instead of future depth.
+  Top Priority: Remove all default-run player-facing Wave 9+/Late Break/Afterburn messaging and reward promises from the shipped path, then compress HUD/forge screens so the run sells one current form and one immediate proof ask instead of future route administration.
+  Why Now: Players will not crave a longer game if the current game already feels like unfinished expansion UI.
+  Do Not Repeat: Do not spend another pass inventing endforms, extra bays, or new branch wrappers while the shipped slice still markets content beyond its real contract.
+  Release Gate: Progression
 
 - 2026-03-28 00:41:00 KST
   Findings:
@@ -3697,6 +3708,14 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-28 01:35:00 KST
+  Changed: tightened the shipped forge header in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the default `Wave 1-8` reward read no longer keeps resurfacing an already-owned branch payoff while the player is choosing a headline or final pick. `renderForgeOverlay()` now routes the header tail through new `getBaseRouteForgeContextTailSummary(...)`, which returns a third slot only on the live rider step with a concrete immediate payoff like `새 보조`; headline and final stops now stay on the lean `즉시 위협 + 현재 형태` shell instead of drifting back toward route administration. Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock that fail-closed behavior.
+  Why: the latest critique's `Top Priority` called for compressing HUD/forge presentation so the shipped run sells one current form and one immediate proof ask rather than future or side-lane administration. The highest-value bounded interpretation was to stop the forge header from re-explaining active branch state outside the exact rider-selection moment, because that was still making the reward pause read like a route brief even after other late-route copy had been scrubbed.
+  Follow-up Risk: the forge header is leaner now, but the rider-step third slot still depends on text instead of a stronger visual silhouette. If the next critique still says the reward pause is too explanatory, the next bounded pass should strengthen card/body preview identity on that same rider step rather than adding more header language back.
+  UI reference direction: followed the compact reward-focus hierarchy from `Hades` and `Nova Drift`, where the pause anchors one current power state and one immediate next proof, then only surfaces a small extra payoff when it is the actual pick in front of the player.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Progression
 
 - 2026-03-28 01:05:00 KST
   Changed: turned the shipped `Wave 6` bastion breakpoint back into a true chassis-only leap in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). `buildWave6ChassisBreakpointChoices(...)` now returns `singleAxisBreakpoint` cards with no bundled `bayUnlock` or `systemChoice`, `applyForgeChoice(...)` records the chassis proof hold without silently installing support, and the new `shouldHoldWave6SingleAxisBreakpoint(...)` gate keeps both support offers and the secondary gamble lane closed through `Wave 7` so the picked body has to carry two full proof fights before breadth reopens at `Wave 8`. Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new `Wave 6 -> Wave 7` contract, including no immediate support install, no `Wave 7` gamble after a chassis breakpoint, and support visibility returning on `Wave 8`.
