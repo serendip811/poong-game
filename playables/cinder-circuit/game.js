@@ -8123,6 +8123,12 @@
     if (!CONSOLIDATED_12_WAVE_ROUTE || !build) {
       return build;
     }
+    if (
+      build.previewSupportSystemId &&
+      PREVIEW_SUPPORT_SYSTEM_DEFS[build.previewSupportSystemId]
+    ) {
+      build.previewSupportSystemId = null;
+    }
     if (Array.isArray(build.wildcardProtocolIds) && build.wildcardProtocolIds.length > 0) {
       build.wildcardProtocolIds = [];
     }
@@ -13065,8 +13071,8 @@
 
   function createPreviewSupportChoice(build, nextWave) {
     if (
+      CONSOLIDATED_12_WAVE_ROUTE ||
       !build ||
-      (CONSOLIDATED_12_WAVE_ROUTE && nextWave < SUPPORT_SYSTEM_START_WAVE) ||
       nextWave !== 5 ||
       Boolean(build.previewSupportSystemId) ||
       getInstalledSupportSystems(build).length > 0
@@ -13095,14 +13101,16 @@
   }
 
   function createForgeRiderSupportChoice(build, rng, nextWave, excludedChoiceId = null) {
-    const previewChoice = createPreviewSupportChoice(build, nextWave);
-    if (previewChoice && previewChoice.id !== excludedChoiceId) {
-      return createForgeRiderCard(previewChoice, "Support Rider");
-    }
     const random = typeof rng === "function" ? rng : Math.random;
-    const wildcardChoice = createWildcardProtocolChoice(build, nextWave);
-    if (wildcardChoice && wildcardChoice.id !== excludedChoiceId) {
-      return createForgeRiderCard(wildcardChoice, "Support Rider");
+    if (!CONSOLIDATED_12_WAVE_ROUTE) {
+      const previewChoice = createPreviewSupportChoice(build, nextWave);
+      if (previewChoice && previewChoice.id !== excludedChoiceId) {
+        return createForgeRiderCard(previewChoice, "Support Rider");
+      }
+      const wildcardChoice = createWildcardProtocolChoice(build, nextWave);
+      if (wildcardChoice && wildcardChoice.id !== excludedChoiceId) {
+        return createForgeRiderCard(wildcardChoice, "Support Rider");
+      }
     }
     const supportPool = createSupportSystemChoices(build, random, {
       nextWave,
@@ -15058,6 +15066,9 @@
     }
 
     if (choice.type === "utility" && choice.action === "preview_support") {
+      if (CONSOLIDATED_12_WAVE_ROUTE) {
+        return null;
+      }
       if (!PREVIEW_SUPPORT_SYSTEM_DEFS[choice.systemId]) {
         return null;
       }

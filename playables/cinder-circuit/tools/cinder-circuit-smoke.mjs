@@ -392,9 +392,9 @@ roadmapBuild.overcommitUnlocked = true;
 roadmapBuild.previewSupportSystemId = "volt_drones";
 roadmapBuild.wildcardProtocolIds = ["rogue_lattice"];
 const previewRoadmapSupportStats = game.computeSupportSystemStats(roadmapBuild);
-assert.ok(previewRoadmapSupportStats);
-assert.equal(previewRoadmapSupportStats.id, "volt_drones");
-assert.equal(previewRoadmapSupportStats.tier, 0);
+assert.equal(previewRoadmapSupportStats, null);
+assert.equal(roadmapBuild.previewSupportSystemId, null);
+assert.equal(roadmapBuild.wildcardProtocolIds.length, 0);
 const primedRoadmap = game.getBuildRoadmap(roadmapBuild, game.computeWeaponStats(roadmapBuild), 6);
 assert.equal(primedRoadmap.steps[0].title, "Ember Spindle");
 assert.equal(primedRoadmap.steps[0].state, "locked");
@@ -905,7 +905,7 @@ const pollutedWave5Choices = game.buildForgeChoices(pollutedShippingBuild, Math.
   finalForge: false,
   build: pollutedShippingBuild,
 });
-assert.equal(pollutedShippingBuild.previewSupportSystemId, "volt_drones");
+assert.equal(pollutedShippingBuild.previewSupportSystemId, null);
 assert.equal(pollutedShippingBuild.wildcardProtocolIds.length, 0);
 assert.ok(
   !pollutedWave5Choices.some(
@@ -913,7 +913,7 @@ assert.ok(
       choice.action === "preview_support" || choice.action === "wildcard_protocol"
   )
 );
-assert.ok(game.computeSupportSystemStats(pollutedShippingBuild));
+assert.equal(game.computeSupportSystemStats(pollutedShippingBuild), null);
 assert.ok(game.WAVE_CONFIG[7].spawnBudget > game.WAVE_CONFIG[4].spawnBudget);
 assert.ok(game.WAVE_CONFIG[7].mix.warden > 0);
 assert.equal(game.WAVE_CONFIG[7].mix.mortar || 0, 0);

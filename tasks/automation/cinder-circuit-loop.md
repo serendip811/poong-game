@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: make one Wave 5-6 branch visibly change piloting and screen control immediately, while keeping forge/HUD to `current form + next proof + one branch payoff` with no extra route scaffolding.
+- Immediate priority: strip Wave 4-6 support primers and wildcard-tease logic out of the shipped player-facing route so the run stays lean until one Wave 5-6 gun/body break owns piloting by itself.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-27 17:30:42 KST
+  Findings:
+  - The current priority is drifting: the run no longer just needs a stronger Wave 5-6 branch, it needs protection from early fake breadth. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2996) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3058) still define support primers, which means satellites, intercept halos, and drones are mentally introduced before the main gun/body arc has fully earned the screen.
+  - The forge flow is still undermining the promised lean start by surfacing those primers as real rewards. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12334) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L15064) keep `preview_support` in the reward loop, so the player starts tasting helper-tech early instead of craving the first true chassis or weapon break.
+  - Wildcard structure is still occupying shipped-slice design weight even though the release contract says branch desire should come from the main 8-wave appetite loop first. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3118) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3166) still define Wave 4/7/10 wildcard protocols and roadmap details, which keeps the codebase and future UI pressure biased toward exception routes instead of one clean rerun-worthy spine.
+  - The HUD/forge contract is cleaner than earlier passes, but it is still doing extra explanatory work around support tracking and next-breakpoint framing while the real issue is simpler: the player is still being told about too many future layers before feeling one dominant form. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22858) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L22939) still compute support track, next breakpoint, proof window, and branch payoff together in the forge header.
+  Top Priority: Remove preview support rewards and wildcard-tease presentation from the shipped route so Wave 1-6 is almost entirely `base gun -> weapon leap -> chassis break`, with full support systems only arriving after that identity has already proven itself.
+  Why Now: If the run feels busy before it feels hungry, later transformations lose payoff no matter how strong they are.
+  Do Not Repeat: Do not answer this with copy trims while preview satellites/drones/halos and wildcard route hooks are still entering the live draft flow.
+  Release Gate: Progression
 
 - 2026-03-27 17:01:04 KST
   Findings:
@@ -3530,6 +3541,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-27 22:10:00 KST
+  Changed: hardened the shipped `Wave 1-8` route in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so stale `previewSupportSystemId` and `wildcardProtocolIds` are scrubbed by `sanitizeConsolidatedBuildState(...)`, `createPreviewSupportChoice(...)` now fails closed immediately under consolidation, `createForgeRiderSupportChoice(...)` stops checking primer/contraband rider cards on the shipped path, and `applyForgeChoice(...)` now rejects `preview_support` picks outright when the consolidated route is active. Aligned [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert that polluted shipped builds no longer revive preview support stats or wildcard branches and that Wave 5 choices stay free of both actions.
+  Why: the newest critique's `Top Priority` was to remove preview support rewards and wildcard-tease presentation from the shipped route so `Wave 1-6` stays almost entirely `base gun -> weapon leap -> chassis break`. The highest-value bounded interpretation was to make the shipped route fail closed even when old state leaks in, because dead primer/contraband hooks were still present in the live reward/apply paths and could keep future UI or tests biased toward fake breadth.
+  Follow-up Risk: the shipped route is now cleaner at the state-contract level, but the codebase still contains non-shipped primer and wildcard definitions for the larger route. If future work touches shared forge helpers or support summaries, it should keep validating that those definitions never leak back into the consolidated path instead of assuming the current guards are enough.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Progression
 
 - 2026-03-27 21:35:00 KST
   Changed: recut the shipped `Wave 6` branch in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `buildWave6ChassisBreakpointChoices(...)` now returns chassis-only `body first` cards for the consolidated route instead of bundling an immediate support install, and aligned the proof text plus smoke coverage in [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs). The applied `Wave 6` pick now uses the existing chassis-surge path without `bayUnlock` or `systemChoice`, the forge/status transformation copy now says `Wave 6 = movement/body identity` and `Wave 7+ = first support rider`, and the smoke suite now locks that contract by asserting no support system is installed at the breakpoint.
