@@ -254,17 +254,20 @@ const greedPayoff = game.getBaseRouteBranchPayoffSummary({
 });
 assert.equal(greedPayoff?.label, "분기 보상");
 assert.equal(greedPayoff?.value, "Entry Vault");
-const wave6Choices = game.buildWave6ChassisBreakpointChoices(game.createInitialBuild("rail_zeal"), () => 0, 6);
+const wave6PreviewBuild = game.createInitialBuild("rail_zeal");
+wave6PreviewBuild.architectureForecastId = "storm_artillery";
+const wave6Choices = game.buildWave6ChassisBreakpointChoices(wave6PreviewBuild, () => 0, 6);
 const chassisOnlyChoice = wave6Choices.find((choice) => choice.chassisTitle);
 assert.ok(chassisOnlyChoice);
-assert.ok(wave6Choices.every((choice) => !choice.bayUnlock));
-assert.ok(wave6Choices.every((choice) => !choice.systemChoice));
+assert.ok(wave6Choices.every((choice) => choice.bayUnlock));
+assert.ok(wave6Choices.every((choice) => choice.systemChoice));
 assert.ok(wave6Choices.every((choice) => choice.singleAxisBreakpoint));
 assert.ok(!chassisOnlyChoice.description.includes("Late Break Armory"));
 assert.ok(!chassisOnlyChoice.description.includes("Wave 9"));
 assert.ok(chassisOnlyChoice.description.includes("Wave 6-7"));
 assert.ok(chassisOnlyChoice.description.includes("Wave 8"));
 const chassisBranchBuild = game.createInitialBuild("rail_zeal");
+chassisBranchBuild.architectureForecastId = "storm_artillery";
 game.applyForgeChoice(
   {
     build: chassisBranchBuild,
@@ -276,16 +279,16 @@ game.applyForgeChoice(
   chassisOnlyChoice
 );
 const wave6SupportStats = game.computeSupportSystemStats(chassisBranchBuild);
-assert.equal(wave6SupportStats, null);
+assert.equal(wave6SupportStats?.id, chassisOnlyChoice.systemChoice.systemId);
 const supportPayoff = game.getBaseRouteBranchPayoffSummary({
   build: chassisBranchBuild,
   supportSystem: wave6SupportStats,
   waveNumber: 7,
 });
 assert.equal(supportPayoff?.label, "분기 보상");
-assert.equal(supportPayoff?.value, chassisOnlyChoice.title);
-assert.equal(game.getSupportBayCapacity(chassisBranchBuild), 1);
-assert.equal(chassisBranchBuild.supportSystems.length, 0);
+assert.equal(supportPayoff?.value, chassisOnlyChoice.systemChoice.title);
+assert.equal(game.getSupportBayCapacity(chassisBranchBuild), 2);
+assert.equal(chassisBranchBuild.supportSystems.length, 1);
 assert.equal(chassisBranchBuild.wave6ChassisBreakpoint, true);
 assert.equal(JSON.stringify(game.getVisibleSupportOfferSystemIds(chassisBranchBuild, 7)), JSON.stringify([]));
 const aegisSpotlightBuild = game.createInitialBuild("rail_zeal");
@@ -376,7 +379,7 @@ const supportPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   phase: "combat",
   paused: true,
 });
-assert.ok(supportPauseSnapshotMarkup.includes(chassisOnlyChoice.title));
+assert.ok(supportPauseSnapshotMarkup.includes(chassisOnlyChoice.systemChoice.title));
 assert.ok(!supportPauseSnapshotMarkup.includes("활성 보조"));
 assert.ok(!supportPauseSnapshotMarkup.includes("활성 판돈"));
 const wave5GambleChoice = wave5ForgeChoices.find((choice) => choice.contractRole === "gamble");
@@ -466,7 +469,9 @@ assert.equal(wave5FieldGrantChoices.length, 2);
 assert.equal(wave5FieldGrantChoices.find((choice) => choice.contractRole === "headline")?.contractLabel, "주력");
 assert.equal(wave5FieldGrantChoices.find((choice) => choice.contractRole === "rider")?.contractLabel, "버팀");
 assert.equal(wave5FieldGrantChoices.find((choice) => choice.contractRole === "gamble"), undefined);
-const wave6ForgeChoices = game.buildForgeChoices(game.createInitialBuild("rail_zeal"), () => 0, 999, {
+const wave6ForgeBuild = game.createInitialBuild("rail_zeal");
+wave6ForgeBuild.architectureForecastId = "storm_artillery";
+const wave6ForgeChoices = game.buildForgeChoices(wave6ForgeBuild, () => 0, 999, {
   nextWave: 6,
   finalForge: false,
 });
@@ -479,8 +484,8 @@ assert.ok(
 );
 const wave6RiderChoice = wave6ForgeChoices.find((choice) => choice.contractRole === "rider");
 assert.equal(wave6RiderChoice?.action, "bastion_bay_forge");
-assert.ok(!wave6RiderChoice?.bayUnlock);
-assert.ok(!wave6RiderChoice?.systemChoice);
+assert.ok(wave6RiderChoice?.bayUnlock);
+assert.ok(wave6RiderChoice?.systemChoice);
 const wave6GambleChoice = wave6ForgeChoices.find((choice) => choice.contractRole === "gamble");
 assert.equal(wave6GambleChoice, undefined);
 assert.notEqual(wave6GambleChoice?.action, "affix_reforge");
@@ -1002,20 +1007,22 @@ assert.ok(
 const shippingLadderFocusWave4 = game.getShippingLadderFocus(roadmapBuild, null, 4);
 assert.equal(shippingLadderFocusWave4.label, "방호");
 assert.ok(/Wave 6|몸체|방호/.test(shippingLadderFocusWave4.detail));
-const recurringWave6Choices = game.buildForgeChoices(roadmapBuild, Math.random, 40, {
+const recurringWave6Build = game.createInitialBuild("rail_zeal");
+recurringWave6Build.architectureForecastId = "storm_artillery";
+const recurringWave6Choices = game.buildForgeChoices(recurringWave6Build, Math.random, 40, {
   nextWave: 6,
   finalForge: false,
-  build: roadmapBuild,
+  build: recurringWave6Build,
 });
 const wave6DefenseChoice = recurringWave6Choices.find((choice) => choice.contractRole === "rider");
 assert.ok(wave6DefenseChoice);
 assert.equal(wave6DefenseChoice.action, "bastion_bay_forge");
-assert.ok(!wave6DefenseChoice.bayUnlock);
-assert.ok(!wave6DefenseChoice.systemChoice);
+assert.ok(wave6DefenseChoice.bayUnlock);
+assert.ok(wave6DefenseChoice.systemChoice);
 const wave6DefenseTransform = game.getBaseRouteForgeChoiceTransformation(wave6DefenseChoice);
 assert.ok(wave6DefenseTransform.previewLabel.length > 0);
-assert.ok(/충격파|탄막|돌격/.test(wave6DefenseTransform.promise));
-assert.ok(/lane|돌격 섀시|파고드는/.test(wave6DefenseTransform.proof));
+assert.ok(/탄막|복귀 각|고리|포탑|미사일|드론/.test(wave6DefenseTransform.promise));
+assert.ok(/lane|돌격 섀시|파고드는|복귀 각|추격선|탄막/.test(wave6DefenseTransform.proof));
 const crownfireBuild = game.createInitialBuild("rail_zeal");
 const crownfireWave5Choices = game.buildForgeChoices(crownfireBuild, () => 0.1, 999, {
   nextWave: 5,
@@ -1826,8 +1833,8 @@ assert.equal(architecturePreviewRun.build.supportSystems.length, 0);
 const wave6DoctrineChoices = game.buildBastionDraftChoices(architecturePreviewRun.build, () => 0, 6);
 assert.equal(wave6DoctrineChoices.length, 3);
 assert.ok(wave6DoctrineChoices.every((choice) => choice.action === "bastion_bay_forge"));
-assert.ok(wave6DoctrineChoices.every((choice) => !choice.bayUnlock));
-assert.ok(wave6DoctrineChoices.every((choice) => !choice.systemChoice));
+assert.ok(wave6DoctrineChoices.every((choice) => choice.bayUnlock));
+assert.ok(wave6DoctrineChoices.every((choice) => choice.systemChoice));
 assert.ok(wave6DoctrineChoices.every((choice) => choice.singleAxisBreakpoint));
 assert.ok(wave6DoctrineChoices.every((choice) => choice.chassisId));
 systemsForgeBuild.bastionDoctrineId = "kiln_bastion";
@@ -1842,8 +1849,8 @@ assert.equal(
   JSON.stringify(wave6ChassisPackages.map((choice) => choice.chassisId).sort()),
   JSON.stringify(["bulwark_treads", "salvage_winch", "vector_thrusters"])
 );
-assert.ok(wave6ChassisPackages.every((choice) => !choice.bayUnlock));
-assert.ok(wave6ChassisPackages.every((choice) => !choice.systemChoice));
+assert.ok(wave6ChassisPackages.every((choice) => choice.bayUnlock));
+assert.ok(wave6ChassisPackages.every((choice) => choice.systemChoice));
 assert.ok(wave6ChassisPackages.every((choice) => choice.singleAxisBreakpoint));
 assert.ok(wave6ChassisPackages.every((choice) => choice.skipNextAdminStop));
 const initialMaxHpBonus = systemsForgeBuild.maxHpBonus;
@@ -1889,14 +1896,18 @@ assert.equal(game.shouldSkipOwnershipAdminStop(wave6AscensionRun.build, 9), fals
 chassisRun.build.bastionDoctrineId = "kiln_bastion";
 game.applyForgeChoice(chassisRun, vectorChassisChoice);
 assert.equal(chassisRun.build.wave6ChassisBreakpoint, true);
-assert.equal(chassisRun.build.supportBayCap, 1);
-assert.equal(chassisRun.build.supportSystems.length, 0);
+assert.equal(chassisRun.build.supportBayCap, 2);
+assert.equal(chassisRun.build.supportSystems.length, 1);
+assert.equal(chassisRun.build.supportSystems[0].id, vectorChassisChoice.systemChoice.systemId);
 assert.equal(chassisRun.build.chassisId, vectorChassisChoice.chassisId);
 assert.equal(game.shouldSkipOwnershipAdminStop(chassisRun.build, 9), false);
 assert.equal(JSON.stringify(game.getVisibleSupportOfferSystemIds(chassisRun.build, 7)), JSON.stringify([]));
 const delayedWave7GrantChoices = game.buildFieldGrantChoices(chassisRun.build, () => 0, 7);
 assert.equal(delayedWave7GrantChoices.find((choice) => choice.contractRole === "gamble"), undefined);
-assert.ok(delayedWave7GrantChoices.every((choice) => choice.type !== "system"));
+const delayedWave7Rider = delayedWave7GrantChoices.find((choice) => choice.contractRole === "rider");
+assert.equal(delayedWave7Rider?.type, "system");
+assert.equal(delayedWave7Rider?.systemId, vectorChassisChoice.systemChoice.systemId);
+assert.equal(delayedWave7Rider?.systemTier, 2);
 const vectorWave6Proof = game.resolveWaveConfig(5, chassisRun.build);
 const vectorWave7Proof = game.resolveWaveConfig(6, chassisRun.build);
 const baseWave7Proof = game.resolveWaveConfig(6, game.createInitialBuild("scrap_pact"));
@@ -2445,13 +2456,13 @@ const bastionOvercommitChoices = game.buildBastionDraftChoices(
 );
 assert.equal(bastionOvercommitChoices.length, 3);
 assert.ok(bastionOvercommitChoices.every((choice) => choice.action === "bastion_bay_forge"));
-assert.ok(bastionOvercommitChoices.every((choice) => !choice.bayUnlock));
-assert.ok(bastionOvercommitChoices.every((choice) => !choice.systemChoice));
+assert.ok(bastionOvercommitChoices.every((choice) => choice.bayUnlock));
+assert.ok(bastionOvercommitChoices.every((choice) => choice.systemChoice));
 game.applyForgeChoice(architectureRun, bastionOvercommitChoices[0]);
-assert.equal(game.getSupportBayCapacity(architectureRun.build), 1);
-assert.equal(architectureRun.build.auxiliaryJunctionLevel, 0);
+assert.equal(game.getSupportBayCapacity(architectureRun.build), 2);
+assert.equal(architectureRun.build.auxiliaryJunctionLevel, 1);
 assert.equal(architectureRun.build.wave6ChassisBreakpoint, true);
-assert.equal(architectureRun.build.supportSystems.length, 0);
+assert.equal(architectureRun.build.supportSystems.length, 1);
 assert.equal(architectureRun.build.bastionDoctrineId, architectureRun.build.architectureForecastId);
 assert.equal(architectureRun.build.doctrinePursuitCommitted, false);
 assert.equal(architectureRun.build.doctrinePursuitProgress, 0);
@@ -2462,7 +2473,7 @@ assert.ok(
   )
 );
 assert.ok(
-  architectureRun.build.upgrades.includes("Chassis Breakpoint: support hold through Wave 7 proof laps")
+  architectureRun.build.upgrades.includes("Chassis Breakpoint: support online now, auto Wave 8 uplink")
 );
 assert.equal(game.shouldSkipOwnershipAdminStop(architectureRun.build, 9), false);
 assert.equal(game.unlockLateSupportBay(architectureRun.build), true);
@@ -2692,13 +2703,14 @@ const artilleryAscensionChoice = game
   .find((choice) => choice.action === "bastion_bay_forge" && choice.chassisId === "vector_thrusters");
 assert.ok(artilleryAscensionChoice);
 assert.ok(artilleryAscensionChoice.description.includes("Wave 6-7 proof lap"));
-assert.ok(!artilleryAscensionChoice.systemChoice);
+assert.ok(artilleryAscensionChoice.systemChoice);
 assert.ok(!artilleryAscensionChoice.description.includes("contraband salvage"));
 game.applyForgeChoice(
   { build: artilleryDoctrineBuild, player: null, resources: { scrap: 999 }, stats: {} },
   artilleryAscensionChoice
 );
-assert.equal(JSON.stringify(artilleryDoctrineBuild.supportSystems.map((entry) => entry.id).sort()), JSON.stringify([]));
+assert.equal(artilleryDoctrineBuild.supportSystems.length, 1);
+assert.equal(artilleryDoctrineBuild.supportSystems[0].id, artilleryAscensionChoice.systemChoice.systemId);
 assert.equal(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "seeker_array", 7), false);
 assert.equal(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "ember_ring", 7), false);
 assert.equal(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "ember_ring", 8), true);

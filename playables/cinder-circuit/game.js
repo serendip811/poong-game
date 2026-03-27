@@ -14983,6 +14983,13 @@
     if (!build) {
       return [];
     }
+    const doctrine = getBastionDoctrineDef(build);
+    const systemChoice = doctrine
+      ? createDoctrineChaseSystemChoice(build, doctrine, { nextWave })
+      : null;
+    const supportIdentity = systemChoice
+      ? getSupportSystemIdentitySummary(systemChoice.systemId, systemChoice.systemTier)
+      : null;
     const chassisDefs = Object.values(CHASSIS_BREAKPOINT_DEFS);
     const chassisChoices = chassisDefs.map((chassisDef) => ({
       type: "utility",
@@ -14992,9 +14999,13 @@
       tag: chassisDef.tag,
       title: chassisDef.title,
       description: CONSOLIDATED_12_WAVE_ROUTE
-        ? `${chassisDef.description} 이번 정지는 차체 하나만 잠가 Wave 6-7 proof lap 전체를 이 포즈로 버틴다. support bay와 rider install은 Wave 8 마무리 포지까지 닫아 두어, 먼저 몸체 리듬만 화면을 먹게 만든다.`
+        ? systemChoice
+          ? `${chassisDef.description} 이번 정지는 ${chassisDef.title}와 ${systemChoice.title}를 함께 잠가 Wave 6-7 proof lap부터 body/support bracket을 바로 연다. ${supportIdentity ? `${supportIdentity.effectValue}를 즉시 붙인 채` : "보조 실루엣을 즉시 붙인 채"} Wave 8 마무리 포지에서 세 번째 bay나 증설 한 번을 더 얹을 여지를 남긴다.`
+          : `${chassisDef.description} 이번 정지는 차체 하나만 잠가 Wave 6-7 proof lap 전체를 이 포즈로 버틴다. support bay와 rider install은 Wave 8 마무리 포지까지 닫아 두어, 먼저 몸체 리듬만 화면을 먹게 만든다.`
         : `${chassisDef.description} 이번 정지에서는 차체 실루엣만 먼저 확정하고 support bay 증설은 뒤로 미룬다.`,
-      slotText: `섀시 breakpoint · ${chassisDef.slotText}`,
+      slotText: systemChoice
+        ? `섀시 breakpoint · ${chassisDef.slotText} + ${systemChoice.title}`
+        : `섀시 breakpoint · ${chassisDef.slotText}`,
       cost: 0,
       laneLabel: "섀시 breakpoint",
       forgeLaneLabel: "섀시 breakpoint",
@@ -15002,6 +15013,8 @@
       chassisTitle: chassisDef.title,
       skipNextAdminStop: true,
       singleAxisBreakpoint: true,
+      bayUnlock: Boolean(systemChoice),
+      systemChoice,
     }));
     if (chassisChoices.length > 0) {
       return chassisChoices;
@@ -15023,6 +15036,8 @@
       chassisTitle: CHASSIS_BREAKPOINT_DEFS.vector_thrusters.title,
       skipNextAdminStop: true,
       singleAxisBreakpoint: true,
+      bayUnlock: Boolean(systemChoice),
+      systemChoice,
     }];
   }
 
@@ -16162,11 +16177,15 @@
       if (choice.chassisId && applyChassisBreakpoint(run.build, choice.chassisId, run)) {
         const chassis = getChassisBreakpointDef(choice.chassisId);
         run.build.upgrades.push(`유틸리티 섀시: ${(chassis && chassis.label) || choice.chassisTitle || choice.chassisId}`);
-        if (!choice.bayUnlock && CONSOLIDATED_12_WAVE_ROUTE) {
+        if (CONSOLIDATED_12_WAVE_ROUTE) {
           if (choice.singleAxisBreakpoint) {
             run.build.wave6ChassisBreakpoint = true;
-            run.build.upgrades.push("Chassis Breakpoint: support hold through Wave 7 proof laps");
-          } else {
+            run.build.upgrades.push(
+              choice.systemChoice
+                ? "Chassis Breakpoint: support online now, auto Wave 8 uplink"
+                : "Chassis Breakpoint: support hold through Wave 7 proof laps"
+            );
+          } else if (!choice.bayUnlock) {
             run.build.upgrades.push("Chassis Breakpoint: small support held for mid-run forge");
           }
           activateChassisBreakpointSurge(run, choice.chassisId);

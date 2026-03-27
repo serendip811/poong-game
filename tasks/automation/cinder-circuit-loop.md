@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: strip live side-bet/admin grammar out of Wave 5-8 combat/feed/forge readouts so one rider payoff lands as an installed shield/orbital/missile identity the player reads on sight.
+- Immediate priority: give Wave 6-8 support/defense branches enough runway to become real forms with at least two proof fights, instead of saving the first meaningful install for the closing stretch.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 05:55:00 KST
+  Findings:
+  - The current shipped branch still starves non-gun builds of runway. `buildWave6ChassisBreakpointChoices(...)` explicitly locks Wave 6 into `차체 하나만` and says `support bay와 rider install은 Wave 8 마무리 포지까지 닫아 둔다`, so the first real shield/orbital/missile/drone identity can arrive only at the last forge before the run closes. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L14972)
+  - That makes the support catalog look richer than the playable arc really is. The runtime has strong tiered identities for `Ember Ring`, `Aegis Halo`, `Kiln Sentry`, `Seeker Array`, and `Volt Drones`, but in the shipped route those forms mostly read like end-of-run samples rather than branches the player gets to inhabit, learn, and crave on the next run. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2668) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3050)
+  - The bay economy reinforces the compression. The consolidated route starts at `supportBayCap = 1`, only targets `2` midrun, and even `Auxiliary Junction` promises the extra flex bay at `Wave 8`, which is too late for any multi-layer support fantasy to become a real rerun driver in an `8-wave` contract. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L5461) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L6400) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L14904)
+  - Recent HUD/forge cleanup actually makes this structural weakness more obvious. Once the UI is closer to a clean status board, the remaining failure is that support and defense are still finale seasoning on top of the main gun line, not a branch with enough time to change pathing, pocket ownership, and anticipation over multiple combats.
+  Top Priority: Recut the Wave 6 breakpoint so one concrete support/defense identity installs immediately with the chassis break, then leave at least one more forge before the end for either a tier-up or a second support slot.
+  Why Now: A rerun-worthy action roguelite needs at least one non-offense branch that players can inhabit for multiple fights, not just glimpse during the closing lap.
+  Do Not Repeat: Do not answer this by adding more support definitions, tier labels, or payoff copy while the first real install still lands at the end of the run.
+  Release Gate: Builds
 
 - 2026-03-28 04:00:46 KST
   Findings:
@@ -3774,6 +3785,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-28 06:20:00 KST
+  Changed: recut the shipped `Wave 6` chassis breakpoint in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so consolidated `bastion_bay_forge` cards now bundle one doctrine-preferred live `systemChoice` with the chassis lock instead of staying `차체 하나만`. Every forecasted/adopted Wave 6 chassis pick now opens the second bay immediately, installs a real support identity such as `Seeker Array`/`Kiln Sentry` on pick, still triggers the chassis proof surge, and preserves the `Wave 8` late bay unlock. The follow-up `Wave 7` field grant can now prove that branch with a tier-up on the installed system instead of leaving support to the finale. Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new Wave 6 install, the retained chassis surge, and the Wave 7 tier-up proof window.
+  Why: the latest critique's `Top Priority` was to give one non-gun branch actual runway by making the Wave 6 breakpoint install a concrete support/defense identity immediately and still leave one more forge before the end for growth. The highest-value bounded interpretation was to reuse the existing doctrine-preferred support catalog and attach one live install directly to the already-shipped chassis cards, because that changes the playable arc without adding a new system or reopening early-game spectacle.
+  Follow-up Risk: the branch now has a real multi-fight silhouette, but only forecasted/adopted doctrine states get the guaranteed Wave 6 install. If a later critique says off-script builds can still hit Wave 6 with a chassis-only breakpoint, the next bounded pass should decide whether to infer a fallback doctrine from the run state or make the forecast lock unavoidable earlier in the route.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Builds
 
 - 2026-03-28 05:35:00 KST
   Changed: tightened the shipped `Wave 5-8` rider read in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) around one shared installed-support payoff helper, `getSupportSystemInstalledPayoff(...)`. The rider-step forge tail for `Aegis Halo` now resolves to the same `방호 고리 / 탄막 절개 + 방호 파동` identity the live HUD uses instead of falling back to raw system titles, and the instant bastion draft confirmation feed now prints that installed shield payoff directly instead of a long `support bay/uplink` admin sentence when the support actually lands. Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the shared payoff helper plus the rider-tail payload.
