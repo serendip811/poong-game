@@ -7677,14 +7677,21 @@
     if (choice.type === "utility" && choice.action === "bastion_bay_forge") {
       const defenseTitle = choice.chassisTitle || "방호 차체";
       const supportTitle = choice.systemChoice ? choice.systemChoice.title : choice.bayUnlock ? "빈 보조칸" : "후속 보조 선택";
+      const supportSpotlight = choice.systemChoice
+        ? getSupportSystemSpotlight(choice.systemChoice.systemId, choice.systemChoice.systemTier)
+        : null;
       const promise =
-        CONSOLIDATED_12_WAVE_ROUTE && choice.systemChoice
+        supportSpotlight
+          ? supportSpotlight.promise
+          : CONSOLIDATED_12_WAVE_ROUTE && choice.systemChoice
           ? `${defenseTitle}와 ${supportTitle}를 함께 잠가 Wave 6부터 body/support bracket을 바로 연다.`
           : !choice.bayUnlock && CONSOLIDATED_12_WAVE_ROUTE
             ? `${defenseTitle}만 먼저 잠가 Wave 6의 move rhythm과 복귀 각을 통째로 바꾼다.`
             : `${defenseTitle} 위에 ${supportTitle}를 얹어 버티는 선을 먼저 연다.`;
       const proof =
-        CONSOLIDATED_12_WAVE_ROUTE && choice.systemChoice
+        supportSpotlight
+          ? supportSpotlight.proof
+          : CONSOLIDATED_12_WAVE_ROUTE && choice.systemChoice
           ? `${supportTitle}가 다음 전투부터 복귀 각과 근접 정리선을 바로 받쳐 Wave 7-8 proof lap까지 같은 bracket을 길게 읽게 만든다.`
           : !choice.bayUnlock && CONSOLIDATED_12_WAVE_ROUTE
             ? "다음 전투는 새 차체 리듬만 읽는 proof window가 되고, 첫 support rider는 Wave 7부터 그 위에 얹힌다."
@@ -7702,8 +7709,25 @@
         accent:
           CONSOLIDATED_12_WAVE_ROUTE && !choice.bayUnlock && !choice.systemChoice
             ? defenseTitle
-            : `${defenseTitle} · ${supportTitle}`,
+            : supportSpotlight
+              ? `${defenseTitle} · ${supportSpotlight.hudLabel}`
+              : `${defenseTitle} · ${supportTitle}`,
       };
+    }
+    if (choice.type === "system") {
+      const supportSpotlight = getSupportSystemSpotlight(choice.systemId, choice.systemTier);
+      if (supportSpotlight) {
+        return {
+          laneLabel: choice.forgeLaneLabel || choice.laneLabel || "Forge Lane",
+          title: choice.title || choice.slotText || "Unnamed Shift",
+          tone: "defense",
+          promise: supportSpotlight.promise,
+          proof: supportSpotlight.proof,
+          riderLabel: "Support Rider",
+          riderNote: "버티는 선을 먼저 벌리고 그 위에서 주포 화선을 더 오래 유지한다.",
+          accent: `${supportSpotlight.hudLabel} · ${supportSpotlight.hudValue}`,
+        };
+      }
     }
     if (choice.type === "utility" && choice.action === "doctrine_chase") {
       const targetCount = choice.pursuitGoal || 2;
@@ -9815,8 +9839,15 @@
   }
 
   function getBaseRouteForgePreviewValue(choice, previewRow, tone) {
+    const supportSpotlight =
+      choice && choice.type === "system"
+        ? getSupportSystemSpotlight(choice.systemId, choice.systemTier)
+        : null;
     const slotDetail = getBaseRouteForgeSlotDetail(choice);
     const previewValue = previewRow && previewRow.value ? previewRow.value : "";
+    if (supportSpotlight) {
+      return supportSpotlight.hudValue;
+    }
     if (choice && choice.type === "evolution") {
       return slotDetail || choice.title || previewValue || "실루엣";
     }
@@ -10011,6 +10042,13 @@
       supportSystem && supportSystem.label
         ? supportSystem
         : computeSupportSystemStats(build);
+    const supportSpotlight = getInstalledSupportSpotlight(build);
+    if (supportSpotlight) {
+      return {
+        label: supportSpotlight.hudLabel,
+        value: supportSpotlight.hudValue,
+      };
+    }
     if (activeSupport && activeSupport.label) {
       return {
         label: "분기 보상",
@@ -12117,6 +12155,58 @@
       effectLabel: "효과",
       effectValue: tierDef.previewText || tierDef.slotText || tierDef.title,
     };
+  }
+
+  function getSupportSystemSpotlight(systemId, targetTier = 1) {
+    const systemDef = SUPPORT_SYSTEM_DEFS[systemId];
+    const tierDef = systemDef && systemDef.tiers ? systemDef.tiers[targetTier] : null;
+    const identity = getSupportSystemIdentitySummary(systemId, targetTier);
+    if (!systemDef || !tierDef || !identity) {
+      return null;
+    }
+    if (systemId === "aegis_halo") {
+      const haloCount = Math.max(1, tierDef.orbitCount || targetTier || 1);
+      const ringLabel =
+        haloCount >= 3 ? "삼각 방호진" : haloCount === 2 ? "방호 고리 2기" : "방호 고리";
+      return {
+        hudLabel: identity.payoffLabel,
+        hudValue: identity.effectValue,
+        status: haloCount >= 2 ? `${haloCount}기 전개` : "1기 전개",
+        note:
+          haloCount >= 3
+            ? "삼각 방호진이 탄막을 끊고 대형 방호 파동으로 가까운 추격선까지 비운다."
+            : haloCount === 2
+              ? "두 기의 방호 고리가 교차 탄막을 끊고 넓은 방호 파동으로 복귀 각을 연다."
+              : "방호 고리가 탄환을 끊고 짧은 방호 파동으로 가까운 추격선을 비운다.",
+        promise:
+          haloCount >= 3
+            ? `${ringLabel}을 띄워 탄막 구멍과 근접 생존선을 함께 크게 벌린다.`
+            : haloCount === 2
+              ? `${ringLabel}를 띄워 교차 탄막을 먼저 끊고 복귀 각을 넓힌다.`
+              : `${ringLabel} 1기를 띄워 탄막을 먼저 가르고 복귀 각을 만든다.`,
+        proof:
+          haloCount >= 3
+            ? "다음 전투에서 방호 파동이 가까운 적과 탄막을 함께 쓸어내며 좁은 회전도 버티는지 바로 드러난다."
+            : haloCount === 2
+              ? "다음 전투에서 교차 탄막이 먼저 갈라지고, 두 번째 복귀 선이 얼마나 안정적으로 열리는지 바로 드러난다."
+              : "다음 전투에서 가까운 탄각이 먼저 비워지고, 방호 파동이 돌진선을 끊는지 바로 드러난다.",
+        feed:
+          haloCount >= 3
+            ? `${identity.payoffLabel} 전개. 삼각 방호진이 탄막을 비우고 대형 방호 파동으로 주변 추격선까지 뜯어낸다.`
+            : haloCount === 2
+              ? `${identity.payoffLabel} 전개. 두 기의 고리가 교차 탄막을 끊고 넓은 방호 파동으로 복귀 각을 연다.`
+              : `${identity.payoffLabel} 설치. 궤도 실드가 탄환을 끊고 방호 파동으로 가까운 추격선을 비운다.`,
+      };
+    }
+    return null;
+  }
+
+  function getInstalledSupportSpotlight(build) {
+    const supportSnapshot = getInstalledSupportSnapshot(build);
+    if (!supportSnapshot || !supportSnapshot.primary) {
+      return null;
+    }
+    return getSupportSystemSpotlight(supportSnapshot.primary.id, supportSnapshot.primary.tier);
   }
 
   function createDoctrineChaseSystemChoice(build, doctrine, options = null) {
@@ -16545,6 +16635,7 @@
     getDoctrineCapstoneDef,
     getBuildRoadmap,
     getForgeSupportTrackSnapshot,
+    getSupportSystemSpotlight,
     getForgeEraPlan,
     getShippingLadderSteps,
     getShippingLadderFocus,
@@ -16568,6 +16659,7 @@
     createBaseRouteForgeContextMarkup,
     createBaseRoutePauseSnapshotMarkup,
     createMinimalCombatAskMarkup,
+    getLiveSideBetSummary,
     summarizeCombatFeedEntry,
     getBaseRouteTransformationFocus,
     getShippedRoutePresentationBeats,
@@ -16997,6 +17089,23 @@
   function getLiveSideBetSummary(currentState = state) {
     if (CONSOLIDATED_12_WAVE_ROUTE && currentState.waveIndex + 1 >= MAX_WAVES) {
       return null;
+    }
+    const liveWaveNumber =
+      currentState && typeof currentState.waveIndex === "number"
+        ? clamp(currentState.waveIndex + 1, 1, DEFAULT_ROUTE_WAVE_COUNT)
+        : 1;
+    const supportSpotlight =
+      CONSOLIDATED_12_WAVE_ROUTE &&
+      liveWaveNumber >= 5 &&
+      liveWaveNumber <= DEFAULT_ROUTE_WAVE_COUNT
+        ? getInstalledSupportSpotlight(currentState.build)
+        : null;
+    if (supportSpotlight) {
+      return {
+        label: supportSpotlight.hudLabel,
+        status: supportSpotlight.status,
+        note: supportSpotlight.note,
+      };
     }
     const pursuit = getDoctrineForgePursuitDef(currentState.build);
     if (currentState.catalystCrucible.active) {
@@ -19988,7 +20097,16 @@
       updateHUD();
       return;
     }
-    pushCombatFeed(`${choice.tag} · ${choice.title} 적용.`, "FORGE");
+    const supportSpotlight =
+      choice.type === "system"
+        ? getSupportSystemSpotlight(choice.systemId, choice.systemTier)
+        : choice.systemChoice
+          ? getSupportSystemSpotlight(choice.systemChoice.systemId, choice.systemChoice.systemTier)
+          : null;
+    pushCombatFeed(
+      supportSpotlight ? supportSpotlight.feed : `${choice.tag} · ${choice.title} 적용.`,
+      "FORGE"
+    );
     if (state.waveIndex + 2 === LATE_BREAK_ARMORY_WAVE && choice.lateBreakProfileId) {
       pushCombatFeed(
         choice.lateBreakProfileId === "mutation"

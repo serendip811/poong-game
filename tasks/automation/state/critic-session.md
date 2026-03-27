@@ -12,9 +12,9 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Builds`: offense has a visible appetite, but defense/support/utility still arrive as preview rows, shard chores, and lane summaries rather than instant rerun-worthy identities.
-- Do not keep leading with the old `Wave 9+/Afterburn exists` critique by itself unless the shipped route regresses again; the higher-value pressure now is whether the non-offense lanes become desirable on sight inside Wave 5-8.
-- Wave 5-8 combat asks are no longer failing first on sameness; avoid falling back to the older "four domination laps" note unless encounter differentiation collapses.
-- Current structural failure: forge and HUD surfaces still frame rider/support/greed as administration through `preview_support`, pursuit status, branch payoff tails, and deferred-support wording instead of one concrete present-tense transformation.
-- Repeated false solutions: trimming copy while keeping the same reward payload, adding more support modules before one existing lane changes movement immediately, or hiding admin in secondary panels without fixing the reward read.
-- Keep pressure on consolidation over expansion: protect the lean opener, let one midrun transformation own Wave 5-8, and require at least one non-offense identity to feel visually and tactically real before reopening 20-30-wave ambition.
+- The most fragile gate is now `Rewards`: the game has support-system tech in runtime, but forge/HUD/feed grammar still presents it as route administration instead of instant desire.
+- Do not lead with `Wave 9+/Afterburn exists` unless the shipped route regresses; the better pressure is that Wave 5-8 still reads like an operations board instead of a satisfying build payoff loop.
+- Wave 5-8 combat asks are not the main problem right now. Avoid reverting to old density/sameness critiques unless spacing or encounter identity clearly collapses again.
+- Current structural failure: reward surfaces still foreground support track, shard chase, cache state, branch payoff tails, and side-bet labels before the player sees one obvious installed shield/orbital/missile identity.
+- Repeated false solutions: shortening the same jargon, keeping a three-part contract shell, adding more support content before one current rider visibly changes pathing, or hiding admin in secondary panels while the main reward beat stays abstract.
+- Keep pressure on consolidation over expansion: one rider payoff should become instantly legible and replay-worthy across card, HUD, and combat feed before reopening longer-wave ambition.

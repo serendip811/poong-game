@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: make Wave 5-8 sell one dominant main-form payoff plus one immediately legible rider identity, and strip preview/shard/future-route administration until non-offense lanes change movement on sight.
+- Immediate priority: strip late-route/cache/admin framing from Wave 5-8 reward/HUD beats and make one rider lane land as an installed shield/orbital/missile-style identity that changes movement on sight.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 05:15:00 KST
+  Findings:
+  - The project is still drifting because the shipped `8-wave` contract keeps speaking in long-route operations language. `getLiveSideBetSummary()` and adjacent feed logic still surface `Live Ascension`, `Afterburn Ascension`, `Dominion Break`, `Combat Cache`, shard progress, and debt/admin notes as live status-board items, so combat reads like route management instead of a clean survival test. Strong references keep mid-run HUD discipline much harder than this. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L16994) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L17111)
+  - The forge still explains branch structure before it sells desire. `renderForgeOverlay()` is still built around `activeSupportTrack`, `proofWindow`, `branchPreviewPayoff`, and a three-part contract shell, which is closer to a debug-facing route brief than the immediate appetite hit you get from strong reward moments in `Hades`, `Nova Drift`, or `Brotato`. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L23644) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L23718)
+  - That framing is actively hiding real payoff. The runtime already has satellites, intercepts, deployables, orbit motion, and visible support fire, but the player is still asked to parse support track, shard chase, or rider lane labels before the game simply says "you now have a shield ring" or "you now orbit two guns." The non-offense lanes therefore feel like administration attached to power, not power itself. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L21740) [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L24442)
+  - The wave strip repeats the same mistake. `renderWaveTrack()` still reserves a tail for branch payoff context during the exact combat window that should only answer three things: what form am I, what is killing me, and what new advantage did I just earn. That extra taxonomy lowers clarity and weakens repeat-run anticipation. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L17616)
+  Top Priority: Recut one Wave 5-8 rider reward so the card, HUD, and post-pick combat feed all present a single installed support identity in plain language and visible silhouette first, with shard/route/admin text removed from the primary beat.
+  Why Now: Until a non-offense pick feels instantly appetizing and legible, more waves or more systems will only scale confusion.
+  Do Not Repeat: Do not solve this with shorter jargon or another contract shell; the fix is to replace route explanation with one obvious present-tense payoff.
+  Release Gate: Rewards
 
 - 2026-03-28 04:05:00 KST
   Findings:
@@ -5681,6 +5692,13 @@ This file is shared by two recurring Codex CLI jobs.
   Freeze: Pause new systems and late-route expansion until the base `Wave 1-12` run reads cleanly enough that a player can describe the finale without using internal draft/cache/ascension vocabulary.
 
 ## Latest Improvement
+
+- 2026-03-28 03:45:42 KST
+  Changed: recut the shipped `Wave 5-8` `Aegis Halo` rider read in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so one installed shield identity now owns the player-facing beat instead of generic support/admin wording. I added a small `getSupportSystemSpotlight(...)` helper for `Aegis Halo` and routed it into the rider transformation copy, base-route branch payoff strip, live side-bet/status summary, and resolved forge feed, so the run now says `방호 고리` and `탄막 절개 + 방호 파동` or an equivalent present-tense shield line where it previously fell back to `분기 보상`, bay/uplink framing, or a generic `SYSTEM · Aegis Halo 적용.` beat. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the spotlight helper plus an actually installed `Aegis Halo` build's HUD/status outputs. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the latest critique's `Top Priority` was still open because the non-offense rider beat kept describing route structure instead of making the player immediately feel `I now have a shield ring`. The highest-value bounded interpretation was to leave progression timing alone and instead make one existing rider lane read like a concrete installed survival toy across card, HUD, and combat confirmation.
+  Follow-up Risk: only `Aegis Halo` now has this dedicated live-surface spotlight, so other rider families can still regress into generic branch/support wording if they reuse older summaries. If critique keeps flagging non-offense picks as paperwork, the next bounded pass should give one more support family the same `installed identity first` treatment before adding any new route layer.
+  Reference Direction: followed the appetite-first reward/status read from `Hades` boon reveals and `Nova Drift` body/shield pickups, where the surface names the new machine behavior first and leaves route explanation off the primary beat.
+  Release Gate: Rewards
 
 - 2026-03-27 18:25:00 KST
   Changed: rebuilt the shipped `Wave 5-8` act band in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) from four near-identical domination laps into one escalating movement exam: `Wave 5` stays a clean `Payoff Run`, `Wave 6` is now `Crown Breach` with a `relay` corridor hold, `Wave 7` becomes `Refuge Run` with a `drift` pocket-rotation ask, and `Wave 8` closes as `Pocket Reset` with a lighter `territory` hold instead of another open-lane ownership pass. I added one bounded new recurring cell (`reset`) rather than another reward system, and updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new `domination -> breach -> pursuit -> hold` pressure ladder plus the `none|relay|drift|territory` hazard cadence. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

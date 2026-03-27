@@ -288,6 +288,41 @@ assert.equal(game.getSupportBayCapacity(chassisBranchBuild), 1);
 assert.equal(chassisBranchBuild.supportSystems.length, 0);
 assert.equal(chassisBranchBuild.wave6ChassisBreakpoint, true);
 assert.equal(JSON.stringify(game.getVisibleSupportOfferSystemIds(chassisBranchBuild, 7)), JSON.stringify([]));
+const aegisSpotlightBuild = game.createInitialBuild("rail_zeal");
+game.applyForgeChoice(
+  {
+    build: aegisSpotlightBuild,
+    resources: { scrap: 999 },
+    stats: { scrapSpent: 0 },
+    feed: [],
+  },
+  {
+    type: "system",
+    systemId: "aegis_halo",
+    systemTier: 1,
+    title: "Aegis Halo",
+    tag: "SYSTEM",
+  }
+);
+const aegisPayoff = game.getBaseRouteBranchPayoffSummary({
+  build: aegisSpotlightBuild,
+  supportSystem: game.computeSupportSystemStats(aegisSpotlightBuild),
+  waveNumber: 7,
+});
+assert.equal(aegisPayoff?.label, "방호 고리");
+assert.equal(aegisPayoff?.value, "탄막 절개 + 방호 파동");
+const aegisLiveStatus = game.getLiveSideBetSummary({
+  build: aegisSpotlightBuild,
+  waveIndex: 6,
+  phase: "wave",
+  wave: {},
+  catalystCrucible: { active: false },
+  overcommit: { active: false },
+  doctrinePursuit: { active: false },
+});
+assert.equal(aegisLiveStatus?.label, "방호 고리");
+assert.equal(aegisLiveStatus?.status, "1기 전개");
+assert.ok(aegisLiveStatus?.note.includes("방호 파동"));
 const wave7FieldGrantChoices = game.buildFieldGrantChoices(chassisBranchBuild, () => 0, 7);
 assert.equal(wave7FieldGrantChoices.find((choice) => choice.contractRole === "gamble"), undefined);
 assert.ok(wave7FieldGrantChoices.every((choice) => choice.type !== "system"));
@@ -609,6 +644,11 @@ const aegisRiderPreviewRows = game.createForgePreviewRows({
 });
 assert.equal(aegisRiderPreviewRows[1].label, "방호 고리");
 assert.equal(aegisRiderPreviewRows[2].value, "탄막 절개 + 방호 파동");
+const aegisSpotlight = game.getSupportSystemSpotlight("aegis_halo", 1);
+assert.equal(aegisSpotlight?.hudLabel, "방호 고리");
+assert.equal(aegisSpotlight?.hudValue, "탄막 절개 + 방호 파동");
+assert.ok(aegisSpotlight?.promise.includes("방호 고리"));
+assert.ok(!aegisSpotlight?.feed.includes("Wave 8"));
 const forgeHeadlineMarkup = game.createBaseRouteForgeContextMarkup({
   title: "주력 변이",
   titleLabel: "다음 시험",
