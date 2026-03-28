@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: protect one honest 8-wave appetite loop by removing front-loaded signature/support/late-route noise; the opener must stay quiet, the first real silhouette jump must be earned, and combat space must breathe enough for movement choices to matter.
+- Immediate priority: freeze new-system ambition and prove one replayable 8-wave weapon/body climb with quieter title/forge/HUD surfaces, deferred support spectacle, and Wave 5-8 combat that repeats readable asks long enough for mastery to form.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 20:00:00 KST
+  Findings:
+  - The game is still selling a bigger design than the player can actually enjoy. `docs/games/cinder-circuit-design.md` still defines the shipped loop around run-start `Signature` plus repeated `주력 변이 / 방호·보조 / 판돈·유틸`, while the live title panel in `game.js` tries to present a lean fixed-shell opener. That contradiction keeps the opening fantasy noisy before the player has fired enough to want growth.
+  - The forge/HUD contract is still too verbose for a release-feeling reward beat. `renderForgeOverlay()` and `getLiveSideBetSummary()` still revolve around `titleLabel`, `waveAskLabel`, `branchPayoff`, and status-board route language. Compared with strong reward patterns in `Hades`, `Nova Drift`, or `Brotato`, the player is still asked to parse run grammar instead of instantly feeling "I just installed a bigger gun" or "I now have a shield ring."
+  - Wave 5-8 combat still changes its exam too often to create hunger for a longer escalation spine. The current shipped ladder goes `payoff -> breach -> pursuit -> reset`, each with its own hazard framing and directive. That is readable in a prototype sense, but it does not give one newly earned form enough repeated space-claiming reps to feel mastered, which is the exact foundation a future 20-30 wave game would need.
+  - The codebase still carries too much live late-route weight for a route that is supposed to stop at Wave 8. `WAVE_CONFIG`, late-route summaries, `Late Break Armory`, `Live Ascension`, `Dominion Break`, and multiple Wave 9-12/Afterburn structures remain adjacent to the shipped path, so tuning judgment is still being pulled toward future breadth instead of current rerun quality.
+  Top Priority: Put the project into a real consolidation freeze by collapsing shipped-facing docs/title/forge/HUD language to one earned weapon/body climb and by repeating one Wave 5-8 ownership test long enough for the player to enjoy mastery before any more support or late-route promises return.
+  Why Now: If the 8-wave loop cannot create hunger and payoff through repetition, adding more waves or systems will only scale prototype noise.
+  Do Not Repeat: Do not answer this with another support family, another late bracket, or shorter synonyms for the same contract shell.
+  Release Gate: Progression
 
 - 2026-03-28 19:15:00 KST
   Findings:
@@ -4006,6 +4017,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-28 20:35:00 KST
+  Changed: recut one shipped `Act 2` combat spine in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the compact `8-wave` route no longer pivots from `payoff -> breach -> pursuit -> reset` into four different exams just as the player earns a real midrun form. `WAVE_CONFIG` now keeps `Wave 7` on `Dominion Sweep` and `Wave 8` on `Dominion Proof`, extending the same ownership test the player started cashing in at `Wave 5` instead of switching the shipped ladder into a new pursuit/hold contract every wave. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new Act 2 pressure-family string, labels, directives, and revised support-mix expectations.
+  Why: the newest critique's `Top Priority` asked for one Wave `5-8` ownership test to repeat long enough that the earned weapon/body line can actually feel mastered before the game promises anything larger. The highest-value bounded interpretation inside `playables/cinder-circuit/` was to change the shipped recurring-wave spine itself, because that improves long-run pacing and rerun hunger without adding new modules, new UI wrappers, or more early spectacle.
+  Follow-up Risk: the default ladder is now more coherent, but `Wave 7` still keeps a `drift` hazard while `Wave 8` closes on `territory`, and support-specific proof text still adds route flavor on top. If critique still says the back half changes its exam too often, the next bounded pass should collapse those hazard/read variants further instead of widening progression.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Progression
 
 - 2026-03-28 19:40:00 KST
   Changed: recut one shipped `Wave 6` breakpoint presentation slice in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so default chassis cards stop advertising `Wave 8`, `support bay`, and uplink-style admin at the exact moment the run should feel like one earned body transformation. I added `getWave6BreakpointInstallSummary(...)`, rewrote `buildWave6ChassisBreakpointChoices(...)` to describe the installed rider as part of the new chassis silhouette instead of a future bay reservation, and replaced the shipped upgrade log string with a hidden-junction note that no longer names `Wave 8` as the reward object. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the shipped breakpoint copy is now locked against `Wave 8` / `support bay` wording while still asserting the real bundled install remains intact.

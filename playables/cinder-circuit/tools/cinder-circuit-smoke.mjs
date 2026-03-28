@@ -132,7 +132,8 @@ assert.equal(game.WAVE_CONFIG[5].arena.width, 1640);
 assert.equal(game.WAVE_CONFIG[5].arena.height, 920);
 assert.equal(game.WAVE_CONFIG[4].label, "Wave 5 · Payoff Run");
 assert.equal(game.WAVE_CONFIG[5].label, "Wave 6 · Crown Breach");
-assert.equal(game.WAVE_CONFIG[6].label, "Wave 7 · Refuge Run");
+assert.equal(game.WAVE_CONFIG[6].label, "Wave 7 · Dominion Sweep");
+assert.equal(game.WAVE_CONFIG[7].label, "Wave 8 · Dominion Proof");
 const baseRouteVictoryLap = game.createBaseRouteVictoryLapWave(game.createInitialBuild("rail_zeal"));
 assert.equal(baseRouteVictoryLap.label, "Victory Lap · Dominion Run");
 assert.equal(baseRouteVictoryLap.completesRun, true);
@@ -145,36 +146,36 @@ assert.equal(baseRouteVictoryLap.arena.width, 1820);
 assert.equal(baseRouteVictoryLap.arena.height, 1020);
 assert.equal(baseRouteVictoryLap.spawnBudget, 66);
 assert.equal(baseRouteVictoryLap.activeCap, 18);
-assert.equal(game.WAVE_CONFIG[7].label, "Wave 8 · Pocket Reset");
+assert.equal(game.WAVE_CONFIG[7].label, "Wave 8 · Dominion Proof");
 assert.equal(game.WAVE_CONFIG[8].label, "Wave 9 · Payoff Run+");
 assert.equal(game.WAVE_CONFIG[9].label, "Wave 10 · Crown Proof+");
 assert.equal(game.WAVE_CONFIG[4].directive, "가장 넓은 flank부터 비우고 열린 lane 둘 중 하나를 오래 붙든다.");
 assert.equal(game.WAVE_CONFIG[5].directive, "가장 먼 relay를 먼저 끊고 뚫린 corridor 하나를 길게 지킨다.");
 assert.equal(
   game.WAVE_CONFIG[6].directive,
-  "가장 얇은 pursuit 덩어리를 먼저 찢고 비워 낸 refuge pocket으로 짧게 갈아탄다."
+  "가장 넓은 flank를 먼저 비우고 같은 gun/body lane 하나를 오래 붙들며 점유 시간을 늘린다."
 );
 assert.equal(
   game.WAVE_CONFIG[7].directive,
-  "열린 pocket 하나를 먼저 확보하고 turret tax가 겹치기 전에 다음 refuge 각으로 짧게 갈아탄다."
+  "가장 넓은 외곽 lane을 먼저 비우고 같은 gun/body 화선을 끝까지 밀어 점유 시간을 늘린다."
 );
 assert.equal(game.WAVE_CONFIG[5].pressureFamily, "breach");
 assert.equal(game.WAVE_CONFIG[5].hazard.type, "relay");
 assert.ok((game.WAVE_CONFIG[5].mix.binder || 0) > 0);
 assert.ok((game.WAVE_CONFIG[5].mix.lancer || 0) > 0);
 assert.equal(game.WAVE_CONFIG[5].mix.mortar || 0, 0);
-assert.equal(game.WAVE_CONFIG[6].pressureFamily, "pursuit");
+assert.equal(game.WAVE_CONFIG[6].pressureFamily, "domination");
 assert.equal(game.WAVE_CONFIG[6].activeCap, 20);
-assert.equal(game.WAVE_CONFIG[6].spawnBudget, 110);
+assert.equal(game.WAVE_CONFIG[6].spawnBudget, 108);
 assert.equal(game.WAVE_CONFIG[6].hazard.type, "drift");
 assert.ok((game.WAVE_CONFIG[6].mix.binder || 0) > 0);
 assert.equal(game.WAVE_CONFIG[6].arena.width, 1740);
 assert.equal(game.WAVE_CONFIG[6].arena.height, 980);
 assert.ok(game.WAVE_CONFIG[6].arena.width > game.WAVE_CONFIG[5].arena.width);
 assert.ok(game.WAVE_CONFIG[6].activeCap < game.WAVE_CONFIG[7].activeCap);
-assert.equal(game.WAVE_CONFIG[7].pressureFamily, "hold");
+assert.equal(game.WAVE_CONFIG[7].pressureFamily, "domination");
 assert.equal(game.WAVE_CONFIG[7].activeCap, 22);
-assert.equal(game.WAVE_CONFIG[7].spawnBudget, 124);
+assert.equal(game.WAVE_CONFIG[7].spawnBudget, 120);
 assert.equal(game.WAVE_CONFIG[7].arena.width, 1780);
 assert.equal(game.WAVE_CONFIG[7].arena.height, 1000);
 assert.equal(game.WAVE_CONFIG[7].hazard.type, "territory");
@@ -462,7 +463,7 @@ assert.equal(seekerWave8Config.supportProof?.label, "Seeker Overclock");
 assert.equal(seekerWave8Config.supportProof?.status, "barrage corridor chain");
 assert.ok(seekerWave8Config.directive.includes("corridor"));
 assert.ok((seekerWave8Config.mix.warden || 0) >= 0.12);
-assert.ok((seekerWave8Config.mix.mortar || 0) >= 0.08);
+assert.ok((seekerWave8Config.mix.mortar || 0) >= 0.04);
 const seekerProofLiveStatus = game.getLiveSideBetSummary({
   build: seekerProofBuild,
   waveIndex: 7,
@@ -541,14 +542,14 @@ const droneWave7Config = game.resolveWaveConfig(6, droneProofBuild);
 assert.equal(droneWave7Config.supportProof?.label, "Drone Re-entry");
 assert.equal(droneWave7Config.supportProof?.status, "tail seam re-entry");
 assert.ok(droneWave7Config.directive.includes("rear screen"));
-assert.ok((droneWave7Config.mix.binder || 0) >= 0.18);
+assert.ok((droneWave7Config.mix.binder || 0) >= 0.17);
 assert.ok((droneWave7Config.mix.brander || 0) >= 0.05);
 const droneWave8Config = game.resolveWaveConfig(7, droneProofBuild);
 assert.equal(droneWave8Config.supportProof?.label, "Drone Overclock");
 assert.equal(droneWave8Config.supportProof?.status, "rolling refuge chain");
 assert.ok(droneWave8Config.directive.includes("refuge"));
 assert.ok((droneWave8Config.mix.brute || 0) >= 0.18);
-assert.ok((droneWave8Config.mix.binder || 0) >= 0.14);
+assert.ok((droneWave8Config.mix.binder || 0) >= 0.09);
 const droneProofLiveStatus = game.getLiveSideBetSummary({
   build: droneProofBuild,
   waveIndex: 7,
@@ -1496,7 +1497,7 @@ assert.ok(game.WAVE_CONFIG[7].spawnBudget > game.WAVE_CONFIG[4].spawnBudget);
 assert.ok(game.WAVE_CONFIG[7].mix.warden > 0);
 assert.equal(game.WAVE_CONFIG[7].mix.mortar || 0, 0);
 assert.equal(game.WAVE_CONFIG[7].hazard.type, "territory");
-assert.equal(game.WAVE_CONFIG[7].pressureFamily, "hold");
+assert.equal(game.WAVE_CONFIG[7].pressureFamily, "domination");
 assert.ok((game.WAVE_CONFIG[7].mix.binder || 0) > 0);
 assert.ok(game.WAVE_CONFIG[7].activeCap > game.WAVE_CONFIG[5].activeCap);
 assert.ok(game.WAVE_CONFIG[7].arena.width >= game.WAVE_CONFIG[6].arena.width);
@@ -1543,11 +1544,12 @@ assert.equal(afterglowWindow.hazard, undefined);
 assert.equal(breaklineFollowthrough.hazard.type, "relay");
 assert.equal(breaklineFollowthrough.pressureFamily, "breach");
 assert.equal(breaklineFollowthrough.label, "Wave 6 · Crown Breach");
-assert.equal(crownfireSpike.pressureFamily, "pursuit");
+assert.equal(crownfireSpike.pressureFamily, "domination");
 assert.equal(crownfireSpike.hazard.type, "drift");
-assert.equal(forgecrossSpike.pressureFamily, "hold");
+assert.equal(crownfireSpike.label, "Wave 7 · Dominion Sweep");
+assert.equal(forgecrossSpike.pressureFamily, "domination");
 assert.equal(forgecrossSpike.hazard.type, "territory");
-assert.equal(forgecrossSpike.label, "Wave 8 · Pocket Reset");
+assert.equal(forgecrossSpike.label, "Wave 8 · Dominion Proof");
 assert.ok(afterglowWindow.activeCap <= breaklineFollowthrough.activeCap);
 assert.ok(breaklineFollowthrough.activeCap < crownfireSpike.activeCap);
 assert.ok(crownfireSpike.activeCap < forgecrossSpike.activeCap);
@@ -4158,7 +4160,7 @@ const waveSummary = game.WAVE_CONFIG.map((wave) => ({
 const actTwoLadder = game.WAVE_CONFIG.slice(4, 8);
 assert.equal(
   actTwoLadder.map((wave) => wave.pressureFamily).join("|"),
-  "domination|breach|pursuit|hold"
+  "domination|breach|domination|domination"
 );
 assert.equal(
   actTwoLadder.map((wave) => (wave.hazard ? wave.hazard.type : "none")).join("|"),
@@ -4170,8 +4172,8 @@ assert.ok(actTwoLadder[2].arena.width > actTwoLadder[1].arena.width);
 assert.ok(actTwoLadder[2].arena.height > actTwoLadder[1].arena.height);
 assert.ok(actTwoLadder[2].activeCap < actTwoLadder[3].activeCap);
 assert.ok(actTwoLadder[1].note.includes("shared breach cell"));
-assert.ok(actTwoLadder[2].note.includes("shared pursuit cell"));
-assert.ok(actTwoLadder[3].note.includes("shared hold cell"));
+assert.ok(actTwoLadder[2].note.includes("shared domination sweep cell"));
+assert.ok(actTwoLadder[3].note.includes("shared domination proof cell"));
 
 const lateBreakSmokeBuild = game.createInitialBuild("scrap_pact");
 lateBreakSmokeBuild.bastionDoctrineId = "kiln_bastion";
