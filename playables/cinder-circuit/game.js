@@ -10165,6 +10165,43 @@
     `;
   }
 
+  function createCurrentMachinePayoffMarkup({
+    machineLabel = "현재 머신",
+    machineValue = "-",
+    payoffLabel = "다음 전투",
+    payoffValue = "-",
+  }) {
+    return `
+      <div class="machine-payoff">
+        <article class="machine-payoff__slot machine-payoff__slot--headline">
+          <span class="machine-payoff__label">${machineLabel}</span>
+          <strong class="machine-payoff__value">${machineValue}</strong>
+        </article>
+        <article class="machine-payoff__slot">
+          <span class="machine-payoff__label">${payoffLabel}</span>
+          <strong class="machine-payoff__value">${payoffValue}</strong>
+        </article>
+      </div>
+    `;
+  }
+
+  function getShippingMachinePayoffSummary(build, weapon = null, waveNumber = 1, options = {}) {
+    const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
+    const phase = options && options.phase ? options.phase : "combat";
+    const contractSummary = getShippingContractSummary(build, weapon, boundedWave, options);
+    return {
+      machineLabel:
+        boundedWave < 3 && phase !== "result"
+          ? "현재 선체"
+          : phase === "result"
+            ? "완성 머신"
+            : "현재 머신",
+      machineValue: contractSummary.titleValue,
+      payoffLabel: phase === "forge" ? "복귀 전투" : contractSummary.leadLabel,
+      payoffValue: contractSummary.leadValue,
+    };
+  }
+
   function getBaseRouteBranchPayoffSummary({
     build,
     supportSystem = null,
@@ -10489,22 +10526,12 @@
       DEFAULT_ROUTE_WAVE_COUNT
     );
     const weapon = activeState.weapon || computeWeaponStats(build);
-    const supportSystem =
-      activeState.supportSystem && activeState.supportSystem.label
-        ? activeState.supportSystem
-        : computeSupportSystemStats(build);
-    const contractSummary = getShippingContractSummary(build, weapon, waveNumber, {
+    const machineSummary = getShippingMachinePayoffSummary(build, weapon, waveNumber, {
       phase: activeState.phase === "result" ? "result" : "combat",
     });
     return `
       <div class="pause-summary__hero">
-        ${createBaseRouteStatusStripMarkup({
-          titleLabel: contractSummary.titleLabel,
-          titleValue: contractSummary.titleValue,
-          leadLabel: contractSummary.leadLabel,
-          leadValue: contractSummary.leadValue,
-          headlineFirst: true,
-        })}
+        ${createCurrentMachinePayoffMarkup(machineSummary)}
       </div>
     `;
   }
@@ -18614,7 +18641,7 @@
           ? clamp(state.stats.wavesCleared, 1, totalTrackWaves)
           : clamp(state.waveIndex + 1, 1, totalTrackWaves);
     const currentWeapon = state.weapon || computeWeaponStats(state.build);
-    const contractSummary = getShippingContractSummary(state.build, currentWeapon, trackWaveNumber, {
+    const machineSummary = getShippingMachinePayoffSummary(state.build, currentWeapon, trackWaveNumber, {
       phase: state.phase === "result" ? "result" : state.phase === "forge" ? "forge" : "combat",
     });
     const label =
@@ -18626,18 +18653,17 @@
             ? "LAP"
             : `W${trackWaveNumber}`;
     elements.runTrackLabel.textContent = label;
-    elements.waveTrack.innerHTML = createBaseRouteStatusStripMarkup({
-      titleLabel: contractSummary.titleLabel,
-      titleValue: contractSummary.titleValue,
-      leadLabel:
+    elements.waveTrack.innerHTML = createCurrentMachinePayoffMarkup({
+      machineLabel: machineSummary.machineLabel,
+      machineValue: machineSummary.machineValue,
+      payoffLabel:
         state.wave && state.wave.baseRouteVictoryLap && state.phase !== "result"
           ? "현재 랩"
-          : contractSummary.leadLabel,
-      leadValue:
+          : machineSummary.payoffLabel,
+      payoffValue:
         state.wave && state.wave.baseRouteVictoryLap && state.phase !== "result"
           ? "짧은 승리 랩"
-          : contractSummary.leadValue,
-      headlineFirst: true,
+          : machineSummary.payoffValue,
     });
   }
 

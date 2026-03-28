@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: strip the shipped route to a fragile no-signature opener, one Wave 5-6 weapon/body break, and one earned Wave 7-8 payoff while hiding support/late-route grammar until it is actually awarded.
+- Immediate priority: collapse every shipped-facing surface to one fragile opener, one visible Wave 5-6 break, and one earned Wave 7-8 payoff; remove signature/three-lane/late-route grammar from docs, title, forge, and HUD until those layers actually exist on-screen.
 
 ## Release Gates
 
@@ -61,6 +61,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 21:50:00 KST
+  Findings:
+  - The project is still teaching a prototype contract instead of launching a run fantasy. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L9) and [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L24) still define shipped play around run-start `Signature` plus repeated `주력 변이 / 방호·보조 / 판돈·유틸`, so the design doc itself is pulling against the loop’s no-signature, low-reading opener.
+  - The title screen is cleaner visually, but it still carries too much authored route explanation for a first click. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L19528) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L19550) build a `title / detail / proof strip` launch panel, which is closer to a mission brief than the blunt appetite hook strong arena roguelites use.
+  - Forge presentation is still over-authored and still reading like admin. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L7912) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L7930) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8181) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8204) still sell each pick with `promise / proof / recommended rider` and showcase deltas. Compared with the power-first punch of `Hades` boon screens or `Nova Drift` upgrade reads, this is still too much explanation around the reward moment.
+  - The HUD is still carrying route-contract DNA even when compressed. [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L91) through [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html#L101) keep the lower-left overlay as a `status-board`, and [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css#L1050) through [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css#L1126) still preserve contract-strip and roadmap-card hierarchy. Even when text is hidden, the screen is still structurally built around reading the route.
+  - The codebase is still hoarding late-game ambition in the shipped path. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2101) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2160) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L19969) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20036) still surface `Late Break cadence`, Wave 9-12 wording, and armory explanations adjacent to the 8-wave build, which keeps the player aware of roadmap scaffolding instead of hungry for the next visible transformation.
+  Top Priority: Recut the shipped-facing contract so title, forge, HUD, and docs each present only `current machine` and `next combat payoff`, with no signature taxonomy, recommended rider language, or Wave 9-12 route framing on default surfaces.
+  Why Now: Until the player stops being briefed and starts being tempted, repeated runs will keep feeling like reading a plan for a better future version.
+  Do Not Repeat: Do not answer this with more copy compression, more hidden terminology, or another new reward layer before the existing screens stop acting like documents.
+  Release Gate: UX/UI
 
 - 2026-03-28 21:20:00 KST
   Findings:
@@ -4040,6 +4052,14 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-28 22:15:00 KST
+  Changed: recut one shipped-facing HUD contract layer in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html), and [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) so the default lower-left overlay and pause snapshot no longer render as a `status-board` / route-contract document. I added `getShippingMachinePayoffSummary(...)` and `createCurrentMachinePayoffMarkup(...)`, then switched `renderWaveTrack()` and `createBaseRoutePauseSnapshotMarkup(...)` to the same two-slot read: `현재 선체/머신` and `다음 전투`. The overlay markup now uses `machine-panel` / `machine-payoff`, which removes the old dashboard-strip hierarchy and keeps the current run focused on the live machine plus the next combat payoff. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new HUD/pause shell.
+  Why: the newest critique's `Top Priority` was to make shipped-facing surfaces present only `current machine` and `next combat payoff`, and current player feedback still says status/detail reads too much like a document. The highest-value bounded interpretation inside `playables/cinder-circuit/` was to remove the remaining `status-board` DNA from the live HUD and pause summary, because those are the surfaces the player glances at most often during the run.
+  Follow-up Risk: the live left-side read is now much cleaner, but `getShippingContractSummary(...)` still names the midrun form as `런 실루엣` for shared forge/ladder helpers. If critique still says the reward shell feels over-authored, the next bounded pass should align that forge-context headline to the same `현재 머신` language instead of adding more reward wrappers.
+  UI reference direction: followed the compact power-first hierarchy seen in `Hades` boon reads and `Nova Drift` upgrade summaries, where the player sees the thing they are piloting now and the next immediate ask, not a three-part route dashboard.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: UX/UI
 
 - 2026-03-28 20:35:00 KST
   Changed: recut one shipped `Act 2` combat spine in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the compact `8-wave` route no longer pivots from `payoff -> breach -> pursuit -> reset` into four different exams just as the player earns a real midrun form. `WAVE_CONFIG` now keeps `Wave 7` on `Dominion Sweep` and `Wave 8` on `Dominion Proof`, extending the same ownership test the player started cashing in at `Wave 5` instead of switching the shipped ladder into a new pursuit/hold contract every wave. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new Act 2 pressure-family string, labels, directives, and revised support-mix expectations.

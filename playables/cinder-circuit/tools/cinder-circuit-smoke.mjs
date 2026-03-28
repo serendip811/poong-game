@@ -630,7 +630,7 @@ const pauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   paused: true,
 });
 assert.ok(pauseSnapshotMarkup.includes("다음 증명"));
-assert.ok(pauseSnapshotMarkup.includes("route-contract--double"));
+assert.ok(pauseSnapshotMarkup.includes("machine-payoff"));
 assert.ok(!pauseSnapshotMarkup.includes("summary-head"));
 assert.ok(!pauseSnapshotMarkup.includes("최근 획득"));
 assert.ok(!pauseSnapshotMarkup.includes("고철 +34 / 회수 +10% / Siege Debt 1웨이브"));
@@ -650,7 +650,7 @@ const openingPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
 assert.ok(openingPauseSnapshotMarkup.includes("다음 도약"));
 assert.ok(openingPauseSnapshotMarkup.includes("현재 선체"));
 assert.ok(openingPauseSnapshotMarkup.includes("빈 선체"));
-assert.ok(openingPauseSnapshotMarkup.includes("route-contract--double"));
+assert.ok(openingPauseSnapshotMarkup.includes("machine-payoff"));
 assert.ok(!openingPauseSnapshotMarkup.includes("summary-head"));
 assert.ok(!openingPauseSnapshotMarkup.includes("최근 획득"));
 assert.ok(!openingPauseSnapshotMarkup.includes("첫 포지 전"));
@@ -666,8 +666,9 @@ const supportPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   phase: "combat",
   paused: true,
 });
-assert.ok(supportPauseSnapshotMarkup.includes("route-contract--double"));
+assert.ok(supportPauseSnapshotMarkup.includes("machine-payoff"));
 assert.ok(supportPauseSnapshotMarkup.includes("현재 증명"));
+assert.ok(supportPauseSnapshotMarkup.includes("현재 머신"));
 assert.ok(!supportPauseSnapshotMarkup.includes("summary-head"));
 assert.ok(!supportPauseSnapshotMarkup.includes("활성 보조"));
 assert.ok(!supportPauseSnapshotMarkup.includes("활성 판돈"));
@@ -1090,7 +1091,7 @@ assert.ok(indexMarkup.includes('id="run-track-label"'));
 assert.ok(indexMarkup.includes('id="wave-track"'));
 assert.ok(indexMarkup.includes('id="combat-feed"'));
 assert.ok(indexMarkup.includes('id="pause-summary"'));
-assert.ok(indexMarkup.includes('status-board status-board--overlay'));
+assert.ok(indexMarkup.includes('machine-panel machine-panel--overlay'));
 assert.ok(!indexMarkup.includes('roadmap-card roadmap-card--contract'));
 const minimalHudVisibility = game.getMinimalBaseRouteHudVisibility({
   paused: false,

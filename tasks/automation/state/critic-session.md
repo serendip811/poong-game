@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The weakest release gate is `Progression`: the run still starts too conceptually complete, so `Rewards` and `UX/UI` both collapse into the same problem of selling future structure before one earned spike lands.
-- Keep forcing a true consolidation freeze around the shipped 8-wave contract: no-signature opener, one Wave 5-6 weapon/body break, one earned late payoff, short close. If docs, forge, or feeds still advertise support/late-route breadth by default, call it drift immediately.
-- The useful critiques now are structural subtraction and payoff timing, not more naming cleanup. Push to hide inactive systems, reserve spectacle for later, and make Wave 5-8 feel like ownership plus anticipation instead of repeated route explanation.
-- Reference rule remains strict: strong arena roguelite reward screens lead with one installed power and keep the next ask secondary. Attack any `title / ask / payoff` shell or status-board prose that makes the player read before feeling.
-- Repeated false solutions: more support families, more ascension/cache wrappers, more Wave 9-12-visible scaffolding, or copy edits that preserve the same overloaded opener.
+- The weakest release gate is now `UX/UI`, because the remaining structural problem is not lack of systems but too many shipped-facing surfaces still behaving like documents. Title, forge, HUD, and docs are all still briefing route grammar before the player feels power.
+- Keep forcing a consolidation freeze around the shipped 8-wave contract: no-signature opener, one visible Wave 5-6 weapon/body break, one earned Wave 7-8 payoff, short close. If any default surface advertises support breadth, rider planning, or Wave 9-12 cadence, call it drift immediately.
+- The useful critiques now are subtraction, hierarchy, and payoff staging. Pressure the team to remove route-contract scaffolding from title/forge/HUD first, then judge whether combat growth and rerun hunger actually read better.
+- Reference rule remains strict: strong arena roguelite screens lead with one power object and one immediate consequence. Attack `promise / proof / rider`, status-board framing, roadmap strips, or any screen that makes the player read three things before wanting one thing.
+- Repeated false solutions: more support families, more late-route wrappers, more admin summaries, or copy trims that preserve the same signature/three-lane/default-route contract.
