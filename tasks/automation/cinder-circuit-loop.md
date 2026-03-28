@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze the shipped game to one honest `lean launch -> Wave 3 weapon break -> Wave 6 support install -> Wave 6-8 ownership lap`, and remove live `Wave 9-12 / Late Break / Afterburn` teaching from player-facing surfaces before balancing anything else.
+- Immediate priority: strip the shipped path to one quiet `lean launch -> Wave 3 weapon break -> Wave 6 support install -> Wave 6-8 ownership lap` presentation, removing `Signature / contract / proof / rider / Wave 9-12 / Late Break / Afterburn` teaching from title, forge, and status surfaces before any more balance or content work.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 02:00:45 KST
+  Findings:
+  - The shipped slice is still teaching taxonomy before fantasy. `docs/games/cinder-circuit-design.md` says lean launch bias, but the same doc still describes a `mission board`, signature-heavy title, and lane-based side panels, so the design language is still briefing the player instead of dropping them into a small, hungry opener.
+  - The live game still carries that drift. `playables/cinder-circuit/game.js` keeps signature selection on the title when the consolidated route is off, and the forge still foregrounds `current form`, `wave ask`, `branch payoff`, `proof`, and `rider` shells instead of one obvious install silhouette plus one short combat promise.
+  - `Tab`/status readability is still below release standard. Evolution ladders, current-detail paragraphs, and contract-style board language make the quick-check surface feel closer to a design document than to the glanceable status hierarchy seen in stronger arena roguelite HUDs.
+  - The project is also still lying about scope at the same time. `playables/cinder-circuit/game.js` keeps live `Wave 9-12`, `Late Break`, and `Afterburn` structure, so the player-facing shell is both too wordy and still pointing beyond the honest 8-wave run.
+  Top Priority: Remove shipped-facing signature selection and contract/proof/evolution-board framing from title, forge, and `Tab`, so the default run only presents one lean machine state, one big Wave 3 weapon break, and one visible Wave 6 support payoff.
+  Why Now: The opening is still too busy and too wordy, so players are parsing systems before they feel growth.
+  Do Not Repeat: Do not shorten the same admin shell again; delete the shell.
+  Release Gate: UX/UI
 
 - 2026-03-29 01:30:41 KST
   Findings:
@@ -4253,6 +4264,19 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-29 03:05:00 KST
+  Changed:
+  - Recut the shipped base-route forge shell in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so its context block now behaves like one object spotlight instead of a labeled contract board. The top card now shows the chosen machine/install name first, keeps only one short secondary line when needed, and drops the old `전투 ask` label row.
+  - Removed base-route forge card tags from [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), so shipped cards no longer stamp `주력 / 버팀 / 설치` above every pick while the default run is trying to feel like one lean machine-state reward moment.
+  - Matched the new hierarchy in [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) and updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so paused `Tab` snapshots also drop the labeled `전투 ask` prefix while still locking the machine/install name and short combat hint in place.
+  Why:
+  - The latest critique's `Top Priority` was to delete the remaining contract/proof/evolution-board framing from shipped title/forge/`Tab`, not just trim it again. The highest-value bounded interpretation inside `playables/cinder-circuit/` was the forge and pause top shell, because those surfaces were still reading like a mini board of labels even after earlier copy cuts.
+  Follow-up Risk:
+  - This makes the shipped reward/status shell faster to parse, but the forge context still keeps a small eyebrow line and secondary subvalue for orientation. If feedback says the screen still feels briefed rather than tempting, the next bounded pass should test removing that last context line entirely instead of restoring card tags or proof labels.
+  UI reference direction: followed the object-first reward read from `Hades` boon picks and the quick machine snapshot feel from `Nova Drift`, using the install or form name as the dominant object and demoting tactical text to a single short support line.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: UX/UI
 
 - 2026-03-29 02:35:00 KST
   Changed:

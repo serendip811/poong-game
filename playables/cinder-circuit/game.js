@@ -10730,7 +10730,6 @@
         data-verb="${choice.verb}"
         ${disabled ? "disabled" : ""}
       >
-        <span class="forge-card__tag">${contractLabel}</span>
         <h3>${transformation.cardTitle || choice.title}</h3>
         <p class="forge-card__hero-copy">${transformation.promise}</p>
         ${createBaseRouteForgePreviewMarkup(transformation.previewLabel, transformation.previewValue)}
@@ -10759,7 +10758,6 @@
         data-verb="${choice.verb}"
         ${disabled ? "disabled" : ""}
       >
-        <span class="forge-card__tag">${contractLabel}</span>
         ${createBaseRouteForgeSpotlightMarkup(transformation.previewLabel, transformation.previewValue)}
         <h3>${transformation.cardTitle || choice.title}</h3>
         <p class="forge-card__hero-copy">${transformation.promise}</p>
@@ -10930,16 +10928,25 @@
     branchPayoffLabel = "",
     branchPayoffValue = "",
   }) {
-    const askLabel = waveAskLabel || branchPayoffLabel || "다음 전투";
-    const askValue = waveAskValue || branchPayoffValue || "-";
+    const spotlightValue = title || currentFormLabel || waveAskValue || branchPayoffValue || "-";
+    const secondaryValue =
+      currentFormLabel && currentFormLabel !== spotlightValue
+        ? currentFormLabel
+        : waveAskValue && waveAskValue !== spotlightValue
+        ? waveAskValue
+        : branchPayoffValue && branchPayoffValue !== spotlightValue
+          ? branchPayoffValue
+          : "";
+    const eyebrowValue = eyebrow || titleLabel || waveAskLabel || branchPayoffLabel || "";
     return `
+      ${eyebrowValue ? `<p class="forge-ask-shell__eyebrow">${eyebrowValue}</p>` : ""}
       <div class="forge-ask-shell">
-        <span class="forge-ask-shell__label">${askLabel}</span>
-        <strong class="forge-ask-shell__value">${askValue}</strong>
+        <strong class="forge-ask-shell__value forge-ask-shell__value--solo">${spotlightValue}</strong>
+        ${secondaryValue ? `<span class="forge-ask-shell__subvalue">${secondaryValue}</span>` : ""}
       </div>
       ${
         askNote
-          ? `<p class="forge-ask-shell__note"><span>전투 ask</span>${askNote}</p>`
+          ? `<p class="forge-ask-shell__note">${askNote}</p>`
           : ""
       }
     `;
@@ -11018,7 +11025,7 @@
     return `
       <div class="pause-summary__hero">
         ${createCurrentMachinePayoffMarkup(machineSummary)}
-        <p class="machine-payoff__note"><span>전투 ask</span>${combatAsk}</p>
+        <p class="machine-payoff__note">${combatAsk}</p>
       </div>
     `;
   }

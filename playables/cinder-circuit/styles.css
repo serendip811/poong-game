@@ -1703,44 +1703,41 @@ body[data-overdrive="true"] .backdrop__glow--right {
   padding: 0;
 }
 
-.forge-ask-shell {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 14px;
-  padding: 0 0 6px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+.forge-ask-shell__eyebrow {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
-.forge-ask-shell__label {
-  color: var(--muted);
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+.forge-ask-shell {
+  display: grid;
+  gap: 4px;
+  padding: 0 0 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .forge-ask-shell__value {
   color: var(--text);
   font-size: clamp(1rem, 2vw, 1.2rem);
-  text-align: right;
+}
+
+.forge-ask-shell__value--solo {
+  text-align: left;
+}
+
+.forge-ask-shell__subvalue {
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
 }
 
 .forge-ask-shell__note {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
   margin: 10px 0 0;
   color: var(--muted-strong);
   font-size: 0.82rem;
   line-height: 1.42;
-}
-
-.forge-ask-shell__note span {
-  flex: 0 0 auto;
-  color: var(--muted);
-  font-size: 0.68rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
 }
 
 .forge-context__card strong {
@@ -2687,18 +2684,9 @@ body[data-overdrive="true"] .backdrop__glow--right {
   margin: 0.8rem 0 0;
   padding-top: 0.8rem;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
-  display: grid;
-  gap: 0.28rem;
   color: rgba(243, 236, 224, 0.82);
   font-size: 0.78rem;
   line-height: 1.5;
-}
-
-.machine-payoff__note span {
-  font-size: 0.62rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: rgba(244, 170, 63, 0.68);
 }
 
 .combat-feed {
