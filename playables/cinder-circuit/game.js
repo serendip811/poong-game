@@ -10638,10 +10638,10 @@
       return machineSummary;
     }
     return {
-      machineLabel: machineSummary.machineLabel,
-      machineValue: machineSummary.machineValue,
-      payoffLabel: "설치",
-      payoffValue: supportInstall.title,
+      machineLabel: "설치",
+      machineValue: supportInstall.title,
+      payoffLabel: machineSummary.machineLabel,
+      payoffValue: machineSummary.machineValue,
     };
   }
 
@@ -10982,6 +10982,30 @@
       leadValue: supportInstall
         ? getBaseRouteSupportInstallCombatAsk(supportInstall.systemId, SUPPORT_SYSTEM_START_WAVE)
         : proofWindowLabel || "-",
+    };
+  }
+
+  function getBaseRouteForgeDominantInstallHero({
+    choice = null,
+    dominantFormLabel = "",
+    waveNumber = SUPPORT_SYSTEM_START_WAVE,
+  } = {}) {
+    const supportInstall = getBaseRouteSupportInstallChoice(choice);
+    if (!supportInstall) {
+      return null;
+    }
+    const spotlight = getSupportSystemSpotlight(
+      supportInstall.systemId,
+      supportInstall.systemTier || 1
+    );
+    return {
+      eyebrow: spotlight?.hudLabel || "설치",
+      title: supportInstall.title || dominantFormLabel || "-",
+      currentFormLabel: dominantFormLabel || "",
+      askNote: trimForgeCombatAsk(
+        getBaseRouteSupportInstallCombatAsk(supportInstall.systemId, waveNumber),
+        "열린 공간을 남기고 자주 자리를 바꾼다."
+      ),
     };
   }
 
@@ -18241,7 +18265,9 @@
     getBaseRoutePostWaveTransition,
     getBaseRouteForgeContextTailSummary,
     getBaseRouteForgeSpotlightSummary,
+    getBaseRouteForgeDominantInstallHero,
     createBaseRouteForgeContextMarkup,
+    getBaseRoutePauseHeroSummary,
     createBaseRoutePauseSnapshotMarkup,
     createMinimalCombatAskMarkup,
     getShippingUpgradePresentationLabel,
@@ -25475,6 +25501,14 @@
       dominantFormLabel: dominantFormSummary.label,
       proofWindowLabel: proofWindow.label,
     });
+    const dominantInstallHero =
+      useBaseRouteContract && !state.pendingFinalForge
+        ? getBaseRouteForgeDominantInstallHero({
+            choice: spotlightChoice,
+            dominantFormLabel: dominantFormSummary.label,
+            waveNumber: state.waveIndex + 2,
+          })
+        : null;
     const forgeCombatAsk = trimForgeCombatAsk(
       getBaseRouteCombatAskForWave(state.build, state.waveIndex + 2),
       "열린 공간을 남기고 자주 자리를 바꾼다."
@@ -25544,13 +25578,19 @@
       ? `
         <article class="forge-context__card forge-context__card--span-two forge-context__card--contract-shell">
           ${createBaseRouteForgeContextMarkup({
-            eyebrow: baseRouteTransformationFocus.eyebrow || focusEyebrow,
-            title: spotlightChoice ? spotlightChoice.title || forgeSpotlightSummary.titleValue : dominantFormSummary.label,
-            titleLabel: forgeSpotlightSummary.titleLabel,
-            currentFormLabel: forgeSpotlightSummary.titleValue,
-            waveAskLabel: forgeSpotlightSummary.leadLabel,
-            waveAskValue: forgeSpotlightSummary.leadValue,
-            askNote: forgeCombatAsk,
+            eyebrow:
+              dominantInstallHero?.eyebrow ||
+              baseRouteTransformationFocus.eyebrow ||
+              focusEyebrow,
+            title:
+              dominantInstallHero?.title ||
+              (spotlightChoice ? spotlightChoice.title || forgeSpotlightSummary.titleValue : dominantFormSummary.label),
+            titleLabel: dominantInstallHero ? "" : forgeSpotlightSummary.titleLabel,
+            currentFormLabel:
+              dominantInstallHero?.currentFormLabel || forgeSpotlightSummary.titleValue,
+            waveAskLabel: dominantInstallHero ? "" : forgeSpotlightSummary.leadLabel,
+            waveAskValue: dominantInstallHero ? "" : forgeSpotlightSummary.leadValue,
+            askNote: dominantInstallHero?.askNote || forgeCombatAsk,
             branchPayoffLabel: forgeContextTail ? forgeContextTail.label : "",
             branchPayoffValue: forgeContextTail ? forgeContextTail.value : "",
           })}

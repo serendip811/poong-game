@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop adding route grammar and late-run scaffolding, and instead hard-cut docs, title, forge, and `Tab`/status surfaces to one honest shipped loop: `lean launch -> Wave 3 weapon break -> Wave 6 support install -> Wave 6-8 ownership lap`, with Wave 9+ hidden until the 8-wave run is genuinely rerunnable.
+- Immediate priority: stop all route/admin shell iteration and consolidate one honest shipped loop: `lean launch -> Wave 3 weapon break -> Wave 6 support install -> Wave 6-8 ownership lap`, with docs/HUD/forge only selling the current machine and next ask, and Wave 9+ fully out of player-facing judgment until the 8-wave run is rerunnable.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 04:55:00 KST
+  Findings:
+  - The project is still evaluating a shipped 8-wave run through a prototype roadmap lens. `docs/games/cinder-circuit-design.md` still describes a `mission board` title and `Afterburn` validation, while `docs/games/cinder-circuit-source-application.md` still teaches the game as a `12-wave act ladder`. That keeps the team designing for future scale before proving present replayability.
+  - The forge remains too document-like to create hunger. `renderForgeOverlay()` and the base-route helpers still revolve around `proofWindow`, `riderStep`, route-contract markup, and “current form / wave ask / branch payoff” framing. Strong reward screens in `Hades`, `Nova Drift`, or `Brotato` land because the object silhouette is immediate and the explanation is nearly disposable; this still asks the player to read the structure of the choice.
+  - Even the supposedly cleaned 8-wave route still pre-briefs too much future state. `getBaseRouteBuildRoadmap()` packages the run into three labeled steps and keeps `proof lap`, `finale roadmap`, and `current machine` summaries live, so the HUD/status layer is still teaching an authored plan instead of letting the player discover whether the new gun or support actually owns space.
+  - Build depth is present in the catalog, but the game is spending that capital too abstractly. The support systems already have visible fantasies like halo, ring, sentry, missiles, and drones, yet the player-facing shell still flattens them into route administration instead of “take this thing and feel the arena change for two waves.” That suppresses anticipation and makes future 20-30 wave ambition less credible, not more.
+  Top Priority: Collapse forge and status presentation to one dominant reward object plus one short combat ask, then judge the run strictly on whether a Wave 6 support install makes Waves 6-8 worth replaying without roadmap language.
+  Why Now: The game needs proof of fun from one readable payoff loop, not more authored structure around that payoff.
+  Do Not Repeat: Do not spend another pass preserving `roadmap / proof / rider / current machine` scaffolding in “cleaner” wording.
+  Release Gate: Rewards
 
 - 2026-03-29 04:10:00 KST
   Findings:
@@ -4287,6 +4298,19 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-29 05:20:00 KST
+  Changed:
+  - Recut the shipped `Wave 6+` forge context in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so support installs now claim the dominant hero slot with the install name first, the current machine as the only secondary line, and one short combat ask underneath. The base-route shell no longer spends that moment on a second labeled `전투 ask` row when the reward is already a visible support object.
+  - Matched the same hierarchy in the paused `Tab` snapshot inside [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), flipping live support states to `설치 -> support title` first and pushing `현재 머신` to the secondary slot so the earned install reads like the run's active star instead of a side note.
+  - Extended [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new support-first pause ordering and the object-first forge install context, including a regression check that the install hero block stays free of a redundant `다음 전투` label.
+  Why:
+  - The latest critique's `Top Priority` was to collapse forge and status presentation to one dominant reward object plus one short combat ask, then judge whether the `Wave 6` install itself makes `Wave 6-8` worth replaying. The highest-value bounded interpretation was to make support-install moments read like a `Hades` boon or `Brotato` shop object pickup instead of a route card, because the install fantasy already exists in combat and only needed the UI hierarchy to stop demoting it.
+  Follow-up Risk:
+  - This improves the support-install beat, but non-support forge moments still share the broader context shell. If critique still says reward screens feel too briefed, the next bounded pass should simplify non-install headline picks with the same restraint instead of reintroducing labels around support states.
+  UI reference direction: followed the object-first reward hierarchy from `Hades` boon picks and the terse sell-first shop read from `Brotato`, putting the install name ahead of the route explanation and leaving only one short tactical sentence.
+  Validation: `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Rewards
 
 - 2026-03-29 03:35:00 KST
   Changed:

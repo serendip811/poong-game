@@ -728,12 +728,24 @@ assert.ok(supportPauseSnapshotMarkup.includes("machine-payoff"));
 assert.ok(supportPauseSnapshotMarkup.includes("현재 머신"));
 assert.ok(supportPauseSnapshotMarkup.includes("설치"));
 assert.ok(supportPauseSnapshotMarkup.includes("Aegis Halo"));
+assert.ok(supportPauseSnapshotMarkup.indexOf("설치") < supportPauseSnapshotMarkup.indexOf("현재 머신"));
 assert.ok(supportPauseSnapshotMarkup.includes("같은 seam으로 바로 재진입한다."));
 assert.ok(!supportPauseSnapshotMarkup.includes("summary-head"));
 assert.ok(!supportPauseSnapshotMarkup.includes("활성 보조"));
 assert.ok(!supportPauseSnapshotMarkup.includes("활성 판돈"));
 assert.ok(!supportPauseSnapshotMarkup.includes("다음 랩"));
 assert.ok(!supportPauseSnapshotMarkup.includes("탄막 절개 + 방호 파동"));
+const supportPauseHeroSummary = game.getBaseRoutePauseHeroSummary({
+  build: aegisSpotlightBuild,
+  weapon: game.computeWeaponStats(aegisSpotlightBuild),
+  supportSystem: game.computeSupportSystemStats(aegisSpotlightBuild),
+  waveIndex: 6,
+  phase: "combat",
+  paused: true,
+});
+assert.equal(supportPauseHeroSummary.machineLabel, "설치");
+assert.equal(supportPauseHeroSummary.machineValue, "Aegis Halo");
+assert.equal(supportPauseHeroSummary.payoffLabel, "현재 머신");
 const hiddenCombatCacheStatus = game.getLiveSideBetSummary({
   build: game.createInitialBuild("rail_zeal"),
   waveIndex: 4,
@@ -1128,6 +1140,25 @@ const forgeRiderSpotlight = game.getBaseRouteForgeSpotlightSummary({
 assert.ok(forgeRiderSpotlight.titleLabel.length > 0);
 assert.ok(forgeRiderSpotlight.titleValue.length > 0);
 assert.equal(forgeRiderSpotlight.leadValue, "Dominion Sweep");
+const forgeDominantInstallHero = game.getBaseRouteForgeDominantInstallHero({
+  choice: wave6HeadlineChoice,
+  dominantFormLabel: "Twin Spine",
+  waveNumber: 6,
+});
+assert.equal(forgeDominantInstallHero?.eyebrow, "절단 고리");
+assert.equal(forgeDominantInstallHero?.title, "Ember Ring");
+assert.equal(forgeDominantInstallHero?.currentFormLabel, "Twin Spine");
+assert.equal(forgeDominantInstallHero?.askNote, "고리가 긁은 입구로 짧게 파고든다.");
+const dominantInstallContextMarkup = game.createBaseRouteForgeContextMarkup({
+  eyebrow: forgeDominantInstallHero?.eyebrow,
+  title: forgeDominantInstallHero?.title,
+  currentFormLabel: forgeDominantInstallHero?.currentFormLabel,
+  askNote: forgeDominantInstallHero?.askNote,
+});
+assert.ok(dominantInstallContextMarkup.includes("Ember Ring"));
+assert.ok(dominantInstallContextMarkup.includes("Twin Spine"));
+assert.ok(dominantInstallContextMarkup.includes("고리가 긁은 입구로 짧게 파고든다."));
+assert.ok(!dominantInstallContextMarkup.includes("다음 전투"));
 const forgeFinalSpotlight = game.getBaseRouteForgeSpotlightSummary({
   pendingFinalForge: true,
   dominantFormLabel: "Prism Crown",
