@@ -898,19 +898,31 @@ assert.ok(lockgridRoadmap.prompt.includes("Bulwark Treads"));
 assert.ok(!lockgridRoadmap.prompt.includes("form track"));
 assert.ok(lockgridRoadmap.note.includes("->"));
 const eraOnePlan = game.getForgeEraPlan(roadmapBuild, game.computeWeaponStats(roadmapBuild), null, 1);
-assert.equal(eraOnePlan.length, 3);
-assert.equal(eraOnePlan[0].waveLabel, "Wave 1-4");
-assert.equal(eraOnePlan[1].waveLabel, "Wave 5-7");
-assert.equal(eraOnePlan[2].waveLabel, "Wave 8 + Lap");
+assert.equal(eraOnePlan.length, 1);
+assert.equal(eraOnePlan[0].waveLabel, "Wave 1");
 assert.equal(eraOnePlan[0].state, "live");
-assert.equal(eraOnePlan[1].state, "planned");
-assert.equal(eraOnePlan[2].state, "planned");
+assert.equal(eraOnePlan[0].primaryLabel, "현재 선체");
+assert.equal(eraOnePlan[0].proofLabel, "복귀 전투");
+assert.ok(eraOnePlan[0].secondaryLabel.length > 0);
 assert.ok(eraOnePlan[0].proofLabel.length > 0);
 const eraThreePlan = game.getForgeEraPlan(roadmapBuild, game.computeWeaponStats(roadmapBuild), null, 9);
-assert.equal(eraThreePlan[0].state, "locked");
-assert.equal(eraThreePlan[1].state, "locked");
-assert.equal(eraThreePlan[2].state, "live");
-assert.ok(eraThreePlan[2].proofLabel.length > 0);
+assert.equal(eraThreePlan.length, 1);
+assert.equal(eraThreePlan[0].state, "live");
+assert.equal(eraThreePlan[0].waveLabel, "Wave 8");
+assert.equal(eraThreePlan[0].proofLabel, "복귀 전투");
+assert.ok(eraThreePlan[0].proofDetail.length > 0);
+const compactEraPanelMarkup = game.createEraContractPanelMarkup(
+  roadmapBuild,
+  game.computeWeaponStats(roadmapBuild),
+  null,
+  6
+);
+assert.ok(compactEraPanelMarkup.includes("현재 머신"));
+assert.ok(compactEraPanelMarkup.includes("machine-payoff"));
+assert.ok(!compactEraPanelMarkup.includes("Era I"));
+assert.ok(!compactEraPanelMarkup.includes("Headline Form"));
+assert.ok(!compactEraPanelMarkup.includes("Survival Rider"));
+assert.ok(!compactEraPanelMarkup.includes("Proof Band"));
 const compactFocusMarkup = game.createBaseRouteFocusMarkup({
   eyebrow: "현재 형태",
   title: "Sky Lance",

@@ -9576,6 +9576,40 @@
       CONSOLIDATED_12_WAVE_ROUTE ? DEFAULT_ROUTE_WAVE_COUNT : MAX_WAVES + POST_CAPSTONE_WAVE_COUNT
     );
     const currentWeapon = weapon || computeWeaponStats(build);
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
+      const machineSummary = getShippingMachinePayoffSummary(build, currentWeapon, boundedWave, {
+        phase: "forge",
+      });
+      const visibleEffect =
+        getBaseRouteBranchPayoffSummary({
+          build,
+          supportSystem,
+          waveNumber: boundedWave,
+        }) ||
+        {
+          label: boundedWave < 3 ? "보이는 효과" : "형태 변화",
+          value:
+            boundedWave < 3
+              ? "약한 화선으로 첫 전장을 버틴다."
+              : getShippingContractSummary(build, currentWeapon, boundedWave, {
+                  phase: "forge",
+                }).titleValue,
+        };
+      return [
+        {
+          label: machineSummary.machineLabel,
+          title: machineSummary.machineValue,
+          waveLabel: `Wave ${boundedWave}`,
+          state: "live",
+          primaryLabel: machineSummary.machineLabel,
+          primaryDetail: machineSummary.machineValue,
+          secondaryLabel: visibleEffect.label || "보이는 효과",
+          secondaryDetail: visibleEffect.value || "-",
+          proofLabel: machineSummary.payoffLabel,
+          proofDetail: machineSummary.payoffValue,
+        },
+      ];
+    }
     const roadmap = getBuildRoadmap(build, currentWeapon, boundedWave);
     const doctrine = getBastionDoctrineDef(build);
     const supportTrack = getForgeSupportTrackSnapshot(build, supportSystem);
@@ -9620,62 +9654,6 @@
       "Act II Proof Window",
       "Wave 5-6의 이어진 open-lane payoff에서 headline midform이 공간 점유를 얼마나 길게 끌고 가는지 확인한다."
     );
-    if (CONSOLIDATED_12_WAVE_ROUTE) {
-      const dominantForm = getDominantFormSummary(build, currentWeapon, boundedWave);
-      const finalProof = getEraProofWindow(
-        8,
-        "Wave 8 Proof",
-        "Wave 8에서 잠긴 gun/body line이 마지막 압박을 밀어내고, 이어지는 짧은 승리 랩까지 sweep 폭을 유지하는지 본다."
-      );
-      const getEraState = (start, end = start) => {
-        if (boundedWave > end) {
-          return "locked";
-        }
-        if (boundedWave >= start) {
-          return "live";
-        }
-        return boundedWave + 1 >= start ? "primed" : "planned";
-      };
-      return [
-        {
-          label: "Era I",
-          title: "Ignition Frame",
-          waveLabel: "Wave 1-4",
-          state: getEraState(1, 4),
-          primaryLabel: primaryOpenLabel,
-          primaryDetail: roadmap.steps[0] ? roadmap.steps[0].detail : "첫 변신 실루엣을 잠그는 구간.",
-          secondaryLabel: supportTrack.label,
-          secondaryDetail: ignitionSupportDetail,
-          proofLabel: eraOneProof.label,
-          proofDetail: eraOneProof.detail,
-        },
-        {
-          label: "Era II",
-          title: "Bastion Lock",
-          waveLabel: "Wave 5-7",
-          state: getEraState(5, 7),
-          primaryLabel: primaryBreakLabel,
-          primaryDetail: roadmap.steps[1] ? roadmap.steps[1].detail : "중반 break를 앞당겨 doctrine form을 전장에 고정한다.",
-          secondaryLabel: supportTrack.label,
-          secondaryDetail: siegeSupportDetail,
-          proofLabel: eraTwoProof.label,
-          proofDetail: eraTwoProof.detail,
-        },
-        {
-          label: "Finale",
-          title: "Wave 8 Proof",
-          waveLabel: "Wave 8 + Lap",
-          state: boundedWave >= 8 ? "live" : boundedWave >= 7 ? "primed" : "planned",
-          primaryLabel: dominantForm.label,
-          primaryDetail:
-            roadmap.steps[2] ? roadmap.steps[2].detail : "잠긴 body/gun line을 Wave 8 proof와 짧은 승리 랩으로 닫는다.",
-          secondaryLabel: supportTrack.label,
-          secondaryDetail: `${supportTrack.detail} 이 축은 새 갈림길이 아니라 final proof와 짧은 승리 랩에서 주력 실루엣을 받쳐 주는 rider로만 남는다.`,
-          proofLabel: finalProof.label,
-          proofDetail: finalProof.detail,
-        },
-      ];
-    }
     const getEraState = (start, end) => {
       if (boundedWave > end) {
         return "locked";
@@ -9735,6 +9713,36 @@
     if (!eras || eras.length === 0) {
       return "";
     }
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
+      return eras
+        .map(
+          (era) => `
+            <article class="forge-era forge-era--compact" data-state="${era.state}">
+              <div class="forge-era__header">
+                <div class="forge-era__title">
+                  <p>${era.waveLabel || ""}</p>
+                  <strong>${era.title}</strong>
+                </div>
+              </div>
+              <div class="forge-era__tracks">
+                <div class="forge-era__track">
+                  <span>${era.primaryLabel || "현재 머신"}</span>
+                  <strong>${era.primaryDetail || "-"}</strong>
+                </div>
+                <div class="forge-era__track">
+                  <span>${era.secondaryLabel || "보이는 효과"}</span>
+                  <strong>${era.secondaryDetail || "-"}</strong>
+                </div>
+                <div class="forge-era__track">
+                  <span>${era.proofLabel || "다음 전투"}</span>
+                  <strong>${era.proofDetail || "-"}</strong>
+                </div>
+              </div>
+            </article>
+          `
+        )
+        .join("");
+    }
     const stateLabelMap = {
       planned: "PLANNED",
       primed: "PRIMED",
@@ -9777,6 +9785,17 @@
   }
 
   function createEraContractPanelMarkup(build, weapon = null, supportSystem = null, waveNumber = 1) {
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
+      const machineSummary = getShippingMachinePayoffSummary(build, weapon, waveNumber, {
+        phase: "forge",
+      });
+      return `
+        <div class="summary-head">
+          <strong>현재 머신</strong>
+        </div>
+        ${createCurrentMachinePayoffMarkup(machineSummary)}
+      `;
+    }
     const eras = getForgeEraPlan(build, weapon, supportSystem, waveNumber);
     if (!eras || eras.length === 0) {
       return "";
@@ -17202,9 +17221,9 @@
         if (CONSOLIDATED_12_WAVE_ROUTE) {
           if (choice.singleAxisBreakpoint) {
             run.build.wave6ChassisBreakpoint = true;
-            run.build.upgrades.push("Chassis Breakpoint: support hold through Wave 7 proof laps");
+            run.build.upgrades.push("Chassis Breakpoint: visible support frame installed with the new chassis");
           } else if (!choice.bayUnlock) {
-            run.build.upgrades.push("Chassis Breakpoint: small support held for mid-run forge");
+            run.build.upgrades.push("Chassis Breakpoint: support frame came online with the chassis lock");
           }
           activateChassisBreakpointSurge(run, choice.chassisId);
         }
@@ -17696,6 +17715,8 @@
     getSupportSystemInstalledPayoff,
     getBaseRouteResultCopy,
     getForgeEraPlan,
+    createForgeEraMarkup,
+    createEraContractPanelMarkup,
     getShippingLadderSteps,
     getShippingLadderFocus,
     getShippingContractSummary,

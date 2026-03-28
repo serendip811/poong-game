@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop pseudo-long-run drift and make the first support install create a readable ownership window by Wave 6-8 through simpler reward/HUD surfaces and more breathable combat space.
+- Immediate priority: stop hidden 12-wave/admin drift and make Wave 6-8 the full shipped payoff loop by landing one visible support install earlier, then showing only the current machine and next ask on default surfaces.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 23:59:00 KST
+  Findings:
+  - The run still withholds its first real support fantasy until the finish line. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L13698) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L13738) explicitly reserve midrun support for the rider step and only allow the Wave 8 payoff if the chassis breakpoint flag is set, while upgrade text like [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L17201) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L17205) still celebrates “support hold through Wave 7 proof laps.” That is prototype discipline, not rerun hunger.
+  - The forge/pause route language is still a document, not a toy sale. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L9571) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L9810) keep `Era I / Era II / Headline Form / Survival Rider / Proof Band` alive in the shipped route, which is the opposite of the object-first hierarchy strong references use when they want a player to snap-pick and get back to combat.
+  - The codebase is still leaking a future game into the current one. [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L175) through [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L179) and late-route feed/state strings such as [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20306) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20314) still teach Wave 9-12 payoff/proof/finale structure. If the shipped slice is Wave 1-8, that material should not be shaping the player-facing fantasy every few screens.
+  - Early restraint is better than before, but the opening still points the player toward route planning more than toward a single craveable transformation. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L9118) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L9128) reduce the launch panel to a cleaner start, yet the first truly exciting visible system family is still treated as deferred support paperwork instead of the run’s second big “I want that” moment.
+  Top Priority: Turn Wave 6 into the first guaranteed visible support install payoff, then strip default forge/pause surfaces for Wave 6-8 down to only the installed machine, its visible effect, and the next combat ask.
+  Why Now: Until the player gets a real mid-run machine mutation with 2-3 waves to enjoy it, longer escalation and cleaner polish are both solving the wrong problem.
+  Do Not Repeat: Do not spend another pass preserving `era/contract/proof` scaffolding while merely moving the same delayed support reward a little closer to the end.
+  Release Gate: Builds
 
 - 2026-03-28 23:58:00 KST
   Findings:
@@ -4096,6 +4107,14 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-28 23:59:59 KST
+  Changed: stripped one remaining shipped-route contract fallback in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the exported base-route helpers no longer keep `Era I / Headline Form / Survival Rider / Proof Band` alive after the live HUD/forge had already moved to `현재 머신 + 보이는 효과 + 다음 전투`. For `CONSOLIDATED_12_WAVE_ROUTE`, `getForgeEraPlan(...)` now collapses to one compact machine/effect/ask summary, `createForgeEraMarkup(...)` renders those slots instead of era taxonomy, and `createEraContractPanelMarkup(...)` now reuses `createCurrentMachinePayoffMarkup(...)` rather than rebuilding a contract document. In the same bounded pass I replaced the Wave 6 chassis upgrade log strings that still said `support hold through Wave 7 proof laps` / `small support held for mid-run forge` with immediate-install language so the breakpoint stop no longer narrates the support as deferred paperwork. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new compact helper output and assert those old era labels are gone.
+  Why: the newest critique's `Top Priority` asked for Wave `6-8` default surfaces to show only the installed machine, its visible effect, and the next combat ask. The concrete high-value interpretation was not to move support timing again, because Wave 6 already installs a visible support toy in the shipped route, but to remove the leftover helper/log language that still taught a delayed, document-like contract whenever these shared summaries were inspected or reused.
+  Follow-up Risk: the shipped route helpers are now aligned, but some deeper non-default docs and long-route helper names still preserve `era/proof` framing because they serve the dormant `12-wave` path. If critique keeps saying the game speaks in two voices, the next bounded pass should quarantine or rename those non-shipped helpers/docs rather than reopening Wave 6-8 pacing again.
+  UI reference direction: followed the object-first read from `Hades` boon picks and `Nova Drift` status boards, where a reward/status helper should foreground the machine you have and the next fight, not a taxonomy of route stages.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: UX/UI
 
 - 2026-03-28 23:59:30 KST
   Changed: retuned one shipped combat spine in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the compact route finally gives the first support install real room to breathe across `Wave 6-8` instead of paying for it with cramped density. `WAVE_CONFIG` now widens the ownership window from `1720x980` to `1840x1040` to `1920x1080`, trims `activeCap` to `17 -> 18 -> 19`, lowers `spawnBudget` to `92 -> 100 -> 108`, and slows the relay/drift/territory hazard cadence so the same three asks stay readable without stacking into survival homework. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new `Wave 6-8` arena, cap, budget, and lighter hazard thresholds.
