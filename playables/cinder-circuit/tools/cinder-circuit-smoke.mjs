@@ -704,10 +704,10 @@ const supportPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   paused: true,
 });
 assert.ok(supportPauseSnapshotMarkup.includes("machine-payoff"));
-assert.ok(supportPauseSnapshotMarkup.includes("방호 고리"));
-assert.ok(supportPauseSnapshotMarkup.includes("탄막 절개 + 방호 파동"));
 assert.ok(supportPauseSnapshotMarkup.includes("현재 머신"));
 assert.ok(supportPauseSnapshotMarkup.includes("Aegis Halo"));
+assert.ok(supportPauseSnapshotMarkup.includes("방호 고리"));
+assert.ok(supportPauseSnapshotMarkup.includes("탄막 절개 + 방호 파동"));
 assert.ok(supportPauseSnapshotMarkup.includes("전투 ask"));
 assert.ok(/pocket|재진입|Halo/.test(supportPauseSnapshotMarkup));
 assert.ok(!supportPauseSnapshotMarkup.includes("summary-head"));

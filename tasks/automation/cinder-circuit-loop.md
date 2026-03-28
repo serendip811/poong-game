@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: enforce a real consolidation freeze so the shipped path is only `lean launch -> Wave 3 weapon break -> Wave 6 support install -> Wave 6-8 ownership lap`, with `Signature / Proof / Wave 9-12 / Late Break / Afterburn` fully absent from player-facing docs, forge, pause, and combat feed.
+- Immediate priority: strip the shipped path down to `lean launch -> Wave 3 weapon break -> Wave 6 support install -> Wave 6-8 ownership lap`, with docs, forge, `Tab`, pause, and combat feed all behaving like a simple status/reward loop instead of a `Signature / Proof / Wave 9-12 / Late Break / Afterburn` roadmap.
 
 ## Release Gates
 
@@ -61,6 +61,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 01:05:00 KST
+  Findings:
+  - The project is still documenting and surfacing the wrong game. `docs/games/cinder-circuit-design.md` continues to define the shipped run through `Signature`, three forge lanes, and `Proof Window`, so the team is still balancing a concept deck instead of a rerunnable appetite loop.
+  - The live slice is still contaminated by future-route scaffolding. `playables/cinder-circuit/game.js` keeps `Wave 9-12`, `Late Break`, and `Afterburn` in the active wave spine and support summaries, which means the current 8-wave run is not being judged as a clean, self-sufficient product.
+  - `Tab`/status surfaces are still too document-like. The `8-Wave Contract` panel and its explanatory summary note make the quick-check board read like a mini design brief, which is well below strong arena-roguelite HUD references where build state is recognized at a glance.
+  - The forge still explains before it excites. `current form`, `wave ask`, `branch payoff`, `next test`, and card-side proof text are still doing too much of the screen’s first-read work, so the player is parsing reward grammar before feeling hunger for the install.
+  - The support catalog is already broad enough, but the run still lacks one obviously dominant Wave 6 install that gets two full waves of ownership. Missiles, drones, and shields exist; replay desire still does not.
+  Top Priority: Rebuild the default player-facing presentation so docs, `Tab`, and forge only show one lean machine state and one visible support install payoff, while all contract/proof/late-wave roadmap language stays off the shipped 8-wave route.
+  Why Now: If the reward and status surfaces still read like instructions, players will understand the run before they want to replay it.
+  Do Not Repeat: Do not solve this with shorter copy inside the same contract shell.
+  Release Gate: UX/UI
 
 - 2026-03-29 00:12:00 KST
   Findings:
@@ -4219,6 +4231,19 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-29 01:35:00 KST
+  Changed:
+  - Recut the shipped `Tab` hero in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so paused `Wave 6-8` runs now read as `현재 머신` first and the installed support payoff second, with only one short `전투 ask` under the card instead of letting the support effect replace the whole machine summary.
+  - Rewrote the shipped overview in [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) around `빈 선체 -> Wave 3 무기 도약 -> Wave 6 지원 설치 -> Wave 8 숙련 랩`, removing player-facing `Signature`, `Headline/Rider`, and `Proof Window` language from the main promise, loop, and forge sections.
+  - Extended [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new pause-card order so future passes do not drift back to support-first wording.
+  Why:
+  - The latest critique was correct that `Tab` and the design doc were still teaching a contract shell. This pass makes the quick-check board read more like a `Nova Drift`-style status snapshot: one machine state, one installed payoff, then back to combat.
+  Follow-up Risk:
+  - Forge still carries some `proof` and late-route helper text outside this paused summary path, so a future UX consolidation pass should strip the remaining shipped-facing card-side `proof` copy without reopening a bigger route-language refactor.
+  UI reference direction: followed the quick status-board hierarchy from `Nova Drift` and the object-first reward read from `Hades`, keeping one machine silhouette and one earned payoff visible instead of a contract panel.
+  Validation: `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: UX/UI
 
 - 2026-03-29 00:13:30 KST
   Changed: extended the shipped `Wave 6-8` support proof surge in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so offensive support installs now change firing patterns, not just cooldown math. `computeSupportSystemStats(build, waveNumber)` and `updateSupportSystem(dt)` now carry temporary `shotBurstCount` / `shotBurstSpread` surge fields: `Seeker Array` widens from a single missile into 2-3 missile fans across the ownership lap, `Volt Drones` fork their auto-fire into split screens from `Wave 7`, and `Ember Ring` gains a brief `Wave 8` ignition-bolt burst even at tier 1. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock those temporary volley spikes against baseline non-surge stats.

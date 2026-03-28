@@ -6,14 +6,14 @@
 - Genre: 탑다운 아레나 슈터 + 웨이브 로그라이트
 - Platform: Desktop-first Canvas browser game
 - Session length: shipped slice 기준 `8웨이브 + 짧은 승리 랩`, `8~10분` 내외
-- Core promise: 현재 shipped 러닝은 `Wave 1-8` 동안 `주력 변이`, `방호·보조`, `판돈·유틸` 중 하나를 반복해서 고르고, 직후 전투의 `Proof Window`에서 그 선택이 정말 전장을 먹는지 바로 증명한다.
+- Core promise: 현재 shipped 러닝은 `빈 선체 -> Wave 3 무기 도약 -> Wave 6 지원 설치 -> Wave 8 숙련 랩`의 짧은 실루엣을 반복해서 타며, 매번 다른 무기/지원 조합이 전장을 어떻게 다시 읽게 만드는지 바로 체감하게 한다.
 
 ## Pillars
 
 - 읽히는 회피: 플레이어는 항상 무엇을 피해야 하고 어디로 빠져야 하는지 즉시 알아야 한다.
 - 변신의 갈증: 다음 세 웨이브 안에 기계가 얼마나 달라질지 기대하게 만들어야 한다.
-- 드랍의 가치: 웨이브 중 얻은 코어와 스크랩이 다음 포지의 headline/rider 선택을 흔들어야 한다.
-- 단계 계약: `Wave 1-4`는 lean start와 첫 무기 도약, `Wave 5-8`은 실제 분기와 domination proof를 맡는다.
+- 드랍의 가치: 웨이브 중 얻은 코어와 스크랩이 다음 포지의 무기 도약이나 지원 설치를 흔들어야 한다.
+- 단계 구조: `Wave 1-4`는 lean start와 첫 무기 도약, `Wave 5-8`은 설치한 지원 실루엣을 자기 것으로 만드는 ownership lap을 맡는다.
 
 ## Core Fantasy
 
@@ -21,21 +21,21 @@
 
 ## Player Loop
 
-1. 런 시작 전에 `시동 회로(Signature)`를 골라 초기 벤치 2장과 패시브를 정한다.
-2. 아레나를 돌며 적을 피하고 자동 사격으로 잡는다.
-3. 스크랩과 코어 드랍을 주워 다음 시대의 `Headline Leap`과 `Survival Rider` 선택지를 넓힌다.
-4. 포지 구간에서 스크랩을 써 다음 전투를 바꿀 `Headline Form` 한 장과 필요 시 이를 받칠 `Rider` 한 장을 고른다.
-5. 직후 웨이브의 `Proof Window`에서 새 형태가 실제로 lane, pocket, greed route를 얼마나 넓히는지 확인한다.
-6. `Wave 8`과 짧은 승리 랩을 닫으면 한 번의 shipped run을 끝내고, 다른 form/rider/greed 조합으로 다시 돈다.
+1. 작은 기본 화선으로 시작해 아레나를 돌며 적을 피하고 자동 사격으로 잡는다.
+2. 스크랩과 코어 드랍을 주워 다음 포지에서 더 넓은 화선이나 더 강한 지원 설치를 노린다.
+3. `Wave 3` 포지에서 무기 도약 하나를 골라 주포 실루엣을 바꾼다.
+4. `Wave 6` 포지에서 지원 설치 하나를 붙여 화면 읽기와 이동 루트를 바꾼다.
+5. `Wave 6-8`에서 그 조합이 lane, pocket, 복귀 각을 얼마나 더 오래 열어 주는지 직접 버텨 본다.
+6. `Wave 8`과 짧은 승리 랩을 닫으면 한 번의 shipped run을 끝내고, 다른 무기/지원 조합을 다시 노린다.
 
 ## Match Structure
 
-- shipped route는 총 `Wave 1-8`와 웨이브 사이 포지로 이루어진 한 번의 닫힌 계약이다.
+- shipped route는 총 `Wave 1-8`와 웨이브 사이 포지로 이루어진 한 번의 닫힌 러닝이다.
 - `Wave 1-4`: 기본 코어로 버티며 첫 무기 도약을 만든다.
-- `Wave 5-6`: 주무장 도약 뒤 차체 break를 잠가 mid-run identity를 한 축으로 세운다.
-- `Wave 7-8`: 잠긴 gun/body line을 domination proof로 길게 증명하고, 이후 보조 실루엣을 얹을 여지만 남긴다.
+- `Wave 5-6`: 주무장 도약 뒤 차체와 지원 설치를 붙여 mid-run identity를 세운다.
+- `Wave 7-8`: 방금 붙인 gun/body/support 조합으로 같은 ownership ask를 더 오래 밀어붙인다.
 - 각 웨이브는 대체로 `50~75초` 내외, 밴드에 따라 아레나 크기와 압박 리듬이 달라진다.
-- Wave 8 proof와 짧은 승리 랩 종료 후 생존 시 승리
+- Wave 8 숙련 랩과 짧은 승리 랩 종료 후 생존 시 승리
 - HP가 0이 되면 즉시 패배
 
 ## Controls
@@ -47,19 +47,17 @@
   - `WASD`: 이동
   - `Space`: 대시
   - `F`: `Overdrive` 발동
-  - `1` `2` `3`: 타이틀에서 시동 회로 선택
   - `1` `2` `3`: 포지 카드 단축 선택
   - `Enter`: 시작
   - `R`: 재시작
 
 ## Core Systems
 
-### 0. Run Signature
+### 0. Lean Launch Bias
 
-- 런 시작 전 `Relay Oath`, `Scrap Pact`, `Rail Zeal` 중 하나를 고른다.
-- 시그니처는 원작의 `character + rune` 압축판으로, 초기 빌드 방향을 먼저 고정한다.
-- 각 시그니처는 `초기 벤치 2장 + 작은 영구 패시브` 조합으로 구성한다.
-- 목적은 첫 포지 이전부터 이미 다른 러닝 감각을 만드는 것이다.
+- shipped 시작은 플레이어에게 별도 서명 선택을 요구하지 않고, 작은 기본 화선과 빈 지원 슬롯만 보여 준다.
+- 내부적으로는 doctrine bias가 첫 무기/지원 제안 순서를 약하게 기울이지만, 화면은 그 분류를 설명하지 않는다.
+- 목적은 첫 클릭을 taxonomy가 아니라 회피와 첫 도약 기대감으로 시작하게 만드는 것이다.
 
 ### 1. Arena Combat
 
@@ -82,11 +80,10 @@
 ### 3. Forge Intermission
 
 - Wave 종료 후 시간이 잠시 멈추고 다음 전투를 바꿀 카드가 열린다.
-- 기본 계약은 세 가지다: `Headline Leap`, `Survival Rider`, `Greed/Utility Gamble`.
-- 대부분의 정지에서는 `Headline Leap` 한 장을 먼저 고르고, 필요한 경우 그 뒤에 소형 `Rider` 한 장만 얹는다.
-- `Headline Leap`은 주무장/차체의 실루엣과 발사 규칙을 크게 바꾸는 선택이다.
-- `Survival Rider`는 방호, support, 회수, 기동성처럼 headline leap의 약점을 받쳐 proof window를 길게 즐기게 만든다.
-- `Greed/Utility`는 현장 경제나 위험 계약으로 런 노선을 비트는 예외적 선택이다.
+- 기본 shipped 정지는 `무기 도약`과 `지원 설치`를 순서대로 여는 짧은 두 번의 변형 계단이다.
+- `Wave 3` 전후 카드는 주무장/차체의 실루엣과 발사 규칙을 크게 바꾼다.
+- `Wave 6` 전후 카드는 방호, 미사일, 드론, 포탑 같은 지원 실루엣을 붙여 플레이 방식과 공간 점유를 바꾼다.
+- 드물게 나오는 greed/utility 선택은 현장 경제나 위험 계약으로 런 노선을 비트는 예외다.
 - 정규화된 스크랩 경제 기준으로 카드 비용은 대체로 `0~52 Scrap` 안에서 읽히게 유지한다.
 
 ### 4. Reactor Pressure
@@ -100,8 +97,7 @@
 - 초반은 `Scuttler` 위주로 회피를 익힌다.
 - 중반부터 느리지만 버티는 `Brute`와 흔들리는 진입선을 만드는 `Shrike`가 섞이며 첫 ownership window를 시험한다.
 - 각 웨이브마다 엘리트가 끼어들어 코어 드랍 기회를 만든다.
-- 각 시대의 첫 밴드는 새 form을 즐기는 `payoff/proof` 창, 다음 밴드는 같은 생태에서 압박을 올리는 `escalation` 창으로 읽혀야 한다.
-- 현재 shipped slice는 `Wave 5` 주포 변이와 `Wave 6` 차체 잠금이 바로 run identity를 바꾸는지 증명해야 하며, 이후 `20-30웨이브` 구조 확장은 이 8-wave appetite loop가 먼저 반복 플레이 가능한지 확인한 뒤 연다.
+- 현재 shipped slice는 `Wave 3` 무기 도약과 `Wave 6` 지원 설치가 바로 run identity를 바꾸는지 증명해야 하며, 이후 `20-30웨이브` 구조 확장은 이 8-wave appetite loop가 먼저 반복 플레이 가능한지 확인한 뒤 연다.
 
 ## Content Scope
 

@@ -10502,10 +10502,10 @@
       return machineSummary;
     }
     return {
-      machineLabel: supportSpotlight.hudLabel,
-      machineValue: supportSpotlight.hudValue,
-      payoffLabel: machineSummary.machineLabel,
-      payoffValue: machineSummary.machineValue,
+      machineLabel: machineSummary.machineLabel,
+      machineValue: machineSummary.machineValue,
+      payoffLabel: supportSpotlight.hudLabel,
+      payoffValue: supportSpotlight.hudValue,
     };
   }
 
