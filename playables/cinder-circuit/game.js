@@ -9064,12 +9064,12 @@
             : "Wave 3 한 장으로 첫 포문을 크게 벌린다. 작은 조율은 뒤로 숨기고 이 무기 변화만 먼저 또렷하게 읽히게 둔다.",
       },
       {
-        label: "방호",
+        label: "증명",
         title: chassis ? chassis.label : "방호 약속",
         state: stageState(6),
         detail: chassis
           ? supportIdentity
-            ? `${chassis.label} 차체가 proof를 통과했고 ${supportIdentity.payoffValue}가 같은 실루엣을 더 넓게 밀어붙인다.`
+            ? `${chassis.label} 차체가 proof 단계에 들어섰다. Wave 6-7은 이 형태를 먼저 증명하고, 붙은 보조선은 같은 실루엣을 뒤에서 받친다.`
             : `${chassis.label} 차체가 첫 방호 약속으로 잠긴다. Wave 6-7은 이 몸체 리듬만 증명한다.`
           : "Wave 6에서는 차체 잠금만 먼저 붙인다. Wave 6-7이 그 몸체 proof를 맡는다.",
       },
@@ -17836,18 +17836,6 @@
         return null;
       }
       const currentWeapon = currentState.weapon || computeWeaponStats(build);
-      const supportSpotlight =
-        liveWaveNumber >= SUPPORT_SYSTEM_START_WAVE &&
-        liveWaveNumber <= DEFAULT_ROUTE_WAVE_COUNT
-          ? getInstalledSupportSpotlight(build)
-          : null;
-      if (supportSpotlight) {
-        return {
-          label: supportSpotlight.hudLabel,
-          status: supportSpotlight.status || getShippingContractSummary(build, currentWeapon, liveWaveNumber).leadValue,
-          note: supportSpotlight.note,
-        };
-      }
       const contractSummary = getShippingContractSummary(build, currentWeapon, liveWaveNumber, {
         phase: currentState.phase === "forge" ? "forge" : "combat",
       });

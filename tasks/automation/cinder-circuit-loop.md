@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: make every shipped-facing surface sell the same 8-wave appetite curve only: quiet lean start, Wave 3 weapon/body bend, Wave 6 proof, short closing lap, with no signature/admin/late-route promises before that loop reruns cleanly.
+- Immediate priority: freeze speculative Wave 9-12/signature/support-bay promise drift and consolidate one readable 8-wave appetite loop only: quiet lean start, Wave 3 bend, Wave 6 visible payoff, short closing lap.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 18:05:00 KST
+  Findings:
+  - The project is still designing from future breadth instead of shipped rerun hunger. `docs/games/cinder-circuit-design.md` still centers run-start `Signature`, three-lane forge taxonomy, and `Wave 5-8` branch doctrine, while `docs/games/cinder-circuit-source-application.md` still normalizes a `Wave 9-12` act ladder. That is not harmless reference scaffolding anymore; it keeps pulling the build toward a larger game before the 8-wave slice is genuinely fun to replay.
+  - The early growth curve is still too pre-solved on paper. `game.js` already contains full visible support families with Mk.II/Mk.III escalation for `Aegis Halo`, `Kiln Sentry`, `Seeker Array`, and `Volt Drones`, plus `bastion_bay_forge` support-bay expansion language. The problem is not missing toys. The problem is that the current route still advertises too much eventual completeness, so later spectacle risks feeling predeclared instead of earned.
+  - Forge and status surfaces are still too contract-heavy for a strong action roguelite reward beat. `renderForgeOverlay()` still revolves around `titleLabel`, `waveAskLabel`, and `branchPayoffLabel`, and nearby status/result paths still carry `Late Break Armory`, `Live Ascension`, and `Dominion Break`. Compared with strong reward/UI patterns from `Hades`, `Nova Drift`, or `Brotato`, the player is still asked to parse route grammar instead of instantly wanting one power object.
+  - This is a consolidation pass, not a content pass. Arena/support/build depth is already outpacing clarity and pacing, so adding more modules, more branch wrappers, or longer-wave promises now would only stretch prototype problems across more minutes.
+  Top Priority: Strip shipped-facing docs and UI contract down to one honest loop and one visible transformation ladder: lean opener, one Wave 3 weapon/body bend, one Wave 6 support/payoff spike, and no default mention of signatures, support-bay reservations, or Wave 9-12 structures.
+  Why Now: Until the game stops promising future depth up front, repeated runs will feel busier rather than more addictive.
+  Do Not Repeat: Do not spend another pass adding systems or trimming wording around the same `title / ask / payoff` shell.
+  Release Gate: Progression
 
 - 2026-03-28 17:10:00 KST
   Findings:
@@ -6048,6 +6059,12 @@ This file is shared by two recurring Codex CLI jobs.
   Freeze: Pause new systems and late-route expansion until the base `Wave 1-12` run reads cleanly enough that a player can describe the finale without using internal draft/cache/ascension vocabulary.
 
 ## Latest Improvement
+
+- 2026-03-28 14:12:54 KST
+  Changed: tightened one more shipped-facing contract surface in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the default `Wave 6-8` status board no longer swaps into installed-support headlines like `방호 고리` or other support spotlight copy the moment a rider exists. I kept active `supportProof` and `chassisProof` callouts intact, but changed the fallback shipped-route readout to stay on `getShippingContractSummary(...)` plus `getShippingLadderFocus(...)`, and I renamed the third ladder rung from `방호` to the more honest `증명` so the compact loop reads as `START -> 도약 -> 증명` instead of advertising support completeness. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new ladder label and the shipped default-status behavior, and validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to strip the shipped UI contract down to one honest 8-wave ladder with a lean opener, one bend, one proof spike, and no default promise of support-bay/admin completeness. The highest-value bounded interpretation was to fix the status surface that still turned an earned rider into the headline contract, because that made the run feel pre-solved instead of keeping attention on the actual `Wave 3 -> Wave 6 -> closing lap` climb.
+  Follow-up Risk: this restores the default status board to a cleaner ladder, but support-specific flavor now lives mostly inside active proof windows and result copy rather than the idle headline. If critique starts saying the Wave 6 payoff has become too muted, the next bounded pass should add a smaller secondary support chip inside proof states or forge payoff cards instead of promoting support names back into the default status slot.
+  Release Gate: Progression
 
 - 2026-03-28 07:42:34 KST
   Changed: scrubbed the remaining shipped-path `Wave 6` package fantasy in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and locked the new contract with [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs). I rewrote doctrine `supportDoctrineText` so it no longer claims `Wave 6` already opened a support bay, recut `getBaseRouteForgeChoiceTransformation(...)` so `bastion_bay_forge` no longer emits `body/support bracket` or `Wave 8 마무리 포지` bundle copy for the shipped single-axis chassis break, and made `getBaseRouteForgeContextTailSummary(...)` fail closed to `null` so the forge header now shows only the installed form and the immediate proof ask instead of a third branch/payoff slot. Smoke coverage now asserts the empty forge tail plus the single-axis chassis transformation text, and validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

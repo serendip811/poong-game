@@ -205,7 +205,7 @@ const shippedLadder = game.getShippingLadderSteps(roadmapBuild, game.computeWeap
 assert.equal(shippedLadder.length, 3);
 assert.equal(
   JSON.stringify(shippedLadder.map((step) => step.label)),
-  JSON.stringify(["START", "도약", "방호"])
+  JSON.stringify(["START", "도약", "증명"])
 );
 const openingContractSummary = game.getShippingContractSummary(
   roadmapBuild,
@@ -331,8 +331,9 @@ const shippedLadderWave6 = game.getShippingLadderSteps(
   game.computeWeaponStats(chassisBranchBuild),
   6
 );
-assert.ok(shippedLadderWave6[2].detail.includes("Seeker Array"));
-assert.ok(shippedLadderWave6[2].detail.includes("같은 실루엣"));
+assert.equal(shippedLadderWave6[2].label, "증명");
+assert.ok(shippedLadderWave6[2].detail.includes("Wave 6-7"));
+assert.ok(shippedLadderWave6[2].detail.includes("보조선"));
 const shippedRoadmapWave6 = game.getBuildRoadmap(
   chassisBranchBuild,
   game.computeWeaponStats(chassisBranchBuild),
@@ -385,9 +386,9 @@ const aegisLiveStatus = game.getLiveSideBetSummary({
   overcommit: { active: false },
   doctrinePursuit: { active: false },
 });
-assert.equal(aegisLiveStatus?.label, "방호 고리");
-assert.equal(aegisLiveStatus?.status, "1기 전개");
-assert.ok(aegisLiveStatus?.note.includes("탄환을 끊고"));
+assert.equal(aegisLiveStatus?.label, "방호 약속");
+assert.equal(aegisLiveStatus?.status, "잠긴 형태 증명");
+assert.ok(aegisLiveStatus?.note.includes("Wave 6"));
 const aegisProofBuild = game.createInitialBuild("rail_zeal");
 aegisProofBuild.chassisId = "vector_thrusters";
 aegisProofBuild.supportSystems = [{ id: "aegis_halo", tier: 1 }];
@@ -1295,14 +1296,14 @@ assert.equal(supportTrackSnapshot.label, "Volt Drones");
 assert.ok(!/Bay Package|Wildcard Rail|Catalyst/.test(supportTrackSnapshot.label));
 const shippingLadderWave4 = game.getShippingLadderSteps(roadmapBuild, null, 4);
 assert.equal(shippingLadderWave4.length, 3);
-assert.equal(shippingLadderWave4.map((step) => step.label).join("|"), "START|도약|방호");
+assert.equal(shippingLadderWave4.map((step) => step.label).join("|"), "START|도약|증명");
 assert.ok(
   !shippingLadderWave4.some(
     (step) => /Wave 5|작은 변이|사격 조율/i.test(`${step.label} ${step.title} ${step.detail}`)
   )
 );
 const shippingLadderFocusWave4 = game.getShippingLadderFocus(roadmapBuild, null, 4);
-assert.equal(shippingLadderFocusWave4.label, "방호");
+assert.equal(shippingLadderFocusWave4.label, "증명");
 assert.ok(/Wave 6|몸체|방호/.test(shippingLadderFocusWave4.detail));
 const recurringWave6Build = game.createInitialBuild("rail_zeal");
 recurringWave6Build.architectureForecastId = "storm_artillery";
