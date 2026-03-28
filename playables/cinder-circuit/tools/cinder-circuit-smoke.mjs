@@ -1145,7 +1145,7 @@ const forgeRiderSpotlight = game.getBaseRouteForgeSpotlightSummary({
 });
 assert.ok(forgeRiderSpotlight.titleLabel.length > 0);
 assert.ok(forgeRiderSpotlight.titleValue.length > 0);
-assert.equal(forgeRiderSpotlight.leadValue, "Dominion Sweep");
+assert.equal(forgeRiderSpotlight.leadValue, "복귀선 하나만 길게 붙든다.");
 const forgeDominantInstallHero = game.getBaseRouteForgeDominantInstallHero({
   choice: wave6HeadlineChoice,
   dominantFormLabel: "Twin Spine",
@@ -1614,13 +1614,17 @@ assert.ok(wave6HeadlineMarkup.includes(wave6DefenseTransform.previewLabel));
 assert.ok(wave6HeadlineMarkup.includes(wave6DefenseTransform.previewValue));
 const wave6ForgeContextMarkup = game.createBaseRouteForgeContextMarkup({
   titleLabel: wave6DefenseTransform.previewLabel,
-  currentFormLabel: wave6DefenseTransform.previewValue,
-  waveAskLabel: "다음 전투",
-  waveAskValue: "Ring Cut",
-  askNote: game.getBaseRouteCombatAskForWave(recurringWave6Build, 6),
+  title: "Ember Ring",
+  currentFormLabel: "Twin Spine",
+  waveAskLabel: "전투 ask",
+  waveAskValue: game.getBaseRouteForgeChoiceCombatAsk(wave6DefenseChoice, 6),
+  askNote: game.getBaseRouteForgeChoiceCombatAsk(wave6DefenseChoice, 6),
 });
 assert.ok(wave6ForgeContextMarkup.includes("forge-ask-shell__note"));
-assert.ok(/relay|corridor|외곽|pocket|점거 코어/.test(wave6ForgeContextMarkup));
+assert.ok(wave6ForgeContextMarkup.includes("Ember Ring"));
+assert.ok(wave6ForgeContextMarkup.includes("Twin Spine"));
+assert.ok(wave6ForgeContextMarkup.includes("고리가 긁은 입구로 짧게 파고든다."));
+assert.ok(!wave6ForgeContextMarkup.includes("다음 전투"));
 assert.ok(wave6HeadlineMarkup.includes("Ember Ring"));
 assert.ok(!wave6HeadlineMarkup.includes(wave6DefenseTransform.proof));
 const crownfireBuild = game.createInitialBuild("rail_zeal");

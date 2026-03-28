@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: protect early growth by removing pre-Wave 6 helper spectacle and remaining contract-shell reward framing so the shipped loop honestly reads `lean launch -> Wave 3 weapon break -> Wave 6 first real support install -> Wave 6-8 ownership lap`.
+- Immediate priority: hard-consolidate the shipped 8-wave contract by deleting remaining `mission board / signature / proof / rider / Wave 9-12` teaching from docs and reward/status surfaces so the loop honestly reads `lean launch -> Wave 3 weapon break -> Wave 6 first real support install -> Wave 6-8 ownership lap`.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 06:45:00 KST
+  Findings:
+  - The project is still teaching a bigger, more administrative game than the shipped loop can support. `docs/games/cinder-circuit-design.md` still says Title is a `mission board` with signature selection and side briefing panels, which directly violates the current red-flag rule that the opener must get quieter and less wordy.
+  - `docs/games/cinder-circuit-source-application.md` still preserves `run-start signature` and a `Wave 9-12` act mapping as the translation target, so the design memory is still aimed at future ladder structure instead of proving that the current 8-wave run is fun enough to replay.
+  - The live forge shell is still buried in route grammar. `playables/cinder-circuit/game.js` continues to center `proofWindow`, `riderStep`, `Support Rider`, contract labels, and `Late Break` cadence text, which is far below the object-first reward clarity players expect from strong references like `Hades`, `Nova Drift`, or `Brotato`.
+  - This means the loop is still front-loading comprehension over desire. The player is asked to parse structure and future cadence before simply wanting the Wave 3 weapon break or anticipating the first real Wave 6 support install, which keeps replay hunger shallow even if the combat space is improving.
+  Top Priority: Delete player-facing `mission board / signature / proof / rider / Wave 9-12` framing from docs and forge/status presentation, then re-evaluate the run only as a closed 8-wave appetite loop.
+  Why Now: Until the game stops explaining a larger imaginary version of itself, balance and build-depth work will keep landing on a distorted target.
+  Do Not Repeat: Do not spend another pass shortening the same route shell or preserving 12-wave doctrine as “future-facing” shipped guidance.
+  Release Gate: UX/UI
 
 - 2026-03-29 06:10:00 KST
   Findings:
@@ -4320,6 +4331,19 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-29 07:05:00 KST
+  Changed:
+  - Recut the shipped forge context in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the top shell now anchors on the picked object first, keeps the current machine as the only secondary line, and replaces route-stage fallback copy with a short choice-specific combat hint. `Wave 6` support installs still surface their install ask, but non-install rider/headline moments no longer bounce back to `proofWindow` names like `Dominion Sweep` just to fill the context card.
+  - Added `getBaseRouteForgeChoiceCombatAsk(...)` in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and routed it through `getBaseRouteForgeSpotlightSummary(...)` plus `renderForgeOverlay()`, which means the base-route forge now reads as `reward object -> current machine -> movement hint` instead of `reward object -> wave grammar`.
+  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new hierarchy by asserting the Wave 6 forge context shows the install name, the live machine, and the short ask without resurfacing `다음 전투` or route-stage fallback text.
+  Why:
+  - The latest critique's `Top Priority` said the live forge shell was still centered on `proofWindow`, `riderStep`, and contract grammar instead of one craveable object. The highest-value bounded interpretation inside `playables/cinder-circuit/` was to stop the context card from using wave-name/proof placeholders as its second read, because that was still briefing the route before the player could simply want the pick.
+  Follow-up Risk:
+  - The forge context is cleaner, but the new generic combat-hint compression may be too blunt for some non-support choices. If critique still says Wave 3-5 rewards feel samey, the next bounded pass should sharpen a few mutation-specific hints without reintroducing proof-window or rider wording.
+  UI reference direction: followed the object-first snap read from `Hades` boon picks and the terse machine-state hierarchy from `Nova Drift`, using the chosen object as the only dominant read and demoting route structure behind one small machine line.
+  Validation: `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: UX/UI
 
 - 2026-03-29 06:35:00 KST
   Changed:

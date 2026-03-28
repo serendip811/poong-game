@@ -10801,6 +10801,7 @@
         leadValue: proofWindowLabel || "짧은 마감 랩",
       };
     }
+
     const transformation = choice ? getBaseRouteForgeChoiceTransformation(choice) : null;
     const supportInstall = getBaseRouteSupportInstallChoice(choice);
     const titleLabel =
@@ -10817,10 +10818,30 @@
       titleLabel,
       titleValue,
       leadLabel: "전투 ask",
-      leadValue: supportInstall
-        ? getBaseRouteSupportInstallCombatAsk(supportInstall.systemId, SUPPORT_SYSTEM_START_WAVE)
+      leadValue: choice
+        ? getBaseRouteForgeChoiceCombatAsk(choice, SUPPORT_SYSTEM_START_WAVE)
         : proofWindowLabel || "-",
     };
+  }
+
+  function getBaseRouteForgeChoiceCombatAsk(choice, waveNumber = 1) {
+    const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
+    const supportInstall = getBaseRouteSupportInstallChoice(choice);
+    if (supportInstall) {
+      return getBaseRouteSupportInstallCombatAsk(supportInstall.systemId, boundedWave);
+    }
+    const transformation = choice ? getBaseRouteForgeChoiceTransformation(choice) : null;
+    const tone = transformation?.tone || "";
+    if (choice?.type === "mod") {
+      return boundedWave >= 6 ? "숨 쉴 corridor 하나만 길게 남긴다." : "비워 둔 입구로만 다시 접는다.";
+    }
+    if (tone === "defense") {
+      return boundedWave >= 6 ? "복귀선 하나만 길게 붙든다." : "열린 복귀 각만 남긴다.";
+    }
+    if (tone === "greed") {
+      return boundedWave >= 6 ? "짧게 긁고 바로 외곽으로 빠진다." : "긁을 seam 하나만 고른다.";
+    }
+    return boundedWave >= 6 ? "열린 입구 하나만 길게 찢는다." : "얇은 lane 하나만 밀어 연다.";
   }
 
   function getBaseRouteForgeDominantInstallHero({
@@ -18025,6 +18046,7 @@
     getBaseRoutePostWaveTransition,
     getBaseRouteForgeContextTailSummary,
     getBaseRouteForgeSpotlightSummary,
+    getBaseRouteForgeChoiceCombatAsk,
     getBaseRouteForgeDominantInstallHero,
     createBaseRouteForgeContextMarkup,
     getBaseRoutePauseHeroSummary,
@@ -25346,11 +25368,17 @@
               dominantInstallHero?.title ||
               (spotlightChoice ? spotlightChoice.title || forgeSpotlightSummary.titleValue : dominantFormSummary.label),
             titleLabel: dominantInstallHero ? "" : forgeSpotlightSummary.titleLabel,
-            currentFormLabel:
-              dominantInstallHero?.currentFormLabel || forgeSpotlightSummary.titleValue,
+            currentFormLabel: dominantInstallHero?.currentFormLabel || dominantFormSummary.label,
             waveAskLabel: dominantInstallHero ? "" : forgeSpotlightSummary.leadLabel,
             waveAskValue: dominantInstallHero ? "" : forgeSpotlightSummary.leadValue,
-            askNote: dominantInstallHero?.askNote || forgeCombatAsk,
+            askNote:
+              dominantInstallHero?.askNote ||
+              (spotlightChoice
+                ? trimForgeCombatAsk(
+                    getBaseRouteForgeChoiceCombatAsk(spotlightChoice, state.waveIndex + 2),
+                    forgeCombatAsk
+                  )
+                : forgeCombatAsk),
             branchPayoffLabel: forgeContextTail ? forgeContextTail.label : "",
             branchPayoffValue: forgeContextTail ? forgeContextTail.value : "",
           })}
