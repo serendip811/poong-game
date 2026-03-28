@@ -8836,10 +8836,6 @@
     return SIGNATURE_DEFS[signatureId] || SIGNATURE_DEFS[DEFAULT_SIGNATURE_ID];
   }
 
-  function getTitleRouteSignatureId() {
-    return CONSOLIDATED_12_WAVE_ROUTE ? null : selectedSignatureId;
-  }
-
   function getBastionDoctrineDef(buildOrSignatureId) {
     if (!buildOrSignatureId) {
       return null;
@@ -18328,7 +18324,6 @@
     },
   };
 
-  let selectedSignatureId = DEFAULT_SIGNATURE_ID;
   let state = createAppState();
   let lastFrameTime = 0;
 
@@ -18893,8 +18888,8 @@
     return { grade: "D", note: "초기 포지 이전 안정화가 우선이다." };
   }
 
-  function createAppState(signatureId = getTitleRouteSignatureId()) {
-    const build = createInitialBuild(signatureId || DEFAULT_SIGNATURE_ID, {
+  function createAppState() {
+    const build = createInitialBuild(DEFAULT_SIGNATURE_ID, {
       leanStartBiasDoctrineId: CONSOLIDATED_12_WAVE_ROUTE ? pickLeanStartBiasDoctrineId() : null,
     });
     return {
@@ -20363,77 +20358,35 @@
     if (!elements.titleLaunchPanel) {
       return;
     }
-    if (CONSOLIDATED_12_WAVE_ROUTE) {
-      const titleBuild = createInitialBuild(DEFAULT_SIGNATURE_ID);
-      const titleLaunchSummary = getLeanStartLaunchSummary(titleBuild);
-      elements.titleLaunchPanel.innerHTML = `
-        <section class="title-launch-shell title-launch-shell--lean">
-          <div class="title-launch-shell__frame" aria-hidden="true">
-            <div class="title-launch-shell__silhouette">
-              <span class="title-launch-shell__nose"></span>
-              <span class="title-launch-shell__wing title-launch-shell__wing--left"></span>
-              <span class="title-launch-shell__wing title-launch-shell__wing--right"></span>
-              <span class="title-launch-shell__core"></span>
-              <span class="title-launch-shell__trail"></span>
+    const titleBuild = createInitialBuild(DEFAULT_SIGNATURE_ID);
+    const titleLaunchSummary = getLeanStartLaunchSummary(titleBuild);
+    elements.titleLaunchPanel.innerHTML = `
+      <section class="title-launch-shell title-launch-shell--lean">
+        <div class="title-launch-shell__frame" aria-hidden="true">
+          <div class="title-launch-shell__silhouette">
+            <span class="title-launch-shell__nose"></span>
+            <span class="title-launch-shell__wing title-launch-shell__wing--left"></span>
+            <span class="title-launch-shell__wing title-launch-shell__wing--right"></span>
+            <span class="title-launch-shell__core"></span>
+            <span class="title-launch-shell__trail"></span>
+          </div>
+        </div>
+        <div class="title-launch-shell__copy title-launch-shell__copy--lean">
+          <strong class="title-launch-shell__headline title-launch-shell__headline--solo">${titleLaunchSummary.title}</strong>
+          <p class="title-launch-shell__detail">${titleLaunchSummary.detail}</p>
+          <div class="title-launch-shell__status-strip">
+            <div class="title-launch-shell__status">
+              <span>${titleLaunchSummary.hullLabel}</span>
+              <strong>${titleLaunchSummary.hullValue}</strong>
+            </div>
+            <div class="title-launch-shell__status title-launch-shell__status--hot">
+              <span>${titleLaunchSummary.hookLabel}</span>
+              <strong>${titleLaunchSummary.hookValue}</strong>
             </div>
           </div>
-          <div class="title-launch-shell__copy title-launch-shell__copy--lean">
-            <strong class="title-launch-shell__headline title-launch-shell__headline--solo">${titleLaunchSummary.title}</strong>
-            <p class="title-launch-shell__detail">${titleLaunchSummary.detail}</p>
-            <div class="title-launch-shell__status-strip">
-              <div class="title-launch-shell__status">
-                <span>${titleLaunchSummary.hullLabel}</span>
-                <strong>${titleLaunchSummary.hullValue}</strong>
-              </div>
-              <div class="title-launch-shell__status title-launch-shell__status--hot">
-                <span>${titleLaunchSummary.hookLabel}</span>
-                <strong>${titleLaunchSummary.hookValue}</strong>
-              </div>
-            </div>
-          </div>
-        </section>
-      `;
-      return;
-    }
-    elements.titleLaunchPanel.innerHTML = Object.values(SIGNATURE_DEFS)
-      .map(
-        (signature, index) => {
-          const startCore = CORE_DEFS[signature.startCoreId];
-          const doctrine = getBastionDoctrineDef(signature.id);
-          const headlineChip = CONSOLIDATED_12_WAVE_ROUTE
-            ? `${doctrine ? doctrine.short : signature.short} 예약`
-            : `${startCore.short} 시작`;
-          const summaryText = CONSOLIDATED_12_WAVE_ROUTE
-            ? doctrine
-              ? `${doctrine.label} 계열 · Wave 3부터 크게 갈라진다`
-              : signature.short
-            : signature.short;
-          return `
-          <button
-            type="button"
-            class="signature-card ${selectedSignatureId === signature.id ? "signature-card--active" : ""}"
-            data-signature-id="${signature.id}"
-            aria-pressed="${selectedSignatureId === signature.id ? "true" : "false"}"
-          >
-            <div class="signature-card__top">
-              <span class="signature-card__hotkey">0${index + 1}</span>
-              <span class="micro-chip micro-chip--quiet">${headlineChip}</span>
-            </div>
-            <h3>${signature.label}</h3>
-            <p class="signature-card__bias">${summaryText}</p>
-          </button>
-        `;
-        }
-      )
-      .join("");
-  }
-
-  function selectSignature(signatureId) {
-    if (!SIGNATURE_DEFS[signatureId]) {
-      return;
-    }
-    selectedSignatureId = signatureId;
-    renderTitleLaunchPanel();
+        </div>
+      </section>
+    `;
   }
 
   function startRun() {
@@ -20443,10 +20396,6 @@
     state.paused = false;
     state.player = createPlayer(state.build);
     refreshDerivedStats(false);
-    const signature = getSignatureDef(getTitleRouteSignatureId());
-    if (!CONSOLIDATED_12_WAVE_ROUTE && typeof signature.onRunStart === "function") {
-      signature.onRunStart(state);
-    }
     pushCombatFeed(`${CORE_DEFS[state.build.coreId].label} 기동.`, "DROP");
     showScreen("game");
     renderPauseOverlay();
@@ -27913,19 +27862,6 @@
     showScreen("title");
   });
 
-  if (elements.titleLaunchPanel) {
-    elements.titleLaunchPanel.addEventListener("pointerdown", (event) => {
-      if (CONSOLIDATED_12_WAVE_ROUTE) {
-        return;
-      }
-      const card = event.target.closest("[data-signature-id]");
-      if (!card) {
-        return;
-      }
-      selectSignature(card.dataset.signatureId);
-    });
-  }
-
   elements.forgeCards.addEventListener("pointerdown", (event) => {
     const card = event.target.closest("[data-index]");
     if (!card) {
@@ -27975,18 +27911,6 @@
     }
     if (state.paused) {
       return;
-    }
-    if (
-      state.screen === "title" &&
-      !CONSOLIDATED_12_WAVE_ROUTE &&
-      ["Digit1", "Digit2", "Digit3"].includes(event.code)
-    ) {
-      const signatureIds = Object.keys(SIGNATURE_DEFS);
-      const nextSignatureId =
-        signatureIds[Number(event.code.replace("Digit", "")) - 1];
-      if (nextSignatureId) {
-        selectSignature(nextSignatureId);
-      }
     }
     if (
       state.phase === "forge" &&

@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: strip the shipped path to one quiet `lean launch -> Wave 3 weapon break -> Wave 6 support install -> Wave 6-8 ownership lap` presentation, removing `Signature / contract / proof / rider / Wave 9-12 / Late Break / Afterburn` teaching from title, forge, and status surfaces before any more balance or content work.
+- Immediate priority: hard-align docs and shipped-facing surfaces to one honest `lean launch -> Wave 3 weapon break -> Wave 6 support install -> Wave 6-8 ownership lap`, deleting `mission board / Signature / contract / proof / rider / Wave 9-12 / Late Break / Afterburn` teaching instead of hiding it behind flags or lighter copy before any more balance or content work.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 03:15:00 KST
+  Findings:
+  - The project is still documenting the wrong shipped game. `docs/games/cinder-circuit-design.md` says lean launch bias, but its `UI Layout` still defines a `mission board`, signature selection, and side-panel briefing structure, so the team is preserving an onboarding shell that directly violates the current red flags.
+  - The live implementation is still one toggle away from that same drift. `playables/cinder-circuit/game.js` keeps title signature input active whenever `CONSOLIDATED_12_WAVE_ROUTE` is off, which means the lean opener is not treated as the real game yet, only as a mode.
+  - Forge presentation still explains route grammar before selling the install. `renderForgeOverlay()` continues to build around `proofWindow`, `riderStep`, contract labels, side-note proof text, and branch-payoff framing, which is far below the snap-read object hierarchy stronger reward screens use.
+  - Late-route ambition is still leaking into player-facing status language. `getLateBreakCadenceSummary()` and related headline copy still package Wave 9-12 / Late Break cadence as a live summary target, so the current run is not being judged as a self-sufficient repeatable product.
+  Top Priority: Make the 8-wave route the only shipped-facing contract in docs, title, forge, and status surfaces, with no fallback signature board and no Wave 9-12/Late Break/Afterburn player text anywhere outside hidden future hooks.
+  Why Now: Until the game presents one honest repeatable run instead of a flagged prototype shell, every reward, pacing, and build-depth judgment stays contaminated.
+  Do Not Repeat: Do not keep a “clean” 8-wave route as just one codepath beside the old contract shell.
+  Release Gate: UX/UI
 
 - 2026-03-29 02:00:45 KST
   Findings:
@@ -4264,6 +4275,19 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-29 03:35:00 KST
+  Changed:
+  - Removed the shipped title's fallback signature-board shell from [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). `renderTitleLaunchPanel()` now always renders the bare-hull lean opener, `createAppState()` no longer accepts a title-selected signature path, and the old title click/number-key signature selection handlers are gone.
+  - Kept the hidden start-bias behavior internal by leaving `createInitialBuild(signatureId)` available for routing/tests while making the player-facing title contract identical no matter which legacy signature id is passed in under the hood.
+  - Extended [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the launch summary is identical across legacy signature ids and still only sells `빈 선체 -> Wave 3 무기 방향`, with no `Signature`, `Wave 6`, or `Wave 8` title teaching.
+  Why:
+  - The newest critique's `Top Priority` said the 8-wave route was still only a codepath beside an older signature-board contract. The highest-value bounded interpretation inside `playables/cinder-circuit/` was to delete that fallback from the actual title/start flow, because leaving it alive kept the honest shipped route behaving like a mode toggle rather than the game.
+  Follow-up Risk:
+  - The title no longer advertises the old shell, but docs and deeper late-route helpers can still preserve roadmap language elsewhere. If critique still says the shipped slice reads like a flagged prototype, the next bounded pass should hit remaining player-facing late-route summaries rather than reopening title variants.
+  UI reference direction: followed the immediate drop-in start feel from `Nova Drift` and the no-briefing opener discipline of `Hades`, favoring one quick launch fantasy over a pre-run class/signature board.
+  Validation: `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: UX/UI
 
 - 2026-03-29 03:05:00 KST
   Changed:

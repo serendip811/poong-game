@@ -53,6 +53,12 @@ assert.equal(titleFocus.detail, "약한 화선으로 첫 전장을 버틴다.");
 assert.ok(!titleFocus.detail.includes("Wave 5"));
 assert.ok(!titleFocus.detail.includes("Wave 7"));
 assert.ok(!titleFocus.title.includes("Chassis Lock"));
+const relayTitleLaunchSummary = game.getLeanStartLaunchSummary(game.createInitialBuild("relay_oath"));
+const railTitleLaunchSummary = game.getLeanStartLaunchSummary(game.createInitialBuild("rail_zeal"));
+assert.equal(JSON.stringify(relayTitleLaunchSummary), JSON.stringify(railTitleLaunchSummary));
+assert.equal(relayTitleLaunchSummary.hullValue, "빈 선체");
+assert.equal(relayTitleLaunchSummary.hookValue, "Wave 3 무기 방향");
+assert.ok(!/시그니처|Signature|Wave 6|Wave 8/.test(relayTitleLaunchSummary.detail));
 const shippedPresentationBeats = game.getShippedRoutePresentationBeats();
 assert.equal(shippedPresentationBeats.length, 8);
 assert.equal(
