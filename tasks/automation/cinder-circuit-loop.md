@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: make the shipped build truthfully behave like `lean launch -> one Wave 3 weapon break -> one Wave 6 support install -> Wave 6-8 ownership lap`, and quarantine `Signature / Proof / Wave 9-12 / Late Break / Afterburn` logic from docs, forge, pause, and combat feed until that loop is replayable without roadmap leakage.
+- Immediate priority: enforce a real consolidation freeze so the shipped path is only `lean launch -> Wave 3 weapon break -> Wave 6 support install -> Wave 6-8 ownership lap`, with `Signature / Proof / Wave 9-12 / Late Break / Afterburn` fully absent from player-facing docs, forge, pause, and combat feed.
 
 ## Release Gates
 
@@ -61,6 +61,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 00:12:00 KST
+  Findings:
+  - The project is still teaching the wrong game first. `docs/games/cinder-circuit-design.md` still defines the shipped promise around `Signature`, three reward lanes, and `Proof Window`, which directly fights the red-flag rule that the opening should be quieter, leaner, and less wordy.
+  - The 8-wave build is still not honestly isolated. `playables/cinder-circuit/game.js` still keeps live `Wave 9-12`, `Late Break`, and `Afterburn` structures in the main wave table and combat/forge messaging, so balance is being judged through roadmap scaffolding instead of one repeatable appetite loop.
+  - Forge desire is still arriving too late. The live overlay still foregrounds `current form`, `wave ask`, `branch payoff`, and `proof` shells; compared with strong reward beats like `Hades` or `Nova Drift`, the player is still reading contract grammar before wanting the install.
+  - The game already has enough support vocabulary for now: shields, missiles, drones, chains, and extra bays exist on paper, but the run still lacks one Wave 6 support install that visibly takes over Waves 6-8 and makes later transformation feel worth chasing.
+  - Stop broadening the system list this pass. The next release-feeling gain is consolidation of launch clarity, forge appetite, and midrun ownership, not more branches.
+  Top Priority: Hard-separate the shipped slice into one minimal launch contract and one payoff-first forge, then make a single Wave 6 support install visibly carry Waves 6-8 while all `Wave 9+ / Late Break / Afterburn` framing stays completely off player-facing surfaces.
+  Why Now: If the current slice cannot create hunger for one more run, a longer 20-30 wave ambition will only inherit a weaker opening.
+  Do Not Repeat: Do not answer this with renamed contract copy or with more support options on the same forge shell.
+  Release Gate: Rewards
 
 - 2026-03-28 23:31:07 KST
   Findings:
@@ -4207,6 +4219,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-29 00:13:30 KST
+  Changed: extended the shipped `Wave 6-8` support proof surge in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so offensive support installs now change firing patterns, not just cooldown math. `computeSupportSystemStats(build, waveNumber)` and `updateSupportSystem(dt)` now carry temporary `shotBurstCount` / `shotBurstSpread` surge fields: `Seeker Array` widens from a single missile into 2-3 missile fans across the ownership lap, `Volt Drones` fork their auto-fire into split screens from `Wave 7`, and `Ember Ring` gains a brief `Wave 8` ignition-bolt burst even at tier 1. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock those temporary volley spikes against baseline non-surge stats.
+  Why: the newest critique's `Top Priority` still demanded that one `Wave 6` support install visibly carry `Wave 6-8`. The highest-value bounded interpretation was to make the installed toy behave differently on screen during the ownership lap, because the previous surge mostly read as invisible efficiency unless the player was already parsing support cadence closely.
+  Follow-up Risk: this makes offensive installs much more legible, but `Aegis Halo` and `Kiln Sentry` still express their carry mostly through space control and pulse/anchor density rather than new projectile silhouettes. If later feedback says those defensive installs still feel flatter than missile/drone runs, the next bounded pass should add family-specific overclock visuals for them instead of widening the support catalog again.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Builds
 
 - 2026-03-28 23:59:59.999 KST
   Changed: gave the shipped `Wave 6-8` support install a bounded proof-surge carry pass in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). I added `getBaseRouteSupportProofSurge(...)` and taught `computeSupportSystemStats(build, waveNumber)` to temporarily enlarge the first installed `Wave 6` support silhouette during the base-route ownership lap, so single-bay installs gain one extra visible orbit/deploy body plus faster shots, pulses, or sentry cadence instead of waiting until a later permanent tier jump to feel screen-changing. I also recompute support stats on `beginWave(...)` and `beginBaseRouteVictoryLap()` so the surge only lives inside the real combat lap, and updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock `Seeker Array` and `Kiln Sentry` surge behavior against baseline non-surge stats.

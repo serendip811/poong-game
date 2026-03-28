@@ -6538,6 +6538,44 @@
     const deployDurationBonus = stage === 3 ? 3.4 : stage === 2 ? 2.3 : 1.5;
     const deployShotDamageBonus = stage === 3 ? 8 : stage === 2 ? 5 : 3;
     const deployBurstBonus = stage >= 2 ? 1 : 0;
+    const shotBurstCountBonus =
+      systemEntry.id === "seeker_array"
+        ? stage === 3
+          ? 2
+          : 1
+        : systemEntry.id === "volt_drones"
+          ? stage >= 2
+            ? 1
+            : 0
+          : systemEntry.id === "ember_ring"
+            ? stage === 3
+              ? 1
+              : 0
+            : 0;
+    const shotBurstSpreadBonus =
+      systemEntry.id === "seeker_array"
+        ? stage === 3
+          ? 0.12
+          : 0.08
+        : systemEntry.id === "volt_drones"
+          ? stage === 3
+            ? 0.14
+            : stage === 2
+              ? 0.09
+              : 0
+          : systemEntry.id === "ember_ring"
+            ? stage === 3
+              ? 0.18
+              : 0
+            : 0;
+    const unlockShotCooldown =
+      systemEntry.id === "ember_ring" && systemEntry.tier <= 1 && stage === 3 ? 1.08 : 0;
+    const unlockShotDamage =
+      systemEntry.id === "ember_ring" && systemEntry.tier <= 1 && stage === 3 ? 11 : 0;
+    const unlockShotRange =
+      systemEntry.id === "ember_ring" && systemEntry.tier <= 1 && stage === 3 ? 236 : 0;
+    const unlockShotSpeed =
+      systemEntry.id === "ember_ring" && systemEntry.tier <= 1 && stage === 3 ? 560 : 0;
     return {
       countBonus,
       cooldownFactor,
@@ -6552,6 +6590,12 @@
       deployDurationBonus,
       deployShotDamageBonus,
       deployBurstBonus,
+      shotBurstCountBonus,
+      shotBurstSpreadBonus,
+      unlockShotCooldown,
+      unlockShotDamage,
+      unlockShotRange,
+      unlockShotSpeed,
       statusNote:
         stage === 3
           ? `${SUPPORT_SYSTEM_DEFS[systemEntry.id]?.tiers[systemEntry.tier]?.title || systemEntry.id} proof surge가 최고조로 올라 설치 직후보다 더 두꺼운 ownership lap을 만든다.`
@@ -6590,7 +6634,12 @@
           systemIndex === 0 ? getBaseRouteSupportProofSurge(build, waveNumber, entry) : null;
         const orbitCount = tierDef.orbitCount || 0;
         const hasOrbitFrame = orbitCount > 0;
-        const hasSatelliteShots = hasOrbitFrame && (tierDef.shotCooldown || 0) > 0;
+        const unlockedSurgeShots = surge && surge.unlockShotCooldown > 0;
+        const baseShotCooldown = Math.max(tierDef.shotCooldown || 0, unlockedSurgeShots ? surge.unlockShotCooldown : 0);
+        const baseShotRange = Math.max(tierDef.shotRange || 0, unlockedSurgeShots ? surge.unlockShotRange : 0);
+        const baseShotDamage = Math.max(tierDef.shotDamage || 0, unlockedSurgeShots ? surge.unlockShotDamage : 0);
+        const baseShotSpeed = Math.max(tierDef.shotSpeed || 0, unlockedSurgeShots ? surge.unlockShotSpeed : 0);
+        const hasSatelliteShots = hasOrbitFrame && baseShotCooldown > 0;
         const hasIntercept = hasOrbitFrame && (tierDef.interceptRange || 0) > 0;
         const hasDeployable = (tierDef.deployCount || 0) > 0;
         return {
@@ -6627,14 +6676,22 @@
                 )
               : 0,
           shotCooldown:
-            tierDef.shotCooldown > 0
-              ? round(
-                  Math.max(0.12, tierDef.shotCooldown * (surge ? surge.cooldownFactor : 1)),
-                  3
-                )
+            baseShotCooldown > 0
+              ? round(Math.max(0.12, baseShotCooldown * (surge ? surge.cooldownFactor : 1)), 3)
               : 0,
-          shotDamage:
-            (tierDef.shotDamage || 0) + (surge && hasSatelliteShots ? surge.shotDamageBonus : 0),
+          shotDamage: baseShotDamage + (surge && hasSatelliteShots ? surge.shotDamageBonus : 0),
+          shotBurstCount: Math.max(
+            1,
+            (tierDef.shotBurstCount || 1) + (surge && hasSatelliteShots ? surge.shotBurstCountBonus : 0)
+          ),
+          shotBurstSpread: round(
+            Math.max(
+              0,
+              (tierDef.shotBurstSpread || 0) +
+                (surge && hasSatelliteShots ? surge.shotBurstSpreadBonus : 0)
+            ),
+            3
+          ),
           interceptRange:
             (tierDef.interceptRange || 0) + (surge && hasIntercept ? surge.interceptRangeBonus : 0),
           interceptCooldown:
@@ -6677,6 +6734,8 @@
             (surge && hasDeployable ? surge.deployShotDamageBonus : 0),
           deployBurstCount:
             (tierDef.deployBurstCount || 0) + (surge && hasDeployable ? surge.deployBurstBonus : 0),
+          shotRange: baseShotRange,
+          shotSpeed: baseShotSpeed,
           statusNote: [tierDef.statusNote, surge ? surge.statusNote : null].filter(Boolean).join(" "),
         };
       })
@@ -6724,6 +6783,8 @@
           shotRange: system.shotRange,
           shotDamage: system.shotDamage,
           shotSpeed: system.shotSpeed,
+          shotBurstCount: system.shotBurstCount,
+          shotBurstSpread: system.shotBurstSpread,
           interceptRange: system.interceptRange,
           interceptCooldown: system.interceptCooldown,
           interceptPulseDamage: system.interceptPulseDamage,
@@ -6770,6 +6831,8 @@
       shotRange: Math.max(0, ...systems.map((system) => system.shotRange)),
       shotDamage: systems.reduce((sum, system) => sum + system.shotDamage, 0),
       shotSpeed: Math.max(0, ...systems.map((system) => system.shotSpeed)),
+      shotBurstCount: Math.max(1, ...systems.map((system) => system.shotBurstCount || 1)),
+      shotBurstSpread: Math.max(0, ...systems.map((system) => system.shotBurstSpread || 0)),
       interceptRange: Math.max(0, ...systems.map((system) => system.interceptRange)),
       interceptCooldown: systems.some((system) => system.interceptCooldown > 0)
         ? Math.min(...systems.filter((system) => system.interceptCooldown > 0).map((system) => system.interceptCooldown))
@@ -23403,7 +23466,23 @@
             }
           }
           if (target) {
-            state.projectiles.push(createSupportSystemProjectile(satellite, target, satellite));
+            const baseAngle = Math.atan2(target.y - satellite.y, target.x - satellite.x);
+            const burstCount = Math.max(1, satellite.shotBurstCount || 1);
+            const half = (burstCount - 1) / 2;
+            for (let burstIndex = 0; burstIndex < burstCount; burstIndex += 1) {
+              const angleOffset = (burstIndex - half) * (satellite.shotBurstSpread || 0);
+              state.projectiles.push(
+                createSupportSystemProjectileAtAngle(
+                  satellite,
+                  baseAngle + angleOffset,
+                  satellite,
+                  {
+                    radius: satellite.renderShape === "missile" ? 4.2 : 3.8,
+                    life: satellite.renderShape === "missile" ? 0.9 : 0.82,
+                  }
+                )
+              );
+            }
             state.particles.push(createParticle(satellite.x, satellite.y, "#fff0c9", 0.55));
             fired = true;
           }
