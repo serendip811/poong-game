@@ -9369,15 +9369,16 @@
     if (phase === "result") {
       leadLabel = "마무리";
       leadValue = "Wave 8 숙련 랩";
-    } else if (boundedWave >= 8) {
-      leadLabel = phase === "forge" ? "복귀 랩" : "마무리";
-      leadValue = "Wave 8 숙련 랩";
-    } else if (boundedWave >= 6) {
-      titleValue = riderSummary ? `${dominantForm.label} + ${riderSummary.value}` : dominantForm.label;
-      leadLabel = phase === "forge" ? "복귀 랩" : "다음 랩";
-      leadValue = "Wave 8 숙련 랩";
+    }
+    if (!preBreakWindow && boundedWave >= 3) {
+      titleLabel = boundedWave >= 6 && riderSummary ? "설치" : "무기 변이";
+      titleValue = boundedWave >= 6 && riderSummary ? riderSummary.value : dominantForm.label;
+    }
+    if (boundedWave >= 6 && riderSummary) {
+      leadLabel = phase === "result" ? "완성 변이" : "주력 변이";
+      leadValue = dominantForm.label;
     } else if (boundedWave >= 3) {
-      leadLabel = phase === "forge" ? "다음 설치" : "다음 설치";
+      leadLabel = "다음 설치";
       leadValue = "Wave 6 지원 설치";
     }
     return {
@@ -10521,17 +10522,11 @@
 
   function getShippingMachinePayoffSummary(build, weapon = null, waveNumber = 1, options = {}) {
     const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
-    const phase = options && options.phase ? options.phase : "combat";
     const contractSummary = getShippingContractSummary(build, weapon, boundedWave, options);
     return {
-      machineLabel:
-        boundedWave < 3 && phase !== "result"
-          ? "현재 선체"
-          : phase === "result"
-            ? "완성 머신"
-            : "현재 머신",
+      machineLabel: contractSummary.titleLabel,
       machineValue: contractSummary.titleValue,
-      payoffLabel: phase === "forge" ? "다음 전투" : contractSummary.leadLabel,
+      payoffLabel: contractSummary.leadLabel,
       payoffValue: contractSummary.leadValue,
     };
   }
@@ -10629,20 +10624,7 @@
     const machineSummary = getShippingMachinePayoffSummary(build, weapon, waveNumber, {
       phase: activeState.phase === "result" ? "result" : "combat",
     });
-    const supportSpotlight =
-      activeState.phase !== "result" && waveNumber >= SUPPORT_SYSTEM_START_WAVE
-        ? getInstalledSupportSpotlight(build)
-        : null;
-    const supportInstall = supportSpotlight ? getBaseRouteInstalledSupportInstallSummary(build) : null;
-    if (!supportSpotlight || !supportInstall) {
-      return machineSummary;
-    }
-    return {
-      machineLabel: "설치",
-      machineValue: supportInstall.title,
-      payoffLabel: machineSummary.machineLabel,
-      payoffValue: machineSummary.machineValue,
-    };
+    return machineSummary;
   }
 
   function getBaseRouteBranchPayoffSummary({

@@ -262,6 +262,7 @@ const midrunContractSummary = game.getShippingContractSummary(
   game.computeWeaponStats(roadmapBuild),
   5
 );
+assert.equal(midrunContractSummary.titleLabel, "무기 변이");
 assert.equal(midrunContractSummary.leadLabel, "다음 설치");
 assert.equal(midrunContractSummary.leadValue, "Wave 6 지원 설치");
 const supportSurgeBuild = game.createInitialBuild("rail_zeal");
@@ -424,8 +425,8 @@ const shippedRoadmapMarkup = game.createShippingLadderMarkup(
   game.computeWeaponStats(chassisBranchBuild),
   6
 );
-assert.ok(shippedRoadmapMarkup.includes("현재 머신"));
-assert.ok(shippedRoadmapMarkup.includes("다음 랩"));
+assert.ok(shippedRoadmapMarkup.includes("설치"));
+assert.ok(shippedRoadmapMarkup.includes("주력 변이"));
 assert.ok(!shippedRoadmapMarkup.includes("분기 보상"));
 assert.ok(shippedRoadmapMarkup.includes("route-contract--double"));
 const aegisSpotlightBuild = game.createInitialBuild("rail_zeal");
@@ -465,7 +466,7 @@ const aegisLiveStatus = game.getLiveSideBetSummary({
   doctrinePursuit: { active: false },
 });
 assert.equal(aegisLiveStatus?.label, "Wave 8 숙련 랩");
-assert.equal(aegisLiveStatus?.status, "Wave 8 숙련 랩");
+assert.equal(aegisLiveStatus?.status, "Ember Spindle · Aegis Halo");
 assert.ok(aegisLiveStatus?.note.includes("Wave 6"));
 const aegisProofBuild = game.createInitialBuild("rail_zeal");
 aegisProofBuild.chassisId = "vector_thrusters";
@@ -558,8 +559,10 @@ const supportContractSummary = game.getShippingContractSummary(
   game.computeWeaponStats(seekerProofBuild),
   7
 );
-assert.equal(supportContractSummary.leadLabel, "다음 랩");
-assert.equal(supportContractSummary.leadValue, "Wave 8 숙련 랩");
+assert.equal(supportContractSummary.titleLabel, "설치");
+assert.equal(supportContractSummary.titleValue, "Seeker Array");
+assert.equal(supportContractSummary.leadLabel, "주력 변이");
+assert.ok(supportContractSummary.leadValue.length > 0);
 const openingForgeBuild = game.createInitialBuild("rail_zeal");
 const openingForgeSummary = game.getShippingContractSummary(
   openingForgeBuild,
@@ -577,16 +580,18 @@ const supportForgeSummary = game.getShippingContractSummary(
   7,
   { phase: "forge" }
 );
-assert.equal(supportForgeSummary.leadLabel, "복귀 랩");
-assert.equal(supportForgeSummary.leadValue, "Wave 8 숙련 랩");
+assert.equal(supportForgeSummary.titleLabel, "설치");
+assert.equal(supportForgeSummary.leadLabel, "주력 변이");
+assert.ok(supportForgeSummary.leadValue.length > 0);
 const closingForgeSummary = game.getShippingContractSummary(
   seekerProofBuild,
   game.computeWeaponStats(seekerProofBuild),
   8,
   { phase: "forge" }
 );
-assert.equal(closingForgeSummary.leadLabel, "복귀 랩");
-assert.equal(closingForgeSummary.leadValue, "Wave 8 숙련 랩");
+assert.equal(closingForgeSummary.titleLabel, "설치");
+assert.equal(closingForgeSummary.leadLabel, "주력 변이");
+assert.ok(closingForgeSummary.leadValue.length > 0);
 const seekerDominantForm = game.getDominantFormSummary(
   seekerProofBuild,
   game.computeWeaponStats(seekerProofBuild),
@@ -657,7 +662,7 @@ const hiddenPursuitStatus = game.getLiveSideBetSummary({
   doctrinePursuit: { active: true },
 });
 assert.equal(hiddenPursuitStatus?.label, "Wave 8 숙련 랩");
-assert.equal(hiddenPursuitStatus?.status, "Wave 8 숙련 랩");
+assert.equal(hiddenPursuitStatus?.status, "Wave 6 지원 설치");
 assert.ok(hiddenPursuitStatus?.note.includes("Wave 6"));
 const wave7FieldGrantChoices = game.buildFieldGrantChoices(chassisBranchBuild, () => 0, 7);
 assert.equal(wave7FieldGrantChoices.find((choice) => choice.contractRole === "gamble"), undefined);
@@ -725,15 +730,14 @@ const supportPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   paused: true,
 });
 assert.ok(supportPauseSnapshotMarkup.includes("machine-payoff"));
-assert.ok(supportPauseSnapshotMarkup.includes("현재 머신"));
 assert.ok(supportPauseSnapshotMarkup.includes("설치"));
+assert.ok(supportPauseSnapshotMarkup.includes("주력 변이"));
 assert.ok(supportPauseSnapshotMarkup.includes("Aegis Halo"));
-assert.ok(supportPauseSnapshotMarkup.indexOf("설치") < supportPauseSnapshotMarkup.indexOf("현재 머신"));
+assert.ok(supportPauseSnapshotMarkup.indexOf("설치") < supportPauseSnapshotMarkup.indexOf("주력 변이"));
 assert.ok(supportPauseSnapshotMarkup.includes("같은 seam으로 바로 재진입한다."));
 assert.ok(!supportPauseSnapshotMarkup.includes("summary-head"));
 assert.ok(!supportPauseSnapshotMarkup.includes("활성 보조"));
 assert.ok(!supportPauseSnapshotMarkup.includes("활성 판돈"));
-assert.ok(!supportPauseSnapshotMarkup.includes("다음 랩"));
 assert.ok(!supportPauseSnapshotMarkup.includes("탄막 절개 + 방호 파동"));
 const supportPauseHeroSummary = game.getBaseRoutePauseHeroSummary({
   build: aegisSpotlightBuild,
@@ -745,7 +749,7 @@ const supportPauseHeroSummary = game.getBaseRoutePauseHeroSummary({
 });
 assert.equal(supportPauseHeroSummary.machineLabel, "설치");
 assert.equal(supportPauseHeroSummary.machineValue, "Aegis Halo");
-assert.equal(supportPauseHeroSummary.payoffLabel, "현재 머신");
+assert.equal(supportPauseHeroSummary.payoffLabel, "주력 변이");
 const hiddenCombatCacheStatus = game.getLiveSideBetSummary({
   build: game.createInitialBuild("rail_zeal"),
   waveIndex: 4,
@@ -964,14 +968,14 @@ assert.equal(eraOnePlan.length, 1);
 assert.equal(eraOnePlan[0].waveLabel, "Wave 1");
 assert.equal(eraOnePlan[0].state, "live");
 assert.equal(eraOnePlan[0].primaryLabel, "현재 선체");
-assert.equal(eraOnePlan[0].proofLabel, "다음 전투");
+assert.equal(eraOnePlan[0].proofLabel, "다음 설치");
 assert.ok(eraOnePlan[0].secondaryLabel.length > 0);
 assert.ok(eraOnePlan[0].proofLabel.length > 0);
 const eraThreePlan = game.getForgeEraPlan(roadmapBuild, game.computeWeaponStats(roadmapBuild), null, 9);
 assert.equal(eraThreePlan.length, 1);
 assert.equal(eraThreePlan[0].state, "live");
 assert.equal(eraThreePlan[0].waveLabel, "Wave 8");
-assert.equal(eraThreePlan[0].proofLabel, "다음 전투");
+assert.equal(eraThreePlan[0].proofLabel, "다음 설치");
 assert.ok(eraThreePlan[0].proofDetail.length > 0);
 const compactEraPanelMarkup = game.createEraContractPanelMarkup(
   roadmapBuild,
@@ -980,6 +984,8 @@ const compactEraPanelMarkup = game.createEraContractPanelMarkup(
   6
 );
 assert.ok(compactEraPanelMarkup.includes("현재 머신"));
+assert.ok(compactEraPanelMarkup.includes("설치"));
+assert.ok(compactEraPanelMarkup.includes("다음 설치"));
 assert.ok(compactEraPanelMarkup.includes("machine-payoff"));
 assert.ok(!compactEraPanelMarkup.includes("Era I"));
 assert.ok(!compactEraPanelMarkup.includes("Headline Form"));
@@ -1566,6 +1572,9 @@ assert.ok(
 const shippingLadderFocusWave4 = game.getShippingLadderFocus(roadmapBuild, null, 4);
 assert.equal(shippingLadderFocusWave4.label, "INSTALL");
 assert.ok(/Wave 6|지원 설치|버팀선/.test(shippingLadderFocusWave4.detail));
+const shippingLadderWave7 = game.getShippingLadderSteps(seekerProofBuild, null, 7);
+const liveInstallStep = shippingLadderWave7.find((step) => step.label === "INSTALL");
+assert.equal(liveInstallStep?.title, "Seeker Array");
 const recurringWave6Build = game.createInitialBuild("rail_zeal");
 recurringWave6Build.architectureForecastId = "storm_artillery";
 const recurringWave6Choices = game.buildForgeChoices(recurringWave6Build, Math.random, 40, {

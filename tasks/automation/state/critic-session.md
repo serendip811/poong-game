@@ -12,10 +12,10 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Rewards`, but only because `UX/UI` drift is still muting reward desire: the game keeps presenting roadmap/admin grammar where the player should just see one machine, one prize, and one next combat ask.
-- Treat any shipped-facing `mission board / Signature / contract / proof / rider / roadmap / evolution ladder / Wave 9-12 / Late Break / Afterburn` surface as immediate drift. Hidden hooks are fine; active docs, HUD, forge, and status teaching are not.
-- Highest-value target remains one clean rerun arc: `lean launch -> Wave 3 weapon break -> Wave 6 visible support install -> Wave 6-8 ownership lap`.
-- Current critique pressure: stop system expansion, stop taxonomy cleanup, and prove that one Wave 6 install can create two replayable ownership waves in a roomier readable arena.
-- Early-growth rule: the opener must feel small and incomplete. No signature taxonomy up front, and no support spectacle that makes the build feel visually finished the instant it appears.
-- Reward/UI rule: compare against `Hades`, `Nova Drift`, and `Brotato` snap-read reward/status hierarchy. Sell the object first, the combat promise second, and cut any wording that behaves like route documentation.
-- Repeated false solutions: renaming the same shell, trimming copy without deleting the shell, keeping the clean route behind `CONSOLIDATED_12_WAVE_ROUTE`, leaving Wave 9+ logic or docs live “for later,” or masking shallow payoff by adding more missiles/drones/shields instead of protecting one readable install.
+- The most fragile gate is back to `UX/UI` because shipped-facing docs and reward/status surfaces still describe a larger admin-heavy game than the 8-wave run can honestly sell.
+- Treat any active `mission board / signature / proof / rider / roadmap / evolution ladder / Wave 9-12 / Late Break / Afterburn` teaching in docs, HUD, forge, or status as immediate drift.
+- Highest-value target remains one rerunnable arc: `lean launch -> Wave 3 weapon break -> Wave 6 visible support install -> Wave 6-8 ownership lap`, with enough arena breathing room for the install to own space.
+- Current pressure: stop adding layers, stop rewording taxonomy, and align docs plus player-facing screens around one prize and one next combat ask.
+- Early-growth rule: the opener must feel small, quiet, and visually incomplete so later shields, drones, missiles, orbitals, or helpers read as earned escalation.
+- Reward/UI rule: judge against `Hades`, `Nova Drift`, and `Brotato` object-first hierarchy. If the player has to read the route structure, the screen is still failing.
+- Repeated false solutions: shorter copy around the same shell, preserving future 12-wave/signature doctrine in shipped docs, and adding more support content before one Wave 6 install creates replay hunger on its own.

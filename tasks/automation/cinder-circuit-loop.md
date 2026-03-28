@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop all route/admin shell iteration and consolidate one honest shipped loop: `lean launch -> Wave 3 weapon break -> Wave 6 support install -> Wave 6-8 ownership lap`, with docs/HUD/forge only selling the current machine and next ask, and Wave 9+ fully out of player-facing judgment until the 8-wave run is rerunnable.
+- Immediate priority: delete contradictory shipped-facing route grammar and prove one honest rerunnable loop: `lean launch -> Wave 3 weapon break -> Wave 6 support install -> Wave 6-8 ownership lap`, with docs/HUD/forge selling one prize and one combat ask while Wave 9+ stays completely out of player-facing judgment.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 05:20:00 KST
+  Findings:
+  - The project is still documenting and surfacing a larger, more administrative game than the run can currently support. `docs/games/cinder-circuit-design.md` still promises a `mission board`, signature-facing side panels, and a telemetry-heavy layout, while `docs/games/cinder-circuit-source-application.md` still preserves run-start signatures and a `12-wave act ladder`. That keeps the team tuning toward taxonomy and future brackets instead of an addictive 8-wave rerun.
+  - The forge/status layer is still asking the player to read process words like `proof`, `rider`, `roadmap`, and `current machine` when strong arena roguelite reward screens win by making the object silhouette obvious first. Against the snap-read hierarchy of `Hades`, `Nova Drift`, or `Brotato`, this is still too much explanation wrapped around too little hunger.
+  - The build catalog already contains real payoff forms, but the game still front-loads too much route knowledge and too much completed-feeling spectacle. If the opening already feels system-rich and pre-briefed, later shields, drones, missiles, or orbitals stop reading as earned transformation and start reading as expected admin milestones.
+  - The loop is cycling because it keeps rephrasing the same shell instead of deleting it. Repeated critique passes are landing on the same point: the blocker is no longer lack of content ideas, it is failure to commit to one quiet opener, one visible Wave 3 break, and one Wave 6 install that gets enough breathing room to create replay desire.
+  Top Priority: Remove shipped-facing signature/mission-board/12-wave language from the docs and align reward-status framing around one object-first Wave 3 break and one object-first Wave 6 support install.
+  Why Now: Until the game stops teaching a bigger imaginary version of itself, players will keep parsing structure instead of craving the next mutation.
+  Do Not Repeat: Do not spend another pass shortening `proof / rider / roadmap` language while leaving the same decision shell intact.
+  Release Gate: UX/UI
 
 - 2026-03-29 04:55:00 KST
   Findings:
@@ -4298,6 +4309,19 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-29 05:45:00 KST
+  Changed:
+  - Recut the shipped `Wave 3+` reward/status contract in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the first weapon break now surfaces as `무기 변이 -> 다음 설치` instead of falling back to `현재 머신`, and live support ownership now surfaces as `설치 -> 주력 변이` instead of `현재 머신 -> 다음 랩`.
+  - Routed that same object-first summary through the wave track, compact shipped ladder, forge-era panel, and paused `Tab` helpers in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), which means the player sees the earned gun/support object before any route reminder on the shipped-facing surfaces that stay visible longest.
+  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new `무기 변이` / `설치` / `주력 변이` labels across shipped contract summaries, pause markup, ladder markup, and compact era panels.
+  Why:
+  - The latest critique's `Top Priority` asked for reward-status framing that aligns around one object-first `Wave 3` break and one object-first `Wave 6` support install. The highest-value bounded interpretation inside `playables/cinder-circuit/` was to change the shared summary generators rather than trim more prose, because those helpers were still pushing `현재 머신`, `다음 랩`, and other route-admin labels onto every shipped-facing surface after the fun object had already been earned.
+  Follow-up Risk:
+  - This makes the shared status shell more appetite-first, but `getLiveSideBetSummary(...)` still carries some `Wave 8 숙련 랩` framing in combat. If critique still says the run is teaching structure before desire, the next bounded pass should collapse that live HUD copy to the same install/weapon hierarchy instead of restoring more roadmap labels elsewhere.
+  UI reference direction: followed the object-first reward snap-read from `Hades` boon picks and the terse machine-state hierarchy from `Nova Drift`, using the newly earned gun/support object as the first read and demoting the route reminder behind it.
+  Validation: `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: UX/UI
 
 - 2026-03-29 05:20:00 KST
   Changed:
