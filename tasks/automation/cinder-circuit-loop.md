@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: strip the default run contract down to `small Wave 1-3 -> one visible weapon break -> one Wave 6 support install -> Wave 6-8 ownership lap`, and remove roadmap grammar from forge/title/Tab/docs until that loop feels replayable without explanation.
+- Immediate priority: hard-gate the shipped game to `small Wave 1-3 -> one visible weapon break -> one Wave 6 support install -> Wave 6-8 ownership lap`, and stop surfacing `Wave 9-12 / Late Break / Afterburn` grammar anywhere the player can see before that loop is replayable without explanation.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 22:32:00 KST
+  Findings:
+  - The project is still drifting because the design docs continue to define the run around `Signature -> Headline/Rider -> Proof Window` and even preserve `Wave 9-12` as the act mapping, which keeps the shipped game thinking like a compressed roadmap instead of a satisfying 8-wave appetite loop.
+  - The live wave table still ships `Wave 9-12`, `Late Breakpoint`, and other act-three labels right beside the current slice, so tuning judgment is still being pulled toward a future escalation promise the player cannot yet trust.
+  - The forge reward beat is still too administrative. The overlay still frames choices through `current form`, `wave ask`, `proof`, and contract roles; compared with the one-object-first clarity of strong reward screens like `Hades` or `Nova Drift`, this still makes the player read structure before wanting the install.
+  - Combat space is breathing better by Wave 7-8, but the game is still too eager to layer route grammar, ascension drops, and support/system framing around that space. A run-selling midgame should let one newly installed support object visibly carry two or three waves, not compete with more route promises.
+  Top Priority: Remove shipped-facing `Wave 9-12 / Late Break / Afterburn` framing from docs and default run surfaces, then tune Wave 6-8 around one visible support install that gets a clean ownership lap.
+  Why Now: If the current slice still leans on future-route language, the game cannot build real replay hunger or support a longer escalation curve later.
+  Do Not Repeat: Do not answer this with lighter wording on the same contract shells or with more late-drop branches.
+  Release Gate: Progression
 
 - 2026-03-28 22:00:28 KST
   Findings:
@@ -4173,6 +4184,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-28 23:59:59.999 KST
+  Changed: sealed one remaining shipped-facing route leak in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so default `8-wave` surfaces stop reading `Wave 9-12 / Refuge Run / Final Stand` proof language when a helper is asked about later wave numbers. I added `getPlayerFacingWaveNumber(...)` plus `getPlayerFacingProofWindowSummary(...)`, switched the base-route forge overlay and result copy to those player-facing helpers, and exported them for smoke coverage. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert player-facing wave numbers clamp `9+ -> 8` and that the shipped proof window at `Wave 11` still resolves to the same `Wave 8` read instead of late-route bands.
+  Why: the newest critique's `Top Priority` was to remove shipped-facing `Wave 9-12 / Late Break / Afterburn` framing from default run surfaces. The highest-value bounded interpretation inside `playables/cinder-circuit/` was to close the helper-level leak rather than rewrite more copy, because forge/result/player-facing summaries could still accidentally inherit late-route proof labels even after the visible contract had already been collapsed to an `8-wave` appetite loop.
+  Follow-up Risk: this hardens forge/result-facing helpers, but internal non-shipped late-route helpers and the raw `WAVE_CONFIG` table still preserve the `Wave 9-12` ladder for dormant content. If critique keeps saying the live wave table is still teaching the future game beside the shipped slice, the next bounded pass should isolate or relabel that table for default inspection surfaces rather than adding more progression copy.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Progression
 
 - 2026-03-28 23:59:59.995 KST
   Changed: recut one shipped `Tab`/pause summary surface in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 6-8` no longer opens the paused status board with `현재 머신 + 다음 랩` after a support install is already live. I added `getBaseRoutePauseHeroSummary(...)`, and `createBaseRoutePauseSnapshotMarkup(...)` now promotes the installed support spotlight to the headline slot while keeping the current machine in the secondary slot and preserving only one short `전투 ask` line below. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert paused support runs show the support label/effect first and no longer foreground `다음 랩`.

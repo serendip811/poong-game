@@ -37,6 +37,14 @@ assert.equal(game.getPlayerFacingActLabelForWave(6).shortLabel, "Act 2");
 assert.equal(game.getPlayerFacingActLabelForWave(9).shortLabel, "Act 2");
 assert.equal(game.getPlayerFacingActLabelForWave(13).shortLabel, "Act 2");
 assert.equal(game.getPlayerFacingActLabelForWave(19).shortLabel, "Act 2");
+assert.equal(game.getPlayerFacingWaveNumber(6), 6);
+assert.equal(game.getPlayerFacingWaveNumber(9), 8);
+assert.equal(game.getPlayerFacingWaveNumber(19), 8);
+const playerFacingProofBuild = game.createInitialBuild("rail_zeal");
+assert.equal(
+  JSON.stringify(game.getPlayerFacingProofWindowSummary(playerFacingProofBuild, 11)),
+  JSON.stringify(game.getImmediateProofWindowSummary(playerFacingProofBuild, 8))
+);
 const titleFocus = game.getBaseRouteTransformationFocus(1, { stage: "title" });
 assert.equal(titleFocus.eyebrow, "Bare Hull");
 assert.equal(titleFocus.windowLabel, "회로 투입");

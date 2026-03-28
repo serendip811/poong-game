@@ -2259,10 +2259,16 @@
   }
 
   function getPlayerFacingActLabelForWave(waveNumber) {
-    const boundedWave = CONSOLIDATED_12_WAVE_ROUTE
-      ? clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT)
-      : waveNumber;
+    const boundedWave = getPlayerFacingWaveNumber(waveNumber);
     return getActLabelForWave(boundedWave);
+  }
+
+  function getPlayerFacingWaveNumber(waveNumber) {
+    return clamp(
+      Math.round(waveNumber || 1),
+      1,
+      CONSOLIDATED_12_WAVE_ROUTE ? DEFAULT_ROUTE_WAVE_COUNT : MAX_WAVES
+    );
   }
 
   function getWaveTrackHeadline(config, waveNumber) {
@@ -12828,7 +12834,7 @@
     }
     const dominantForm = getDominantFormSummary(build, weapon, DEFAULT_ROUTE_WAVE_COUNT);
     const riderSummary = getBaseRouteInstalledRiderSummary(build, DEFAULT_ROUTE_WAVE_COUNT);
-    const proofWindow = getImmediateProofWindowSummary(build, DEFAULT_ROUTE_WAVE_COUNT);
+    const proofWindow = getPlayerFacingProofWindowSummary(build, DEFAULT_ROUTE_WAVE_COUNT);
     if (riderSummary) {
       return `${dominantForm.label}로 완성 시험과 승리 랩을 닫았다. ${riderSummary.value}가 ${proofWindow.label} 내내 새 실루엣을 받쳤다.`;
     }
@@ -17771,6 +17777,7 @@
     getSignatureDef,
     getActLabelForWave,
     getPlayerFacingActLabelForWave,
+    getPlayerFacingWaveNumber,
     computePlayerStats,
     computeWeaponStats,
     computeSupportSystemStats,
@@ -17847,6 +17854,7 @@
     createShippingLadderMarkup,
     getDominantFormSummary,
     getImmediateProofWindowSummary,
+    getPlayerFacingProofWindowSummary,
     getLateAscensionDef,
     getStandardLateRouteBeatSummary,
     getDoctrinePursuitCapstoneDef,
@@ -18195,6 +18203,10 @@
       label: resolvedWave.bandLabel || resolvedWave.label,
       detail: resolvedWave.directive || resolvedWave.note || "다음 전투에서 변형이 바로 증명된다.",
     };
+  }
+
+  function getPlayerFacingProofWindowSummary(build, waveNumber = 1) {
+    return getImmediateProofWindowSummary(build, getPlayerFacingWaveNumber(waveNumber));
   }
 
   function getStandardLateRouteBeatSummary(build, waveNumber = 1) {
@@ -25020,7 +25032,7 @@
     const activeSupportTrack = getForgeSupportTrackSnapshot(state.build, state.supportSystem);
     const dominantFormSummary = getDominantFormSummary(state.build, state.weapon, state.waveIndex + 2);
     const nextFormStep = getNextBreakpointSummary(state.build, state.weapon, state.waveIndex + 2);
-    const proofWindow = getImmediateProofWindowSummary(state.build, state.waveIndex + 2);
+    const proofWindow = getPlayerFacingProofWindowSummary(state.build, state.waveIndex + 2);
     const riderStep = state.forgeMaxSteps > 1 && state.forgeStep === 2;
     const baseRouteTransformationFocus = getBaseRouteTransformationFocus(state.waveIndex + 2, {
       stage: "forge",
