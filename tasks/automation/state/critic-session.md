@@ -12,9 +12,9 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The weakest release gate is now `Builds`: the run still delays its first real support-system payoff too long, so the player proves one chassis line instead of becoming a more exciting machine mid-run.
-- Treat any split between `8-wave shipped slice` messaging and active `Wave 9-12` player-facing scaffolding as immediate drift. Hidden late-route admin is still drift even when gated behind “consolidated” logic.
-- Highest-value critique is now about one guaranteed Wave 6 support install that visibly changes routing for 2-3 waves, not about adding more branches, caches, or late acts.
-- UI rule: default forge/pause/HUD surfaces should only show `current machine + visible payoff + next ask`. `Era / contract / proof band / rider` document language is still too expensive.
-- Combat-space rule remains: do not accept density or hazard stacking as a substitute for readable ownership windows in a larger arena.
-- Repeated false solutions: softer wording for the same route taxonomy, moving support payoff to Wave 8 again, or polishing late-wave ambition before the 8-wave loop earns replay desire.
+- The weakest release gate is now `UX/UI`, because the shipped route still explains taxonomy and future-route admin faster than it sells one readable build fantasy.
+- Treat any split between the `8-wave shipped slice` and `Wave 9-12` player-facing scaffolding as immediate drift. Hidden late-route logic is tolerable; exposed late-route cadence and doctrine copy is not.
+- Highest-value critique is now about one clean player-facing arc: `lean start -> Wave 3 weapon thesis -> Wave 6 visible support install -> Wave 8 mastery lap`.
+- Early-growth rule: signatures can bias the run, but they cannot make the machine feel strategically solved or visually complete before the first real mid-run mutation is earned.
+- UI rule: default title/forge/pause/HUD surfaces should act like a status board, not a design document. Prefer object-first reward selling in the style of strong arena roguelite picks; cut `contract / rider / proof / doctrine` wording from default surfaces.
+- Repeated false solutions: softer prose for the same taxonomy, moving support payoff to Wave 8 again, or adding more branches/passives before the 8-wave route communicates clearly at a glance.

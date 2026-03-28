@@ -9030,11 +9030,7 @@
     const currentWeapon = weapon || computeWeaponStats(build);
     const dominantForm = getDominantFormSummary(build, currentWeapon, boundedWave);
     const chassis = getChassisBreakpointDef(build);
-    const supportSnapshot = getInstalledSupportSnapshot(build);
-    const supportIdentity =
-      supportSnapshot && supportSnapshot.primary
-        ? getSupportSystemIdentitySummary(supportSnapshot.primary.id, supportSnapshot.primary.tier)
-        : null;
+    const riderSummary = getBaseRouteInstalledRiderSummary(build, boundedWave);
     const stageState = (start, end = start) => {
       if (boundedWave > end) {
         return "locked";
@@ -9047,31 +9043,40 @@
     return [
       {
         label: "START",
-        title: "약한 시작",
+        title: "조용한 선체",
         state: boundedWave >= 3 ? "locked" : "live",
         detail:
           boundedWave >= 3
-            ? "빈 선체 구간은 끝났다. 이제 런의 큰 약속은 몸체 잠금과 후기 점화만 남는다."
+            ? "빈 선체 구간은 끝났다. 이제 무기 방향을 굳히고 Wave 6 설치 타이밍을 기다린다."
             : "처음 두 웨이브는 한 줄 화선으로 버틴다. 자동 연출은 닫아 두고 Wave 3 무기 도약에 힘을 모은다.",
       },
       {
-        label: "도약",
-        title: boundedWave >= 3 ? dominantForm.label : "첫 무기 도약",
+        label: "THESIS",
+        title: boundedWave >= 3 ? dominantForm.label : "Wave 3 무기 방향",
         state: stageState(3),
         detail:
           boundedWave >= 3
-            ? `${dominantForm.label}이 첫 주포 도약으로 잠겼다. 이 화망이 런의 기준이 되며, 다음 큰 약속은 Wave 6 몸체 잠금이다.`
+            ? `${dominantForm.label}이 첫 무기 방향으로 잠겼다. 이제 다음 큰 변화는 Wave 6 지원 설치다.`
             : "Wave 3 한 장으로 첫 포문을 크게 벌린다. 작은 조율은 뒤로 숨기고 이 무기 변화만 먼저 또렷하게 읽히게 둔다.",
       },
       {
-        label: "증명",
-        title: chassis ? chassis.label : "방호 약속",
+        label: "INSTALL",
+        title: riderSummary ? riderSummary.value : chassis ? "Wave 6 지원 설치" : "Wave 6 지원 설치",
         state: stageState(6),
-        detail: chassis
-          ? supportIdentity
-            ? `${chassis.label} 차체가 proof 단계에 들어섰다. Wave 6-7은 이 형태를 먼저 증명하고, 붙은 보조선은 같은 실루엣을 뒤에서 받친다.`
-            : `${chassis.label} 차체가 첫 방호 약속으로 잠긴다. Wave 6-7은 이 몸체 리듬만 증명한다.`
-          : "Wave 6에서는 차체 잠금만 먼저 붙인다. Wave 6-7이 그 몸체 proof를 맡는다.",
+        detail: riderSummary
+          ? `${riderSummary.value}가 Wave 6에 붙었다. Wave 6-7은 이 설치가 빈 lane과 복귀 각을 어떻게 넓히는지 바로 즐기는 구간이다.`
+          : chassis
+            ? `${chassis.label} 차체가 먼저 잠기고 지원 설치가 곧 따라온다. Wave 6은 run silhouette가 두 번째로 커지는 지점이다.`
+            : "Wave 6에서 첫 지원 설치가 붙는다. 몸체 리듬 위에 새 버팀선이나 자동 화력이 올라간다.",
+      },
+      {
+        label: "LAP",
+        title: boundedWave >= 8 ? "숙련 랩" : "Wave 8 숙련 랩",
+        state: stageState(8),
+        detail:
+          boundedWave >= 8
+            ? "Wave 8은 새 설명 없이 지금까지 만든 machine rule을 한 번 더 오래 미는 마무리 랩이다."
+            : "Wave 8은 새 규칙을 더하지 않고, Wave 6에 붙인 설치를 오래 굴리는 숙련 랩으로 닫는다.",
       },
     ];
   }
@@ -9091,25 +9096,29 @@
     const phase = options && options.phase ? options.phase : "combat";
     const currentWeapon = weapon || computeWeaponStats(build);
     const dominantForm = getDominantFormSummary(build, currentWeapon, boundedWave);
+    const riderSummary = getBaseRouteInstalledRiderSummary(build, boundedWave);
     const preBreakWindow = boundedWave < 3 && phase !== "result";
-    let leadLabel = phase === "forge" ? "지금 도약" : "다음 도약";
-    let leadValue = "Wave 3 무기 굴절";
+    let titleLabel = preBreakWindow ? "현재 선체" : "현재 머신";
+    let titleValue = preBreakWindow ? "빈 선체" : dominantForm.label;
+    let leadLabel = phase === "forge" ? "다음 설치" : "다음 변이";
+    let leadValue = "Wave 3 무기 방향";
     if (phase === "result") {
       leadLabel = "마무리";
-      leadValue = "짧은 마감 랩";
+      leadValue = "Wave 8 숙련 랩";
     } else if (boundedWave >= 8) {
-      leadLabel = phase === "forge" ? "지금 마감" : "마무리";
-      leadValue = "짧은 마감 랩";
+      leadLabel = phase === "forge" ? "복귀 랩" : "마무리";
+      leadValue = "Wave 8 숙련 랩";
     } else if (boundedWave >= 6) {
-      leadLabel = phase === "forge" ? "지금 증명" : "현재 증명";
-      leadValue = "잠긴 형태 증명";
+      titleValue = riderSummary ? `${dominantForm.label} + ${riderSummary.value}` : dominantForm.label;
+      leadLabel = phase === "forge" ? "복귀 랩" : "다음 랩";
+      leadValue = "Wave 8 숙련 랩";
     } else if (boundedWave >= 3) {
-      leadLabel = phase === "forge" ? "지금 준비" : "다음 증명";
-      leadValue = "Wave 6 형태 증명";
+      leadLabel = phase === "forge" ? "다음 설치" : "다음 설치";
+      leadValue = "Wave 6 지원 설치";
     }
     return {
-      titleLabel: preBreakWindow ? "현재 선체" : "런 실루엣",
-      titleValue: preBreakWindow ? "빈 선체" : dominantForm.label,
+      titleLabel,
+      titleValue,
       leadLabel,
       leadValue,
     };
@@ -9125,6 +9134,8 @@
       steps: [
         { label: "Start", value: "조용한 시작" },
         { label: "Wave 3", value: openingContract.leadValue },
+        { label: "Wave 6", value: "지원 설치" },
+        { label: "Wave 8", value: "숙련 랩" },
       ],
     };
   }
@@ -10223,7 +10234,7 @@
             ? "완성 머신"
             : "현재 머신",
       machineValue: contractSummary.titleValue,
-      payoffLabel: phase === "forge" ? "복귀 전투" : contractSummary.leadLabel,
+      payoffLabel: phase === "forge" ? "다음 전투" : contractSummary.leadLabel,
       payoffValue: contractSummary.leadValue,
     };
   }
@@ -10523,7 +10534,7 @@
     return {
       titleLabel,
       titleValue,
-      leadLabel: "다음 시험",
+      leadLabel: "다음 전투",
       leadValue: proofWindowLabel || "-",
     };
   }
