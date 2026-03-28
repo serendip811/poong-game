@@ -10278,14 +10278,12 @@
         : getBaseRouteCombatAsk(activeState, waveConfig, null);
     return `
       <div class="pause-summary__hero">
-        ${createBaseRouteFocusMarkup({
-          eyebrow: "현재 형태",
-          chipLabel: `W${waveNumber}`,
-          title: dominantForm.label,
-          currentFormLabel: dominantForm.label,
-          spotlightLabel: "즉시 위협",
-          spotlightValue: currentAsk,
-          compact: true,
+        ${createBaseRouteStatusStripMarkup({
+          titleLabel: "현재 형태",
+          titleValue: dominantForm.label,
+          leadLabel: activeState.phase === "result" ? "마무리" : "즉시 위협",
+          leadValue: currentAsk,
+          headlineFirst: true,
         })}
       </div>
     `;

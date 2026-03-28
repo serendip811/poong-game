@@ -491,12 +491,15 @@ const pauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   paused: true,
 });
 assert.ok(pauseSnapshotMarkup.includes("즉시 위협"));
+assert.ok(pauseSnapshotMarkup.includes("route-contract--double"));
+assert.ok(!pauseSnapshotMarkup.includes("summary-head"));
 assert.ok(!pauseSnapshotMarkup.includes("최근 획득"));
 assert.ok(!pauseSnapshotMarkup.includes("고철 +34 / 회수 +10% / Siege Debt 1웨이브"));
 assert.ok(!pauseSnapshotMarkup.includes("활성 판돈"));
 assert.ok(!pauseSnapshotMarkup.includes("Era III"));
 assert.ok(!pauseSnapshotMarkup.includes("주력 변이"));
 assert.ok(!pauseSnapshotMarkup.includes("방호·보조"));
+assert.ok(!pauseSnapshotMarkup.includes("W5"));
 const openingPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   build: roadmapBuild,
   weapon: game.computeWeaponStats(roadmapBuild),
@@ -506,6 +509,8 @@ const openingPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   paused: true,
 });
 assert.ok(openingPauseSnapshotMarkup.includes("즉시 위협"));
+assert.ok(openingPauseSnapshotMarkup.includes("route-contract--double"));
+assert.ok(!openingPauseSnapshotMarkup.includes("summary-head"));
 assert.ok(!openingPauseSnapshotMarkup.includes("최근 획득"));
 assert.ok(!openingPauseSnapshotMarkup.includes("첫 포지 전"));
 assert.ok(!openingPauseSnapshotMarkup.includes("pause-summary__lanes"));
@@ -519,8 +524,9 @@ const supportPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   phase: "combat",
   paused: true,
 });
-assert.ok(supportPauseSnapshotMarkup.includes("route-contract__title"));
+assert.ok(supportPauseSnapshotMarkup.includes("route-contract--double"));
 assert.ok(supportPauseSnapshotMarkup.includes("즉시 위협"));
+assert.ok(!supportPauseSnapshotMarkup.includes("summary-head"));
 assert.ok(!supportPauseSnapshotMarkup.includes("활성 보조"));
 assert.ok(!supportPauseSnapshotMarkup.includes("활성 판돈"));
 const hiddenCombatCacheStatus = game.getLiveSideBetSummary({
