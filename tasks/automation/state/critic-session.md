@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate has shifted to `UX/UI` because the shipped contract is now dishonest: docs still promise signatures and longer ladders, while the live route suppresses them and starts from a fixed Ember shell.
-- Do not recycle the older “Wave 6 needs a second toy” critique. The sharper failure is drift: title, forge, docs, and hidden Wave 9-12 scaffolding are selling different games.
-- Keep pushing for a quiet opening, but make it honest. Either restore one minimal real start bias that bends Wave 3 and Wave 6, or strip signature/doctrine promises from shipped-facing surfaces until they are playable.
-- Strong references should guide reward readability: one power object first, one immediate threat second. Avoid contract shells that make the player read `current form / next proof / branch payoff` before feeling desire.
-- Repeated false solutions: more future-wave roadmap copy, more named branches, more system catalog breadth, or micro-copy trimming around the same over-explained screens.
+- The most fragile gate remains `UX/UI`, but specifically because shipped-facing docs and live surfaces still disagree about the product. Design docs teach signatures and longer-route scaffolding while the playable route is a fixed quiet-start 8-wave loop.
+- Do not recycle the older support-timing critique. The current blocker is contract honesty and reward readability, not whether Wave 6 technically installs a second toy.
+- Keep pushing for a quiet opening, but only if every major surface sells the same beats: quiet start, Wave 3 bend, Wave 6 support install, short closing lap.
+- Strong references should keep guiding reward readability: one power object first, one immediate threat second. Avoid `current form / wave ask / branch payoff` shells even if the wording gets shorter.
+- Repeated false solutions: restoring verbose signature cards, keeping Wave 9-12 fantasy alive in docs, adding more named future ladders, or polishing admin-heavy copy instead of deleting it.

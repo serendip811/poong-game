@@ -9096,19 +9096,19 @@
       supportSnapshot && supportSnapshot.primary
         ? getSupportSystemIdentitySummary(supportSnapshot.primary.id, supportSnapshot.primary.tier)
         : null;
-    let leadLabel = phase === "forge" ? "이번 선택" : "다음 도약";
+    let leadLabel = phase === "forge" ? "지금 도약" : "다음 도약";
     let leadValue = "Wave 3 무기 도약";
     if (phase === "result") {
       leadLabel = "마무리";
       leadValue = "짧은 승리 랩";
     } else if (boundedWave >= 8) {
-      leadLabel = phase === "forge" ? "이번 선택" : "마무리";
+      leadLabel = phase === "forge" ? "지금 마감" : "마무리";
       leadValue = "완성 시험";
     } else if (boundedWave >= 6) {
-      leadLabel = phase === "forge" ? "이번 선택" : supportIdentity ? "현재 추격" : "다음 추격";
+      leadLabel = phase === "forge" ? (supportIdentity ? "지금 증폭" : "지금 설치") : supportIdentity ? "현재 추격" : "다음 추격";
       leadValue = supportIdentity ? `${supportIdentity.payoffValue} 증폭` : "첫 방호·보조 설치";
     } else if (boundedWave >= 3) {
-      leadLabel = phase === "forge" ? "이번 선택" : "다음 추격";
+      leadLabel = phase === "forge" ? "지금 잠금" : "다음 추격";
       leadValue = "Wave 6 차체 잠금";
     }
     return {
@@ -17750,7 +17750,15 @@
     }
     const liveWaveNumber =
       currentState && typeof currentState.waveIndex === "number"
-        ? clamp(currentState.waveIndex + 1, 1, DEFAULT_ROUTE_WAVE_COUNT)
+        ? clamp(
+            currentState.phase === "result"
+              ? currentState.stats?.wavesCleared || 1
+              : currentState.phase === "forge"
+                ? currentState.waveIndex + 2
+                : currentState.waveIndex + 1,
+            1,
+            DEFAULT_ROUTE_WAVE_COUNT
+          )
         : 1;
     if (currentState.phase === "wave" && currentState.wave && currentState.wave.supportProof) {
       return {
@@ -17759,17 +17767,39 @@
         note: currentState.wave.supportProof.note,
       };
     }
-    const supportSpotlight =
-      CONSOLIDATED_12_WAVE_ROUTE &&
-      liveWaveNumber >= 5 &&
-      liveWaveNumber <= DEFAULT_ROUTE_WAVE_COUNT
-        ? getInstalledSupportSpotlight(currentState.build)
-        : null;
-    if (supportSpotlight && !CONSOLIDATED_12_WAVE_ROUTE) {
+    if (currentState.phase === "wave" && currentState.wave && currentState.wave.chassisProof) {
       return {
-        label: supportSpotlight.hudLabel,
-        status: supportSpotlight.status,
-        note: supportSpotlight.note,
+        label: currentState.wave.chassisProof.label,
+        status: currentState.wave.chassisProof.status,
+        note: currentState.wave.chassisProof.note,
+      };
+    }
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
+      const build = currentState && currentState.build ? getSanitizedConsolidatedBuild(currentState.build) : null;
+      if (!build) {
+        return null;
+      }
+      const currentWeapon = currentState.weapon || computeWeaponStats(build);
+      const supportSpotlight =
+        liveWaveNumber >= SUPPORT_SYSTEM_START_WAVE &&
+        liveWaveNumber <= DEFAULT_ROUTE_WAVE_COUNT
+          ? getInstalledSupportSpotlight(build)
+          : null;
+      if (supportSpotlight) {
+        return {
+          label: supportSpotlight.hudLabel,
+          status: supportSpotlight.status || getShippingContractSummary(build, currentWeapon, liveWaveNumber).leadValue,
+          note: supportSpotlight.note,
+        };
+      }
+      const contractSummary = getShippingContractSummary(build, currentWeapon, liveWaveNumber, {
+        phase: currentState.phase === "forge" ? "forge" : "combat",
+      });
+      const ladderFocus = getShippingLadderFocus(build, currentWeapon, liveWaveNumber);
+      return {
+        label: ladderFocus ? ladderFocus.title : contractSummary.titleValue,
+        status: contractSummary.leadValue,
+        note: ladderFocus ? ladderFocus.detail : `${contractSummary.titleValue}을(를) 기준으로 다음 전투를 준비한다.`,
       };
     }
     const pursuit = getDoctrineForgePursuitDef(currentState.build);
@@ -17846,13 +17876,6 @@
         label: shouldUseLateFieldCache(currentState.waveIndex + 2) ? "Arsenal Cache" : "Combat Cache",
         status: combatCache.claimed ? "claimed" : "live",
         note: "현장 cache 하나를 집으면 다음 웨이브가 포지 정지 없이 직결된다.",
-      };
-    }
-    if (currentState.phase === "wave" && currentState.wave && currentState.wave.chassisProof) {
-      return {
-        label: currentState.wave.chassisProof.label,
-        status: currentState.wave.chassisProof.status,
-        note: currentState.wave.chassisProof.note,
       };
     }
     if (

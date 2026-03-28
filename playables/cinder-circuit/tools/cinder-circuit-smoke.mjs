@@ -378,7 +378,9 @@ const aegisLiveStatus = game.getLiveSideBetSummary({
   overcommit: { active: false },
   doctrinePursuit: { active: false },
 });
-assert.equal(aegisLiveStatus, null);
+assert.equal(aegisLiveStatus?.label, "방호 고리");
+assert.equal(aegisLiveStatus?.status, "1기 전개");
+assert.ok(aegisLiveStatus?.note.includes("탄환을 끊고"));
 const aegisProofBuild = game.createInitialBuild("rail_zeal");
 aegisProofBuild.chassisId = "vector_thrusters";
 aegisProofBuild.supportSystems = [{ id: "aegis_halo", tier: 1 }];
@@ -470,6 +472,23 @@ const supportContractSummary = game.getShippingContractSummary(
 );
 assert.equal(supportContractSummary.leadLabel, "현재 추격");
 assert.equal(supportContractSummary.leadValue, "Seeker Array 증폭");
+const openingForgeBuild = game.createInitialBuild("rail_zeal");
+const openingForgeSummary = game.getShippingContractSummary(
+  openingForgeBuild,
+  game.computeWeaponStats(openingForgeBuild),
+  1,
+  { phase: "forge" }
+);
+assert.equal(openingForgeSummary.leadLabel, "지금 도약");
+assert.equal(openingForgeSummary.leadValue, "Wave 3 무기 도약");
+const supportForgeSummary = game.getShippingContractSummary(
+  seekerProofBuild,
+  game.computeWeaponStats(seekerProofBuild),
+  7,
+  { phase: "forge" }
+);
+assert.equal(supportForgeSummary.leadLabel, "지금 증폭");
+assert.equal(supportForgeSummary.leadValue, "Seeker Array 증폭");
 const seekerDominantForm = game.getDominantFormSummary(
   seekerProofBuild,
   game.computeWeaponStats(seekerProofBuild),
@@ -539,7 +558,9 @@ const hiddenPursuitStatus = game.getLiveSideBetSummary({
   overcommit: { active: false },
   doctrinePursuit: { active: true },
 });
-assert.equal(hiddenPursuitStatus, null);
+assert.equal(hiddenPursuitStatus?.label, "방호 약속");
+assert.equal(hiddenPursuitStatus?.status, "첫 방호·보조 설치");
+assert.ok(hiddenPursuitStatus?.note.includes("Wave 6"));
 const wave7FieldGrantChoices = game.buildFieldGrantChoices(chassisBranchBuild, () => 0, 7);
 assert.equal(wave7FieldGrantChoices.find((choice) => choice.contractRole === "gamble"), undefined);
 assert.ok(wave7FieldGrantChoices.every((choice) => choice.type !== "system"));
@@ -613,7 +634,9 @@ const hiddenCombatCacheStatus = game.getLiveSideBetSummary({
   overcommit: { active: false },
   doctrinePursuit: { active: false },
 });
-assert.equal(hiddenCombatCacheStatus, null);
+assert.equal(hiddenCombatCacheStatus?.label, "방호 약속");
+assert.equal(hiddenCombatCacheStatus?.status, "Wave 6 차체 잠금");
+assert.ok(hiddenCombatCacheStatus?.note.includes("Wave 6"));
 const liveCombatCacheStatus = game.getLiveSideBetSummary({
   build: game.createInitialBuild("rail_zeal"),
   waveIndex: 4,
@@ -628,8 +651,9 @@ const liveCombatCacheStatus = game.getLiveSideBetSummary({
   overcommit: { active: false },
   doctrinePursuit: { active: false },
 });
-assert.equal(liveCombatCacheStatus?.label, "Combat Cache");
-assert.equal(liveCombatCacheStatus?.status, "live");
+assert.equal(liveCombatCacheStatus?.label, "방호 약속");
+assert.equal(liveCombatCacheStatus?.status, "Wave 6 차체 잠금");
+assert.ok(!liveCombatCacheStatus?.note.includes("cache"));
 const wave5GambleChoice = wave5ForgeChoices.find((choice) => choice.contractRole === "gamble");
 assert.equal(wave5GambleChoice, undefined);
 const scriptedMidrunGreedChoice = game.createFieldGreedContractChoice(
