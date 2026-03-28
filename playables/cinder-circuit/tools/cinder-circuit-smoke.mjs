@@ -1478,7 +1478,8 @@ const recurringWave5RiderChoice =
   recurringWave5Choices.find((choice) => choice.contractRole === "rider") ||
   recurringWave5Choices[1];
 assert.ok(recurringWave5RiderChoice);
-assert.notEqual(recurringWave5RiderChoice.action, "preview_support");
+assert.equal(game.computeSupportSystemStats(wave5MutationBuild), null);
+assert.ok(!recurringWave5Choices.some((choice) => choice.type === "system"));
 assert.ok(
   (recurringWave5RiderChoice.type === "affix" && recurringWave5RiderChoice.affixId === "thermal_weave") ||
     (recurringWave5RiderChoice.type === "mod" &&

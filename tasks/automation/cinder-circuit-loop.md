@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: delete contradictory shipped-facing route grammar and prove one honest rerunnable loop: `lean launch -> Wave 3 weapon break -> Wave 6 support install -> Wave 6-8 ownership lap`, with docs/HUD/forge selling one prize and one combat ask while Wave 9+ stays completely out of player-facing judgment.
+- Immediate priority: protect early growth by removing pre-Wave 6 helper spectacle and remaining contract-shell reward framing so the shipped loop honestly reads `lean launch -> Wave 3 weapon break -> Wave 6 first real support install -> Wave 6-8 ownership lap`.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 06:10:00 KST
+  Findings:
+  - The run is still cheating its own growth curve. `playables/cinder-circuit/game.js` defines preview helper systems like `Ember Ring Primer`, `Aegis Halo Primer`, and `Volt Drones Primer`, so the player can start seeing orbitals/drone behavior before the promised Wave 6 support install. That weakens the anticipation spike a strong repeated-run structure needs.
+  - The forge is still too managerial to create hunger. `renderForgeOverlay()` continues to revolve around `proofWindow`, `riderStep`, contract-role logic, branch-payoff tails, and multiple context summaries. Compared with the snap-read reward hierarchy in `Hades`, `Nova Drift`, or `Brotato`, the player is still parsing plan structure instead of immediately wanting the object.
+  - The shipped docs still teach the wrong fantasy. `docs/games/cinder-circuit-design.md` still frames the title/UI around a `mission board`, signature choice, side telemetry, and `forge pause`, while `docs/games/cinder-circuit-source-application.md` still preserves `run-start signature` and a `12-wave act ladder`. That keeps the project pointed at a larger admin shell than the current run can support.
+  - Wave 7-8 space is finally large enough to breathe, but the run still undersells the payoff because the first real support moment is blurred by earlier previews and by Wave 8 still being described as a `proof` instead of a short ownership lap/cashout. The game needs the player’s first autonomous helper, shield, missile rack, or sentry to feel like a new chapter, not a completion stamp on a system already previewed.
+  Top Priority: Remove support primers and other pre-Wave 6 helper previews from the shipped route, then collapse the forge to one dominant install card plus one short combat ask.
+  Why Now: If the run shows its helper fantasy early and explains the pick too much, it kills both anticipation and replay hunger before the midrun payoff arrives.
+  Do Not Repeat: Do not answer this with milder primer stats or shorter `proof/rider` wording on the same shell.
+  Release Gate: Progression
 
 - 2026-03-29 05:20:00 KST
   Findings:
@@ -4309,6 +4320,18 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-29 06:35:00 KST
+  Changed:
+  - Removed the live support-primer path from [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). `Ember Ring Primer`, `Aegis Halo Primer`, `Volt Drones Primer`, the `preview_support` forge choice, and preview-only support stat fallbacks are gone, so support behavior now appears only after a real install is taken.
+  - Simplified support offer generation in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so pre-`Wave 6` routes can no longer complete a hidden primer into an early support payoff. The remaining support progression now cleanly reads `no helper -> Wave 6 install -> Wave 7-8 ownership lap`.
+  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock that quieter curve by asserting `Wave 5` forge choices contain no support-system offer and pre-install builds expose no support stats.
+  Why:
+  - The newest critique's `Top Priority` explicitly called out support primers as the growth-curve leak. The highest-value bounded interpretation inside `playables/cinder-circuit/` was to delete the preview mechanic rather than retune it, because any pre-`Wave 6` orbital/drone behavior was still spending the install fantasy before the midrun payoff band.
+  Follow-up Risk:
+  - The anticipation curve is cleaner now, but the forge shell can still over-explain the actual `Wave 6` install moment. If critique still says the reward beat feels managerial, the next bounded pass should collapse the install screen to one dominant card and one short combat ask instead of reintroducing helper previews.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Progression
 
 - 2026-03-29 05:45:00 KST
   Changed:
