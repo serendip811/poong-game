@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: purge shipped-facing docs and reward/status surfaces of 12-wave/proof/rider admin language, then recut Wave 6-8 around one visible support toy with object-first picks and one-line combat asks.
+- Immediate priority: strip title/pause/forge of roadmap-doctrine admin language, keep Wave 1-3 physically small, and make Wave 6-8 land as one visible support install inside a roomier combat ask.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 21:20:00 KST
+  Findings:
+  - The project is still drifting because the docs continue to teach a bigger, more administrative game than the shipped slice should present. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L95) and [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L157) through [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L260) still normalize `Signature`, `Headline/Rider`, `Proof Window`, and `Wave 9-12` thinking, so tuning is still being pulled toward future breadth instead of a finished 8-wave appetite loop.
+  - The live HUD summaries still pre-solve the run before the player has felt it. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L9021) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L9128) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L10194) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L10559) keep surfacing `Wave 3 무기 방향`, `Wave 6 지원 설치`, doctrine tags, and payoff strips on title/pause/status surfaces. Compared with strong arena-shooter roguelite references, this is still too much route briefing and not enough immediate fantasy.
+  - The support catalog already has the right kinds of run-shaping toys, but the forge still presents them through contract shells instead of desire. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2632) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3134) define shields, sentries, missiles, drones, and orbitals with visible tier spikes, yet [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L6658) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L6735) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L25082) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L25203) still frame the moment as `current machine / next install / proof` bookkeeping instead of “take this halo/sentry/drone and go test it.”
+  - Combat space is closer to the right direction than the surface layer admits. The encounter profiles already expand arenas and active caps around payoff windows, like the `Arsenal Breakpoint` sets in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L95) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L210). The current blocker is not lack of systems or lack of density; it is that the player-facing loop still buries that breathing room under explanation, so the run does not create clean anticipation for a second mutation and a longer future escalation.
+  Top Priority: Remove roadmap/doctrine copy from default title, pause, Tab, and forge context surfaces, then sell Wave 6-8 with one dominant support-install card and one short combat ask.
+  Why Now: Player-facing overload is still suppressing the small-start-to-transformation curve, so longer-run ambition will keep reading like homework instead of hunger.
+  Do Not Repeat: Do not answer this with shorter wording around the same `current form / next install / proof` shell or with more Wave 9-12 scaffolding.
+  Release Gate: UX/UI
 
 - 2026-03-28 20:00:49 KST
   Findings:
@@ -4129,6 +4140,14 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-28 23:59:59.900 KST
+  Changed: tightened one shipped `Wave 6-8` context layer in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the shared forge/pause payoff shell now carries one short `전투 ask` line under the installed machine instead of stopping at `현재 머신 + 다음 전투`. I added `getBaseRouteCombatAskForWave(...)`, taught `createBaseRouteForgeContextMarkup(...)` to render a compact ask note, and wired both the base-route forge header and pause snapshot to the next readable combat directive. I also updated [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) for the new compact note treatment and extended [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the added ask on opening pause and Wave 6 install context markup.
+  Why: the newest critique's `Top Priority` was to remove roadmap/doctrine explanation from default pause/forge surfaces and make `Wave 6-8` read as one dominant support install plus one short combat ask. The bounded high-value interpretation was not more reward cards, because the install card already exists, but making the shared context shell answer the only urgent question left after the pick: “what do I do with this in the next fight?”
+  Follow-up Risk: the new ask line is only as good as the per-wave directives behind it, so any vague or overly authored encounter note will now surface more often on pause/forge summaries. If critique still says the back-half board feels wordy, the next bounded pass should prune the noisiest `Wave 6-8` directives themselves rather than adding more wrapper UI.
+  UI reference direction: followed the object-first, one-line intent read from `Hades` boon detail and `Brotato` shop/hover summaries, where the reward object stays dominant and the tactical instruction beneath it stays extremely short.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: UX/UI
 
 - 2026-03-28 23:59:59.500 KST
   Changed: recut one shipped `Wave 6` reward beat in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the visible support install now becomes the dominant forge card instead of sitting as a secondary rider under another weapon pick. Base-route contract generation now promotes `bastion_bay_forge` packages with an attached system install to the `headline` slot at `Wave 6`, relabels the side weapon card as `주포`, and makes `getBaseRouteForgeChoiceTransformation(...)` plus `createBaseRouteForgeHeadlineCardMarkup(...)` sell the installed toy itself: support object title, one vivid effect line, and one short `다음 전투` ask. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new `Wave 6` role swap, support-first card title/effect/proof copy, and the compact proof row on shipped headline cards.

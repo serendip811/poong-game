@@ -654,6 +654,8 @@ assert.ok(openingPauseSnapshotMarkup.includes("다음 변이"));
 assert.ok(openingPauseSnapshotMarkup.includes("현재 선체"));
 assert.ok(openingPauseSnapshotMarkup.includes("빈 선체"));
 assert.ok(openingPauseSnapshotMarkup.includes("machine-payoff"));
+assert.ok(openingPauseSnapshotMarkup.includes("전투 ask"));
+assert.ok(openingPauseSnapshotMarkup.includes("폭주 지형 없음."));
 assert.ok(!openingPauseSnapshotMarkup.includes("summary-head"));
 assert.ok(!openingPauseSnapshotMarkup.includes("최근 획득"));
 assert.ok(!openingPauseSnapshotMarkup.includes("첫 포지 전"));
@@ -672,6 +674,8 @@ const supportPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
 assert.ok(supportPauseSnapshotMarkup.includes("machine-payoff"));
 assert.ok(supportPauseSnapshotMarkup.includes("다음 랩"));
 assert.ok(supportPauseSnapshotMarkup.includes("현재 머신"));
+assert.ok(supportPauseSnapshotMarkup.includes("전투 ask"));
+assert.ok(/점거 코어|릴레이|외곽|pocket/.test(supportPauseSnapshotMarkup));
 assert.ok(!supportPauseSnapshotMarkup.includes("summary-head"));
 assert.ok(!supportPauseSnapshotMarkup.includes("활성 보조"));
 assert.ok(!supportPauseSnapshotMarkup.includes("활성 판돈"));
@@ -1473,6 +1477,16 @@ const wave6HeadlineMarkup = game.createBaseRouteForgeHeadlineCardMarkup({
   disabled: false,
 });
 assert.ok(wave6HeadlineMarkup.includes("forge-card__proof"));
+const wave6ForgeContextMarkup = game.createBaseRouteForgeContextMarkup({
+  titleLabel: wave6DefenseTransform.previewLabel,
+  currentFormLabel: wave6DefenseTransform.previewValue,
+  waveAskLabel: "다음 전투",
+  waveAskValue: "Ring Cut",
+  askNote: game.getBaseRouteCombatAskForWave(recurringWave6Build, 6),
+});
+assert.ok(wave6ForgeContextMarkup.includes("machine-payoff__note"));
+assert.ok(wave6ForgeContextMarkup.includes("전투 ask"));
+assert.ok(/relay|corridor|외곽|pocket|점거 코어/.test(wave6ForgeContextMarkup));
 assert.ok(wave6HeadlineMarkup.includes("Ember Ring"));
 assert.ok(wave6HeadlineMarkup.includes(wave6DefenseTransform.proof));
 const crownfireBuild = game.createInitialBuild("rail_zeal");

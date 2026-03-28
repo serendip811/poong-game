@@ -10393,6 +10393,15 @@
     return `${source.slice(0, 75).trimEnd()}...`;
   }
 
+  function getBaseRouteCombatAskForWave(build, waveNumber = 1) {
+    const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
+    return getBaseRouteCombatAsk({
+      build,
+      waveIndex: boundedWave - 1,
+      wave: resolveWaveConfig(boundedWave - 1, build),
+    });
+  }
+
   function getShippingUpgradePresentationLabel(upgradeText) {
     const source = String(upgradeText || "").replace(/\s+/g, " ").trim();
     if (!source) {
@@ -10520,15 +10529,23 @@
     currentFormLabel = "",
     waveAskLabel = "",
     waveAskValue = "",
+    askNote = "",
     branchPayoffLabel = "",
     branchPayoffValue = "",
   }) {
-    return createCurrentMachinePayoffMarkup({
-      machineLabel: titleLabel || eyebrow || "현재 머신",
-      machineValue: currentFormLabel || title || "-",
-      payoffLabel: waveAskLabel || branchPayoffLabel || "다음 전투",
-      payoffValue: waveAskValue || branchPayoffValue || "-",
-    });
+    return `
+      ${createCurrentMachinePayoffMarkup({
+        machineLabel: titleLabel || eyebrow || "현재 머신",
+        machineValue: currentFormLabel || title || "-",
+        payoffLabel: waveAskLabel || branchPayoffLabel || "다음 전투",
+        payoffValue: waveAskValue || branchPayoffValue || "-",
+      })}
+      ${
+        askNote
+          ? `<p class="machine-payoff__note"><span>전투 ask</span>${askNote}</p>`
+          : ""
+      }
+    `;
   }
 
   function getBaseRouteForgeSpotlightSummary({
@@ -10589,9 +10606,14 @@
     const machineSummary = getShippingMachinePayoffSummary(build, weapon, waveNumber, {
       phase: activeState.phase === "result" ? "result" : "combat",
     });
+    const combatAsk = trimInspectNote(
+      getBaseRouteCombatAskForWave(build, waveNumber),
+      "열린 공간을 남기고 자주 자리를 바꾼다."
+    );
     return `
       <div class="pause-summary__hero">
         ${createCurrentMachinePayoffMarkup(machineSummary)}
+        <p class="machine-payoff__note"><span>전투 ask</span>${combatAsk}</p>
       </div>
     `;
   }
@@ -17798,6 +17820,7 @@
     createBaseRouteStatusStripMarkup,
     getBaseRouteBranchPayoffSummary,
     getBaseRouteCombatAsk,
+    getBaseRouteCombatAskForWave,
     getMinimalBaseRouteHudVisibility,
     getBaseRouteForgeStage,
     getBaseRoutePostWaveTransition,
@@ -25035,6 +25058,10 @@
       dominantFormLabel: dominantFormSummary.label,
       proofWindowLabel: proofWindow.label,
     });
+    const forgeCombatAsk = trimInspectNote(
+      getBaseRouteCombatAskForWave(state.build, state.waveIndex + 2),
+      "열린 공간을 남기고 자주 자리를 바꾼다."
+    );
     const featuredForgeChoice = riderStep || useBaseRouteContract
       ? { showcase: null, featuredIndex: -1 }
       : getForgeFeaturedChoice(state.forgeChoices, state.build, state.waveIndex + 2);
@@ -25106,6 +25133,7 @@
             currentFormLabel: forgeSpotlightSummary.titleValue,
             waveAskLabel: forgeSpotlightSummary.leadLabel,
             waveAskValue: forgeSpotlightSummary.leadValue,
+            askNote: forgeCombatAsk,
             branchPayoffLabel: forgeContextTail ? forgeContextTail.label : "",
             branchPayoffValue: forgeContextTail ? forgeContextTail.value : "",
           })}
