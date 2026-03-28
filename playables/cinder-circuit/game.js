@@ -9091,25 +9091,20 @@
     const phase = options && options.phase ? options.phase : "combat";
     const currentWeapon = weapon || computeWeaponStats(build);
     const dominantForm = getDominantFormSummary(build, currentWeapon, boundedWave);
-    const supportSnapshot = getInstalledSupportSnapshot(build);
-    const supportIdentity =
-      supportSnapshot && supportSnapshot.primary
-        ? getSupportSystemIdentitySummary(supportSnapshot.primary.id, supportSnapshot.primary.tier)
-        : null;
     let leadLabel = phase === "forge" ? "지금 도약" : "다음 도약";
-    let leadValue = "Wave 3 무기 도약";
+    let leadValue = "Wave 3 무기 굴절";
     if (phase === "result") {
       leadLabel = "마무리";
-      leadValue = "짧은 승리 랩";
+      leadValue = "짧은 마감 랩";
     } else if (boundedWave >= 8) {
       leadLabel = phase === "forge" ? "지금 마감" : "마무리";
-      leadValue = "완성 시험";
+      leadValue = "짧은 마감 랩";
     } else if (boundedWave >= 6) {
-      leadLabel = phase === "forge" ? (supportIdentity ? "지금 증폭" : "지금 설치") : supportIdentity ? "현재 추격" : "다음 추격";
-      leadValue = supportIdentity ? `${supportIdentity.payoffValue} 증폭` : "첫 방호·보조 설치";
+      leadLabel = phase === "forge" ? "지금 증명" : "현재 증명";
+      leadValue = "잠긴 형태 증명";
     } else if (boundedWave >= 3) {
-      leadLabel = phase === "forge" ? "지금 잠금" : "다음 추격";
-      leadValue = "Wave 6 차체 잠금";
+      leadLabel = phase === "forge" ? "지금 준비" : "다음 증명";
+      leadValue = "Wave 6 형태 증명";
     }
     return {
       titleLabel: "런 실루엣",
@@ -19428,7 +19423,11 @@
     if (CONSOLIDATED_12_WAVE_ROUTE) {
       const titleFocus = getBaseRouteTransformationFocus(1, { stage: "title" });
       const titleBuild = createInitialBuild(DEFAULT_SIGNATURE_ID);
-      const titleContract = getShippingContractSummary(titleBuild, computeWeaponStats(titleBuild), 1);
+      const titleWeapon = computeWeaponStats(titleBuild);
+      const openingContract = getShippingContractSummary(titleBuild, titleWeapon, 1);
+      const bendContract = getShippingContractSummary(titleBuild, titleWeapon, 3);
+      const proofContract = getShippingContractSummary(titleBuild, titleWeapon, 6);
+      const closingContract = getShippingContractSummary(titleBuild, titleWeapon, 8);
       elements.titleLaunchPanel.innerHTML = `
         <section class="title-launch-shell title-launch-shell--lean">
           <div class="title-launch-shell__frame" aria-hidden="true">
@@ -19442,11 +19441,12 @@
           </div>
           <div class="title-launch-shell__copy title-launch-shell__copy--lean">
             <strong class="title-launch-shell__headline title-launch-shell__headline--solo">${titleFocus.title}</strong>
-            <p class="title-launch-shell__detail">처음 두 웨이브는 한 줄 화선으로 버틴다. ${titleContract.leadValue}으로 방향을 꺾고, Wave 6에서 첫 방호·보조를 붙인다.</p>
+            <p class="title-launch-shell__detail">처음 두 웨이브는 한 줄 화선으로 버틴다. ${openingContract.leadValue}로 방향을 꺾고, ${bendContract.leadValue}만 노린 뒤 ${closingContract.leadValue}으로 짧게 닫는다.</p>
             <div class="title-launch-shell__proof-strip">
               <div class="title-launch-shell__proof"><span>Start</span><strong>조용한 시작</strong></div>
-              <div class="title-launch-shell__proof"><span>Wave 3</span><strong>${titleContract.leadValue}</strong></div>
-              <div class="title-launch-shell__proof"><span>Wave 6</span><strong>방호·보조 추격</strong></div>
+              <div class="title-launch-shell__proof"><span>Wave 3</span><strong>${openingContract.leadValue}</strong></div>
+              <div class="title-launch-shell__proof"><span>Wave 6</span><strong>${proofContract.leadValue}</strong></div>
+              <div class="title-launch-shell__proof"><span>Lap</span><strong>${closingContract.leadValue}</strong></div>
             </div>
           </div>
         </section>
