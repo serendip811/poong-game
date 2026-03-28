@@ -7799,7 +7799,7 @@
         title: choice.title || choice.slotText || "Unnamed Shift",
         tone: "main",
         promise: `${weaponTitle}로 첫 주포 실루엣을 바로 바꾼다.`,
-        proof: `${bodyTitle}는 다음 변형으로 남고, 이번에는 주포 화선이 얼마나 넓어졌는지만 바로 본다.`,
+        proof: `${bodyTitle}와 첫 지원 설치는 아직 남고, 이번에는 주포 화선 한 줄이 어디까지 닿는지만 바로 본다.`,
         riderLabel: "Defense / Utility",
         riderNote: "커진 주포가 숨 쉴 공간을 다음 방호 선택이 받쳐 준다.",
         accent: weaponTitle,
@@ -7827,9 +7827,9 @@
         title: choice.title || accent,
         tone: "main",
         promise: `${accent}를 붙여 Wave 3에서 잠근 주포를 한 번 더 비튼다.`,
-        proof: "바로 다음 전투에서 열린 화선이 더 오래 버티는지 즉시 드러난다.",
+        proof: "바로 다음 전투에서 화선 틈이 조금 메워질 뿐, 첫 지원 설치 전까지는 빈 측면이 남는다는 점이 즉시 드러난다.",
         riderLabel: "Defense / Utility",
-        riderNote: "살아남는 선 한 줄만 더하면 새 화선이 실제 공간으로 바뀐다.",
+        riderNote: "살아남는 선 한 줄을 더해도 mid-run install 전까지는 복귀선이 아직 비어 있다.",
         accent,
       };
     }
@@ -9199,7 +9199,7 @@
         state: boundedWave >= 3 ? "locked" : "live",
         detail:
           boundedWave >= 3
-            ? "빈 선체 구간은 끝났다. 이제 무기 방향을 굳히고 Wave 6 설치 타이밍을 기다린다."
+            ? "빈 선체 구간은 끝났다. 아직 한 줄 주포만 선 상태라 바깥 lane은 비어 있고, Wave 6 설치 타이밍을 기다린다."
             : "처음 두 웨이브는 한 줄 화선으로 버틴다. 자동 연출은 닫아 두고 Wave 3 무기 도약에 힘을 모은다.",
       },
       {
@@ -9208,7 +9208,7 @@
         state: stageState(3),
         detail:
           boundedWave >= 3
-            ? `${dominantForm.label}이 첫 무기 방향으로 잠겼다. 이제 다음 큰 변화는 Wave 6 지원 설치다.`
+            ? `${dominantForm.label}이 첫 무기 방향으로 잠겼다. 아직 빈 측면과 복귀선은 남아 있고, 다음 큰 변화는 Wave 6 지원 설치다.`
             : "Wave 3 한 장으로 첫 포문을 크게 벌린다. 작은 조율은 뒤로 숨기고 이 무기 변화만 먼저 또렷하게 읽히게 둔다.",
       },
       {
@@ -16246,7 +16246,7 @@
       tag: "ARCH",
       title: weaponChoice.title,
       description:
-        `${weaponChoice.title}을(를) 지금 바로 붙여 Wave 3 첫 주포 도약을 만든다. 이번 pick은 support나 운영 패키지가 아니라 발사 각과 실루엣을 먼저 크게 바꾸는 선택이다. Wave 6에서는 ${chassis ? chassis.title : "차체 break"}를 붙여 몸체 리듬까지 함께 확정한다.`,
+        `${weaponChoice.title}을(를) 지금 바로 붙여 Wave 3 첫 주포 방향만 만든다. 이번 pick은 support나 운영 패키지가 아니라 발사 각과 실루엣 한 줄을 먼저 고정하는 선택이다. 바깥 lane과 복귀선은 아직 비워 두고, Wave 6에서는 ${chassis ? chassis.title : "차체 break"} 위에 첫 지원 설치를 얹어 machine silhouette를 두 번째로 키운다.`,
       slotText: `${weaponChoice.title} · ${weaponChoice.slotText || "첫 주포 도약"}`,
       cost: 0,
       laneLabel: "주력 변이",
@@ -21525,7 +21525,7 @@
       pushCombatFeed(
         state.forgeDraftType === "architecture_draft"
           ? choice.action === "architecture_forecast"
-            ? `${choice.weaponChoice ? choice.weaponChoice.title : choice.title} 장착. Wave 3부터 주포 발사각이 바로 꺾인다. ${choice.breakpointLabel || "Wave 6 차체 break"}는 다음 정지에서 붙이고, 별도 보조 하드웨어는 late-form lock 직전까지 숨겨 주포와 차체가 먼저 화면을 먹게 둔다.`
+            ? `${choice.weaponChoice ? choice.weaponChoice.title : choice.title} 장착. Wave 3부터 주포 발사각이 바로 꺾인다. 아직 빈 측면과 복귀선은 남겨 두고 ${choice.breakpointLabel || "Wave 6 차체 break"}와 첫 지원 설치는 다음 정지에서 붙인다.`
             : `${grantLabel} 적용. 아키텍처 방향을 기울인 채 다음 웨이브를 연다.`
         : state.forgeDraftType === "bastion_draft"
           ? choice.type === "fallback"

@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: hard-consolidate the shipped 8-wave contract by disabling remaining live `Wave 9-12 / Afterburn / ascension cache` flow and stripping `mission board / signature / roadmap / proof / rider` grammar from title, Tab/status, forge, combat feed, and docs so the loop honestly reads `lean launch -> Wave 3 weapon break -> Wave 6 first real support install -> Wave 6-8 ownership lap`.
+- Immediate priority: enforce an honest shipped `8-wave` appetite loop by quarantining `signature / Wave 9-12 / Afterburn / ascension cache` scaffolding from docs and player-facing surfaces, and restore the growth curve so `Wave 3` is only a weapon break while `Wave 6` remains the first truly transformational support moment.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 06:30:43 KST
+  Findings:
+  - The shipped run is still structurally dishonest. `playables/cinder-circuit/game.js` keeps live `Wave 9-12`, `Afterburn`, and ascension-cache flow, while `docs/games/cinder-circuit-source-application.md` still teaches a `12-wave act ladder`; this prevents honest judgment of whether the current 8-wave loop is worth replaying on its own.
+  - The early growth curve is still front-loading completion. Multiple Wave 3/8 weapon-form descriptions in `playables/cinder-circuit/game.js` explicitly say the gun already dominates `support 없이도`, which turns the promised Wave 6 support install into garnish instead of the first real run-shaping payoff.
+  - Tab/status and forge are still selling roadmap doctrine over immediate desire. `getBuildRoadmap()`, `createShippingLadderMarkup()`, and the forge contract shell still foreground `roadmapDetail`, `proof`, and route framing where stronger references would show current power, survivability, and one next ask with far less reading.
+  - The docs are still teaching admin fantasy instead of action fantasy. `docs/games/cinder-circuit-design.md` still frames the title as a `mission board`, preserves signature-facing side panels, and keeps `Afterburn` in the build target, so implementation pressure keeps drifting back toward explanation and future wrappers.
+  Top Priority: Reassert the shipped progression contract by removing `Wave 9+ / Afterburn / signature` teaching from shipped docs and UI, then rewrite the Wave 3 weapon-break presentation so it looks meaningfully incomplete until the Wave 6 support install lands.
+  Why Now: A rerunnable roguelite needs anticipation, and the current run is spending its payoff too early while still advertising a later game that is not shipped.
+  Do Not Repeat: Do not solve this with softer wording on the same roadmap shell or by adding more support options before the first support install actually feels necessary.
+  Release Gate: Progression
 
 - 2026-03-29 07:40:00 KST
   Findings:
@@ -4353,6 +4364,18 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-29 06:43:13 KST
+  Changed:
+  - Recut the shipped `Wave 3` weapon-break presentation in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so architecture picks, their forge promise/proof copy, and the architecture combat-feed no longer read like a complete gun form. Those surfaces now frame the pick as `first gun direction only`, explicitly leaving outer lanes and the return line open until the first `Wave 6` support install lands.
+  - Tightened the compact shipped ladder copy in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so post-`Wave 3` status steps say the run still has `빈 측면 / 복귀선` to solve before `Wave 6`, instead of implying the main weapon is already enough on its own.
+  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new `Wave 3 first direction, not finished form` contract across the architecture draft description, forge transformation proof, afterglow mutation copy, and shipped ladder details, then re-ran the existing smoke coverage.
+  Why:
+  - The newest critique's `Top Priority` said the shipped run is still spending its payoff too early by presenting the `Wave 3` gun break as though support is optional garnish. The highest-value bounded interpretation inside `playables/cinder-circuit/` was to restage the shared player-facing copy so `Wave 3` reads as a hungry partial lock and `Wave 6` keeps its chapter-break anticipation.
+  Follow-up Risk:
+  - This fixes the shipped-facing `Wave 3-5` presentation shell, but the codebase still contains hidden/non-shipped late-form text that uses stronger `support 없이도` completion language. If critique still says the project feels tuned around a too-complete gun, the next bounded pass should quarantine or rewrite those non-shipped descriptions instead of adding more reward layers.
+  Validation: `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Progression
 
 - 2026-03-29 08:05:00 KST
   Changed:

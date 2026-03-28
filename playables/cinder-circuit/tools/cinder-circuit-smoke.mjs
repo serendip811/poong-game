@@ -312,6 +312,26 @@ const midrunContractSummary = game.getShippingContractSummary(
 assert.equal(midrunContractSummary.titleLabel, "무기 변이");
 assert.equal(midrunContractSummary.leadLabel, "다음 설치");
 assert.equal(midrunContractSummary.leadValue, "Wave 6 지원 설치");
+const midrunLadderSteps = game.getShippingLadderSteps(
+  roadmapBuild,
+  game.computeWeaponStats(roadmapBuild),
+  5
+);
+assert.match(midrunLadderSteps[0].detail, /바깥 lane은 비어 있고/);
+assert.match(midrunLadderSteps[1].detail, /빈 측면과 복귀선은 남아 있고/);
+const architectureChoice = game.buildArchitectureDraftChoices(roadmapBuild)[0];
+assert.ok(architectureChoice);
+assert.match(architectureChoice.description, /Wave 3 첫 주포 방향만 만든다/);
+assert.match(architectureChoice.description, /바깥 lane과 복귀선은 아직 비워 두고/);
+const architectureTransformation = game.getForgeChoiceTransformation(architectureChoice);
+assert.match(architectureTransformation.proof, /첫 지원 설치는 아직 남고/);
+const afterglowChoice = game
+  .buildFieldGrantChoices(roadmapBuild, Math.random, 5)
+  .find((choice) => choice && choice.action === "afterglow_mutation");
+assert.ok(afterglowChoice);
+const afterglowTransformation = game.getForgeChoiceTransformation(afterglowChoice);
+assert.match(afterglowTransformation.proof, /첫 지원 설치 전까지는 빈 측면이 남는/);
+assert.match(afterglowTransformation.riderNote, /복귀선이 아직 비어 있다/);
 const supportSurgeBuild = game.createInitialBuild("rail_zeal");
 supportSurgeBuild.wave6ChassisBreakpoint = true;
 supportSurgeBuild.supportSystems = [{ id: "seeker_array", tier: 1 }];
@@ -3319,7 +3339,7 @@ const mirrorArchitectureChoice = game
   .find((choice) => choice.title === "Ricochet Coil");
 assert.ok(mirrorArchitectureChoice);
 assert.ok(mirrorArchitectureChoice.description.includes("Wave 3"));
-assert.ok(mirrorArchitectureChoice.description.includes("첫 주포 도약"));
+assert.ok(mirrorArchitectureChoice.description.includes("첫 주포 방향만 만든다"));
 assert.ok(!mirrorArchitectureChoice.description.includes("support bay"));
 assert.ok(!mirrorArchitectureChoice.description.includes("marked elite shard"));
 game.applyForgeChoice(
