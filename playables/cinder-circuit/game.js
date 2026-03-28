@@ -10419,6 +10419,38 @@
     });
   }
 
+  function getBaseRouteForgeSpotlightSummary({
+    choice = null,
+    riderStep = false,
+    pendingFinalForge = false,
+    dominantFormLabel = "",
+    proofWindowLabel = "",
+  } = {}) {
+    if (pendingFinalForge) {
+      return {
+        titleLabel: "형태 고정",
+        titleValue: dominantFormLabel || "-",
+        leadLabel: "마무리",
+        leadValue: proofWindowLabel || "짧은 마감 랩",
+      };
+    }
+    const transformation = choice ? getBaseRouteForgeChoiceTransformation(choice) : null;
+    const titleLabel =
+      (transformation && transformation.previewLabel) ||
+      (riderStep ? "이번 설치" : "이번 도약");
+    const titleValue =
+      (transformation && transformation.previewValue) ||
+      (choice && (choice.chassisTitle || choice.systemChoice?.title || choice.title)) ||
+      dominantFormLabel ||
+      "-";
+    return {
+      titleLabel,
+      titleValue,
+      leadLabel: "다음 시험",
+      leadValue: proofWindowLabel || "-",
+    };
+  }
+
   function getBaseRouteForgeContextTailSummary({
     riderStep = false,
     branchPreviewPayoff = null,
@@ -17380,6 +17412,7 @@
     getBaseRouteForgeStage,
     getBaseRoutePostWaveTransition,
     getBaseRouteForgeContextTailSummary,
+    getBaseRouteForgeSpotlightSummary,
     createBaseRouteForgeContextMarkup,
     createBaseRoutePauseSnapshotMarkup,
     createMinimalCombatAskMarkup,
@@ -24535,12 +24568,6 @@
     }
     const activeSupportTrack = getForgeSupportTrackSnapshot(state.build, state.supportSystem);
     const dominantFormSummary = getDominantFormSummary(state.build, state.weapon, state.waveIndex + 2);
-    const forgeContractSummary = getShippingContractSummary(
-      state.build,
-      state.weapon,
-      state.waveIndex + 2,
-      { phase: state.pendingFinalForge ? "result" : "forge" }
-    );
     const nextFormStep = getNextBreakpointSummary(state.build, state.weapon, state.waveIndex + 2);
     const proofWindow = getImmediateProofWindowSummary(state.build, state.waveIndex + 2);
     const riderStep = state.forgeMaxSteps > 1 && state.forgeStep === 2;
@@ -24606,6 +24633,20 @@
     const forgeContextTail = getBaseRouteForgeContextTailSummary({
       riderStep,
       branchPreviewPayoff,
+    });
+    const spotlightChoice = state.pendingFinalForge
+      ? null
+      : riderStep
+        ? riderContractChoice || state.forgeChoices[0] || null
+        : state.forgeChoices.find((choice) => choice && choice.contractRole === "headline") ||
+          state.forgeChoices[0] ||
+          null;
+    const forgeSpotlightSummary = getBaseRouteForgeSpotlightSummary({
+      choice: spotlightChoice,
+      riderStep,
+      pendingFinalForge: state.pendingFinalForge,
+      dominantFormLabel: dominantFormSummary.label,
+      proofWindowLabel: proofWindow.label,
     });
     const featuredForgeChoice = riderStep || useBaseRouteContract
       ? { showcase: null, featuredIndex: -1 }
@@ -24673,13 +24714,11 @@
         <article class="forge-context__card forge-context__card--span-two forge-context__card--contract-shell">
           ${createBaseRouteForgeContextMarkup({
             eyebrow: baseRouteTransformationFocus.eyebrow || focusEyebrow,
-            title: dominantFormSummary.label,
-            titleLabel: state.pendingFinalForge ? "형태 고정" : forgeContractSummary.titleLabel,
-            currentFormLabel: dominantFormSummary.label,
-            waveAskLabel: state.pendingFinalForge ? "마무리" : forgeContractSummary.leadLabel,
-            waveAskValue: state.pendingFinalForge
-              ? baseRouteTransformationFocus.title || focusTitle
-              : forgeContractSummary.leadValue,
+            title: spotlightChoice ? spotlightChoice.title || forgeSpotlightSummary.titleValue : dominantFormSummary.label,
+            titleLabel: forgeSpotlightSummary.titleLabel,
+            currentFormLabel: forgeSpotlightSummary.titleValue,
+            waveAskLabel: forgeSpotlightSummary.leadLabel,
+            waveAskValue: forgeSpotlightSummary.leadValue,
             branchPayoffLabel: forgeContextTail ? forgeContextTail.label : "",
             branchPayoffValue: forgeContextTail ? forgeContextTail.value : "",
           })}

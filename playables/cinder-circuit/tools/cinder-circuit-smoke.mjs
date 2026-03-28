@@ -978,6 +978,32 @@ assert.ok(forgeHeadlineMarkup.includes("다음 시험"));
 assert.ok(forgeHeadlineMarkup.includes("Payoff Run"));
 assert.ok(forgeHeadlineMarkup.includes("route-contract--double"));
 assert.ok(!forgeHeadlineMarkup.includes("분기 보상"));
+const forgeHeadlineSpotlight = game.getBaseRouteForgeSpotlightSummary({
+  choice: wave6HeadlineChoice,
+  proofWindowLabel: "Payoff Run",
+});
+assert.ok(forgeHeadlineSpotlight.titleLabel.length > 0);
+assert.ok(forgeHeadlineSpotlight.titleValue.length > 0);
+assert.equal(forgeHeadlineSpotlight.leadLabel, "다음 시험");
+assert.equal(forgeHeadlineSpotlight.leadValue, "Payoff Run");
+const forgeRiderSpotlight = game.getBaseRouteForgeSpotlightSummary({
+  choice: wave6RiderChoice,
+  riderStep: true,
+  proofWindowLabel: "Dominion Sweep",
+});
+assert.ok(forgeRiderSpotlight.titleLabel.length > 0);
+assert.ok(forgeRiderSpotlight.titleValue.length > 0);
+assert.equal(forgeRiderSpotlight.leadLabel, "다음 시험");
+assert.equal(forgeRiderSpotlight.leadValue, "Dominion Sweep");
+const forgeFinalSpotlight = game.getBaseRouteForgeSpotlightSummary({
+  pendingFinalForge: true,
+  dominantFormLabel: "Prism Crown",
+  proofWindowLabel: "짧은 마감 랩",
+});
+assert.equal(forgeFinalSpotlight.titleLabel, "형태 고정");
+assert.equal(forgeFinalSpotlight.titleValue, "Prism Crown");
+assert.equal(forgeFinalSpotlight.leadLabel, "마무리");
+assert.equal(forgeFinalSpotlight.leadValue, "짧은 마감 랩");
 const summarizedFeed = game.summarizeCombatFeedEntry({
   stamp: "W6",
   text: "Wave 6 진입. 가장 먼 relay를 먼저 끊고 뚫린 corridor 하나를 길게 지킨다.",
