@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Progression`, with `UX/UI` as the symptom layer. The project already has enough toys; the failure is that the shipped run still promises too much future structure before it earns one addictive transformation arc.
-- Keep pressing the same appetite curve: quiet lean start, Wave 3 bend, Wave 6 visible payoff, short closing lap. Anything that reintroduces signature choice, support-bay reservation talk, or Wave 9-12 promise on default surfaces is drift.
-- The main consolidation warning: do not answer weak pacing with more modules, more Mk tiers, or more late-route scaffolding. Depth already exists in the catalog; it is not yet landing as hunger.
-- Reward/reference rule stays strict: forge/status/result surfaces should sell one installed power object first and one immediate ask second. Avoid `title / ask / payoff` shells even if the text is shorter.
-- Repeated false solutions: keeping `Late Break Armory`, `Live Ascension`, `Dominion Break`, or 12-wave act language near the shipped route; solving overload with copy edits instead of removing hidden promises; expanding the game before the 8-wave slice reruns cleanly.
+- The most fragile gate is now `Builds`, with `Progression` and `UX/UI` as spillover symptoms. The game already has enough toys; the real failure is that the shipped route does not protect one lean weapon/body climb strongly enough for later support spectacle to feel earned.
+- Keep pressing the same appetite curve: quiet lean start, Wave 3 bend, Wave 6 visible payoff, short closing lap. Default surfaces that reintroduce signature selection, support-bay reservation, or Wave 9-12 promise are still drift.
+- Main consolidation warning: stop making this only a wording critique. The next valuable pressure is structural subtraction, especially removing front-loaded build/admin noise and proving the 8-wave route is fun on weapon/body growth before more branches return.
+- Reward/reference rule stays strict: forge/status/result surfaces should sell one installed power object first and one immediate ask second. Avoid `title / ask / payoff` shells and avoid status boards that explain future layers before the player feels them.
+- Repeated false solutions: keeping `Late Break Armory`, `Live Ascension`, `Dominion Break`, or 12-wave act language near the shipped route; solving overload with copy edits instead of removing hidden promises; adding more support variants, Mk tiers, or passive wrappers before the opener is sparse enough to create anticipation.

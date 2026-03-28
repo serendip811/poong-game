@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze speculative Wave 9-12/signature/support-bay promise drift and consolidate one readable 8-wave appetite loop only: quiet lean start, Wave 3 bend, Wave 6 visible payoff, short closing lap.
+- Immediate priority: protect one honest 8-wave appetite loop by removing front-loaded signature/support/late-route noise; the opener must stay quiet, the first real silhouette jump must be earned, and combat space must breathe enough for movement choices to matter.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 19:15:00 KST
+  Findings:
+  - The run still starts from too much authored completeness. `docs/games/cinder-circuit-design.md` keeps run-start `Signature` as part of the core loop, while `game.js` still ships full support families (`Aegis Halo`, `Kiln Sentry`, `Seeker Array`, `Volt Drones`) with Mk.II/Mk.III ladders already live. That means the player is being told about side systems before one weapon/body fantasy has earned attention.
+  - The 8-wave slice is still balanced in the shadow of a bigger game. `game.js` keeps `Wave 9-12`, `Late Break Armory`, `Live Ascension`, and `Dominion Break` machinery beside the shipped route, so current forge/status/combat tuning is still contaminated by a longer bracket instead of asking whether Waves 1-8 alone are rerunnable.
+  - Combat space is larger on paper, but the run still risks feeling constantly authored rather than breathable. Waves 5-8 stack bespoke cell identity, hazards, and escalating spawn budgets every round, so the player is often processing contract changes instead of enjoying a longer mastery stretch with one newly earned form.
+  - The build curve still spends payoff too early. A release-feeling run should begin with a smaller gun/body silhouette and make the player hunger for missiles, orbitals, shields, or helpers later; here the catalog, title route, and hidden status grammar make those layers feel preloaded rather than won.
+  Top Priority: Strip the default shipped route to one lean opener and one dominant midrun transformation path by suppressing run-start signature/admin presentation and all Wave 9-12-facing support/armory language until the 8-wave loop proves it can stand on weapon/body growth alone.
+  Why Now: Until the run starts smaller and stays readable longer, added systems only make replay feel busier instead of deeper.
+  Do Not Repeat: Do not spend another pass polishing late-route labels or adding more support variants before the default 8-wave run feels intentionally sparse at the start.
+  Release Gate: Builds
 
 - 2026-03-28 18:05:00 KST
   Findings:
@@ -3995,6 +4006,14 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-28 19:40:00 KST
+  Changed: recut one shipped `Wave 6` breakpoint presentation slice in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so default chassis cards stop advertising `Wave 8`, `support bay`, and uplink-style admin at the exact moment the run should feel like one earned body transformation. I added `getWave6BreakpointInstallSummary(...)`, rewrote `buildWave6ChassisBreakpointChoices(...)` to describe the installed rider as part of the new chassis silhouette instead of a future bay reservation, and replaced the shipped upgrade log string with a hidden-junction note that no longer names `Wave 8` as the reward object. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the shipped breakpoint copy is now locked against `Wave 8` / `support bay` wording while still asserting the real bundled install remains intact.
+  Why: the newest critique's `Top Priority` was to suppress run-start/admin presentation and late-route-facing support language so the default `8-wave` route feels like a lean opener followed by one dominant midrun transformation path. The highest-value bounded interpretation inside `playables/cinder-circuit/` was to fix the Wave 6 breakpoint cards and logs, because they were still making the earned chassis moment read like support-bay bookkeeping rather than a new combat form.
+  Follow-up Risk: the Wave 6 breakpoint now reads more honestly, but the actual forge shell and some deeper non-default helper text still carry broader route grammar. If critique still says the run feels pre-authored, the next bounded pass should suppress remaining `armory/uplink` wording in any default forge/context strip before adding more build layers.
+  UI reference direction: followed the power-first reward discipline from `Hades` and `Nova Drift`, where the card sells the installed form or toy first and hides future route administration unless the player is making that exact later choice.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Builds
 
 - 2026-03-28 17:35:00 KST
   Changed: cleaned one shipped-facing status/result layer in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the compact `8-wave` run no longer dumps raw internal upgrade logs onto the result panel. I added `getShippingUpgradePresentationLabel(...)` and `getShippingUpgradePresentationLabels(...)` to filter out dormant admin like `Ascension Relay`, `Ownership Relay`, `Chassis Breakpoint`, and similar late-route wrappers, then switched `finishRun(...)` to render a short `RUN` history made of visible earned beats instead of raw `MOD` strings. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the shipped filtering rules and the curated result-history labels.

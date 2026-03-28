@@ -288,8 +288,9 @@ assert.ok(wave6Choices.every((choice) => !choice.singleAxisBreakpoint));
 assert.ok(!chassisOnlyChoice.description.includes("Late Break Armory"));
 assert.ok(!chassisOnlyChoice.description.includes("Wave 9"));
 assert.ok(chassisOnlyChoice.description.includes("Wave 6"));
-assert.ok(chassisOnlyChoice.description.includes("Wave 8"));
-assert.ok(chassisOnlyChoice.description.includes("mastery lap"));
+assert.ok(!chassisOnlyChoice.description.includes("Wave 8"));
+assert.ok(!chassisOnlyChoice.description.includes("support bay"));
+assert.ok(chassisOnlyChoice.description.includes("pocket ownership"));
 const chassisBranchBuild = game.createInitialBuild("rail_zeal");
 chassisBranchBuild.architectureForecastId = "storm_artillery";
 game.applyForgeChoice(
@@ -2813,7 +2814,7 @@ assert.ok(
   )
 );
 assert.ok(
-  architectureRun.build.upgrades.includes("Chassis Breakpoint: support bay +1 now, auto Wave 8 uplink")
+  architectureRun.build.upgrades.includes("Chassis Breakpoint: hidden support junction opened under the frame lock")
 );
 assert.equal(game.shouldSkipOwnershipAdminStop(architectureRun.build, 9), false);
 assert.equal(game.unlockLateSupportBay(architectureRun.build), true);
@@ -3043,7 +3044,8 @@ const artilleryAscensionChoice = game
   .find((choice) => choice.action === "bastion_bay_forge" && choice.chassisId === "vector_thrusters");
 assert.ok(artilleryAscensionChoice);
 assert.ok(artilleryAscensionChoice.description.includes("Wave 6"));
-assert.ok(artilleryAscensionChoice.description.includes("Wave 8"));
+assert.ok(!artilleryAscensionChoice.description.includes("Wave 8"));
+assert.ok(artilleryAscensionChoice.description.includes("증명하는"));
 assert.equal(artilleryAscensionChoice.systemChoice?.systemId, "seeker_array");
 assert.ok(!artilleryAscensionChoice.description.includes("contraband salvage"));
 game.applyForgeChoice(

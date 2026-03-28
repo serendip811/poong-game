@@ -12417,6 +12417,18 @@
     };
   }
 
+  function getWave6BreakpointInstallSummary(systemChoice) {
+    if (!systemChoice) {
+      return null;
+    }
+    const payoff = getSupportSystemInstalledPayoff(systemChoice.systemId, systemChoice.systemTier);
+    return {
+      title: systemChoice.title || "보조 장치",
+      label: (payoff && payoff.label) || "새 버팀선",
+      value: (payoff && payoff.value) || systemChoice.title || "새 버팀선",
+    };
+  }
+
   function getInstalledSupportSpotlight(build) {
     const supportSnapshot = getInstalledSupportSnapshot(build);
     if (!supportSnapshot || !supportSnapshot.primary) {
@@ -15651,6 +15663,7 @@
     const preferredSystemChoice = preferredSystemId
       ? createSupportSystemTierChoice(preferredSystemId, 1)
       : null;
+    const preferredInstallSummary = getWave6BreakpointInstallSummary(preferredSystemChoice);
     const chassisDefs = Object.values(CHASSIS_BREAKPOINT_DEFS);
     const chassisChoices = chassisDefs.map((chassisDef) => ({
       type: "utility",
@@ -15660,10 +15673,10 @@
       tag: chassisDef.tag,
       title: chassisDef.title,
       description: CONSOLIDATED_12_WAVE_ROUTE
-        ? `${chassisDef.description} 이번 정지에서는 차체와 ${preferredSystemChoice ? preferredSystemChoice.title : "교리 방호"}를 함께 붙여 Wave 6부터 새 버팀 실루엣을 바로 연다. Wave 8은 첫 설치가 아니라 이 장치의 출력과 pocket ownership을 한 단계 더 밀어 올리는 mastery lap으로 바뀐다.`
+        ? `${chassisDef.description} 이번 정지에서는 차체 안쪽에 ${preferredInstallSummary ? preferredInstallSummary.value : preferredSystemChoice ? preferredSystemChoice.title : "교리 방호"}를 숨겨 붙여, Wave 6부터 한 줄 더 버티는 새 몸체 실루엣으로 바로 바뀐다. 남은 루트는 관리 문구를 읽는 시간이 아니라 이 자세가 pocket ownership을 얼마나 오래 버티는지 증명하는 구간이다.`
         : `${chassisDef.description} 이번 정지에서는 차체 실루엣만 먼저 확정하고 support bay 증설은 뒤로 미룬다.`,
       slotText: preferredSystemChoice
-        ? `섀시 breakpoint · ${chassisDef.slotText} + ${preferredSystemChoice.title}`
+        ? `섀시 breakpoint · ${chassisDef.slotText} · ${preferredInstallSummary ? preferredInstallSummary.value : preferredSystemChoice.title}`
         : `섀시 breakpoint · ${chassisDef.slotText}`,
       cost: 0,
       laneLabel: "섀시 breakpoint",
@@ -15691,10 +15704,10 @@
       title: CHASSIS_BREAKPOINT_DEFS.vector_thrusters.title,
       description:
         preferredSystemChoice
-          ? `대시 충격파와 slipstream을 여는 Vector Thrusters에 ${preferredSystemChoice.title}를 즉시 얹어 Wave 6부터 flank 복귀선과 pocket 제어를 같이 바꾼다. Wave 8은 첫 방호 설치가 아니라 이미 켠 장치를 더 과격하게 증폭하는 mastery lap이 된다.`
+          ? `대시 충격파와 slipstream을 여는 Vector Thrusters 안쪽에 ${preferredInstallSummary ? preferredInstallSummary.value : preferredSystemChoice.title}를 숨겨 붙여 Wave 6부터 flank 복귀선과 pocket 제어를 같이 바꾼다. 남은 루트는 이 새 자세를 더 오래 밀어붙이는 증명 구간이 된다.`
           : "대시 충격파와 slipstream을 여는 Vector Thrusters를 장착하고, support bay 증설은 뒤로 미뤄 Wave 6-7 두 번의 proof lap을 차체 리듬만으로 버티게 만든다.",
       slotText: preferredSystemChoice
-        ? `섀시 breakpoint · Vector Thrusters + ${preferredSystemChoice.title}`
+        ? `섀시 breakpoint · Vector Thrusters · ${preferredInstallSummary ? preferredInstallSummary.value : preferredSystemChoice.title}`
         : "섀시 breakpoint · Vector Thrusters",
       cost: 0,
       laneLabel: "섀시 breakpoint",
@@ -16838,7 +16851,7 @@
         applyAuxiliaryJunction(run.build);
         run.build.upgrades.push(
           choice.skipNextAdminStop
-            ? "Chassis Breakpoint: support bay +1 now, auto Wave 8 uplink"
+            ? "Chassis Breakpoint: hidden support junction opened under the frame lock"
             : "Auxiliary Junction: support bay +1 now, reserve Wave 8 bay"
         );
         if (choice.skipNextAdminStop) {
