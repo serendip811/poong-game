@@ -2055,6 +2055,24 @@ const unsupportedAscensionWeapon = game.computeWeaponStats(unsupportedAscensionB
 assert.equal(unsupportedAscensionWeapon.lateAscensionFirePattern.kind, "split_wing");
 assert.ok(unsupportedAscensionWeapon.lateAscensionFirePattern.offsets.length >= 6);
 assert.match(unsupportedAscensionWeapon.lateAscensionStatusNote, /support uplink 없이도 완성형/);
+const biasedLeanStartBuild = game.createInitialBuild("scrap_pact", {
+  leanStartBiasDoctrineId: "storm_artillery",
+});
+assert.equal(biasedLeanStartBuild.leanStartBiasDoctrineId, "storm_artillery");
+assert.ok(biasedLeanStartBuild.pendingCores.includes("lance"));
+const biasedArchitectureChoices = game.buildArchitectureDraftChoices(biasedLeanStartBuild);
+assert.equal(biasedArchitectureChoices[0].doctrineId, "storm_artillery");
+assert.equal(biasedArchitectureChoices[0].weaponChoice.coreId, "lance");
+assert.ok((biasedArchitectureChoices[0].weaponChoice.benchCopies || 0) >= 1);
+const biasedArchitectureRun = {
+  build: biasedLeanStartBuild,
+  resources: { scrap: 0 },
+  stats: { scrapCollected: 0, scrapSpent: 0 },
+  player: { hp: 100, maxHp: 100, heat: 0, overheated: false },
+};
+game.applyForgeChoice(biasedArchitectureRun, biasedArchitectureChoices[0]);
+const biasedWave6Choices = game.buildWave6ChassisBreakpointChoices(biasedArchitectureRun.build, () => 0, 6);
+assert.ok(biasedWave6Choices.every((choice) => choice.systemChoice?.systemId === "seeker_array"));
 const systemsForgeBuild = game.createInitialBuild("scrap_pact");
 const architectureChoices = game.buildArchitectureDraftChoices(systemsForgeBuild);
 assert.equal(architectureChoices.length, 3);

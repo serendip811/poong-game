@@ -2669,6 +2669,7 @@
 
   const MAX_SUPPORT_SYSTEM_TIER = 3;
   const LEAN_START_CORE_ID = "ember";
+  const LEAN_START_BIAS_DOCTRINE_IDS = ["mirror_hunt", "kiln_bastion", "storm_artillery"];
   const MAX_SUPPORT_BAYS = 2;
   const MAX_SUPPORT_BAY_LIMIT = 4;
   const SUPPORT_SYSTEM_START_WAVE = 6;
@@ -5435,6 +5436,7 @@
     cashoutFailSoftId: null,
     act3CatalystDraftSeen: false,
     architectureForecastId: null,
+    leanStartBiasDoctrineId: null,
     bastionDoctrineId: null,
     doctrineCapstoneId: null,
     afterburnAscensionOffered: false,
@@ -8307,7 +8309,16 @@
     return removed;
   }
 
-  function createInitialBuild(signatureId = DEFAULT_SIGNATURE_ID) {
+  function pickLeanStartBiasDoctrineId(random = Math.random) {
+    const doctrineIds = LEAN_START_BIAS_DOCTRINE_IDS.filter((doctrineId) => BASTION_DOCTRINE_DEFS[doctrineId]);
+    if (doctrineIds.length === 0) {
+      return null;
+    }
+    const clampedRoll = clamp(random(), 0, 0.999999);
+    return doctrineIds[Math.floor(clampedRoll * doctrineIds.length)] || doctrineIds[0];
+  }
+
+  function createInitialBuild(signatureId = DEFAULT_SIGNATURE_ID, options = {}) {
     return sanitizeConsolidatedBuildState(applySignatureToBuild(
       {
         signatureId: BASE_BUILD.signatureId,
@@ -8321,6 +8332,7 @@
         cashoutFailSoftId: BASE_BUILD.cashoutFailSoftId,
         act3CatalystDraftSeen: BASE_BUILD.act3CatalystDraftSeen,
         architectureForecastId: BASE_BUILD.architectureForecastId,
+        leanStartBiasDoctrineId: BASE_BUILD.leanStartBiasDoctrineId,
         bastionDoctrineId: BASE_BUILD.bastionDoctrineId,
         doctrineCapstoneId: BASE_BUILD.doctrineCapstoneId,
         afterburnAscensionOffered: BASE_BUILD.afterburnAscensionOffered,
@@ -8378,20 +8390,31 @@
         overdriveDurationBonus: BASE_BUILD.overdriveDurationBonus,
         hazardMitigation: BASE_BUILD.hazardMitigation,
       },
-      signatureId
+      signatureId,
+      options
     ));
   }
 
-  function applySignatureToBuild(build, signatureId) {
+  function applySignatureToBuild(build, signatureId, options = {}) {
     const nextBuild = build || {};
     const signature =
       SIGNATURE_DEFS[signatureId] || SIGNATURE_DEFS[DEFAULT_SIGNATURE_ID];
     const leanStartContract = CONSOLIDATED_12_WAVE_ROUTE;
+    const leanStartBiasDoctrine = leanStartContract
+      ? getBastionDoctrineDef(options.leanStartBiasDoctrineId)
+      : null;
+    const leanStartSeedCoreId =
+      leanStartBiasDoctrine && leanStartBiasDoctrine.favoredCoreId && CORE_DEFS[leanStartBiasDoctrine.favoredCoreId]
+        ? leanStartBiasDoctrine.favoredCoreId
+        : null;
     const starterCoreId = leanStartContract
       ? LEAN_START_CORE_ID
       : signature.startCoreId || nextBuild.coreId || BASE_BUILD.coreId;
     nextBuild.signatureId = leanStartContract ? null : signature.id;
     nextBuild.coreId = starterCoreId;
+    nextBuild.leanStartBiasDoctrineId = leanStartContract && leanStartBiasDoctrine
+      ? leanStartBiasDoctrine.id
+      : null;
     nextBuild.attunedCoreId = nextBuild.coreId;
     nextBuild.attunedCopies = 1;
     nextBuild.affixes = sanitizeAffixIds(
@@ -8402,7 +8425,11 @@
     );
     nextBuild.pendingCores = sanitizeBenchCoreIds(
       (Array.isArray(nextBuild.pendingCores) ? nextBuild.pendingCores : []).concat(
-        leanStartContract ? [] : signature.seedCores || []
+        leanStartContract
+          ? leanStartSeedCoreId && leanStartSeedCoreId !== starterCoreId
+            ? [leanStartSeedCoreId]
+            : []
+          : signature.seedCores || []
       )
     );
     if (!leanStartContract && typeof signature.apply === "function") {
@@ -8578,6 +8605,13 @@
         ? buildOrSignatureId
         : buildOrSignatureId.signatureId || null;
     return signatureId ? BASTION_DOCTRINE_DEFS[signatureId] || null : null;
+  }
+
+  function getLeanStartBiasDoctrineDef(build) {
+    if (!build || !build.leanStartBiasDoctrineId) {
+      return null;
+    }
+    return getBastionDoctrineDef(build.leanStartBiasDoctrineId);
   }
 
   function getDoctrineCapstoneDef(buildOrCapstoneId) {
@@ -15402,9 +15436,24 @@
   }
 
   function buildArchitectureDraftChoices(build = null) {
-    return Object.values(BASTION_DOCTRINE_DEFS)
+    const choices = Object.values(BASTION_DOCTRINE_DEFS)
       .map((doctrine) => createArchitectureDoctrineChoice(doctrine, build))
       .filter(Boolean);
+    const biasDoctrine =
+      build && build.architectureForecastId
+        ? getBastionDoctrineDef(build.architectureForecastId)
+        : getLeanStartBiasDoctrineDef(build);
+    if (biasDoctrine) {
+      choices.sort((left, right) => {
+        const leftBias = left.doctrineId === biasDoctrine.id ? 1 : 0;
+        const rightBias = right.doctrineId === biasDoctrine.id ? 1 : 0;
+        if (rightBias !== leftBias) {
+          return rightBias - leftBias;
+        }
+        return (left.cost || 0) - (right.cost || 0);
+      });
+    }
+    return choices;
   }
 
   function createBastionDraftPactChoice() {
@@ -17866,7 +17915,9 @@
   }
 
   function createAppState(signatureId = getTitleRouteSignatureId()) {
-    const build = createInitialBuild(signatureId || DEFAULT_SIGNATURE_ID);
+    const build = createInitialBuild(signatureId || DEFAULT_SIGNATURE_ID, {
+      leanStartBiasDoctrineId: CONSOLIDATED_12_WAVE_ROUTE ? pickLeanStartBiasDoctrineId() : null,
+    });
     return {
       screen: "title",
       phase: "title",

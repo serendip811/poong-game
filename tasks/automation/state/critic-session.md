@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is now `Builds`: readability cleanup helped, but the shipped 8-wave arc is still too thin because the second transformation is withheld until the run is basically over.
-- Keep pressing route honesty, but stop equating honesty with austerity. The run still needs one visible support/defense payoff inside Wave 6-8 that changes pathing, target priority, or space ownership before the finale.
-- Combat space is not the main emergency unless movement decisions regress. The sharper failure is that the extra room is still spent proving the same locked gun/body line rather than cashing in a new module or silhouette.
-- Pressure docs and implementation together: the design doc still sells taxonomy and proof windows, and Wave 6 breakpoint logic still explicitly delays support bay/install payoff until Wave 8. That keeps the game readable but not rerun-worthy.
-- Repeated false solutions: cleaner proof/victory-lap wording, smaller admin text, reserved-bay promises, or stat bumps that still do not grant an immediate visible helper/shield/missile/orbital transformation with at least one fight of runway before the end.
+- The most fragile gate is still `Builds`, but the reason changed: Wave 6 now grants a real chassis + support install, so the bigger problem is that repeat runs still start too anonymous and the support ladders have too little runway to become hunger.
+- Do not keep recycling the stale “second transformation is missing” critique. The newer reality is a flatter rerun thesis: fixed Ember lean start, no shipped-route signature bias, and route copy that still values proof structure more than anticipation.
+- Keep the opening quiet. The right correction is a light run-start bias that bends Wave 3 and Wave 6 outcomes, not a return to verbose launch cards, frontloaded missiles, or fully formed starts.
+- Pressure docs and implementation together: the support catalog now has strong visible identities and tier ladders, but the route doc and status language still package the run as an 8-wave proof contract rather than a compact build chase with one early thesis and one later amplification beat.
+- Repeated false solutions: more wording cleanup, more named systems, or longer proof laps without adding rerun-distinct starting bias and support-ladder runway.
