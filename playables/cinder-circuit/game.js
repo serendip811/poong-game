@@ -10834,31 +10834,22 @@
   }
 
   function createBaseRouteForgeContextMarkup({
-    eyebrow = "",
     title = "",
-    titleLabel = "현재 형태",
-    currentFormLabel = "",
-    waveAskLabel = "",
-    waveAskValue = "",
+    currentLoadoutLabel = "현재 머신",
+    currentLoadoutValue = "",
     askNote = "",
-    branchPayoffLabel = "",
-    branchPayoffValue = "",
   }) {
-    const spotlightValue = title || currentFormLabel || waveAskValue || branchPayoffValue || "-";
+    const spotlightValue = title || currentLoadoutValue || "-";
     const secondaryValue =
-      currentFormLabel && currentFormLabel !== spotlightValue
-        ? currentFormLabel
-        : waveAskValue && waveAskValue !== spotlightValue
-        ? waveAskValue
-        : branchPayoffValue && branchPayoffValue !== spotlightValue
-          ? branchPayoffValue
-          : "";
-    const eyebrowValue = eyebrow || titleLabel || waveAskLabel || branchPayoffLabel || "";
+      currentLoadoutValue && currentLoadoutValue !== spotlightValue ? currentLoadoutValue : "";
     return `
-      ${eyebrowValue ? `<p class="forge-ask-shell__eyebrow">${eyebrowValue}</p>` : ""}
       <div class="forge-ask-shell">
         <strong class="forge-ask-shell__value forge-ask-shell__value--solo">${spotlightValue}</strong>
-        ${secondaryValue ? `<span class="forge-ask-shell__subvalue">${secondaryValue}</span>` : ""}
+        ${
+          secondaryValue
+            ? `<span class="forge-ask-shell__subvalue">${currentLoadoutLabel} · ${secondaryValue}</span>`
+            : ""
+        }
       </div>
       ${
         askNote
@@ -10940,8 +10931,8 @@
       supportInstall.systemTier || 1
     );
     return {
-      eyebrow: spotlight?.hudLabel || "설치",
       title: supportInstall.title || dominantFormLabel || "-",
+      currentLoadoutLabel: "현재 머신",
       currentFormLabel: dominantFormLabel || "",
       askNote: trimForgeCombatAsk(
         getBaseRouteSupportInstallCombatAsk(supportInstall.systemId, waveNumber),
@@ -25443,17 +25434,14 @@
       ? `
         <article class="forge-context__card forge-context__card--span-two forge-context__card--contract-shell">
           ${createBaseRouteForgeContextMarkup({
-            eyebrow:
-              dominantInstallHero?.eyebrow ||
-              baseRouteTransformationFocus.eyebrow ||
-              focusEyebrow,
             title:
               dominantInstallHero?.title ||
               (spotlightChoice ? spotlightChoice.title || forgeSpotlightSummary.titleValue : dominantFormSummary.label),
-            titleLabel: dominantInstallHero ? "" : forgeSpotlightSummary.titleLabel,
-            currentFormLabel: dominantInstallHero?.currentFormLabel || dominantFormSummary.label,
-            waveAskLabel: dominantInstallHero ? "" : forgeSpotlightSummary.leadLabel,
-            waveAskValue: dominantInstallHero ? "" : forgeSpotlightSummary.leadValue,
+            currentLoadoutLabel:
+              dominantInstallHero?.currentLoadoutLabel || forgeSpotlightSummary.titleLabel || "현재 머신",
+            currentLoadoutValue:
+              dominantInstallHero?.currentFormLabel ||
+              (dominantInstallHero ? "" : forgeSpotlightSummary.titleValue),
             askNote:
               dominantInstallHero?.askNote ||
               (spotlightChoice

@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: strip `signature / mission board / Wave 9-12 / Afterburn` doctrine out of shipped docs and reward/status surfaces, and protect `Wave 6` as the first run-shaping support payoff by making `Wave 3` read powerful but still incomplete.
+- Immediate priority: collapse shipped opener, `Tab`, and forge/status reads to current power + one next ask only, while removing `signature / mission board / Wave 9-12 / Afterburn / support 없이도` teaching so `Wave 6` becomes the first real transformation.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 08:20:00 KST
+  Findings:
+  - The project memory is still pointing at the wrong shipped fantasy. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) still defines the title as a `mission board`, keeps signature-facing side panels in the core layout, and still treats `Afterburn` as a next-build target, while [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md) still normalizes `run-start signature` and a `12-wave act ladder`.
+  - The forge is still far below release-grade reward readability. `renderForgeOverlay()` in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still leads with `proofWindow`, `rider`, `current form`, `wave ask`, and contract-shell framing where stronger references like `Hades` boon picks, `Nova Drift` level-ups, or `Brotato` shop choices lead with one desirable object, current survival state, and almost no explanation.
+  - The status layer is still behaving like a route document instead of a combat dashboard. `getLateBreakCadenceSummary()`, `getLateBreakHeadline()`, roadmap rows, and `Wave 11/12` status copy in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) keep the quick-check surface focused on future ladder teaching instead of current loadout, survivability, and the next meaningful pressure read.
+  - The growth curve is still front-loading completion. Multiple late-form weapon notes in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still say the gun dominates `support 없이도`, which makes the first support install read like polish on an already-finished chassis instead of the chapter break that should finally add drones, shields, missiles, orbitals, or other visible lane ownership tools.
+  Top Priority: Rebuild shipped player-facing UI around a strict object-first hierarchy: opener, `Tab`, and forge should show only current loadout, one dominant reward object, and one short combat ask, while all `signature / contract / proof / Wave 9-12 / Afterburn / support 없이도` teaching is removed from shipped-facing paths.
+  Why Now: Until the player stops reading a later-game design brief at every break, the run cannot create clean early hunger or a believable Wave 6 payoff.
+  Do Not Repeat: Do not answer this with shorter copy on the same contract shell or by adding new support content before the first install actually feels necessary.
+  Release Gate: UX/UI
 
 - 2026-03-29 07:00:35 KST
   Findings:
@@ -6718,6 +6729,13 @@ This file is shared by two recurring Codex CLI jobs.
   Freeze: Pause new systems and late-route expansion until the base `Wave 1-12` run reads cleanly enough that a player can describe the finale without using internal draft/cache/ascension vocabulary.
 
 ## Latest Improvement
+
+- 2026-03-29 09:15:00 KST
+  Changed: tightened the shipped forge spotlight in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the top card now reads as one dominant reward object, one current machine line, and one short combat ask only. `createBaseRouteForgeContextMarkup(...)` no longer emits the extra eyebrow/contract label layer for the shipped route, and `renderForgeOverlay()` now feeds it the picked install or mutation as the large line with the owned machine demoted to the only subline. `getBaseRouteForgeDominantInstallHero(...)` was adjusted to preserve support-first hierarchy without reintroducing `다음 전투` or wave/proof labels, and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks that object-first shell for generic forge states and live support installs. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` was to stop shipped forge/status surfaces from reading like a contract brief and instead show only current loadout, one dominant reward object, and one short combat ask. The highest-value bounded interpretation was to finish collapsing the forge top shell itself, because that is the first thing the player reads when deciding whether a reward is exciting.
+  Follow-up Risk: the forge spotlight is cleaner, but card body copy still carries some longer promise/proof sentences lower in the grid. If critique still says the reward beat feels too talkative, the next bounded pass should trim per-card copy length or card preview density rather than reopening progression structure.
+  Reference Direction: followed the object-first snap-read from `Hades` boon picks and `Nova Drift` level-ups, where the chosen toy owns the top line and the tactical implication is compressed underneath it.
+  Release Gate: UX/UI
 
 - 2026-03-29 05:00:00 KST
   Changed: hard-stopped the shipped consolidated route at `Wave 8` inside [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so any accidental post-`Wave 8` combat advance now collapses into the short `Victory Lap` instead of silently opening `Wave 9`. `beginWave(...)` now treats `index >= DEFAULT_ROUTE_WAVE_COUNT` as `victory lap -> result`, and `getBaseRoutePostWaveTransition(...)` no longer advertises another forge break for impossible post-`Wave 8` shipped states. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock that contract so consolidated post-wave transitions resolve to `victory_lap` rather than `forge`. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
