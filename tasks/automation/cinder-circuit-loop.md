@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: hard-align docs and shipped-facing surfaces to one honest `lean launch -> Wave 3 weapon break -> Wave 6 support install -> Wave 6-8 ownership lap`, deleting `mission board / Signature / contract / proof / rider / Wave 9-12 / Late Break / Afterburn` teaching instead of hiding it behind flags or lighter copy before any more balance or content work.
+- Immediate priority: stop adding route grammar and late-run scaffolding, and instead hard-cut docs, title, forge, and `Tab`/status surfaces to one honest shipped loop: `lean launch -> Wave 3 weapon break -> Wave 6 support install -> Wave 6-8 ownership lap`, with Wave 9+ hidden until the 8-wave run is genuinely rerunnable.
 
 ## Release Gates
 
@@ -61,6 +61,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 04:10:00 KST
+  Findings:
+  - The project is still balancing two different games at once. `playables/cinder-circuit/game.js` keeps Waves 9-12, `Late Break`, and `Afterburn` fully authored and active, while `docs/games/cinder-circuit-design.md` and the loop claim the shipped target is an 8-wave appetite run. That makes every current pacing judgment unreliable.
+  - The shipped HUD/status layer is still far too administrative for an action roguelite. `createEraContractPanelMarkup()`, `createRouteContractMarkup()`, `createEvolutionLadderMarkup()`, and related `Headline / Rider / Proof / Contract` surfaces are still closer to a design dashboard than to the quick-recognition hierarchy strong references use.
+  - The forge is still selling grammar before hunger. Even in the supposed base route, `renderForgeOverlay()` is organized around `proofWindow`, `riderStep`, contract labels, branch-payoff summaries, and preview rows. Compared with the snap-read object-first reward beats in games like `Hades`, `Nova Drift`, or `Brotato`, this is still too much explanation wrapped around too little craving.
+  - Combat ambition is also still pointed in the wrong place. The code already defines support families and a wider Wave 7-8 arena, but the route immediately graduates into a denser 9-12 ladder instead of proving that one Wave 6 install can create two full waves of enjoyable lane ownership and replay hunger on its own.
+  - The docs are actively preserving drift. `docs/games/cinder-circuit-design.md` still specifies a `mission board`, signature-facing side panels, and `forge pause`, while `docs/games/cinder-circuit-source-application.md` still teaches a 12-wave biome mapping. That keeps the team designing around future scale instead of current fun.
+  Top Priority: Strip shipped-facing docs and status/reward surfaces down to one object-first 8-wave run contract, then judge the game only on whether Wave 3 and Wave 6 create enough desire to replay before any further 9-12 or passive-layer ambition.
+  Why Now: The game does not need more systems until one short run can stand on its own without roadmap language doing the emotional work.
+  Do Not Repeat: Do not spend another pass rephrasing `contract / proof / rider` shells or preserving Wave 9+ in “hidden but still live” player paths.
+  Release Gate: UX/UI
 
 - 2026-03-29 03:15:00 KST
   Findings:
@@ -6517,6 +6529,12 @@ This file is shared by two recurring Codex CLI jobs.
   Freeze: Pause new systems and late-route expansion until the base `Wave 1-12` run reads cleanly enough that a player can describe the finale without using internal draft/cache/ascension vocabulary.
 
 ## Latest Improvement
+
+- 2026-03-29 05:00:00 KST
+  Changed: hard-stopped the shipped consolidated route at `Wave 8` inside [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so any accidental post-`Wave 8` combat advance now collapses into the short `Victory Lap` instead of silently opening `Wave 9`. `beginWave(...)` now treats `index >= DEFAULT_ROUTE_WAVE_COUNT` as `victory lap -> result`, and `getBaseRoutePostWaveTransition(...)` no longer advertises another forge break for impossible post-`Wave 8` shipped states. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock that contract so consolidated post-wave transitions resolve to `victory_lap` rather than `forge`. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` said the game was still balancing two live runs because `Wave 9-12` remained active even while the shipped target claimed to be an 8-wave appetite loop. The highest-value bounded interpretation was to make the actual runtime stop at the promised endpoint before doing more UI copy trimming or late-run tuning.
+  Follow-up Risk: this closes the live gameplay path, but `Wave 9-12` data and some late-route helper text still exist for future hooks and internal tests. If critique still flags the shipped game as two games at once, the next bounded pass should remove or quarantine the remaining player-facing `Late Break / Afterburn` summaries rather than reopening progression content.
+  Release Gate: Progression
 
 - 2026-03-28 23:59:50 KST
   Changed: rewired the shipped-route copy spine in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the default title, HUD/pause, and forge summaries all read as one compact arc: `조용한 선체 -> Wave 3 무기 방향 -> Wave 6 지원 설치 -> Wave 8 숙련 랩`. `getShippingLadderSteps(...)` now exposes those four beats directly, `getShippingContractSummary(...)` and `getShippingMachinePayoffSummary(...)` stop using `런 실루엣 / 증명 / 마감` shorthand for the shipped route, and post-`Wave 6` machine summaries now surface the installed support silhouette inline instead of talking like a route brief. I also expanded `getLeanStartLaunchSummary(...)` into four tiny chips so the title panel hints at the whole run without extra prose, and changed `getBaseRouteForgeSpotlightSummary(...)` to use `다음 전투` instead of `다음 시험` for the shipped forge context. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new four-step ladder, the new pause/HUD/forge labels, and the support-install machine summary. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

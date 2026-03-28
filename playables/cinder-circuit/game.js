@@ -17282,6 +17282,9 @@
         ? { id: "result_panel", label: "결과 패널", action: "result" }
         : { id: "victory_lap", label: "승리 랩", action: "victory_lap" };
     }
+    if (CONSOLIDATED_12_WAVE_ROUTE && upcomingWave > DEFAULT_ROUTE_WAVE_COUNT) {
+      return { id: "victory_lap", label: "승리 랩", action: "victory_lap" };
+    }
     return {
       id: shouldUseConsolidatedEarlyMutationForge({ nextWave: upcomingWave, finalForge: false })
         ? "field_break"
@@ -20464,6 +20467,14 @@
   }
 
   function beginWave(index) {
+    if (CONSOLIDATED_12_WAVE_ROUTE && index >= DEFAULT_ROUTE_WAVE_COUNT) {
+      if (state.wave && state.wave.baseRouteVictoryLap) {
+        finishRun(true);
+      } else {
+        beginBaseRouteVictoryLap();
+      }
+      return;
+    }
     const resolvedConfig = resolveWaveConfig(index, state.build);
     let config = applyRiskMutationPressureTax(
       {

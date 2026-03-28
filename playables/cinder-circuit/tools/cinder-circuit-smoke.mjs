@@ -93,7 +93,7 @@ assert.equal(
 );
 assert.equal(
   game.getBaseRoutePostWaveTransition({ waveIndex: 8, wave: { completesRun: false } }, 10).action,
-  "forge"
+  "victory_lap"
 );
 assert.equal(
   game.getBaseRoutePostWaveTransition({ waveIndex: 7, wave: { completesRun: true } }, 9).action,
@@ -1339,7 +1339,7 @@ assert.equal(
     { waveIndex: 7, wave: { completesRun: false } },
     9
   ).action,
-  "forge"
+  "victory_lap"
 );
 assert.equal(game.shouldUseFieldGrant({ nextWave: 6, finalForge: false, build: roadmapBuild }), false);
 const recurringWave3Choices = game.buildForgeChoices(roadmapBuild, Math.random, 40, {
@@ -3127,8 +3127,8 @@ const lateFormTransition = game.getBaseRoutePostWaveTransition(
   },
   9
 );
-assert.equal(lateFormTransition.action, "forge");
-assert.equal(lateFormTransition.label, "마무리");
+assert.equal(lateFormTransition.action, "victory_lap");
+assert.equal(lateFormTransition.label, "승리 랩");
 const earlyMutationTransition = game.getBaseRoutePostWaveTransition(
   {
     waveIndex: 3,
