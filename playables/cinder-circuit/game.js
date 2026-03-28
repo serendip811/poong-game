@@ -2044,13 +2044,13 @@
     if (profileId === "mutation") {
       return {
         cadenceDetail:
-          "Wave 8 완성 시험에서 열린 lane 둘을 얼마나 오래 잠그는지 먼저 보고, 끝나면 짧은 승리 랩에서 같은 sweep를 더 오래 누른다.",
+          "Wave 8 마감 오버클록은 Wave 6 설치가 벌려 둔 seam 위에 cataclysm fan을 덧대, 열린 lane 둘을 얼마나 오래 함께 잠그는지 먼저 본다. 끝나면 짧은 승리 랩에서 같은 sweep를 더 오래 누른다.",
         headlineDetail:
-          "Wave 8 완성 시험에서 열린 lane 둘을 먹고, 끝나면 짧은 승리 랩에서 같은 cataclysm sweep를 더 오래 밀어붙인다.",
+          "Wave 8 마감 오버클록은 이미 깔린 설치 실루엣 위에 cataclysm fan을 겹쳐 lane 둘을 같이 먹게 만들고, 끝나면 짧은 승리 랩에서 같은 sweep를 더 오래 밀어붙인다.",
         roadmapDetail: "Wave 8 완성 시험 -> 짧은 승리 랩",
-        proof: "Wave 8 완성 시험에서 넓어진 화망이 열린 lane 둘을 얼마나 오래 비우는지 바로 본다.",
+        proof: "Wave 8 완성 시험에서 Wave 6 설치가 벌려 둔 복귀선과 cataclysm fan이 이어 붙어 열린 lane 둘을 얼마나 오래 비우는지 바로 본다.",
         statusNote:
-          "Wave 8 Cataclysm Arsenal이 전면 cataclysm fan과 측면 포드를 한 번에 잠가 주포 실루엣을 갈아엎었다. 완성 시험에서 이 화망이 열린 lane 둘을 얼마나 오래 비우는지 바로 증명하고, 끝나면 짧은 승리 랩에서 같은 sweep를 더 오래 누른다.",
+          "Wave 8 Cataclysm Arsenal이 Wave 6 설치가 벌려 둔 seam 위에 전면 cataclysm fan과 측면 포드를 덧대 machine sweep를 더 길게 묶었다. 완성 시험에서 이 화망이 열린 lane 둘을 얼마나 오래 비우는지 바로 증명하고, 끝나면 짧은 승리 랩에서 같은 sweep를 더 오래 누른다.",
       };
     }
     if (profileId === "aegis") {
@@ -7798,10 +7798,10 @@
         laneLabel: choice.forgeLaneLabel || choice.laneLabel || "Forge Lane",
         title: choice.title || choice.slotText || "Unnamed Shift",
         tone: "main",
-        promise: `${weaponTitle}로 첫 주포 실루엣을 바로 바꾼다.`,
-        proof: `${bodyTitle}와 첫 지원 설치는 아직 남고, 이번에는 주포 화선 한 줄이 어디까지 닿는지만 바로 본다.`,
+        promise: `${weaponTitle}로 첫 주포 실루엣을 세우되, 아직 빈 측면이 남는 lean gun break로 묶는다.`,
+        proof: `${bodyTitle}와 첫 지원 설치는 아직 남고, 이번에는 주포 화선 한 줄이 어디까지 닿는지와 어느 seam이 아직 비는지만 바로 본다.`,
         riderLabel: "Defense / Utility",
-        riderNote: "커진 주포가 숨 쉴 공간을 다음 방호 선택이 받쳐 준다.",
+        riderNote: "커진 주포가 만든 얇은 안전선은 다음 body/support install이 와야 오래 버틴다.",
         accent: weaponTitle,
       };
     }
@@ -7937,12 +7937,12 @@
         laneLabel: choice.forgeLaneLabel || choice.laneLabel || "Forge Lane",
         title: choice.title || choice.slotText || "Unnamed Shift",
         tone: "main",
-        promise: "전면 cataclysm fan과 측면 포드를 잠가 lane 둘을 동시에 찢는 주포로 바꾼다.",
+        promise: "Wave 6 설치가 벌려 둔 seam 위에 전면 cataclysm fan과 측면 포드를 덧대 lane 둘을 같이 찢는 마감 주포로 바꾼다.",
         proof: CONSOLIDATED_12_WAVE_ROUTE
           ? closureCopy.proof
           : "Wave 9 open-lane에서 넓어진 화망이 flank 둘을 얼마나 오래 비우는지 바로 본다.",
         riderLabel: "Defense / Utility",
-        riderNote: "커진 화망 뒤에 방호선 한 줄만 붙여 열린 lane을 오래 점유한다.",
+        riderNote: "이 오버클록은 이미 깔린 설치 실루엣이 lane을 붙들어 줄 때 가장 오래 산다.",
         accent: "cataclysm fan + broadside pods",
       };
     }
@@ -14891,8 +14891,8 @@
       tag: "ARSENAL",
       title: "Cataclysm Arsenal",
       description: CONSOLIDATED_12_WAVE_ROUTE
-        ? `${CORE_DEFS[build.coreId].label}에 전면 cataclysm fan과 측면 브로드사이드 포드를 한 번에 잠가 support 없이도 주포 firing geometry를 monster form으로 갈아엎는다. 이번 pick의 rider는 보조 증폭일 뿐이고, 진짜 payoff는 Wave 8 완성 시험과 이어지는 짧은 승리 랩에서 이 화망이 화면을 얼마나 오래 먹는지 직접 누르는 데 있다.`
-        : `${CORE_DEFS[build.coreId].label}에 전면 cataclysm fan과 측면 브로드사이드 포드를 한 번에 잠가 support 없이도 주포 firing geometry를 monster form으로 갈아엎는다. 이번 pick의 rider는 보조 증폭일 뿐이고, 진짜 payoff는 Wave 9-10에서 주포가 열린 lane 둘을 동시에 잠그는 새 화망 자체다.`,
+        ? `${CORE_DEFS[build.coreId].label}에 전면 cataclysm fan과 측면 브로드사이드 포드를 한 번에 잠가 Wave 6 설치가 벌려 둔 seam 위로 주포 firing geometry를 크게 덧씌운다. 이번 pick의 payoff는 support를 지우는 단독 종착점이 아니라, 이미 열린 lane 둘을 같은 machine sweep로 더 오래 붙드는 데 있다.`
+        : `${CORE_DEFS[build.coreId].label}에 전면 cataclysm fan과 측면 브로드사이드 포드를 한 번에 잠가 기존 설치가 만든 seam 위로 주포 firing geometry를 크게 덧씌운다. 이번 pick의 payoff는 support를 지우는 단독 종착점이 아니라, 열린 lane 둘을 같은 machine sweep로 더 오래 붙드는 새 화망이다.`,
       roadmapDetail: CONSOLIDATED_12_WAVE_ROUTE
         ? getBaseRouteWave8ClosureCopy("mutation").roadmapDetail
         : "Wave 9 open-lane -> Wave 10 breach proof -> Wave 11 pursuit run -> Wave 12 final stand",
@@ -16246,7 +16246,7 @@
       tag: "ARCH",
       title: weaponChoice.title,
       description:
-        `${weaponChoice.title}을(를) 지금 바로 붙여 Wave 3 첫 주포 방향만 만든다. 이번 pick은 support나 운영 패키지가 아니라 발사 각과 실루엣 한 줄을 먼저 고정하는 선택이다. 바깥 lane과 복귀선은 아직 비워 두고, Wave 6에서는 ${chassis ? chassis.title : "차체 break"} 위에 첫 지원 설치를 얹어 machine silhouette를 두 번째로 키운다.`,
+        `${weaponChoice.title}을(를) 지금 바로 붙여 Wave 3 첫 주포 방향만 만든다. 이번 pick은 support나 운영 패키지가 아니라 lean gun break 하나를 먼저 세우는 선택이다. 바깥 lane과 복귀선은 아직 비워 두고, Wave 6에서는 ${chassis ? chassis.title : "차체 break"} 위에 첫 지원 설치를 얹어 그 빈 seam을 실제 machine silhouette로 메운다.`,
       slotText: `${weaponChoice.title} · ${weaponChoice.slotText || "첫 주포 도약"}`,
       cost: 0,
       laneLabel: "주력 변이",

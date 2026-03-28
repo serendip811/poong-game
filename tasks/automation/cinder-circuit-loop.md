@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: enforce an honest shipped `8-wave` appetite loop by quarantining `signature / Wave 9-12 / Afterburn / ascension cache` scaffolding from docs and player-facing surfaces, and restore the growth curve so `Wave 3` is only a weapon break while `Wave 6` remains the first truly transformational support moment.
+- Immediate priority: strip `signature / mission board / Wave 9-12 / Afterburn` doctrine out of shipped docs and reward/status surfaces, and protect `Wave 6` as the first run-shaping support payoff by making `Wave 3` read powerful but still incomplete.
 
 ## Release Gates
 
@@ -61,6 +61,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 07:00:35 KST
+  Findings:
+  - The design memory is still teaching the wrong game. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) still defines the title as a `mission board`, keeps `signature`-era side panels in the core UI layout, and still names `Afterburn` as a next-build target, so the project is still steering toward admin structure instead of a clean shipped 8-wave appetite loop.
+  - [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md) is still normalizing `run-start signature`, a `12-wave act ladder`, and Wave `10/12` balance expectations. That keeps implementation pressure aimed at a future route instead of proving the current `Wave 1-8` slice can stand alone and support later 20-30 wave ambition.
+  - The forge is still reading like doctrine briefing, not reward hunger. `renderForgeOverlay()` in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still foregrounds `proofWindow`, `current form`, `wave ask`, `rider`, and `12-wave` final-silhouette framing where strong references like `Hades`, `Nova Drift`, or `Brotato` would lead with one craveable gun/support object and almost no route prose.
+  - The playable still advertises non-shipped late structure inside the live run. `getLateBreakCadenceSummary()`, `getLateBreakHeadline()`, active `Afterburn` labels, and `Act 4` routing in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) keep Wave `9-12` and endform scaffolding visible, which makes the current run feel like a preview build instead of a finished rerunnable slice.
+  - The growth curve is still cheating its own payoff. Multiple weapon descriptions in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) explicitly say the gun dominates `support 없이도` and that extra riders are only cleanup, which collapses anticipation for the first real shield/drone/missile/orbital install and makes Wave 6 feel like garnish.
+  Top Priority: Remove `signature / mission board / Wave 9-12 / Afterburn` teaching from shipped docs and player-facing forge/status surfaces, then rewrite Wave 3 and Wave 8 weapon presentation so the gun looks strong-but-incomplete until the Wave 6 support install visibly changes routing.
+  Why Now: A replayable roguelite needs desire for the next form, and the current run is both over-explaining itself and spending completion too early.
+  Do Not Repeat: Do not answer this with shorter copy on the same contract/proof shell or by adding more support branches before the first support install becomes necessary.
+  Release Gate: Progression
 
 - 2026-03-29 06:30:43 KST
   Findings:
@@ -4364,6 +4376,18 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-29 09:05:00 KST
+  Changed:
+  - Rewrote the shipped `Wave 3` weapon-break copy in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so architecture cards and their forge transformation text explicitly sell a `lean gun break` with `빈 seam` left unresolved, instead of reading like a self-sufficient gun form before the first support install.
+  - Recut the shipped `Wave 8` `Cataclysm Arsenal` presentation in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the reward now reads as a weapon overclock layered on top of the `Wave 6` install-owned seam. The forge promise, card description, and compact-route closure/status copy now point at `Wave 6 설치가 벌려 둔 seam` rather than saying the gun dominates on its own.
+  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock both ends of that curve, asserting `Wave 3` architecture copy keeps the partial-lock language and shipped `Wave 8` mutation copy stays free of `support 없이도` / `완성형`, then re-ran the smoke test.
+  Why:
+  - The latest critique's `Top Priority` said the growth curve still spends completion too early. The highest-value bounded interpretation inside `playables/cinder-circuit/` was to tighten the shared player-facing copy at the two key weapon beats so `Wave 3` feels hungry and `Wave 8` feels like a finish layered over the already meaningful `Wave 6` install.
+  Follow-up Risk:
+  - This fixes the shipped `Wave 3` and `Wave 8` weapon shell, but other hidden late-route/non-shipped weapon descriptions still use stronger self-sufficient gun language. If critique still says the project is teaching a too-complete weapon fantasy, the next bounded pass should quarantine or rewrite those leftover non-shipped strings instead of adding more reward structure.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Progression
 
 - 2026-03-29 06:43:13 KST
   Changed:

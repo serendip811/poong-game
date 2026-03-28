@@ -323,8 +323,12 @@ const architectureChoice = game.buildArchitectureDraftChoices(roadmapBuild)[0];
 assert.ok(architectureChoice);
 assert.match(architectureChoice.description, /Wave 3 첫 주포 방향만 만든다/);
 assert.match(architectureChoice.description, /바깥 lane과 복귀선은 아직 비워 두고/);
+assert.match(architectureChoice.description, /lean gun break/);
+assert.match(architectureChoice.description, /빈 seam/);
 const architectureTransformation = game.getForgeChoiceTransformation(architectureChoice);
 assert.match(architectureTransformation.proof, /첫 지원 설치는 아직 남고/);
+assert.match(architectureTransformation.proof, /어느 seam이 아직 비는지/);
+assert.match(architectureTransformation.riderNote, /body\/support install/);
 const afterglowChoice = game
   .buildFieldGrantChoices(roadmapBuild, Math.random, 5)
   .find((choice) => choice && choice.action === "afterglow_mutation");
@@ -1992,6 +1996,8 @@ assert.ok(cataclysmChoice);
 assert.equal(cataclysmChoice.title, "Cataclysm Arsenal");
 assert.equal(cataclysmChoice.lateFieldMutationLevel, 4);
 assert.equal(cataclysmChoice.roadmapDetail, "Wave 8 완성 시험 -> 짧은 승리 랩");
+assert.match(cataclysmChoice.description, /Wave 6 설치가 벌려 둔 seam/);
+assert.doesNotMatch(cataclysmChoice.description, /support 없이도|완성형/);
 const cataclysmRun = {
   build: mutationLateBandBuild,
   resources: { scrap: 999 },
@@ -2007,6 +2013,7 @@ assert.ok(cataclysmWeapon.lateBreakCataclysmFirePattern);
 assert.ok(cataclysmWeapon.lateBreakCataclysmFirePattern.offsets.length >= 5);
 assert.ok(cataclysmWeapon.lateFieldMutationTraitLabel.includes("Cataclysm Arsenal"));
 assert.ok(cataclysmWeapon.damage >= 20);
+assert.match(cataclysmWeapon.lateBreakStatusNote, /Wave 6 설치가 벌려 둔 seam/);
 const cataclysmLanceBuild = game.createInitialBuild("rail_zeal");
 cataclysmLanceBuild.coreId = "lance";
 cataclysmLanceBuild.attunedCoreId = "lance";
