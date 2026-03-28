@@ -339,8 +339,8 @@ const supportPayoff = game.getBaseRouteBranchPayoffSummary({
   supportSystem: wave6SupportStats,
   waveNumber: 7,
 });
-assert.equal(supportPayoff?.label, "분기 보상");
-assert.equal(supportPayoff?.value, "Seeker Array");
+assert.equal(supportPayoff?.label, "추적 랙");
+assert.equal(supportPayoff?.value, "자동 미사일 + 외곽 정리");
 assert.equal(game.getSupportBayCapacity(chassisBranchBuild), 2);
 assert.equal(chassisBranchBuild.supportSystems.length, 1);
 assert.equal(chassisBranchBuild.wave6ChassisBreakpoint, true);
@@ -981,6 +981,22 @@ assert.equal(aegisSpotlight?.hudLabel, "방호 고리");
 assert.equal(aegisSpotlight?.hudValue, "탄막 절개 + 방호 파동");
 assert.ok(aegisSpotlight?.promise.includes("방호 고리"));
 assert.ok(!aegisSpotlight?.feed.includes("Wave 8"));
+const seekerSpotlight = game.getSupportSystemSpotlight("seeker_array", 2);
+assert.equal(seekerSpotlight?.hudLabel, "추적 랙");
+assert.equal(seekerSpotlight?.hudValue, "쌍미사일 + 측면 절단");
+assert.ok(seekerSpotlight?.promise.includes("쌍미사일"));
+assert.ok(seekerSpotlight?.proof.includes("자동 미사일"));
+const droneSpotlight = game.getSupportSystemSpotlight("volt_drones", 3);
+assert.equal(droneSpotlight?.hudLabel, "자율 편대");
+assert.equal(droneSpotlight?.status, "4기 전격망");
+assert.ok(droneSpotlight?.promise.includes("자동 전격망"));
+const sentrySpotlight = game.getSupportSystemSpotlight("kiln_sentry", 2);
+assert.equal(sentrySpotlight?.hudLabel, "거점 포탑");
+assert.ok(sentrySpotlight?.feed.includes("교차 사격"));
+const emberRingSpotlight = game.getSupportSystemSpotlight("ember_ring", 3);
+assert.equal(emberRingSpotlight?.hudLabel, "절단 고리");
+assert.equal(emberRingSpotlight?.hudValue, "근접 요격 + 연쇄 점화");
+assert.ok(emberRingSpotlight?.proof.includes("연쇄 점화"));
 assert.equal(
   game.getBaseRouteForgeContextTailSummary({
     riderStep: true,
@@ -999,6 +1015,20 @@ assert.equal(wave6SingleAxisTransformation.accent, "Bulwark Treads");
 assert.equal(wave6SingleAxisTransformation.previewValue, "hold, dive, exit 리듬 교체");
 assert.ok(!wave6SingleAxisTransformation.promise.includes("body/support bracket"));
 assert.ok(!wave6SingleAxisTransformation.proof.includes("Wave 8 마무리 포지"));
+const seekerWave8Transformation = game.getBaseRouteForgeChoiceTransformation({
+  type: "system",
+  systemId: "seeker_array",
+  systemTier: 2,
+  title: "Seeker Array Mk.II",
+  description: "Seeker Array를 2기 편대로 증설한다. 미사일 발사 간격이 짧아지고 두 갈래 탄막이 측면 교차 화선을 먼저 정리한다.",
+  slotText: "공세 모듈 증설 · 미사일 랙 2기",
+  forgeLaneLabel: "공세 모듈",
+  contractRole: "rider",
+});
+assert.equal(seekerWave8Transformation.previewLabel, "추적 랙");
+assert.equal(seekerWave8Transformation.previewValue, "쌍미사일 + 측면 절단");
+assert.ok(seekerWave8Transformation.promise.includes("2기 편대"));
+assert.ok(seekerWave8Transformation.proof.includes("측면 교차 화선"));
 const forgeHeadlineMarkup = game.createBaseRouteForgeContextMarkup({
   title: "주력 변이",
   titleLabel: "다음 시험",
@@ -1383,7 +1413,7 @@ const wave6DefenseTransform = game.getBaseRouteForgeChoiceTransformation(wave6De
 assert.ok(wave6DefenseTransform.previewLabel.length > 0);
 assert.ok(/충격파|slipstream|돌격/.test(wave6DefenseTransform.promise));
 assert.ok(/lane|돌격 섀시|파고드는/.test(wave6DefenseTransform.proof));
-assert.ok(wave6DefenseTransform.accent.includes("Seeker Array"));
+assert.ok(wave6DefenseTransform.accent.includes("추적 랙"));
 const crownfireBuild = game.createInitialBuild("rail_zeal");
 const crownfireWave5Choices = game.buildForgeChoices(crownfireBuild, () => 0.1, 999, {
   nextWave: 5,

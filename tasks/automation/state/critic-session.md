@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The weakest release gate is now `UX/UI`, because the remaining structural problem is not lack of systems but too many shipped-facing surfaces still behaving like documents. Title, forge, HUD, and docs are all still briefing route grammar before the player feels power.
-- Keep forcing a consolidation freeze around the shipped 8-wave contract: no-signature opener, one visible Wave 5-6 weapon/body break, one earned Wave 7-8 payoff, short close. If any default surface advertises support breadth, rider planning, or Wave 9-12 cadence, call it drift immediately.
-- The useful critiques now are subtraction, hierarchy, and payoff staging. Pressure the team to remove route-contract scaffolding from title/forge/HUD first, then judge whether combat growth and rerun hunger actually read better.
-- Reference rule remains strict: strong arena roguelite screens lead with one power object and one immediate consequence. Attack `promise / proof / rider`, status-board framing, roadmap strips, or any screen that makes the player read three things before wanting one thing.
-- Repeated false solutions: more support families, more late-route wrappers, more admin summaries, or copy trims that preserve the same signature/three-lane/default-route contract.
+- The weakest release gate is now `Progression`: the project still mixes a supposed shipped Wave 1-8 loop with live Wave 9-12, doctrine, ascension, and capstone scaffolding, so the escalation spine cannot be judged honestly.
+- Keep forcing a consolidation freeze around one truthful shipped contract: fragile opener, one visible Wave 5-6 weapon/body break, one earned Wave 7-8 secondary payoff, short close. If docs or default generators advertise signature choice, three lanes, support planning, or post-capstone cadence, call it drift immediately.
+- The useful critiques now are subtraction plus escalation discipline. Pressure the team to cut roadmap leakage from docs/title/forge/generators first, then re-evaluate build hunger, movement asks, and combat payoff.
+- Reference rule remains strict: strong arena roguelite rewards sell one power object first and let consequence follow. Attack `promise / proof / rider`, named proof-cell choreography, status-board framing, and any reward language that explains the build before the player wants it.
+- Repeated false solutions: more support families, more doctrine wrappers, more late-route cadence, more admin summaries, or copy trims that preserve the same default reward shell.

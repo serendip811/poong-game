@@ -9964,6 +9964,13 @@
   }
 
   function getBaseRouteForgePreviewLabel(choice, previewRow, tone) {
+    const supportSpotlight =
+      choice && choice.type === "system"
+        ? getSupportSystemSpotlight(choice.systemId, choice.systemTier)
+        : null;
+    if (supportSpotlight) {
+      return supportSpotlight.hudLabel;
+    }
     if (choice && choice.type === "evolution") {
       return "진화";
     }
@@ -12434,6 +12441,45 @@
     if (!systemDef || !tierDef || !identity) {
       return null;
     }
+    if (systemId === "ember_ring") {
+      const ringCount = Math.max(1, tierDef.orbitCount || targetTier || 1);
+      const ringLabel =
+        ringCount >= 3 ? "삼중 절단 고리" : ringCount === 2 ? "절단 고리 2기" : "절단 고리";
+      return {
+        hudLabel: identity.payoffLabel,
+        hudValue:
+          ringCount >= 3
+            ? "근접 요격 + 연쇄 점화"
+            : ringCount === 2
+              ? "근접 요격 + 자동 볼트"
+              : identity.effectValue,
+        status: ringCount >= 3 ? "3기 과열 고리" : ringCount === 2 ? "2기 교차 고리" : "1기 요격 고리",
+        note:
+          ringCount >= 3
+            ? "세 기의 절단 고리가 근접 전열을 태우고 더 빠른 점화 볼트로 외곽 잔당까지 함께 정리한다."
+            : ringCount === 2
+              ? "두 기의 절단 고리가 복귀선 근처를 먼저 태우고 자동 볼트로 흩어진 잔당을 곧바로 긁어낸다."
+              : "절단 고리 한 기가 근접 적을 먼저 태워 좁은 회전과 복귀 각을 연다.",
+        promise:
+          ringCount >= 3
+            ? `${ringLabel}를 띄워 근접 전열과 측면 잔당을 함께 태우는 회전 화망을 만든다.`
+            : ringCount === 2
+              ? `${ringLabel}를 띄워 근접 추격선을 먼저 긁고 자동 볼트로 바깥 잔당까지 이어 태운다.`
+              : `${ringLabel} 1기를 띄워 근접 전열을 먼저 얇게 만들고 복귀 각을 남긴다.`,
+        proof:
+          ringCount >= 3
+            ? "다음 전투에서 세 갈래 절단 고리가 근접 압박을 먼저 비우고 연쇄 점화 볼트가 외곽 잔당까지 이어 먹는지 바로 드러난다."
+            : ringCount === 2
+              ? "다음 전투에서 두 기의 절단 고리가 복귀선 근처를 먼저 태우고 자동 볼트가 빈틈을 이어 메우는지 바로 드러난다."
+              : "다음 전투에서 근접 적이 먼저 긁히며 플레이어 주위에 숨 쉴 반경이 생기는지 바로 드러난다.",
+        feed:
+          ringCount >= 3
+            ? `${identity.payoffLabel} 전개. 삼중 절단 고리가 근접 전열을 태우고 연쇄 점화 볼트로 외곽 잔당까지 함께 정리한다.`
+            : ringCount === 2
+              ? `${identity.payoffLabel} 전개. 두 기의 절단 고리가 복귀선을 긁고 자동 볼트로 빈틈을 이어 메운다.`
+              : `${identity.payoffLabel} 설치. 회전 위성이 근접 전열을 먼저 태워 복귀 반경을 만든다.`,
+      };
+    }
     if (systemId === "aegis_halo") {
       const haloCount = Math.max(1, tierDef.orbitCount || targetTier || 1);
       const ringLabel =
@@ -12466,6 +12512,123 @@
             : haloCount === 2
               ? `${identity.payoffLabel} 전개. 두 기의 고리가 교차 탄막을 끊고 넓은 방호 파동으로 복귀 각을 연다.`
               : `${identity.payoffLabel} 설치. 궤도 실드가 탄환을 끊고 방호 파동으로 가까운 추격선을 비운다.`,
+      };
+    }
+    if (systemId === "kiln_sentry") {
+      const sentryCount = Math.max(1, tierDef.deployCount || targetTier || 1);
+      const sentryLabel =
+        sentryCount >= 3 ? "릴레이 포탑선" : sentryCount === 2 ? "교차 포탑선" : "전방 포탑";
+      return {
+        hudLabel: identity.payoffLabel,
+        hudValue:
+          sentryCount >= 3
+            ? "릴레이 포탑 + 전선 확장"
+            : sentryCount === 2
+              ? "교차 사격 + 거점 회수"
+              : identity.effectValue,
+        status: sentryCount >= 3 ? "3기 릴레이" : sentryCount === 2 ? "2기 교차 거점" : "1기 전방 거점",
+        note:
+          sentryCount >= 3
+            ? "세 기의 릴레이 포탑이 이동선 자체를 전선으로 바꿔, 플레이어가 거점 사다리를 타고 전장을 밀어붙이게 만든다."
+            : sentryCount === 2
+              ? "두 개의 포탑 거점이 교차 사격을 열어 밀린 전열을 다시 붙잡을 지점을 남긴다."
+              : "전방 포탑 한 기가 좁은 진입로를 대신 지켜 첫 거점을 만들어 준다.",
+        promise:
+          sentryCount >= 3
+            ? `${sentryLabel}을 열어 포탑 전선을 따라 전장을 밀어붙이는 이동형 거점을 만든다.`
+            : sentryCount === 2
+              ? `${sentryLabel}을 세워 두 포탑 사이를 오가며 밀린 전열을 다시 찢게 만든다.`
+              : `${sentryLabel} 하나를 먼저 세워 전방 진입로 한 줄을 대신 지키게 만든다.`,
+        proof:
+          sentryCount >= 3
+            ? "다음 전투에서 릴레이 포탑선이 여러 진입각을 동시에 붙잡고, 플레이어가 그 전선을 따라 얼마나 깊게 밀어붙일 수 있는지 바로 드러난다."
+            : sentryCount === 2
+              ? "다음 전투에서 두 포탑의 교차 사격이 한쪽 pocket을 붙잡아 주고, 플레이어가 그 사이를 오가며 전열을 되찾는지 바로 드러난다."
+              : "다음 전투에서 전방 포탑이 먼저 진입로를 붙잡아 플레이어가 반대 각을 비울 시간을 만드는지 바로 드러난다.",
+        feed:
+          sentryCount >= 3
+            ? `${identity.payoffLabel} 전개. 릴레이 포탑선이 이동선 전체를 전선으로 바꾸고 삼중 탄막으로 밀어붙인다.`
+            : sentryCount === 2
+              ? `${identity.payoffLabel} 전개. 두 개의 포탑 거점이 교차 사격으로 밀린 전열을 다시 붙잡는다.`
+              : `${identity.payoffLabel} 설치. 전방 포탑이 좁은 진입로를 대신 지켜 첫 거점을 만든다.`,
+      };
+    }
+    if (systemId === "seeker_array") {
+      const rackCount = Math.max(1, tierDef.orbitCount || targetTier || 1);
+      const rackLabel =
+        rackCount >= 3 ? "삼중 미사일 고리" : rackCount === 2 ? "쌍미사일 랙" : "추적 미사일 랙";
+      return {
+        hudLabel: identity.payoffLabel,
+        hudValue:
+          rackCount >= 3
+            ? "삼중 포격 + 외곽 붕괴"
+            : rackCount === 2
+              ? "쌍미사일 + 측면 절단"
+              : identity.effectValue,
+        status: rackCount >= 3 ? "3기 포격 고리" : rackCount === 2 ? "2기 교차 포격" : "1기 자동 추적",
+        note:
+          rackCount >= 3
+            ? "세 개의 미사일 고리가 외곽 사격진과 잔당을 동시에 무너뜨려, 플레이어가 열린 lane을 더 오래 비우게 만든다."
+            : rackCount === 2
+              ? "두 갈래 미사일 랙이 측면 교차 화선을 먼저 찢어 열린 외곽 정리선을 더 두껍게 만든다."
+              : "추적 미사일 랙 한 기가 멀리 벌어진 적을 자동으로 찍어 외곽 정리선을 만든다.",
+        promise:
+          rackCount >= 3
+            ? `${rackLabel}를 띄워 외곽 사격진과 잔당을 자동 포격으로 함께 무너뜨린다.`
+            : rackCount === 2
+              ? `${rackLabel}를 열어 측면 교차 화선을 먼저 찢고 바깥 정리선을 두껍게 만든다.`
+              : `${rackLabel} 하나를 붙여 멀리 벌어진 적을 자동 미사일로 먼저 찍는다.`,
+        proof:
+          rackCount >= 3
+            ? "다음 전투에서 삼중 미사일 포격이 외곽 잔당과 사격진을 동시에 무너뜨려 열린 lane이 더 오래 비는지 바로 드러난다."
+            : rackCount === 2
+              ? "다음 전투에서 두 갈래 자동 미사일이 측면 교차선을 먼저 찢고 플레이어의 주포가 중앙 압박에 더 오래 집중하는지 바로 드러난다."
+              : "다음 전투에서 멀리 남은 적이 자동으로 먼저 정리돼 플레이어가 가까운 압박에 집중할 수 있는지 바로 드러난다.",
+        feed:
+          rackCount >= 3
+            ? `${identity.payoffLabel} 전개. 삼중 미사일 고리가 외곽 사격진과 잔당을 함께 무너뜨린다.`
+            : rackCount === 2
+              ? `${identity.payoffLabel} 전개. 쌍미사일 랙이 측면 교차 화선을 먼저 찢는다.`
+              : `${identity.payoffLabel} 설치. 추적 미사일이 멀리 벌어진 적부터 자동으로 찍어 낸다.`,
+      };
+    }
+    if (systemId === "volt_drones") {
+      const droneCount = Math.max(1, tierDef.orbitCount || targetTier + 1 || 2);
+      const droneLabel =
+        droneCount >= 4 ? "과충전 드론망" : droneCount >= 3 ? "드론 편대 3기" : "자율 드론 2기";
+      return {
+        hudLabel: identity.payoffLabel,
+        hudValue:
+          droneCount >= 4
+            ? "과충전 전격망 + 측면 재진입"
+            : droneCount >= 3
+              ? "고속 전격탄 + 외곽 절단"
+              : identity.effectValue,
+        status: droneCount >= 4 ? "4기 전격망" : droneCount >= 3 ? "3기 편대" : "2기 후방 절단",
+        note:
+          droneCount >= 4
+            ? "네 기의 드론이 플레이어 주위를 감는 전격망을 만들어, 측면 재진입과 외곽 회전을 더 과감하게 열어 준다."
+            : droneCount >= 3
+              ? "세 기의 드론 편대가 외곽 회전선을 더 두껍게 감으며 고속 전격탄으로 후방 추격선을 먼저 끊는다."
+              : "두 기의 자율 드론이 후방 추격선을 먼저 끊어 회전 복귀와 측면 절단을 쉽게 만든다.",
+        promise:
+          droneCount >= 4
+            ? `${droneLabel}을 띄워 플레이어 주위에 움직이는 자동 전격망을 만든다.`
+            : droneCount >= 3
+              ? `${droneLabel}를 띄워 외곽 회전선과 후방 절단 화력을 함께 두껍게 만든다.`
+              : `${droneLabel}를 띄워 후방 추격선을 자동 전격탄으로 먼저 끊는다.`,
+        proof:
+          droneCount >= 4
+            ? "다음 전투에서 과충전 전격망이 측면 재진입선을 먼저 정리해 플레이어가 더 과감하게 외곽을 가를 수 있는지 바로 드러난다."
+            : droneCount >= 3
+              ? "다음 전투에서 세 기의 드론이 후방 추격선을 더 빨리 끊어 외곽 회전 뒤 복귀 사선이 오래 남는지 바로 드러난다."
+              : "다음 전투에서 후방 추격선이 자동으로 먼저 찢기고 회전 복귀 사선이 쉬워지는지 바로 드러난다.",
+        feed:
+          droneCount >= 4
+            ? `${identity.payoffLabel} 전개. 과충전 드론망이 측면 재진입선을 먼저 정리한다.`
+            : droneCount >= 3
+              ? `${identity.payoffLabel} 전개. 드론 편대가 후방 추격선을 끊고 외곽 회전선을 지킨다.`
+              : `${identity.payoffLabel} 설치. 자율 드론 두 기가 후방 추격선을 자동 전격탄으로 끊는다.`,
       };
     }
     return null;
