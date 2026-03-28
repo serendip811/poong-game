@@ -8802,6 +8802,19 @@
     return build;
   }
 
+  function stripShippingLateRoutePresentationState(build) {
+    if (!CONSOLIDATED_12_WAVE_ROUTE || !build) {
+      return build;
+    }
+    build.act3CatalystDraftSeen = false;
+    build.catalystCapstoneId = null;
+    build.cashoutSupportId = null;
+    build.cashoutFailSoftId = null;
+    build.doctrineCapstoneId = null;
+    build.crownfireOverdriveId = null;
+    return build;
+  }
+
   function getSanitizedConsolidatedBuild(build) {
     if (!CONSOLIDATED_12_WAVE_ROUTE || !build) {
       return build;
@@ -8813,6 +8826,10 @@
         : [],
     };
     return sanitizeConsolidatedBuildState(sanitizedBuild);
+  }
+
+  function getSanitizedConsolidatedPresentationBuild(build) {
+    return stripShippingLateRoutePresentationState(getSanitizedConsolidatedBuild(build));
   }
 
   function getSignatureDef(signatureId) {
@@ -9115,7 +9132,7 @@
   }
 
   function getBuildRoadmap(build, weapon = null, waveNumber = 1) {
-    build = getSanitizedConsolidatedBuild(build);
+    build = getSanitizedConsolidatedPresentationBuild(build);
     if (CONSOLIDATED_12_WAVE_ROUTE) {
       return getBaseRouteBuildRoadmap(build, weapon, waveNumber);
     }
@@ -9829,7 +9846,7 @@
   }
 
   function getForgeEraPlan(build, weapon = null, supportSystem = null, waveNumber = 1) {
-    build = getSanitizedConsolidatedBuild(build);
+    build = getSanitizedConsolidatedPresentationBuild(build);
     const boundedWave = clamp(
       Math.round(waveNumber || 1),
       1,
@@ -10597,7 +10614,9 @@
 
   function getBaseRoutePauseHeroSummary(currentState = state) {
     const activeState = currentState && typeof currentState === "object" ? currentState : state;
-    const build = activeState && activeState.build ? getSanitizedConsolidatedBuild(activeState.build) : null;
+    const build = activeState && activeState.build
+      ? getSanitizedConsolidatedPresentationBuild(activeState.build)
+      : null;
     if (!build) {
       return null;
     }
@@ -10972,7 +10991,9 @@
 
   function createBaseRoutePauseSnapshotMarkup(currentState = state) {
     const activeState = currentState && typeof currentState === "object" ? currentState : state;
-    const build = activeState && activeState.build ? getSanitizedConsolidatedBuild(activeState.build) : null;
+    const build = activeState && activeState.build
+      ? getSanitizedConsolidatedPresentationBuild(activeState.build)
+      : null;
     if (!build) {
       return "";
     }
@@ -18158,6 +18179,8 @@
     getSupportBayCapacity,
     getChassisBreakpointDef,
     sanitizeConsolidatedBuildState,
+    getSanitizedConsolidatedBuild,
+    getSanitizedConsolidatedPresentationBuild,
     isMidrunGreedRaidFrameActive,
     getIllegalOverclockDef,
     doctrineAllowsSystemInstall,
@@ -18681,7 +18704,9 @@
       };
     }
     if (CONSOLIDATED_12_WAVE_ROUTE) {
-      const build = currentState && currentState.build ? getSanitizedConsolidatedBuild(currentState.build) : null;
+      const build = currentState && currentState.build
+        ? getSanitizedConsolidatedPresentationBuild(currentState.build)
+        : null;
       if (!build) {
         return null;
       }

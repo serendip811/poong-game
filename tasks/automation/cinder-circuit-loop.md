@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: lock the shipped path to `lean launch -> Wave 3 weapon break -> Wave 6 support install -> Wave 6-8 ownership lap`, then make that support install read as the one earned spectacle in a roomier, less wordy run instead of a half-solved `proof / roadmap / late-route` shell.
+- Immediate priority: freeze the shipped game to one honest `lean launch -> Wave 3 weapon break -> Wave 6 support install -> Wave 6-8 ownership lap`, and remove live `Wave 9-12 / Late Break / Afterburn` teaching from player-facing surfaces before balancing anything else.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 01:30:41 KST
+  Findings:
+  - The game is still not presenting an honest shipped slice. `docs/games/cinder-circuit-source-application.md` still maps the design through `Wave 9-12`, and `playables/cinder-circuit/game.js` still keeps Wave 9-12, `Late Break`, and `Afterburn` fully live in the main route, so the team is balancing a future ladder instead of a repeatable 8-wave run.
+  - The forge/UI shell is still too administrative. `playables/cinder-circuit/game.js` continues to center `current form`, `wave ask`, `branch payoff`, `proof`, and `rider` framing where stronger references would sell one craveable install silhouette first and let the combat ask stay implicit.
+  - Wave 7-8 combat space is finally large enough to breathe, but that gain is structurally wasted because the run immediately points beyond it. A player cannot learn whether the support install actually creates fun lane ownership if the game keeps advertising the next roadmap bracket.
+  - The loop is cycling on softer copy trims while the real blocker stays intact: too much live structure, too little consolidation. This pass should stop adding route wrappers and prove that one Wave 6 install can carry replay desire by itself.
+  Top Priority: Hard-disable player-facing `Wave 9-12 / Late Break / Afterburn` route teaching and rebalance the shipped run as a closed 8-wave appetite loop where Wave 6-8 is the terminal payoff band.
+  Why Now: Until the current run stands alone and creates rerun hunger without future promises, every pacing and reward judgment is contaminated.
+  Do Not Repeat: Do not shorten the same forge/contract shell again while late-route scaffolding remains visible.
+  Release Gate: Progression
 
 - 2026-03-29 01:00:41 KST
   Findings:
@@ -4242,6 +4253,17 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-29 02:35:00 KST
+  Changed:
+  - Hardened the shipped-route presentation quarantine in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `getSanitizedConsolidatedPresentationBuild(build)` now strips remaining late-form state that could still make the default `8-wave` run think like `Wave 9-12`: doctrine capstones, catalyst/fail-soft cashout picks, and stray crownfire overdrive ids are removed from player-facing clones alongside the existing ascension/afterburn cleanup.
+  - Extended the polluted-build regression in [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to seed those late-route ids into a shipped build and assert the sanitizer clears them before player-facing roadmap/pause helpers can read them.
+  Why:
+  - The latest critique's `Top Priority` was to hard-disable shipped-facing `Wave 9-12 / Late Break / Afterburn` teaching and make the current route stand as a closed `8-wave` appetite loop. The highest-value bounded interpretation inside `playables/cinder-circuit/` was to finish the existing build sanitizer instead of trimming more copy, because dormant late-form ids could still leak future-route identity back onto shipped surfaces even after the visible text had been cleaned up.
+  Follow-up Risk:
+  - This closes one important hidden leak, but the dormant late-route content tables still live in the same file for future work. If critique keeps saying the project is still balancing the roadmap instead of the shipped slice, the next bounded pass should isolate late-route config behind a stricter runtime boundary instead of adding more reward copy.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Progression
 
 - 2026-03-29 02:10:00 KST
   Changed:
