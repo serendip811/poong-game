@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The most fragile gate is still `Builds`, but the reason changed: Wave 6 now grants a real chassis + support install, so the bigger problem is that repeat runs still start too anonymous and the support ladders have too little runway to become hunger.
-- Do not keep recycling the stale “second transformation is missing” critique. The newer reality is a flatter rerun thesis: fixed Ember lean start, no shipped-route signature bias, and route copy that still values proof structure more than anticipation.
-- Keep the opening quiet. The right correction is a light run-start bias that bends Wave 3 and Wave 6 outcomes, not a return to verbose launch cards, frontloaded missiles, or fully formed starts.
-- Pressure docs and implementation together: the support catalog now has strong visible identities and tier ladders, but the route doc and status language still package the run as an 8-wave proof contract rather than a compact build chase with one early thesis and one later amplification beat.
-- Repeated false solutions: more wording cleanup, more named systems, or longer proof laps without adding rerun-distinct starting bias and support-ladder runway.
+- The most fragile gate has shifted to `UX/UI` because the shipped contract is now dishonest: docs still promise signatures and longer ladders, while the live route suppresses them and starts from a fixed Ember shell.
+- Do not recycle the older “Wave 6 needs a second toy” critique. The sharper failure is drift: title, forge, docs, and hidden Wave 9-12 scaffolding are selling different games.
+- Keep pushing for a quiet opening, but make it honest. Either restore one minimal real start bias that bends Wave 3 and Wave 6, or strip signature/doctrine promises from shipped-facing surfaces until they are playable.
+- Strong references should guide reward readability: one power object first, one immediate threat second. Avoid contract shells that make the player read `current form / next proof / branch payoff` before feeling desire.
+- Repeated false solutions: more future-wave roadmap copy, more named branches, more system catalog breadth, or micro-copy trimming around the same over-explained screens.

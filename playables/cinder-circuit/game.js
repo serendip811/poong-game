@@ -9086,21 +9086,53 @@
     );
   }
 
+  function getShippingContractSummary(build, weapon = null, waveNumber = 1, options = {}) {
+    const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
+    const phase = options && options.phase ? options.phase : "combat";
+    const currentWeapon = weapon || computeWeaponStats(build);
+    const dominantForm = getDominantFormSummary(build, currentWeapon, boundedWave);
+    const supportSnapshot = getInstalledSupportSnapshot(build);
+    const supportIdentity =
+      supportSnapshot && supportSnapshot.primary
+        ? getSupportSystemIdentitySummary(supportSnapshot.primary.id, supportSnapshot.primary.tier)
+        : null;
+    let leadLabel = phase === "forge" ? "이번 선택" : "다음 도약";
+    let leadValue = "Wave 3 무기 도약";
+    if (phase === "result") {
+      leadLabel = "마무리";
+      leadValue = "짧은 승리 랩";
+    } else if (boundedWave >= 8) {
+      leadLabel = phase === "forge" ? "이번 선택" : "마무리";
+      leadValue = "완성 시험";
+    } else if (boundedWave >= 6) {
+      leadLabel = phase === "forge" ? "이번 선택" : supportIdentity ? "현재 추격" : "다음 추격";
+      leadValue = supportIdentity ? `${supportIdentity.payoffValue} 증폭` : "첫 방호·보조 설치";
+    } else if (boundedWave >= 3) {
+      leadLabel = phase === "forge" ? "이번 선택" : "다음 추격";
+      leadValue = "Wave 6 차체 잠금";
+    }
+    return {
+      titleLabel: "런 실루엣",
+      titleValue: dominantForm.label,
+      leadLabel,
+      leadValue,
+    };
+  }
+
   function createShippingLadderMarkup(build, weapon = null, waveNumber = 1) {
     const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
     const focus = getShippingLadderFocus(build, weapon, boundedWave);
-    const dominantForm = getDominantFormSummary(build, weapon || computeWeaponStats(build), boundedWave);
-    const proofWindow = getImmediateProofWindowSummary(build, boundedWave);
+    const contractSummary = getShippingContractSummary(build, weapon, boundedWave);
     return `
       <div class="summary-head">
         <strong>런 상태</strong>
         <span class="summary-chip ${focus.state === "live" ? "summary-chip--hot" : ""}">${focus.windowLabel || focus.label}</span>
       </div>
       ${createBaseRouteStatusStripMarkup({
-        leadLabel: "즉시 증명",
-        leadValue: proofWindow.label,
-        titleLabel: "현재 형태",
-        titleValue: dominantForm.label,
+        leadLabel: contractSummary.leadLabel,
+        leadValue: contractSummary.leadValue,
+        titleLabel: contractSummary.titleLabel,
+        titleValue: contractSummary.titleValue,
         headlineFirst: true,
       })}
     `;
@@ -10360,19 +10392,16 @@
       activeState.supportSystem && activeState.supportSystem.label
         ? activeState.supportSystem
         : computeSupportSystemStats(build);
-    const dominantForm = getDominantFormSummary(build, weapon, waveNumber);
-    const waveConfig = resolveWaveConfig(waveNumber - 1, build);
-    const currentAsk =
-      activeState.phase === "result"
-        ? "짧은 지배 구간 완료"
-        : getBaseRouteCombatAsk(activeState, waveConfig, null);
+    const contractSummary = getShippingContractSummary(build, weapon, waveNumber, {
+      phase: activeState.phase === "result" ? "result" : "combat",
+    });
     return `
       <div class="pause-summary__hero">
         ${createBaseRouteStatusStripMarkup({
-          titleLabel: "현재 형태",
-          titleValue: dominantForm.label,
-          leadLabel: activeState.phase === "result" ? "마무리" : "즉시 위협",
-          leadValue: currentAsk,
+          titleLabel: contractSummary.titleLabel,
+          titleValue: contractSummary.titleValue,
+          leadLabel: contractSummary.leadLabel,
+          leadValue: contractSummary.leadValue,
           headlineFirst: true,
         })}
       </div>
@@ -17264,6 +17293,7 @@
     getForgeEraPlan,
     getShippingLadderSteps,
     getShippingLadderFocus,
+    getShippingContractSummary,
     createShippingLadderMarkup,
     getDominantFormSummary,
     getImmediateProofWindowSummary,
@@ -18454,15 +18484,10 @@
         : state.phase === "result"
           ? clamp(state.stats.wavesCleared, 1, totalTrackWaves)
           : clamp(state.waveIndex + 1, 1, totalTrackWaves);
-    const waveConfig = resolveWaveConfig(trackWaveNumber - 1, state.build);
     const currentWeapon = state.weapon || computeWeaponStats(state.build);
-    const dominantForm = getDominantFormSummary(state.build, currentWeapon, trackWaveNumber);
-    const currentAskValue =
-      state.phase === "result"
-        ? "짧은 지배 구간 완료"
-        : state.phase === "forge"
-          ? getImmediateProofWindowSummary(state.build, trackWaveNumber).label
-          : waveConfig.bandLabel || waveConfig.label || `Wave ${trackWaveNumber}`;
+    const contractSummary = getShippingContractSummary(state.build, currentWeapon, trackWaveNumber, {
+      phase: state.phase === "result" ? "result" : state.phase === "forge" ? "forge" : "combat",
+    });
     const label =
       state.phase === "forge"
         ? `FORGE W${trackWaveNumber}`
@@ -18473,17 +18498,16 @@
             : `W${trackWaveNumber}`;
     elements.runTrackLabel.textContent = label;
     elements.waveTrack.innerHTML = createBaseRouteStatusStripMarkup({
-      titleLabel: "현재 형태",
-      titleValue: dominantForm.label,
+      titleLabel: contractSummary.titleLabel,
+      titleValue: contractSummary.titleValue,
       leadLabel:
-        state.phase === "result"
-          ? "마무리"
-          : state.phase === "forge"
-            ? "즉시 증명"
-            : state.wave && state.wave.baseRouteVictoryLap
-              ? "현재 랩"
-              : "즉시 위협",
-      leadValue: currentAskValue,
+        state.wave && state.wave.baseRouteVictoryLap && state.phase !== "result"
+          ? "현재 랩"
+          : contractSummary.leadLabel,
+      leadValue:
+        state.wave && state.wave.baseRouteVictoryLap && state.phase !== "result"
+          ? "짧은 승리 랩"
+          : contractSummary.leadValue,
       headlineFirst: true,
     });
   }
@@ -19380,6 +19404,8 @@
     }
     if (CONSOLIDATED_12_WAVE_ROUTE) {
       const titleFocus = getBaseRouteTransformationFocus(1, { stage: "title" });
+      const titleBuild = createInitialBuild(DEFAULT_SIGNATURE_ID);
+      const titleContract = getShippingContractSummary(titleBuild, computeWeaponStats(titleBuild), 1);
       elements.titleLaunchPanel.innerHTML = `
         <section class="title-launch-shell title-launch-shell--lean">
           <div class="title-launch-shell__frame" aria-hidden="true">
@@ -19393,6 +19419,12 @@
           </div>
           <div class="title-launch-shell__copy title-launch-shell__copy--lean">
             <strong class="title-launch-shell__headline title-launch-shell__headline--solo">${titleFocus.title}</strong>
+            <p class="title-launch-shell__detail">처음 두 웨이브는 한 줄 화선으로 버틴다. ${titleContract.leadValue}으로 방향을 꺾고, Wave 6에서 첫 방호·보조를 붙인다.</p>
+            <div class="title-launch-shell__proof-strip">
+              <div class="title-launch-shell__proof"><span>Start</span><strong>조용한 시작</strong></div>
+              <div class="title-launch-shell__proof"><span>Wave 3</span><strong>${titleContract.leadValue}</strong></div>
+              <div class="title-launch-shell__proof"><span>Wave 6</span><strong>방호·보조 추격</strong></div>
+            </div>
           </div>
         </section>
       `;
@@ -24418,6 +24450,12 @@
     }
     const activeSupportTrack = getForgeSupportTrackSnapshot(state.build, state.supportSystem);
     const dominantFormSummary = getDominantFormSummary(state.build, state.weapon, state.waveIndex + 2);
+    const forgeContractSummary = getShippingContractSummary(
+      state.build,
+      state.weapon,
+      state.waveIndex + 2,
+      { phase: state.pendingFinalForge ? "result" : "forge" }
+    );
     const nextFormStep = getNextBreakpointSummary(state.build, state.weapon, state.waveIndex + 2);
     const proofWindow = getImmediateProofWindowSummary(state.build, state.waveIndex + 2);
     const riderStep = state.forgeMaxSteps > 1 && state.forgeStep === 2;
@@ -24551,12 +24589,12 @@
           ${createBaseRouteForgeContextMarkup({
             eyebrow: baseRouteTransformationFocus.eyebrow || focusEyebrow,
             title: dominantFormSummary.label,
-            titleLabel: state.pendingFinalForge ? "형태 고정" : "현재 형태",
+            titleLabel: state.pendingFinalForge ? "형태 고정" : forgeContractSummary.titleLabel,
             currentFormLabel: dominantFormSummary.label,
-            waveAskLabel: state.pendingFinalForge ? "마무리" : "즉시 위협",
+            waveAskLabel: state.pendingFinalForge ? "마무리" : forgeContractSummary.leadLabel,
             waveAskValue: state.pendingFinalForge
               ? baseRouteTransformationFocus.title || focusTitle
-              : proofWindow.label,
+              : forgeContractSummary.leadValue,
             branchPayoffLabel: forgeContextTail ? forgeContextTail.label : "",
             branchPayoffValue: forgeContextTail ? forgeContextTail.value : "",
           })}

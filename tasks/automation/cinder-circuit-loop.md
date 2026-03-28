@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: restore rerun hunger without re-bloating the opening; the shipped 8-wave route now needs lightweight run-start identity and more runway for support ladders so Wave 6 installs feel like a chaseable arc instead of a late punctuation mark.
+- Immediate priority: consolidate the shipped 8-wave contract into one honest, appetite-first route; stop advertising hidden signature and Wave 9-12 promises until the live title, forge, and status flow all sell the same build chase.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 15:10:00 KST
+  Findings:
+  - The project is drifting at the contract layer. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L24) and [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L50) still teach pre-run `Signature` choice and seeded bench identity, but [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8398) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L8436) suppress that in the shipped route with fixed `Ember` lean start and no active signature apply. That mismatch makes the run feel less intentional, not more readable.
+  - The title and forge UX still behave like a design document leaking through the glass. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L19399) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L19427) keep signature/doctrine card scaffolding alive, while [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L24548) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L24566) still frame reward moments as `현재 형태 / 즉시 위협 / branch payoff`. Stronger references land reward desire with one power object first and the next combat ask second; this still reads like a route brief.
+  - The file is carrying too much Wave 9-12 fantasy for an 8-wave game that has not earned repeat hunger yet. [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L179) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L24275) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L24305) keep teaching `Wave 9-12`, `Late Break Armory`, and `Live Ascension` ladders. That is not healthy ambition yet; it is speculative breadth that muddies what the player should crave in the shipped slice.
+  - The support catalog is already deeper than the run wrapper. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2716) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3146) promise clear visible escalation with Mk.II/Mk.III orbitals, shields, turrets, missiles, and drones, but the live route still spends more wording on future doctrine grammar than on making one early thesis and one later amplification feel inevitable.
+  Top Priority: Rewrite the shipped-facing contract so title, forge, status text, and docs all describe the same 8-wave appetite loop: one quiet opening bias, one Wave 3 steering beat, one Wave 6 support chase, and no player-facing Wave 9-12 or signature promises unless they are truly playable.
+  Why Now: Until the route is honest and legible, every added build layer will feel like prototype surplus instead of rerun hunger.
+  Do Not Repeat: Do not answer this with more branch names, more future-wave scaffolding, or shorter wording around the same contract-heavy screens.
+  Release Gate: UX/UI
 
 - 2026-03-28 14:25:00 KST
   Findings:
@@ -3940,6 +3951,14 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-28 15:10:00 KST
+  Changed: rewrote one shipped-facing contract slice in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the title launch card, live wave strip, pause snapshot, shipped ladder summary, and consolidated forge shell all speak the same `8-wave` appetite loop. The new `getShippingContractSummary(...)` now drives those shared strips with `런 실루엣 + 다음 도약/현재 추격/마무리`, which means the default route stops briefing `현재 형태 / 즉시 위협` like a route document and instead keeps pointing at the real beats: `Wave 3 무기 도약`, `Wave 6` support chase, then `완성 시험`. I also expanded the shipped title card to show that exact three-beat route in one quiet panel, and updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new contract labels and the support-chase summary state.
+  Why: the newest critique's `Top Priority` asked for one honest shipped contract across title, forge, and status text instead of signature-era scaffolding and document-minded `current form / immediate threat` wording. The highest-value bounded interpretation was to unify the shared shipped UI summary first, because that fixes the player-facing read on every check-in without reopening more systems or adding more explanatory copy.
+  Follow-up Risk: this pass deliberately left the design docs and deeper dormant `Wave 9-12` runtime text alone, so the contract is cleaner in the live shipped surfaces than in every underlying helper/doc yet. If the next critique still calls out contract drift, the next bounded pass should update the remaining shipped-facing docs/helper copy to match this `quiet start -> Wave 3 steer -> Wave 6 support chase -> Wave 8 finish` route instead of adding more UI wrappers.
+  UI reference direction: followed the appetite-first status/reward hierarchy from `Hades`, `Nova Drift`, and `Brotato`, where the player sees one active build silhouette and one next chase beat instead of a mini route brief.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: UX/UI
 
 - 2026-03-28 15:10:00 KST
   Changed: added one hidden lean-start doctrine bias in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so shipped runs no longer begin as a completely neutral `Ember` shell. `createAppState(...)` now rolls a silent `leanStartBiasDoctrineId`, `createInitialBuild(...)` can seed that bias into the run as exactly one doctrine-owned bench core, and `buildArchitectureDraftChoices(...)` uses it to tilt `Wave 3` ordering toward a different opening weapon thesis each rerun without adding any new title copy or extra start spectacle. Because that same `Wave 3` doctrine still owns the later breakpoint, the steering also carries cleanly into the `Wave 6` support family. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the hidden bias path: a forced `storm_artillery` seed must preload `Lance`, put that doctrine first in the `Wave 3` draft, and lead the later chassis package toward `Seeker Array`.

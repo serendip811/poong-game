@@ -207,6 +207,14 @@ assert.equal(
   JSON.stringify(shippedLadder.map((step) => step.label)),
   JSON.stringify(["START", "도약", "방호"])
 );
+const openingContractSummary = game.getShippingContractSummary(
+  roadmapBuild,
+  game.computeWeaponStats(roadmapBuild),
+  1
+);
+assert.equal(openingContractSummary.titleLabel, "런 실루엣");
+assert.equal(openingContractSummary.leadLabel, "다음 도약");
+assert.equal(openingContractSummary.leadValue, "Wave 3 무기 도약");
 assert.ok(!shippedLadder.some((step) => step.label === "점화"));
 assert.equal(game.createWildcardProtocolChoice(roadmapBuild, 4), null);
 assert.equal(game.createWildcardProtocolChoice(roadmapBuild, 7), null);
@@ -330,8 +338,8 @@ const shippedRoadmapMarkup = game.createShippingLadderMarkup(
   game.computeWeaponStats(chassisBranchBuild),
   6
 );
-assert.ok(shippedRoadmapMarkup.includes("현재 형태"));
-assert.ok(shippedRoadmapMarkup.includes("즉시 증명"));
+assert.ok(shippedRoadmapMarkup.includes("런 실루엣"));
+assert.ok(shippedRoadmapMarkup.includes("현재 추격"));
 assert.ok(!shippedRoadmapMarkup.includes("분기 보상"));
 assert.ok(shippedRoadmapMarkup.includes("route-contract--double"));
 const aegisSpotlightBuild = game.createInitialBuild("rail_zeal");
@@ -455,6 +463,13 @@ const seekerProofLiveStatus = game.getLiveSideBetSummary({
 });
 assert.equal(seekerProofLiveStatus?.label, "Seeker Overclock");
 assert.equal(seekerProofLiveStatus?.status, "barrage corridor chain");
+const supportContractSummary = game.getShippingContractSummary(
+  seekerProofBuild,
+  game.computeWeaponStats(seekerProofBuild),
+  7
+);
+assert.equal(supportContractSummary.leadLabel, "현재 추격");
+assert.equal(supportContractSummary.leadValue, "Seeker Array 증폭");
 const seekerDominantForm = game.getDominantFormSummary(
   seekerProofBuild,
   game.computeWeaponStats(seekerProofBuild),
@@ -545,7 +560,7 @@ const pauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   phase: "combat",
   paused: true,
 });
-assert.ok(pauseSnapshotMarkup.includes("즉시 위협"));
+assert.ok(pauseSnapshotMarkup.includes("다음 추격"));
 assert.ok(pauseSnapshotMarkup.includes("route-contract--double"));
 assert.ok(!pauseSnapshotMarkup.includes("summary-head"));
 assert.ok(!pauseSnapshotMarkup.includes("최근 획득"));
@@ -563,7 +578,7 @@ const openingPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   phase: "combat",
   paused: true,
 });
-assert.ok(openingPauseSnapshotMarkup.includes("즉시 위협"));
+assert.ok(openingPauseSnapshotMarkup.includes("다음 도약"));
 assert.ok(openingPauseSnapshotMarkup.includes("route-contract--double"));
 assert.ok(!openingPauseSnapshotMarkup.includes("summary-head"));
 assert.ok(!openingPauseSnapshotMarkup.includes("최근 획득"));
@@ -580,7 +595,7 @@ const supportPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   paused: true,
 });
 assert.ok(supportPauseSnapshotMarkup.includes("route-contract--double"));
-assert.ok(supportPauseSnapshotMarkup.includes("즉시 위협"));
+assert.ok(supportPauseSnapshotMarkup.includes("현재 추격"));
 assert.ok(!supportPauseSnapshotMarkup.includes("summary-head"));
 assert.ok(!supportPauseSnapshotMarkup.includes("활성 보조"));
 assert.ok(!supportPauseSnapshotMarkup.includes("활성 판돈"));
