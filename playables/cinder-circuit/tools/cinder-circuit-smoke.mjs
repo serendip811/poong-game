@@ -1173,6 +1173,7 @@ assert.equal(wave6SingleAxisTransformation.accent, "Bulwark Treads");
 assert.equal(wave6SingleAxisTransformation.previewValue, "hold, dive, exit 리듬 교체");
 assert.ok(!wave6SingleAxisTransformation.promise.includes("body/support bracket"));
 assert.ok(!wave6SingleAxisTransformation.proof.includes("Wave 8 마무리 포지"));
+assert.ok(!/proof|support rider/i.test(wave6SingleAxisTransformation.proof));
 const seekerWave8Transformation = game.getBaseRouteForgeChoiceTransformation({
   type: "system",
   systemId: "seeker_array",
@@ -1541,6 +1542,7 @@ assert.equal(recurringWave5HeadlineChoice.action, "afterglow_mutation");
 const recurringWave5Transform = game.getBaseRouteForgeChoiceTransformation(recurringWave5HeadlineChoice);
 assert.ok(/프리즘탄|날개|레일|산탄/.test(recurringWave5Transform.promise));
 assert.ok(/반사|lane|빈틈|전투/.test(recurringWave5Transform.proof));
+assert.ok(!/proof|support 없이도/i.test(recurringWave5Transform.proof));
 const recurringWave5RiderChoice =
   recurringWave5Choices.find((choice) => choice.contractRole === "rider") ||
   recurringWave5Choices[1];
@@ -1662,6 +1664,7 @@ assert.ok(wave6DefenseTransform.previewLabel.length > 0);
 assert.ok(/절단 고리|근접/.test(wave6DefenseTransform.promise));
 assert.ok(/다음 전투|복귀선|근접 적/.test(wave6DefenseTransform.proof));
 assert.ok(wave6DefenseTransform.accent.includes("절단 고리"));
+assert.ok(!/proof|support 없이도/i.test(wave6DefenseTransform.proof));
 const wave6OffenseChoice = recurringWave6Choices.find((choice) => choice.contractRole === "rider");
 assert.ok(wave6OffenseChoice);
 assert.equal(wave6OffenseChoice.type, "evolution");

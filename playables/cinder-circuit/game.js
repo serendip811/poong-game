@@ -7840,7 +7840,7 @@
         title: choice.title || accent,
         tone: "main",
         promise: `${accent}를 열어 Wave 6 몸체 break 뒤 첫 open-lane 지배 형태를 완성한다.`,
-        proof: "다음 전투에서 support 없이도 열린 측면 둘을 얼마나 오래 비우는지 바로 드러난다.",
+        proof: "다음 전투에서 열린 측면 둘을 얼마나 오래 비우는지 바로 드러난다.",
         riderLabel: "Defense / Utility",
         riderNote: "큰 gun/body 실루엣이 먼저 서고, support는 그 뒤에 따라와야 한다.",
         accent,
@@ -7866,7 +7866,7 @@
         supportSpotlight
           ? supportSpotlight.proof
           : CONSOLIDATED_12_WAVE_ROUTE && choice.singleAxisBreakpoint
-            ? "다음 전투는 새 차체 리듬만 읽는 proof window가 되고, support rider는 몸체 proof 뒤에 다시 연다."
+            ? "다음 전투는 새 차체 리듬만 먼저 읽고, 보조선은 그 뒤에 다시 연다."
             : CONSOLIDATED_12_WAVE_ROUTE && choice.systemChoice
               ? `${supportTitle}가 다음 전투의 복귀 각과 근접 정리선을 바로 받쳐 같은 pocket을 얼마나 오래 버티는지 드러난다.`
               : CONSOLIDATED_12_WAVE_ROUTE && choice.bayUnlock
@@ -10117,7 +10117,16 @@
     return String(text || "")
       .replace(/현장에서 바로 scrap credit를 당겨/gi, "현장에서 바로 고철을 당겨")
       .replace(/Siege Debt가 붙어/gi, "압박 빚이 붙어")
-      .replace(/Siege Debt/gi, "압박 빚");
+      .replace(/Siege Debt/gi, "압박 빚")
+      .replace(/support 없이도/gi, "")
+      .replace(/proof window/gi, "짧은 교전")
+      .replace(/proof lap/gi, "짧은 랩")
+      .replace(/몸체 proof/gi, "몸체 확인")
+      .replace(/support rider/gi, "보조선")
+      .replace(/\bproof\b/gi, "확인")
+      .replace(/\s{2,}/g, " ")
+      .replace(/\s+([,.!?])/g, "$1")
+      .trim();
   }
 
   function getBaseRouteForgeSlotDetail(choice) {
@@ -16428,7 +16437,7 @@
       description:
         preferredSystemChoice
           ? `대시 충격파와 slipstream을 여는 Vector Thrusters 안쪽에 ${preferredInstallSummary ? preferredInstallSummary.value : preferredSystemChoice.title}를 숨겨 붙여 Wave 6부터 flank 복귀선과 pocket 제어를 같이 바꾼다. 남은 루트는 이 새 자세를 더 오래 밀어붙이는 증명 구간이 된다.`
-          : "대시 충격파와 slipstream을 여는 Vector Thrusters를 장착하고, support bay 증설은 뒤로 미뤄 Wave 6-7 두 번의 proof lap을 차체 리듬만으로 버티게 만든다.",
+          : "대시 충격파와 slipstream을 여는 Vector Thrusters를 장착하고, support bay 증설은 뒤로 미뤄 Wave 6-7 두 번의 짧은 랩을 차체 리듬만으로 버티게 만든다.",
       slotText: preferredSystemChoice
         ? `섀시 breakpoint · Vector Thrusters · ${preferredInstallSummary ? preferredInstallSummary.value : preferredSystemChoice.title}`
         : "섀시 breakpoint · Vector Thrusters",
