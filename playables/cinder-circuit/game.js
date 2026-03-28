@@ -10181,6 +10181,18 @@
     return `<p class="forge-card__pivot"><span>${label || "형태"}</span><strong>${value}</strong></p>`;
   }
 
+  function createBaseRouteForgeSpotlightMarkup(label, value) {
+    if (!value) {
+      return "";
+    }
+    return `
+      <div class="forge-card__spotlight">
+        <span class="forge-card__spotlight-label">${label || "형태"}</span>
+        <strong class="forge-card__spotlight-value">${value}</strong>
+      </div>
+    `;
+  }
+
   function createBaseRouteForgeProofMarkup(proof) {
     if (!proof) {
       return "";
@@ -10411,9 +10423,9 @@
         ${disabled ? "disabled" : ""}
       >
         <span class="forge-card__tag">${contractLabel}</span>
+        ${createBaseRouteForgeSpotlightMarkup(transformation.previewLabel, transformation.previewValue)}
         <h3>${transformation.cardTitle || choice.title}</h3>
         <p class="forge-card__hero-copy">${transformation.promise}</p>
-        ${createBaseRouteForgePreviewMarkup(transformation.previewLabel, transformation.previewValue)}
         ${createBaseRouteForgeBillMarkup(slotLabel)}
       </button>
     `;

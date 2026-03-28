@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: hard-gate the shipped game to `small Wave 1-3 -> one visible weapon break -> one Wave 6 support install -> Wave 6-8 ownership lap`, and stop surfacing `Wave 9-12 / Late Break / Afterburn` grammar anywhere the player can see before that loop is replayable without explanation.
+- Immediate priority: strip the default player-facing run to `lean launch -> one Wave 3 weapon break -> one Wave 6 support install -> Wave 6-8 ownership lap`, and remove `Signature / Proof / Wave 9-12 / Late Break / Afterburn` teaching from launch, forge, and status surfaces until that 8-wave loop is replayable without reading.
 
 ## Release Gates
 
@@ -61,6 +61,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 23:10:00 KST
+  Findings:
+  - The project is still drifting because the shipped docs define the run around `Signature`, three reward lanes, and `Proof Window`, which keeps the opener conceptually busy before the player has earned any hunger for a build.
+  - The title flow still opens on three signature cards with bias text, so the player is choosing taxonomy before feeling a small, fragile machine. Strong references sell immediate action fantasy first and route logic later.
+  - The forge remains too administrative: `current form`, `wave ask`, `next test`, rider labels, and promise/proof copy still make the reward read like a briefing instead of a power spike. Compared with `Hades` or `Nova Drift`, desire is still arriving too late.
+  - The live implementation still keeps `Wave 9-12 / Late Break / Afterburn` structure hot and named beside the current slice, which weakens tuning discipline and encourages front-loaded complexity before Wave 6-8 ownership is actually replayable.
+  - Stop adding systems for a pass. The game already has enough support toys to prove the fantasy; the missing step is readability, pacing, and a cleaner early growth silhouette.
+  Top Priority: Collapse the default player-facing contract to one canned lean opener and one object-first forge screen, and quarantine signature/late-route grammar from launch, forge, and status surfaces until after the 8-wave loop is proven.
+  Why Now: If the run starts by explaining itself, players will understand the roadmap before they want another attempt.
+  Do Not Repeat: Do not answer this with shorter copy on the same signature cards or the same forge contract shell.
+  Release Gate: UX/UI
 
 - 2026-03-28 22:32:00 KST
   Findings:
@@ -4184,6 +4196,14 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-28 23:13:03 KST
+  Changed: pushed one more shipped forge readability pass in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the base-route headline reward card no longer hides its object preview in the same small metadata row used by side cards. I added `createBaseRouteForgeSpotlightMarkup(...)` and moved the headline card to a dedicated top spotlight block that surfaces the installed weapon/support silhouette before the promise text, while leaving compact side cards unchanged. I updated [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) to give that spotlight a stronger hero treatment, and refreshed [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert shipped headline cards now render `forge-card__spotlight` instead of leaning on the smaller preview row.
+  Why: the newest critique's `Top Priority` called for one object-first forge screen, not more copy trimming on the same contract shell. The highest-value bounded interpretation was to change the reward card hierarchy itself so `Wave 3` weapon breaks and `Wave 6` installs read more like `Hades` boon picks or `Nova Drift` level-up rewards: the machine object first, the effect line second.
+  Follow-up Risk: the hero card is clearer now, but the forge context shell above it still carries a compact `현재 머신 + 다음 전투` read. If critique still says the forge feels administrative, the next bounded pass should decide whether that shell should collapse further or disappear once a dominant card is present, rather than adding more labels back onto cards.
+  UI reference direction: followed the object-first reward hierarchy from `Hades` boon picks and `Nova Drift` level-up cards, where the newly earned toy gets a larger dedicated visual block before any tactical sentence.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Rewards
 
 - 2026-03-28 23:59:59.999 KST
   Changed: sealed one remaining shipped-facing route leak in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so default `8-wave` surfaces stop reading `Wave 9-12 / Refuge Run / Final Stand` proof language when a helper is asked about later wave numbers. I added `getPlayerFacingWaveNumber(...)` plus `getPlayerFacingProofWindowSummary(...)`, switched the base-route forge overlay and result copy to those player-facing helpers, and exported them for smoke coverage. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert player-facing wave numbers clamp `9+ -> 8` and that the shipped proof window at `Wave 11` still resolves to the same `Wave 8` read instead of late-route bands.

@@ -1344,7 +1344,7 @@ assert.ok(recurringWave3CardMarkup.includes(recurringWave3HeadlineTransform.prom
 assert.ok(recurringWave3CardMarkup.includes("forge-card__hero-copy"));
 assert.ok(!recurringWave3CardMarkup.includes("forge-card__proof"));
 assert.ok(!recurringWave3CardMarkup.includes(recurringWave3HeadlineTransform.proof));
-assert.ok(recurringWave3CardMarkup.includes("forge-card__pivot"));
+assert.ok(recurringWave3CardMarkup.includes("forge-card__spotlight"));
 assert.ok(recurringWave3CardMarkup.includes(recurringWave3HeadlineTransform.previewLabel));
 assert.ok(recurringWave3CardMarkup.includes(recurringWave3HeadlineTransform.previewValue));
 const recurringWave3RiderChoice =
@@ -1490,6 +1490,9 @@ const wave6HeadlineMarkup = game.createBaseRouteForgeHeadlineCardMarkup({
   disabled: false,
 });
 assert.ok(!wave6HeadlineMarkup.includes("forge-card__proof"));
+assert.ok(wave6HeadlineMarkup.includes("forge-card__spotlight"));
+assert.ok(wave6HeadlineMarkup.includes(wave6DefenseTransform.previewLabel));
+assert.ok(wave6HeadlineMarkup.includes(wave6DefenseTransform.previewValue));
 const wave6ForgeContextMarkup = game.createBaseRouteForgeContextMarkup({
   titleLabel: wave6DefenseTransform.previewLabel,
   currentFormLabel: wave6DefenseTransform.previewValue,
