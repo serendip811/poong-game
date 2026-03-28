@@ -6525,16 +6525,60 @@
       return null;
     }
     const stage = boundedWave >= DEFAULT_ROUTE_WAVE_COUNT ? 3 : boundedWave === 7 ? 2 : 1;
-    const countBonus = systemEntry.tier <= 1 ? 1 : 0;
+    const countBonus =
+      systemEntry.tier <= 1 && systemEntry.id !== "aegis_halo"
+        ? 1
+        : 0;
     const cooldownFactor = stage === 3 ? 0.78 : stage === 2 ? 0.86 : 0.92;
+    const interceptCooldownFactor =
+      systemEntry.id === "aegis_halo"
+        ? stage === 3
+          ? 0.62
+          : stage === 2
+            ? 0.7
+            : 0.78
+        : cooldownFactor;
     const orbitRadiusBonus = stage === 3 ? 12 : stage === 2 ? 8 : 5;
     const orbitSpeedBonus = stage === 3 ? 0.28 : stage === 2 ? 0.2 : 0.12;
     const satelliteRadiusBonus = stage === 3 ? 1.1 : stage === 2 ? 0.8 : 0.5;
     const touchDamageBonus = stage === 3 ? 6 : stage === 2 ? 4 : 2;
     const shotDamageBonus = stage === 3 ? 8 : stage === 2 ? 5 : 3;
-    const interceptRangeBonus = stage === 3 ? 14 : stage === 2 ? 10 : 6;
-    const interceptPulseDamageBonus = stage === 3 ? 7 : stage === 2 ? 5 : 3;
-    const interceptPulseRadiusBonus = stage === 3 ? 18 : stage === 2 ? 12 : 8;
+    const interceptRangeBonus =
+      systemEntry.id === "aegis_halo"
+        ? stage === 3
+          ? 22
+          : stage === 2
+            ? 16
+            : 10
+        : stage === 3
+          ? 14
+          : stage === 2
+            ? 10
+            : 6;
+    const interceptPulseDamageBonus =
+      systemEntry.id === "aegis_halo"
+        ? stage === 3
+          ? 11
+          : stage === 2
+            ? 8
+            : 5
+        : stage === 3
+          ? 7
+          : stage === 2
+            ? 5
+            : 3;
+    const interceptPulseRadiusBonus =
+      systemEntry.id === "aegis_halo"
+        ? stage === 3
+          ? 30
+          : stage === 2
+            ? 22
+            : 14
+        : stage === 3
+          ? 18
+          : stage === 2
+            ? 12
+            : 8;
     const deployDurationBonus = stage === 3 ? 3.4 : stage === 2 ? 2.3 : 1.5;
     const deployShotDamageBonus = stage === 3 ? 8 : stage === 2 ? 5 : 3;
     const deployBurstBonus = stage >= 2 ? 1 : 0;
@@ -6579,6 +6623,7 @@
     return {
       countBonus,
       cooldownFactor,
+      interceptCooldownFactor,
       orbitRadiusBonus,
       orbitSpeedBonus,
       satelliteRadiusBonus,
@@ -6697,7 +6742,10 @@
           interceptCooldown:
             tierDef.interceptCooldown > 0
               ? round(
-                  Math.max(0.06, tierDef.interceptCooldown * (surge ? surge.cooldownFactor : 1)),
+                  Math.max(
+                    0.06,
+                    tierDef.interceptCooldown * (surge ? surge.interceptCooldownFactor || surge.cooldownFactor : 1)
+                  ),
                   3
                 )
               : 0,
@@ -10475,6 +10523,78 @@
     };
   }
 
+  function getBaseRouteSupportInstallChoice(choice) {
+    if (!choice) {
+      return null;
+    }
+    if (choice.type === "system" && choice.systemId) {
+      return {
+        systemId: choice.systemId,
+        systemTier: choice.systemTier || 1,
+        title:
+          choice.title ||
+          SUPPORT_SYSTEM_DEFS[choice.systemId]?.tiers?.[choice.systemTier || 1]?.title ||
+          "",
+      };
+    }
+    if (
+      choice.type === "utility" &&
+      choice.action === "bastion_bay_forge" &&
+      choice.systemChoice &&
+      choice.systemChoice.systemId
+    ) {
+      return {
+        systemId: choice.systemChoice.systemId,
+        systemTier: choice.systemChoice.systemTier || 1,
+        title: choice.systemChoice.title || choice.title || "",
+      };
+    }
+    return null;
+  }
+
+  function getBaseRouteSupportInstallCombatAsk(systemId, waveNumber = SUPPORT_SYSTEM_START_WAVE) {
+    const boundedWave = clamp(Math.round(waveNumber || SUPPORT_SYSTEM_START_WAVE), 1, DEFAULT_ROUTE_WAVE_COUNT);
+    if (systemId === "aegis_halo") {
+      if (boundedWave >= 8) {
+        return "한 pocket만 길게 붙든다.";
+      }
+      if (boundedWave >= 7) {
+        return "같은 seam으로 바로 재진입한다.";
+      }
+      return "탄선이 갈라진 틈으로 찢어 들어간다.";
+    }
+    if (systemId === "ember_ring") {
+      return boundedWave >= 8 ? "안쪽 seam 둘만 번갈아 쓴다." : "고리가 긁은 입구로 짧게 파고든다.";
+    }
+    if (systemId === "kiln_sentry") {
+      return boundedWave >= 7 ? "포탑 사이 pocket만 되찾는다." : "포탑 사거리 안 corridor를 붙든다.";
+    }
+    if (systemId === "seeker_array") {
+      return boundedWave >= 8 ? "열린 outer corridor만 갈아탄다." : "미사일이 연 측면부터 지운다.";
+    }
+    if (systemId === "volt_drones") {
+      return boundedWave >= 8 ? "앞 refuge 둘만 번갈아 쓴다." : "뒤 seam을 자르고 다시 꺾는다.";
+    }
+    return "열린 공간을 남기고 자주 자리를 바꾼다.";
+  }
+
+  function getBaseRouteInstalledSupportInstallSummary(build) {
+    const supportSnapshot = getInstalledSupportSnapshot(build);
+    const primary = supportSnapshot && supportSnapshot.primary ? supportSnapshot.primary : null;
+    if (!primary) {
+      return null;
+    }
+    const tierDef = SUPPORT_SYSTEM_DEFS[primary.id]?.tiers?.[primary.tier];
+    if (!tierDef) {
+      return null;
+    }
+    return {
+      systemId: primary.id,
+      systemTier: primary.tier,
+      title: tierDef.title,
+    };
+  }
+
   function getBaseRoutePauseHeroSummary(currentState = state) {
     const activeState = currentState && typeof currentState === "object" ? currentState : state;
     const build = activeState && activeState.build ? getSanitizedConsolidatedBuild(activeState.build) : null;
@@ -10498,14 +10618,15 @@
       activeState.phase !== "result" && waveNumber >= SUPPORT_SYSTEM_START_WAVE
         ? getInstalledSupportSpotlight(build)
         : null;
-    if (!supportSpotlight) {
+    const supportInstall = supportSpotlight ? getBaseRouteInstalledSupportInstallSummary(build) : null;
+    if (!supportSpotlight || !supportInstall) {
       return machineSummary;
     }
     return {
       machineLabel: machineSummary.machineLabel,
       machineValue: machineSummary.machineValue,
-      payoffLabel: supportSpotlight.hudLabel,
-      payoffValue: supportSpotlight.hudValue,
+      payoffLabel: "설치",
+      payoffValue: supportInstall.title,
     };
   }
 
@@ -10821,10 +10942,13 @@
       };
     }
     const transformation = choice ? getBaseRouteForgeChoiceTransformation(choice) : null;
+    const supportInstall = getBaseRouteSupportInstallChoice(choice);
     const titleLabel =
+      (supportInstall ? "설치" : "") ||
       (transformation && transformation.previewLabel) ||
       (riderStep ? "이번 설치" : "이번 도약");
     const titleValue =
+      (supportInstall && supportInstall.title) ||
       (transformation && transformation.previewValue) ||
       (choice && (choice.chassisTitle || choice.systemChoice?.title || choice.title)) ||
       dominantFormLabel ||
@@ -10832,8 +10956,10 @@
     return {
       titleLabel,
       titleValue,
-      leadLabel: "다음 전투",
-      leadValue: proofWindowLabel || "-",
+      leadLabel: "전투 ask",
+      leadValue: supportInstall
+        ? getBaseRouteSupportInstallCombatAsk(supportInstall.systemId, SUPPORT_SYSTEM_START_WAVE)
+        : proofWindowLabel || "-",
     };
   }
 
@@ -10860,8 +10986,12 @@
       DEFAULT_ROUTE_WAVE_COUNT
     );
     const machineSummary = getBaseRoutePauseHeroSummary(activeState);
+    const supportInstall =
+      waveNumber >= SUPPORT_SYSTEM_START_WAVE ? getBaseRouteInstalledSupportInstallSummary(build) : null;
     const combatAsk = trimInspectNote(
-      getBaseRouteCombatAskForWave(build, waveNumber),
+      supportInstall
+        ? getBaseRouteSupportInstallCombatAsk(supportInstall.systemId, waveNumber)
+        : getBaseRouteCombatAskForWave(build, waveNumber),
       "열린 공간을 남기고 자주 자리를 바꾼다."
     );
     return `
@@ -15448,42 +15578,42 @@
         waveNumber === 8 ? 1.38 : waveNumber === 7 ? 1.34 : 1.3
       );
       nextConfig.activeCap = Math.max(
-        16,
-        (nextConfig.activeCap || 17) - (waveNumber === 8 ? 1 : 2)
+        15,
+        (nextConfig.activeCap || 17) - (waveNumber === 8 ? 2 : 3)
       );
       nextConfig.arena = {
-        width: Math.max(waveNumber === 8 ? 1800 : 1700, nextConfig.arena?.width || 0),
-        height: Math.max(waveNumber === 8 ? 1010 : 960, nextConfig.arena?.height || 0),
+        width: Math.max(waveNumber === 8 ? 1860 : 1760, nextConfig.arena?.width || 0),
+        height: Math.max(waveNumber === 8 ? 1040 : 990, nextConfig.arena?.height || 0),
       };
       if (nextConfig.hazard) {
         if (Number.isFinite(nextConfig.hazard.interval)) {
           nextConfig.hazard.interval =
-            nextConfig.hazard.interval * (waveNumber === 8 ? 0.96 : 0.92);
+            nextConfig.hazard.interval * (waveNumber === 8 ? 1 : 0.98);
         }
         if (Number.isFinite(nextConfig.hazard.telegraph)) {
           nextConfig.hazard.telegraph =
-            nextConfig.hazard.telegraph * (waveNumber === 8 ? 0.94 : 0.9);
+            nextConfig.hazard.telegraph * (waveNumber === 8 ? 0.96 : 0.94);
         }
         if (Number.isFinite(nextConfig.hazard.duration)) {
-          nextConfig.hazard.duration += waveNumber === 8 ? 0.4 : 0.2;
+          nextConfig.hazard.duration += waveNumber === 8 ? 0.34 : 0.18;
         }
         if (Number.isFinite(nextConfig.hazard.relayRange)) {
-          nextConfig.hazard.relayRange = Math.max(344, nextConfig.hazard.relayRange - 72);
+          nextConfig.hazard.relayRange = Math.max(332, nextConfig.hazard.relayRange - 64);
         }
         if (Number.isFinite(nextConfig.hazard.relayWidth)) {
-          nextConfig.hazard.relayWidth += 6;
+          nextConfig.hazard.relayWidth += 2;
         }
         if (Number.isFinite(nextConfig.hazard.driftSpeed)) {
-          nextConfig.hazard.driftSpeed += 10;
+          nextConfig.hazard.driftSpeed += 6;
         }
         if (Number.isFinite(nextConfig.hazard.driftOrbit)) {
-          nextConfig.hazard.driftOrbit += 0.04;
+          nextConfig.hazard.driftOrbit += 0.02;
         }
         if (Number.isFinite(nextConfig.hazard.turretInterval)) {
-          nextConfig.hazard.turretInterval = Math.max(0.72, nextConfig.hazard.turretInterval - 0.12);
+          nextConfig.hazard.turretInterval = Math.max(0.76, nextConfig.hazard.turretInterval - 0.08);
         }
         if (Number.isFinite(nextConfig.hazard.enemyPullRadius)) {
-          nextConfig.hazard.enemyPullRadius += 14;
+          nextConfig.hazard.enemyPullRadius += 10;
         }
       }
       nextConfig.note =

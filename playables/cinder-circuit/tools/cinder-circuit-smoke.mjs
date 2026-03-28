@@ -269,6 +269,19 @@ assert.equal(seekerBaseline.orbitCount, 1);
 assert.equal(seekerSurge.orbitCount, 2);
 assert.ok(seekerSurge.shotCooldown < seekerBaseline.shotCooldown);
 assert.ok(seekerSurge.shotDamage > seekerBaseline.shotDamage);
+const aegisSurgeBuild = game.createInitialBuild("rail_zeal");
+aegisSurgeBuild.wave6ChassisBreakpoint = true;
+aegisSurgeBuild.supportSystems = [{ id: "aegis_halo", tier: 1 }];
+aegisSurgeBuild.supportSystemId = "aegis_halo";
+aegisSurgeBuild.supportSystemTier = 1;
+const aegisBaselineStats = game.computeSupportSystemStats(aegisSurgeBuild, 5);
+const aegisSurgeStats = game.computeSupportSystemStats(aegisSurgeBuild, 6);
+const aegisOverclockStats = game.computeSupportSystemStats(aegisSurgeBuild, 8);
+assert.equal(aegisBaselineStats.orbitCount, 1);
+assert.equal(aegisSurgeStats.orbitCount, 1);
+assert.ok(aegisSurgeStats.interceptCooldown < aegisBaselineStats.interceptCooldown);
+assert.ok(aegisSurgeStats.interceptPulseRadius > aegisBaselineStats.interceptPulseRadius);
+assert.ok(aegisOverclockStats.interceptPulseRadius > aegisSurgeStats.interceptPulseRadius);
 const sentrySurgeBuild = game.createInitialBuild("rail_zeal");
 sentrySurgeBuild.wave6ChassisBreakpoint = true;
 sentrySurgeBuild.supportSystems = [{ id: "kiln_sentry", tier: 1 }];
@@ -457,6 +470,8 @@ assert.equal(aegisWave6Config.supportProof?.status, "bullet seam breach");
 assert.ok(aegisWave6Config.directive.includes("Halo가 자른 탄선 틈"));
 assert.ok((aegisWave6Config.mix.shrike || 0) >= 0.2);
 assert.ok((aegisWave6Config.mix.lancer || 0) >= 0.14);
+assert.ok((aegisWave6Config.activeCap || 0) <= 15);
+assert.ok((aegisWave6Config.arena?.width || 0) >= 1760);
 const aegisWave7Config = game.resolveWaveConfig(6, aegisProofBuild);
 assert.equal(aegisWave7Config.supportProof?.label, "Halo Re-entry");
 assert.equal(aegisWave7Config.supportProof?.status, "tight pocket re-entry");
@@ -705,15 +720,15 @@ const supportPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
 });
 assert.ok(supportPauseSnapshotMarkup.includes("machine-payoff"));
 assert.ok(supportPauseSnapshotMarkup.includes("현재 머신"));
+assert.ok(supportPauseSnapshotMarkup.includes("설치"));
 assert.ok(supportPauseSnapshotMarkup.includes("Aegis Halo"));
-assert.ok(supportPauseSnapshotMarkup.includes("방호 고리"));
-assert.ok(supportPauseSnapshotMarkup.includes("탄막 절개 + 방호 파동"));
 assert.ok(supportPauseSnapshotMarkup.includes("전투 ask"));
-assert.ok(/pocket|재진입|Halo/.test(supportPauseSnapshotMarkup));
+assert.ok(supportPauseSnapshotMarkup.includes("같은 seam으로 바로 재진입한다."));
 assert.ok(!supportPauseSnapshotMarkup.includes("summary-head"));
 assert.ok(!supportPauseSnapshotMarkup.includes("활성 보조"));
 assert.ok(!supportPauseSnapshotMarkup.includes("활성 판돈"));
 assert.ok(!supportPauseSnapshotMarkup.includes("다음 랩"));
+assert.ok(!supportPauseSnapshotMarkup.includes("탄막 절개 + 방호 파동"));
 const hiddenCombatCacheStatus = game.getLiveSideBetSummary({
   build: game.createInitialBuild("rail_zeal"),
   waveIndex: 4,
@@ -1098,8 +1113,8 @@ const forgeHeadlineSpotlight = game.getBaseRouteForgeSpotlightSummary({
 });
 assert.ok(forgeHeadlineSpotlight.titleLabel.length > 0);
 assert.ok(forgeHeadlineSpotlight.titleValue.length > 0);
-assert.equal(forgeHeadlineSpotlight.leadLabel, "다음 전투");
-assert.equal(forgeHeadlineSpotlight.leadValue, "Payoff Run");
+assert.equal(forgeHeadlineSpotlight.leadLabel, "전투 ask");
+assert.equal(forgeHeadlineSpotlight.leadValue, "고리가 긁은 입구로 짧게 파고든다.");
 const forgeRiderSpotlight = game.getBaseRouteForgeSpotlightSummary({
   choice: wave6RiderChoice,
   riderStep: true,
@@ -1107,7 +1122,7 @@ const forgeRiderSpotlight = game.getBaseRouteForgeSpotlightSummary({
 });
 assert.ok(forgeRiderSpotlight.titleLabel.length > 0);
 assert.ok(forgeRiderSpotlight.titleValue.length > 0);
-assert.equal(forgeRiderSpotlight.leadLabel, "다음 전투");
+assert.equal(forgeRiderSpotlight.leadLabel, "전투 ask");
 assert.equal(forgeRiderSpotlight.leadValue, "Dominion Sweep");
 const forgeFinalSpotlight = game.getBaseRouteForgeSpotlightSummary({
   pendingFinalForge: true,
@@ -1258,6 +1273,13 @@ const kilnBastionWave6Choices = game.buildWave6ChassisBreakpointChoices(
   6
 );
 assert.ok(kilnBastionWave6Choices.every((choice) => choice.systemChoice?.systemId === "aegis_halo"));
+const kilnWave6Spotlight = game.getBaseRouteForgeSpotlightSummary({
+  choice: kilnBastionWave6Choices[0],
+});
+assert.equal(kilnWave6Spotlight.titleLabel, "설치");
+assert.equal(kilnWave6Spotlight.titleValue, "Aegis Halo");
+assert.equal(kilnWave6Spotlight.leadLabel, "전투 ask");
+assert.equal(kilnWave6Spotlight.leadValue, "탄선이 갈라진 틈으로 찢어 들어간다.");
 const stormArtilleryWave6Choices = game.buildWave6ChassisBreakpointChoices(
   { ...game.createInitialBuild("rail_zeal"), bastionDoctrineId: "storm_artillery" },
   Math.random,

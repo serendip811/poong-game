@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: strip the shipped path down to `lean launch -> Wave 3 weapon break -> Wave 6 support install -> Wave 6-8 ownership lap`, with docs, forge, `Tab`, pause, and combat feed all behaving like a simple status/reward loop instead of a `Signature / Proof / Wave 9-12 / Late Break / Afterburn` roadmap.
+- Immediate priority: lock the shipped path to `lean launch -> Wave 3 weapon break -> Wave 6 support install -> Wave 6-8 ownership lap`, then make that support install read as the one earned spectacle in a roomier, less wordy run instead of a half-solved `proof / roadmap / late-route` shell.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 01:00:41 KST
+  Findings:
+  - The shipped slice still looks too solved too early. `playables/cinder-circuit/game.js` gives Wave 6 chassis/surge packages and support installs enough extra barrels, side volleys, orbitals, and auto-behavior that the run risks feeling visually complete right when it should only be starting to mutate.
+  - Wave 6-8 combat is roomier on paper, but the game is still spending that space on authored `proof` language instead of cleaner movement pressure. Strong arena-shooter loops let the player discover pocket ownership through enemy geometry and breathing room, not through repeated `support proof / chassis proof / ownership` framing.
+  - The forge and pause surfaces still explain the build more than they sell it. Compared with the fast object-first clarity of `Hades` boons or `Nova Drift` upgrades, `current form / wave ask / next test / branch payoff` remains too much reading wrapped around one pick.
+  - The support catalog is already deep enough for this phase: shields, rings, sentries, missiles, and drones exist. The problem is not missing content; it is that no single Wave 6 install is yet being protected as the unmistakable run-shaping star for the next 2-3 waves.
+  Top Priority: Retune the shipped Wave 6-8 route around one support install that visibly changes routing without immediately overfilling the screen, and strip forge/pause wording down to the install name plus one short combat ask.
+  Why Now: Until the first support spike feels earned, readable, and worth living with for multiple waves, the run will keep feeling like a designed demo instead of a rerunnable action loop.
+  Do Not Repeat: Do not answer this by adding another support branch or by rewording the same `proof` shell.
+  Release Gate: Builds
 
 - 2026-03-29 01:05:00 KST
   Findings:
@@ -4231,6 +4242,19 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-29 02:10:00 KST
+  Changed:
+  - Retuned the shipped `Aegis Halo` ownership lap in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so its `Wave 6-8` proof surge no longer adds a second halo immediately. The surge now stays on one readable ring and spends its power on faster intercept cadence, wider seam-clearing pulse bursts, a roomier arena, and lower active pressure so the install changes routing without flooding the screen.
+  - Recut the shipped support summaries in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `forge` and paused `Tab` snapshots collapse to `설치 / Aegis Halo` plus one short `전투 ask` instead of restating the full support effect payload during the ownership lap.
+  - Extended [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new Aegis surge shape, the roomier `Wave 6` route tuning, and the leaner pause/forge wording.
+  Why:
+  - The latest critique's `Top Priority` was to protect one `Wave 6-8` support install as the run-shaping star without overfilling the screen, then strip forge/pause wording down to the install name and one combat ask. The highest-value bounded interpretation was `Aegis Halo`, because it already changes movement decisions through seam re-entry and pocket ownership if the game stops expressing that power as more orbit clutter.
+  Follow-up Risk:
+  - This makes `Aegis Halo` much clearer, but `Kiln Sentry` still leans on density of deployables and `Seeker Array` still leans on projectile volume for spectacle. If later feedback says the other support laps still feel louder or more solved than Halo runs, the next bounded pass should normalize those families toward equally readable ownership patterns instead of adding another support branch.
+  UI reference direction: followed the object-first reward read from `Hades` and the fast machine-state snapshot from `Nova Drift`, using the install name as the dominant object and pushing the tactical sentence down to one short ask.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Builds
 
 - 2026-03-29 01:35:00 KST
   Changed:
