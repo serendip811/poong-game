@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The weakest release gate is now `Rewards`: the game still presents its systems like admin, so players are asked to parse route packaging instead of wanting the next toy.
-- Keep forcing a truthful Wave 1-8 shipped surface across docs, title, forge, combat feed, and result. If any default-facing layer reintroduces `Signature`, `Rider`, `Proof Window`, `Doctrine`, or Wave 9-12 ambition, call it drift immediately.
-- Current high-value critique is consolidation of readability and fantasy, not more content branches. Pressure the team to make rewards read like one desirable object plus one combat consequence, then re-evaluate pacing and build hunger.
-- Reference rule remains strict: use strong arena roguelite patterns where reward screens behave like `Hades` boon choices or `Nova Drift` level-ups, not status dashboards. Fewer words, stronger hierarchy, immediate desire.
-- Repeated false solutions: synonym swaps for the same jargon, hiding late-route scaffolding behind defaults, more route labels, more proof-cell naming, or more systems that arrive before the base gun earns them.
+- The weakest release gate is now `Builds`: the run still does not mutate enough times before ending, so UI/admin language is filling the gap left by shallow lived build payoff.
+- Keep forcing a truthful shipped Wave 1-8 surface across docs, forge, pause, and result. If default-facing layers reintroduce `Signature`, `Rider`, `Proof Window`, `Doctrine`, contract dashboards, or Wave 9-12 ambition, treat it as drift.
+- Highest-value critique now is consolidation around a two-step arc: lean opener, clear main-weapon bend, then one visibly distinct support/defense/offense install by Wave 7 with enough Wave 8 runway to feel ownership.
+- Reference rule remains strict: compare reward and HUD readability against object-first patterns like `Hades` boon picks and `Nova Drift` level-ups/status boards, not briefing decks. Fewer words, stronger hierarchy, faster desire.
+- Repeated false solutions: synonym swaps for the same jargon, more roadmap/contract cards, hiding late-route scaffolding behind shipping flags, or adding new systems before the existing support catalog gets a real payoff window.

@@ -14974,6 +14974,107 @@
       mix: { ...(config.mix || {}) },
       supportProof: config.supportProof ? { ...config.supportProof } : null,
     };
+    if (primarySupport.id === "ember_ring") {
+      nextConfig.mix = blendEnemyMix(
+        nextConfig.mix,
+        waveNumber === 6
+          ? {
+              brute: 0.2,
+              shrike: 0.2,
+              skimmer: 0.16,
+              brander: 0.1,
+            }
+          : waveNumber === 7
+            ? {
+                shrike: 0.22,
+                skimmer: 0.18,
+                lancer: 0.16,
+                brander: 0.12,
+              }
+            : {
+                brute: 0.16,
+                shrike: 0.18,
+                lancer: 0.18,
+                warden: 0.16,
+                brander: 0.08,
+              },
+        waveNumber === 8 ? 0.25 : 0.21
+      );
+      nextConfig.driveGainFactor = Math.max(
+        nextConfig.driveGainFactor || 1,
+        waveNumber === 8 ? 1.36 : waveNumber === 7 ? 1.31 : 1.27
+      );
+      nextConfig.activeCap = Math.max(
+        waveNumber === 8 ? 18 : 17,
+        (nextConfig.activeCap || 18) - (waveNumber === 8 ? 0 : 1)
+      );
+      nextConfig.arena = {
+        width: Math.max(waveNumber === 8 ? 1780 : waveNumber === 7 ? 1720 : 1660, nextConfig.arena?.width || 0),
+        height: Math.max(waveNumber === 8 ? 1000 : waveNumber === 7 ? 960 : 920, nextConfig.arena?.height || 0),
+      };
+      if (nextConfig.hazard) {
+        if (Number.isFinite(nextConfig.hazard.interval)) {
+          nextConfig.hazard.interval =
+            nextConfig.hazard.interval * (waveNumber === 8 ? 0.98 : 0.94);
+        }
+        if (Number.isFinite(nextConfig.hazard.telegraph)) {
+          nextConfig.hazard.telegraph =
+            nextConfig.hazard.telegraph * (waveNumber === 8 ? 0.92 : 0.95);
+        }
+        if (Number.isFinite(nextConfig.hazard.duration)) {
+          nextConfig.hazard.duration += waveNumber === 8 ? 0.52 : 0.24;
+        }
+        if (Number.isFinite(nextConfig.hazard.relayRange)) {
+          nextConfig.hazard.relayRange = Math.max(328, nextConfig.hazard.relayRange - 52);
+        }
+        if (Number.isFinite(nextConfig.hazard.relayWidth)) {
+          nextConfig.hazard.relayWidth += waveNumber === 8 ? 10 : 6;
+        }
+        if (Number.isFinite(nextConfig.hazard.driftSpeed)) {
+          nextConfig.hazard.driftSpeed += waveNumber === 8 ? 10 : 6;
+        }
+        if (Number.isFinite(nextConfig.hazard.driftOrbit)) {
+          nextConfig.hazard.driftOrbit += waveNumber === 8 ? 0.06 : 0.03;
+        }
+        if (Number.isFinite(nextConfig.hazard.enemyPullRadius)) {
+          nextConfig.hazard.enemyPullRadius += waveNumber === 8 ? 18 : 8;
+        }
+      }
+      nextConfig.note =
+        waveNumber === 6
+          ? `${config.note} Ember Ring proof가 relay breach를 근접 절단 시험으로 바꿔, brute가 막은 입구를 위성이 먼저 긁고 짧은 화선 안쪽으로 접어드는지 본다.`
+          : waveNumber === 7
+            ? `${config.note} Ember Ring proof가 drift 회피전을 근접 재점화 랩으로 바꿔, shrike와 brander가 꼬인 pocket 안쪽을 고리 절단으로 다시 열고 같은 seam을 재사용하는지 묻는다.`
+            : `${config.note} Ember Ring overclock payoff가 마지막 hold를 가열된 근접 소각전으로 키워, Mk.II 고리가 wardens와 lancer 전열을 깎는 동안 플레이어가 열린 안쪽 seam을 연속으로 갈아타게 만든다.`;
+      nextConfig.directive =
+        waveNumber === 6
+          ? "긴 우회보다 Ember Ring이 먼저 긁은 입구로 짧게 파고든다. brute 전열을 바깥에서 조금 태운 뒤 같은 seam으로 바로 접어 relay corridor를 붙드는 편이 맞다."
+          : waveNumber === 7
+            ? "drift 바깥을 크게 돌지 말고, 절단 고리가 비운 안쪽 seam으로 다시 꽂힌다. shrike와 brander가 pocket을 닫기 전에 같은 재진입 각을 두 번 이어 써야 한다."
+            : "강화된 절단 고리가 전열을 계속 태우는 동안 가장 좁은 안쪽 seam 둘만 번갈아 쓴다. 외곽 chase보다 근접 소각 반경 안에서 lane을 연속으로 갈아타는 편이 맞다.";
+      nextConfig.supportProof =
+        waveNumber === 6
+          ? {
+              label: "Ring Cut",
+              status: "close seam breach",
+              note:
+                "절단 고리가 입구 전열을 먼저 긁는 동안 같은 seam으로 짧게 두 번 접어들어야 한다. 긴 우회보다 근접 절단 리듬이 핵심이다.",
+            }
+          : waveNumber === 7
+            ? {
+                label: "Ring Re-ignite",
+                status: "close pocket relight",
+                note:
+                  "drift가 벌린 pocket을 버리지 말고 절단 고리가 비운 안쪽 seam으로 다시 데워야 한다. 재점화 각이 끊기면 근접 우세도 같이 사라진다.",
+              }
+            : {
+                label: "Ring Overclock",
+                status: "incineration seam chain",
+                note:
+                  "강화된 절단 고리가 전열을 태우는 동안 안쪽 seam을 연속으로 갈아타야 한다. 근접 소각 반경이 끊기면 overclock payoff도 약해진다.",
+              };
+      return nextConfig;
+    }
     if (primarySupport.id === "aegis_halo") {
       nextConfig.mix = blendEnemyMix(
         nextConfig.mix,
@@ -15895,7 +15996,8 @@
       return [];
     }
     const doctrine = getBastionDoctrineDef(build);
-    const preferredSystemId = getDoctrinePrimarySupportSystemId(doctrine);
+    const preferredSystemId =
+      getDoctrineMidrunSupportSystemId(doctrine) || getDoctrinePrimarySupportSystemId(doctrine);
     const preferredSystemChoice = preferredSystemId
       ? createSupportSystemTierChoice(preferredSystemId, 1)
       : null;
@@ -17633,6 +17735,7 @@
     createBaseRouteForgePreviewMarkup,
     createBaseRouteForgeProofMarkup,
     createBaseRouteForgeBillMarkup,
+    resolveWaveConfig,
   };
 
   if (typeof module !== "undefined" && module.exports) {
