@@ -8684,6 +8684,38 @@
     return sanitizeConsolidatedBuildState(sanitizedBuild);
   }
 
+  function quarantineShippedLateRouteState(run) {
+    if (!CONSOLIDATED_12_WAVE_ROUTE || !run) {
+      return run;
+    }
+    if (run.build) {
+      sanitizeConsolidatedBuildState(run.build);
+      stripShippingLateRoutePresentationState(run.build);
+    }
+    run.pendingFinalForge = false;
+    if (run.postCapstone) {
+      run.postCapstone.active = false;
+      run.postCapstone.stageIndex = 0;
+      run.postCapstone.total = 0;
+    }
+    if (run.wave) {
+      run.wave.postCapstoneStage = 0;
+      run.wave.postCapstoneTotal = 0;
+      run.wave.combatCache = null;
+      run.wave.finaleMutation = null;
+      run.wave.doctrineAscension = null;
+      run.wave.afterburnAscension = null;
+      run.wave.lateAscension = null;
+      run.wave.afterburnOverdrive = null;
+      run.wave.afterburnDominion = null;
+      run.wave.apexPredator = null;
+    }
+    resetOvercommitState(run);
+    resetDoctrinePursuitState(run);
+    resetCatalystCrucibleState(run);
+    return run;
+  }
+
   function getSanitizedConsolidatedPresentationBuild(build) {
     return stripShippingLateRoutePresentationState(getSanitizedConsolidatedBuild(build));
   }
@@ -17992,6 +18024,7 @@
     sanitizeConsolidatedBuildState,
     getSanitizedConsolidatedBuild,
     getSanitizedConsolidatedPresentationBuild,
+    quarantineShippedLateRouteState,
     isMidrunGreedRaidFrameActive,
     getIllegalOverclockDef,
     doctrineAllowsSystemInstall,
@@ -20561,6 +20594,7 @@
   }
 
   function enterForge() {
+    quarantineShippedLateRouteState(state);
     const isFinalForge = state.waveIndex >= DEFAULT_ROUTE_WAVE_COUNT - 1;
     const forgeOptions = {
       finalForge: isFinalForge,
@@ -21158,6 +21192,7 @@
   }
 
   function beginBaseRouteVictoryLap() {
+    quarantineShippedLateRouteState(state);
     state.phase = "wave";
     state.pendingFinalForge = false;
     state.wave = createBaseRouteVictoryLapWave(state.build);
@@ -21316,6 +21351,7 @@
   }
 
   function finishRun(victory) {
+    quarantineShippedLateRouteState(state);
     const doctrine = getBastionDoctrineDef(state.build);
     const benchEntries = getBenchEntries(state.build);
     const runHistoryLabels = getShippingUpgradePresentationLabels(state.build, 4);

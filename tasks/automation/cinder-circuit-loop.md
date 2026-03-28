@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: hard-consolidate the shipped 8-wave contract by deleting remaining `mission board / signature / proof / rider / Wave 9-12` teaching from docs and reward/status surfaces so the loop honestly reads `lean launch -> Wave 3 weapon break -> Wave 6 first real support install -> Wave 6-8 ownership lap`.
+- Immediate priority: hard-consolidate the shipped 8-wave contract by disabling remaining live `Wave 9-12 / Afterburn / ascension cache` flow and stripping `mission board / signature / proof / rider` grammar from forge, combat feed, and docs so the loop honestly reads `lean launch -> Wave 3 weapon break -> Wave 6 first real support install -> Wave 6-8 ownership lap`.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 07:10:00 KST
+  Findings:
+  - The run is still balancing against a fake longer game. `playables/cinder-circuit/game.js` keeps Wave `9-12`, `Late Break`, `Afterburn`, ascension caches, and related combat-feed messaging live, so the current 8-wave slice cannot be judged as a clean rerunnable loop.
+  - The forge is still too managerial to create hunger. `renderForgeOverlay()` continues to spend reward real estate on `proofWindow`, `current form`, `wave ask`, `branch payoff`, and contract-role logic; compared with the object-first snap-read in `Hades`, `Nova Drift`, or `Brotato`, the player is still reading plan grammar before craving the install.
+  - The docs are still teaching the wrong game. `docs/games/cinder-circuit-design.md` still promises a `mission board`, signature-facing side panels, and `forge pause`, while `docs/games/cinder-circuit-source-application.md` still argues for `run-start signature` and a `Wave 9-12` act ladder.
+  - This keeps the Wave 6 support moment from landing as a chapter break. Even with roomier Wave 7-8 arenas, the run keeps hinting at later admin ladders and extra caches instead of letting one shield, drone, missile, or orbital install own space for two full waves.
+  Top Priority: Cut the live run to an honest shipped contract by quarantining all `Wave 9-12 / Afterburn / ascension cache` systems behind non-shipped flags and collapsing the forge to one dominant install card plus one short combat ask.
+  Why Now: Until the slice stops advertising unproven later structure, every pacing and payoff decision is diluted.
+  Do Not Repeat: Do not spend another pass rewriting `proof / rider / contract` copy while the same late-route scaffolding stays active.
+  Release Gate: Progression
 
 - 2026-03-29 06:45:00 KST
   Findings:
@@ -4331,6 +4342,18 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-29 07:35:00 KST
+  Changed:
+  - Added `quarantineShippedLateRouteState(...)` to [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), which force-clears post-capstone counters, late ascension/Afterburn payloads, and late-route build ids whenever the shipped route is about to re-enter forge, hand off to the short victory lap, or finish into results.
+  - Routed that quarantine through `enterForge()`, `beginBaseRouteVictoryLap()`, and `finishRun()` in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so a polluted state can no longer carry `Wave 9-12 / Afterburn / ascension cache` residue forward inside the shipped 8-wave contract even if a future branch or odd mutation path seeds it.
+  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to seed fake late-route state into a shipped run object and assert the quarantine strips build ids, post-capstone progress, and live late-wave payloads back out.
+  Why:
+  - The latest critique's `Top Priority` was to cut the live run to an honest shipped contract before doing more copy cleanup. The highest-value bounded interpretation inside `playables/cinder-circuit/` was to add a hard runtime quarantine at the actual shipped transition points, because `beginWave()` already stopped Wave 9 entry but the run could still carry fake late-game scaffolding under the hood.
+  Follow-up Risk:
+  - This seals the shipped runtime transitions, but the codebase still physically contains the old `Wave 9-12 / Afterburn` data and docs. If critique still says the project is balancing a fake longer game, the next bounded pass should move more of those definitions behind a non-shipped gate instead of adding new route-side wording.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Progression
 
 - 2026-03-29 07:05:00 KST
   Changed:

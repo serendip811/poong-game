@@ -106,6 +106,52 @@ assert.equal(
   ).action,
   "result"
 );
+const quarantinedLateRun = game.quarantineShippedLateRouteState({
+  build: {
+    ...game.createInitialBuild("rail_zeal"),
+    doctrineCapstoneId: "stormspire_needle",
+    lateAscensionId: "crownsplitter_array",
+    afterburnOverdriveId: "overheat_wake",
+    afterburnDominionId: "ember",
+    cashoutSupportId: "pilot_light",
+    cashoutFailSoftId: "ember_wake",
+    crownfireOverdriveId: "crownfire_surge",
+    lateFieldConvergenceId: "vector_thrusters",
+    wildcardProtocolIds: ["shardsplice"],
+    overcommitUnlocked: true,
+    doctrinePursuitCommitted: true,
+  },
+  pendingFinalForge: true,
+  postCapstone: { active: true, stageIndex: 3, total: game.POST_CAPSTONE_WAVE_COUNT },
+  wave: {
+    postCapstoneStage: 3,
+    postCapstoneTotal: game.POST_CAPSTONE_WAVE_COUNT,
+    doctrineAscension: { deployed: true },
+    combatCache: { deployed: true },
+    finaleMutation: { deployed: true },
+    afterburnAscension: { deployed: true },
+    lateAscension: { deployed: true },
+    afterburnOverdrive: { deployed: true },
+    afterburnDominion: { deployed: true },
+    apexPredator: { spawned: true },
+  },
+  overcommit: { active: true },
+  doctrinePursuit: { active: true },
+  catalystCrucible: { active: true },
+});
+assert.equal(quarantinedLateRun.pendingFinalForge, false);
+assert.equal(quarantinedLateRun.postCapstone.active, false);
+assert.equal(quarantinedLateRun.postCapstone.total, 0);
+assert.equal(quarantinedLateRun.wave.postCapstoneStage, 0);
+assert.equal(quarantinedLateRun.wave.afterburnAscension, null);
+assert.equal(quarantinedLateRun.wave.lateAscension, null);
+assert.equal(quarantinedLateRun.wave.afterburnDominion, null);
+assert.equal(quarantinedLateRun.build.doctrineCapstoneId, null);
+assert.equal(quarantinedLateRun.build.lateAscensionId, null);
+assert.equal(quarantinedLateRun.build.afterburnOverdriveId, null);
+assert.equal(quarantinedLateRun.build.afterburnDominionId, null);
+assert.equal(quarantinedLateRun.build.cashoutSupportId, null);
+assert.equal(quarantinedLateRun.build.lateFieldConvergenceId, null);
 assert.ok(game.WAVE_CONFIG[0].spawnBudget < game.WAVE_CONFIG[2].spawnBudget);
 assert.equal(game.WAVE_CONFIG[0].activeCap, 12);
 assert.equal(game.WAVE_CONFIG[1].activeCap, 15);
