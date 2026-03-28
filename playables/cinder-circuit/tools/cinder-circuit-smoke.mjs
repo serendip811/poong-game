@@ -300,9 +300,10 @@ const openingLiveStatus = game.getLiveSideBetSummary({
   overcommit: { active: false },
   doctrinePursuit: { active: false },
 });
-assert.equal(openingLiveStatus?.label, "조용한 선체");
-assert.equal(openingLiveStatus?.status, "Wave 3 무기 방향");
-assert.ok(!/Wave 6|방호|보조|Late Break|Ascension/.test(openingLiveStatus?.note || ""));
+assert.equal(openingLiveStatus?.label, "빈 선체");
+assert.equal(openingLiveStatus?.status, "첫 포지 전");
+assert.ok(openingLiveStatus?.note.includes("폭주 지형 없음."));
+assert.ok(!/Wave 3|Wave 6|설치|변이/.test(openingLiveStatus?.note || ""));
 const midrunContractSummary = game.getShippingContractSummary(
   roadmapBuild,
   game.computeWeaponStats(roadmapBuild),
@@ -511,9 +512,9 @@ const aegisLiveStatus = game.getLiveSideBetSummary({
   overcommit: { active: false },
   doctrinePursuit: { active: false },
 });
-assert.equal(aegisLiveStatus?.label, "Wave 8 숙련 랩");
-assert.equal(aegisLiveStatus?.status, "Ember Spindle · Aegis Halo");
-assert.ok(aegisLiveStatus?.note.includes("Wave 6"));
+assert.equal(aegisLiveStatus?.label, "Aegis Halo");
+assert.ok(aegisLiveStatus?.status.includes("Ember Spindle"));
+assert.equal(aegisLiveStatus?.note, "같은 seam으로 바로 재진입한다.");
 const aegisProofBuild = game.createInitialBuild("rail_zeal");
 aegisProofBuild.chassisId = "vector_thrusters";
 aegisProofBuild.supportSystems = [{ id: "aegis_halo", tier: 1 }];
@@ -707,9 +708,12 @@ const hiddenPursuitStatus = game.getLiveSideBetSummary({
   overcommit: { active: false },
   doctrinePursuit: { active: true },
 });
-assert.equal(hiddenPursuitStatus?.label, "Wave 8 숙련 랩");
-assert.equal(hiddenPursuitStatus?.status, "Wave 6 지원 설치");
-assert.ok(hiddenPursuitStatus?.note.includes("Wave 6"));
+assert.ok(hiddenPursuitStatus?.label.includes("Ember Spindle"));
+assert.equal(hiddenPursuitStatus?.status, "첫 포지 전");
+assert.equal(
+  hiddenPursuitStatus?.note,
+  "가장 넓은 flank를 먼저 비우고 같은 gun/body lane 하나를 오래 붙들며 점유 시간을 늘린다."
+);
 const wave7FieldGrantChoices = game.buildFieldGrantChoices(chassisBranchBuild, () => 0, 7);
 assert.equal(wave7FieldGrantChoices.find((choice) => choice.contractRole === "gamble"), undefined);
 const wave7FieldGrantRiderChoice = wave7FieldGrantChoices.find((choice) => choice.contractRole === "rider");
@@ -737,11 +741,10 @@ const pauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   phase: "combat",
   paused: true,
 });
-assert.ok(pauseSnapshotMarkup.includes("다음 설치"));
+assert.ok(pauseSnapshotMarkup.includes("최근 획득"));
 assert.ok(pauseSnapshotMarkup.includes("machine-payoff"));
 assert.ok(!pauseSnapshotMarkup.includes("summary-head"));
-assert.ok(!pauseSnapshotMarkup.includes("최근 획득"));
-assert.ok(!pauseSnapshotMarkup.includes("고철 +34 / 회수 +10% / Siege Debt 1웨이브"));
+assert.ok(pauseSnapshotMarkup.includes("고철 +34 / 회수 +10% / Siege Debt 1웨이브"));
 assert.ok(!pauseSnapshotMarkup.includes("활성 판돈"));
 assert.ok(!pauseSnapshotMarkup.includes("Era III"));
 assert.ok(!pauseSnapshotMarkup.includes("주력 변이"));
@@ -755,14 +758,13 @@ const openingPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   phase: "combat",
   paused: true,
 });
-assert.ok(openingPauseSnapshotMarkup.includes("다음 변이"));
+assert.ok(openingPauseSnapshotMarkup.includes("최근 획득"));
 assert.ok(openingPauseSnapshotMarkup.includes("현재 선체"));
 assert.ok(openingPauseSnapshotMarkup.includes("빈 선체"));
 assert.ok(openingPauseSnapshotMarkup.includes("machine-payoff"));
 assert.ok(openingPauseSnapshotMarkup.includes("폭주 지형 없음."));
 assert.ok(!openingPauseSnapshotMarkup.includes("summary-head"));
-assert.ok(!openingPauseSnapshotMarkup.includes("최근 획득"));
-assert.ok(!openingPauseSnapshotMarkup.includes("첫 포지 전"));
+assert.ok(openingPauseSnapshotMarkup.includes("첫 포지 전"));
 assert.ok(!openingPauseSnapshotMarkup.includes("pause-summary__lanes"));
 assert.ok(!openingPauseSnapshotMarkup.includes("Bare Hull"));
 assert.ok(!openingPauseSnapshotMarkup.includes("조용한 계약"));
@@ -777,9 +779,9 @@ const supportPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
 });
 assert.ok(supportPauseSnapshotMarkup.includes("machine-payoff"));
 assert.ok(supportPauseSnapshotMarkup.includes("설치"));
-assert.ok(supportPauseSnapshotMarkup.includes("주력 변이"));
+assert.ok(supportPauseSnapshotMarkup.includes("현재 머신"));
 assert.ok(supportPauseSnapshotMarkup.includes("Aegis Halo"));
-assert.ok(supportPauseSnapshotMarkup.indexOf("설치") < supportPauseSnapshotMarkup.indexOf("주력 변이"));
+assert.ok(supportPauseSnapshotMarkup.indexOf("설치") < supportPauseSnapshotMarkup.indexOf("현재 머신"));
 assert.ok(supportPauseSnapshotMarkup.includes("같은 seam으로 바로 재진입한다."));
 assert.ok(!supportPauseSnapshotMarkup.includes("summary-head"));
 assert.ok(!supportPauseSnapshotMarkup.includes("활성 보조"));
@@ -795,7 +797,7 @@ const supportPauseHeroSummary = game.getBaseRoutePauseHeroSummary({
 });
 assert.equal(supportPauseHeroSummary.machineLabel, "설치");
 assert.equal(supportPauseHeroSummary.machineValue, "Aegis Halo");
-assert.equal(supportPauseHeroSummary.payoffLabel, "주력 변이");
+assert.equal(supportPauseHeroSummary.payoffLabel, "현재 머신");
 const hiddenCombatCacheStatus = game.getLiveSideBetSummary({
   build: game.createInitialBuild("rail_zeal"),
   waveIndex: 4,
@@ -810,9 +812,9 @@ const hiddenCombatCacheStatus = game.getLiveSideBetSummary({
   overcommit: { active: false },
   doctrinePursuit: { active: false },
 });
-assert.equal(hiddenCombatCacheStatus?.label, "Wave 6 지원 설치");
-assert.equal(hiddenCombatCacheStatus?.status, "Wave 6 지원 설치");
-assert.ok(hiddenCombatCacheStatus?.note.includes("Wave 6"));
+assert.ok(!/Wave 6|설치/.test(hiddenCombatCacheStatus?.label || ""));
+assert.equal(hiddenCombatCacheStatus?.status, "첫 포지 전");
+assert.equal(hiddenCombatCacheStatus?.note, "가장 넓은 flank부터 비우고 열린 lane 둘 중 하나를 오래 붙든다.");
 const liveCombatCacheStatus = game.getLiveSideBetSummary({
   build: game.createInitialBuild("rail_zeal"),
   waveIndex: 4,
@@ -827,8 +829,8 @@ const liveCombatCacheStatus = game.getLiveSideBetSummary({
   overcommit: { active: false },
   doctrinePursuit: { active: false },
 });
-assert.equal(liveCombatCacheStatus?.label, "Wave 6 지원 설치");
-assert.equal(liveCombatCacheStatus?.status, "Wave 6 지원 설치");
+assert.ok(!/Wave 6|설치/.test(liveCombatCacheStatus?.label || ""));
+assert.equal(liveCombatCacheStatus?.status, "첫 포지 전");
 assert.ok(!liveCombatCacheStatus?.note.includes("cache"));
 const wave5GambleChoice = wave5ForgeChoices.find((choice) => choice.contractRole === "gamble");
 assert.equal(wave5GambleChoice, undefined);

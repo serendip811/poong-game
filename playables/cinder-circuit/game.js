@@ -10419,6 +10419,59 @@
     };
   }
 
+  function getBaseRouteWeaponOwnershipLabel(build, weapon = null, waveNumber = 1) {
+    if (!build) {
+      return "빈 선체";
+    }
+    const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
+    const currentWeapon = weapon || computeWeaponStats(build);
+    const roadmap = getBuildRoadmap(build, currentWeapon, boundedWave);
+    const activeCore = CORE_DEFS[build.coreId];
+    const doctrineBodyForm = getDoctrineBodyForm(build);
+    const activeForm = roadmap.activeForm || activeCore.label;
+    return doctrineBodyForm ? `${activeForm} / ${doctrineBodyForm.label}` : activeForm;
+  }
+
+  function getBaseRouteOwnedPowerSummary(build, weapon = null, waveNumber = 1) {
+    if (!build) {
+      return {
+        machineLabel: "현재 선체",
+        machineValue: "빈 선체",
+        payoffLabel: "최근 획득",
+        payoffValue: "첫 포지 전",
+      };
+    }
+    const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
+    const currentWeapon = weapon || computeWeaponStats(build);
+    const supportSystem = computeSupportSystemStats(build, boundedWave);
+    const recentGain = getBaseRoutePauseRecentGainSummary(build, supportSystem, boundedWave);
+    const activeWeaponLabel = getBaseRouteWeaponOwnershipLabel(build, currentWeapon, boundedWave);
+    const installedSupport =
+      boundedWave >= SUPPORT_SYSTEM_START_WAVE ? getBaseRouteInstalledSupportInstallSummary(build) : null;
+    if (installedSupport) {
+      return {
+        machineLabel: "설치",
+        machineValue: installedSupport.title,
+        payoffLabel: "현재 머신",
+        payoffValue: activeWeaponLabel,
+      };
+    }
+    if (boundedWave >= ARCHITECTURE_DRAFT_WAVE) {
+      return {
+        machineLabel: "무기 변이",
+        machineValue: activeWeaponLabel,
+        payoffLabel: "최근 획득",
+        payoffValue: recentGain,
+      };
+    }
+    return {
+      machineLabel: "현재 선체",
+      machineValue: "빈 선체",
+      payoffLabel: "최근 획득",
+      payoffValue: recentGain,
+    };
+  }
+
   function getBaseRouteSupportInstallChoice(choice) {
     if (!choice) {
       return null;
@@ -10509,10 +10562,7 @@
       DEFAULT_ROUTE_WAVE_COUNT
     );
     const weapon = activeState.weapon || computeWeaponStats(build);
-    const machineSummary = getShippingMachinePayoffSummary(build, weapon, waveNumber, {
-      phase: activeState.phase === "result" ? "result" : "combat",
-    });
-    return machineSummary;
+    return getBaseRouteOwnedPowerSummary(build, weapon, waveNumber);
   }
 
   function getBaseRouteBranchPayoffSummary({
@@ -18557,14 +18607,19 @@
         return null;
       }
       const currentWeapon = currentState.weapon || computeWeaponStats(build);
-      const contractSummary = getShippingContractSummary(build, currentWeapon, liveWaveNumber, {
-        phase: currentState.phase === "forge" ? "forge" : "combat",
-      });
-      const ladderFocus = getShippingLadderFocus(build, currentWeapon, liveWaveNumber);
+      const supportInstall =
+        liveWaveNumber >= SUPPORT_SYSTEM_START_WAVE ? getBaseRouteInstalledSupportInstallSummary(build) : null;
+      const currentOwnership = getBaseRouteOwnedPowerSummary(build, currentWeapon, liveWaveNumber);
+      const combatAsk = trimInspectNote(
+        supportInstall
+          ? getBaseRouteSupportInstallCombatAsk(supportInstall.systemId, liveWaveNumber)
+          : getBaseRouteCombatAskForWave(build, liveWaveNumber),
+        "열린 공간을 남기고 자주 자리를 바꾼다."
+      );
       return {
-        label: ladderFocus ? ladderFocus.title : contractSummary.titleValue,
-        status: contractSummary.leadValue,
-        note: ladderFocus ? ladderFocus.detail : `${contractSummary.titleValue}을(를) 기준으로 다음 전투를 준비한다.`,
+        label: currentOwnership.machineValue,
+        status: currentOwnership.payoffValue,
+        note: combatAsk,
       };
     }
     const pursuit = getDoctrineForgePursuitDef(currentState.build);
@@ -19273,9 +19328,7 @@
           ? clamp(state.stats.wavesCleared, 1, totalTrackWaves)
           : clamp(state.waveIndex + 1, 1, totalTrackWaves);
     const currentWeapon = state.weapon || computeWeaponStats(state.build);
-    const machineSummary = getShippingMachinePayoffSummary(state.build, currentWeapon, trackWaveNumber, {
-      phase: state.phase === "result" ? "result" : state.phase === "forge" ? "forge" : "combat",
-    });
+    const machineSummary = getBaseRouteOwnedPowerSummary(state.build, currentWeapon, trackWaveNumber);
     const label =
       state.phase === "forge"
         ? `FORGE W${trackWaveNumber}`
@@ -19288,14 +19341,8 @@
     elements.waveTrack.innerHTML = createCurrentMachinePayoffMarkup({
       machineLabel: machineSummary.machineLabel,
       machineValue: machineSummary.machineValue,
-      payoffLabel:
-        state.wave && state.wave.baseRouteVictoryLap && state.phase !== "result"
-          ? "현재 랩"
-          : machineSummary.payoffLabel,
-      payoffValue:
-        state.wave && state.wave.baseRouteVictoryLap && state.phase !== "result"
-          ? "짧은 승리 랩"
-          : machineSummary.payoffValue,
+      payoffLabel: machineSummary.payoffLabel,
+      payoffValue: machineSummary.payoffValue,
     });
   }
 

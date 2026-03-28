@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: hard-consolidate the shipped 8-wave contract by disabling remaining live `Wave 9-12 / Afterburn / ascension cache` flow and stripping `mission board / signature / proof / rider` grammar from forge, combat feed, and docs so the loop honestly reads `lean launch -> Wave 3 weapon break -> Wave 6 first real support install -> Wave 6-8 ownership lap`.
+- Immediate priority: hard-consolidate the shipped 8-wave contract by disabling remaining live `Wave 9-12 / Afterburn / ascension cache` flow and stripping `mission board / signature / roadmap / proof / rider` grammar from title, Tab/status, forge, combat feed, and docs so the loop honestly reads `lean launch -> Wave 3 weapon break -> Wave 6 first real support install -> Wave 6-8 ownership lap`.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 07:40:00 KST
+  Findings:
+  - The game still ships two conflicting promises. `playables/cinder-circuit/game.js` still defines live `Wave 9-12` and `Afterburn` bands in the main wave ladder, so the current 8-wave run cannot be judged as a clean repeatable slice and every pacing decision is still contaminated by a non-shipped future route.
+  - The status layer is still acting like a route document. `getBuildRoadmap()`, `createShippingLadderMarkup()`, and related `proof / contract / form track` markup in `playables/cinder-circuit/game.js` keep Tab/pause focused on what the build is supposed to become instead of what the player currently owns. Strong references keep this board to immediate power, survivability, and one next ask.
+  - The forge is still too explanatory to create appetite. `renderForgeOverlay()` and the base-route forge helpers still spend reward hierarchy on `current form`, `wave ask`, `proof`, `branch payoff`, and `headline/rider` contract framing; compared with `Hades`, `Nova Drift`, or `Brotato`, the player is still parsing doctrine before wanting the gun, shield, drone, missile, or orbital.
+  - The docs are still teaching the wrong fantasy. `docs/games/cinder-circuit-design.md` still calls for a `mission board`, `signature` selection, `arsenal rack`, and `pressure board`, while `docs/games/cinder-circuit-source-application.md` still normalizes `run-start signature` and a `12-wave act ladder`. That keeps implementation pressure pointed at admin structure instead of replay hunger.
+  Top Priority: Remove shipped-facing roadmap/contract UI from title, Tab/pause, and forge so those screens show only current loadout, one dominant reward object, and one short combat ask; then judge the 8-wave loop again without route briefings.
+  Why Now: The game cannot feel addictive while every non-combat screen keeps interrupting desire with planning grammar.
+  Do Not Repeat: Do not answer this with shorter copy on the same roadmap widgets or by keeping live `Wave 9-12` scaffolding hidden behind “future” wording.
+  Release Gate: UX/UI
 
 - 2026-03-29 07:10:00 KST
   Findings:
@@ -4342,6 +4353,19 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-29 08:05:00 KST
+  Changed:
+  - Recut the shipped status summary in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) around `getBaseRouteOwnedPowerSummary(...)`, so the minimal wave-track HUD, paused `Tab` hero card, and shipped `getLiveSideBetSummary(...)` now show what the player currently owns instead of what the route says should happen next. Pre-break states read `현재 선체 -> 최근 획득`, post-`Wave 3` states read `무기 변이 -> 최근 획득`, and installed-support states read `설치 -> 현재 머신`.
+  - Replaced the remaining shipped `next install / mastery lap` live-status wording in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) with direct combat asks. The status note now stays on the immediate movement instruction or support-install ask instead of surfacing `Wave 6 지원 설치`, `Wave 8 숙련 랩`, or other route-briefing grammar during the compact run.
+  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new ownership-first hierarchy across opening live status, paused snapshots, support-installed pause states, and shipped live readouts, then re-ran the existing smoke coverage.
+  Why:
+  - The latest critique's `Top Priority` was to remove shipped-facing roadmap/contract UI from title, Tab/pause, and forge so those surfaces show current loadout, one dominant reward object, and one short combat ask. The highest-value bounded interpretation in this pass was to finish collapsing the lingering status/pause roadmap shell, because that was still teaching `next install / mastery lap` on the screens players check most often.
+  Follow-up Risk:
+  - The shipped status board is cleaner, but the title launch panel still keeps one explicit `Wave 3` hook and the forge cards still carry some `contractRole` plumbing under the hood. If critique still says player-facing surfaces feel like route briefs, the next bounded UX pass should simplify one of those remaining surfaces instead of reintroducing future-facing status copy.
+  UI reference direction: followed the object-first snap-read from `Hades` boon/status moments and the terse current-state board from `Nova Drift`, keeping the owned machine/install as the first read and demoting planning grammar behind one short combat ask.
+  Validation: `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: UX/UI
 
 - 2026-03-29 07:35:00 KST
   Changed:
