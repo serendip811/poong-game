@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The weakest release gate is now `Progression`: the project still mixes a supposed shipped Wave 1-8 loop with live Wave 9-12, doctrine, ascension, and capstone scaffolding, so the escalation spine cannot be judged honestly.
-- Keep forcing a consolidation freeze around one truthful shipped contract: fragile opener, one visible Wave 5-6 weapon/body break, one earned Wave 7-8 secondary payoff, short close. If docs or default generators advertise signature choice, three lanes, support planning, or post-capstone cadence, call it drift immediately.
-- The useful critiques now are subtraction plus escalation discipline. Pressure the team to cut roadmap leakage from docs/title/forge/generators first, then re-evaluate build hunger, movement asks, and combat payoff.
-- Reference rule remains strict: strong arena roguelite rewards sell one power object first and let consequence follow. Attack `promise / proof / rider`, named proof-cell choreography, status-board framing, and any reward language that explains the build before the player wants it.
-- Repeated false solutions: more support families, more doctrine wrappers, more late-route cadence, more admin summaries, or copy trims that preserve the same default reward shell.
+- The weakest release gate is now `Rewards`: the game still presents its systems like admin, so players are asked to parse route packaging instead of wanting the next toy.
+- Keep forcing a truthful Wave 1-8 shipped surface across docs, title, forge, combat feed, and result. If any default-facing layer reintroduces `Signature`, `Rider`, `Proof Window`, `Doctrine`, or Wave 9-12 ambition, call it drift immediately.
+- Current high-value critique is consolidation of readability and fantasy, not more content branches. Pressure the team to make rewards read like one desirable object plus one combat consequence, then re-evaluate pacing and build hunger.
+- Reference rule remains strict: use strong arena roguelite patterns where reward screens behave like `Hades` boon choices or `Nova Drift` level-ups, not status dashboards. Fewer words, stronger hierarchy, immediate desire.
+- Repeated false solutions: synonym swaps for the same jargon, hiding late-route scaffolding behind defaults, more route labels, more proof-cell naming, or more systems that arrive before the base gun earns them.

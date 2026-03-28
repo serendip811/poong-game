@@ -10293,6 +10293,7 @@
         <span class="forge-card__tag">${contractLabel}</span>
         <h3>${choice.title}</h3>
         <p class="forge-card__hero-copy">${transformation.promise}</p>
+        ${createBaseRouteForgePreviewMarkup(transformation.previewLabel, transformation.previewValue)}
         ${createBaseRouteForgeBillMarkup(slotLabel)}
       </button>
     `;
@@ -10321,6 +10322,7 @@
         <span class="forge-card__tag">${contractLabel}</span>
         <h3>${choice.title}</h3>
         <p class="forge-card__hero-copy">${transformation.promise}</p>
+        ${createBaseRouteForgePreviewMarkup(transformation.previewLabel, transformation.previewValue)}
         ${createBaseRouteForgeBillMarkup(slotLabel)}
       </button>
     `;
@@ -10467,14 +10469,11 @@
     branchPayoffLabel = "",
     branchPayoffValue = "",
   }) {
-    return createBaseRouteStatusStripMarkup({
-      titleLabel,
-      titleValue: currentFormLabel || title || "-",
-      leadLabel: waveAskLabel || eyebrow || "즉시 증명",
-      leadValue: waveAskValue || "-",
-      tailLabel: branchPayoffLabel,
-      tailValue: branchPayoffValue,
-      headlineFirst: true,
+    return createCurrentMachinePayoffMarkup({
+      machineLabel: titleLabel || eyebrow || "현재 머신",
+      machineValue: currentFormLabel || title || "-",
+      payoffLabel: waveAskLabel || branchPayoffLabel || "다음 전투",
+      payoffValue: waveAskValue || branchPayoffValue || "-",
     });
   }
 

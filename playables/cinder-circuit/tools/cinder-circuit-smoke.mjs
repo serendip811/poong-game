@@ -619,8 +619,11 @@ const branchForgeContextMarkup = game.createBaseRouteForgeContextMarkup({
   branchPayoffLabel: "분기 보상",
   branchPayoffValue: "Scrapline Raid",
 });
-assert.ok(branchForgeContextMarkup.includes("분기 보상"));
-assert.ok(branchForgeContextMarkup.includes("Scrapline Raid"));
+assert.ok(branchForgeContextMarkup.includes("machine-payoff"));
+assert.ok(branchForgeContextMarkup.includes("다음 전장"));
+assert.ok(branchForgeContextMarkup.includes("Dominion Sweep"));
+assert.ok(!branchForgeContextMarkup.includes("분기 보상"));
+assert.ok(!branchForgeContextMarkup.includes("Scrapline Raid"));
 const pauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   build: greedBuild,
   weapon: game.computeWeaponStats(greedBuild),
@@ -939,8 +942,8 @@ assert.ok(forgeContextMarkup.includes("다음 전장"));
 assert.ok(forgeContextMarkup.includes("Dominion Sweep"));
 assert.ok(forgeContextMarkup.includes("Prism Crown"));
 assert.ok(!forgeContextMarkup.includes("다음 급등"));
-assert.ok(forgeContextMarkup.includes("route-contract__slot"));
-assert.ok(forgeContextMarkup.includes("route-contract--double"));
+assert.ok(forgeContextMarkup.includes("machine-payoff__slot"));
+assert.ok(forgeContextMarkup.includes("machine-payoff"));
 assert.ok(!forgeContextMarkup.includes("summary-head"));
 assert.ok(!forgeContextMarkup.includes("Next Proof"));
 assert.ok(!forgeContextMarkup.includes("Route Payoff"));
@@ -1040,7 +1043,7 @@ assert.ok(forgeHeadlineMarkup.includes("주력 변이"));
 assert.ok(forgeHeadlineMarkup.includes("Afterglow"));
 assert.ok(forgeHeadlineMarkup.includes("다음 시험"));
 assert.ok(forgeHeadlineMarkup.includes("Payoff Run"));
-assert.ok(forgeHeadlineMarkup.includes("route-contract--double"));
+assert.ok(forgeHeadlineMarkup.includes("machine-payoff"));
 assert.ok(!forgeHeadlineMarkup.includes("분기 보상"));
 const forgeHeadlineSpotlight = game.getBaseRouteForgeSpotlightSummary({
   choice: wave6HeadlineChoice,
@@ -1288,7 +1291,9 @@ assert.ok(recurringWave3CardMarkup.includes("forge-card--snap"));
 assert.ok(recurringWave3CardMarkup.includes(recurringWave3HeadlineTransform.promise));
 assert.ok(recurringWave3CardMarkup.includes("forge-card__hero-copy"));
 assert.ok(!recurringWave3CardMarkup.includes("forge-card__proof"));
-assert.ok(!recurringWave3CardMarkup.includes("forge-card__pivot"));
+assert.ok(recurringWave3CardMarkup.includes("forge-card__pivot"));
+assert.ok(recurringWave3CardMarkup.includes(recurringWave3HeadlineTransform.previewLabel));
+assert.ok(recurringWave3CardMarkup.includes(recurringWave3HeadlineTransform.previewValue));
 const recurringWave3RiderChoice =
   recurringWave3Choices.find((choice) => choice.contractRole === "rider") || recurringWave3Choices[1];
 const recurringWave3RiderTransform =
@@ -1310,7 +1315,9 @@ assert.ok(recurringWave3RiderMarkup.includes(recurringWave3RiderChoice.title));
 assert.ok(recurringWave3RiderMarkup.includes(recurringWave3RiderTransform.promise));
 assert.ok(recurringWave3RiderMarkup.includes("forge-card__hero-copy"));
 assert.ok(!recurringWave3RiderMarkup.includes("forge-card__proof"));
-assert.ok(!recurringWave3RiderMarkup.includes("forge-card__pivot"));
+assert.ok(recurringWave3RiderMarkup.includes("forge-card__pivot"));
+assert.ok(recurringWave3RiderMarkup.includes(recurringWave3RiderTransform.previewLabel));
+assert.ok(recurringWave3RiderMarkup.includes(recurringWave3RiderTransform.previewValue));
 const wave5MutationBuild = game.createInitialBuild("relay_oath");
 wave5MutationBuild.pendingCores = [];
 const recurringWave5Choices = game.buildForgeChoices(wave5MutationBuild, Math.random, 40, {
