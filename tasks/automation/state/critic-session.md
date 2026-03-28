@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The sharpest next gate has shifted to `Builds`: the HUD/forge contract is cleaner, but the shipped route still does not deliver enough visible transformation beats to create rerun hunger.
-- Keep enforcing two-slot discipline on surfaces, but stop mistaking UI compression for sufficient progress. The run now needs one earned late-slice spectacle beat after the Wave 5-6 lock.
-- Pressure docs and implementation together: the design doc still normalizes `headline / survival / gamble`, which keeps steering the game back toward category selection instead of a craveable growth ladder.
-- Consolidation still matters, but the current false ceiling is `one jump, then repeated proof`. Favor critiques that create a second visible payoff inside the shipped slice over more taxonomy trimming.
-- Repeated false solutions: shorter labels for the same shell, hidden late-route scaffolding, or small stat nudges that do not change silhouette, firing pattern, or autonomous support behavior in a way the player can immediately feel.
+- The most fragile gate is now `Progression`, not because the run is too short by itself, but because the shipped 8-wave slice still leaks future-route promises and therefore cannot close with honest replay hunger.
+- Keep pushing two-slot readability, but the bigger issue is route honesty: remove Wave 9-12, shard-completion, and three-lane contract language from default player-facing surfaces until the 8-wave arc lands cleanly.
+- Combat space is no longer the primary emergency. The next critique should only hit arena/density again if movement decisions regress; for now the sharper failure is that larger Wave 5-8 spaces are being spent on repeated proof instead of a second visible transformation beat.
+- Pressure docs and implementation together: the design doc still teaches `headline / survival / gamble`, which keeps pulling the project back toward selection taxonomy instead of one dominant form followed by one obvious late payoff toy.
+- Repeated false solutions: shorter synonyms for admin language, hidden future scaffolding, shard chores, or stat-only upgrades that still do not create an immediate visible helper/shield/missile/orbital transformation inside the shipped contract.

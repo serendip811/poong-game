@@ -12263,6 +12263,37 @@
     return getSupportSystemSpotlight(supportSnapshot.primary.id, supportSnapshot.primary.tier);
   }
 
+  function getBaseRouteInstalledRiderSummary(build, waveNumber = 1) {
+    if (!CONSOLIDATED_12_WAVE_ROUTE || !build) {
+      return null;
+    }
+    const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
+    if (boundedWave < SUPPORT_SYSTEM_START_WAVE) {
+      return null;
+    }
+    const supportSnapshot = getInstalledSupportSnapshot(build);
+    const primarySupport = supportSnapshot && supportSnapshot.primary ? supportSnapshot.primary : null;
+    if (!primarySupport) {
+      return null;
+    }
+    const spotlight = getSupportSystemSpotlight(primarySupport.id, primarySupport.tier);
+    if (spotlight) {
+      return {
+        label: spotlight.hudLabel,
+        value: getSupportSystemIdentitySummary(primarySupport.id, primarySupport.tier)?.payoffValue
+          || spotlight.hudValue,
+      };
+    }
+    const identity = getSupportSystemIdentitySummary(primarySupport.id, primarySupport.tier);
+    if (!identity) {
+      return null;
+    }
+    return {
+      label: identity.payoffLabel,
+      value: identity.payoffValue,
+    };
+  }
+
   function createDoctrineChaseSystemChoice(build, doctrine, options = null) {
     if (!build || !doctrine) {
       return null;
@@ -17100,6 +17131,7 @@
     getShippingLadderSteps,
     getShippingLadderFocus,
     createShippingLadderMarkup,
+    getDominantFormSummary,
     getImmediateProofWindowSummary,
     getLateAscensionDef,
     getStandardLateRouteBeatSummary,
@@ -17413,8 +17445,9 @@
     const doctrineBodyForm = getDoctrineBodyForm(build);
     const activeForm = roadmap.activeForm || activeCore.label;
     const dominantForm = doctrineBodyForm ? `${activeForm} / ${doctrineBodyForm.label}` : activeForm;
+    const installedRider = getBaseRouteInstalledRiderSummary(build, waveNumber);
     return {
-      label: dominantForm,
+      label: installedRider ? `${dominantForm} · ${installedRider.value}` : dominantForm,
       detail: getPresentationFormDetail(build, weapon, waveNumber),
     };
   }
@@ -17696,6 +17729,7 @@
     if (
       currentState.build.doctrinePursuitCommitted &&
       pursuit &&
+      !CONSOLIDATED_12_WAVE_ROUTE &&
       !currentState.build.doctrineChaseClaimed
     ) {
       return {

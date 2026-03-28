@@ -448,6 +448,18 @@ const seekerProofLiveStatus = game.getLiveSideBetSummary({
 });
 assert.equal(seekerProofLiveStatus?.label, "Seeker Overclock");
 assert.equal(seekerProofLiveStatus?.status, "barrage corridor chain");
+const seekerDominantForm = game.getDominantFormSummary(
+  seekerProofBuild,
+  game.computeWeaponStats(seekerProofBuild),
+  7
+);
+assert.ok(seekerDominantForm.label.includes("Seeker Array"));
+const seekerShippedMarkup = game.createShippingLadderMarkup(
+  seekerProofBuild,
+  game.computeWeaponStats(seekerProofBuild),
+  7
+);
+assert.ok(seekerShippedMarkup.includes("Seeker Array"));
 const droneProofBuild = game.createInitialBuild("scrap_pact");
 droneProofBuild.chassisId = "bulwark_treads";
 droneProofBuild.supportSystems = [{ id: "volt_drones", tier: 1 }];
@@ -480,6 +492,22 @@ const droneProofLiveStatus = game.getLiveSideBetSummary({
 });
 assert.equal(droneProofLiveStatus?.label, "Drone Overclock");
 assert.equal(droneProofLiveStatus?.status, "rolling refuge chain");
+const hiddenPursuitStatus = game.getLiveSideBetSummary({
+  build: {
+    ...game.createInitialBuild("rail_zeal"),
+    bastionDoctrineId: "storm_artillery",
+    doctrinePursuitCommitted: true,
+    doctrinePursuitProgress: 1,
+    doctrineChaseClaimed: false,
+  },
+  waveIndex: 6,
+  phase: "wave",
+  wave: {},
+  catalystCrucible: { active: false },
+  overcommit: { active: false },
+  doctrinePursuit: { active: true },
+});
+assert.equal(hiddenPursuitStatus, null);
 const wave7FieldGrantChoices = game.buildFieldGrantChoices(chassisBranchBuild, () => 0, 7);
 assert.equal(wave7FieldGrantChoices.find((choice) => choice.contractRole === "gamble"), undefined);
 assert.ok(wave7FieldGrantChoices.every((choice) => choice.type !== "system"));
