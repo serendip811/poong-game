@@ -12,11 +12,11 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The weakest release gate is now `Progression`: the shipped slice still teaches a bigger 12-wave route before the 8-wave run proves it can create replay hunger on its own.
-- Treat any split between the `8-wave shipped slice` and exposed `Signature / Headline / Rider / Proof / Wave 9-12` scaffolding as immediate drift. Hidden future logic is tolerable; shipped-facing grammar that teaches a larger game is not.
-- Highest-value critique remains one clean player-facing arc: `lean start -> Wave 3 weapon thesis -> Wave 6 visible support install -> Wave 6-8 ownership lap`.
-- Early-growth rule: the opener should feel physically small. Signatures or ladder copy cannot make the run look strategically solved before the first earned mutation.
-- Reward/UI rule: strong references make reward moments object-first and nearly wordless. Default title/forge/pause/Tab surfaces should act like a fast status board plus one dominant reward card, not a route brief.
-- Combat-space rule: encounter configs already know how to open the arena and reduce suffocation on payoff bands; critique should spend that breathing room on a longer ownership test, not on more density theater or more wrappers.
-- Consolidation rule: every few passes, prefer stopping system growth and forcing the current Wave 6-8 support-install lap to carry replay value before expanding the run again.
-- Repeated false solutions: softer wording for the same ladder, preserving roadmap cards with less copy, adding more Wave 9-12 scaffolding, or inventing new support layers before the current Wave 6 install becomes instantly desirable and fun for multiple waves.
+- The weakest release gate is now `UX/UI`, because the forge/title/Tab contract still explains the route instead of making one power object immediately desirable.
+- Treat any shipped-facing split between the `8-wave slice` and exposed `Signature / Headline / Rider / Proof / Wave 9-12` grammar as immediate drift. Hidden future hooks are acceptable; live roadmap teaching is not.
+- Highest-value target remains one clean arc: `small opener -> Wave 3 weapon break -> Wave 6 visible support install -> Wave 6-8 ownership lap`.
+- Early-growth rule: the opener must feel physically and visually incomplete. The player should not start with support fantasy, doctrine grammar, or a solved build shell.
+- Reward/UI rule: compare against strong arena roguelite reward beats, not local consistency. One dominant install card, one short combat ask, fast status board. Anything beyond that is probably over-explaining.
+- Combat-space rule: Wave 5-8 already has roomier arenas; use that space to let the same install breathe for multiple waves, not to add more wrappers or extra density.
+- Consolidation rule: push for readability, payoff, and repeatable desire before adding new systems or reopening late-route expansion.
+- Repeated false solutions: copy trims that keep the same contract layout, preserving Wave 9-12 structure on default surfaces, or adding more support branches before the first install becomes a visible run-selling moment.

@@ -10260,6 +10260,40 @@
     };
   }
 
+  function getBaseRoutePauseHeroSummary(currentState = state) {
+    const activeState = currentState && typeof currentState === "object" ? currentState : state;
+    const build = activeState && activeState.build ? getSanitizedConsolidatedBuild(activeState.build) : null;
+    if (!build) {
+      return null;
+    }
+    const waveNumber = clamp(
+      activeState.phase === "result"
+        ? activeState.stats?.wavesCleared || 1
+        : activeState.phase === "forge"
+          ? (activeState.waveIndex || 0) + 2
+          : (activeState.waveIndex || 0) + 1,
+      1,
+      DEFAULT_ROUTE_WAVE_COUNT
+    );
+    const weapon = activeState.weapon || computeWeaponStats(build);
+    const machineSummary = getShippingMachinePayoffSummary(build, weapon, waveNumber, {
+      phase: activeState.phase === "result" ? "result" : "combat",
+    });
+    const supportSpotlight =
+      activeState.phase !== "result" && waveNumber >= SUPPORT_SYSTEM_START_WAVE
+        ? getInstalledSupportSpotlight(build)
+        : null;
+    if (!supportSpotlight) {
+      return machineSummary;
+    }
+    return {
+      machineLabel: supportSpotlight.hudLabel,
+      machineValue: supportSpotlight.hudValue,
+      payoffLabel: machineSummary.machineLabel,
+      payoffValue: machineSummary.machineValue,
+    };
+  }
+
   function getBaseRouteBranchPayoffSummary({
     build,
     supportSystem = null,
@@ -10610,10 +10644,7 @@
       1,
       DEFAULT_ROUTE_WAVE_COUNT
     );
-    const weapon = activeState.weapon || computeWeaponStats(build);
-    const machineSummary = getShippingMachinePayoffSummary(build, weapon, waveNumber, {
-      phase: activeState.phase === "result" ? "result" : "combat",
-    });
+    const machineSummary = getBaseRoutePauseHeroSummary(activeState);
     const combatAsk = trimInspectNote(
       getBaseRouteCombatAskForWave(build, waveNumber),
       "열린 공간을 남기고 자주 자리를 바꾼다."

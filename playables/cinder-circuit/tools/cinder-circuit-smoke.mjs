@@ -666,21 +666,24 @@ assert.ok(!openingPauseSnapshotMarkup.includes("Bare Hull"));
 assert.ok(!openingPauseSnapshotMarkup.includes("조용한 계약"));
 assert.ok(!openingPauseSnapshotMarkup.includes("Wave 6"));
 const supportPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
-  build: chassisBranchBuild,
-  weapon: game.computeWeaponStats(chassisBranchBuild),
-  supportSystem: game.computeSupportSystemStats(chassisBranchBuild),
+  build: aegisSpotlightBuild,
+  weapon: game.computeWeaponStats(aegisSpotlightBuild),
+  supportSystem: game.computeSupportSystemStats(aegisSpotlightBuild),
   waveIndex: 6,
   phase: "combat",
   paused: true,
 });
 assert.ok(supportPauseSnapshotMarkup.includes("machine-payoff"));
-assert.ok(supportPauseSnapshotMarkup.includes("다음 랩"));
+assert.ok(supportPauseSnapshotMarkup.includes("방호 고리"));
+assert.ok(supportPauseSnapshotMarkup.includes("탄막 절개 + 방호 파동"));
 assert.ok(supportPauseSnapshotMarkup.includes("현재 머신"));
+assert.ok(supportPauseSnapshotMarkup.includes("Aegis Halo"));
 assert.ok(supportPauseSnapshotMarkup.includes("전투 ask"));
-assert.ok(/점거 코어|릴레이|외곽|pocket/.test(supportPauseSnapshotMarkup));
+assert.ok(/pocket|재진입|Halo/.test(supportPauseSnapshotMarkup));
 assert.ok(!supportPauseSnapshotMarkup.includes("summary-head"));
 assert.ok(!supportPauseSnapshotMarkup.includes("활성 보조"));
 assert.ok(!supportPauseSnapshotMarkup.includes("활성 판돈"));
+assert.ok(!supportPauseSnapshotMarkup.includes("다음 랩"));
 const hiddenCombatCacheStatus = game.getLiveSideBetSummary({
   build: game.createInitialBuild("rail_zeal"),
   waveIndex: 4,

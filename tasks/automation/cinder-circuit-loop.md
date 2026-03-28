@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: enter a real shipped-slice consolidation freeze by removing `Signature / Headline / Rider / Proof / Wave 9-12` grammar from docs and default player-facing surfaces, keeping Wave 1-3 physically small, and turning Wave 6-8 into one repeated support-ownership exam with minimal new explanation.
+- Immediate priority: strip the default run contract down to `small Wave 1-3 -> one visible weapon break -> one Wave 6 support install -> Wave 6-8 ownership lap`, and remove roadmap grammar from forge/title/Tab/docs until that loop feels replayable without explanation.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 22:00:28 KST
+  Findings:
+  - The game is still presenting itself like a roadmap instead of a run. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L38) still teach `Signature -> Headline Leap -> Rider -> Proof Window`, which keeps the opener strategically solved before the player has earned hunger.
+  - The live forge flow still behaves more like a route brief than a reward moment. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L24984) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L25220) still center `current form`, `next breakpoint`, `proof window`, and contract labels where stronger references would show one dominant power object first and make the combat ask secondary.
+  - The 8-wave slice is not cleanly protected because the active wave table and supporting copy still normalize late-route structure. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L523) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L760) still ship Wave 9-12 cells in the same main ladder, so tuning judgment is still being pulled toward a longer promise the current run has not earned.
+  - Wave 5-8 arena scale is moving in the right direction, but the payoff curve is still too verbal and too complete too early. The code already has visible support objects like shields, missiles, and drones, yet the player is primed to read doctrine instead of craving the first install and then enjoying two to three waves of ownership with it.
+  Top Priority: Remove contract-shell framing from the shipped forge/title/Tab experience and make the first visible support install the star of Wave 6-8, with only one short combat ask attached.
+  Why Now: If the reward beat still feels administrative, longer escalation and build depth will read like future promises instead of replay fuel.
+  Do Not Repeat: Do not answer this with lighter copy on the same contract card layout or with more late-route scaffolding.
+  Release Gate: UX/UI
 
 - 2026-03-28 22:10:00 KST
   Findings:
@@ -4162,6 +4173,14 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-28 23:59:59.995 KST
+  Changed: recut one shipped `Tab`/pause summary surface in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 6-8` no longer opens the paused status board with `현재 머신 + 다음 랩` after a support install is already live. I added `getBaseRoutePauseHeroSummary(...)`, and `createBaseRoutePauseSnapshotMarkup(...)` now promotes the installed support spotlight to the headline slot while keeping the current machine in the secondary slot and preserving only one short `전투 ask` line below. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert paused support runs show the support label/effect first and no longer foreground `다음 랩`.
+  Why: the newest critique's `Top Priority` called out shipped forge/title/Tab surfaces still feeling like contract shells instead of letting the first visible support install own `Wave 6-8`. The highest-value bounded interpretation inside `playables/cinder-circuit/` was the `Tab` pause hero, because that was still re-briefing the lap at the exact moment the player should just read `방호 고리`, `절단 고리`, `거점 포탑`, `추적 랙`, or `드론 편대` and go back in with one combat ask.
+  Follow-up Risk: this makes paused support runs cleaner, but the live lower-left run track still defaults to machine/lap framing outside explicit `supportProof` windows. If critique keeps saying the ownership lap is still too administrative, the next bounded pass should decide whether that always-on HUD read also needs support-first priority instead of adding more copy.
+  UI reference direction: followed the object-first hierarchy from `Hades` boon/pause reads and `Nova Drift` upgrade summaries, where the earned toy leads and the tactical instruction stays secondary.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: UX/UI
 
 - 2026-03-28 23:59:59.990 KST
   Changed: recut one shipped opening contract surface in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the title launch panel no longer previews the whole `Wave 3 -> Wave 6 -> Wave 8` route before the player has fired a shot. `getLeanStartLaunchSummary(...)` now exposes only `현재 선체 / 빈 선체` and `첫 도약 / Wave 3 무기 방향`, and `renderTitleLaunchPanel()` swaps the old four-step proof strip for two compact status cards. I updated [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) to support that quieter two-card layout and refreshed [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the launch summary no longer advertises `Wave 6` or `Wave 8` up front.
