@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: delete shipped-facing signature, Wave 9-12, and Wave 6 support-chase promises so the 8-wave route reads as one quiet-start weapon/body escalation before any new build ambition is added.
+- Immediate priority: make every shipped-facing surface sell the same 8-wave appetite curve only: quiet lean start, Wave 3 weapon/body bend, Wave 6 proof, short closing lap, with no signature/admin/late-route promises before that loop reruns cleanly.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 17:10:00 KST
+  Findings:
+  - The game still presents too much system contract before it delivers fantasy. `docs/games/cinder-circuit-design.md` opens on repeated `주력 변이 / 방호·보조 / 판돈·유틸` choosing plus run-start `Signature`, while the shipped route in `game.js` is already trying to be a lean fixed-shell start. That mismatch makes the opening read like homework, not hunger.
+  - The 8-wave slice is still contaminated by authored Wave 9-12 ambition. `game.js` keeps full late-route cells, `Late Break Armory`, `Dominion Break`, and `Live Ascension` language alive beside the shipped run, so tuning pressure is still being pulled toward a game that does not yet need to exist.
+  - Forge readability is still below strong reward references. `renderForgeOverlay()` still builds the reward beat around `titleLabel`, `waveAskLabel`, and `branchPayoffLabel`, which keeps the choice screen closer to a route brief than the power-first, low-reading upgrade hit seen in `Hades`, `Nova Drift`, or `Brotato`.
+  - The build ceiling is being authored faster than the growth curve is being protected. Support systems already cover shields, missiles, drones, satellites, and late-form fire patterns, but the opening contract is still noisy enough that these read as preloaded completeness instead of transformations the run earns.
+  Top Priority: Collapse every shipped-facing doc/title/forge/status surface to one honest 8-wave promise and hide late-route/support-admin grammar unless the player has actually reached or unlocked it.
+  Why Now: If the run starts by briefing depth instead of earning it, repeated runs will feel informationally bigger without becoming more fun.
+  Do Not Repeat: Do not answer this with more module branches, more Wave 9-12 scaffolding, or shorter synonyms for the same three-slot forge shell.
+  Release Gate: UX/UI
 
 - 2026-03-28 13:00:40 KST
   Findings:
@@ -3973,6 +3984,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-28 17:35:00 KST
+  Changed: cleaned one shipped-facing status/result layer in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the compact `8-wave` run no longer dumps raw internal upgrade logs onto the result panel. I added `getShippingUpgradePresentationLabel(...)` and `getShippingUpgradePresentationLabels(...)` to filter out dormant admin like `Ascension Relay`, `Ownership Relay`, `Chassis Breakpoint`, and similar late-route wrappers, then switched `finishRun(...)` to render a short `RUN` history made of visible earned beats instead of raw `MOD` strings. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the shipped filtering rules and the curated result-history labels.
+  Why: the newest critique's `Top Priority` was to collapse shipped-facing title/forge/status surfaces down to one honest `8-wave` promise and hide late-route/support-admin grammar unless it is truly active. The highest-value bounded interpretation still inside `playables/cinder-circuit/` was to stop the result/status layer from resurfacing hidden route jargon after the rest of the wrapper had already been consolidated.
+  Follow-up Risk: the result panel now reads like a shipped run summary, but some combat-feed and dormant helper strings still carry deeper `Ascension` or `Dominion` grammar because they live below the default status/result shell. If critique still says the run speaks in two voices, the next bounded pass should apply the same shipped-filter discipline to any remaining history/feed strip instead of widening systems again.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: UX/UI
 
 - 2026-03-28 17:20:00 KST
   Changed: recut one shipped-facing contract layer in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the compact `8-wave` run now sells the same loop on the title shell, pause snapshot, forge summary, and default live contract: `조용한 시작 -> Wave 3 무기 굴절 -> Wave 6 형태 증명 -> 짧은 마감 랩`. `getShippingContractSummary(...)` no longer makes the shared shipped summary advertise `첫 방호·보조 설치` or `… 증폭` as the main promise, and `renderTitleLaunchPanel()` now mirrors that same four-beat route instead of promising `Wave 6에서 첫 방호·보조를 붙인다` in the opening copy. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new Wave 3 / Wave 6 / closing-lap labels across shipped summary, live status, and pause/forge expectations.

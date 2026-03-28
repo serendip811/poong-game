@@ -10278,17 +10278,76 @@
     return `${source.slice(0, 75).trimEnd()}...`;
   }
 
-  function formatPauseRecentUpgradeLabel(upgradeText) {
+  function getShippingUpgradePresentationLabel(upgradeText) {
     const source = String(upgradeText || "").replace(/\s+/g, " ").trim();
     if (!source) {
       return "";
     }
-    if (!/[가-힣]/.test(source)) {
+    if (
+      source.includes("교리 추격") ||
+      source.includes("Forge Pursuit") ||
+      source.includes("Contraband Overcommit") ||
+      source.startsWith("Ascension Relay:") ||
+      source.startsWith("Ownership Relay:") ||
+      source.startsWith("Live Ascension Uplink:") ||
+      source.startsWith("Chassis Breakpoint:") ||
+      source.startsWith("Ascension Surge:")
+    ) {
       return "";
     }
     const colonIndex = source.indexOf(":");
+    const prefix = colonIndex >= 0 ? source.slice(0, colonIndex).trim() : source;
     const value = colonIndex >= 0 ? source.slice(colonIndex + 1).trim() : source;
+    if (prefix === "분해") {
+      return "";
+    }
+    if (prefix === "Reforge") {
+      return trimInspectNote(`벤치 ${value}`, value);
+    }
+    if (
+      prefix === "주무장 진화" ||
+      prefix === "Afterglow Mutation" ||
+      prefix === "속성 각인" ||
+      prefix === "재구성" ||
+      prefix === "유틸리티 섀시" ||
+      prefix === "방호·보조 예열" ||
+      prefix === "안정화" ||
+      prefix === "비상 점화" ||
+      prefix === "교리 채택" ||
+      prefix === "교리 완성" ||
+      prefix === "Wave 3 무기 도약" ||
+      prefix === "Wave 6 Ascension"
+    ) {
+      return trimInspectNote(value, value);
+    }
+    if (!/[가-힣]/.test(source) && !/[가-힣]/.test(value)) {
+      return "";
+    }
     return trimInspectNote(value, value);
+  }
+
+  function getShippingUpgradePresentationLabels(build, limit = 4) {
+    if (!build || !Array.isArray(build.upgrades) || limit <= 0) {
+      return [];
+    }
+    const labels = [];
+    const seen = new Set();
+    for (let index = build.upgrades.length - 1; index >= 0; index -= 1) {
+      const label = getShippingUpgradePresentationLabel(build.upgrades[index]);
+      if (!label || seen.has(label)) {
+        continue;
+      }
+      seen.add(label);
+      labels.push(label);
+      if (labels.length >= limit) {
+        break;
+      }
+    }
+    return labels;
+  }
+
+  function formatPauseRecentUpgradeLabel(upgradeText) {
+    return getShippingUpgradePresentationLabel(upgradeText);
   }
 
   function getBaseRoutePauseRecentGainSummary(build, supportSystem = null, waveNumber = 1) {
@@ -17311,6 +17370,8 @@
     createBaseRouteForgeContextMarkup,
     createBaseRoutePauseSnapshotMarkup,
     createMinimalCombatAskMarkup,
+    getShippingUpgradePresentationLabel,
+    getShippingUpgradePresentationLabels,
     getLiveSideBetSummary,
     summarizeCombatFeedEntry,
     getBaseRouteTransformationFocus,
@@ -20604,6 +20665,7 @@
   function finishRun(victory) {
     const doctrine = getBastionDoctrineDef(state.build);
     const benchEntries = getBenchEntries(state.build);
+    const runHistoryLabels = getShippingUpgradePresentationLabels(state.build, 4);
     state.screen = "result";
     state.phase = "result";
     state.pendingFinalForge = false;
@@ -20649,9 +20711,8 @@
         }</span>
       </div>
       <div class="mini-pill-row">
-        ${state.build.upgrades
-          .slice(-4)
-          .map((upgrade) => createMiniPill("MOD", upgrade))
+        ${(runHistoryLabels.length ? runHistoryLabels : ["조용한 시작 -> Wave 3 굴절 -> Wave 6 증명"])
+          .map((upgrade) => createMiniPill("RUN", upgrade))
           .join("")}
       </div>
       <div class="status-list">

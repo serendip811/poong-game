@@ -1459,6 +1459,25 @@ const pollutedPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
 assert.ok(!pollutedPauseSnapshotMarkup.includes("Afterburn"));
 assert.ok(!pollutedPauseSnapshotMarkup.includes("Wave 9"));
 assert.ok(!pollutedPauseSnapshotMarkup.includes("Cataclysm"));
+assert.equal(game.getShippingUpgradePresentationLabel("Wave 6 Ascension: 정상 기록"), "정상 기록");
+assert.equal(game.getShippingUpgradePresentationLabel("Ascension Relay: Storm Frame 즉시 활성화"), "");
+assert.equal(game.getShippingUpgradePresentationLabel("Ownership Relay: Wave 8 bay uplink without armory stop"), "");
+assert.equal(game.getShippingUpgradePresentationLabel("Reforge: Ember + Lance"), "벤치 Ember + Lance");
+assert.equal(
+  JSON.stringify(
+    game.getShippingUpgradePresentationLabels({
+      upgrades: [
+        "교리 채택: Mirror Hunt Doctrine",
+        "Ascension Relay: Storm Frame 즉시 활성화",
+        "Wave 6 Ascension: 정상 기록",
+        "Wave 6 Ascension: 정상 기록",
+        "Ownership Relay: Wave 8 bay uplink without armory stop",
+        "안정화: Aegis Halo",
+      ],
+    })
+  ),
+  JSON.stringify(["Aegis Halo", "정상 기록", "Mirror Hunt Doctrine"])
+);
 assert.equal(game.computeSupportSystemStats(pollutedShippingBuild), null);
 game.sanitizeConsolidatedBuildState(pollutedShippingBuild);
 assert.equal(pollutedShippingBuild.doctrineChaseClaimed, false);
