@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze future-route scaffolding and make the shipped 8-wave run read as one honest appetite spine: lean opener, one decisive weapon/body lock, then one earned late-run spectacle payoff without Wave 9+ leakage or three-lane admin framing.
+- Immediate priority: stop adding route wrappers and make the shipped 8-wave run read as one honest appetite spine: quiet opener, one decisive weapon/body lock, then one earned late-run spectacle payoff with reward/HUD/result surfaces stripped of Wave 9+, bay-reservation, and three-lane admin framing.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 10:30:43 KST
+  Findings:
+  - The game is still explaining a prototype route contract instead of selling a run fantasy. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L9) and [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L85) still teach repeated `주력 변이 / 방호·보조 / 판돈·유틸` and `Headline Leap / Survival Rider / Greed/Utility`, so the player is briefed on taxonomy before one toy has fully earned attention.
+  - Reward presentation is still leaking deferred admin into the payoff beat. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L7428) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L7461) let `bastion_bay_forge` preview rows show `다음 방호`, `후속 보조 선택`, and `빈 보조칸`, which is bookkeeping, not desire. Strong reward references make the player want the installed shield/orbital/helper now; they do not advertise reserved slots.
+  - The combat feed is still narrating future scaffolding during selection outcomes. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20542) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20558) still talk about hidden support hardware, immediate bay unlocks, and Wave 8 uplinks/reservations, so even a good chassis or support pickup lands like route administration instead of a clean power spike.
+  - The run-ending read is still validating the wrong fantasy. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20438) celebrates `Wave 6 차체 잠금과 중반 보조 축` and the victory lap structure, which means the result screen is still summarizing system packaging instead of telling the player what machine they became and why that made them want another run.
+  Top Priority: Recut forge preview rows, forge/result copy, and selection feed so the shipped route only names the installed form or support toy plus the next combat ask; remove reserved-bay, delayed-support, and future-bracket wording from those default surfaces.
+  Why Now: The project needs to consolidate reward hunger and readability before any more build layers or longer-wave ambition can help.
+  Do Not Repeat: Do not solve this with shorter synonyms for `다음 방호`, more preview rows, or another future reservation disguised as payoff.
+  Release Gate: Rewards
 
 - 2026-03-28 12:20:00 KST
   Findings:
@@ -3907,6 +3918,14 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-28 13:05:00 KST
+  Changed: treated the true newest critique as the `2026-03-28 12:20:00 KST` entry even though `## Latest Critique` is currently out of timestamp order, then tightened the shipped late-payoff copy in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). `createForgePreviewRows(...)` and `getBaseRouteForgeChoiceTransformation(...)` no longer let `bastion_bay_forge` default cards advertise `다음 방호`, `빈 보조칸`, or `후속 보조 선택`; consolidated chassis cards now surface only the current chassis change, and installed support cards now surface the actual toy plus its immediate effect. In the same pass, the `bastion_bay_forge` instant draft feed inside `handleForgeSelection(...)` dropped `Wave 8 uplink/reservation` narration in favor of `what got installed now -> what the next fight proves`, and the result screen now uses a new `getBaseRouteResultCopy(...)` helper so victory text describes the machine the player became instead of `Wave 6 차체 잠금과 중반 보조 축`. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the cleaned preview rows, the cleaned single-axis transformation copy, and the new result summary text.
+  Why: the latest actionable critique wanted the shipped `Wave 7-8` reward/conclusion to end on one immediate visible support payoff inside the `8-wave` contract, without default surfaces leaking future brackets, shard chores, or reserved-bay bookkeeping. The highest-value bounded interpretation was to clean the three surfaces that still narrated admin during payoff beats: forge preview rows, selection-confirm feed, and the result copy.
+  Follow-up Risk: the late payoff now reads more like an installed toy, but the forge overlay still carries more hierarchy than the blunt one-object reward reads the critique compared against. If the next pass still says the reward moment feels document-minded, the next bounded change should simplify the Wave 8 forge card/focus hierarchy itself rather than adding more late systems.
+  UI reference direction: followed the toy-first reward phrasing from `Hades` boon picks and `Nova Drift` upgrade reads, where the freshly installed object is named first and the next combat ask stays secondary.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Rewards
 
 - 2026-03-28 12:45:00 KST
   Changed: recast the shipped default status shell in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so an earned support rider now closes the run as part of `현재 형태` instead of reopening a third payoff/admin lane. `getDominantFormSummary(...)` now appends the installed rider title directly onto the dominant-form label on the consolidated route once support is actually live, which means the forge context, live wave strip, shipped ladder, and pause snapshot immediately read things like `... · Seeker Array Mk.II` or `... · Aegis Halo` inside the same two-slot shell. In the same pass, `getLiveSideBetSummary(...)` now keeps doctrine pursuit / shard-progress chatter hidden on the consolidated route so the default surfaces stop slipping back into future-form admin during `Wave 6-8`. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock both outcomes: shipped ladder markup must surface the installed rider title, and a consolidated doctrine-pursuit state must still return `null`.

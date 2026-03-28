@@ -259,6 +259,13 @@ wave6PreviewBuild.architectureForecastId = "storm_artillery";
 const wave6Choices = game.buildWave6ChassisBreakpointChoices(wave6PreviewBuild, () => 0, 6);
 const chassisOnlyChoice = wave6Choices.find((choice) => choice.chassisTitle);
 assert.ok(chassisOnlyChoice);
+const wave6PreviewRows = game.createForgePreviewRows(chassisOnlyChoice);
+assert.equal(wave6PreviewRows[0]?.label, "차체");
+assert.equal(wave6PreviewRows[1]?.label, "즉시 변화");
+assert.ok(!wave6PreviewRows.some((row) => /빈 보조칸|후속 보조 선택|다음 방호/.test(row.label) || /빈 보조칸|후속 보조 선택|다음 방호/.test(row.value)));
+const wave6SingleAxisChoiceTransformation = game.getBaseRouteForgeChoiceTransformation(chassisOnlyChoice);
+assert.ok(!wave6SingleAxisChoiceTransformation.promise.includes("빈 보조칸"));
+assert.ok(!wave6SingleAxisChoiceTransformation.promise.includes("후속 보조 선택"));
 assert.ok(wave6Choices.every((choice) => !choice.bayUnlock));
 assert.ok(wave6Choices.every((choice) => !choice.systemChoice));
 assert.ok(wave6Choices.every((choice) => choice.singleAxisBreakpoint));
@@ -460,6 +467,16 @@ const seekerShippedMarkup = game.createShippingLadderMarkup(
   7
 );
 assert.ok(seekerShippedMarkup.includes("Seeker Array"));
+const seekerResultCopy = game.getBaseRouteResultCopy(
+  seekerProofBuild,
+  game.computeWeaponStats(seekerProofBuild),
+  true
+);
+assert.ok(seekerResultCopy.includes("완성 시험"));
+assert.ok(seekerResultCopy.includes("승리 랩"));
+assert.ok(seekerResultCopy.includes("Seeker Array"));
+assert.ok(!seekerResultCopy.includes("Wave 9"));
+assert.ok(!seekerResultCopy.includes("중반 보조 축"));
 const droneProofBuild = game.createInitialBuild("scrap_pact");
 droneProofBuild.chassisId = "bulwark_treads";
 droneProofBuild.supportSystems = [{ id: "volt_drones", tier: 1 }];
@@ -887,7 +904,7 @@ const wave6SingleAxisTransformation = game.getBaseRouteForgeChoiceTransformation
   bayUnlock: false,
 });
 assert.equal(wave6SingleAxisTransformation.accent, "Bulwark Treads");
-assert.equal(wave6SingleAxisTransformation.previewValue, "차체 리듬 선점");
+assert.equal(wave6SingleAxisTransformation.previewValue, "hold, dive, exit 리듬 교체");
 assert.ok(!wave6SingleAxisTransformation.promise.includes("body/support bracket"));
 assert.ok(!wave6SingleAxisTransformation.proof.includes("Wave 8 마무리 포지"));
 const forgeHeadlineMarkup = game.createBaseRouteForgeContextMarkup({

@@ -7437,6 +7437,43 @@
       const supportIdentity = choice.systemChoice
         ? getSupportSystemIdentitySummary(choice.systemChoice.systemId, choice.systemChoice.systemTier)
         : null;
+      const supportPayoff = choice.systemChoice
+        ? getSupportSystemInstalledPayoff(choice.systemChoice.systemId, choice.systemChoice.systemTier)
+        : null;
+      if (CONSOLIDATED_12_WAVE_ROUTE && choice.systemChoice) {
+        return [
+          {
+            label: "차체",
+            value: choice.chassisTitle || "유틸리티 레이어",
+          },
+          {
+            label: supportPayoff?.label || supportIdentity?.payoffLabel || "보조",
+            value: choice.systemChoice.title,
+          },
+          {
+            label: "즉시 변화",
+            value:
+              supportPayoff?.value ||
+              supportIdentity?.effectValue ||
+              choice.systemChoice.slotText ||
+              choice.systemChoice.title,
+          },
+          ...finaleRows,
+        ];
+      }
+      if (CONSOLIDATED_12_WAVE_ROUTE && choice.singleAxisBreakpoint) {
+        return [
+          {
+            label: "차체",
+            value: choice.chassisTitle || "유틸리티 레이어",
+          },
+          {
+            label: "즉시 변화",
+            value: "hold, dive, exit 리듬 교체",
+          },
+          ...finaleRows,
+        ];
+      }
       return [
         {
           label: "버팀",
@@ -7699,7 +7736,7 @@
     }
     if (choice.type === "utility" && choice.action === "bastion_bay_forge") {
       const defenseTitle = choice.chassisTitle || "방호 차체";
-      const supportTitle = choice.systemChoice ? choice.systemChoice.title : choice.bayUnlock ? "빈 보조칸" : "후속 보조 선택";
+      const supportTitle = choice.systemChoice ? choice.systemChoice.title : "보강 섀시";
       const supportSpotlight = choice.systemChoice
         ? getSupportSystemSpotlight(choice.systemChoice.systemId, choice.systemChoice.systemTier)
         : null;
@@ -7711,7 +7748,7 @@
             : CONSOLIDATED_12_WAVE_ROUTE && choice.systemChoice
               ? `${defenseTitle} 위에 ${supportTitle}를 얹어 같은 실루엣의 빈틈을 메운다.`
               : CONSOLIDATED_12_WAVE_ROUTE && choice.bayUnlock
-                ? `${defenseTitle} 뒤에 열린 보조칸 하나를 확보해 다음 방호 선택 폭을 넓힌다.`
+                ? `${defenseTitle} 뒤에 보강 섀시를 한 겹 더 붙여 버티는 선을 넓힌다.`
             : `${defenseTitle} 위에 ${supportTitle}를 얹어 버티는 선을 먼저 연다.`;
       const proof =
         supportSpotlight
@@ -7721,10 +7758,10 @@
             : CONSOLIDATED_12_WAVE_ROUTE && choice.systemChoice
               ? `${supportTitle}가 다음 전투의 복귀 각과 근접 정리선을 바로 받쳐 같은 pocket을 얼마나 오래 버티는지 드러난다.`
               : CONSOLIDATED_12_WAVE_ROUTE && choice.bayUnlock
-                ? "다음 전투는 새 차체 포즈와 열린 보조칸이 얼마나 오래 숨통을 만드는지 바로 드러난다."
+                ? "다음 전투는 넓어진 버팀선이 복귀 각과 pocket 체류 시간을 얼마나 더 길게 남기는지 바로 드러난다."
             : choice.systemChoice
           ? `${supportTitle}가 다음 전투의 생존선과 복귀 각을 바로 다듬는다.`
-          : "지금은 빈 보조칸만 열어 두고, 다음 전투에서 숨 쉴 공간부터 확보한다.";
+          : "다음 전투에서 넓어진 버팀선이 숨 쉴 공간을 얼마나 더 남기는지 바로 드러난다.";
       return {
         laneLabel: choice.forgeLaneLabel || choice.laneLabel || "Forge Lane",
         title: choice.title || choice.slotText || "Unnamed Shift",
@@ -9933,9 +9970,17 @@
     if (previewRows.length === 0) {
       return null;
     }
+    if (choice && choice.type === "utility" && choice.action === "bastion_bay_forge") {
+      if (choice.systemChoice) {
+        return previewRows[1] || previewRows[0];
+      }
+      if (choice.singleAxisBreakpoint) {
+        return previewRows.find((row) => row.label === "즉시 변화") || previewRows[0];
+      }
+    }
     const priorityByRole =
       choice && choice.contractRole === "rider"
-        ? ["버팀", "보조", "효과", "몸체", "형태"]
+        ? ["보조", "즉시 변화", "효과", "차체", "버팀", "몸체", "형태"]
         : choice && choice.contractRole === "gamble"
           ? ["획득", "판돈", "보상", "목표", "효과"]
           : ["주포", "진화", "형태", "속성", "몸체", "효과", "무기"];
@@ -12292,6 +12337,22 @@
       label: identity.payoffLabel,
       value: identity.payoffValue,
     };
+  }
+
+  function getBaseRouteResultCopy(build, weapon, victory = true) {
+    if (!victory) {
+      return "열과 밀도를 버티지 못했다. 이동 경로와 포지 선택을 다시 정리해야 한다.";
+    }
+    if (!CONSOLIDATED_12_WAVE_ROUTE) {
+      return "마지막 형태와 보강 조합은 아래에 기록된다.";
+    }
+    const dominantForm = getDominantFormSummary(build, weapon, DEFAULT_ROUTE_WAVE_COUNT);
+    const riderSummary = getBaseRouteInstalledRiderSummary(build, DEFAULT_ROUTE_WAVE_COUNT);
+    const proofWindow = getImmediateProofWindowSummary(build, DEFAULT_ROUTE_WAVE_COUNT);
+    if (riderSummary) {
+      return `${dominantForm.label}로 완성 시험과 승리 랩을 닫았다. ${riderSummary.value}가 ${proofWindow.label} 내내 새 실루엣을 받쳤다.`;
+    }
+    return `${dominantForm.label}로 완성 시험과 승리 랩을 닫았다. ${proofWindow.label} 동안 방금 잠근 실루엣을 끝까지 밀어붙였다.`;
   }
 
   function createDoctrineChaseSystemChoice(build, doctrine, options = null) {
@@ -17127,6 +17188,7 @@
     getForgeSupportTrackSnapshot,
     getSupportSystemSpotlight,
     getSupportSystemInstalledPayoff,
+    getBaseRouteResultCopy,
     getForgeEraPlan,
     getShippingLadderSteps,
     getShippingLadderFocus,
@@ -20434,9 +20496,7 @@
     elements.resultTitle.textContent = victory
       ? "회로 봉인 성공"
       : "회로 붕괴";
-    elements.resultCopy.textContent = victory
-      ? "Wave 6 차체 잠금과 중반 보조 축을 Wave 8까지 증명한 뒤 열린 승리 랩까지 밀어붙여 이번 런을 닫았다. 마지막 형태와 보강 조합은 아래에 기록된다."
-      : "열과 밀도를 버티지 못했다. 이동 경로와 포지 선택을 다시 정리해야 한다.";
+    elements.resultCopy.textContent = getBaseRouteResultCopy(state.build, state.weapon, victory);
     elements.resultStats.innerHTML = [
       createResultStat("Waves", String(state.result.wavesCleared)),
       createResultStat("Kills", String(state.result.kills)),
@@ -20550,12 +20610,12 @@
                 ? `${grantLabel} 적용. ${choice.doctrineLabel}를 잠가 ${choice.doctrineChoice ? choice.doctrineChoice.title : "주포 mutation"}과 ${choice.chassisTitle || "utility chassis"}를 함께 켰다. 이번 break는 주포/차체 형태를 확정하는 데만 쓰고 다음 rider 갈림길은 뒤로 미룬다.`
                 : choice.action === "bastion_bay_forge"
                 ? supportInstallPayoff
-                  ? supportInstallPayoff.feed
+                  ? `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"} 위에 ${choice.systemChoice ? choice.systemChoice.title : supportInstallPayoff.label}를 얹어 ${supportInstallPayoff.value}를 바로 켰다. 다음 전투는 이 설치물이 새 pocket ownership을 얼마나 오래 받치는지 바로 본다.`
                   : !choice.bayUnlock && CONSOLIDATED_12_WAVE_ROUTE
-                    ? `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}만 먼저 잠가 hold, dive, exit 리듬을 바꿨다. 다음 웨이브 시작부터 해당 차체 포즈가 바로 켜지고, 작은 support 실루엣은 다음 mid-run 포지에서만 열리게 묶어 둔다.`
+                    ? `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}만 먼저 잠가 hold, dive, exit 리듬을 바꿨다. 다음 전투는 새 몸체 포즈가 corridor와 복귀 각을 얼마나 오래 버티는지 바로 보는 proof window다.`
                     : wave6AscensionDraft || choice.skipNextAdminStop
-                      ? `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}를 잠그고 두 번째 support bay를 flex lane으로 즉시 열어 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 장착했다. Wave 8에서는 정지 없이 세 번째 bay가 자동 uplink되어 Wave 6-8 bracket을 그대로 이어 간다.`
-                      : `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}와 함께 두 번째 support bay를 즉시 열고 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 먼저 장착한 채, Wave 8 세 번째 bay까지 예약하고 다음 웨이브를 연다.`
+                      ? `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}와 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 함께 켜 버티는 선을 바로 바꿨다. 다음 전투는 새 보조 장치가 같은 pocket을 얼마나 오래 지키는지 바로 드러난다.`
+                      : `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}에 ${choice.systemChoice ? choice.systemChoice.title : "시스템 회로"}를 붙여 복귀 각과 방호선을 즉시 다시 짰다. 다음 전투는 이 새 실루엣을 바로 시험한다.`
                 : choice.action === "bastion_doctrine"
                 ? `${choice.doctrineLabel} 적용. 즉시 ${choice.doctrineChoice ? choice.doctrineChoice.title : "spike"}를 확보하고 이후 포지를 해당 교리 쪽으로 기울인 채 다음 웨이브를 연다.`
               : `${grantLabel} 적용. 고철 ${choice.cost}을 태워 ${choice.title}을 일찍 확보하고 다음 웨이브를 강행한다.`
