@@ -10108,6 +10108,13 @@
 
   function getBaseRouteForgeChoiceTransformation(choice) {
     const baseTransformation = getForgeChoiceTransformation(choice);
+    const supportInstallSpotlight =
+      choice &&
+      choice.type === "utility" &&
+      choice.action === "bastion_bay_forge" &&
+      choice.systemChoice
+        ? getSupportSystemSpotlight(choice.systemChoice.systemId, choice.systemChoice.systemTier)
+        : null;
     const previewRow = getBaseRouteForgePreviewRow(choice);
     const contractRole = choice && choice.contractRole ? choice.contractRole : "";
     const descriptionLines = getBaseRouteForgeDescriptionLines(choice);
@@ -10117,10 +10124,16 @@
         : contractRole === "gamble"
           ? "greed"
           : baseTransformation.tone;
-    const previewLabel = getBaseRouteForgePreviewLabel(choice, previewRow, tone);
-    const previewValue = getBaseRouteForgePreviewValue(choice, previewRow, tone);
+    const previewLabel = supportInstallSpotlight
+      ? supportInstallSpotlight.hudLabel
+      : getBaseRouteForgePreviewLabel(choice, previewRow, tone);
+    const previewValue = supportInstallSpotlight
+      ? supportInstallSpotlight.hudValue
+      : getBaseRouteForgePreviewValue(choice, previewRow, tone);
     const rawPromise =
-      descriptionLines[0] && !BASE_ROUTE_FORGE_ADMIN_LEAK_PATTERN.test(descriptionLines[0])
+      supportInstallSpotlight
+        ? supportInstallSpotlight.promise
+        : descriptionLines[0] && !BASE_ROUTE_FORGE_ADMIN_LEAK_PATTERN.test(descriptionLines[0])
         ? descriptionLines[0]
         : tone === "defense"
         ? `${previewValue}로 버티는 선을 두껍게 만든다.`
@@ -10129,7 +10142,9 @@
           : `${previewValue}로 주력 실루엣을 바로 바꾼다.`;
     const fallbackProof = getBaseRouteForgeFallbackProof(choice, tone, previewValue);
     const proof =
-      descriptionLines[1] && !BASE_ROUTE_FORGE_ADMIN_LEAK_PATTERN.test(descriptionLines[1])
+      supportInstallSpotlight
+        ? supportInstallSpotlight.proof
+        : descriptionLines[1] && !BASE_ROUTE_FORGE_ADMIN_LEAK_PATTERN.test(descriptionLines[1])
         ? descriptionLines[1]
         : baseTransformation.proof &&
             !BASE_ROUTE_FORGE_ADMIN_LEAK_PATTERN.test(baseTransformation.proof)
@@ -10142,8 +10157,16 @@
       tone,
       promise,
       proof: trimInspectNote(localizeBaseRouteForgeText(proof), fallbackProof),
+      cardTitle: supportInstallSpotlight
+        ? choice.systemChoice?.title || supportInstallSpotlight.hudLabel
+        : choice && choice.title
+          ? choice.title
+          : baseTransformation.title,
       previewLabel,
       previewValue: localizeBaseRouteForgeText(previewValue),
+      accent: supportInstallSpotlight
+        ? `${supportInstallSpotlight.hudLabel} · ${supportInstallSpotlight.hudValue}`
+        : baseTransformation.accent,
     };
   }
 
@@ -10321,7 +10344,7 @@
         ${disabled ? "disabled" : ""}
       >
         <span class="forge-card__tag">${contractLabel}</span>
-        <h3>${choice.title}</h3>
+        <h3>${transformation.cardTitle || choice.title}</h3>
         <p class="forge-card__hero-copy">${transformation.promise}</p>
         ${createBaseRouteForgePreviewMarkup(transformation.previewLabel, transformation.previewValue)}
         ${createBaseRouteForgeBillMarkup(slotLabel)}
@@ -10350,9 +10373,10 @@
         ${disabled ? "disabled" : ""}
       >
         <span class="forge-card__tag">${contractLabel}</span>
-        <h3>${choice.title}</h3>
+        <h3>${transformation.cardTitle || choice.title}</h3>
         <p class="forge-card__hero-copy">${transformation.promise}</p>
         ${createBaseRouteForgePreviewMarkup(transformation.previewLabel, transformation.previewValue)}
+        ${createBaseRouteForgeProofMarkup(transformation.proof)}
         ${createBaseRouteForgeBillMarkup(slotLabel)}
       </button>
     `;
@@ -13808,16 +13832,27 @@
               scoreBaseRouteGambleChoice(choice, build, scrapBank, nextWave)
             )
           : takeFirstAvailableChoice(gamblePool, takenIds, "탐욕/유틸");
+    const shouldHeadlineSupportInstall =
+      recurringBaseRouteContract &&
+      nextWave === SUPPORT_SYSTEM_START_WAVE &&
+      adaptiveRiderChoice &&
+      adaptiveRiderChoice.type === "utility" &&
+      adaptiveRiderChoice.action === "bastion_bay_forge" &&
+      adaptiveRiderChoice.systemChoice;
+    const headlineChoice = shouldHeadlineSupportInstall ? adaptiveRiderChoice : adaptiveHeadlineChoice;
+    const riderChoice = shouldHeadlineSupportInstall ? adaptiveHeadlineChoice : adaptiveRiderChoice;
+    const headlineLabel = shouldHeadlineSupportInstall ? "설치" : "주력";
+    const riderLabel = shouldHeadlineSupportInstall ? "주포" : "버팀";
     const choices = [
       markForgeContract(
-        adaptiveHeadlineChoice,
+        headlineChoice,
         "headline",
-        "주력"
+        headlineLabel
       ),
       markForgeContract(
-        adaptiveRiderChoice,
+        riderChoice,
         "rider",
-        "버팀"
+        riderLabel
       ),
     ].filter(Boolean);
     if (!twoCardBaseRouteContract) {
@@ -16780,6 +16815,22 @@
   function getBaseRouteForgeContractLabel(role, choice, riderStep = false) {
     if (riderStep) {
       return "버팀";
+    }
+    if (
+      role === "headline" &&
+      choice &&
+      choice.type === "utility" &&
+      choice.action === "bastion_bay_forge" &&
+      choice.systemChoice
+    ) {
+      return "설치";
+    }
+    if (
+      role === "rider" &&
+      choice &&
+      choice.type === "evolution"
+    ) {
+      return "주포";
     }
     if (role === "headline") {
       return "주력";

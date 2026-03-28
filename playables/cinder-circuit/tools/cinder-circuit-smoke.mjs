@@ -797,23 +797,19 @@ assert.equal(wave5FieldGrantChoices.find((choice) => choice.contractRole === "he
 assert.equal(wave5FieldGrantChoices.find((choice) => choice.contractRole === "rider")?.contractLabel, "버팀");
 assert.equal(wave5FieldGrantChoices.find((choice) => choice.contractRole === "gamble"), undefined);
 const wave6ForgeBuild = game.createInitialBuild("rail_zeal");
-wave6ForgeBuild.architectureForecastId = "storm_artillery";
+wave6ForgeBuild.bastionDoctrineId = "storm_artillery";
 const wave6ForgeChoices = game.buildForgeChoices(wave6ForgeBuild, () => 0, 999, {
   nextWave: 6,
   finalForge: false,
 });
 assert.equal(wave6ForgeChoices.length, 2);
 const wave6HeadlineChoice = wave6ForgeChoices.find((choice) => choice.contractRole === "headline");
-assert.ok(
-  wave6HeadlineChoice &&
-    (wave6HeadlineChoice.type === "evolution" ||
-      (wave6HeadlineChoice.type === "utility" && wave6HeadlineChoice.action === "wave6_ascension"))
-);
+assert.equal(wave6HeadlineChoice?.action, "bastion_bay_forge");
+assert.equal(wave6HeadlineChoice?.contractLabel, "설치");
+assert.equal(wave6HeadlineChoice?.systemChoice?.systemId, "ember_ring");
 const wave6RiderChoice = wave6ForgeChoices.find((choice) => choice.contractRole === "rider");
-assert.equal(wave6RiderChoice?.action, "bastion_bay_forge");
-assert.ok(wave6RiderChoice?.bayUnlock);
-assert.equal(wave6RiderChoice?.systemChoice?.systemId, "ember_ring");
-assert.equal(wave6RiderChoice?.systemChoice?.systemTier, 1);
+assert.equal(wave6RiderChoice?.type, "evolution");
+assert.equal(wave6RiderChoice?.contractLabel, "주포");
 const wave6GambleChoice = wave6ForgeChoices.find((choice) => choice.contractRole === "gamble");
 assert.equal(wave6GambleChoice, undefined);
 assert.notEqual(wave6GambleChoice?.action, "affix_reforge");
@@ -1329,7 +1325,8 @@ const recurringWave3CardMarkup = game.createBaseRouteForgeHeadlineCardMarkup({
 assert.ok(recurringWave3CardMarkup.includes("forge-card--snap"));
 assert.ok(recurringWave3CardMarkup.includes(recurringWave3HeadlineTransform.promise));
 assert.ok(recurringWave3CardMarkup.includes("forge-card__hero-copy"));
-assert.ok(!recurringWave3CardMarkup.includes("forge-card__proof"));
+assert.ok(recurringWave3CardMarkup.includes("forge-card__proof"));
+assert.ok(recurringWave3CardMarkup.includes(recurringWave3HeadlineTransform.proof));
 assert.ok(recurringWave3CardMarkup.includes("forge-card__pivot"));
 assert.ok(recurringWave3CardMarkup.includes(recurringWave3HeadlineTransform.previewLabel));
 assert.ok(recurringWave3CardMarkup.includes(recurringWave3HeadlineTransform.previewValue));
@@ -1450,16 +1447,34 @@ const recurringWave6Choices = game.buildForgeChoices(recurringWave6Build, Math.r
   finalForge: false,
   build: recurringWave6Build,
 });
-const wave6DefenseChoice = recurringWave6Choices.find((choice) => choice.contractRole === "rider");
+const wave6DefenseChoice = recurringWave6Choices.find((choice) => choice.contractRole === "headline");
 assert.ok(wave6DefenseChoice);
 assert.equal(wave6DefenseChoice.action, "bastion_bay_forge");
 assert.ok(wave6DefenseChoice.bayUnlock);
 assert.equal(wave6DefenseChoice.systemChoice?.systemId, "ember_ring");
+assert.equal(wave6DefenseChoice.contractLabel, "설치");
 const wave6DefenseTransform = game.getBaseRouteForgeChoiceTransformation(wave6DefenseChoice);
+assert.equal(wave6DefenseTransform.cardTitle, "Ember Ring");
 assert.ok(wave6DefenseTransform.previewLabel.length > 0);
-assert.ok(/충격파|slipstream|돌격/.test(wave6DefenseTransform.promise));
-assert.ok(/lane|돌격 섀시|파고드는/.test(wave6DefenseTransform.proof));
+assert.ok(/절단 고리|근접/.test(wave6DefenseTransform.promise));
+assert.ok(/다음 전투|복귀선|근접 적/.test(wave6DefenseTransform.proof));
 assert.ok(wave6DefenseTransform.accent.includes("절단 고리"));
+const wave6OffenseChoice = recurringWave6Choices.find((choice) => choice.contractRole === "rider");
+assert.ok(wave6OffenseChoice);
+assert.equal(wave6OffenseChoice.type, "evolution");
+assert.equal(wave6OffenseChoice.contractLabel, "주포");
+const wave6HeadlineMarkup = game.createBaseRouteForgeHeadlineCardMarkup({
+  choice: wave6DefenseChoice,
+  index: 0,
+  kind: wave6DefenseChoice.action || wave6DefenseChoice.type || "choice",
+  contractLabel: wave6DefenseChoice.contractLabel,
+  transformation: wave6DefenseTransform,
+  slotLabel: "무료",
+  disabled: false,
+});
+assert.ok(wave6HeadlineMarkup.includes("forge-card__proof"));
+assert.ok(wave6HeadlineMarkup.includes("Ember Ring"));
+assert.ok(wave6HeadlineMarkup.includes(wave6DefenseTransform.proof));
 const crownfireBuild = game.createInitialBuild("rail_zeal");
 const crownfireWave5Choices = game.buildForgeChoices(crownfireBuild, () => 0.1, 999, {
   nextWave: 5,

@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: cut 12-wave/doctrine/admin language out of the shipped 8-wave route, then re-center Wave 6-8 around one visible support pivot and default surfaces that only show the current machine and next ask.
+- Immediate priority: purge shipped-facing docs and reward/status surfaces of 12-wave/proof/rider admin language, then recut Wave 6-8 around one visible support toy with object-first picks and one-line combat asks.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 20:00:49 KST
+  Findings:
+  - The project is still drifting because the docs describe a more abstract, more administrative game than the shipped slice should present. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L38) and [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L157) through [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L179) still teach `Signature`, `Headline Leap`, `Survival Rider`, `Proof Window`, and `Wave 9-12` structure even though the active loop says the shipped route must sell a clean 8-wave appetite first.
+  - The opening ladder is cleaner, but it is still too authored and roadmap-like for a rerunnable action roguelite opener. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L9070) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L9128) pre-explain `Wave 3 무기 방향`, `Wave 6 지원 설치`, and `Wave 8 숙련 랩`; that is more disciplined than before, but strong references let the player feel the first toy and infer the hunger, not study the route card up front.
+  - The support catalog already contains real rerun-worthy toys, but the reward layer still presents them as route bookkeeping instead of desire. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2674) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3064) define orbitals, shield halos, sentries, missiles, and drones with visible tier spikes, yet [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L24894) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L25203) still wrap picks in context shell, branch payoff, proof copy, and contract framing instead of simply making one machine upgrade look irresistible.
+  - Late-route fantasy is still leaking into the shipped surface area. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2103) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2160) keep exposing `Wave 9-12` cadence text, which keeps the team thinking in future brackets while the current run still has not nailed the repeatable pleasure of `small start -> gun bend -> support install -> mastery lap`.
+  Top Priority: Recut the shipped reward/status layer so Wave 6-8 sells one visible support install from the existing catalog as the run's second real mutation, with one dominant card, one vivid effect line, and one short next-combat ask.
+  Why Now: Until the player instantly wants the Wave 6-8 toy, longer escalation plans are ambition theater rather than replay fuel.
+  Do Not Repeat: Do not answer this with cleaner roadmap copy or another hidden 12-wave shell around the same over-explained reward beat.
+  Release Gate: Rewards
 
 - 2026-03-28 23:59:30 KST
   Findings:
@@ -4118,6 +4129,14 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-28 23:59:59.500 KST
+  Changed: recut one shipped `Wave 6` reward beat in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the visible support install now becomes the dominant forge card instead of sitting as a secondary rider under another weapon pick. Base-route contract generation now promotes `bastion_bay_forge` packages with an attached system install to the `headline` slot at `Wave 6`, relabels the side weapon card as `주포`, and makes `getBaseRouteForgeChoiceTransformation(...)` plus `createBaseRouteForgeHeadlineCardMarkup(...)` sell the installed toy itself: support object title, one vivid effect line, and one short `다음 전투` ask. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new `Wave 6` role swap, support-first card title/effect/proof copy, and the compact proof row on shipped headline cards.
+  Why: the newest critique's `Top Priority` was to make `Wave 6-8` sell one visible support install as the run's second real mutation, with one dominant card and one immediate combat ask. The highest-value bounded interpretation was not adding more support content, because the catalog already exists, but changing the reward hierarchy so the player sees `Ember Ring` / `Aegis Halo` / `Volt Drones` as the moment's headline object instead of reading another thesis card first.
+  Follow-up Risk: the reward read is now stronger when a doctrine-owned install is present, but some `Wave 6` edge cases that have not locked doctrine/support yet can still fall back to the older weapon-first hierarchy. If critique keeps saying the second mutation is inconsistent, the next bounded pass should decide whether those fallback states should be removed or converted to the same support-first presentation rather than adding more card variants.
+  UI reference direction: followed the one-dominant-object reward read from `Hades` boon picks and `Nova Drift` level-up cards, where the installed machine gets the hero slot and the next fight ask sits directly underneath it.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Rewards
 
 - 2026-03-28 23:59:59 KST
   Changed: stripped one remaining shipped-route contract fallback in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the exported base-route helpers no longer keep `Era I / Headline Form / Survival Rider / Proof Band` alive after the live HUD/forge had already moved to `현재 머신 + 보이는 효과 + 다음 전투`. For `CONSOLIDATED_12_WAVE_ROUTE`, `getForgeEraPlan(...)` now collapses to one compact machine/effect/ask summary, `createForgeEraMarkup(...)` renders those slots instead of era taxonomy, and `createEraContractPanelMarkup(...)` now reuses `createCurrentMachinePayoffMarkup(...)` rather than rebuilding a contract document. In the same bounded pass I replaced the Wave 6 chassis upgrade log strings that still said `support hold through Wave 7 proof laps` / `small support held for mid-run forge` with immediate-install language so the breakpoint stop no longer narrates the support as deferred paperwork. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new compact helper output and assert those old era labels are gone.
