@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: collapse the shipped-route contract across forge, HUD, and status surfaces to `one current form + one immediate ask`; strip branch-tail, side-bet, and future-admin language until the 8-wave appetite loop reads cleanly at a glance.
+- Immediate priority: turn the shipped route into a true appetite spine: lean opener, one decisive weapon/body lock, then one earned late-run support/spectacle payoff inside the shipped slice instead of ending on repeated proof laps and taxonomy cleanup.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 11:30:00 KST
+  Findings:
+  - The project is starting to over-consolidate into cleanliness without enough payoff. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L336) still frame the shipped run as `Wave 1-4 setup -> Wave 5 weapon jump -> Wave 6 chassis lock -> Wave 7-8 proof`, which is too few authored transformation beats for a rerun-hungry roguelite.
+  - Combat space is beginning to breathe more, but the run keeps spending that space on proving the same ownership shape again. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L475) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L588) widen arenas and vary hazards, yet the asks are still mostly `open lane`, `corridor hold`, `pocket reset`, `pocket hold` around one locked form rather than new player-authored spikes.
+  - Delaying support spectacle at Wave 6 was the right correction, but the shipped slice now underspends anticipation. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L15376) explicitly hides rider install until later, while [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L86) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L15462) still organize forge value around `headline / survival / gamble` roles instead of a visible growth ladder the player can crave.
+  - The most exciting visual/function jumps are still parked outside the current shipped appetite loop. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L5527) onward contains the kind of split-wing, impact-seed, and escalating silhouette language that sells reruns, but the current run reaches the finish before it meaningfully cashes in that fantasy.
+  Top Priority: Add one shipped-slice late payoff beat that branches off the locked Wave 5-6 form into a visibly distinct support/spectacle upgrade around Wave 7 or early Wave 8, with obvious on-screen transformation such as missiles, orbitals, shield emitters, or autonomous helpers rather than another mostly textual proof lap.
+  Why Now: The run currently ends just as build hunger should peak.
+  Do Not Repeat: Do not answer this with more hidden late-route scaffolding, more role labels, or another pass of copy compression without a new visible payoff beat.
+  Release Gate: Builds
 
 - 2026-03-28 10:55:00 KST
   Findings:
@@ -3885,6 +3896,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-28 12:05:00 KST
+  Changed: turned the shipped `Wave 7 clear -> Wave 8 forge` stop in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) into a real late support-payoff beat for runs that actually took the lean `Wave 6` single-axis chassis lock. `getVisibleSupportOfferSystemIds(...)` now flips that window from the old subdued midrun fallback to the doctrine's primary support silhouette, `createSupportSystemChoices(...)` upgrades that one offer straight to a discounted `Mk.II` install, and the strict `Wave 8` rider contract now allows that `system` card only when `build.wave6ChassisBreakpoint` is true. In practice, a locked-form run now reaches `Wave 8` with one big support spectacle card such as `Seeker Array Mk.II`, `Kiln Sentry Mk.II`, or `Aegis Halo Mk.II` instead of another minor sustain pick. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new doctrine-owned `Wave 8` visibility, the `Mk.II` rider offer, and the rule that ordinary non-breakpoint `Wave 8` forges do not suddenly reopen support installs.
+  Why: the latest critique's `Top Priority` was to add one shipped-slice late payoff beat branching off the locked `Wave 5-6` form into an obvious support/spectacle upgrade around `Wave 7` or early `Wave 8`. The highest-value bounded interpretation was to make the existing `Wave 8` forge finally cash out that anticipation with a visible helper-tech jump, because it preserves the lean opener and single-axis `Wave 6` correction while giving the run one last appetizing transformation before the final proof.
+  Follow-up Risk: `Seeker Array`, `Volt Drones`, `Aegis Halo`, and `Kiln Sentry` now turn this window into a stronger authored proof, but `Ember Ring Mk.II` still relies more on raw orbit spectacle than a bespoke `Wave 8` support-proof script. If the next critique says the orbital route still reads weaker than missiles/shields/drones, the next bounded pass should give `Ember Ring` its own late proof ask instead of widening the reward shell again.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Builds
 
 - 2026-03-28 11:20:00 KST
   Changed: recut the shipped `Tab`/pause snapshot in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `createBaseRoutePauseSnapshotMarkup(...)` now renders the same two-slot `route-contract` strip the live HUD and forge already use, instead of the thicker hero card with `summary-head`, a wave chip, and a separate oversized title. The pause board now reads as only `현재 형태 + 즉시 위협/마무리`, with no extra header wrapper to reintroduce status-board admin. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new `route-contract--double` markup and the absence of `summary-head` and `W5` on shipped pause snapshots.

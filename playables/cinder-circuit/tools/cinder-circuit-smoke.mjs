@@ -291,7 +291,17 @@ assert.equal(game.getSupportBayCapacity(chassisBranchBuild), 1);
 assert.equal(chassisBranchBuild.supportSystems.length, 0);
 assert.equal(chassisBranchBuild.wave6ChassisBreakpoint, true);
 assert.equal(JSON.stringify(game.getVisibleSupportOfferSystemIds(chassisBranchBuild, 7)), JSON.stringify([]));
-assert.equal(JSON.stringify(game.getVisibleSupportOfferSystemIds(chassisBranchBuild, 8)), JSON.stringify(["ember_ring"]));
+assert.equal(JSON.stringify(game.getVisibleSupportOfferSystemIds(chassisBranchBuild, 8)), JSON.stringify(["seeker_array"]));
+const wave8PayoffChoices = game.buildForgeChoices(chassisBranchBuild, () => 0, 999, {
+  nextWave: 8,
+  finalForge: false,
+});
+const wave8PayoffRider = wave8PayoffChoices.find((choice) => choice.contractRole === "rider");
+assert.equal(wave8PayoffRider?.type, "system");
+assert.equal(wave8PayoffRider?.systemId, "seeker_array");
+assert.equal(wave8PayoffRider?.systemTier, 2);
+assert.ok(wave8PayoffRider?.slotText.includes("완성 시험 직전"));
+assert.ok(wave8PayoffRider?.description.includes("눈에 띄는 support silhouette"));
 const shippedLadderWave6 = game.getShippingLadderSteps(
   chassisBranchBuild,
   game.computeWeaponStats(chassisBranchBuild),
@@ -2668,14 +2678,14 @@ assert.ok(
 assert.equal(game.shouldSkipOwnershipAdminStop(architectureRun.build, 9), false);
 assert.equal(game.unlockLateSupportBay(architectureRun.build), true);
 assert.equal(game.getSupportBayCapacity(architectureRun.build), 3);
-assert.equal(game.doctrineAllowsSystemInstall(architectureRun.build, "seeker_array", 8), false);
-assert.equal(game.doctrineAllowsSystemInstall(architectureRun.build, "volt_drones", 8), true);
+assert.equal(game.doctrineAllowsSystemInstall(architectureRun.build, "seeker_array", 8), true);
+assert.equal(game.doctrineAllowsSystemInstall(architectureRun.build, "volt_drones", 8), false);
 assert.equal(game.doctrineAllowsSystemInstall(architectureRun.build, "aegis_halo"), false);
 assert.equal(game.doctrineAllowsSystemInstall(architectureRun.build, "ember_ring", 8), false);
 assert.ok(game.doctrineAllowsSystemInstall(architectureRun.build, "seeker_array", 9));
 assert.equal(
   JSON.stringify(game.getVisibleSupportOfferSystemIds(architectureRun.build, 8).sort()),
-  JSON.stringify(["volt_drones"])
+  JSON.stringify(["seeker_array"])
 );
 assert.equal(
   JSON.stringify(game.getVisibleSupportOfferSystemIds(architectureRun.build, 9).sort()),
@@ -2902,7 +2912,8 @@ game.applyForgeChoice(
 assert.equal(artilleryDoctrineBuild.supportSystems.length, 0);
 assert.equal(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "seeker_array", 7), false);
 assert.equal(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "ember_ring", 7), false);
-assert.equal(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "ember_ring", 8), true);
+assert.equal(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "seeker_array", 8), true);
+assert.equal(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "ember_ring", 8), false);
 assert.equal(
   JSON.stringify(game.getVisibleSupportOfferSystemIds(artilleryDoctrineBuild, 7).sort()),
   JSON.stringify([])
@@ -2910,7 +2921,7 @@ assert.equal(
 assert.ok(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "seeker_array", 9));
 assert.equal(
   JSON.stringify(game.getVisibleSupportOfferSystemIds(artilleryDoctrineBuild, 8).sort()),
-  JSON.stringify(["ember_ring"])
+  JSON.stringify(["seeker_array"])
 );
 assert.equal(
   JSON.stringify(game.getVisibleSupportOfferSystemIds(artilleryDoctrineBuild, 9).sort()),

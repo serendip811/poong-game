@@ -6658,6 +6658,10 @@
     }
     const random = typeof rng === "function" ? rng : Math.random;
     const nextWave = options && Number.isFinite(options.nextWave) ? options.nextWave : 0;
+    const baseRouteWave8SupportPayoff =
+      CONSOLIDATED_12_WAVE_ROUTE &&
+      build.wave6ChassisBreakpoint &&
+      nextWave === DEFAULT_ROUTE_WAVE_COUNT;
     const installedSystems = getInstalledSupportSystems(build);
     const supportBayCap = getSupportBayCapacity(build);
     const installedMap = new Map(installedSystems.map((entry) => [entry.id, entry]));
@@ -6690,7 +6694,8 @@
           primedSystemId === systemId &&
           installedSystems.length === 0 &&
           nextWave === BASE_ROUTE_MIDRUN_SUPPORT_WAVE;
-        const targetTier = primerCompletion ? 2 : 1;
+        const targetTier =
+          primerCompletion || (baseRouteWave8SupportPayoff && installedSystems.length === 0) ? 2 : 1;
         const tierDef = system && system.tiers[targetTier];
         const previewDef = primerCompletion ? PREVIEW_SUPPORT_SYSTEM_DEFS[systemId] : null;
         if (!system || !tierDef) {
@@ -6705,6 +6710,8 @@
           description:
             primerCompletion && previewDef
               ? `${previewDef.title}에서 바로 ${tierDef.title}로 완성한다. Wave 5에 먼저 띄운 약식 실루엣이 이번 정지에서 완전한 편대/파동으로 열린다. ${tierDef.description}`
+              : baseRouteWave8SupportPayoff && installedSystems.length === 0
+                ? `Wave 8 완성 시험 직전, ${tierDef.title}를 곧바로 붙여 잠긴 차체 위에 눈에 띄는 support silhouette를 바로 연다. ${tierDef.description}`
               : installedSystems.length > 0
               ? `${tierDef.description} 기존 ${installedSystems.map((entry) => SUPPORT_SYSTEM_DEFS[entry.id].tiers[entry.tier].label).join(" + ")}와 병렬 베이에 탑재된다.${
                   !CONSOLIDATED_12_WAVE_ROUTE && doctrine && doctrine.supportDoctrineText
@@ -6715,6 +6722,8 @@
           slotText:
             primerCompletion
               ? `예열 완성 · ${tierDef.slotText}`
+              : baseRouteWave8SupportPayoff && installedSystems.length === 0
+                ? `완성 시험 직전 · ${tierDef.slotText}`
               : installedSystems.length > 0
               ? `빈 베이 설치 · ${tierDef.slotText}`
               : tierDef.slotText,
@@ -6724,6 +6733,8 @@
           forgeLaneLabel: getSupportSystemForgeLane(system.id),
           cost: primerCompletion
             ? Math.max(system.tiers[1].cost, tierDef.cost - PREVIEW_SUPPORT_PRIMER_CREDIT)
+            : baseRouteWave8SupportPayoff && installedSystems.length === 0
+              ? Math.max(system.tiers[1].cost + 4, Math.round(tierDef.cost * 0.84))
             : tierDef.cost,
           primerCompletion,
         };
@@ -10912,6 +10923,11 @@
 
   function getVisibleSupportOfferSystemIds(build, nextWave = 0) {
     const allSystemIds = Object.keys(SUPPORT_SYSTEM_DEFS);
+    const baseRouteWave8SupportPayoff =
+      CONSOLIDATED_12_WAVE_ROUTE &&
+      build &&
+      build.wave6ChassisBreakpoint &&
+      nextWave === DEFAULT_ROUTE_WAVE_COUNT;
     if (shouldHoldWave6SingleAxisBreakpoint(build, nextWave)) {
       return [];
     }
@@ -10940,6 +10956,10 @@
     // hardware catalog at once.
     if (nextWave < SUPPORT_SYSTEM_START_WAVE) {
       return [];
+    }
+    if (baseRouteWave8SupportPayoff) {
+      const payoffSystemId = getDoctrinePrimarySupportSystemId(build);
+      return payoffSystemId ? [payoffSystemId] : allSystemIds;
     }
     if (nextWave < LATE_BREAK_ARMORY_WAVE) {
       const midrunSystemId = getDoctrineMidrunSupportSystemId(build);
@@ -11786,6 +11806,9 @@
     if (!choice) {
       return false;
     }
+    if (choice.type === "system") {
+      return nextWave === DEFAULT_ROUTE_WAVE_COUNT;
+    }
     if (choice.type === "fallback") {
       return true;
     }
@@ -11804,6 +11827,20 @@
   function scoreBaseRouteRiderChoice(choice, nextWave) {
     if (!isBaseRouteDefenseRiderChoice(choice, nextWave)) {
       return -1;
+    }
+    if (choice.type === "system") {
+      const spectacleBonus =
+        choice.systemId === "seeker_array"
+          ? 52
+          : choice.systemId === "volt_drones"
+            ? 48
+            : choice.systemId === "aegis_halo"
+              ? 44
+              : choice.systemId === "kiln_sentry"
+                ? 40
+                : 36;
+      const tierBonus = (choice.systemTier || 1) * 28;
+      return nextWave === DEFAULT_ROUTE_WAVE_COUNT ? 420 + spectacleBonus + tierBonus : 150;
     }
     if (choice.type === "utility" && choice.action === "bastion_bay_forge") {
       return nextWave === 6 ? 320 : 80;
@@ -13211,6 +13248,10 @@
     const strictBaseRouteRiderContract =
       recurringBaseRouteContract &&
       nextWave === DEFAULT_ROUTE_WAVE_COUNT;
+    const allowWave8SupportPayoff =
+      strictBaseRouteRiderContract &&
+      build &&
+      build.wave6ChassisBreakpoint;
     const unconstrainedDefensePool =
       recurringBaseRouteContract && nextWave === 6
         ? [...chassisBreakpointChoices, ...subsystemCandidates, ...sustainCandidates]
@@ -13218,6 +13259,8 @@
     const defensePool =
       recurringBaseRouteContract && nextWave < SUPPORT_SYSTEM_START_WAVE
         ? unconstrainedDefensePool.filter((choice) => isBaseRouteDefenseRiderChoice(choice, nextWave))
+        : strictBaseRouteRiderContract && !allowWave8SupportPayoff
+          ? unconstrainedDefensePool.filter((choice) => choice && choice.type !== "system")
         : unconstrainedDefensePool;
     const unconstrainedHeadlinePool = reserveMidrunSupportForRider
       ? [...evolutionCandidates, ...commitCandidates, ...pivotCandidates]
@@ -13229,7 +13272,9 @@
       ? baseRouteHeadlinePool.filter((choice) => isBaseRouteHeadlineChoice(choice, nextWave))
       : baseRouteHeadlinePool;
     const riderPool = strictBaseRouteRiderContract
-      ? defensePool.filter((choice) => isBaseRouteDefenseRiderChoice(choice, nextWave))
+      ? [...(allowWave8SupportPayoff ? supportSystemChoices : []), ...defensePool].filter((choice) =>
+          isBaseRouteDefenseRiderChoice(choice, nextWave)
+        )
       : reserveMidrunSupportForRider
         ? [...supportSystemChoices, ...defensePool]
         : defensePool;

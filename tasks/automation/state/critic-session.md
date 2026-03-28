@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The sharpest next gate is still `UX/UI`, but the real issue is now structural appetite: the shipped route still reads like a system menu before it reads like a form fantasy.
-- Keep enforcing strict two-slot discipline for the shipped slice: `one earned form + one immediate proof ask`. Any cache, bay, ascension, or branch text must stay hidden unless the player is interacting with that thing right now.
-- Keep pressuring docs and player-facing surfaces together. The design doc still normalizes the three-lane reward contract, which keeps reintroducing UI drift even when individual screens improve.
-- This is a consolidation phase, not an expansion phase. Prefer critiques that remove admin language, protect the lean opener, and delay visible support spectacle rather than inventing more branches.
-- Repeated false solutions: shorter labels for the same triple-shell, new named wrappers to justify existing complexity, or pushing 20-30 wave scaffolding before the current 8-wave appetite loop feels clean and rerunnable.
+- The sharpest next gate has shifted to `Builds`: the HUD/forge contract is cleaner, but the shipped route still does not deliver enough visible transformation beats to create rerun hunger.
+- Keep enforcing two-slot discipline on surfaces, but stop mistaking UI compression for sufficient progress. The run now needs one earned late-slice spectacle beat after the Wave 5-6 lock.
+- Pressure docs and implementation together: the design doc still normalizes `headline / survival / gamble`, which keeps steering the game back toward category selection instead of a craveable growth ladder.
+- Consolidation still matters, but the current false ceiling is `one jump, then repeated proof`. Favor critiques that create a second visible payoff inside the shipped slice over more taxonomy trimming.
+- Repeated false solutions: shorter labels for the same shell, hidden late-route scaffolding, or small stat nudges that do not change silhouette, firing pattern, or autonomous support behavior in a way the player can immediately feel.
