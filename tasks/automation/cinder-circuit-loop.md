@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: cash the shipped Wave 1-8 route into a true two-step build arc by landing one visible support/defense/offense install in Wave 6-7, then let Wave 8 read it cleanly with no contract/admin scaffolding.
+- Immediate priority: stop pseudo-long-run drift and make the first support install create a readable ownership window by Wave 6-8 through simpler reward/HUD surfaces and more breathable combat space.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 23:58:00 KST
+  Findings:
+  - The project is drifting between an `8-wave shipped slice` and a not-really-shipped `12-wave ladder`. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L8) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L16) still define the game as Wave 1-8 appetite proof, while [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L172) through [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L199) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L605) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L762) keep teaching and balancing for Wave 9-12. That is structural dishonesty, not healthy ambition.
+  - The late route currently escalates mostly by stacking bodies and hazards into nearly the same footprint instead of creating richer movement asks. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L560) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L603) push Wave 8 to `spawnBudget 120`, `activeCap 22`, and a `territory` hazard every `9s`, then [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L718) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L760) climb to `spawnBudget 184`, `activeCap 33`, and even tighter pocket pressure while the arena actually shrinks from `1780x1000` to `1680x980`. That reads like cramped survival homework, not the breathable ownership game a rerunnable arena roguelite needs.
+  - The support catalog is already strong enough to sell build hunger, but the route still treats it as a rider instead of a run-shaping layer. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2675) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3146) define orbitals, shield halos, sentries, missiles, and drones with clear Mk.II/Mk.III visual payoff, yet [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L9652) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L9675) still frame support as something that merely “받쳐 주는 rider” for the Wave 8 proof. If the first install does not visibly change how the player routes space for multiple waves, there is no real build anticipation.
+  - The reward/status UI is still closer to a briefing deck than the object-first clarity of strong references like `Hades` boon picks or `Nova Drift` status boards. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L9734) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L9810) keep `Era`, `Contract`, `Headline Form`, `Survival Rider`, and `Proof Band` scaffolding alive even in the supposed consolidated route. That is still too much reading around a game that needs the player to feel one dominant machine change immediately.
+  Top Priority: Pick one honest shipped spine for the next pass, then retune Wave 6-8 around a single support install that gets 2-3 full waves of ownership in a wider, lower-tax arena instead of extending pressure with Wave 9-12 admin and denser hazard stacking.
+  Why Now: A longer escalation curve only helps if the current curve first proves that added minutes create stronger desire rather than slower fatigue.
+  Do Not Repeat: Do not answer this by keeping the same density curve and merely renaming `contract/era/proof` shells around it.
+  Release Gate: Progression
 
 - 2026-03-28 23:40:00 KST
   Findings:
@@ -4085,6 +4096,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-28 23:59:30 KST
+  Changed: retuned one shipped combat spine in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the compact route finally gives the first support install real room to breathe across `Wave 6-8` instead of paying for it with cramped density. `WAVE_CONFIG` now widens the ownership window from `1720x980` to `1840x1040` to `1920x1080`, trims `activeCap` to `17 -> 18 -> 19`, lowers `spawnBudget` to `92 -> 100 -> 108`, and slows the relay/drift/territory hazard cadence so the same three asks stay readable without stacking into survival homework. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new `Wave 6-8` arena, cap, budget, and lighter hazard thresholds.
+  Why: the newest critique's `Top Priority` asked for an honest shipped spine where the first support system gets `2-3` full waves of ownership in a wider, lower-tax arena, not a pseudo-long-run escalation built by denser `Wave 8-12` pressure. The highest-value bounded interpretation inside `playables/cinder-circuit/` was to retune the shipped `Wave 6-8` ladder itself, because that improves both support payoff readability and repeat-run combat feel without adding more wrappers or early spectacle.
+  Follow-up Risk: the compact route now breathes more, but there is still a steep cliff between the shipped `Wave 8` and the dormant `Wave 9+` ladder values in the same file. If critique still says the game is teaching two different run promises, the next bounded pass should either quarantine more `Wave 9-12` admin from shipped-facing helpers or add a cleaner post-`Wave 8` fallback path instead of re-densifying Act 2.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Combat
 
 - 2026-03-28 23:40:00 KST
   Changed: recut one shipped-facing forge reward layer in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the compact `8-wave` route no longer frames the reward header like a three-part route strip. `createBaseRouteForgeContextMarkup(...)` now reuses the same `현재 머신 + 다음 전투` payoff shell as the live HUD/pause card, which drops `분기 보상`-style branch bookkeeping from the default forge context. In the same bounded pass, `createBaseRouteForgeHeadlineCardMarkup(...)` and `createBaseRouteForgeCompactCardMarkup(...)` now render one concrete preview row under the promise, so shipped forge cards name the installed silhouette or support toy directly instead of asking the player to infer it from copy alone. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new two-slot forge shell and the preview-row expectation on shipped contract cards.

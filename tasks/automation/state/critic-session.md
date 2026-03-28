@@ -12,8 +12,9 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The weakest release gate is now `Builds`: the run still does not mutate enough times before ending, so UI/admin language is filling the gap left by shallow lived build payoff.
-- Keep forcing a truthful shipped Wave 1-8 surface across docs, forge, pause, and result. If default-facing layers reintroduce `Signature`, `Rider`, `Proof Window`, `Doctrine`, contract dashboards, or Wave 9-12 ambition, treat it as drift.
-- Highest-value critique now is consolidation around a two-step arc: lean opener, clear main-weapon bend, then one visibly distinct support/defense/offense install by Wave 7 with enough Wave 8 runway to feel ownership.
-- Reference rule remains strict: compare reward and HUD readability against object-first patterns like `Hades` boon picks and `Nova Drift` level-ups/status boards, not briefing decks. Fewer words, stronger hierarchy, faster desire.
-- Repeated false solutions: synonym swaps for the same jargon, more roadmap/contract cards, hiding late-route scaffolding behind shipping flags, or adding new systems before the existing support catalog gets a real payoff window.
+- The weakest release gate is now `Progression`: the game is stretching toward longer-run structure without first proving that the current curve is fun to repeat.
+- Treat any split between `8-wave shipped slice` messaging and active `Wave 9-12` balancing/scaffolding as immediate drift. One honest route spine must win before more growth is added.
+- Highest-value critique is now about lived ownership windows, not more content nouns: a support install should arrive early enough and breathe long enough to change routing, spacing, and appetite for the next run.
+- Combat-space rule: do not accept density/hazard escalation as a substitute for better movement decisions. If arena size, spawn pressure, and hazard cadence combine into constant cramped kiting, call it out hard.
+- Reference rule remains strict: compare reward/HUD hierarchy against object-first patterns like `Hades` boon picks and `Nova Drift` status boards, not command-deck documents.
+- Repeated false solutions: more contract/era/proof wording, hidden late-wave admin behind route flags, or “longer run” expansion that mainly adds spawn budget and hazards without a new readable power spike.
