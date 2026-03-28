@@ -6818,11 +6818,12 @@
     }
     const random = typeof rng === "function" ? rng : Math.random;
     const nextWave = options && Number.isFinite(options.nextWave) ? options.nextWave : 0;
+    const installedSystems = getInstalledSupportSystems(build);
     const baseRouteWave8SupportPayoff =
       CONSOLIDATED_12_WAVE_ROUTE &&
       build.wave6ChassisBreakpoint &&
+      installedSystems.length > 0 &&
       nextWave === DEFAULT_ROUTE_WAVE_COUNT;
-    const installedSystems = getInstalledSupportSystems(build);
     const supportBayCap = getSupportBayCapacity(build);
     const installedMap = new Map(installedSystems.map((entry) => [entry.id, entry]));
     const doctrine = build && build.bastionDoctrineId ? getBastionDoctrineDef(build) : null;
@@ -11614,10 +11615,12 @@
 
   function getVisibleSupportOfferSystemIds(build, nextWave = 0) {
     const allSystemIds = Object.keys(SUPPORT_SYSTEM_DEFS);
+    const installedSystems = build ? getInstalledSupportSystems(build) : [];
     const baseRouteWave8SupportPayoff =
       CONSOLIDATED_12_WAVE_ROUTE &&
       build &&
       build.wave6ChassisBreakpoint &&
+      installedSystems.length > 0 &&
       nextWave === DEFAULT_ROUTE_WAVE_COUNT;
     if (shouldHoldWave6SingleAxisBreakpoint(build, nextWave)) {
       return [];
@@ -12581,6 +12584,7 @@
       CONSOLIDATED_12_WAVE_ROUTE &&
       build &&
       build.wave6ChassisBreakpoint &&
+      getInstalledSupportSystems(build).length > 0 &&
       Number.isFinite(nextWave) &&
       nextWave > 6 &&
       nextWave < DEFAULT_ROUTE_WAVE_COUNT
@@ -16058,7 +16062,7 @@
       tag: "DOCTRINE",
       title: doctrine.label,
       description:
-        `${doctrine.description} 즉시 ${weaponChoice.title}을(를) 할인 장착해 core gun lock을 먼저 굳히고, 이어지는 Chassis Breakpoint에서 body plan만 추가로 잠근다. 별도 support 하드웨어는 late-form lock 직전까지 숨기고, opening과 mid-run은 주포 각과 차체 리듬이 먼저 화면을 먹게 둔다.${forecastConfirmed ? " Wave 3 forecast와 맞아 더 싸게 확정된다." : ""}${
+        `${doctrine.description} 즉시 ${weaponChoice.title}을(를) 할인 장착해 core gun lock을 먼저 굳히고, 이어지는 Chassis Breakpoint에서 body plan과 첫 support install을 함께 잠근다. opening은 lean하게 두되 Wave 6부터는 드론·헤일로·미사일 같은 visible hardware가 바로 화면을 먹게 둔다.${forecastConfirmed ? " Wave 3 forecast와 맞아 더 싸게 확정된다." : ""}${
           !CONSOLIDATED_12_WAVE_ROUTE && lateCapstoneLabel
             ? ` 이후 Wave 6-8 marked elite shard를 모으는 장기 forge pursuit가 열리고, 완성 시 ${lateCapstoneLabel} 계열 교리 monster form이 즉시 잠긴다.`
             : ""
@@ -16704,8 +16708,8 @@
     state.forgeChoices = buildArchitectureDraftChoices(state.build);
     pushCombatFeed(
       CONSOLIDATED_12_WAVE_ROUTE
-        ? "주력 변이 선택 개시. 이번 정지에서는 전장을 가장 크게 바꿀 한 장만 먼저 고른다. 차체 점프는 Wave 6에 붙이고, 별도 support 하드웨어는 late-form lock까지 숨겨 opening과 mid-run을 lean하게 유지한다."
-        : "Architecture Draft 개시. 이제 Wave 3에서는 세 장기 교리 중 하나를 골라 주포 mutation만 먼저 잠근다. utility chassis는 Wave 6에 붙이고, support 하드웨어는 late-form lock 이후에나 열어 opening run이 과하게 완성되지 않게 둔다.",
+        ? "주력 변이 선택 개시. 이번 정지에서는 전장을 가장 크게 바꿀 한 장만 먼저 고른다. 차체 점프와 첫 support install은 Wave 6에 붙여 mid-run silhouette를 바로 두껍게 만들고, opening만 lean하게 유지한다."
+        : "Architecture Draft 개시. 이제 Wave 3에서는 세 장기 교리 중 하나를 골라 주포 mutation만 먼저 잠근다. utility chassis와 첫 support 하드웨어는 Wave 6에 함께 붙여 opening run만 과하게 완성되지 않게 둔다.",
       "ARCH"
     );
     setBanner(CONSOLIDATED_12_WAVE_ROUTE ? "주력 변이" : "Architecture Draft", 0.95);
@@ -17013,12 +17017,12 @@
     pushCombatFeed(
       CONSOLIDATED_12_WAVE_ROUTE
         ? wave6ChassisDraft
-          ? "방호·보조 선택 개시. 이번 정지는 몸체 하나만 고른다. Wave 3에서 먼저 키운 주포 위에 버티는 선만 덧대고, 작은 보조선은 다음 mid-run 포지까지 늦춘다."
+          ? "방호·보조 선택 개시. 이번 정지는 몸체 하나를 고르면 그 안쪽에 첫 support install이 같이 잠긴다. Wave 6부터 새 버팀선이나 자동 화력이 바로 켜져 남은 두 전투를 이 실루엣으로 밀어붙인다."
           : wave6AscensionDraft
-            ? "주력 변이 선택 개시. 이번 정지는 오래 끌 몸체 하나만 고른다. 보조선은 아직 닫아 두고 몸과 주포만 먼저 굳힌다."
+            ? "주력 변이 선택 개시. 이번 정지는 오래 끌 몸체 하나를 고르고, 그 프레임 안쪽에 첫 support install까지 함께 잠근다. Wave 6부터 몸과 보조선이 같이 켜져 mid-run silhouette가 바로 커진다."
           : "변이 선택 개시. 이번 정지는 크게 바꾸는 한 장, 버티는 한 장, 판돈을 거는 한 장 중 하나만 고른다."
         : wave6AscensionDraft
-          ? "Wave 6 Ascension Draft 개시. 세 장기 교리 중 하나를 irreversible form으로 잠그면 주포 mutation과 utility chassis까지만 먼저 굳힌다. 별도 support 하드웨어는 아직 열지 않고 late-form lock 이후로 미뤄 mid-run 실루엣을 lean하게 유지한다."
+          ? "Wave 6 Ascension Draft 개시. 세 장기 교리 중 하나를 irreversible form으로 잠그면 주포 mutation, utility chassis, 첫 support install을 함께 굳힌다. mid-run 실루엣은 여기서 바로 두 번째 chapter로 넘어간다."
           : `Bastion Draft 개시. ${getBastionDraftIntroText(state.build)}`,
       "DRAFT"
     );

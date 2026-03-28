@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze expansion and make the shipped `Wave 1-8` run honest by removing live/player-facing `signature / mission board / contract / proof / Wave 9-12 / Afterburn / support 없이도` scaffolding, then rebalance around `lean opener -> Wave 3 gun leap -> Wave 6 first real support install -> Wave 8 proof`.
+- Immediate priority: freeze expansion, cut live/player-facing `signature / mission board / contract / proof / Wave 9-12 / Afterburn / support 없이도` scaffolding, and make `Wave 6` deliver the first unmistakable support install instead of deferring that payoff to `Wave 8` or later.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 10:05:00 KST
+  Findings:
+  - The shipped arc still is not honest about its promised midpoint payoff. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) explicitly says in `enterArchitectureDraft()` and `enterBastionDraft()` that support hardware stays hidden until `late-form lock` or a later mid-run stop, so the live game is still protecting a lean opener by deleting the actual `Wave 6` transformation.
+  - The support system offer logic reinforces the same mistake. In `createSupportSystemChoices()` inside [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), the consolidated route is still special-casing its visible support payoff around `nextWave === DEFAULT_ROUTE_WAVE_COUNT`, which means the first big shield/drone/missile/orbital silhouette is being saved for `Wave 8` proof instead of creating hunger through `Wave 6-8`.
+  - That leaves Waves `6-8` structurally flatter than the design promise in [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md), which still sells `Wave 6` as the moment a support install changes routing. Right now the code is closer to `Wave 3 gun -> Wave 6 chassis posture -> Wave 8 visible helper`, so the run spends two whole waves proving a body adjustment instead of a run-shaping mutation.
+  - The project is still front-loading weapon completion while back-loading the spectacle layer. Multiple weapon summaries in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still describe the gun as dominating `support 없이도`, which makes the delayed helper/shield/drone layer read like optional garnish rather than the second pillar of build identity.
+  Top Priority: Rebuild the shipped `Wave 6` forge so one visible support install is guaranteed there and immediately owns `Wave 6-8`, while `Wave 8` becomes proof-plus-final-weapon finish instead of the first time the run looks transformed.
+  Why Now: If the run withholds its first real helper layer until the finale band, players never get time to enjoy or rerun the mutation they were supposed to be chasing.
+  Do Not Repeat: Do not defend this as “lean start” again while the code still delays support silhouette to `Wave 8` and late-form paths.
+  Release Gate: Builds
 
 - 2026-03-29 09:15:00 KST
   Findings:
@@ -4399,6 +4410,18 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-29 10:30:00 KST
+  Changed:
+  - Tightened the shipped support-offer gates in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 8` only uses the special support-payoff path when the run already owns a real installed support system. Polluted `wave6ChassisBreakpoint` states with no install no longer hide support through `Wave 7` or jump straight to a first-time `Mk.II` reveal at `Wave 8`; they now surface the doctrine-owned `Wave 6` install lane instead.
+  - Rewrote the remaining shipped `Architecture Draft` / `Bastion Draft` doctrine text in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so it explicitly promises `Wave 6` body-plus-support installation instead of saying support hardware stays hidden until `late-form lock`.
+  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the doctrine-adoption copy no longer mentions `late-form lock`, and to lock the recovery path where a bad post-`Wave 6` state still surfaces the doctrine-owned tier-1 install at `Wave 7-8` instead of skipping to a first visible payoff on the finale band.
+  Why:
+  - The latest critique's `Top Priority` was to make `Wave 6` the first unmistakable support transformation and stop letting `Wave 8` act like the first real silhouette reveal. The highest-value bounded interpretation inside `playables/cinder-circuit/` was to fix the fallback/support-offer gates and the surviving draft promises that still encoded the older `late-form lock` behavior, because those paths could still teach or recreate the exact delayed-payoff curve the critique called out.
+  Follow-up Risk:
+  - This hardens the shipped `Wave 6 first install` contract and its recovery path, but it does not yet trim every dormant non-shipped `Wave 9-12 / Afterburn` string or every long-route doctrine helper in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). If critique still says the project is balancing a larger fake game, the next bounded pass should quarantine one more late-route surface instead of adding another build branch.
+  Validation: `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Builds
 
 - 2026-03-29 09:40:00 KST
   Changed:

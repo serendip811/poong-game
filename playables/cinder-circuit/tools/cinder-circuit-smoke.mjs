@@ -329,6 +329,13 @@ const architectureTransformation = game.getForgeChoiceTransformation(architectur
 assert.match(architectureTransformation.proof, /첫 지원 설치는 아직 남고/);
 assert.match(architectureTransformation.proof, /어느 seam이 아직 비는지/);
 assert.match(architectureTransformation.riderNote, /body\/support install/);
+const doctrinePromiseBuild = game.createInitialBuild("rail_zeal");
+const doctrinePromiseChoice = game
+  .buildBastionDraftChoices(doctrinePromiseBuild, () => 0, 7)
+  .find((choice) => choice && choice.action === "bastion_doctrine");
+assert.ok(doctrinePromiseChoice);
+assert.match(doctrinePromiseChoice.description, /첫 support install을 함께 잠근다/);
+assert.ok(!/late-form lock/.test(doctrinePromiseChoice.description));
 const afterglowChoice = game
   .buildFieldGrantChoices(roadmapBuild, Math.random, 5)
   .find((choice) => choice && choice.action === "afterglow_mutation");
@@ -336,6 +343,20 @@ assert.ok(afterglowChoice);
 const afterglowTransformation = game.getForgeChoiceTransformation(afterglowChoice);
 assert.match(afterglowTransformation.proof, /첫 지원 설치 전까지는 빈 측면이 남는/);
 assert.match(afterglowTransformation.riderNote, /복귀선이 아직 비어 있다/);
+const delayedInstallBuild = game.createInitialBuild("rail_zeal");
+delayedInstallBuild.bastionDoctrineId = "storm_artillery";
+delayedInstallBuild.wave6ChassisBreakpoint = true;
+assert.equal(
+  JSON.stringify(game.getVisibleSupportOfferSystemIds(delayedInstallBuild, 7)),
+  JSON.stringify(["ember_ring"])
+);
+const delayedWave8Choices = game.buildForgeChoices(delayedInstallBuild, () => 0, 999, {
+  nextWave: 8,
+  finalForge: false,
+});
+const delayedWave8SupportChoice = delayedWave8Choices.find((choice) => choice?.type === "system");
+assert.equal(delayedWave8SupportChoice?.systemId, "ember_ring");
+assert.equal(delayedWave8SupportChoice?.systemTier, 1);
 const supportSurgeBuild = game.createInitialBuild("rail_zeal");
 supportSurgeBuild.wave6ChassisBreakpoint = true;
 supportSurgeBuild.supportSystems = [{ id: "seeker_array", tier: 1 }];
