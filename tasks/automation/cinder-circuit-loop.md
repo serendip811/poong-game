@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop adding route wrappers and make the shipped 8-wave run read as one honest appetite spine: quiet opener, one decisive weapon/body lock, then one earned late-run spectacle payoff with reward/HUD/result surfaces stripped of Wave 9+, bay-reservation, and three-lane admin framing.
+- Immediate priority: stop treating the cleaned-up 8-wave route as finished structure; the shipped run still needs one clearly visible second transformation inside Wave 6-8 so players get a real build payoff before the run ends, with reward/HUD/result surfaces staying stripped of Wave 9+, bay-reservation, and three-lane admin framing.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 13:05:00 KST
+  Findings:
+  - The run is now cleaner than it is hungry. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L7) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L38) still define the shipped promise as repeated `주력 변이 / 방호·보조 / 판돈·유틸` proof windows inside an `8웨이브 + 짧은 승리 랩` contract, which reads like a tidy structure document, not a rerun fantasy.
+  - The biggest build failure is still structural, not cosmetic: Wave 6 deliberately withholds the second toy. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L15449) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L15527) explicitly keep `support bay` growth and rider install closed until Wave 8, so the player spends Wave 6-7 proving one body pose instead of beginning the shield/orbital/missile/helper layer that should make the run mutate.
+  - That makes the larger arena work underspend itself. The game has more breathing room now, but [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L35) through [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L36) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2023) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2088) still spend the back half mostly on `완성 시험` and `승리 랩` copy for the already-locked line. More room only matters if a newly installed module changes how you claim that room.
+  - Pause/result/forge summaries are quieter than before, but they still validate contract discipline over transformation. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L10309) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L10339) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12342) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L12355) still frame the payoff as `현재 형태 / 즉시 위협` and `완성 시험을 닫았다`, where stronger arena-roguelite references would be selling the toy itself: the halo that let you cut in, the drones that let you own flanks, the missile rack that changed target priority.
+  Top Priority: Pull one real support/defense spectacle install forward into Wave 6 or early Wave 7, then let Wave 8 be the mastery lap of that completed form instead of the first time the run finally grants it.
+  Why Now: If the second transformation still lands at the finish line, further cleanup only produces a polished prototype.
+  Do Not Repeat: Do not spend another pass making the proof/victory-lap wording cleaner while the run still asks players to prove the same line longer instead of becoming something bigger.
+  Release Gate: Builds
 
 - 2026-03-28 10:30:43 KST
   Findings:
@@ -3918,6 +3929,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-28 13:40:00 KST
+  Changed: pulled one real support spectacle install forward into the shipped `Wave 6` breakpoint in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). `buildWave6ChassisBreakpointChoices(...)` now bundles each chassis card with the doctrine's primary tier-1 support system and a live bay unlock, so picks like `Vector Thrusters + Seeker Array` or `Bulwark Treads + Aegis Halo` actually mutate the machine at the breakpoint instead of withholding the second toy until the finish. I also updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so the shipped contract now expects `Wave 6 = chassis + installed support`, `Wave 7 = prove the live rider`, and `Wave 8 = same-system Mk.II/mastery upgrade` rather than a first-time support grant.
+  Why: the newest critique's `Top Priority` was to stop spending `Wave 6-7` on proving only one body pose and to let the larger arena matter by giving the player a real shield/orbital/missile/helper layer earlier. The highest-value bounded interpretation was to reuse the existing doctrine/support framework, but move the visible install into the breakpoint itself so the run gets a second transformation without reopening new route wrappers.
+  Follow-up Risk: `Wave 6` cards now pre-bake a doctrine-owned rider, so special states that mutate doctrine timing could drift into mismatched bundled support if future passes widen overcommit or off-doctrine exceptions. If that surfaces, the next bounded pass should harden doctrine adoption/order around this bundle instead of adding more support branches.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Builds
 
 - 2026-03-28 13:05:00 KST
   Changed: treated the true newest critique as the `2026-03-28 12:20:00 KST` entry even though `## Latest Critique` is currently out of timestamp order, then tightened the shipped late-payoff copy in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). `createForgePreviewRows(...)` and `getBaseRouteForgeChoiceTransformation(...)` no longer let `bastion_bay_forge` default cards advertise `다음 방호`, `빈 보조칸`, or `후속 보조 선택`; consolidated chassis cards now surface only the current chassis change, and installed support cards now surface the actual toy plus its immediate effect. In the same pass, the `bastion_bay_forge` instant draft feed inside `handleForgeSelection(...)` dropped `Wave 8 uplink/reservation` narration in favor of `what got installed now -> what the next fight proves`, and the result screen now uses a new `getBaseRouteResultCopy(...)` helper so victory text describes the machine the player became instead of `Wave 6 차체 잠금과 중반 보조 축`. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the cleaned preview rows, the cleaned single-axis transformation copy, and the new result summary text.

@@ -15514,25 +15514,38 @@
     if (!build) {
       return [];
     }
+    const doctrine = getBastionDoctrineDef(build);
+    const preferredSystemId = getDoctrinePrimarySupportSystemId(doctrine);
+    const preferredSystemChoice = preferredSystemId
+      ? createSupportSystemTierChoice(preferredSystemId, 1)
+      : null;
     const chassisDefs = Object.values(CHASSIS_BREAKPOINT_DEFS);
     const chassisChoices = chassisDefs.map((chassisDef) => ({
       type: "utility",
       action: "bastion_bay_forge",
-      id: `utility:bastion_chassis_break:${chassisDef.id}:single_axis`,
+      id: `utility:bastion_chassis_break:${chassisDef.id}:${preferredSystemChoice ? preferredSystemChoice.systemId : "support"}`,
       verb: "접합",
       tag: chassisDef.tag,
       title: chassisDef.title,
       description: CONSOLIDATED_12_WAVE_ROUTE
-        ? `${chassisDef.description} 이번 정지는 차체 하나만 잠가 Wave 6-7 proof lap 전체를 이 포즈로 버틴다. support bay와 rider install은 Wave 8 마무리 포지까지 닫아 두어, 먼저 몸체 리듬만 화면을 먹게 만든다.`
+        ? `${chassisDef.description} 이번 정지에서는 차체와 ${preferredSystemChoice ? preferredSystemChoice.title : "교리 방호"}를 함께 붙여 Wave 6부터 새 버팀 실루엣을 바로 연다. Wave 8은 첫 설치가 아니라 이 장치의 출력과 pocket ownership을 한 단계 더 밀어 올리는 mastery lap으로 바뀐다.`
         : `${chassisDef.description} 이번 정지에서는 차체 실루엣만 먼저 확정하고 support bay 증설은 뒤로 미룬다.`,
-      slotText: `섀시 breakpoint · ${chassisDef.slotText}`,
+      slotText: preferredSystemChoice
+        ? `섀시 breakpoint · ${chassisDef.slotText} + ${preferredSystemChoice.title}`
+        : `섀시 breakpoint · ${chassisDef.slotText}`,
       cost: 0,
       laneLabel: "섀시 breakpoint",
       forgeLaneLabel: "섀시 breakpoint",
       chassisId: chassisDef.id,
       chassisTitle: chassisDef.title,
       skipNextAdminStop: true,
-      singleAxisBreakpoint: true,
+      bayUnlock: Boolean(preferredSystemChoice),
+      systemChoice: preferredSystemChoice
+        ? {
+            ...preferredSystemChoice,
+            cost: 0,
+          }
+        : null,
     }));
     if (chassisChoices.length > 0) {
       return chassisChoices;
@@ -15540,20 +15553,30 @@
     return [{
       type: "utility",
       action: "bastion_bay_forge",
-      id: "utility:bastion_chassis_break:vector_thrusters:single_axis",
+      id: `utility:bastion_chassis_break:vector_thrusters:${preferredSystemChoice ? preferredSystemChoice.systemId : "support"}`,
       verb: "접합",
       tag: CHASSIS_BREAKPOINT_DEFS.vector_thrusters.tag,
       title: CHASSIS_BREAKPOINT_DEFS.vector_thrusters.title,
       description:
-        "대시 충격파와 slipstream을 여는 Vector Thrusters를 장착하고, support bay 증설은 뒤로 미뤄 Wave 6-7 두 번의 proof lap을 차체 리듬만으로 버티게 만든다.",
-      slotText: "섀시 breakpoint · Vector Thrusters",
+        preferredSystemChoice
+          ? `대시 충격파와 slipstream을 여는 Vector Thrusters에 ${preferredSystemChoice.title}를 즉시 얹어 Wave 6부터 flank 복귀선과 pocket 제어를 같이 바꾼다. Wave 8은 첫 방호 설치가 아니라 이미 켠 장치를 더 과격하게 증폭하는 mastery lap이 된다.`
+          : "대시 충격파와 slipstream을 여는 Vector Thrusters를 장착하고, support bay 증설은 뒤로 미뤄 Wave 6-7 두 번의 proof lap을 차체 리듬만으로 버티게 만든다.",
+      slotText: preferredSystemChoice
+        ? `섀시 breakpoint · Vector Thrusters + ${preferredSystemChoice.title}`
+        : "섀시 breakpoint · Vector Thrusters",
       cost: 0,
       laneLabel: "섀시 breakpoint",
       forgeLaneLabel: "섀시 breakpoint",
       chassisId: CHASSIS_BREAKPOINT_DEFS.vector_thrusters.id,
       chassisTitle: CHASSIS_BREAKPOINT_DEFS.vector_thrusters.title,
       skipNextAdminStop: true,
-      singleAxisBreakpoint: true,
+      bayUnlock: Boolean(preferredSystemChoice),
+      systemChoice: preferredSystemChoice
+        ? {
+            ...preferredSystemChoice,
+            cost: 0,
+          }
+        : null,
     }];
   }
 
