@@ -1696,6 +1696,46 @@ body[data-overdrive="true"] .backdrop__glow--right {
   padding: 0;
 }
 
+.forge-ask-shell {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 0 0 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.forge-ask-shell__label {
+  color: var(--muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.forge-ask-shell__value {
+  color: var(--text);
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  text-align: right;
+}
+
+.forge-ask-shell__note {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 10px 0 0;
+  color: var(--muted-strong);
+  font-size: 0.82rem;
+  line-height: 1.42;
+}
+
+.forge-ask-shell__note span {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .forge-context__card strong {
   display: block;
   margin-top: 8px;
@@ -2227,24 +2267,33 @@ body[data-overdrive="true"] .backdrop__glow--right {
 
 .forge-card--snap {
   gap: 12px;
-  padding: 16px;
+  padding: 18px 18px 16px;
+  min-height: 250px;
+  background:
+    radial-gradient(circle at top left, rgba(255, 180, 117, 0.18), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent 48%),
+    rgba(17, 13, 11, 0.96);
+  border-color: rgba(255, 189, 120, 0.32);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
 }
 
 .forge-card--snap h3 {
   margin-top: 0;
-  font-size: 1.08rem;
-  line-height: 1.2;
+  font-size: 1.18rem;
+  line-height: 1.16;
 }
 
 .forge-card--snap .forge-card__hero-copy {
   margin-top: 0;
   color: var(--text);
-  font-size: 0.92rem;
-  line-height: 1.46;
+  font-size: 0.95rem;
+  line-height: 1.5;
 }
 
 .forge-card--snap .forge-card__pivot {
-  margin-top: 2px;
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .forge-card--snap .forge-card__hero-copy {
@@ -2266,6 +2315,12 @@ body[data-overdrive="true"] .backdrop__glow--right {
 
   .forge-card--contract[data-contract="headline"] {
     grid-column: 1 / -1;
+  }
+
+  .forge-ask-shell,
+  .forge-ask-shell__note {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }
 

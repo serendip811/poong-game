@@ -10376,7 +10376,6 @@
         <h3>${transformation.cardTitle || choice.title}</h3>
         <p class="forge-card__hero-copy">${transformation.promise}</p>
         ${createBaseRouteForgePreviewMarkup(transformation.previewLabel, transformation.previewValue)}
-        ${createBaseRouteForgeProofMarkup(transformation.proof)}
         ${createBaseRouteForgeBillMarkup(slotLabel)}
       </button>
     `;
@@ -10391,6 +10390,17 @@
       return source;
     }
     return `${source.slice(0, 75).trimEnd()}...`;
+  }
+
+  function trimForgeCombatAsk(text, fallback) {
+    const source = (text || fallback || "").replace(/\s+/g, " ").trim();
+    if (!source) {
+      return fallback || "";
+    }
+    if (source.length <= 54) {
+      return source;
+    }
+    return `${source.slice(0, 51).trimEnd()}...`;
   }
 
   function getBaseRouteCombatAskForWave(build, waveNumber = 1) {
@@ -10533,16 +10543,16 @@
     branchPayoffLabel = "",
     branchPayoffValue = "",
   }) {
+    const askLabel = waveAskLabel || branchPayoffLabel || "다음 전투";
+    const askValue = waveAskValue || branchPayoffValue || "-";
     return `
-      ${createCurrentMachinePayoffMarkup({
-        machineLabel: titleLabel || eyebrow || "현재 머신",
-        machineValue: currentFormLabel || title || "-",
-        payoffLabel: waveAskLabel || branchPayoffLabel || "다음 전투",
-        payoffValue: waveAskValue || branchPayoffValue || "-",
-      })}
+      <div class="forge-ask-shell">
+        <span class="forge-ask-shell__label">${askLabel}</span>
+        <strong class="forge-ask-shell__value">${askValue}</strong>
+      </div>
       ${
         askNote
-          ? `<p class="machine-payoff__note"><span>전투 ask</span>${askNote}</p>`
+          ? `<p class="forge-ask-shell__note"><span>전투 ask</span>${askNote}</p>`
           : ""
       }
     `;
@@ -25058,7 +25068,7 @@
       dominantFormLabel: dominantFormSummary.label,
       proofWindowLabel: proofWindow.label,
     });
-    const forgeCombatAsk = trimInspectNote(
+    const forgeCombatAsk = trimForgeCombatAsk(
       getBaseRouteCombatAskForWave(state.build, state.waveIndex + 2),
       "열린 공간을 남기고 자주 자리를 바꾼다."
     );

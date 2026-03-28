@@ -619,7 +619,7 @@ const branchForgeContextMarkup = game.createBaseRouteForgeContextMarkup({
   branchPayoffLabel: "분기 보상",
   branchPayoffValue: "Scrapline Raid",
 });
-assert.ok(branchForgeContextMarkup.includes("machine-payoff"));
+assert.ok(branchForgeContextMarkup.includes("forge-ask-shell"));
 assert.ok(branchForgeContextMarkup.includes("다음 전장"));
 assert.ok(branchForgeContextMarkup.includes("Dominion Sweep"));
 assert.ok(!branchForgeContextMarkup.includes("분기 보상"));
@@ -952,10 +952,10 @@ const forgeContextMarkup = game.createBaseRouteForgeContextMarkup({
 });
 assert.ok(forgeContextMarkup.includes("다음 전장"));
 assert.ok(forgeContextMarkup.includes("Dominion Sweep"));
-assert.ok(forgeContextMarkup.includes("Prism Crown"));
 assert.ok(!forgeContextMarkup.includes("다음 급등"));
-assert.ok(forgeContextMarkup.includes("machine-payoff__slot"));
-assert.ok(forgeContextMarkup.includes("machine-payoff"));
+assert.ok(forgeContextMarkup.includes("forge-ask-shell"));
+assert.ok(forgeContextMarkup.includes("forge-ask-shell__value"));
+assert.ok(!forgeContextMarkup.includes("Prism Crown"));
 assert.ok(!forgeContextMarkup.includes("summary-head"));
 assert.ok(!forgeContextMarkup.includes("Next Proof"));
 assert.ok(!forgeContextMarkup.includes("Route Payoff"));
@@ -1053,9 +1053,9 @@ const forgeHeadlineMarkup = game.createBaseRouteForgeContextMarkup({
 });
 assert.ok(forgeHeadlineMarkup.includes("주력 변이"));
 assert.ok(forgeHeadlineMarkup.includes("Afterglow"));
-assert.ok(forgeHeadlineMarkup.includes("다음 시험"));
-assert.ok(forgeHeadlineMarkup.includes("Payoff Run"));
-assert.ok(forgeHeadlineMarkup.includes("machine-payoff"));
+assert.ok(!forgeHeadlineMarkup.includes("다음 시험"));
+assert.ok(!forgeHeadlineMarkup.includes("Payoff Run"));
+assert.ok(forgeHeadlineMarkup.includes("forge-ask-shell"));
 assert.ok(!forgeHeadlineMarkup.includes("분기 보상"));
 const forgeHeadlineSpotlight = game.getBaseRouteForgeSpotlightSummary({
   choice: wave6HeadlineChoice,
@@ -1329,8 +1329,8 @@ const recurringWave3CardMarkup = game.createBaseRouteForgeHeadlineCardMarkup({
 assert.ok(recurringWave3CardMarkup.includes("forge-card--snap"));
 assert.ok(recurringWave3CardMarkup.includes(recurringWave3HeadlineTransform.promise));
 assert.ok(recurringWave3CardMarkup.includes("forge-card__hero-copy"));
-assert.ok(recurringWave3CardMarkup.includes("forge-card__proof"));
-assert.ok(recurringWave3CardMarkup.includes(recurringWave3HeadlineTransform.proof));
+assert.ok(!recurringWave3CardMarkup.includes("forge-card__proof"));
+assert.ok(!recurringWave3CardMarkup.includes(recurringWave3HeadlineTransform.proof));
 assert.ok(recurringWave3CardMarkup.includes("forge-card__pivot"));
 assert.ok(recurringWave3CardMarkup.includes(recurringWave3HeadlineTransform.previewLabel));
 assert.ok(recurringWave3CardMarkup.includes(recurringWave3HeadlineTransform.previewValue));
@@ -1476,7 +1476,7 @@ const wave6HeadlineMarkup = game.createBaseRouteForgeHeadlineCardMarkup({
   slotLabel: "무료",
   disabled: false,
 });
-assert.ok(wave6HeadlineMarkup.includes("forge-card__proof"));
+assert.ok(!wave6HeadlineMarkup.includes("forge-card__proof"));
 const wave6ForgeContextMarkup = game.createBaseRouteForgeContextMarkup({
   titleLabel: wave6DefenseTransform.previewLabel,
   currentFormLabel: wave6DefenseTransform.previewValue,
@@ -1484,11 +1484,11 @@ const wave6ForgeContextMarkup = game.createBaseRouteForgeContextMarkup({
   waveAskValue: "Ring Cut",
   askNote: game.getBaseRouteCombatAskForWave(recurringWave6Build, 6),
 });
-assert.ok(wave6ForgeContextMarkup.includes("machine-payoff__note"));
+assert.ok(wave6ForgeContextMarkup.includes("forge-ask-shell__note"));
 assert.ok(wave6ForgeContextMarkup.includes("전투 ask"));
 assert.ok(/relay|corridor|외곽|pocket|점거 코어/.test(wave6ForgeContextMarkup));
 assert.ok(wave6HeadlineMarkup.includes("Ember Ring"));
-assert.ok(wave6HeadlineMarkup.includes(wave6DefenseTransform.proof));
+assert.ok(!wave6HeadlineMarkup.includes(wave6DefenseTransform.proof));
 const crownfireBuild = game.createInitialBuild("rail_zeal");
 const crownfireWave5Choices = game.buildForgeChoices(crownfireBuild, () => 0.1, 999, {
   nextWave: 5,
