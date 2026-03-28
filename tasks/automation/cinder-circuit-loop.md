@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: strip the default player-facing run to `lean launch -> one Wave 3 weapon break -> one Wave 6 support install -> Wave 6-8 ownership lap`, and remove `Signature / Proof / Wave 9-12 / Late Break / Afterburn` teaching from launch, forge, and status surfaces until that 8-wave loop is replayable without reading.
+- Immediate priority: make the shipped build truthfully behave like `lean launch -> one Wave 3 weapon break -> one Wave 6 support install -> Wave 6-8 ownership lap`, and quarantine `Signature / Proof / Wave 9-12 / Late Break / Afterburn` logic from docs, forge, pause, and combat feed until that loop is replayable without roadmap leakage.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 23:31:07 KST
+  Findings:
+  - Drift is still real, not historical: the design doc still defines the shipped promise around `Signature`, three reward lanes, and `Proof Window`, so the project keeps teaching build grammar before the player has felt a fragile opener or earned hunger for a rerun.
+  - The playable is still balancing an 8-wave slice while simulating a much longer one. `beginWave()` and adjacent wave tables keep `Wave 9-12`, `Late Break`, and `Afterburn` fully live, which makes it impossible to honestly judge whether Wave 1-8 already has enough pacing, room, and payoff to repeat for fun.
+  - The forge is cleaner, but it still lands below strong reward references like `Hades` boon picks or `Nova Drift` level-ups because it foregrounds `ask`, `proof`, and contract framing instead of one instantly desirable install silhouette. The player still reads why a pick matters before wanting it.
+  - Wave 5-8 arena scale is finally large enough to support better movement decisions, but the support payoff is still structurally undercut. The run keeps talking about ownership ladders and later route hooks instead of letting one Wave 6 support install visibly carry two or three waves by itself.
+  Top Priority: Put the project in a real consolidation freeze by disabling shipped-facing `Wave 9-12 / Late Break / Afterburn` flow and retuning the default run around one obvious Wave 6 support install that visibly changes the screen through Wave 8.
+  Why Now: Until the current slice stands on its own, every balance call is contaminated by roadmap scaffolding.
+  Do Not Repeat: Do not answer this with lighter terminology on the same forge contract shell or more hidden late-wave hooks.
+  Release Gate: Progression
 
 - 2026-03-28 23:10:00 KST
   Findings:
@@ -4196,6 +4207,13 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-28 23:59:59.999 KST
+  Changed: gave the shipped `Wave 6-8` support install a bounded proof-surge carry pass in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). I added `getBaseRouteSupportProofSurge(...)` and taught `computeSupportSystemStats(build, waveNumber)` to temporarily enlarge the first installed `Wave 6` support silhouette during the base-route ownership lap, so single-bay installs gain one extra visible orbit/deploy body plus faster shots, pulses, or sentry cadence instead of waiting until a later permanent tier jump to feel screen-changing. I also recompute support stats on `beginWave(...)` and `beginBaseRouteVictoryLap()` so the surge only lives inside the real combat lap, and updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock `Seeker Array` and `Kiln Sentry` surge behavior against baseline non-surge stats.
+  Why: the newest critique's `Top Priority` said the default run still needed one obvious `Wave 6` support install that visibly changes the screen through `Wave 8`, not more late-route scaffolding or more reward-shell wording. The highest-value bounded interpretation was to make the installed support itself overperform during the ownership lap, because the catalog already had the right toys but the first install still flattened out too quickly once combat resumed.
+  Follow-up Risk: this makes the first support install read much louder in combat, but it is still a temporary lap-state boost layered on top of tier definitions. If later balance says one family spikes too hard or the final `Wave 8` upgrade no longer feels like enough of a second beat, the next pass should tune per-family surge scaling or replace the generic boost with family-specific visuals instead of reopening `Wave 9-12` scaffolding.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Progression
 
 - 2026-03-28 23:13:03 KST
   Changed: pushed one more shipped forge readability pass in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the base-route headline reward card no longer hides its object preview in the same small metadata row used by side cards. I added `createBaseRouteForgeSpotlightMarkup(...)` and moved the headline card to a dedicated top spotlight block that surfaces the installed weapon/support silhouette before the promise text, while leaving compact side cards unchanged. I updated [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) to give that spotlight a stronger hero treatment, and refreshed [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert shipped headline cards now render `forge-card__spotlight` instead of leaning on the smaller preview row.

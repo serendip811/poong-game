@@ -6505,7 +6505,61 @@
     return [];
   }
 
-  function computeSupportSystemStats(build) {
+  function getBaseRouteSupportProofSurge(build, waveNumber, systemEntry) {
+    if (
+      !CONSOLIDATED_12_WAVE_ROUTE ||
+      !build ||
+      !build.wave6ChassisBreakpoint ||
+      !systemEntry ||
+      systemEntry.preview ||
+      !Number.isFinite(waveNumber)
+    ) {
+      return null;
+    }
+    const boundedWave = clamp(Math.round(waveNumber || 0), 1, DEFAULT_ROUTE_WAVE_COUNT);
+    if (boundedWave < SUPPORT_SYSTEM_START_WAVE || boundedWave > DEFAULT_ROUTE_WAVE_COUNT) {
+      return null;
+    }
+    const installedSystems = getInstalledSupportSystems(build);
+    if (installedSystems.length !== 1 || installedSystems[0].id !== systemEntry.id) {
+      return null;
+    }
+    const stage = boundedWave >= DEFAULT_ROUTE_WAVE_COUNT ? 3 : boundedWave === 7 ? 2 : 1;
+    const countBonus = systemEntry.tier <= 1 ? 1 : 0;
+    const cooldownFactor = stage === 3 ? 0.78 : stage === 2 ? 0.86 : 0.92;
+    const orbitRadiusBonus = stage === 3 ? 12 : stage === 2 ? 8 : 5;
+    const orbitSpeedBonus = stage === 3 ? 0.28 : stage === 2 ? 0.2 : 0.12;
+    const satelliteRadiusBonus = stage === 3 ? 1.1 : stage === 2 ? 0.8 : 0.5;
+    const touchDamageBonus = stage === 3 ? 6 : stage === 2 ? 4 : 2;
+    const shotDamageBonus = stage === 3 ? 8 : stage === 2 ? 5 : 3;
+    const interceptRangeBonus = stage === 3 ? 14 : stage === 2 ? 10 : 6;
+    const interceptPulseDamageBonus = stage === 3 ? 7 : stage === 2 ? 5 : 3;
+    const interceptPulseRadiusBonus = stage === 3 ? 18 : stage === 2 ? 12 : 8;
+    const deployDurationBonus = stage === 3 ? 3.4 : stage === 2 ? 2.3 : 1.5;
+    const deployShotDamageBonus = stage === 3 ? 8 : stage === 2 ? 5 : 3;
+    const deployBurstBonus = stage >= 2 ? 1 : 0;
+    return {
+      countBonus,
+      cooldownFactor,
+      orbitRadiusBonus,
+      orbitSpeedBonus,
+      satelliteRadiusBonus,
+      touchDamageBonus,
+      shotDamageBonus,
+      interceptRangeBonus,
+      interceptPulseDamageBonus,
+      interceptPulseRadiusBonus,
+      deployDurationBonus,
+      deployShotDamageBonus,
+      deployBurstBonus,
+      statusNote:
+        stage === 3
+          ? `${SUPPORT_SYSTEM_DEFS[systemEntry.id]?.tiers[systemEntry.tier]?.title || systemEntry.id} proof surge가 최고조로 올라 설치 직후보다 더 두꺼운 ownership lap을 만든다.`
+          : `${SUPPORT_SYSTEM_DEFS[systemEntry.id]?.tiers[systemEntry.tier]?.title || systemEntry.id} proof surge가 한 기체 더 붙은 실루엣으로 올라 같은 pocket을 다시 열기 쉽게 만든다.`,
+    };
+  }
+
+  function computeSupportSystemStats(build, waveNumber = null) {
     build = getSanitizedConsolidatedBuild(build);
     const installedSystems = getInstalledSupportSystems(build);
     const doctrineCapstone = getDoctrineCapstoneDef(build);
@@ -6532,6 +6586,13 @@
         if (!system || !tierDef) {
           return null;
         }
+        const surge =
+          systemIndex === 0 ? getBaseRouteSupportProofSurge(build, waveNumber, entry) : null;
+        const orbitCount = tierDef.orbitCount || 0;
+        const hasOrbitFrame = orbitCount > 0;
+        const hasSatelliteShots = hasOrbitFrame && (tierDef.shotCooldown || 0) > 0;
+        const hasIntercept = hasOrbitFrame && (tierDef.interceptRange || 0) > 0;
+        const hasDeployable = (tierDef.deployCount || 0) > 0;
         return {
           id: system.id,
           tier: entry.tier,
@@ -6544,6 +6605,79 @@
           renderShape: system.renderShape,
           systemIndex,
           ...tierDef,
+          orbitCount: Math.max(0, orbitCount + (surge && hasOrbitFrame ? surge.countBonus : 0)),
+          orbitRadius: round(
+            (tierDef.orbitRadius || 0) + (surge && hasOrbitFrame ? surge.orbitRadiusBonus : 0),
+            1
+          ),
+          orbitSpeed: round(
+            (tierDef.orbitSpeed || 0) + (surge && hasOrbitFrame ? surge.orbitSpeedBonus : 0),
+            2
+          ),
+          satelliteRadius: round(
+            (tierDef.satelliteRadius || 0) + (surge && hasOrbitFrame ? surge.satelliteRadiusBonus : 0),
+            2
+          ),
+          touchDamage: (tierDef.touchDamage || 0) + (surge && hasOrbitFrame ? surge.touchDamageBonus : 0),
+          touchCooldown:
+            tierDef.touchCooldown > 0
+              ? round(
+                  Math.max(0.08, tierDef.touchCooldown * (surge ? surge.cooldownFactor : 1)),
+                  3
+                )
+              : 0,
+          shotCooldown:
+            tierDef.shotCooldown > 0
+              ? round(
+                  Math.max(0.12, tierDef.shotCooldown * (surge ? surge.cooldownFactor : 1)),
+                  3
+                )
+              : 0,
+          shotDamage:
+            (tierDef.shotDamage || 0) + (surge && hasSatelliteShots ? surge.shotDamageBonus : 0),
+          interceptRange:
+            (tierDef.interceptRange || 0) + (surge && hasIntercept ? surge.interceptRangeBonus : 0),
+          interceptCooldown:
+            tierDef.interceptCooldown > 0
+              ? round(
+                  Math.max(0.06, tierDef.interceptCooldown * (surge ? surge.cooldownFactor : 1)),
+                  3
+                )
+              : 0,
+          interceptPulseDamage:
+            (tierDef.interceptPulseDamage || 0) +
+            (surge && hasIntercept ? surge.interceptPulseDamageBonus : 0),
+          interceptPulseRadius:
+            (tierDef.interceptPulseRadius || 0) +
+            (surge && hasIntercept ? surge.interceptPulseRadiusBonus : 0),
+          deployCount: Math.max(
+            0,
+            (tierDef.deployCount || 0) + (surge && hasDeployable ? surge.countBonus : 0)
+          ),
+          deployCooldown:
+            tierDef.deployCooldown > 0
+              ? round(
+                  Math.max(0.18, tierDef.deployCooldown * (surge ? surge.cooldownFactor : 1)),
+                  3
+                )
+              : 0,
+          deployDuration: round(
+            (tierDef.deployDuration || 0) + (surge && hasDeployable ? surge.deployDurationBonus : 0),
+            2
+          ),
+          deployShotCooldown:
+            tierDef.deployShotCooldown > 0
+              ? round(
+                  Math.max(0.18, tierDef.deployShotCooldown * (surge ? surge.cooldownFactor : 1)),
+                  3
+                )
+              : 0,
+          deployShotDamage:
+            (tierDef.deployShotDamage || 0) +
+            (surge && hasDeployable ? surge.deployShotDamageBonus : 0),
+          deployBurstCount:
+            (tierDef.deployBurstCount || 0) + (surge && hasDeployable ? surge.deployBurstBonus : 0),
+          statusNote: [tierDef.statusNote, surge ? surge.statusNote : null].filter(Boolean).join(" "),
         };
       })
       .filter(Boolean);
@@ -19185,11 +19319,24 @@
     input.pointer.y = clamp(input.pointer.y, 0, arena.height);
   }
 
+  function getLiveSupportSystemWaveNumber(currentState = state) {
+    if (!CONSOLIDATED_12_WAVE_ROUTE || !currentState || currentState.phase !== "wave") {
+      return null;
+    }
+    if (currentState.wave && currentState.wave.baseRouteVictoryLap) {
+      return DEFAULT_ROUTE_WAVE_COUNT;
+    }
+    if (!Number.isFinite(currentState.waveIndex)) {
+      return null;
+    }
+    return clamp(currentState.waveIndex + 1, 1, DEFAULT_ROUTE_WAVE_COUNT);
+  }
+
   function refreshDerivedStats(preserveRatio) {
     sanitizeConsolidatedBuildState(state.build);
     state.weapon = computeWeaponStats(state.build);
     state.playerStats = computePlayerStats(state.build);
-    state.supportSystem = computeSupportSystemStats(state.build);
+    state.supportSystem = computeSupportSystemStats(state.build, getLiveSupportSystemWaveNumber(state));
     syncSupportSystemRuntime();
     if (!state.player) {
       return;
@@ -20387,6 +20534,8 @@
     state.player.fireCooldown = 0;
     state.player.dashCharges = state.player.dashMax;
     state.player.dashCooldownTimer = 0;
+    state.supportSystem = computeSupportSystemStats(state.build, waveNumber);
+    syncSupportSystemRuntime();
     pushCombatFeed(`${config.label} 진입. ${config.directive || config.note}`, `W${index + 1}`);
     if (blackLedgerRaidActive) {
       setBanner("Black Ledger Raid", 0.9);
@@ -21038,6 +21187,8 @@
     state.player.fireCooldown = 0;
     state.player.dashCharges = state.player.dashMax;
     state.player.dashCooldownTimer = 0;
+    state.supportSystem = computeSupportSystemStats(state.build, DEFAULT_ROUTE_WAVE_COUNT);
+    syncSupportSystemRuntime();
     pushCombatFeed(
       "차체 잠금 완료. 결과 패널 대신 짧은 승리 랩이 바로 열린다. 이번 구간은 추가 목표 없이 새 몸체 화력을 직접 누르는 domination window다.",
       "LAP"
