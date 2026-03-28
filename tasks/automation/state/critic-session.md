@@ -12,8 +12,8 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The weakest release gate is now `Rewards`, with `Progression` and `UX/UI` failing through the same root problem: the game still sells future structure and route grammar before the player feels one earned power spike.
-- Keep forcing a consolidation freeze around one honest shipped contract: lean opener, one weapon/body break, repeated Wave 5-8 ownership reps, short close. If docs or UI keep presenting signature/support/late-act breadth as part of the default promise, call it drift and tighten the stage.
-- Pressure should stay structural, not cosmetic. The valuable next critiques are about subtracting route wrappers, hiding inactive systems, extending mastery space, and protecting later spectacle from early overexposure.
-- Reward/reference rule remains strict: strong references sell one installed object first and one threat second. Attack `title / ask / payoff` shells, status-board prose, and any forge surface that reads like admin instead of appetite.
-- Repeated false solutions: adding more support ladders, primers, wildcard/ascension wrappers, Wave 9-12 scaffolding, or wording-only cleanups that leave the same overloaded run contract intact.
+- The weakest release gate is `Progression`: the run still starts too conceptually complete, so `Rewards` and `UX/UI` both collapse into the same problem of selling future structure before one earned spike lands.
+- Keep forcing a true consolidation freeze around the shipped 8-wave contract: no-signature opener, one Wave 5-6 weapon/body break, one earned late payoff, short close. If docs, forge, or feeds still advertise support/late-route breadth by default, call it drift immediately.
+- The useful critiques now are structural subtraction and payoff timing, not more naming cleanup. Push to hide inactive systems, reserve spectacle for later, and make Wave 5-8 feel like ownership plus anticipation instead of repeated route explanation.
+- Reference rule remains strict: strong arena roguelite reward screens lead with one installed power and keep the next ask secondary. Attack any `title / ask / payoff` shell or status-board prose that makes the player read before feeling.
+- Repeated false solutions: more support families, more ascension/cache wrappers, more Wave 9-12-visible scaffolding, or copy edits that preserve the same overloaded opener.

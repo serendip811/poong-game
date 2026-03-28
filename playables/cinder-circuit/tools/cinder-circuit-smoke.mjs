@@ -213,9 +213,37 @@ const openingContractSummary = game.getShippingContractSummary(
   game.computeWeaponStats(roadmapBuild),
   1
 );
-assert.equal(openingContractSummary.titleLabel, "런 실루엣");
+assert.equal(openingContractSummary.titleLabel, "현재 선체");
+assert.equal(openingContractSummary.titleValue, "빈 선체");
 assert.equal(openingContractSummary.leadLabel, "다음 도약");
 assert.equal(openingContractSummary.leadValue, "Wave 3 무기 굴절");
+const leanStartLaunchSummary = game.getLeanStartLaunchSummary(
+  roadmapBuild,
+  game.computeWeaponStats(roadmapBuild)
+);
+assert.equal(leanStartLaunchSummary.title, "빈 선체 돌입");
+assert.ok(leanStartLaunchSummary.detail.includes("Wave 3 무기 굴절"));
+assert.equal(
+  JSON.stringify(leanStartLaunchSummary.steps.map((step) => step.label)),
+  JSON.stringify(["Start", "Wave 3"])
+);
+assert.ok(
+  !/Wave 6|Lap|방호|보조|Late Break|Ascension/.test(
+    `${leanStartLaunchSummary.detail} ${leanStartLaunchSummary.steps.map((step) => step.value).join(" ")}`
+  )
+);
+const openingLiveStatus = game.getLiveSideBetSummary({
+  build: roadmapBuild,
+  waveIndex: 0,
+  phase: "wave",
+  wave: {},
+  catalystCrucible: { active: false },
+  overcommit: { active: false },
+  doctrinePursuit: { active: false },
+});
+assert.equal(openingLiveStatus?.label, "약한 시작");
+assert.equal(openingLiveStatus?.status, "Wave 3 무기 굴절");
+assert.ok(!/Wave 6|방호|보조|Late Break|Ascension/.test(openingLiveStatus?.note || ""));
 const midrunContractSummary = game.getShippingContractSummary(
   roadmapBuild,
   game.computeWeaponStats(roadmapBuild),
@@ -489,6 +517,8 @@ const openingForgeSummary = game.getShippingContractSummary(
   1,
   { phase: "forge" }
 );
+assert.equal(openingForgeSummary.titleLabel, "현재 선체");
+assert.equal(openingForgeSummary.titleValue, "빈 선체");
 assert.equal(openingForgeSummary.leadLabel, "지금 도약");
 assert.equal(openingForgeSummary.leadValue, "Wave 3 무기 굴절");
 const supportForgeSummary = game.getShippingContractSummary(
@@ -618,6 +648,8 @@ const openingPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   paused: true,
 });
 assert.ok(openingPauseSnapshotMarkup.includes("다음 도약"));
+assert.ok(openingPauseSnapshotMarkup.includes("현재 선체"));
+assert.ok(openingPauseSnapshotMarkup.includes("빈 선체"));
 assert.ok(openingPauseSnapshotMarkup.includes("route-contract--double"));
 assert.ok(!openingPauseSnapshotMarkup.includes("summary-head"));
 assert.ok(!openingPauseSnapshotMarkup.includes("최근 획득"));
@@ -625,6 +657,7 @@ assert.ok(!openingPauseSnapshotMarkup.includes("첫 포지 전"));
 assert.ok(!openingPauseSnapshotMarkup.includes("pause-summary__lanes"));
 assert.ok(!openingPauseSnapshotMarkup.includes("Bare Hull"));
 assert.ok(!openingPauseSnapshotMarkup.includes("조용한 계약"));
+assert.ok(!openingPauseSnapshotMarkup.includes("Wave 6"));
 const supportPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   build: chassisBranchBuild,
   weapon: game.computeWeaponStats(chassisBranchBuild),

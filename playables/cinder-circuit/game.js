@@ -9052,7 +9052,7 @@
         detail:
           boundedWave >= 3
             ? "빈 선체 구간은 끝났다. 이제 런의 큰 약속은 몸체 잠금과 후기 점화만 남는다."
-            : "처음 두 웨이브는 한 줄 화선으로 버틴다. 미사일과 보조 연출은 닫아 두고 Wave 3 무기 도약에 힘을 모은다.",
+            : "처음 두 웨이브는 한 줄 화선으로 버틴다. 자동 연출은 닫아 두고 Wave 3 무기 도약에 힘을 모은다.",
       },
       {
         label: "도약",
@@ -9091,6 +9091,7 @@
     const phase = options && options.phase ? options.phase : "combat";
     const currentWeapon = weapon || computeWeaponStats(build);
     const dominantForm = getDominantFormSummary(build, currentWeapon, boundedWave);
+    const preBreakWindow = boundedWave < 3 && phase !== "result";
     let leadLabel = phase === "forge" ? "지금 도약" : "다음 도약";
     let leadValue = "Wave 3 무기 굴절";
     if (phase === "result") {
@@ -9107,10 +9108,24 @@
       leadValue = "Wave 6 형태 증명";
     }
     return {
-      titleLabel: "런 실루엣",
-      titleValue: dominantForm.label,
+      titleLabel: preBreakWindow ? "현재 선체" : "런 실루엣",
+      titleValue: preBreakWindow ? "빈 선체" : dominantForm.label,
       leadLabel,
       leadValue,
+    };
+  }
+
+  function getLeanStartLaunchSummary(build, weapon = null) {
+    const currentWeapon = weapon || computeWeaponStats(build);
+    const titleFocus = getBaseRouteTransformationFocus(1, { stage: "title" });
+    const openingContract = getShippingContractSummary(build, currentWeapon, 1, { phase: "title" });
+    return {
+      title: titleFocus.title,
+      detail: `처음 두 웨이브는 한 줄 화선으로 버틴다. 살아남으면 ${openingContract.leadValue}이 열린다.`,
+      steps: [
+        { label: "Start", value: "조용한 시작" },
+        { label: "Wave 3", value: openingContract.leadValue },
+      ],
     };
   }
 
@@ -17393,6 +17408,7 @@
     getShippingLadderSteps,
     getShippingLadderFocus,
     getShippingContractSummary,
+    getLeanStartLaunchSummary,
     createShippingLadderMarkup,
     getDominantFormSummary,
     getImmediateProofWindowSummary,
@@ -19516,13 +19532,8 @@
       return;
     }
     if (CONSOLIDATED_12_WAVE_ROUTE) {
-      const titleFocus = getBaseRouteTransformationFocus(1, { stage: "title" });
       const titleBuild = createInitialBuild(DEFAULT_SIGNATURE_ID);
-      const titleWeapon = computeWeaponStats(titleBuild);
-      const openingContract = getShippingContractSummary(titleBuild, titleWeapon, 1);
-      const bendContract = getShippingContractSummary(titleBuild, titleWeapon, 3);
-      const proofContract = getShippingContractSummary(titleBuild, titleWeapon, 6);
-      const closingContract = getShippingContractSummary(titleBuild, titleWeapon, 8);
+      const titleLaunchSummary = getLeanStartLaunchSummary(titleBuild);
       elements.titleLaunchPanel.innerHTML = `
         <section class="title-launch-shell title-launch-shell--lean">
           <div class="title-launch-shell__frame" aria-hidden="true">
@@ -19535,13 +19546,15 @@
             </div>
           </div>
           <div class="title-launch-shell__copy title-launch-shell__copy--lean">
-            <strong class="title-launch-shell__headline title-launch-shell__headline--solo">${titleFocus.title}</strong>
-            <p class="title-launch-shell__detail">처음 두 웨이브는 한 줄 화선으로 버틴다. ${openingContract.leadValue}로 방향을 꺾고, ${bendContract.leadValue}만 노린 뒤 ${closingContract.leadValue}으로 짧게 닫는다.</p>
+            <strong class="title-launch-shell__headline title-launch-shell__headline--solo">${titleLaunchSummary.title}</strong>
+            <p class="title-launch-shell__detail">${titleLaunchSummary.detail}</p>
             <div class="title-launch-shell__proof-strip">
-              <div class="title-launch-shell__proof"><span>Start</span><strong>조용한 시작</strong></div>
-              <div class="title-launch-shell__proof"><span>Wave 3</span><strong>${openingContract.leadValue}</strong></div>
-              <div class="title-launch-shell__proof"><span>Wave 6</span><strong>${proofContract.leadValue}</strong></div>
-              <div class="title-launch-shell__proof"><span>Lap</span><strong>${closingContract.leadValue}</strong></div>
+              ${titleLaunchSummary.steps
+                .map(
+                  (step) =>
+                    `<div class="title-launch-shell__proof"><span>${step.label}</span><strong>${step.value}</strong></div>`
+                )
+                .join("")}
             </div>
           </div>
         </section>

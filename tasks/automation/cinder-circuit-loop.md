@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: align docs, title/forge/HUD, and Wave 5-8 combat around one honest replayable 8-wave weapon/body climb, with run-start signature/support/late-act promises suppressed until the midrun mastery loop is genuinely rerunnable.
+- Immediate priority: strip the shipped route to a fragile no-signature opener, one Wave 5-6 weapon/body break, and one earned Wave 7-8 payoff while hiding support/late-route grammar until it is actually awarded.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-28 21:20:00 KST
+  Findings:
+  - The run still opens with build theory instead of fragility. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L9) and [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L24) still define the default start around `Signature` plus three reward lanes, which directly conflicts with the loop rule that early waves should be quieter, smaller, and easier to read.
+  - The live implementation is still balancing an 8-wave run in the shadow of a 12-wave roadmap. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L523) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L760) keep Wave 9-12 cells active beside the shipped ladder, and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L19969) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20012) still surface `Late Break Armory`, `Live Ascension`, and route promises in normal flow.
+  - Wave 5-8 combat has more room, but it still spends that room proving the same ownership sentence instead of escalating desire. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L440) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L617) mostly repeat lane-claim and corridor-hold exams, while the Wave 8 victory lap still describes a `body/support bracket` rather than a newly earned visible toy.
+  - The forge reward beat is still too contractual compared with strong references such as `Hades`, `Nova Drift`, or `Brotato`, where the player reads one power object first and the next ask second. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L24563) through [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L24718) still route the screen through `title / current form / wave ask / branch payoff`, which keeps the forge feeling like admin.
+  Top Priority: Put the shipped build into a real consolidation freeze by removing `Signature` from the default run contract and hiding support/late-route route grammar until after the first weapon/body break has already landed on-screen.
+  Why Now: A run that begins conceptually complete cannot generate the hunger or transformation curve needed for repeated play.
+  Do Not Repeat: Do not answer this with more branch scaffolding, more support taxonomies, or shorter synonyms for the same three-lane opener.
+  Release Gate: Progression
 
 - 2026-03-28 20:45:00 KST
   Findings:
@@ -6108,6 +6119,12 @@ This file is shared by two recurring Codex CLI jobs.
   Freeze: Pause new systems and late-route expansion until the base `Wave 1-12` run reads cleanly enough that a player can describe the finale without using internal draft/cache/ascension vocabulary.
 
 ## Latest Improvement
+
+- 2026-03-28 22:10:00 KST
+  Changed: tightened the shipped opener contract in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so pre-`Wave 3` player-facing surfaces stop advertising a partly complete run. `getShippingContractSummary(...)` now shows `현재 선체 / 빈 선체` before the first weapon break instead of `런 실루엣`, `getShippingLadderSteps(...)` drops the early `보조` mention from the `START` note, and the title shell now routes through a new `getLeanStartLaunchSummary(...)` helper so it only sells `조용한 시작 -> Wave 3 무기 굴절` rather than briefing `Wave 6` and the closing lap up front. I updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the lean launch summary, the early live-status copy, and the `빈 선체` opening pause/status strip. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the latest critique's `Top Priority` was still open at the very start of the run, because the default title and early status contract were still presenting too much future structure before the first weapon/body break had earned attention. The highest-value bounded interpretation was to make the opener feel truly fragile and incomplete on the surfaces the player sees first, without reopening docs, support timing, or broader progression scaffolding.
+  Follow-up Risk: the opener now hides later route grammar more cleanly, but shipped docs and some deeper non-default summaries can still mention `Signature` or longer-route promises outside this start-facing slice. If critique keeps saying the game opens with theory instead of hunger, the next bounded pass should hit the remaining shipped-facing docs or Tab/readout summaries rather than re-expanding start UI.
+  Release Gate: Progression
 
 - 2026-03-28 15:42:34 KST
   Changed: rewired the shipped forge reward header in [game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the base-route overlay no longer leads with `런 실루엣` plus `지금 도약/준비/증명`. I added `getBaseRouteForgeSpotlightSummary(...)` and routed `renderForgeOverlay()` through it, which makes the context card mirror the actual on-screen pickup instead: the first slot now uses the chosen card's own preview label/value such as the weapon evolution or installed rider identity, and the second slot stays on one `다음 시험` line. Final forge still collapses to `형태 고정 + 마무리`. I also updated [cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock headline/rider/final spotlight summaries, and validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
