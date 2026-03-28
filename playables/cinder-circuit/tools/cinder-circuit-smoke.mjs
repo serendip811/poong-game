@@ -225,10 +225,12 @@ const leanStartLaunchSummary = game.getLeanStartLaunchSummary(
 );
 assert.equal(leanStartLaunchSummary.title, "빈 선체 돌입");
 assert.ok(leanStartLaunchSummary.detail.includes("Wave 3 무기 방향"));
-assert.equal(
-  JSON.stringify(leanStartLaunchSummary.steps.map((step) => step.label)),
-  JSON.stringify(["Start", "Wave 3", "Wave 6", "Wave 8"])
-);
+assert.equal(leanStartLaunchSummary.hullLabel, "현재 선체");
+assert.equal(leanStartLaunchSummary.hullValue, "빈 선체");
+assert.equal(leanStartLaunchSummary.hookLabel, "첫 도약");
+assert.equal(leanStartLaunchSummary.hookValue, "Wave 3 무기 방향");
+assert.ok(!leanStartLaunchSummary.detail.includes("Wave 6"));
+assert.ok(!leanStartLaunchSummary.detail.includes("Wave 8"));
 const openingLiveStatus = game.getLiveSideBetSummary({
   build: roadmapBuild,
   waveIndex: 0,

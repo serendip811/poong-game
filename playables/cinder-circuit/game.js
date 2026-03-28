@@ -9131,12 +9131,10 @@
     return {
       title: titleFocus.title,
       detail: `처음 두 웨이브는 한 줄 화선으로 버틴다. 살아남으면 ${openingContract.leadValue}이 열린다.`,
-      steps: [
-        { label: "Start", value: "조용한 시작" },
-        { label: "Wave 3", value: openingContract.leadValue },
-        { label: "Wave 6", value: "지원 설치" },
-        { label: "Wave 8", value: "숙련 랩" },
-      ],
+      hullLabel: "현재 선체",
+      hullValue: "빈 선체",
+      hookLabel: "첫 도약",
+      hookValue: openingContract.leadValue,
     };
   }
 
@@ -19955,13 +19953,15 @@
           <div class="title-launch-shell__copy title-launch-shell__copy--lean">
             <strong class="title-launch-shell__headline title-launch-shell__headline--solo">${titleLaunchSummary.title}</strong>
             <p class="title-launch-shell__detail">${titleLaunchSummary.detail}</p>
-            <div class="title-launch-shell__proof-strip">
-              ${titleLaunchSummary.steps
-                .map(
-                  (step) =>
-                    `<div class="title-launch-shell__proof"><span>${step.label}</span><strong>${step.value}</strong></div>`
-                )
-                .join("")}
+            <div class="title-launch-shell__status-strip">
+              <div class="title-launch-shell__status">
+                <span>${titleLaunchSummary.hullLabel}</span>
+                <strong>${titleLaunchSummary.hullValue}</strong>
+              </div>
+              <div class="title-launch-shell__status title-launch-shell__status--hot">
+                <span>${titleLaunchSummary.hookLabel}</span>
+                <strong>${titleLaunchSummary.hookValue}</strong>
+              </div>
             </div>
           </div>
         </section>
