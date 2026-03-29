@@ -13370,6 +13370,23 @@
     };
   }
 
+  function createWave6SupportFallbackChoice(preferredInstallSummary = null) {
+    const fallbackTitle =
+      (preferredInstallSummary && preferredInstallSummary.title) || "첫 지원 설치";
+    return {
+      type: "fallback",
+      id: `fallback:wave6_support_hold:${fallbackTitle}`,
+      tag: "VENT",
+      title: "Emergency Vent",
+      description: `${fallbackTitle}는 이번 정지에서 보류하고 열과 체력만 정리한다. Wave 6-7 support ownership 증명은 포기하지만, 바로 다음 진입 각만 다시 세운다.`,
+      slotText: "무료 안정화 · support install 보류",
+      cost: 0,
+      laneLabel: "안정화",
+      forgeLaneLabel: "안정화",
+      wave6SupportFallback: true,
+    };
+  }
+
   function getInstalledSupportSpotlight(build) {
     const supportSnapshot = getInstalledSupportSnapshot(build);
     if (!supportSnapshot || !supportSnapshot.primary) {
@@ -14510,7 +14527,9 @@
         ? promotedSupportHeadlineChoice
         : adaptiveHeadlineChoice;
     const riderChoice = shouldHeadlineSupportInstall
-      ? adaptiveHeadlineChoice
+      ? createWave6SupportFallbackChoice(
+          getWave6BreakpointInstallSummary(adaptiveRiderChoice.systemChoice)
+        )
       : shouldKeepWave8SupportFork
         ? adaptiveRiderChoice || adaptiveHeadlineChoice
         : shouldPromoteSupportHeadline
@@ -14518,7 +14537,7 @@
         : adaptiveRiderChoice;
     const headlineLabel = shouldHeadlineSupportInstall || shouldPromoteSupportHeadline ? "설치" : "주력";
     const riderLabel = shouldHeadlineSupportInstall
-      ? "주포"
+      ? "버팀"
       : shouldKeepWave8SupportFork
         ? "분기"
         : shouldPromoteSupportHeadline
@@ -16687,25 +16706,28 @@
       ? createSupportSystemTierChoice(preferredSystemId, 1)
       : null;
     const preferredInstallSummary = getWave6BreakpointInstallSummary(preferredSystemChoice);
-    const chassisDefs = Object.values(CHASSIS_BREAKPOINT_DEFS);
-    const chassisChoices = chassisDefs.map((chassisDef) => ({
+    const ascensionDef = doctrine ? WAVE6_ASCENSION_DEFS[doctrine.id] || null : null;
+    const featuredChassisDef =
+      (ascensionDef && getChassisBreakpointDef(ascensionDef.chassisId)) ||
+      CHASSIS_BREAKPOINT_DEFS.vector_thrusters;
+    const featuredChoice = {
       type: "utility",
       action: "bastion_bay_forge",
-      id: `utility:bastion_chassis_break:${chassisDef.id}:${preferredSystemChoice ? preferredSystemChoice.systemId : "support"}`,
+      id: `utility:bastion_chassis_break:${featuredChassisDef.id}:${preferredSystemChoice ? preferredSystemChoice.systemId : "support"}`,
       verb: "접합",
-      tag: chassisDef.tag,
-      title: chassisDef.title,
+      tag: featuredChassisDef.tag,
+      title: featuredChassisDef.title,
       description: CONSOLIDATED_12_WAVE_ROUTE
-        ? `${chassisDef.description} 이번 정지에서는 차체 안쪽에 ${preferredInstallSummary ? preferredInstallSummary.value : preferredSystemChoice ? preferredSystemChoice.title : "교리 방호"}를 숨겨 붙여, Wave 6부터 한 줄 더 버티는 새 몸체 실루엣으로 바로 바뀐다. 남은 루트는 관리 문구를 읽는 시간이 아니라 이 자세가 pocket ownership을 얼마나 오래 버티는지 증명하는 구간이다.`
-        : `${chassisDef.description} 이번 정지에서는 차체 실루엣만 먼저 확정하고 support bay 증설은 뒤로 미룬다.`,
+        ? `${featuredChassisDef.description} 이번 정지의 대표 설치는 ${preferredInstallSummary ? preferredInstallSummary.title : preferredSystemChoice ? preferredSystemChoice.title : "교리 방호"} 하나다. ${preferredInstallSummary ? preferredInstallSummary.value : "새 버팀선"}를 차체 안쪽에 바로 붙여 Wave 6부터 두 전투를 이 실루엣으로 밀어붙인다.`
+        : `${featuredChassisDef.description} 이번 정지에서는 차체 실루엣만 먼저 확정하고 support bay 증설은 뒤로 미룬다.`,
       slotText: preferredSystemChoice
-        ? `섀시 breakpoint · ${chassisDef.slotText} · ${preferredInstallSummary ? preferredInstallSummary.value : preferredSystemChoice.title}`
-        : `섀시 breakpoint · ${chassisDef.slotText}`,
+        ? `대표 설치 · ${preferredInstallSummary ? preferredInstallSummary.title : preferredSystemChoice.title} · ${featuredChassisDef.slotText}`
+        : `대표 설치 · ${featuredChassisDef.slotText}`,
       cost: 0,
-      laneLabel: "섀시 breakpoint",
-      forgeLaneLabel: "섀시 breakpoint",
-      chassisId: chassisDef.id,
-      chassisTitle: chassisDef.title,
+      laneLabel: "대표 설치",
+      forgeLaneLabel: "대표 설치",
+      chassisId: featuredChassisDef.id,
+      chassisTitle: featuredChassisDef.title,
       skipNextAdminStop: true,
       bayUnlock: Boolean(preferredSystemChoice),
       systemChoice: preferredSystemChoice
@@ -16714,38 +16736,8 @@
             cost: 0,
           }
         : null,
-    }));
-    if (chassisChoices.length > 0) {
-      return chassisChoices;
-    }
-    return [{
-      type: "utility",
-      action: "bastion_bay_forge",
-      id: `utility:bastion_chassis_break:vector_thrusters:${preferredSystemChoice ? preferredSystemChoice.systemId : "support"}`,
-      verb: "접합",
-      tag: CHASSIS_BREAKPOINT_DEFS.vector_thrusters.tag,
-      title: CHASSIS_BREAKPOINT_DEFS.vector_thrusters.title,
-      description:
-        preferredSystemChoice
-          ? `대시 충격파와 slipstream을 여는 Vector Thrusters 안쪽에 ${preferredInstallSummary ? preferredInstallSummary.value : preferredSystemChoice.title}를 숨겨 붙여 Wave 6부터 flank 복귀선과 pocket 제어를 같이 바꾼다. 남은 루트는 이 새 자세를 더 오래 밀어붙이는 증명 구간이 된다.`
-          : "대시 충격파와 slipstream을 여는 Vector Thrusters를 장착하고, support bay 증설은 뒤로 미뤄 Wave 6-7 두 번의 짧은 랩을 차체 리듬만으로 버티게 만든다.",
-      slotText: preferredSystemChoice
-        ? `섀시 breakpoint · Vector Thrusters · ${preferredInstallSummary ? preferredInstallSummary.value : preferredSystemChoice.title}`
-        : "섀시 breakpoint · Vector Thrusters",
-      cost: 0,
-      laneLabel: "섀시 breakpoint",
-      forgeLaneLabel: "섀시 breakpoint",
-      chassisId: CHASSIS_BREAKPOINT_DEFS.vector_thrusters.id,
-      chassisTitle: CHASSIS_BREAKPOINT_DEFS.vector_thrusters.title,
-      skipNextAdminStop: true,
-      bayUnlock: Boolean(preferredSystemChoice),
-      systemChoice: preferredSystemChoice
-        ? {
-            ...preferredSystemChoice,
-            cost: 0,
-          }
-        : null,
-    }];
+    };
+    return [featuredChoice, createWave6SupportFallbackChoice(preferredInstallSummary)];
   }
 
   function buildBastionDraftChoices(build, rng, nextWave) {

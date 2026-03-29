@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: prove one honest `Wave 1-8` loop where `Wave 6` support ownership lands without `Wave 7` wildcard rescue or `Wave 8` bailout, and shipped-facing UI only sells current power plus one next ask.
+- Immediate priority: stop adding route wrappers and prove one honest `Wave 6-8` support ownership chapter with a quiet forge/status read, two clean payoff fights, and no wildcard or bailout rescue.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 16:45:00 KST
+  Findings:
+  - The loop is starting to cycle on the same fake-depth problem: there are already enough shields, missiles, drones, orbitals, and late-form hooks in the project, but the shipped run still does not give one support install a clean, repeatable ownership chapter. More systems will not fix a chapter that still arrives through rescue logic and admin framing.
+  - The current forge/status shell is still hiding the fantasy behind too much structure. Against `Hades` boon screens, `Nova Drift` level-ups, or `Brotato` shop reads, `Cinder Circuit` is still spending too much hierarchy on `proof`, `rider`, `roadmap`, `current machine`, and route explanation instead of one obvious install silhouette and one immediate combat promise.
+  - The early-to-mid growth curve is still too visually complete for the payoff it wants later. If the opener already feels busy and armed, then `Wave 6` support cannot feel like the first real mutation; it just looks like extra noise attached to an already-finished chassis.
+  - The longer-run ambition is still not being scaffolded honestly. A future `20-30 wave` game needs a repeatable chapter pattern where each power layer gets breathing room and then a proof fight; the current shipped route still reads more like compressed exception handling than the first bracket of a scalable roguelite arc.
+  Top Priority: Rebuild the shipped `Wave 6` forge/pause/HUD moment around one featured support install, one secondary fallback, and almost no route text, then tune `Wave 6-8` so that install gets two readable fights of space ownership before any extra escalation returns.
+  Why Now: Until one support chapter becomes clear, desirable, and repeatable, every new weapon branch or future-wave plan is just stacking content onto an unproven loop.
+  Do Not Repeat: Do not spend another pass adding support content, wildcard unlocks, or softer wording on the same forge shell.
+  Release Gate: Rewards
 
 - 2026-03-29 14:10:00 KST
   Findings:
@@ -4532,6 +4543,18 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-29 19:05:00 KST
+  Changed:
+  - Reworked shipped `Wave 6` support drafting in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `buildWave6ChassisBreakpointChoices(...)` now surfaces one doctrine-owned featured install package instead of a three-chassis menu. Each doctrine now enters the chapter through one clear chassis/support silhouette, and the only alternate card is an explicit `Emergency Vent` fallback.
+  - Updated the compact base-route forge assembly in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 6` no longer pairs the featured support install with a second `주포` headline-adjacent card. `buildForgeChoices(...)` now keeps that stop on `설치 -> 버팀`, which makes the support chapter read as one dominant mutation plus one safety exit.
+  - Refreshed [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new two-card expectation across direct `Wave 6` forge construction, doctrine-specific chassis packages, and representative support-proof paths, then re-ran the existing smoke test.
+  Why:
+  - The latest critique's `Top Priority` called for rebuilding the shipped `Wave 6` forge/pause/HUD moment around one featured support install and one secondary fallback with almost no route text. The highest-value bounded interpretation inside the current slice was to remove the fake-equal chassis/weapon competition at the reward source itself, so the first support chapter finally reads like a deliberate install beat instead of a prototype menu.
+  Follow-up Risk:
+  - This makes the `Wave 6` reward moment much clearer, but it also reduces local chassis choice at that stop to one doctrine-authored package. If critique next says the chapter is cleaner but too predetermined, the next bounded pass should add differentiation through the two ownership fights or the fallback's tradeoff, not by reopening three same-weight cards at the same forge.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Rewards
 
 - 2026-03-29 18:20:00 KST
   Changed:
