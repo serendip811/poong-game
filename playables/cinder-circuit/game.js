@@ -2277,8 +2277,12 @@
     if (!baseConfig || index < LATE_BREAK_ARMORY_WAVE - 1 || !build) {
       return applySupportChapterBreathingRoom(
         applySupportProofEncounterConfig(
-          applyChassisBreakpointEncounterConfig(
-            applyEncounterPressureFamily(baseConfig),
+          applyWave5FieldPathEncounterConfig(
+            applyChassisBreakpointEncounterConfig(
+              applyEncounterPressureFamily(baseConfig),
+              build,
+              index + 1
+            ),
             build,
             index + 1
           ),
@@ -2295,8 +2299,12 @@
     if (!override) {
       return applySupportChapterBreathingRoom(
         applySupportProofEncounterConfig(
-          applyChassisBreakpointEncounterConfig(
-            applyEncounterPressureFamily(baseConfig),
+          applyWave5FieldPathEncounterConfig(
+            applyChassisBreakpointEncounterConfig(
+              applyEncounterPressureFamily(baseConfig),
+              build,
+              index + 1
+            ),
             build,
             index + 1
           ),
@@ -2314,8 +2322,12 @@
     }
     return applySupportChapterBreathingRoom(
       applySupportProofEncounterConfig(
-        applyChassisBreakpointEncounterConfig(
-          applyEncounterPressureFamily(config),
+        applyWave5FieldPathEncounterConfig(
+          applyChassisBreakpointEncounterConfig(
+            applyEncounterPressureFamily(config),
+            build,
+            index + 1
+          ),
           build,
           index + 1
         ),
@@ -16121,6 +16133,169 @@
             ? "Scrapline caravan이 외곽으로 달아난다. chase 각을 내면 payout은 크지만 복귀 flank가 급하게 얇아진다."
             : "Scrapline vault가 크게 열린다. pocket을 빨리 찢고 빠질수록 greed payout이 깔끔하게 남는다.",
       },
+    };
+    return nextConfig;
+  }
+
+  function applyWave5FieldPathEncounterConfig(config, build, waveNumber) {
+    if (
+      !CONSOLIDATED_12_WAVE_ROUTE ||
+      !config ||
+      !build ||
+      !Number.isFinite(waveNumber) ||
+      waveNumber < 6 ||
+      waveNumber > 8
+    ) {
+      return config;
+    }
+    const branchSummary = getBaseRouteWave5FieldPathSummary(build, waveNumber);
+    if (!branchSummary || branchSummary.id === "greed") {
+      return config;
+    }
+    const nextConfig = {
+      ...config,
+      arena: config.arena ? { ...config.arena } : null,
+      hazard: config.hazard ? { ...config.hazard } : null,
+      mix: { ...(config.mix || {}) },
+    };
+    if (branchSummary.id === "offense") {
+      nextConfig.arena = {
+        width: Math.max(waveNumber === 8 ? 1960 : waveNumber === 7 ? 1880 : 1760, nextConfig.arena?.width || 0),
+        height: Math.max(waveNumber === 8 ? 1100 : waveNumber === 7 ? 1060 : 1000, nextConfig.arena?.height || 0),
+      };
+      nextConfig.mix = blendEnemyMix(
+        nextConfig.mix,
+        waveNumber === 6
+          ? { shrike: 0.26, lancer: 0.22, skimmer: 0.14 }
+          : waveNumber === 7
+            ? { shrike: 0.24, lancer: 0.18, brander: 0.14, skimmer: 0.12 }
+            : { shrike: 0.18, lancer: 0.22, brute: 0.12, brander: 0.14 },
+        waveNumber === 8 ? 0.25 : 0.21
+      );
+      nextConfig.driveGainFactor = Math.max(
+        nextConfig.driveGainFactor || 1,
+        waveNumber === 8 ? 1.36 : waveNumber === 7 ? 1.33 : 1.29
+      );
+      nextConfig.activeCap = Math.max(16, (nextConfig.activeCap || 18) - 1);
+      if (nextConfig.hazard) {
+        nextConfig.hazard.label =
+          waveNumber === 6 ? "Killline Relay" : waveNumber === 7 ? "Cinder Chase" : "Breach Pocket";
+        if (Number.isFinite(nextConfig.hazard.interval)) {
+          nextConfig.hazard.interval *= waveNumber === 8 ? 0.96 : 0.92;
+        }
+        if (Number.isFinite(nextConfig.hazard.telegraph)) {
+          nextConfig.hazard.telegraph = Math.max(0.62, nextConfig.hazard.telegraph - 0.06);
+        }
+        if (Number.isFinite(nextConfig.hazard.relayWidth)) {
+          nextConfig.hazard.relayWidth += waveNumber === 8 ? 8 : 6;
+        }
+        if (Number.isFinite(nextConfig.hazard.relayRange)) {
+          nextConfig.hazard.relayRange = Math.max(300, nextConfig.hazard.relayRange - 44);
+        }
+        if (Number.isFinite(nextConfig.hazard.driftSpeed)) {
+          nextConfig.hazard.driftSpeed += waveNumber === 8 ? 14 : 10;
+        }
+        if (Number.isFinite(nextConfig.hazard.driftOrbit)) {
+          nextConfig.hazard.driftOrbit += 0.04;
+        }
+        if (Number.isFinite(nextConfig.hazard.enemyPullRadius)) {
+          nextConfig.hazard.enemyPullRadius = Math.max(110, nextConfig.hazard.enemyPullRadius - 20);
+        }
+        if (Number.isFinite(nextConfig.hazard.coreHp)) {
+          nextConfig.hazard.coreHp = Math.max(30, nextConfig.hazard.coreHp - 6);
+        }
+      }
+      nextConfig.note =
+        waveNumber === 6
+          ? `${config.note} Wave 5 공세 추적이 첫 relay 칸을 kill-lane breach로 다시 묶어, 가장 약한 입구 하나를 길게 찢고 그 seam만 연속으로 늘어뜨리게 만든다.`
+          : waveNumber === 7
+            ? `${config.note} Wave 5 공세 추적이 drift 싸움을 같은 재진입 seam 추적으로 바꿔, 열린 안쪽 lane을 버리지 않고 계속 앞으로 눌러 붙이게 만든다.`
+            : `${config.note} Wave 5 공세 추적 결산은 pocket hold보다 breach chain을 요구해, wardens가 남긴 마지막 전열 틈을 앞쪽으로 갈아타며 끝까지 비우게 만든다.`;
+      nextConfig.directive =
+        waveNumber === 6
+          ? "가장 얇은 relay 입구를 먼저 찢고 그 seam만 길게 전진한다. flank를 넓게 돌기보다 열린 kill-lane 안에서 연속 처치로 앞으로 눌러 붙는 편이 맞다."
+          : waveNumber === 7
+            ? "drift 바깥으로 빠지지 말고 비운 안쪽 seam으로 바로 다시 꽂힌다. 한 번 연 lane을 버리면 공세 리듬도 같이 식는다."
+            : "마지막 pocket은 지키지 말고 뚫는 쪽으로 푼다. 가장 약한 전열 틈 둘만 연속으로 갈아타며 앞쪽 lane을 끝까지 비우는 편이 맞다.";
+      nextConfig.chassisProof = {
+        label: waveNumber === 6 ? "Killline Breach" : waveNumber === 7 ? "Seam Chase" : "Forward Clear",
+        status: waveNumber === 6 ? "open-lane pressure" : waveNumber === 7 ? "repeat entry seam" : "breach chain finish",
+        note:
+          waveNumber === 6
+            ? "열린 입구 하나를 길게 찢고 같은 seam으로 더 깊게 전진하는 공세 proof다."
+            : waveNumber === 7
+              ? "비운 seam으로 바로 다시 꽂혀 같은 lane 압박을 유지하는 공세 proof다."
+              : "마지막 전열 틈 둘만 연속으로 갈아타며 forward clear를 완성하는 공세 proof다.",
+      };
+      return nextConfig;
+    }
+    nextConfig.arena = {
+      width: Math.max(waveNumber === 8 ? 1980 : waveNumber === 7 ? 1900 : 1800, nextConfig.arena?.width || 0),
+      height: Math.max(waveNumber === 8 ? 1120 : waveNumber === 7 ? 1080 : 1020, nextConfig.arena?.height || 0),
+    };
+    nextConfig.mix = blendEnemyMix(
+      nextConfig.mix,
+      waveNumber === 6
+        ? { brute: 0.22, binder: 0.16, warden: 0.16 }
+        : waveNumber === 7
+          ? { brute: 0.18, binder: 0.16, warden: 0.18, shrike: 0.1 }
+          : { brute: 0.16, binder: 0.14, warden: 0.2, lancer: 0.1 },
+      waveNumber === 8 ? 0.23 : 0.2
+    );
+    nextConfig.driveGainFactor = Math.max(
+      nextConfig.driveGainFactor || 1,
+      waveNumber === 8 ? 1.3 : waveNumber === 7 ? 1.27 : 1.24
+    );
+    nextConfig.activeCap = Math.max(13, (nextConfig.activeCap || 18) - (waveNumber === 8 ? 3 : 4));
+    if (nextConfig.hazard) {
+      nextConfig.hazard.label =
+        waveNumber === 6 ? "Refuge Relay" : waveNumber === 7 ? "Breather Drift" : "Holdfast Pocket";
+      if (Number.isFinite(nextConfig.hazard.interval)) {
+        nextConfig.hazard.interval *= waveNumber === 8 ? 1.08 : 1.14;
+      }
+      if (Number.isFinite(nextConfig.hazard.telegraph)) {
+        nextConfig.hazard.telegraph += waveNumber === 8 ? 0.05 : 0.08;
+      }
+      if (Number.isFinite(nextConfig.hazard.duration)) {
+        nextConfig.hazard.duration += waveNumber === 8 ? 0.4 : 0.6;
+      }
+      if (Number.isFinite(nextConfig.hazard.relayRange)) {
+        nextConfig.hazard.relayRange += 68;
+      }
+      if (Number.isFinite(nextConfig.hazard.driftSpeed)) {
+        nextConfig.hazard.driftSpeed = Math.max(82, nextConfig.hazard.driftSpeed - 18);
+      }
+      if (Number.isFinite(nextConfig.hazard.driftOrbit)) {
+        nextConfig.hazard.driftOrbit = Math.max(0.12, nextConfig.hazard.driftOrbit - 0.06);
+      }
+      if (Number.isFinite(nextConfig.hazard.enemyPullRadius)) {
+        nextConfig.hazard.enemyPullRadius += 24;
+      }
+      if (Number.isFinite(nextConfig.hazard.coreHp)) {
+        nextConfig.hazard.coreHp += 12;
+      }
+    }
+    nextConfig.note =
+      waveNumber === 6
+        ? `${config.note} Wave 5 방호 고정이 relay 시험을 refuge hold로 바꿔, 가장 안전한 corridor 하나를 오래 붙들며 회복 각과 재진입 타이밍을 벌게 만든다.`
+        : waveNumber === 7
+          ? `${config.note} Wave 5 방호 고정이 drift 구간을 breather lap으로 눌러, 외곽 pocket 둘을 번갈아 쓰며 같은 복귀선을 계속 살려 두게 만든다.`
+          : `${config.note} Wave 5 방호 고정 결산은 마지막 territory를 holdfast pocket으로 바꿔, 비워 둔 refuge 둘을 번갈아 써야만 막판 pressure를 안정적으로 털어내게 만든다.`;
+    nextConfig.directive =
+      waveNumber === 6
+        ? "가장 안전한 relay corridor 하나를 먼저 정리하고 그 자리에서 회복 각을 번다. 멀리 chase하기보다 같은 pocket을 오래 붙들며 재진입 타이밍을 기다리는 편이 맞다."
+        : waveNumber === 7
+          ? "drift를 길게 따라가지 말고 외곽 refuge 둘만 번갈아 쓴다. 복귀선을 유지하면 pocket이 계속 살아 남고, 무리한 chase를 하면 방호 리듬이 바로 끊긴다."
+          : "마지막 territory는 비워 둔 refuge 둘을 번갈아 쓰며 턴다. 깊게 들어가 오래 버티기보다 안전 pocket을 교대하며 pressure를 분리하는 편이 맞다.";
+    nextConfig.chassisProof = {
+      label: waveNumber === 6 ? "Refuge Hold" : waveNumber === 7 ? "Breather Loop" : "Safe Pocket Chain",
+      status: waveNumber === 6 ? "recovery corridor" : waveNumber === 7 ? "alternating refuge" : "holdfast finish",
+      note:
+        waveNumber === 6
+          ? "복귀 corridor 하나를 길게 붙들며 회복 각을 벌어 두는 방호 proof다."
+          : waveNumber === 7
+            ? "외곽 refuge 둘을 번갈아 써서 같은 복귀선을 살리는 방호 proof다."
+            : "안전 pocket 둘을 교대하며 막판 pressure를 털어내는 방호 proof다.",
     };
     return nextConfig;
   }

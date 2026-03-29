@@ -575,12 +575,26 @@ game.applyForgeChoice(
 );
 assert.equal(offenseBranchBuild.wave5FieldPathId, "offense");
 assert.equal(game.getImmediateProofWindowSummary(offenseBranchBuild, 6).detail, "열린 입구 하나를 길게 찢는다.");
+const offenseWave6Config = game.resolveWaveConfig(5, offenseBranchBuild);
+const offenseWave7Config = game.resolveWaveConfig(6, offenseBranchBuild);
+assert.equal(offenseWave6Config.hazard?.label, "Killline Relay");
+assert.ok(offenseWave6Config.directive.includes("kill-lane"));
+assert.ok((offenseWave6Config.activeCap || 0) <= 16);
+assert.equal(offenseWave7Config.chassisProof?.label, "Seam Chase");
+assert.ok((offenseWave7Config.arena?.width || 0) >= 1880);
 const defenseBranchBuild = game.createInitialBuild("rail_zeal");
 game.applyForgeChoice(
   { build: defenseBranchBuild, resources: { scrap: 999 }, stats: { scrapSpent: 0 }, feed: [], waveIndex: 3 },
   wave5DefenseChoice
 );
 assert.equal(defenseBranchBuild.wave5FieldPathId, "defense");
+const defenseWave6Config = game.resolveWaveConfig(5, defenseBranchBuild);
+const defenseWave8Config = game.resolveWaveConfig(7, defenseBranchBuild);
+assert.equal(defenseWave6Config.hazard?.label, "Refuge Relay");
+assert.ok(defenseWave6Config.directive.includes("relay corridor"));
+assert.ok((defenseWave6Config.activeCap || 99) <= 13);
+assert.equal(defenseWave8Config.chassisProof?.label, "Safe Pocket Chain");
+assert.ok((defenseWave8Config.hazard?.enemyPullRadius || 0) >= 162);
 const defensePauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   build: defenseBranchBuild,
   weapon: game.computeWeaponStats(defenseBranchBuild),
