@@ -154,29 +154,29 @@
   - add a lightweight `weapon bench` layer above it
   - let the player hold a few candidate weapon pieces or duplicate cores during the run
 
-## Principle 4. Characters and runes should be compressed into signatures
+## Principle 4. Characters and runes should be compressed into a hidden lean-start bias
 
-- Full character select plus rune tree is too much for the current scope.
-- The correct browser translation is not “ignore them completely”.
+- Full character select plus rune tree is too much for the current shipped scope.
+- The correct browser translation is not “show another menu”.
 - Recommended compression:
-  - use one `run-start signature` choice at run start
-  - each signature should mimic the source logic without copying names
-- Current signature directions:
+  - keep one hidden doctrine bias that tilts `Wave 3` and `Wave 6` offers
+  - let the player read that bias through the offered weapon/support shapes, not a pre-run picker
+- Current shipped bias directions:
   - ricochet / drive
   - salvage / sustain
   - lance / cooling
-- Later candidates if another layer is needed:
-  - cooldown / ability-focused signature
-  - control / freeze-focused signature
+- Later candidates, if the shipped route needs a second passive layer:
+  - cooldown / ability-focused bias
+  - control / freeze-focused bias
 
-## Principle 5. Biomes should become wave acts
+## Principle 5. Biomes should become shipped wave bands
 
 - The source uses 3 biome brackets.
-- `Cinder Circuit` already uses a single arena, so biome changes should become `wave acts`, not map swaps.
+- `Cinder Circuit` already uses a single arena, so biome changes should become `wave bands`, not map swaps.
 - Recommended mapping:
   - `Wave 1-3` = Burned Forest equivalent
-  - `Wave 4-8` = Scorched City equivalent
-  - `Wave 9-12` = Corrupted Lands equivalent
+  - `Wave 4-6` = Scorched City equivalent
+  - `Wave 7-8` = late-band mastery lap with the same owned form
 - That mapping should affect:
   - enemy composition
   - hazard pattern style
@@ -194,9 +194,9 @@
 | Improve | invest Ash into chosen weapon | direct power upgrade card | Keep verb |
 | Reforge | reroll stats/affixes | reroll or retarget a core/mod package | Keep verb |
 | Recycle | break gear for Ash | salvage unwanted parts into Scrap | Keep verb |
-| Character | passive + active + weapon bias | one run-start signature | Compress |
+| Character | passive + active + weapon bias | hidden lean-start bias | Compress |
 | Runes | permanent passive layer | small pre-run or mid-run passive package | Compress |
-| Biomes | 3 content brackets | 12-wave act ladder | Compress |
+| Biomes | 3 content brackets | shipped 8-wave band ladder | Compress |
 
 ## Current Gaps Between Source Logic and Our Prototype
 
@@ -230,9 +230,9 @@
   - the prototype now reads closer to the source's decision grammar
   - but it still does not create the source's long-term inventory pressure
 
-### Gap C. We now have one run-start signature, but passive layering is still thin
+### Gap C. We now have one hidden lean-start bias, but passive layering is still thin
 
-- The prototype now has a compressed passive layer through run-start signatures.
+- The prototype now has a compressed passive layer through hidden lean-start bias.
 - That is closer to the source than pure Overdrive-only progression.
 - Remaining gap relative to source:
   - no second passive layer during the run
@@ -336,7 +336,7 @@ Current implementation note:
 - The weapon bench now stores up to `3` copies per core type.
 - Duplicate cores produce `SYNC I~II`, reducing Infuse cost and strengthening the equipped matching core.
 - Extra copies above the cap immediately convert to `Scrap +6`.
-- The prototype now also offers three run-start signatures:
+- The prototype now keeps three hidden lean-start biases behind the shipped route:
   - `Relay Oath` for ricochet / drive bias
   - `Scrap Pact` for salvage / sustain bias
   - `Rail Zeal` for lance / chain / cooling bias

@@ -2094,63 +2094,48 @@
   function getBaseRouteWave8ClosureCopy(profileId, build = null) {
     const supportSummary = getBaseRouteLateBreakSupportSummary(build);
     if (profileId === "mutation") {
+      const title = supportSummary ? supportSummary.title : "Cataclysm Arsenal";
       return {
-        title: supportSummary ? supportSummary.title : "Cataclysm Arsenal",
+        title,
         combatAsk: "열린 lane 둘만 오래 비운다.",
         cadenceDetail:
-          supportSummary
-            ? `${supportSummary.title}가 Wave 6 설치 ownership을 붙든 채 cataclysm fan을 받아 lane 둘을 같이 찢는다. 다음 전투는 열린 lane 둘만 오래 비운다.`
-            : "Cataclysm Arsenal이 Wave 6 설치 위에 cataclysm fan을 덧댄다. 다음 전투는 열린 lane 둘만 오래 비운다.",
+          `${title}가 바깥 lane 둘까지 같이 찢는다. 열린 lane 둘만 오래 비운다.`,
         headlineDetail:
-          supportSummary
-            ? `${supportSummary.title}가 먼저 열린 seam을 붙들고 cataclysm fan이 그 바깥 lane 둘을 같이 연다. 열린 lane 둘만 오래 비운다.`
-            : "Cataclysm Arsenal이 이미 깔린 설치 실루엣 위에 cataclysm fan을 겹친다. 열린 lane 둘만 오래 비운다.",
-        roadmapDetail: `${supportSummary ? supportSummary.title : "Cataclysm Arsenal"} -> 열린 lane 둘 유지`,
+          `${title}로 화면 바깥 둘까지 연다. 열린 lane 둘만 오래 비운다.`,
+        roadmapDetail: `${title} 완성`,
         proof: "열린 lane 둘만 오래 비운다.",
         statusNote:
-          supportSummary
-            ? `${supportSummary.title}가 pocket을 먼저 붙든 사이 cataclysm fan과 측면 포드가 바깥 lane 둘까지 같이 정리한다. 열린 lane 둘만 오래 비운다.`
-            : "Cataclysm Arsenal이 Wave 6 설치 위에 전면 cataclysm fan과 측면 포드를 덧댄다. 열린 lane 둘만 오래 비운다.",
+          `${title}가 열린 lane 둘을 같이 정리한다. 열린 lane 둘만 오래 비운다.`,
       };
     }
     if (profileId === "aegis") {
+      const title = supportSummary ? supportSummary.title : "Warplate Halo";
       return {
-        title: supportSummary ? supportSummary.title : "Warplate Halo",
+        title,
         combatAsk: "한 pocket만 길게 붙든다.",
         cadenceDetail:
-          supportSummary
-            ? `${supportSummary.title}가 먼저 복귀 각을 열고 Warplate Halo가 그 pocket을 잠근다. 다음 전투는 한 pocket만 길게 붙든다.`
-            : "Warplate Halo가 몸체를 bastion hull로 바꾼다. 다음 전투는 한 pocket만 길게 붙든다.",
+          `${title}가 pocket 하나를 끝까지 잠근다. 한 pocket만 길게 붙든다.`,
         headlineDetail:
-          supportSummary
-            ? `${supportSummary.title}가 pocket hold를 먼저 만들고 재충전 warplate가 그 자리에서 시간을 번다. 한 pocket만 길게 붙든다.`
-            : "Warplate Halo가 재충전 warplate와 burst pulse를 얹는다. 한 pocket만 길게 붙든다.",
-        roadmapDetail: `${supportSummary ? supportSummary.title : "Warplate Halo"} -> pocket hold`,
+          `${title}로 복귀 pocket 하나를 굳힌다. 한 pocket만 길게 붙든다.`,
+        roadmapDetail: `${title} 완성`,
         proof: "한 pocket만 길게 붙든다.",
         statusNote:
-          supportSummary
-            ? `${supportSummary.title}가 연 복귀 pocket 위에 재충전 warplate 두 겹과 burst pulse가 겹쳐 붙는다. 한 pocket만 길게 붙든다.`
-            : "Warplate Halo가 재충전 warplate 두 겹과 burst pulse를 붙인다. 한 pocket만 길게 붙든다.",
+          `${title}가 복귀 pocket 하나를 길게 받친다. 한 pocket만 길게 붙든다.`,
       };
     }
     if (profileId === "ledger") {
+      const title = supportSummary ? supportSummary.title : "Black Ledger Heist";
       return {
-        title: supportSummary ? supportSummary.title : "Black Ledger Heist",
+        title,
         combatAsk: "payout lane 하나만 깊게 긁는다.",
         cadenceDetail:
-          supportSummary
-            ? `${supportSummary.title}가 복귀 lane을 붙들고 Black Ledger Heist가 payout fork를 연다. 다음 전투는 payout lane 하나만 깊게 긁는다.`
-            : "Black Ledger Heist가 payout lane을 긁는 raid frame을 연다. 다음 전투는 payout lane 하나만 깊게 긁는다.",
+          `${title}가 payout lane 하나를 끝까지 긁는다. payout lane 하나만 깊게 긁는다.`,
         headlineDetail:
-          supportSummary
-            ? `${supportSummary.title}가 빠질 seam을 붙드는 동안 twin tow fork가 payout lane을 깊게 긁는다. payout lane 하나만 깊게 긁는다.`
-            : "Black Ledger Heist가 twin tow fork를 덧대 raid frame을 만든다. payout lane 하나만 깊게 긁는다.",
-        roadmapDetail: `${supportSummary ? supportSummary.title : "Black Ledger Heist"} -> payout lane raid`,
+          `${title}로 payout lane 하나를 깊게 찢는다. payout lane 하나만 깊게 긁는다.`,
+        roadmapDetail: `${title} 완성`,
         proof: "payout lane 하나만 깊게 긁는다.",
         statusNote:
-          supportSummary
-            ? `${supportSummary.title}가 빠질 복귀선을 받치고 twin tow fork가 payout lane을 끝까지 긁는다. payout lane 하나만 깊게 긁는다.`
-            : "Black Ledger Heist가 주포 양옆에 twin tow fork를 열어 payout lane을 긁는 raid frame으로 바꾼다. payout lane 하나만 깊게 긁는다.",
+          `${title}가 payout lane 하나를 깊게 긁어 연다. payout lane 하나만 깊게 긁는다.`,
       };
     }
     return {
@@ -11056,26 +11041,31 @@
 
   function createBaseRouteForgeContextMarkup({
     title = "",
-    currentLoadoutLabel = "현재 머신",
+    eyebrow = "지금 변신",
+    detail = "",
     currentLoadoutValue = "",
-    featuredInstallLabel = "대표 설치",
     featuredInstallValue = "",
-    askLabel = "전투 요청",
+    askLabel = "바로 다음 전투",
     askNote = "",
   }) {
-    const machineValue = currentLoadoutValue || title || "-";
-    const spotlightValue = featuredInstallValue || (title && title !== machineValue ? title : "");
+    const dominantTitle = title || featuredInstallValue || currentLoadoutValue || "-";
+    const transitionDetail =
+      detail ||
+      (currentLoadoutValue && currentLoadoutValue !== dominantTitle
+        ? `${currentLoadoutValue} -> ${dominantTitle}`
+        : featuredInstallValue && featuredInstallValue !== dominantTitle
+          ? featuredInstallValue
+          : "");
     return `
       <div class="forge-context-spotlight">
-        <span class="forge-context-spotlight__eyebrow">${currentLoadoutLabel}</span>
-        <strong class="forge-context-spotlight__value">${machineValue}</strong>
+        <span class="forge-context-spotlight__eyebrow">${eyebrow}</span>
+        <strong class="forge-context-spotlight__value">${dominantTitle}</strong>
       </div>
       ${
-        spotlightValue
+        transitionDetail
           ? `
             <div class="forge-context-spotlight forge-context-spotlight--subline">
-              <span class="forge-context-spotlight__eyebrow">${featuredInstallLabel}</span>
-              <strong class="forge-context-spotlight__value forge-context-spotlight__value--subtle">${spotlightValue}</strong>
+              <strong class="forge-context-spotlight__value forge-context-spotlight__value--subtle">${transitionDetail}</strong>
             </div>
           `
           : ""
@@ -26058,13 +26048,22 @@
             title:
               dominantInstallHero?.title ||
               (spotlightChoice ? spotlightChoice.title || forgeSpotlightSummary.titleValue : dominantFormSummary.label),
-            currentLoadoutLabel: dominantInstallHero?.currentLoadoutLabel || "현재 머신",
-            currentLoadoutValue: dominantInstallHero?.currentFormLabel || dominantFormSummary.label || "",
-            featuredInstallLabel:
+            eyebrow:
               spotlightTransformation?.wave8SupportPayoff?.payoffLabel ||
-              (dominantInstallHero ? "대표 설치" : forgeSpotlightSummary.titleLabel || "대표 설치"),
+              (state.pendingFinalForge ? "마무리" : riderStep ? "지원 설치" : "주력 변이"),
+            detail:
+              dominantInstallHero?.currentFormLabel &&
+              dominantInstallHero.title &&
+              dominantInstallHero.currentFormLabel !== dominantInstallHero.title
+                ? `${dominantInstallHero.currentFormLabel} -> ${dominantInstallHero.title}`
+                : forgeSpotlightSummary.titleValue &&
+                    spotlightChoice?.title &&
+                    forgeSpotlightSummary.titleValue !== spotlightChoice.title
+                  ? `${forgeSpotlightSummary.titleValue} -> ${spotlightChoice.title}`
+                  : "",
+            currentLoadoutValue: dominantInstallHero?.currentFormLabel || dominantFormSummary.label || "",
             featuredInstallValue: dominantInstallHero?.title || forgeSpotlightSummary.titleValue || "",
-            askLabel: spotlightTransformation?.wave8SupportPayoff?.askLabel || "전투 요청",
+            askLabel: spotlightTransformation?.wave8SupportPayoff?.askLabel || "바로 다음 전투",
             askNote:
               spotlightTransformation?.wave8SupportPayoff?.askText ||
               dominantInstallHero?.askNote ||

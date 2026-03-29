@@ -603,11 +603,10 @@ assert.ok(wave8PayoffMarkup.includes("절단 고리 2기"));
 assert.ok(wave8PayoffMarkup.includes("완성 시험"));
 const wave8ForgeContextMarkup = game.createBaseRouteForgeContextMarkup({
   title: "Ember Ring Mk.II",
-  currentLoadoutLabel: "현재 머신",
+  eyebrow: wave8PayoffTransform.wave8SupportPayoff?.payoffLabel || "완성 보상",
   currentLoadoutValue: "Twin Spine",
-  featuredInstallLabel: wave8PayoffTransform.wave8SupportPayoff?.payoffLabel || "대표 설치",
   featuredInstallValue: "Ember Ring Mk.II",
-  askLabel: wave8PayoffTransform.wave8SupportPayoff?.askLabel || "전투 요청",
+  askLabel: wave8PayoffTransform.wave8SupportPayoff?.askLabel || "완성 시험",
   askNote:
     wave8PayoffTransform.wave8SupportPayoff?.askText ||
     game.getBaseRouteForgeChoiceCombatAsk(wave8PayoffHeadline, 8),
@@ -888,16 +887,15 @@ assert.equal(wave7FieldGrantRiderChoice?.systemId, "ember_ring");
 assert.equal(wave7FieldGrantRiderChoice?.systemTier, 2);
 const branchForgeContextMarkup = game.createBaseRouteForgeContextMarkup({
   title: "Dominion Sweep",
-  currentLoadoutLabel: "현재 머신",
   currentLoadoutValue: "Twin Spine / Vector Thrusters",
 });
 assert.ok(branchForgeContextMarkup.includes("forge-context-spotlight"));
 assert.ok(branchForgeContextMarkup.includes("Dominion Sweep"));
 assert.ok(branchForgeContextMarkup.includes("Twin Spine / Vector Thrusters"));
-assert.ok(branchForgeContextMarkup.includes("현재 머신"));
+assert.ok(branchForgeContextMarkup.includes("지금 변신"));
 assert.ok(
-  branchForgeContextMarkup.indexOf("Twin Spine / Vector Thrusters") <
-    branchForgeContextMarkup.indexOf("Dominion Sweep")
+  branchForgeContextMarkup.includes("Twin Spine / Vector Thrusters -&gt; Dominion Sweep") ||
+    branchForgeContextMarkup.includes("Twin Spine / Vector Thrusters -> Dominion Sweep")
 );
 assert.ok(!branchForgeContextMarkup.includes("분기 보상"));
 assert.ok(!branchForgeContextMarkup.includes("Scrapline Raid"));
@@ -1240,7 +1238,6 @@ assert.ok(!statusStripMarkup.includes("다음 급등"));
 assert.ok(!statusStripMarkup.includes("summary-head"));
 const forgeContextMarkup = game.createBaseRouteForgeContextMarkup({
   title: "Dominion Sweep",
-  currentLoadoutLabel: "현재 머신",
   currentLoadoutValue: "Prism Crown",
 });
 assert.ok(forgeContextMarkup.includes("Dominion Sweep"));
@@ -1248,7 +1245,11 @@ assert.ok(!forgeContextMarkup.includes("다음 급등"));
 assert.ok(forgeContextMarkup.includes("forge-context-spotlight"));
 assert.ok(forgeContextMarkup.includes("forge-context-spotlight__value"));
 assert.ok(forgeContextMarkup.includes("Prism Crown"));
-assert.ok(forgeContextMarkup.includes("현재 머신"));
+assert.ok(forgeContextMarkup.includes("지금 변신"));
+assert.ok(
+  forgeContextMarkup.includes("Prism Crown -&gt; Dominion Sweep") ||
+    forgeContextMarkup.includes("Prism Crown -> Dominion Sweep")
+);
 assert.ok(!forgeContextMarkup.includes("summary-head"));
 assert.ok(!forgeContextMarkup.includes("Next Proof"));
 assert.ok(!forgeContextMarkup.includes("Route Payoff"));
@@ -1259,7 +1260,10 @@ assert.ok(!forgeContextMarkup.includes("세 장 중 하나만"));
 assert.ok(!forgeContextMarkup.includes("다음 시험"));
 assert.ok(!forgeContextMarkup.includes("보조 결"));
 assert.ok(!forgeContextMarkup.includes("forge-focus__hint"));
-assert.ok(forgeContextMarkup.indexOf("Prism Crown") < forgeContextMarkup.indexOf("Dominion Sweep"));
+assert.ok(
+  forgeContextMarkup.includes("Prism Crown -&gt; Dominion Sweep") ||
+    forgeContextMarkup.includes("Prism Crown -> Dominion Sweep")
+);
 assert.ok(game.createBaseRouteForgeProofMarkup("열린 lane 하나만 오래 민다.").includes("다음 전투"));
 assert.ok(!game.createBaseRouteForgeProofMarkup("열린 lane 하나만 오래 민다.").includes("다음 시험"));
 assert.equal(
@@ -1344,7 +1348,7 @@ assert.ok(seekerWave8Transformation.promise.includes("2기 편대"));
 assert.ok(seekerWave8Transformation.proof.includes("측면 교차 화선"));
 const forgeHeadlineMarkup = game.createBaseRouteForgeContextMarkup({
   title: "Payoff Run",
-  currentLoadoutLabel: "진화",
+  eyebrow: "진화",
   currentLoadoutValue: "Afterglow",
 });
 assert.ok(forgeHeadlineMarkup.includes("Payoff Run"));
@@ -1380,16 +1384,19 @@ assert.equal(forgeDominantInstallHero?.currentFormLabel, "Twin Spine");
 assert.equal(forgeDominantInstallHero?.askNote, "고리가 긁은 입구로 짧게 파고든다.");
 const dominantInstallContextMarkup = game.createBaseRouteForgeContextMarkup({
   title: forgeDominantInstallHero?.title,
-  currentLoadoutLabel: forgeDominantInstallHero?.currentLoadoutLabel,
+  eyebrow: "지원 설치",
   currentLoadoutValue: forgeDominantInstallHero?.currentFormLabel,
   askNote: forgeDominantInstallHero?.askNote,
 });
 assert.ok(dominantInstallContextMarkup.includes("Ember Ring"));
 assert.ok(dominantInstallContextMarkup.includes("Twin Spine"));
-assert.ok(dominantInstallContextMarkup.includes("현재 머신"));
+assert.ok(dominantInstallContextMarkup.includes("지원 설치"));
 assert.ok(dominantInstallContextMarkup.includes("고리가 긁은 입구로 짧게 파고든다."));
-assert.ok(dominantInstallContextMarkup.indexOf("Twin Spine") < dominantInstallContextMarkup.indexOf("Ember Ring"));
-assert.ok(!dominantInstallContextMarkup.includes("다음 전투"));
+assert.ok(
+  dominantInstallContextMarkup.includes("Twin Spine -&gt; Ember Ring") ||
+    dominantInstallContextMarkup.includes("Twin Spine -> Ember Ring")
+);
+assert.ok(dominantInstallContextMarkup.includes("바로 다음 전투"));
 const forgeFinalSpotlight = game.getBaseRouteForgeSpotlightSummary({
   pendingFinalForge: true,
   dominantFormLabel: "Prism Crown",
@@ -1854,21 +1861,26 @@ assert.ok(wave6HeadlineMarkup.includes("전투 요청"));
 assert.ok(!wave6HeadlineMarkup.includes("다음 전투"));
 const wave6ForgeContextMarkup = game.createBaseRouteForgeContextMarkup({
   title: "Ember Ring",
-  currentLoadoutLabel: "현재 머신",
+  eyebrow: "지원 설치",
   currentLoadoutValue: "Twin Spine",
-  featuredInstallLabel: "대표 설치",
   featuredInstallValue: "Ember Ring",
-  askLabel: "전투 요청",
+  askLabel: "바로 다음 전투",
   askNote: game.getBaseRouteForgeChoiceCombatAsk(wave6DefenseChoice, 6),
 });
 assert.ok(wave6ForgeContextMarkup.includes("forge-context-spotlight__note"));
 assert.ok(wave6ForgeContextMarkup.includes("Ember Ring"));
 assert.ok(wave6ForgeContextMarkup.includes("Twin Spine"));
-assert.ok(wave6ForgeContextMarkup.includes("현재 머신"));
-assert.ok(wave6ForgeContextMarkup.includes("대표 설치"));
-assert.ok(wave6ForgeContextMarkup.includes("전투 요청"));
+assert.ok(wave6ForgeContextMarkup.includes("지원 설치"));
+assert.ok(
+  wave6ForgeContextMarkup.includes("Twin Spine -&gt; Ember Ring") ||
+    wave6ForgeContextMarkup.includes("Twin Spine -> Ember Ring")
+);
+assert.ok(wave6ForgeContextMarkup.includes("바로 다음 전투"));
 assert.ok(wave6ForgeContextMarkup.includes("고리가 긁은 입구로 짧게 파고든다."));
-assert.ok(wave6ForgeContextMarkup.indexOf("Twin Spine") < wave6ForgeContextMarkup.indexOf("Ember Ring"));
+assert.ok(
+  wave6ForgeContextMarkup.includes("Twin Spine -&gt; Ember Ring") ||
+    wave6ForgeContextMarkup.includes("Twin Spine -> Ember Ring")
+);
 assert.ok(!wave6ForgeContextMarkup.includes("설치 · Ember Ring"));
 assert.ok(!wave6ForgeContextMarkup.includes("contract-shell"));
 assert.ok(wave6HeadlineMarkup.includes("Ember Ring"));
@@ -2199,7 +2211,7 @@ const cataclysmChoice = mutationLateBreakChoices.find((choice) => choice.action 
 assert.ok(cataclysmChoice);
 assert.equal(cataclysmChoice.title, "Cataclysm Arsenal");
 assert.equal(cataclysmChoice.lateFieldMutationLevel, 4);
-assert.equal(cataclysmChoice.roadmapDetail, "Cataclysm Arsenal -> 열린 lane 둘 유지");
+assert.equal(cataclysmChoice.roadmapDetail, "Cataclysm Arsenal 완성");
 assert.match(cataclysmChoice.description, /Wave 6 설치 위에 새 화망/);
 assert.doesNotMatch(cataclysmChoice.description, /support 없이도|완성형/);
 assert.doesNotMatch(cataclysmChoice.description, /proof|짧은 승리 랩|완성 시험/i);
@@ -2218,7 +2230,7 @@ assert.ok(cataclysmWeapon.lateBreakCataclysmFirePattern);
 assert.ok(cataclysmWeapon.lateBreakCataclysmFirePattern.offsets.length >= 5);
 assert.ok(cataclysmWeapon.lateFieldMutationTraitLabel.includes("Cataclysm Arsenal"));
 assert.ok(cataclysmWeapon.damage >= 20);
-assert.match(cataclysmWeapon.lateBreakStatusNote, /Wave 6 설치 위에 전면 cataclysm fan/);
+assert.match(cataclysmWeapon.lateBreakStatusNote, /열린 lane 둘을 같이 정리한다/);
 assert.doesNotMatch(cataclysmWeapon.lateBreakStatusNote, /proof|짧은 승리 랩|완성 시험/i);
 const cataclysmLanceBuild = game.createInitialBuild("rail_zeal");
 cataclysmLanceBuild.coreId = "lance";
@@ -2295,7 +2307,7 @@ const lateBreakArmoryChoices = game.buildForgeChoices(lateCacheBuild, Math.rando
 assert.equal(lateBreakArmoryChoices.length, 3);
 assert.ok(
   lateBreakArmoryChoices.every((choice) =>
-    ["Cataclysm Arsenal -> 열린 lane 둘 유지", "Warplate Halo -> pocket hold", "Black Ledger Heist -> payout lane raid"].includes(
+    ["Cataclysm Arsenal 완성", "Warplate Halo 완성", "Black Ledger Heist 완성"].includes(
       choice.roadmapDetail
     )
   )
@@ -4892,7 +4904,7 @@ assert.equal(lateBreakRun.build.lateBreakProfileId, "ledger");
 const lateBreakLedgerWeapon = game.computeWeaponStats(lateBreakRun.build);
 assert.equal(lateBreakLedgerWeapon.headlineFormLabel, "Black Ledger Heist");
 assert.ok(lateBreakLedgerWeapon.lateBreakLedgerFirePattern);
-assert.ok(lateBreakLedgerWeapon.lateBreakStatusNote.includes("twin tow fork"));
+assert.ok(lateBreakLedgerWeapon.lateBreakStatusNote.includes("payout lane 하나를 깊게 긁어 연다."));
 assert.ok(lateBreakLedgerWeapon.lateBreakStatusNote.includes("payout lane 하나만 깊게 긁는다."));
 assert.ok(!lateBreakLedgerWeapon.lateBreakStatusNote.includes("Wave 9"));
 assert.ok(!/완성 시험|짧은 승리 랩/i.test(lateBreakLedgerWeapon.lateBreakStatusNote));

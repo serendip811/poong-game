@@ -122,7 +122,7 @@
 
 ## UI Layout
 
-- Title: 좌측은 게임 판타지와 러닝 루프, 우측은 브리핑 보드와 시그니처 선택을 둔 `mission board` 구성
+- Title: 좌측은 게임 판타지와 러닝 루프, 우측은 `Wave 3 -> Wave 6 -> Wave 8` 변신 계단과 시작 액션만 남긴 launch panel 구성
 - Top bar: 웨이브 지시문과 `Hull / Heat / Drive` 3연속 미터, `Dash / Time / Scrap` 보조 칩을 묶은 `command deck`
 - Left panel: 시그니처, 활성 코어, 벤치, 누적 보강을 차례로 보여 주는 `arsenal rack`
 - Center play space: 상단 `arena feed`와 활성 회로 요약, 중앙 캔버스, 하단 컨트롤 레일을 둔 아레나 프레임
@@ -191,6 +191,6 @@
 현재 구현 목표는 `반복 플레이 가능한 8웨이브 shipped 알파 슬라이스`다.
 
 - 필수: 타이틀, `Wave 1-8`, 반복 포지 계약, 4종 이상 적, 코어/차체/지원 계열 빌드 변화, 드라이브, 폭주 지형, 결과 화면
-- 선택: 화면 흔들림, 파편 파티클, 최소한의 합성 사운드, 이후 `Afterburn` 확장 검증
+- 선택: 화면 흔들림, 파편 파티클, 최소한의 합성 사운드, shipped `8-wave` appetite loop를 더 선명하게 만드는 후속 검증
 
 세부 적용 원칙과 밸런스 계획은 [cinder-circuit-source-application.md](/Users/seren.kim/work_personal/poong_game/docs/games/cinder-circuit-source-application.md#L1)에 정리한다.
