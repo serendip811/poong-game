@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze expansion and turn `Wave 5-8` into a breathable ownership arc where `Wave 6` delivers one visible support install, then gives that install two waves of real space before extra route clutter piles back in.
+- Immediate priority: freeze expansion and strip the shipped `Wave 1-8` route down to a fast-read release shell where forge/status/title surfaces sell one install and one combat ask instead of contract/proof/admin language.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 11:05:00 KST
+  Findings:
+  - The game is still explaining the run harder than it is selling it. In [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), `renderForgeOverlay()` still revolves around `proofWindow`, `riderStep`, contract roles, side-note proof text, and multi-row preview scaffolding, so the between-wave stop reads like build administration instead of a craveable power pickup. Compared with the object-first snap of `Hades` boons or `Nova Drift` upgrades, this is still too much reading for one choice.
+  - The `Tab`/status layer is still carrying roadmap-document habits. `createEraContractPanelMarkup()` and `createEvolutionLadderMarkup()` keep surfacing `8-Wave Contract`, era summaries, ladders, current-detail paragraphs, and payoff tracks. That is well past the readability bar set by strong arena roguelite HUDs, where the player should identify `current loadout + next visible spike + one warning` at a glance.
+  - The design doc is still endorsing drift the code is supposed to be escaping. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) `UI Layout` still calls for a `mission board`, signature selection, arsenal rack, and pressure board shell, so the project keeps preserving a briefing fantasy that conflicts with the stated `lean opener` and current red flags.
+  - Build depth is no longer the binding constraint this pass. The support catalog and weapon evolution ladder already imply enough future hunger; the weaker link is that the player still has to parse too much wrapper language before they can feel a simple `small start -> Wave 3 gun leap -> Wave 6 support install -> Wave 8 closure` arc.
+  Top Priority: Collapse forge and `Tab` into a release-style read order of `current machine -> one featured install -> one short combat ask`, and delete contract/era/ladder/admin framing from shipped-facing surfaces.
+  Why Now: If the reward and status screens still feel like design docs, players will bounce before the run’s actual growth curve can do its job.
+  Do Not Repeat: Do not “trim copy” on the same contract shell again; remove the shell.
+  Release Gate: UX/UI
 
 - 2026-03-29 10:40:00 KST
   Findings:
@@ -4421,6 +4432,18 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-29 11:35:00 KST
+  Changed:
+  - Reworked the shipped compact status summary in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) around a new `getBaseRouteStatusBoardSummary(...)`, so paused `Tab` and the compact era helper now read `현재 머신 -> 설치/다음 설치 -> 짧은 전투 ask` instead of the older support-first or contract-framed ordering.
+  - Recut the consolidated `getForgeEraPlan(...)` and `createEraContractPanelMarkup(...)` output in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) to drop the remaining `8-Wave Contract` shell on shipped-facing compact surfaces and resolve the third line as a short combat ask rather than another roadmap/admin label.
+  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new machine-first ordering for paused support states and compact era snapshots, then re-ran the existing smoke test.
+  Why:
+  - The latest critique's `Top Priority` was to collapse forge and `Tab` into a release-style read order and stop preserving contract/era/admin framing on shipped surfaces. The highest-value bounded interpretation inside `playables/cinder-circuit/` was to make the compact status helpers themselves obey one stable hierarchy, because the old helper outputs were still encoding the exact document-like shell critique called out.
+  Follow-up Risk:
+  - This makes `Tab` and the compact era summary read faster, but the forge card grid itself still carries more preview scaffolding than a true one-object reward beat. If critique still says the between-wave stop feels over-explained, the next bounded UX pass should trim card-side preview/proof rows rather than adding another summary helper.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: UX/UI
 
 - 2026-03-29 09:12:42 KST
   Changed:

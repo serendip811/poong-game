@@ -784,10 +784,11 @@ const pauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   phase: "combat",
   paused: true,
 });
-assert.ok(pauseSnapshotMarkup.includes("최근 획득"));
+assert.ok(pauseSnapshotMarkup.includes("현재 머신"));
+assert.ok(pauseSnapshotMarkup.includes("다음 설치"));
 assert.ok(pauseSnapshotMarkup.includes("machine-payoff"));
 assert.ok(!pauseSnapshotMarkup.includes("summary-head"));
-assert.ok(pauseSnapshotMarkup.includes("고철 +34 / 회수 +10% / Siege Debt 1웨이브"));
+assert.ok(pauseSnapshotMarkup.includes("Wave 6 지원 설치"));
 assert.ok(!pauseSnapshotMarkup.includes("활성 판돈"));
 assert.ok(!pauseSnapshotMarkup.includes("Era III"));
 assert.ok(!pauseSnapshotMarkup.includes("주력 변이"));
@@ -801,13 +802,13 @@ const openingPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   phase: "combat",
   paused: true,
 });
-assert.ok(openingPauseSnapshotMarkup.includes("최근 획득"));
 assert.ok(openingPauseSnapshotMarkup.includes("현재 선체"));
 assert.ok(openingPauseSnapshotMarkup.includes("빈 선체"));
+assert.ok(openingPauseSnapshotMarkup.includes("첫 도약"));
+assert.ok(openingPauseSnapshotMarkup.includes("Wave 3 무기 방향"));
 assert.ok(openingPauseSnapshotMarkup.includes("machine-payoff"));
 assert.ok(openingPauseSnapshotMarkup.includes("폭주 지형 없음."));
 assert.ok(!openingPauseSnapshotMarkup.includes("summary-head"));
-assert.ok(openingPauseSnapshotMarkup.includes("첫 포지 전"));
 assert.ok(!openingPauseSnapshotMarkup.includes("pause-summary__lanes"));
 assert.ok(!openingPauseSnapshotMarkup.includes("Bare Hull"));
 assert.ok(!openingPauseSnapshotMarkup.includes("조용한 계약"));
@@ -824,7 +825,7 @@ assert.ok(supportPauseSnapshotMarkup.includes("machine-payoff"));
 assert.ok(supportPauseSnapshotMarkup.includes("설치"));
 assert.ok(supportPauseSnapshotMarkup.includes("현재 머신"));
 assert.ok(supportPauseSnapshotMarkup.includes("Aegis Halo"));
-assert.ok(supportPauseSnapshotMarkup.indexOf("설치") < supportPauseSnapshotMarkup.indexOf("현재 머신"));
+assert.ok(supportPauseSnapshotMarkup.indexOf("현재 머신") < supportPauseSnapshotMarkup.indexOf("설치"));
 assert.ok(supportPauseSnapshotMarkup.includes("같은 seam으로 바로 재진입한다."));
 assert.ok(!supportPauseSnapshotMarkup.includes("summary-head"));
 assert.ok(!supportPauseSnapshotMarkup.includes("활성 보조"));
@@ -838,9 +839,10 @@ const supportPauseHeroSummary = game.getBaseRoutePauseHeroSummary({
   phase: "combat",
   paused: true,
 });
-assert.equal(supportPauseHeroSummary.machineLabel, "설치");
-assert.equal(supportPauseHeroSummary.machineValue, "Aegis Halo");
-assert.equal(supportPauseHeroSummary.payoffLabel, "현재 머신");
+assert.equal(supportPauseHeroSummary.machineLabel, "현재 머신");
+assert.ok(supportPauseHeroSummary.machineValue.length > 0);
+assert.equal(supportPauseHeroSummary.payoffLabel, "설치");
+assert.equal(supportPauseHeroSummary.payoffValue, "Aegis Halo");
 const hiddenCombatCacheStatus = game.getLiveSideBetSummary({
   build: game.createInitialBuild("rail_zeal"),
   waveIndex: 4,
@@ -1059,14 +1061,14 @@ assert.equal(eraOnePlan.length, 1);
 assert.equal(eraOnePlan[0].waveLabel, "Wave 1");
 assert.equal(eraOnePlan[0].state, "live");
 assert.equal(eraOnePlan[0].primaryLabel, "현재 선체");
-assert.equal(eraOnePlan[0].proofLabel, "다음 설치");
+assert.equal(eraOnePlan[0].proofLabel, "전투 ask");
 assert.ok(eraOnePlan[0].secondaryLabel.length > 0);
 assert.ok(eraOnePlan[0].proofLabel.length > 0);
 const eraThreePlan = game.getForgeEraPlan(roadmapBuild, game.computeWeaponStats(roadmapBuild), null, 9);
 assert.equal(eraThreePlan.length, 1);
 assert.equal(eraThreePlan[0].state, "live");
 assert.equal(eraThreePlan[0].waveLabel, "Wave 8");
-assert.equal(eraThreePlan[0].proofLabel, "다음 설치");
+assert.equal(eraThreePlan[0].proofLabel, "전투 ask");
 assert.ok(eraThreePlan[0].proofDetail.length > 0);
 const compactEraPanelMarkup = game.createEraContractPanelMarkup(
   roadmapBuild,
@@ -1074,10 +1076,10 @@ const compactEraPanelMarkup = game.createEraContractPanelMarkup(
   null,
   6
 );
-assert.ok(compactEraPanelMarkup.includes("현재 머신"));
-assert.ok(compactEraPanelMarkup.includes("설치"));
-assert.ok(compactEraPanelMarkup.includes("다음 설치"));
 assert.ok(compactEraPanelMarkup.includes("machine-payoff"));
+assert.ok(compactEraPanelMarkup.includes("현재 머신"));
+assert.ok(compactEraPanelMarkup.includes("다음 설치"));
+assert.ok(compactEraPanelMarkup.includes("machine-payoff__note"));
 assert.ok(!compactEraPanelMarkup.includes("Era I"));
 assert.ok(!compactEraPanelMarkup.includes("Headline Form"));
 assert.ok(!compactEraPanelMarkup.includes("Survival Rider"));

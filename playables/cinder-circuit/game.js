@@ -9761,24 +9761,15 @@
     );
     const currentWeapon = weapon || computeWeaponStats(build);
     if (CONSOLIDATED_12_WAVE_ROUTE) {
-      const machineSummary = getShippingMachinePayoffSummary(build, currentWeapon, boundedWave, {
-        phase: "forge",
+      const machineSummary = getBaseRouteStatusBoardSummary(build, currentWeapon, boundedWave, {
+        supportSystem,
       });
-      const visibleEffect =
-        getBaseRouteBranchPayoffSummary({
-          build,
-          supportSystem,
-          waveNumber: boundedWave,
-        }) ||
-        {
-          label: boundedWave < 3 ? "보이는 효과" : "형태 변화",
-          value:
-            boundedWave < 3
-              ? "약한 화선으로 첫 전장을 버틴다."
-              : getShippingContractSummary(build, currentWeapon, boundedWave, {
-                  phase: "forge",
-                }).titleValue,
-        };
+      const compactCombatAsk = trimInspectNote(
+        supportSystem && supportSystem.id
+          ? getBaseRouteSupportInstallCombatAsk(supportSystem.id, boundedWave)
+          : getBaseRouteCombatAskForWave(build, boundedWave),
+        "열린 공간을 남기고 자주 자리를 바꾼다."
+      );
       return [
         {
           label: machineSummary.machineLabel,
@@ -9787,10 +9778,10 @@
           state: "live",
           primaryLabel: machineSummary.machineLabel,
           primaryDetail: machineSummary.machineValue,
-          secondaryLabel: visibleEffect.label || "보이는 효과",
-          secondaryDetail: visibleEffect.value || "-",
-          proofLabel: machineSummary.payoffLabel,
-          proofDetail: machineSummary.payoffValue,
+          secondaryLabel: machineSummary.payoffLabel,
+          secondaryDetail: machineSummary.payoffValue,
+          proofLabel: "전투 ask",
+          proofDetail: compactCombatAsk,
         },
       ];
     }
@@ -9970,14 +9961,19 @@
 
   function createEraContractPanelMarkup(build, weapon = null, supportSystem = null, waveNumber = 1) {
     if (CONSOLIDATED_12_WAVE_ROUTE) {
-      const machineSummary = getShippingMachinePayoffSummary(build, weapon, waveNumber, {
-        phase: "forge",
+      const machineSummary = getBaseRouteStatusBoardSummary(build, weapon, waveNumber, {
+        supportSystem,
       });
+      const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
+      const compactCombatAsk = trimInspectNote(
+        supportSystem && supportSystem.id
+          ? getBaseRouteSupportInstallCombatAsk(supportSystem.id, boundedWave)
+          : getBaseRouteCombatAskForWave(build, boundedWave),
+        "열린 공간을 남기고 자주 자리를 바꾼다."
+      );
       return `
-        <div class="summary-head">
-          <strong>현재 머신</strong>
-        </div>
         ${createCurrentMachinePayoffMarkup(machineSummary)}
+        <p class="machine-payoff__note">${compactCombatAsk}</p>
       `;
     }
     const eras = getForgeEraPlan(build, weapon, supportSystem, waveNumber);
@@ -10503,6 +10499,56 @@
     };
   }
 
+  function getBaseRouteStatusBoardSummary(
+    build,
+    weapon = null,
+    waveNumber = 1,
+    options = {}
+  ) {
+    if (!build) {
+      return {
+        machineLabel: "현재 선체",
+        machineValue: "빈 선체",
+        payoffLabel: "첫 도약",
+        payoffValue: "Wave 3 무기 방향",
+      };
+    }
+    const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
+    const currentWeapon = weapon || computeWeaponStats(build);
+    const activeWeaponLabel = getBaseRouteWeaponOwnershipLabel(build, currentWeapon, boundedWave);
+    const featuredSupportInstall =
+      options.supportSystem && options.supportSystem.label
+        ? {
+            systemId: options.supportSystem.id || "",
+            title: options.supportSystem.label,
+          }
+        : boundedWave >= SUPPORT_SYSTEM_START_WAVE
+          ? getBaseRouteInstalledSupportInstallSummary(build)
+          : null;
+    if (boundedWave < ARCHITECTURE_DRAFT_WAVE) {
+      return {
+        machineLabel: "현재 선체",
+        machineValue: "빈 선체",
+        payoffLabel: "첫 도약",
+        payoffValue: "Wave 3 무기 방향",
+      };
+    }
+    if (featuredSupportInstall) {
+      return {
+        machineLabel: "현재 머신",
+        machineValue: activeWeaponLabel,
+        payoffLabel: "설치",
+        payoffValue: featuredSupportInstall.title,
+      };
+    }
+    return {
+      machineLabel: "현재 머신",
+      machineValue: activeWeaponLabel,
+      payoffLabel: "다음 설치",
+      payoffValue: "Wave 6 지원 설치",
+    };
+  }
+
   function getBaseRouteSupportInstallChoice(choice) {
     if (!choice) {
       return null;
@@ -10593,7 +10639,9 @@
       DEFAULT_ROUTE_WAVE_COUNT
     );
     const weapon = activeState.weapon || computeWeaponStats(build);
-    return getBaseRouteOwnedPowerSummary(build, weapon, waveNumber);
+    return getBaseRouteStatusBoardSummary(build, weapon, waveNumber, {
+      supportSystem: activeState.supportSystem || null,
+    });
   }
 
   function getBaseRouteBranchPayoffSummary({
@@ -10996,7 +11044,6 @@
       1,
       DEFAULT_ROUTE_WAVE_COUNT
     );
-    const machineSummary = getBaseRoutePauseHeroSummary(activeState);
     const supportInstall =
       waveNumber >= SUPPORT_SYSTEM_START_WAVE ? getBaseRouteInstalledSupportInstallSummary(build) : null;
     const combatAsk = trimInspectNote(
@@ -11005,6 +11052,7 @@
         : getBaseRouteCombatAskForWave(build, waveNumber),
       "열린 공간을 남기고 자주 자리를 바꾼다."
     );
+    const machineSummary = getBaseRoutePauseHeroSummary(activeState);
     return `
       <div class="pause-summary__hero">
         ${createCurrentMachinePayoffMarkup(machineSummary)}
