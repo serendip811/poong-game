@@ -17131,6 +17131,10 @@
 
   function buildFieldGrantChoices(build, rng, nextWave) {
     const wildcardChoice = createWildcardProtocolChoice(build, nextWave);
+    const shouldForceWave5ThreeWayFieldGrant =
+      CONSOLIDATED_12_WAVE_ROUTE &&
+      Number.isFinite(nextWave) &&
+      nextWave === 5;
     const shouldForceWave7ThreeWayFieldGrant =
       CONSOLIDATED_12_WAVE_ROUTE &&
       Number.isFinite(nextWave) &&
@@ -17143,6 +17147,7 @@
       nextWave >= 1 &&
       nextWave <= DEFAULT_ROUTE_WAVE_COUNT &&
       !shouldOpenBaseRouteSecondaryBranch(nextWave, build) &&
+      !shouldForceWave5ThreeWayFieldGrant &&
       !shouldForceWave7ThreeWayFieldGrant;
     if (shouldUseLateFieldCache(nextWave)) {
       if (isArsenalBreakpointWave(nextWave)) {

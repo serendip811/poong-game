@@ -1104,10 +1104,11 @@ assert.equal(
   "Jackpot Fork"
 );
 const wave5FieldGrantChoices = game.buildFieldGrantChoices(game.createInitialBuild("rail_zeal"), Math.random, 5);
-assert.equal(wave5FieldGrantChoices.length, 2);
+assert.equal(wave5FieldGrantChoices.length, 3);
 assert.equal(wave5FieldGrantChoices.find((choice) => choice.contractRole === "headline")?.contractLabel, "주력");
 assert.equal(wave5FieldGrantChoices.find((choice) => choice.contractRole === "rider")?.contractLabel, "버팀");
-assert.equal(wave5FieldGrantChoices.find((choice) => choice.contractRole === "gamble"), undefined);
+assert.equal(wave5FieldGrantChoices.find((choice) => choice.contractRole === "gamble")?.contractLabel, "판돈");
+assert.equal(wave5FieldGrantChoices.find((choice) => choice.contractRole === "gamble")?.action, "field_greed");
 const wave6ForgeBuild = game.createInitialBuild("rail_zeal");
 wave6ForgeBuild.bastionDoctrineId = "storm_artillery";
 const wave6ForgeChoices = game.buildForgeChoices(wave6ForgeBuild, () => 0, 999, {
