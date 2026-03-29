@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: make shipped `Wave 1-8` read like a complete first chapter instead of a teaser for later acts by removing future-route/admin leakage, keeping only three clear power states, and giving `Wave 5-8` enough open space for one earned support silhouette to prove itself.
+- Immediate priority: stop widening the route and make shipped `Wave 1-8` feel replayable through a quieter opener, one dominant forge payoff, and a single earned support silhouette that clearly owns `Wave 6-8` space.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-30 11:05:00 KST
+  Findings:
+  - The project is still in danger of solving chapter weakness with route breadth. `game.js` still carries a large live `Wave 10-12 / Afterburn / ascension` body, and even if shipped surfaces are cleaner now, that nearby ambition keeps encouraging “more ladder” thinking before `Wave 1-8` has fully proved repeated fun.
+  - The forge reward moment is still too administrative for a game that needs immediate desire. `renderForgeOverlay()` is cleaner than before, but it still stacks `promise + proof + preview rows + impact strip + slot cost`, which is closer to a debug-rich loadout board than the snap hierarchy strong arena roguelites use when they make a player instantly want the install.
+  - Support payoff still risks reading as clutter instead of transformation. The live render path draws orbit lines, deployable range rings, kiln fields, shields, missiles, drones, and support satellites together, so `Wave 6-8` can feel like the screen got busier rather than like one owned silhouette opened new movement pockets.
+  - The opening growth curve is still fragile. With support visuals and multiple system nouns already so close to the player fantasy, the run risks starting too visually complete, which weakens the hunger for later multi-shot, orbit, shield, or helper breakthroughs.
+  Top Priority: Consolidate the shipped chapter around one-card forge hierarchy and one support-readability pass so the first support install creates a single obvious lane-ownership advantage instead of adding more simultaneous shapes and labels.
+  Why Now: If `Wave 6-8` does not clearly prove one earned transformation in breathable combat space, a future `20-30 wave` curve will still feel hypothetical.
+  Do Not Repeat: Do not answer this with new passives, new route brackets, or extra reward verbs before the current support payoff is readable at a glance.
+  Release Gate: Builds
 
 - 2026-03-30 10:15:00 KST
   Findings:
@@ -183,20 +194,22 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not answer this with another arena expansion, another support branch, or lighter copy wrapped around the same `proof/roadmap/contract` shell.
   Release Gate: UX/UI
 
-- 2026-03-29 21:12:00 KST
-  Findings:
-  - The shipped run is still not structurally honest. `docs/games/cinder-circuit-design.md` still documents a title `mission board` with signature framing and still leaves `Afterburn` in the build target, while `docs/games/cinder-circuit-source-application.md` still teaches `run-start signature` and a `Wave 9-12` act ladder as if they are normal shipped grammar.
-  - This drift is not just in docs. `playables/cinder-circuit/game.js` still carries player-facing combat-feed/cache language for `Act 4`, `ascension`, `afterburn`, `Dominion`, and other late-route wrappers, so the live game is still built to talk about a bigger hidden route instead of selling one clean repeatable run.
-  - The forge is cleaner than before, but it still reads like a control panel. The shipped path still centers `current machine`, `featured install`, `combat ask`, branch payoff rows, contract labels, proof text, and slot cost tags in the same reward moment, which is more dashboard than hunger. Strong references land one visible power spike first and let the test be inferred.
-  - The opening remains at risk of front-loading taxonomy instead of desire. As long as signatures, route jargon, and future bracket logic remain active design truth, the run starts too mentally busy and later transformation feels less earned.
-  Top Priority: Do one strict shipped-surface quarantine pass: remove signature selection and all `Wave 9-12 / Afterburn / ascension / Act 4 / contract-route` teaching from title, docs, forge, combat-feed, and status surfaces for the live `Wave 1-8` route.
-  Why Now: Until the player can start and finish one run without seeing the prototype's shadow systems, replay hunger will keep losing to explanation load.
-  Do Not Repeat: Do not answer this with another wording trim on the same architecture or with new support/build content.
-  Release Gate: UX/UI
-
 - Older entries trimmed automatically: 1
 
 ## Latest Improvement
+
+- 2026-03-30 11:35:00 KST
+  Changed:
+  - Added `getSupportRenderPresentation(...)` in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and routed the live support draw path through it so shipped `Wave 6-8` tier-1 support installs now suppress orbit frames, deployable range circles, and Halo intercept rings while keeping the actual support body visible.
+  - Tuned the same pass to keep later support upgrades loud again, so the readability clamp is only for the compact route's first earned install and not for `Mk.II+` payoff beats.
+  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) and [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md) to lock the new `Wave 7 first install quiet / Wave 8 upgrade loud` presentation rule.
+  Why:
+  - The latest critique's `Top Priority` was still open on support readability. The highest-value bounded interpretation was to make the first support install read like one owned silhouette in open space instead of a pile of helper rings and guide geometry.
+  Follow-up Risk:
+  - This reduces support clutter, but forge hierarchy is still heavier than the in-combat payoff. If critique next says the install now reads well in combat but the reward stop still feels administrative, the next pass should trim forge card layering rather than reintroduce louder support guides.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4057` assertion (`sentryTierTwo.interceptRange > 0`) after the new support-render assertions passed
+  Reference Direction: `Nova Drift`-style silhouette-first orbitals and `Hades`-style effect restraint at first unlock; the install body should read first, guide geometry second.
+  Release Gate: Builds
 
 - 2026-03-30 10:40:00 KST
   Changed:
@@ -326,18 +339,6 @@ This file is shared by two recurring Codex CLI jobs.
   Follow-up Risk:
   - The forge headline is cleaner now, but some individual choice descriptions still contain older support/admin phrasing outside the header shell. If critique next says the top card lands but side descriptions still read like tooling, the next bounded pass should trim the worst per-choice descriptions rather than reopening the shell.
   Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:3945` assertion (`sentryTierTwo.interceptRange > 0`) after the updated forge-context and closure-copy assertions passed
-  Release Gate: UX/UI
-
-- 2026-03-29 18:42:56 KST
-  Changed:
-  - Reworked shipped-route `combat feed` rendering in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the `Wave 1-8` pause/`Tab` view no longer expands into raw wave-log paragraphs. `renderCombatFeed()` now keeps the shipped run on the same compact headline/proof card read even in expanded pause mode.
-  - Added `shouldQuarantineShippingCombatFeedText(...)` and `getShippingCombatFeedEntrySummary(...)` in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so leaked `Afterburn / Ascension / Wave 9-12 / Dominion Run` feed text is replaced with sanitized `현재 머신` and current combat-ask summaries instead of prototype-route copy.
-  - Extended [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock that polluted shipped combat-feed entries no longer surface `Dominion`/`Afterburn` wording through the exported shipped summary helper.
-  Why:
-  - The latest critique's `Top Priority` called for a strict shipped-surface quarantine across combat-feed and status surfaces, and current player feedback also says `Tab` is still too text-dense. The highest-value bounded interpretation was to stop the shipped pause feed from behaving like a prototype log and keep it closer to the compact status-history direction seen in `Hades` chamber recap surfaces and `Nova Drift`'s short object-first level-up reads.
-  Follow-up Risk:
-  - This quarantines leaked late-route vocabulary and cuts pause-feed density, but it does not rewrite every wave-start `pushCombatFeed(...)` string at the source. If critique next says the feed reads cleaner yet some live in-wave toasts still sound too administrative, the next bounded pass should retune the worst shipped `Wave 1-8` feed messages themselves rather than reopening bigger route systems.
-  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:3933` assertion (`sentryTierTwo.interceptRange > 0`) after the new shipped combat-feed assertions passed
   Release Gate: UX/UI
 
 - Older entries trimmed automatically: 2

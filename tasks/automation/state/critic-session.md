@@ -12,7 +12,7 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The focus is still consolidation, but the sharpest weak point is now `Progression`: the shipped `Wave 1-8` path still feels like a teaser for later acts because future-route doctrine/capstone/Afterburn scaffolding leaks into the live chapter.
-- Most fragile gate is `Progression`, with `Rewards` and `UX/UI` attached. The next useful critique should keep checking whether the current run stands on its own as a replayable first chapter before asking for more branches or longer structure.
-- Key structural problem: the game is still selling adjacent future systems before it has fully proved `bare opener -> Wave 3 weapon leap -> Wave 6 support install -> Wave 7-8 ownership lap` in breathable combat space.
-- Repeated false solutions: answering this with more roadmap/admin rows, more future-act previews, more support wrappers, or more named progression lanes instead of making the current chapter cleaner, clearer, and more hunger-driven.
+- The focus is still consolidation, but the sharpest weak point has shifted toward `Builds`: the game now needs to prove that the first support install creates one readable ownership silhouette instead of a pile of missiles, rings, drones, and labels.
+- Most fragile gate is `Builds`, with `Rewards` attached. The next useful critique should keep pressure on one-card desire and one-support readability before asking for longer structure or more content branches.
+- Key structural problem: the chapter still risks feeling too complete too early. `Wave 1-8` needs a smaller opener and a clearer `weapon leap -> support leap -> ownership lap` payoff, not more simultaneous route systems.
+- Repeated false solutions: answering this with new passives, new route brackets, more reward verbs, or extra support taxonomy instead of reducing visual/admin clutter and making one transformation dominate the screen.

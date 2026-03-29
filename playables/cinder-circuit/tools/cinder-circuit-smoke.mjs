@@ -4933,6 +4933,15 @@ const supportOwnershipBuild = game.createInitialBuild("scrap_pact");
 supportOwnershipBuild.supportBayCap = 1;
 supportOwnershipBuild.wave6ChassisBreakpoint = true;
 supportOwnershipBuild.supportSystems = [{ id: "ember_ring", tier: 1 }];
+const supportOwnershipPresentation = game.getSupportRenderPresentation(
+  supportOwnershipBuild,
+  game.computeSupportSystemStats(supportOwnershipBuild, 7),
+  7
+);
+assert.equal(supportOwnershipPresentation.compactBaseRouteFirstInstall, true);
+assert.equal(supportOwnershipPresentation.showOrbitFrames, false);
+assert.equal(supportOwnershipPresentation.showDeployableRanges, false);
+assert.equal(supportOwnershipPresentation.showInterceptRings, false);
 const wave7SupportOwnership = game.resolveWaveConfig(6, supportOwnershipBuild);
 assert.equal(wave7SupportOwnership.hazard.targetingProfile, "support_showcase");
 assert.ok(wave7SupportOwnership.spawnBudget < game.WAVE_CONFIG[6].spawnBudget);
@@ -4961,6 +4970,14 @@ const routeFocus = {
 };
 assert.ok(Math.abs(showcaseSpawn.y - hazardContext.player.y) > wave7SupportOwnership.hazard.radius * 1.45);
 assert.ok(Math.hypot(showcaseSpawn.x - routeFocus.x, showcaseSpawn.y - routeFocus.y) > 150);
+supportOwnershipBuild.supportSystems = [{ id: "ember_ring", tier: 2 }];
+const supportOwnershipUpgradePresentation = game.getSupportRenderPresentation(
+  supportOwnershipBuild,
+  game.computeSupportSystemStats(supportOwnershipBuild, 8),
+  8
+);
+assert.equal(supportOwnershipUpgradePresentation.compactBaseRouteFirstInstall, false);
+assert.equal(supportOwnershipUpgradePresentation.showOrbitFrames, true);
 
 const lateBreakSmokeBuild = game.createInitialBuild("scrap_pact");
 lateBreakSmokeBuild.bastionDoctrineId = "kiln_bastion";

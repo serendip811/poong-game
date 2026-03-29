@@ -10600,6 +10600,31 @@
     `;
   }
 
+  function getSupportRenderPresentation(build, supportSystem = null, waveNumber = 1) {
+    const boundedWave = clamp(Math.round(waveNumber || 1), 1, MAX_WAVES + POST_CAPSTONE_WAVE_COUNT);
+    const installedSystems = getInstalledSupportSystems(build);
+    const firstInstalledSystem = installedSystems[0] || null;
+    const compactBaseRouteFirstInstall =
+      CONSOLIDATED_12_WAVE_ROUTE &&
+      build &&
+      supportSystem &&
+      build.wave6ChassisBreakpoint &&
+      boundedWave >= SUPPORT_SYSTEM_START_WAVE &&
+      boundedWave <= DEFAULT_ROUTE_WAVE_COUNT &&
+      installedSystems.length === 1 &&
+      firstInstalledSystem &&
+      firstInstalledSystem.tier <= 1;
+    return {
+      compactBaseRouteFirstInstall,
+      showOrbitFrames: !compactBaseRouteFirstInstall,
+      showDeployableRanges: !compactBaseRouteFirstInstall,
+      showDeployableFieldStroke: !compactBaseRouteFirstInstall,
+      showInterceptRings: !compactBaseRouteFirstInstall,
+      deployableFieldAlpha: compactBaseRouteFirstInstall ? 0.08 : 0.11,
+      deployableFieldStrokeAlpha: compactBaseRouteFirstInstall ? 0.34 : 0.55,
+    };
+  }
+
   function getShippingMachinePayoffSummary(build, weapon = null, waveNumber = 1, options = {}) {
     const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
     const contractSummary = getShippingContractSummary(build, weapon, boundedWave, options);
@@ -19039,6 +19064,7 @@
     createBaseRouteForgeProofMarkup,
     createBaseRouteForgeBillMarkup,
     createBaseRouteMachinePanelMarkup,
+    getSupportRenderPresentation,
     resolveWaveConfig,
   };
 
@@ -27157,15 +27183,22 @@
     }
 
     if (state.player && state.supportSystem) {
-      for (const system of state.supportSystem.systems || []) {
-        if (system.orbitRadius <= 0) {
-          continue;
+      const supportRenderPresentation = getSupportRenderPresentation(
+        state.build,
+        state.supportSystem,
+        state.waveIndex + 1
+      );
+      if (supportRenderPresentation.showOrbitFrames) {
+        for (const system of state.supportSystem.systems || []) {
+          if (system.orbitRadius <= 0) {
+            continue;
+          }
+          context.strokeStyle = system.orbitColor;
+          context.lineWidth = 1.5;
+          context.beginPath();
+          context.arc(state.player.x, state.player.y, system.orbitRadius, 0, Math.PI * 2);
+          context.stroke();
         }
-        context.strokeStyle = system.orbitColor;
-        context.lineWidth = 1.5;
-        context.beginPath();
-        context.arc(state.player.x, state.player.y, system.orbitRadius, 0, Math.PI * 2);
-        context.stroke();
       }
       for (const deployable of state.supportDeployables || []) {
         const lifeRatio =
@@ -27173,11 +27206,13 @@
         const doctrineCapstone = getDoctrineCapstoneDef(state.build);
         context.save();
         context.globalAlpha = lifeRatio < 0.24 ? 0.5 + Math.abs(Math.sin(performance.now() * 0.02)) * 0.4 : 1;
-        context.strokeStyle = `${deployable.strokeColor}`;
-        context.lineWidth = 1.4;
-        context.beginPath();
-        context.arc(deployable.x, deployable.y, deployable.shotRange * 0.32, 0, Math.PI * 2);
-        context.stroke();
+        if (supportRenderPresentation.showDeployableRanges) {
+          context.strokeStyle = `${deployable.strokeColor}`;
+          context.lineWidth = 1.4;
+          context.beginPath();
+          context.arc(deployable.x, deployable.y, deployable.shotRange * 0.32, 0, Math.PI * 2);
+          context.stroke();
+        }
         if (doctrineCapstone && doctrineCapstone.id === "bulwark_foundry") {
           context.globalAlpha = 0.35 + (1 - Math.min(1, deployable.doctrinePulseCooldown || 0)) * 0.2;
           context.strokeStyle = "rgba(255, 190, 120, 0.85)";
@@ -27189,21 +27224,23 @@
         if (deployable.kilnFieldRadius > 0) {
           const pulseAlpha =
             doctrineCapstone && doctrineCapstone.id === "bulwark_foundry" ? 0.18 : 0.11;
-          context.globalAlpha = pulseAlpha;
+          context.globalAlpha = Math.min(pulseAlpha, supportRenderPresentation.deployableFieldAlpha);
           context.fillStyle = doctrineCapstone && doctrineCapstone.id === "bulwark_foundry"
             ? "rgba(255, 170, 92, 0.65)"
             : "rgba(255, 196, 128, 0.5)";
           context.beginPath();
           context.arc(deployable.x, deployable.y, deployable.kilnFieldRadius, 0, Math.PI * 2);
           context.fill();
-          context.globalAlpha = 0.55;
-          context.strokeStyle = doctrineCapstone && doctrineCapstone.id === "bulwark_foundry"
-            ? "rgba(255, 213, 166, 0.92)"
-            : "rgba(255, 222, 184, 0.72)";
-          context.lineWidth = doctrineCapstone && doctrineCapstone.id === "bulwark_foundry" ? 2.4 : 1.6;
-          context.beginPath();
-          context.arc(deployable.x, deployable.y, deployable.kilnFieldRadius, 0, Math.PI * 2);
-          context.stroke();
+          if (supportRenderPresentation.showDeployableFieldStroke) {
+            context.globalAlpha = supportRenderPresentation.deployableFieldStrokeAlpha;
+            context.strokeStyle = doctrineCapstone && doctrineCapstone.id === "bulwark_foundry"
+              ? "rgba(255, 213, 166, 0.92)"
+              : "rgba(255, 222, 184, 0.72)";
+            context.lineWidth = doctrineCapstone && doctrineCapstone.id === "bulwark_foundry" ? 2.4 : 1.6;
+            context.beginPath();
+            context.arc(deployable.x, deployable.y, deployable.kilnFieldRadius, 0, Math.PI * 2);
+            context.stroke();
+          }
         }
         context.translate(deployable.x, deployable.y);
         context.fillStyle = deployable.color;
@@ -27234,15 +27271,17 @@
           context.fill();
           context.stroke();
           context.restore();
-          context.beginPath();
-          context.arc(
-            satellite.x,
-            satellite.y,
-            satellite.radius + satellite.interceptRange * 0.45,
-            0,
-            Math.PI * 2
-          );
-          context.stroke();
+          if (supportRenderPresentation.showInterceptRings) {
+            context.beginPath();
+            context.arc(
+              satellite.x,
+              satellite.y,
+              satellite.radius + satellite.interceptRange * 0.45,
+              0,
+              Math.PI * 2
+            );
+            context.stroke();
+          }
         } else if (satellite.renderShape === "missile") {
           context.save();
           context.translate(satellite.x, satellite.y);
