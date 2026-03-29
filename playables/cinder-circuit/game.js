@@ -6486,6 +6486,7 @@
       next.push({
         id: entry.id,
         tier: clamp(Math.round(entry.tier || 1), 1, MAX_SUPPORT_SYSTEM_TIER),
+        activationWave: Math.max(1, Math.round(entry.activationWave || 1)),
       });
       if (next.length >= bayCap) {
         break;
@@ -6507,10 +6508,21 @@
         {
           id: build.supportSystemId,
           tier: clamp(build.supportSystemTier || 1, 1, MAX_SUPPORT_SYSTEM_TIER),
+          activationWave: 1,
         },
       ];
     }
     return [];
+  }
+
+  function isSupportSystemEntryOnline(systemEntry, waveNumber = null) {
+    if (!systemEntry) {
+      return false;
+    }
+    if (!Number.isFinite(waveNumber)) {
+      return true;
+    }
+    return Math.round(waveNumber || 0) >= Math.max(1, Math.round(systemEntry.activationWave || 1));
   }
 
   function getBaseRouteSupportProofSurge(build, waveNumber, systemEntry) {
@@ -6658,7 +6670,9 @@
 
   function computeSupportSystemStats(build, waveNumber = null) {
     build = getSanitizedConsolidatedBuild(build);
-    const installedSystems = getInstalledSupportSystems(build);
+    const installedSystems = getInstalledSupportSystems(build).filter((entry) =>
+      isSupportSystemEntryOnline(entry, waveNumber)
+    );
     const doctrineCapstone = getDoctrineCapstoneDef(build);
     if (installedSystems.length === 0) {
       return null;
@@ -14076,6 +14090,8 @@
       return null;
     }
     const installSummary = getWave6BreakpointInstallSummary(systemChoice);
+    const quietInstallActivationWave =
+      CONSOLIDATED_12_WAVE_ROUTE && wave6BranchRole !== "greed" ? DEFAULT_ROUTE_WAVE_COUNT : 1;
     return {
       type: "utility",
       action: "bastion_bay_forge",
@@ -14099,6 +14115,7 @@
       systemChoice: {
         ...systemChoice,
         cost: 0,
+        activationWave: quietInstallActivationWave,
       },
     };
   }
@@ -17929,7 +17946,7 @@
         createWave6ChassisInstallChoice({
           chassisDef: offenseChassisDef,
           systemChoice: offenseSystemChoice,
-          description: `이번 갈래는 ${offenseAscension ? offenseAscension.title : "공세 endform"}와 ${offenseInstallSummary ? offenseInstallSummary.title : offenseSystemChoice.title}를 한 번에 꽂아 ${offenseInstallSummary ? offenseInstallSummary.value : "새 공세선"}를 전면에 붙인다. Wave 6-8은 split wing, seed, lattice, breach 실루엣 중 지금 코어에 맞는 한 형태가 바로 열린 lane을 길게 밀어붙인다. ${offenseChassisDef.description}`,
+          description: `이번 갈래는 ${offenseAscension ? offenseAscension.title : "공세 endform"}를 먼저 전면으로 끌어올리고, ${offenseInstallSummary ? offenseInstallSummary.title : offenseSystemChoice.title}는 Wave 8까지 조용한 증폭 회로로 접어 둔다. Wave 6-7은 split wing, seed, lattice, breach 실루엣 중 지금 코어에 맞는 한 형태가 열린 lane을 길게 밀어붙이는 데만 예산을 쓴다. ${offenseChassisDef.description}`,
           laneLabel: "공세 설치",
           forgeLaneLabel: "공세 설치",
           wave6BranchRole: "offense",
@@ -17942,7 +17959,7 @@
         createWave6ChassisInstallChoice({
           chassisDef: defenseChassisDef,
           systemChoice: defenseSystemChoice,
-          description: `이번 갈래는 ${defenseConvergence ? defenseConvergence.title : "hold convergence"}와 ${defenseInstallSummary ? defenseInstallSummary.title : defenseSystemChoice.title}를 같이 고정해 ${defenseInstallSummary ? defenseInstallSummary.value : "새 방호선"}를 바로 켠다. Wave 6-8은 siege spindle과 복귀 보호선이 함께 붙어 refuge pocket 하나를 길게 버티는 실루엣이 된다. ${defenseChassisDef.description}`,
+          description: `이번 갈래는 ${defenseConvergence ? defenseConvergence.title : "hold convergence"}를 먼저 몸체에 고정하고, ${defenseInstallSummary ? defenseInstallSummary.title : defenseSystemChoice.title}는 Wave 8까지 잠복 증폭 회로로 남긴다. Wave 6-7은 siege spindle과 복귀 보호선이 refuge pocket 하나를 길게 버티는 실루엣부터 증명한다. ${defenseChassisDef.description}`,
           laneLabel: "방호 설치",
           forgeLaneLabel: "방호 설치",
           wave6BranchRole: "defense",
@@ -18907,6 +18924,7 @@
         nextSystems = installedSystems.concat({
           id: choice.systemId,
           tier: choice.systemTier || 1,
+          activationWave: Math.max(1, Math.round(choice.activationWave || 1)),
         });
       }
       run.build.supportSystems = sanitizeSupportSystems(nextSystems, run.build);
@@ -23184,7 +23202,9 @@
                 ? `${grantLabel} 적용. ${choice.doctrineLabel}를 잠가 ${choice.doctrineChoice ? choice.doctrineChoice.title : "주포 mutation"}과 ${choice.chassisTitle || "utility chassis"}를 함께 켰다. 이번 break는 주포/차체 형태를 확정하는 데만 쓰고 다음 rider 갈림길은 뒤로 미룬다.`
                 : choice.action === "bastion_bay_forge"
                 ? supportInstallPayoff
-                  ? `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"} 위에 ${choice.systemChoice ? choice.systemChoice.title : supportInstallPayoff.label}를 얹어 ${supportInstallPayoff.value}를 바로 켰다. 다음 전투는 이 설치물이 새 pocket ownership을 얼마나 오래 받치는지 바로 본다.`
+                  ? choice.systemChoice && Number.isFinite(choice.systemChoice.activationWave) && choice.systemChoice.activationWave > state.waveIndex + 2
+                    ? `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}와 ${choice.title}를 먼저 잠그고, ${choice.systemChoice.title}는 Wave ${choice.systemChoice.activationWave}까지 조용한 증폭 회로로 접어 뒀다. 다음 전투는 지원 연출보다 새 주포/차체 포즈가 lane을 얼마나 오래 여는지부터 본다.`
+                    : `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"} 위에 ${choice.systemChoice ? choice.systemChoice.title : supportInstallPayoff.label}를 얹어 ${supportInstallPayoff.value}를 바로 켰다. 다음 전투는 이 설치물이 새 pocket ownership을 얼마나 오래 받치는지 바로 본다.`
                   : !choice.bayUnlock && CONSOLIDATED_12_WAVE_ROUTE
                     ? `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}만 먼저 잠가 hold, dive, exit 리듬을 바꿨다. 다음 전투는 새 몸체 포즈가 corridor와 복귀 각을 얼마나 오래 버티는지 바로 보는 proof window다.`
                     : wave6AscensionDraft || choice.skipNextAdminStop

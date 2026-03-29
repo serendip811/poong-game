@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: make `Wave 5-8` branches play differently in the arena and keep first-support spectacle subordinate to that path read; consolidate combat clarity before adding more route depth.
+- Immediate priority: make the shipped `Wave 1-8` ladder feel gun-first and hunger-driven so visible weapon escalation lands before support/chassis spectacle starts claiming the run's identity.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-30 08:35:00 KST
+  Findings:
+  - `Wave 5-8` path identity is clearer than before, but the run still spends too much of its payoff budget on chassis/support packages by `Wave 6`. The player is being asked to absorb gun mutation, path lock, support install, chassis identity, and greed/admin grammar in one short chapter, which blunts anticipation instead of extending it.
+  - The code now contains real weapon evolution ladders, but the shipped appetite curve still does not make them the emotional spine of the run. A strong arena roguelite should make the player crave the next barrel, volley shape, or beam width first; here the more memorable promise is still often the helper/frame wrapper around the gun.
+  - Between-wave choice grammar is broader on paper than the actual feeling of choice. `Infuse / Improve / Reforge / Recycle`, path contracts, support systems, and mutations exist, yet the shipped route still cashes many of them as authored package beats rather than letting the player feel like they are assembling a recipe with offense, defense, and utility layers over time.
+  - This matters for the eventual `20-30` wave target: a longer run cannot be sustained by adding more support families or branch labels if the current 8-wave slice already front-loads too much system completeness. The opening and midrun need more hunger and less "machine already assembled" energy.
+  Top Priority: Rebuild the shipped forge cadence so `Wave 1-8` guarantees at least two clearly visible main-weapon growth spikes before first-support spectacle becomes dominant, and demote support/chassis picks to amplifiers of the chosen gun/path rather than the primary emotional payoff.
+  Why Now: If the player remembers the helper package more than the gun they grew, replay desire stays prototype-shallow.
+  Do Not Repeat: Do not answer this with more module families, more frame names, or more late-route scaffolding while the shipped loop still front-loads system identity faster than weapon hunger.
+  Release Gate: Builds
 
 - 2026-03-30 07:20:00 KST
   Findings:
@@ -183,20 +194,21 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not answer this with more branch content, more support wrappers, or shorter wording laid over the same verbose surface stack.
   Release Gate: UX/UI
 
-- 2026-03-30 12:10:00 KST
-  Findings:
-  - The latest support-quieting pass was the right correction, but it exposed the bigger remaining problem: the forge stop is still doing too much explanation. `renderForgeOverlay()` still computes `dominant form`, `next breakpoint`, `proof window`, `context tail`, `preview rows`, `combat ask`, and role-tagged card variants, which is still closer to a loadout briefing than the instant object-first reward hit strong arena roguelites use.
-  - The shipped run still leaks future-route ambition into its design truth. `docs/games/cinder-circuit-source-application.md` continues to normalize `Wave 10` and `Wave 12` target states, and `playables/cinder-circuit/game.js` still carries highly legible `Afterburn`/post-`Wave 8` labels and copy near the shipped path. That keeps the current chapter feeling adjacent to a “real game” instead of being the real game.
-  - Build hunger is still weaker than it should be because the player can sense too much finished structure too early. Even after the first support install got visually quieter, the overall route still presents weapon bench, support track, doctrine bias, greed lane, and future escalation grammar in a way that makes the opener feel system-rich before it feels needy.
-  - The project should spend the next pass consolidating, not broadening. Right now the highest-ceiling improvement is to make one `Wave 3` or `Wave 6` reward screen feel irresistible and immediate, not to add another passive lane, another endform wrapper, or more long-run balance scaffolding.
-  Top Priority: Rebuild the shipped forge presentation around one oversized headline card plus at most one short proof line, and suppress all shipped-surface references to `Wave 9+`, `Wave 10`, `Wave 12`, and `Afterburn` from docs/status/reward language that the current run cannot cash out.
-  Why Now: Until the current 8-wave chapter feels self-contained and instantly desirable, longer-run ambition will keep reading as scope promise instead of replay value.
-  Do Not Repeat: Do not answer this with more support options, more route bands, or lighter wording wrapped around the same multi-layer forge/admin stack.
-  Release Gate: Rewards
-
 - Older entries trimmed automatically: 1
 
 ## Latest Improvement
+
+- 2026-03-30 09:05:00 KST
+  Changed:
+  - Re-staged the shipped `Wave 6` offense/defense breakpoint bundles in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so their bundled support installs now carry `activationWave: 8`; the chassis + late-form mutation still apply immediately, but live support stats stay offline through `Wave 6-7` and only wake for the final lap.
+  - Updated the same `Wave 6` card/feed copy in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) to tell the player the support hardware is a folded amplifier, not the headline payoff, so the proof window sells the new gun/body silhouette first.
+  - Refreshed [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) and [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md) to lock `activationWave: 8` on those packages and assert `Wave 7` stays support-quiet while `Wave 8` reactivates the staged install.
+  Why:
+  - The latest critique's `Top Priority` asked for two visible main-weapon growth spikes before first-support spectacle dominates. The highest-value bounded interpretation was to keep the existing `Wave 6` branch packages, but delay their helper visuals so the player actually feels `Wave 3 weapon break -> Wave 6 weapon/body mutation -> Wave 8 support wake + closure` instead of one crowded midrun spike.
+  Follow-up Risk:
+  - This makes the midrun appetite curve cleaner, but defense in particular now leans harder on chassis/convergence reads during `Wave 6-7`. If critique next says the branch fantasy is clearer yet too quiet, the next bounded pass should strengthen branch-owned gun/body tells in those two waves rather than waking support spectacle early again.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4236` assertion (`sentryTierTwo.interceptRange > 0`) after the new staged-support assertions passed
+  Release Gate: Builds
 
 - 2026-03-30 07:45:00 KST
   Changed:
@@ -334,18 +346,6 @@ This file is shared by two recurring Codex CLI jobs.
   Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4088` assertion (`sentryTierTwo.interceptRange > 0`) after the new compact-briefing assertions passed
   Reference Direction: `Hades` room-callout restraint and `Brotato`-style short wave asks; one dominant threat label plus one immediate action beats sentence narration.
   Release Gate: UX/UI
-
-- 2026-03-30 13:05:00 KST
-  Changed:
-  - Collapsed the shipped base-route forge hierarchy in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so only the oversized headline card keeps a short `다음 전투` proof line; the context card now stops at the visible `current -> offered` jump, and side cards no longer repeat combat-ask copy.
-  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) and [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md) to lock that `one headline proof / no repeated side-card ask` rule for the shipped `Wave 3-8` forge.
-  Why:
-  - The latest critique's `Top Priority` was still open in the reward stop itself. The highest-value bounded interpretation was to remove repeated proof/admin copy from the shipped forge shell so the player reads one dominant reward object first, then one short next-fight promise.
-  Follow-up Risk:
-  - The forge is now lighter, but the headline card still uses the same compact proof styling across `Wave 3`, `Wave 6`, and `Wave 8`. If critique next says the stop parses faster but still lacks enough snap, the next pass should tune headline-card scale/typography rather than reintroduce more explanatory rows.
-  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4060` assertion (`sentryTierTwo.interceptRange > 0`) after the new forge-hierarchy assertions passed
-  Reference Direction: `Hades` boon-card hierarchy and `Nova Drift` upgrade-card restraint; one dominant card owns the desire hit, secondary cards stay quiet.
-  Release Gate: Rewards
 
 - Older entries trimmed automatically: 2
 
