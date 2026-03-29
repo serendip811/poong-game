@@ -654,7 +654,8 @@ assert.ok(wave8PayoffMarkup.includes("완성 보상"));
 assert.ok(wave8PayoffMarkup.includes("현재 설치"));
 assert.ok(wave8PayoffMarkup.includes("완성 형태"));
 assert.ok(wave8PayoffMarkup.includes("절단 고리 2기"));
-assert.ok(wave8PayoffMarkup.includes("완성 시험"));
+assert.ok(wave8PayoffMarkup.includes("다음 전투"));
+assert.ok(!wave8PayoffMarkup.includes("완성 시험"));
 const wave8ForgeContextMarkup = game.createBaseRouteForgeContextMarkup({
   title: "Ember Ring Mk.II",
   eyebrow: wave8PayoffTransform.wave8SupportPayoff?.payoffLabel || "완성 보상",
@@ -666,7 +667,6 @@ const wave8ForgeContextMarkup = game.createBaseRouteForgeContextMarkup({
     game.getBaseRouteForgeChoiceCombatAsk(wave8PayoffHeadline, 8),
 });
 assert.ok(wave8ForgeContextMarkup.includes("완성 형태"));
-assert.ok(wave8ForgeContextMarkup.includes("완성 시험"));
 assert.ok(wave8ForgeContextMarkup.includes("Ember Ring Mk.II"));
 assert.equal(wave8PayoffRider?.contractLabel, "주포");
 assert.ok(wave8PayoffRider?.type !== "system");
@@ -1459,12 +1459,12 @@ const dominantInstallContextMarkup = game.createBaseRouteForgeContextMarkup({
 assert.ok(dominantInstallContextMarkup.includes("Seeker Array"));
 assert.ok(dominantInstallContextMarkup.includes("Twin Spine"));
 assert.ok(dominantInstallContextMarkup.includes("주력 변이"));
-assert.ok(dominantInstallContextMarkup.includes("미사일이 연 측면부터 지운다."));
+assert.ok(!dominantInstallContextMarkup.includes("미사일이 연 측면부터 지운다."));
 assert.ok(
   dominantInstallContextMarkup.includes("Twin Spine -&gt; Seeker Array") ||
     dominantInstallContextMarkup.includes("Twin Spine -> Seeker Array")
 );
-assert.ok(dominantInstallContextMarkup.includes("바로 다음 전투"));
+assert.ok(!dominantInstallContextMarkup.includes("바로 다음 전투"));
 const forgeFinalSpotlight = game.getBaseRouteForgeSpotlightSummary({
   pendingFinalForge: true,
   dominantFormLabel: "Prism Crown",
@@ -1750,6 +1750,7 @@ const recurringWave3RiderMarkup = game.createBaseRouteForgeCompactCardMarkup({
       : recurringWave3RiderChoice.type || "choice",
   contractLabel: recurringWave3RiderChoice.contractLabel,
   transformation: recurringWave3RiderTransform,
+  combatAsk: "이 문장은 보이면 안 된다.",
   slotLabel: "고철 12",
   disabled: false,
 });
@@ -1759,6 +1760,7 @@ assert.ok(recurringWave3RiderMarkup.includes("forge-card__spotlight"));
 assert.ok(recurringWave3RiderMarkup.includes(recurringWave3RiderTransform.previewLabel));
 assert.ok(recurringWave3RiderMarkup.includes(recurringWave3RiderTransform.previewValue));
 assert.ok(!recurringWave3RiderMarkup.includes("forge-card__proof--ask"));
+assert.ok(!recurringWave3RiderMarkup.includes("이 문장은 보이면 안 된다."));
 assert.ok(!recurringWave3RiderMarkup.includes("forge-card__hero-copy"));
 assert.ok(!recurringWave3RiderMarkup.includes(recurringWave3RiderTransform.promise));
 assert.ok(!recurringWave3RiderMarkup.includes("forge-card__pivot"));
@@ -1929,12 +1931,13 @@ const wave6HeadlineMarkup = game.createBaseRouteForgeHeadlineCardMarkup({
   slotLabel: "무료",
   disabled: false,
 });
-assert.ok(wave6HeadlineMarkup.includes("forge-card__proof--ask"));
+assert.ok(wave6HeadlineMarkup.includes("forge-card__proof--compact"));
+assert.ok(!wave6HeadlineMarkup.includes("forge-card__proof--ask"));
 assert.ok(wave6HeadlineMarkup.includes("forge-card__spotlight"));
 assert.ok(wave6HeadlineMarkup.includes(wave6OffenseTransform.previewLabel));
 assert.ok(wave6HeadlineMarkup.includes(wave6OffenseTransform.previewValue));
-assert.ok(wave6HeadlineMarkup.includes("전투 요청"));
-assert.ok(!wave6HeadlineMarkup.includes("다음 전투"));
+assert.ok(wave6HeadlineMarkup.includes("다음 전투"));
+assert.ok(!wave6HeadlineMarkup.includes("전투 요청"));
 const wave6ForgeContextMarkup = game.createBaseRouteForgeContextMarkup({
   title: "Ember Ring",
   eyebrow: "지원 설치",
@@ -1943,7 +1946,7 @@ const wave6ForgeContextMarkup = game.createBaseRouteForgeContextMarkup({
   askLabel: "바로 다음 전투",
   askNote: game.getBaseRouteForgeChoiceCombatAsk(wave6DefenseChoice, 6),
 });
-assert.ok(wave6ForgeContextMarkup.includes("forge-context-spotlight__note"));
+assert.ok(!wave6ForgeContextMarkup.includes("forge-context-spotlight__note"));
 assert.ok(wave6ForgeContextMarkup.includes("Ember Ring"));
 assert.ok(wave6ForgeContextMarkup.includes("Twin Spine"));
 assert.ok(wave6ForgeContextMarkup.includes("지원 설치"));
@@ -1951,8 +1954,8 @@ assert.ok(
   wave6ForgeContextMarkup.includes("Twin Spine -&gt; Ember Ring") ||
     wave6ForgeContextMarkup.includes("Twin Spine -> Ember Ring")
 );
-assert.ok(wave6ForgeContextMarkup.includes("바로 다음 전투"));
-assert.ok(wave6ForgeContextMarkup.includes("고리가 긁은 입구로 짧게 파고든다."));
+assert.ok(!wave6ForgeContextMarkup.includes("바로 다음 전투"));
+assert.ok(!wave6ForgeContextMarkup.includes("고리가 긁은 입구로 짧게 파고든다."));
 assert.ok(
   wave6ForgeContextMarkup.includes("Twin Spine -&gt; Ember Ring") ||
     wave6ForgeContextMarkup.includes("Twin Spine -> Ember Ring")

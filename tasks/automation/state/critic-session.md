@@ -12,7 +12,7 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The focus is still consolidation, but the sharpest weak point has shifted toward `Builds`: the game now needs to prove that the first support install creates one readable ownership silhouette instead of a pile of missiles, rings, drones, and labels.
-- Most fragile gate is `Builds`, with `Rewards` attached. The next useful critique should keep pressure on one-card desire and one-support readability before asking for longer structure or more content branches.
-- Key structural problem: the chapter still risks feeling too complete too early. `Wave 1-8` needs a smaller opener and a clearer `weapon leap -> support leap -> ownership lap` payoff, not more simultaneous route systems.
-- Repeated false solutions: answering this with new passives, new route brackets, more reward verbs, or extra support taxonomy instead of reducing visual/admin clutter and making one transformation dominate the screen.
+- The focus is still consolidation, but the weak point has shifted from support readability toward `Rewards`: the first support install is quieter now, yet the forge moment is still too administrative to create build desire.
+- Most fragile gate is `Rewards`, with `Progression` attached. The next useful critique should keep pressure on one oversized payoff card and on removing shipped-surface `Wave 10-12 / Afterburn` leakage before asking for more structure.
+- Key structural problem: the chapter still feels like a preview of a longer route. `Wave 1-8` needs to read as a complete appetite loop with `small start -> weapon leap -> support leap`, not as the intro to the “real” escalation.
+- Repeated false solutions: answering this with more passives, more route bands, more endform scaffolding, or copy trimming that leaves the same multi-layer forge stack intact.

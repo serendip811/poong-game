@@ -10945,7 +10945,6 @@
     kind,
     contractLabel,
     transformation,
-    combatAsk,
     slotLabel,
     disabled,
   }) {
@@ -10962,7 +10961,6 @@
       >
         <h3>${transformation.cardTitle || choice.title}</h3>
         ${createBaseRouteForgeSpotlightMarkup(transformation.previewLabel, transformation.previewValue)}
-        ${createBaseRouteForgeAskMarkup("전투 요청", combatAsk)}
         ${createBaseRouteForgeBillMarkup(slotLabel)}
       </button>
     `;
@@ -11018,7 +11016,7 @@
             : ""
         }
         <h3>${transformation.cardTitle || choice.title}</h3>
-        ${createBaseRouteForgeAskMarkup(wave8SupportPayoff ? wave8SupportPayoff.askLabel : "전투 요청", combatAsk)}
+        ${createBaseRouteForgeProofMarkup(combatAsk)}
         ${createBaseRouteForgeBillMarkup(slotLabel)}
       </button>
     `;
@@ -11242,16 +11240,6 @@
           ? `
             <div class="forge-context-spotlight forge-context-spotlight--subline">
               <strong class="forge-context-spotlight__value forge-context-spotlight__value--subtle">${transitionDetail}</strong>
-            </div>
-          `
-          : ""
-      }
-      ${
-        askNote
-          ? `
-            <div class="forge-context-spotlight forge-context-spotlight--subline">
-              <span class="forge-context-spotlight__eyebrow">${askLabel}</span>
-              <p class="forge-context-spotlight__note">${askNote}</p>
             </div>
           `
           : ""
@@ -26513,16 +26501,6 @@
                   : "",
             currentLoadoutValue: dominantInstallHero?.currentFormLabel || dominantFormSummary.label || "",
             featuredInstallValue: dominantInstallHero?.title || forgeSpotlightSummary.titleValue || "",
-            askLabel: spotlightTransformation?.wave8SupportPayoff?.askLabel || "바로 다음 전투",
-            askNote:
-              spotlightTransformation?.wave8SupportPayoff?.askText ||
-              dominantInstallHero?.askNote ||
-              (spotlightChoice
-                ? trimForgeCombatAsk(
-                    getBaseRouteForgeChoiceCombatAsk(spotlightChoice, state.waveIndex + 2),
-                    forgeCombatAsk
-                  )
-                : forgeCombatAsk),
             branchPayoffLabel: forgeContextTail ? forgeContextTail.label : "",
             branchPayoffValue: forgeContextTail ? forgeContextTail.value : "",
           })}
@@ -26595,11 +26573,7 @@
                 index,
                 kind,
                 contractLabel,
-              transformation,
-              combatAsk: trimForgeCombatAsk(
-                getBaseRouteForgeChoiceCombatAsk(choice, state.waveIndex + 2),
-                forgeCombatAsk
-              ),
+                transformation,
               slotLabel,
               disabled: state.resources.scrap < choice.cost,
             });
