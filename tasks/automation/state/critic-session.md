@@ -12,7 +12,7 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- Weakest gate is now `Progression`: the staged support fix helped, but the shipped `Wave 1-8` slice still spends too much of the total run grammar too quickly and leaves too little oxygen for future escalation.
-- Next useful critique should keep pressuring consolidation: fewer decision verbs, fewer wrapper systems, longer time living inside one earned form before the next named layer appears.
-- Current structural failure: the run still stacks `weapon break -> path lock -> chassis breakpoint -> overdrive/support/chase admin` inside too few waves, so the machine feels nearly complete by `Wave 7` instead of leaving hunger for a longer ladder.
-- Repeated false solutions: adding `Wave 9-12` scaffolding, more capstone labels, or more support/mutation nouns instead of compressing the reward grammar and making each remaining power spike larger and cleaner.
+- Weakest gate is now `UX/UI`: the docs say lean, but the live forge/pause/detail surfaces still over-explain the run with context tails, preview rows, proof lines, hazard notes, and roadmap language that compete with the actual power fantasy.
+- Next useful critique should pressure presentation consolidation before new content again: one dominant-form read, one combat ask, fewer duplicate labels, and less branch/admin narration on reward and status screens.
+- Current structural failure: even after progression cleanup, `Wave 6-8` and the supporting UI still feel administrated rather than hungry because similar ownership hazards plus verbose surfaces flatten path identity and hide payoff clarity.
+- Repeated false solutions: adding more path nouns, more roadmap/detail copy, or more Wave `9-12` promises instead of simplifying what the player sees and making the current 8-wave chapter land harder.

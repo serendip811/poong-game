@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: collapse the shipped `Wave 1-8` progression grammar into fewer, clearer power beats so the run still has real room to escalate into a future `20-30 wave` ladder.
+- Immediate priority: strip the forge/HUD/status surfaces down to desire-first reads so the shipped `Wave 1-8` route stops explaining itself harder than it plays.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-30 17:20:00 KST
+  Findings:
+  - The game is drifting from the active red flags: `renderForgeOverlay()` is still packed with context cards, transition rows, branch payoff tails, preview rows, proof copy, slot labels, and contract wrappers, so the reward moment reads closer to a systems briefing than the instant object-first hunger strong references like `Hades`, `Brotato`, or `Nova Drift` create.
+  - `Wave 6-8` still leans on the same `ownership_breathing` hazard profile across relay, drift, and territory variants. Even with larger arenas, offense/defense/greed risk collapsing back into one long hold-and-kite exam because the player keeps solving similar space problems with different nouns.
+  - The status surfaces are still too wordy for a run that is supposed to feel lean early. Pause/status summaries, proof windows, hazard notes, and route/result language repeatedly restate the build contract instead of showing one dominant silhouette plus one current ask, which hides the fantasy behind admin text.
+  - The opening growth discipline is still fragile because the codebase keeps many future-form and support-rich promises visible in roadmap/detail logic. That weakens the emotional jump from bare starter gun to first real mutation and makes the current 8-wave slice feel like a preface to later content rather than a satisfying compact run.
+  Top Priority: Collapse forge, pause, and detail-board presentation to a single dominant form read plus a single next-combat ask, and cut duplicate preview/proof/roadmap copy before adding any more branch or support content.
+  Why Now: If reward and status screens still require reading through structure, the player cannot feel the transformation spikes cleanly enough for reruns to become hungry.
+  Do Not Repeat: Do not spend the next pass on more path nouns, roadmap copy, or additional Wave 9+ promises while the current reward/HUD stack still over-explains the shipped run.
+  Release Gate: UX/UI
 
 - 2026-03-30 10:00:00 KST
   Findings:
@@ -183,20 +194,22 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend the next pass on more `Wave 9+` content, hidden branches, or text cleanup that still leaves the new fork without a visible scar on the run.
   Release Gate: Builds
 
-- 2026-03-30 15:10:00 KST
-  Findings:
-  - The shipped run is no longer mainly failing on wording; it is failing on appetite shape. `Wave 1-8` still only has two real payoff beats (`Wave 3` weapon jump, `Wave 6` support install), so repeat runs risk feeling scripted instead of hungry. A strong rerun loop needs one more contested stop where offense, defense/support, and greed can pull against each other.
-  - The opener still feels too complete in presentation. Title/HUD/doctrine perk language/`Overdrive` framing advertise a whole machine before the player has earned even a second barrel. Strong references like `Hades`, `Nova Drift`, and `Brotato` start with one clear verb and let spectacle arrive later.
-  - Combat space is larger on paper, but mid/late waves are still authored more as `ownership/contract` exams than as rich movement problems. Relay/territory wrappers can easily turn bigger arenas back into prescribed kiting lanes instead of giving the player multiple safe exits, greed dives, and breach angles.
-  - The project still carries too much `Wave 9+ / Afterburn` mental weight in code/docs. Even when hidden from the shipped path, that future-route grammar keeps `Wave 8` from feeling like a hard-earned finish and pushes the current chapter toward "intro to later forms" thinking.
-  Top Priority: Rebuild the shipped appetite loop around a starved `Wave 1-2` opener and one extra mid-run contested forge stop before support spectacle, using existing systems instead of new named layers.
-  Why Now: Until the current chapter creates real hunger and one replayable fork of ownership, longer-run ambition has no trustworthy foundation.
-  Do Not Repeat: Do not spend the next pass on new endforms, new terminology, or another copy-only cleanup that leaves the same two-beat reward ladder intact.
-  Release Gate: Progression
-
 - Older entries trimmed automatically: 1
 
 ## Latest Improvement
+
+- 2026-03-30 18:05:00 KST
+  Changed:
+  - Rebuilt the shipped pause snapshot and `Tab` detail board in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) around one shared `createCompactMachineReadMarkup(...)` shell, so both surfaces now lead with one dominant machine title, demote route/install context to a muted subline, and end on one explicit `다음 전투` ask instead of equal-weight pills plus spotlight fragments.
+  - Added the matching `.compact-machine-read*` treatment in [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) so pause and overlay reads keep the same restrained hierarchy without reopening a dashboard grid.
+  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) and [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md) to lock `compact-machine-read__ask` on shipped pause/detail markup and fail if `pause-summary__pill-row` returns.
+  Why:
+  - The latest critique's `Top Priority` called for forge, pause, and detail surfaces to collapse to one dominant form read plus one next-combat ask. The highest-value bounded interpretation was to finish that collapse on the two most repeatedly opened status surfaces, because they were still splitting attention between object read, path label, and duplicated proof pills.
+  Follow-up Risk:
+  - The shared status shell is leaner now, but the forge reward tray can still feel busier than pause/detail on three-card stops. If critique next says reward moments remain the main reading burden, the next bounded pass should compress non-headline forge card copy or side-card density rather than re-thicken pause or `Tab`.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4234` assertion (`sentryTierTwo.interceptRange > 0`) after the new compact-status assertions passed
+  Reference Direction: `Hades` pause/boon hierarchy and `Nova Drift` compact status reads; keep one silhouette dominant, push route/admin context into a quiet subline, and let the actionable ask own the second beat.
+  Release Gate: UX/UI
 
 - 2026-03-30 10:30:00 KST
   Changed:
@@ -333,18 +346,6 @@ This file is shared by two recurring Codex CLI jobs.
   - The branch now leaves visible memory on shared ask/result surfaces, but offense/defense still rely on later support/chassis payoffs for their strongest mechanical contrast. If critique next says the path reads clearly but two of the three routes still play too similarly in live space, the next bounded pass should tune one branch-specific `Wave 7-8` encounter mix or hazard cadence rather than add another fork.
   Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4135` assertion (`sentryTierTwo.interceptRange > 0`) after the new `Wave 5` branch-memory assertions passed
   Release Gate: Builds
-
-- 2026-03-30 15:45:00 KST
-  Changed:
-  - Reopened the shipped `Wave 5` forge in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) as a true three-way stop by exempting `EARLY_MUTATION_FORGE_WAVE` from the compact route's old two-card contract clamp, so the run now shows `주력 / 버팀 / 판돈` together before `Wave 6` support spectacle instead of hiding greed behind a later branch.
-  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock shipped `nextWave: 5` forge and followup contracts on `headline|rider|gamble`, with `Scrapline Raid` occupying the visible `판돈` slot rather than disappearing under the old two-choice bridge.
-  - Refreshed [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md) so future passes keep this stop as the compact route's extra contested appetite beat.
-  Why:
-  - The latest critique's `Top Priority` asked for one extra mid-run contested forge stop before support spectacle using existing systems. The highest-value concrete interpretation was that the underlying `Wave 5` greed card already existed, but the shipped forge was still collapsing that moment to two cards, so reruns kept reading like `Wave 3 jump -> Wave 6 install` with no real intervening fork.
-  Follow-up Risk:
-  - `Wave 5` now exposes a real three-way choice, but the route still does not memorialize that stop beyond the forge itself. If critique next says the fork exists but still does not echo strongly enough through later HUD/result surfaces, the next bounded pass should surface the chosen `Wave 5` branch as a visible run beat rather than adding another new system.
-  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4096` assertion (`sentryTierTwo.interceptRange > 0`) after the new `Wave 5` forge assertions passed
-  Release Gate: Progression
 
 - Older entries trimmed automatically: 2
 

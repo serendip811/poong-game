@@ -10643,6 +10643,30 @@
     `;
   }
 
+  function createCompactMachineReadMarkup({
+    eyebrow = "현재 머신",
+    title = "-",
+    detail = "",
+    askLabel = "다음 전투",
+    askValue = "-",
+    modifier = "",
+  }) {
+    const className = modifier ? ` compact-machine-read--${modifier}` : "";
+    return `
+      <div class="compact-machine-read${className}">
+        <div class="compact-machine-read__hero">
+          <span class="compact-machine-read__eyebrow">${eyebrow}</span>
+          <strong class="compact-machine-read__title">${title}</strong>
+          ${detail ? `<p class="compact-machine-read__detail">${detail}</p>` : ""}
+        </div>
+        <div class="compact-machine-read__ask">
+          <span class="compact-machine-read__ask-label">${askLabel}</span>
+          <strong class="compact-machine-read__ask-value">${askValue}</strong>
+        </div>
+      </div>
+    `;
+  }
+
   function createBaseRouteMachinePanelMarkup(build, weapon = null, supportSystem = null, waveNumber = 1) {
     const activeBuild = build ? getSanitizedConsolidatedPresentationBuild(build) : null;
     if (!activeBuild) {
@@ -10659,10 +10683,14 @@
         : getBaseRouteCombatAskForWave(activeBuild, boundedWave),
       "열린 공간을 남기고 자주 자리를 바꾼다."
     );
-    return `
-      ${createCurrentMachinePayoffMarkup(machineSummary)}
-      <p class="machine-payoff__note">${compactCombatAsk}</p>
-    `;
+    return createCompactMachineReadMarkup({
+      eyebrow: machineSummary.machineLabel,
+      title: machineSummary.machineValue,
+      detail: machineSummary.payoffValue ? `${machineSummary.payoffLabel} · ${machineSummary.payoffValue}` : "",
+      askLabel: "다음 전투",
+      askValue: compactCombatAsk,
+      modifier: "overlay",
+    });
   }
 
   function getSupportRenderPresentation(build, supportSystem = null, waveNumber = 1) {
@@ -10917,38 +10945,11 @@
     if (!machineSummary) {
       return null;
     }
-    const waveNumber = clamp(
-      activeState.phase === "result"
-        ? activeState.stats?.wavesCleared || 1
-        : activeState.phase === "forge"
-          ? (activeState.waveIndex || 0) + 2
-          : (activeState.waveIndex || 0) + 1,
-      1,
-      DEFAULT_ROUTE_WAVE_COUNT
-    );
-    const build = activeState && activeState.build
-      ? getSanitizedConsolidatedPresentationBuild(activeState.build)
-      : null;
-    const supportInstall =
-      build && waveNumber >= SUPPORT_SYSTEM_START_WAVE
-        ? getBaseRouteInstalledSupportInstallSummary(build)
-        : null;
-    const showInstalledSupportHero =
-      Boolean(supportInstall) && machineSummary.payoffLabel === "설치";
-    const spotlightTitle =
-      showInstalledSupportHero && machineSummary.payoffValue
-        ? machineSummary.payoffValue
-        : machineSummary.machineValue || machineSummary.payoffValue || "빈 선체";
-    const eyebrow =
-      showInstalledSupportHero && machineSummary.payoffValue
-        ? "현재 설치"
-        : machineSummary.machineLabel || "현재 선체";
-    const transition =
-      showInstalledSupportHero && machineSummary.machineValue && machineSummary.payoffValue
-        ? `${machineSummary.machineValue} -> ${machineSummary.payoffValue}`
-        : machineSummary.payoffValue
-          ? `${machineSummary.payoffLabel} · ${machineSummary.payoffValue}`
-          : "";
+    const spotlightTitle = machineSummary.machineValue || machineSummary.payoffValue || "빈 선체";
+    const eyebrow = machineSummary.machineLabel || "현재 선체";
+    const transition = machineSummary.payoffValue
+      ? `${machineSummary.payoffLabel} · ${machineSummary.payoffValue}`
+      : "";
     return {
       eyebrow,
       spotlightTitle,
@@ -11639,7 +11640,6 @@
     );
     const supportInstall =
       waveNumber >= SUPPORT_SYSTEM_START_WAVE ? getBaseRouteInstalledSupportInstallSummary(build) : null;
-    const branchSummary = getBaseRouteWave5FieldPathSummary(build, waveNumber);
     const combatAsk = trimInspectNote(
       supportInstall
         ? getBaseRouteSupportInstallCombatAsk(supportInstall.systemId, waveNumber)
@@ -11650,17 +11650,14 @@
     return `
       <div class="pause-summary__hero">
         <div class="pause-summary__hero-head">
-          <span class="forge-context-spotlight__eyebrow">${pauseSummary?.eyebrow || "현재 선체"}</span>
-          <strong class="pause-summary__hero-title">${pauseSummary?.spotlightTitle || "빈 선체"}</strong>
-          ${
-            pauseSummary?.transition
-              ? `<p class="pause-summary__hero-detail">${pauseSummary.transition}</p>`
-              : ""
-          }
-        </div>
-        <div class="mini-pill-row pause-summary__pill-row">
-          ${createMiniPill("지금", pauseSummary?.machineValue || "빈 선체", "hot")}
-          ${createMiniPill(branchSummary?.pillLabel || "다음 전투", combatAsk, "accent")}
+          ${createCompactMachineReadMarkup({
+            eyebrow: pauseSummary?.eyebrow || "현재 선체",
+            title: pauseSummary?.spotlightTitle || "빈 선체",
+            detail: pauseSummary?.transition || "",
+            askLabel: "다음 전투",
+            askValue: combatAsk,
+            modifier: "pause",
+          })}
         </div>
       </div>
     `;

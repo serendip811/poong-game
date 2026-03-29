@@ -626,7 +626,7 @@ const defensePauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   phase: "combat",
   paused: true,
 });
-assert.ok(defensePauseSnapshotMarkup.includes(">방호 고정<"));
+assert.ok(defensePauseSnapshotMarkup.includes("Wave 5 경로 · 방호 고정"));
 assert.ok(defensePauseSnapshotMarkup.includes("복귀 pocket 하나만 길게 붙든다."));
 const wave6PreviewBuild = game.createInitialBuild("rail_zeal");
 wave6PreviewBuild.architectureForecastId = "storm_artillery";
@@ -1070,7 +1070,7 @@ const pauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
 });
 assert.ok(pauseSnapshotMarkup.includes("현재 머신"));
 assert.ok(pauseSnapshotMarkup.includes("다음 경로 · 판돈 급습"));
-assert.ok(pauseSnapshotMarkup.includes("forge-context-spotlight"));
+assert.ok(pauseSnapshotMarkup.includes("compact-machine-read__ask"));
 assert.ok(!pauseSnapshotMarkup.includes("summary-head"));
 assert.ok(pauseSnapshotMarkup.includes("판돈 급습"));
 assert.ok(!pauseSnapshotMarkup.includes("활성 판돈"));
@@ -1078,6 +1078,7 @@ assert.ok(!pauseSnapshotMarkup.includes("Era III"));
 assert.ok(!pauseSnapshotMarkup.includes("주력 변이"));
 assert.ok(!pauseSnapshotMarkup.includes("방호·보조"));
 assert.ok(!pauseSnapshotMarkup.includes("W5"));
+assert.ok(!pauseSnapshotMarkup.includes("pause-summary__pill-row"));
 const openingPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   build: roadmapBuild,
   weapon: game.computeWeaponStats(roadmapBuild),
@@ -1090,7 +1091,7 @@ assert.ok(openingPauseSnapshotMarkup.includes("현재 선체"));
 assert.ok(openingPauseSnapshotMarkup.includes("빈 선체"));
 assert.ok(openingPauseSnapshotMarkup.includes("첫 도약 · Wave 3 무기 방향"));
 assert.ok(openingPauseSnapshotMarkup.includes("pause-summary__hero-head"));
-assert.ok(openingPauseSnapshotMarkup.includes("pause-summary__pill-row"));
+assert.ok(openingPauseSnapshotMarkup.includes("compact-machine-read__ask"));
 assert.ok(openingPauseSnapshotMarkup.includes("두꺼운 전열부터 끊는다."));
 assert.ok(!openingPauseSnapshotMarkup.includes("summary-head"));
 assert.ok(!openingPauseSnapshotMarkup.includes("pause-summary__lanes"));
@@ -1107,7 +1108,7 @@ const supportPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
 });
 assert.ok(supportPauseSnapshotMarkup.includes("pause-summary__hero-head"));
 assert.ok(supportPauseSnapshotMarkup.includes("현재 머신"));
-assert.ok(supportPauseSnapshotMarkup.includes(">지금<"));
+assert.ok(supportPauseSnapshotMarkup.includes(">다음 전투<"));
 assert.ok(supportPauseSnapshotMarkup.includes("Ember Spindle"));
 assert.ok(supportPauseSnapshotMarkup.includes("Wave 5 경로 · Wave 5 진로 선택"));
 assert.ok(supportPauseSnapshotMarkup.includes("같은 seam으로 바로 재진입한다."));
@@ -1372,10 +1373,10 @@ const compactEraPanelMarkup = game.createEraContractPanelMarkup(
   null,
   6
 );
-assert.ok(compactEraPanelMarkup.includes("machine-payoff"));
+assert.ok(compactEraPanelMarkup.includes("compact-machine-read"));
 assert.ok(compactEraPanelMarkup.includes("현재 머신"));
 assert.ok(compactEraPanelMarkup.includes("Wave 5 경로"));
-assert.ok(compactEraPanelMarkup.includes("machine-payoff__note"));
+assert.ok(compactEraPanelMarkup.includes("compact-machine-read__ask"));
 assert.ok(!compactEraPanelMarkup.includes("Era I"));
 assert.ok(!compactEraPanelMarkup.includes("Headline Form"));
 assert.ok(!compactEraPanelMarkup.includes("Survival Rider"));
@@ -2256,8 +2257,7 @@ assert.ok(!pollutedPauseSnapshotMarkup.includes("Afterburn"));
 assert.ok(!pollutedPauseSnapshotMarkup.includes("Wave 9"));
 assert.ok(!pollutedPauseSnapshotMarkup.includes("Cataclysm"));
 assert.ok(pollutedPauseSnapshotMarkup.includes("pause-summary__hero-head"));
-assert.ok(pollutedPauseSnapshotMarkup.includes("pause-summary__pill-row"));
-assert.ok(pollutedPauseSnapshotMarkup.includes(">지금<"));
+assert.ok(pollutedPauseSnapshotMarkup.includes("compact-machine-read__ask"));
 assert.ok(pollutedPauseSnapshotMarkup.includes(">다음 전투<"));
 assert.ok(!pollutedPauseSnapshotMarkup.includes("forge-context-spotlight--subline"));
 const pollutedMachinePanelMarkup = game.createBaseRouteMachinePanelMarkup(
@@ -2266,7 +2266,7 @@ const pollutedMachinePanelMarkup = game.createBaseRouteMachinePanelMarkup(
   null,
   5
 );
-assert.ok(pollutedMachinePanelMarkup.includes("machine-payoff__note"));
+assert.ok(pollutedMachinePanelMarkup.includes("compact-machine-read__ask"));
 assert.ok(pollutedMachinePanelMarkup.includes("현재 머신"));
 assert.ok(pollutedMachinePanelMarkup.includes("다음 경로"));
 assert.ok(pollutedMachinePanelMarkup.includes("Wave 5 진로 선택"));
