@@ -12,7 +12,7 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The main problem has narrowed from pure structural honesty to appetite-first clarity. Arena size and combat breathing room are now mostly sufficient for the shipped slice; the run is being held back more by forge/status/admin narration than by lack of room or lack of systems.
-- Most fragile gate remains `UX/UI`, with `Builds` pressure next. The next useful critique should keep testing whether `Wave 3`, `Wave 6`, and `Wave 8` create visible desire fast, not whether the game can name more future ladders.
-- Reference bar remains `Hades`, `Nova Drift`, and `Brotato`: one dominant transformation should land first, then the combat test. Current shipped surfaces still overuse `proof`, `roadmap`, `contract`, and explanatory lane text where the object itself should carry the fantasy.
-- Repeated false solutions: softer wording on the same forge shell, more arena growth when space already breathes, or new support/late-form branches before the shipped docs and reward moments become short, honest, and hungry.
+- The main blocker has shifted from shell wording to build authorship. Arena space and reward readability are improved enough that the shipped run can now be judged on whether players are actually making hungry decisions or just following a cleaned-up script.
+- Most fragile gate is now `Builds`, with `UX/UI` still important but no longer the sole ceiling. The next useful critique should test whether the shipped `Wave 3-8` ladder offers real offense/defense-greed tension and visible payoff targets.
+- Key structural problem: the shipped path still bundles or suppresses too many systems. `Wave 6` is close to a doctrine-confirm bundle, and base-route field grants still cut gamble/greed pressure too often, so replay desire stays lower than the amount of code/content implies.
+- Repeated false solutions: more copy cleanup on the same structure, more prepacked doctrine bundles disguised as choice, or adding new systems before one shipped build fork becomes truly contested and rerunnable.

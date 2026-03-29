@@ -7739,6 +7739,20 @@
         ...finaleRows,
       ];
     }
+    if (choice.type === "utility" && choice.action === "field_greed" && choice.chassisTitle) {
+      return [
+        { label: "형태", value: choice.chassisTitle },
+        {
+          label: "판돈",
+          value: `고철 +${Math.max(0, choice.scrapGain || 0)} · 회수 +${Math.round((choice.scrapMultiplierGain || 0) * 100)}%`,
+        },
+        {
+          label: "압박",
+          value: `${Math.max(1, choice.debtWaves || 1)}웨이브 압박 빚`,
+        },
+        ...finaleRows,
+      ];
+    }
     if (
       choice.type === "utility" &&
       (choice.action === "field_mutation" || choice.action === "field_aegis" || choice.action === "field_greed") &&
@@ -8049,6 +8063,18 @@
       };
     }
     if (choice.type === "utility" && choice.action === "field_greed") {
+      if (choice.chassisTitle) {
+        return {
+          laneLabel: choice.forgeLaneLabel || choice.laneLabel || "Forge Lane",
+          title: choice.title || choice.slotText || "Unnamed Shift",
+          tone: "greed",
+          promise: `${choice.chassisTitle}를 raid frame으로 잠가 회수품을 물 때마다 pickup surge와 twin tow fork를 다시 켠다.`,
+          proof: "Wave 6-8은 더 깊게 긁어 고철을 챙길지, 청구서가 커지기 전에 끊고 빠질지가 바로 갈라진다.",
+          riderLabel: "Defense / Utility",
+          riderNote: "욕심으로 벌린 진입선은 방호 한 줄과 짧은 복귀 각이 있어야 오래 버틴다.",
+          accent: `${choice.chassisTitle} + pickup surge + twin tow fork`,
+        };
+      }
       return {
         laneLabel: choice.forgeLaneLabel || choice.laneLabel || "Forge Lane",
         title: choice.title || choice.slotText || "Unnamed Shift",
@@ -13526,6 +13552,63 @@
     };
   }
 
+  function createWave6ChassisInstallChoice({
+    chassisDef,
+    systemChoice,
+    description,
+    laneLabel = "대표 설치",
+    forgeLaneLabel = laneLabel,
+    wave6BranchRole = "support",
+  }) {
+    if (!chassisDef || !systemChoice) {
+      return null;
+    }
+    const installSummary = getWave6BreakpointInstallSummary(systemChoice);
+    return {
+      type: "utility",
+      action: "bastion_bay_forge",
+      id: `utility:bastion_chassis_break:${chassisDef.id}:${systemChoice.systemId}:${wave6BranchRole}`,
+      verb: "접합",
+      tag: chassisDef.tag,
+      title: chassisDef.title,
+      description,
+      slotText: `${laneLabel} · ${installSummary ? installSummary.title : systemChoice.title} · ${chassisDef.slotText}`,
+      cost: 0,
+      laneLabel,
+      forgeLaneLabel,
+      chassisId: chassisDef.id,
+      chassisTitle: chassisDef.title,
+      skipNextAdminStop: false,
+      bayUnlock: false,
+      singleAxisBreakpoint: CONSOLIDATED_12_WAVE_ROUTE,
+      wave6BranchRole,
+      systemChoice: {
+        ...systemChoice,
+        cost: 0,
+      },
+    };
+  }
+
+  function createWave6GreedFrameChoice(build, chassisDef, nextWave) {
+    const greedChoice = createFieldGreedContractChoice(build, nextWave);
+    if (!greedChoice || !chassisDef) {
+      return null;
+    }
+    return {
+      ...greedChoice,
+      id: `utility:wave6_greed_frame:${chassisDef.id}:${nextWave}`,
+      title: "Scrapline Raid Frame",
+      description: `${chassisDef.description} 이번 갈래는 ${chassisDef.title}를 금고 습격 프레임으로 묶어 고철 ${Math.max(0, greedChoice.scrapGain || 0)}과 회수 증폭을 바로 당긴다. 대신 다음 ${Math.max(1, greedChoice.debtWaves || 1)}웨이브는 압박 빚이 붙어 가장 거친 진입을 직접 버텨야 한다.`,
+      slotText: `${chassisDef.title} · 고철 +${Math.max(0, greedChoice.scrapGain || 0)} · 회수 +${Math.round((greedChoice.scrapMultiplierGain || 0) * 100)}% · ${Math.max(1, greedChoice.debtWaves || 1)}웨이브 압박 빚`,
+      laneLabel: "판돈 압박",
+      forgeLaneLabel: "판돈 압박",
+      chassisId: chassisDef.id,
+      chassisTitle: chassisDef.title,
+      wave6GreedFrame: true,
+      wave6BranchRole: "greed",
+    };
+  }
+
   function createWave6SupportFallbackChoice(preferredInstallSummary = null) {
     const fallbackTitle =
       (preferredInstallSummary && preferredInstallSummary.title) || "첫 지원 설치";
@@ -14469,6 +14552,31 @@
     sortChoicesForDoctrine(sustainCandidates, doctrine);
     sortChoicesForDoctrine(chassisBreakpointChoices, doctrine);
 
+    if (
+      recurringBaseRouteContract &&
+      nextWave === SUPPORT_SYSTEM_START_WAVE &&
+      chassisBreakpointChoices.length > 0
+    ) {
+      const headlineWave6Choice =
+        chassisBreakpointChoices.find((choice) => choice && choice.wave6BranchRole === "offense") ||
+        chassisBreakpointChoices.find((choice) => choice && choice.systemChoice) ||
+        null;
+      const riderWave6Choice =
+        chassisBreakpointChoices.find((choice) => choice && choice.wave6BranchRole === "defense") ||
+        createWave6SupportFallbackChoice(
+          getWave6BreakpointInstallSummary(headlineWave6Choice && headlineWave6Choice.systemChoice)
+        );
+      const gambleWave6Choice =
+        chassisBreakpointChoices.find((choice) => choice && choice.wave6BranchRole === "greed") ||
+        createFieldGrantCard(createFieldGreedContractChoice(build, nextWave)) ||
+        null;
+      return [
+        markForgeContract(headlineWave6Choice, "headline", "주력"),
+        markForgeContract(riderWave6Choice, "rider", "버팀"),
+        markForgeContract(gambleWave6Choice, "gamble", "판돈"),
+      ].filter(Boolean);
+    }
+
     if (sustainCandidates.length === 0) {
       sustainCandidates.push({
         type: "fallback",
@@ -14616,11 +14724,16 @@
     const gamblePool = recurringBaseRouteContract
       ? unconstrainedGamblePool.filter((choice) => isBaseRouteGreedChoice(choice))
       : unconstrainedGamblePool;
+    const wave6ThreeWayFork =
+      recurringBaseRouteContract &&
+      nextWave === SUPPORT_SYSTEM_START_WAVE &&
+      chassisBreakpointChoices.length > 0;
     const twoCardBaseRouteContract =
       recurringBaseRouteContract &&
       nextWave >= 1 &&
       nextWave <= DEFAULT_ROUTE_WAVE_COUNT &&
-      !openSecondaryBranch;
+      !openSecondaryBranch &&
+      !wave6ThreeWayFork;
     const shouldHeadlineSupportPayoff =
       strictBaseRouteRiderContract &&
       build &&
@@ -16931,45 +17044,50 @@
       return [];
     }
     const doctrine = getBastionDoctrineDef(build);
-    const preferredSystemId =
-      getDoctrineMidrunSupportSystemId(doctrine) || getDoctrinePrimarySupportSystemId(doctrine);
-    const preferredSystemChoice = preferredSystemId
-      ? createSupportSystemTierChoice(preferredSystemId, 1)
-      : null;
-    const preferredInstallSummary = getWave6BreakpointInstallSummary(preferredSystemChoice);
     const ascensionDef = doctrine ? WAVE6_ASCENSION_DEFS[doctrine.id] || null : null;
     const featuredChassisDef =
       (ascensionDef && getChassisBreakpointDef(ascensionDef.chassisId)) ||
       CHASSIS_BREAKPOINT_DEFS.vector_thrusters;
-    const featuredChoice = {
-      type: "utility",
-      action: "bastion_bay_forge",
-      id: `utility:bastion_chassis_break:${featuredChassisDef.id}:${preferredSystemChoice ? preferredSystemChoice.systemId : "support"}`,
-      verb: "접합",
-      tag: featuredChassisDef.tag,
-      title: featuredChassisDef.title,
-      description: CONSOLIDATED_12_WAVE_ROUTE
-        ? `${featuredChassisDef.description} 이번 정지의 대표 설치는 ${preferredInstallSummary ? preferredInstallSummary.title : preferredSystemChoice ? preferredSystemChoice.title : "교리 방호"} 하나다. ${preferredInstallSummary ? preferredInstallSummary.value : "새 버팀선"}를 차체 안쪽에 바로 붙여 Wave 6부터 두 전투를 이 실루엣으로 밀어붙인다.`
-        : `${featuredChassisDef.description} 이번 정지에서는 차체 실루엣만 먼저 확정하고 support bay 증설은 뒤로 미룬다.`,
-      slotText: preferredSystemChoice
-        ? `대표 설치 · ${preferredInstallSummary ? preferredInstallSummary.title : preferredSystemChoice.title} · ${featuredChassisDef.slotText}`
-        : `대표 설치 · ${featuredChassisDef.slotText}`,
-      cost: 0,
-      laneLabel: "대표 설치",
-      forgeLaneLabel: "대표 설치",
-      chassisId: featuredChassisDef.id,
-      chassisTitle: featuredChassisDef.title,
-      skipNextAdminStop: false,
-      bayUnlock: false,
-      singleAxisBreakpoint: CONSOLIDATED_12_WAVE_ROUTE && Boolean(preferredSystemChoice),
-      systemChoice: preferredSystemChoice
-        ? {
-            ...preferredSystemChoice,
-            cost: 0,
-          }
-        : null,
-    };
-    return [featuredChoice, createWave6SupportFallbackChoice(preferredInstallSummary)];
+    const offenseSystemId = getDoctrinePrimarySupportSystemId(doctrine);
+    const defenseSystemId =
+      getDoctrineMidrunSupportSystemId(doctrine) ||
+      getDoctrinePrimarySupportSystemId(doctrine);
+    const offenseSystemChoice = offenseSystemId
+      ? createSupportSystemTierChoice(offenseSystemId, 1)
+      : null;
+    const defenseSystemChoice =
+      defenseSystemId && defenseSystemId !== offenseSystemId
+        ? createSupportSystemTierChoice(defenseSystemId, 1)
+        : null;
+    const offenseInstallSummary = getWave6BreakpointInstallSummary(offenseSystemChoice);
+    const defenseInstallSummary = getWave6BreakpointInstallSummary(defenseSystemChoice);
+    const choices = [];
+    if (offenseSystemChoice) {
+      choices.push(
+        createWave6ChassisInstallChoice({
+          chassisDef: featuredChassisDef,
+          systemChoice: offenseSystemChoice,
+          description: `${featuredChassisDef.description} 이번 갈래는 ${offenseInstallSummary ? offenseInstallSummary.title : offenseSystemChoice.title}를 전면 화력용으로 바로 꽂아 ${offenseInstallSummary ? offenseInstallSummary.value : "새 공세선"}를 켠다. Wave 6-7은 이 실루엣으로 열린 lane을 먼저 길게 밀어붙인다.`,
+          laneLabel: "공세 설치",
+          forgeLaneLabel: "공세 설치",
+          wave6BranchRole: "offense",
+        })
+      );
+    }
+    if (defenseSystemChoice) {
+      choices.push(
+        createWave6ChassisInstallChoice({
+          chassisDef: featuredChassisDef,
+          systemChoice: defenseSystemChoice,
+          description: `${featuredChassisDef.description} 이번 갈래는 ${defenseInstallSummary ? defenseInstallSummary.title : defenseSystemChoice.title}를 버팀선으로 바로 꽂아 ${defenseInstallSummary ? defenseInstallSummary.value : "새 방호선"}를 켠다. Wave 6-7은 복귀 pocket 하나를 더 오래 붙잡는 proof window가 된다.`,
+          laneLabel: "방호 설치",
+          forgeLaneLabel: "방호 설치",
+          wave6BranchRole: "defense",
+        })
+      );
+    }
+    choices.push(createWave6GreedFrameChoice(build, featuredChassisDef, nextWave));
+    return choices.filter(Boolean);
   }
 
   function buildBastionDraftChoices(build, rng, nextWave) {
@@ -17528,7 +17646,7 @@
     pushCombatFeed(
       CONSOLIDATED_12_WAVE_ROUTE
         ? wave6ChassisDraft
-          ? "방호·보조 선택 개시. 이번 정지는 몸체 하나를 고르면 그 안쪽에 첫 support install이 같이 잠긴다. Wave 6부터 새 버팀선이나 자동 화력이 바로 켜져 남은 두 전투를 이 실루엣으로 밀어붙인다."
+          ? "중반 분기 선택 개시. 이번 정지는 세 갈래만 뜬다. 몸체 위에 화력을 얹는 공세 설치, 버팀 pocket을 여는 방호 설치, 고철을 먼저 당기는 판돈 압박 중 하나로 Wave 6-8 실루엣을 고른다."
           : wave6AscensionDraft
             ? "주력 변이 선택 개시. 이번 정지는 오래 끌 몸체 하나를 고르고, 그 프레임 안쪽에 첫 support install까지 함께 잠근다. Wave 6부터 몸과 보조선이 같이 켜져 mid-run silhouette가 바로 커진다."
           : "변이 선택 개시. 이번 정지는 크게 바꾸는 한 장, 버티는 한 장, 판돈을 거는 한 장 중 하나만 고른다."
@@ -18414,6 +18532,23 @@
     }
 
     if (choice.type === "utility" && choice.action === "field_greed") {
+      if (
+        CONSOLIDATED_12_WAVE_ROUTE &&
+        choice.wave6GreedFrame &&
+        !run.build.bastionDoctrineId &&
+        run.build.architectureForecastId
+      ) {
+        adoptBastionDoctrine(run.build.architectureForecastId, { recordUpgrade: false });
+      }
+      if (choice.wave6GreedFrame && choice.chassisId) {
+        if (applyChassisBreakpoint(run.build, choice.chassisId, run)) {
+          const chassis = getChassisBreakpointDef(choice.chassisId);
+          run.build.upgrades.push(`유틸리티 섀시: ${(chassis && chassis.label) || choice.chassisTitle || choice.chassisId}`);
+          activateChassisBreakpointSurge(run, choice.chassisId);
+        }
+        run.build.wave6ChassisBreakpoint = true;
+        run.build.upgrades.push(`Raid Frame: ${choice.chassisTitle || choice.title || "Scrapline"}`);
+      }
       if (run.resources) {
         run.resources.scrap += Math.max(0, choice.scrapGain || 0);
       }
@@ -22055,6 +22190,8 @@
             ? `${grantLabel} 적용. Bastion Draft를 안정화로 넘기고 다음 웨이브를 바로 연다.`
             : choice.action === "bastion_pact"
               ? `${grantLabel} 적용. 최대 체력을 깎아 고철을 쥔 대신 3웨이브 Siege Debt를 떠안고 다음 웨이브를 연다.`
+              : choice.action === "field_greed"
+                ? `${grantLabel} 적용. ${choice.chassisTitle || "유틸리티 섀시"}를 raid frame으로 잠가 고철과 회수 효율을 먼저 당겼다. 대신 다음 전투는 압박 빚이 붙은 채 열린다.`
             : choice.action === "wave6_ascension"
                 ? `${grantLabel} 적용. ${choice.doctrineLabel}를 잠가 ${choice.doctrineChoice ? choice.doctrineChoice.title : "주포 mutation"}과 ${choice.chassisTitle || "utility chassis"}를 함께 켰다. 이번 break는 주포/차체 형태를 확정하는 데만 쓰고 다음 rider 갈림길은 뒤로 미룬다.`
                 : choice.action === "bastion_bay_forge"
