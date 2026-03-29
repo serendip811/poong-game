@@ -5410,7 +5410,7 @@
   };
 
   const BASE_BUILD = {
-    signatureId: DEFAULT_SIGNATURE_ID,
+    signatureId: CONSOLIDATED_12_WAVE_ROUTE ? null : DEFAULT_SIGNATURE_ID,
     coreId: "ember",
     attunedCoreId: "ember",
     attunedCopies: 1,
@@ -8647,6 +8647,9 @@
     if (Array.isArray(build.wildcardProtocolIds) && build.wildcardProtocolIds.length > 0) {
       build.wildcardProtocolIds = [];
     }
+    if (build.auxiliaryJunctionLevel) {
+      build.auxiliaryJunctionLevel = 0;
+    }
     if (build.lateBreakProfileId) {
       build.lateBreakProfileId = null;
     }
@@ -8704,11 +8707,7 @@
     if (build.blackLedgerRaidWaves) {
       build.blackLedgerRaidWaves = 0;
     }
-    build.supportBayCap = clamp(
-      Math.round(build.supportBayCap || getStartingSupportBayCapacity()),
-      getStartingSupportBayCapacity(),
-      getOwnershipSupportBayCapacityTarget(build)
-    );
+    build.supportBayCap = getStartingSupportBayCapacity();
     return build;
   }
 
@@ -19508,6 +19507,9 @@
   }
 
   function shouldRunDoctrinePursuitWave(build, waveNumber) {
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
+      return false;
+    }
     return (
       !!build &&
       !!build.bastionDoctrineId &&
