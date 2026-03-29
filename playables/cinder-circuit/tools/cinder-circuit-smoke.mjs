@@ -1162,6 +1162,8 @@ assert.ok(!forgeContextMarkup.includes("세 장 중 하나만"));
 assert.ok(!forgeContextMarkup.includes("다음 시험"));
 assert.ok(!forgeContextMarkup.includes("보조 결"));
 assert.ok(!forgeContextMarkup.includes("forge-focus__hint"));
+assert.ok(game.createBaseRouteForgeProofMarkup("열린 lane 하나만 오래 민다.").includes("다음 전투"));
+assert.ok(!game.createBaseRouteForgeProofMarkup("열린 lane 하나만 오래 민다.").includes("다음 시험"));
 assert.equal(
   game.getBaseRouteForgeContextTailSummary({
     riderStep: false,
@@ -1258,6 +1260,7 @@ const forgeHeadlineSpotlight = game.getBaseRouteForgeSpotlightSummary({
 });
 assert.ok(forgeHeadlineSpotlight.titleLabel.length > 0);
 assert.ok(forgeHeadlineSpotlight.titleValue.length > 0);
+assert.equal(forgeHeadlineSpotlight.leadLabel, "다음 전투");
 assert.equal(forgeHeadlineSpotlight.leadValue, "고리가 긁은 입구로 짧게 파고든다.");
 const forgeRiderSpotlight = game.getBaseRouteForgeSpotlightSummary({
   choice: wave6RiderChoice,
@@ -1266,6 +1269,7 @@ const forgeRiderSpotlight = game.getBaseRouteForgeSpotlightSummary({
 });
 assert.ok(forgeRiderSpotlight.titleLabel.length > 0);
 assert.ok(forgeRiderSpotlight.titleValue.length > 0);
+assert.equal(forgeRiderSpotlight.leadLabel, "다음 전투");
 assert.equal(forgeRiderSpotlight.leadValue, "복귀선 하나만 길게 붙든다.");
 const forgeDominantInstallHero = game.getBaseRouteForgeDominantInstallHero({
   choice: wave6HeadlineChoice,
@@ -2048,9 +2052,10 @@ const cataclysmChoice = mutationLateBreakChoices.find((choice) => choice.action 
 assert.ok(cataclysmChoice);
 assert.equal(cataclysmChoice.title, "Cataclysm Arsenal");
 assert.equal(cataclysmChoice.lateFieldMutationLevel, 4);
-assert.equal(cataclysmChoice.roadmapDetail, "Wave 8 완성 시험 -> 짧은 승리 랩");
-assert.match(cataclysmChoice.description, /Wave 6 설치가 벌려 둔 seam/);
+assert.equal(cataclysmChoice.roadmapDetail, "Cataclysm Arsenal -> 열린 lane 둘 유지");
+assert.match(cataclysmChoice.description, /Wave 6 설치 위에 새 화망/);
 assert.doesNotMatch(cataclysmChoice.description, /support 없이도|완성형/);
+assert.doesNotMatch(cataclysmChoice.description, /proof|짧은 승리 랩|완성 시험/i);
 const cataclysmRun = {
   build: mutationLateBandBuild,
   resources: { scrap: 999 },
@@ -2066,7 +2071,8 @@ assert.ok(cataclysmWeapon.lateBreakCataclysmFirePattern);
 assert.ok(cataclysmWeapon.lateBreakCataclysmFirePattern.offsets.length >= 5);
 assert.ok(cataclysmWeapon.lateFieldMutationTraitLabel.includes("Cataclysm Arsenal"));
 assert.ok(cataclysmWeapon.damage >= 20);
-assert.match(cataclysmWeapon.lateBreakStatusNote, /Wave 6 설치가 벌려 둔 seam/);
+assert.match(cataclysmWeapon.lateBreakStatusNote, /Wave 6 설치 위에 전면 cataclysm fan/);
+assert.doesNotMatch(cataclysmWeapon.lateBreakStatusNote, /proof|짧은 승리 랩|완성 시험/i);
 const cataclysmLanceBuild = game.createInitialBuild("rail_zeal");
 cataclysmLanceBuild.coreId = "lance";
 cataclysmLanceBuild.attunedCoreId = "lance";
@@ -2141,12 +2147,17 @@ const lateBreakArmoryChoices = game.buildForgeChoices(lateCacheBuild, Math.rando
 });
 assert.equal(lateBreakArmoryChoices.length, 3);
 assert.ok(
-  lateBreakArmoryChoices.every((choice) => choice.roadmapDetail === "Wave 8 완성 시험 -> 짧은 승리 랩")
+  lateBreakArmoryChoices.every((choice) =>
+    ["Cataclysm Arsenal -> 열린 lane 둘 유지", "Warplate Halo -> pocket hold", "Black Ledger Heist -> payout lane raid"].includes(
+      choice.roadmapDetail
+    )
+  )
 );
 assert.ok(lateBreakArmoryChoices.every((choice) => !choice.roadmapDetail?.includes("Wave 9")));
 assert.ok(lateBreakArmoryChoices.every((choice) => !choice.roadmapDetail?.includes("Wave 10")));
 assert.ok(lateBreakArmoryChoices.every((choice) => !choice.roadmapDetail?.includes("Wave 11")));
 assert.ok(lateBreakArmoryChoices.every((choice) => !choice.roadmapDetail?.includes("Wave 12")));
+assert.ok(lateBreakArmoryChoices.every((choice) => !/proof|완성 시험/i.test(choice.roadmapDetail)));
 const afterburnBreakpointChoices = game.getCombatCacheChoicesForWave(lateCacheBuild, 14);
 assert.equal(afterburnBreakpointChoices.length, 0);
 const crownWindowBuild = game.createInitialBuild("scrap_pact");
@@ -4667,15 +4678,15 @@ assert.ok(lateBreakDefense.slotText.includes("bastion hull"));
 assert.ok(lateBreakGreed.slotText.includes("twin tow fork"));
 const lateBreakGreedTransform = game.getForgeChoiceTransformation(lateBreakGreed);
 assert.ok(lateBreakGreedTransform.promise.includes("tow fork"));
-assert.ok(lateBreakGreedTransform.proof.includes("Wave 8 완성 시험"));
+assert.equal(lateBreakGreedTransform.proof, "payout lane 하나만 깊게 긁는다.");
 assert.ok(!lateBreakGreedTransform.proof.includes("Wave 9"));
 const lateBreakPreviewRows = game.createForgePreviewRows(lateBreakGreed);
 assert.equal(
   JSON.stringify(lateBreakPreviewRows),
   JSON.stringify([
     { label: "분기", value: "Greed Contract" },
-    { label: "Wave 8", value: "완성 시험" },
-    { label: "그 뒤", value: "짧은 승리 랩" },
+    { label: "설치", value: "Black Ledger Heist" },
+    { label: "다음 전투", value: "payout lane 하나만 깊게 긁는다." },
   ])
 );
 const lateBreakRun = {
@@ -4691,9 +4702,9 @@ const lateBreakLedgerWeapon = game.computeWeaponStats(lateBreakRun.build);
 assert.equal(lateBreakLedgerWeapon.headlineFormLabel, "Black Ledger Heist");
 assert.ok(lateBreakLedgerWeapon.lateBreakLedgerFirePattern);
 assert.ok(lateBreakLedgerWeapon.lateBreakStatusNote.includes("twin tow fork"));
-assert.ok(lateBreakLedgerWeapon.lateBreakStatusNote.includes("완성 시험"));
-assert.ok(lateBreakLedgerWeapon.lateBreakStatusNote.includes("짧은 승리 랩"));
+assert.ok(lateBreakLedgerWeapon.lateBreakStatusNote.includes("payout lane 하나만 깊게 긁는다."));
 assert.ok(!lateBreakLedgerWeapon.lateBreakStatusNote.includes("Wave 9"));
+assert.ok(!/완성 시험|짧은 승리 랩/i.test(lateBreakLedgerWeapon.lateBreakStatusNote));
 const lateBreakDebt = game.createBlackLedgerDebtState(lateBreakRun.build, 12);
 assert.ok(lateBreakDebt);
 assert.equal(lateBreakDebt.stacks, 0);
