@@ -143,6 +143,30 @@ assert.equal(
   ).action,
   "result"
 );
+const shippedClearTransition = game.getBaseRouteTransitionFeedCopy(
+  {
+    build: game.createInitialBuild("rail_zeal"),
+    waveIndex: 3,
+    wave: { completesRun: false },
+  },
+  { phase: "clear", nextWave: 5 }
+);
+assert.ok(shippedClearTransition.headline.includes("정리"));
+assert.ok(shippedClearTransition.proof.includes("첫 차체 잠금"));
+assert.ok(shippedClearTransition.proof.includes("바로 간다"));
+assert.ok(!/Late Break|Afterburn|support bay|proof lap|Wave 9|Wave 10/i.test(shippedClearTransition.text));
+const shippedForgeTransition = game.getBaseRouteTransitionFeedCopy(
+  {
+    build: game.createInitialBuild("rail_zeal"),
+    waveIndex: 7,
+    wave: { completesRun: true },
+    pendingFinalForge: true,
+  },
+  { phase: "forge", nextWave: 9 }
+);
+assert.ok(shippedForgeTransition.headline.includes("유지"));
+assert.ok(shippedForgeTransition.proof.includes("짧은 승리 랩"));
+assert.ok(!/Late Break|Afterburn|support bay|Wave 9|Wave 10/i.test(shippedForgeTransition.text));
 const quarantinedLateRun = game.quarantineShippedLateRouteState({
   build: {
     ...game.createInitialBuild("rail_zeal"),

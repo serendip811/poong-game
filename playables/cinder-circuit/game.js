@@ -17938,6 +17938,53 @@
     };
   }
 
+  function getBaseRouteTransitionFeedCopy(run = state, options = {}) {
+    if (!CONSOLIDATED_12_WAVE_ROUTE) {
+      return null;
+    }
+    const nextWave = Number.isFinite(options.nextWave) ? options.nextWave : run ? run.waveIndex + 2 : 1;
+    const currentWave = run && Number.isFinite(run.waveIndex) ? clamp(run.waveIndex + 1, 1, DEFAULT_ROUTE_WAVE_COUNT) : 1;
+    const activeBuild =
+      run && run.build ? getSanitizedConsolidatedPresentationBuild(run.build) : null;
+    const weapon = activeBuild ? computeWeaponStats(activeBuild) : null;
+    const dominantForm =
+      activeBuild && weapon
+        ? trimInspectNote(getDominantFormSummary(activeBuild, weapon, currentWave).label, "현재 형태")
+        : "현재 형태";
+    const transition = getBaseRoutePostWaveTransition(run, nextWave);
+    const phase = options.phase || "clear";
+    if (transition.action === "result") {
+      const proof = "남은 고철만 회수하면 이번 런이 닫힌다.";
+      return {
+        headline: `${dominantForm} 마감`,
+        proof,
+        text: `${dominantForm} 마감. ${proof}`,
+      };
+    }
+    if (transition.action === "victory_lap") {
+      const proof = "짧은 승리 랩 하나만 더 밀어붙인다.";
+      return {
+        headline: `${dominantForm} 유지`,
+        proof,
+        text: `${dominantForm} 유지. ${proof}`,
+      };
+    }
+    const forgeFocus = getBaseRouteTransformationFocus(nextWave, {
+      stage: "forge",
+      pendingFinalForge: phase === "forge" && Boolean(run && run.pendingFinalForge),
+    });
+    const proofWindow = trimInspectNote(
+      getPlayerFacingProofWindowSummary(activeBuild, nextWave).label,
+      "다음 전투"
+    );
+    const proof = `${forgeFocus.title} 하나를 고른 뒤 ${proofWindow}로 바로 간다.`;
+    return {
+      headline: phase === "forge" ? `현재 형태 · ${dominantForm}` : `${dominantForm} 정리`,
+      proof,
+      text: `${phase === "forge" ? `현재 형태는 ${dominantForm}` : `${dominantForm} 정리`}. ${proof}`,
+    };
+  }
+
   function getForgeDisplayModeLabel() {
     if (shouldUseBaseRouteForgeContract()) {
       return getBaseRouteForgeStage(state).label;
@@ -18891,6 +18938,7 @@
     getMinimalBaseRouteHudVisibility,
     getBaseRouteForgeStage,
     getBaseRoutePostWaveTransition,
+    getBaseRouteTransitionFeedCopy,
     getBaseRouteForgeContextTailSummary,
     getBaseRouteForgeSpotlightSummary,
     getBaseRouteForgeChoiceCombatAsk,
@@ -21465,22 +21513,32 @@
     pushCombatFeed(
       isFinalForge
         ? CONSOLIDATED_12_WAVE_ROUTE
-          ? "최종 웨이브 정리 완료. 기본 8-wave spine은 여기서 닫히고 짧은 승리 랩만 남는다."
+          ? getBaseRouteTransitionFeedCopy(state, {
+              phase: "forge",
+              nextWave: forgeOptions.nextWave,
+            }).text
           : "최종 웨이브 정리 완료. 마지막 포지에서 최종 각인과 7연속 afterburn survival ladder의 시작 형태를 마감한다."
         : isLateBreakArmory(forgeOptions)
           ? CONSOLIDATED_12_WAVE_ROUTE
-            ? "Wave 8 돌파. 이번 정지는 런의 마지막 큰 잠금 하나를 고른다. 새 시대 예고 없이 이 형태를 바로 증명하고, 끝나면 짧은 승리 랩 하나만 더 몰아본다."
+            ? getBaseRouteTransitionFeedCopy(state, {
+                phase: "forge",
+                nextWave: forgeOptions.nextWave,
+              }).text
             : state.build.auxiliaryJunctionLevel > 0
               ? "Wave 8 돌파. Late Break Armory를 단일 breakpoint로 재절단했다. 이제 정확히 세 장만 뜨며, Cataclysm Arsenal, Warplate Halo, Black Ledger Heist 중 하나를 고르면 Wave 9-10은 payoff band, Wave 11은 그 선택 전용 proof, Wave 12는 최종 finale로 꺾인다."
               : "Wave 8 돌파. Late Break Armory를 단일 breakpoint로 재절단했다. 이제 정확히 세 장만 뜨며, Cataclysm Arsenal, Warplate Halo, Black Ledger Heist 중 하나를 고르면 Wave 9-10은 payoff band, Wave 11은 그 선택 전용 proof, Wave 12는 최종 finale로 꺾인다."
           : draftType === "armory"
           ? CONSOLIDATED_12_WAVE_ROUTE
-            ? "Wave 4 돌파. 이번 정지는 눈에 띄게 큰 한 장과 버티는 답 한 장만 남긴다. 판돈 갈림길은 body break 뒤로 미룬다."
+            ? getBaseRouteTransitionFeedCopy(state, {
+                phase: "forge",
+                nextWave: forgeOptions.nextWave,
+              }).text
             : "Wave 4 돌파. Act Break Armory는 이제 headline breakpoint 1장 뒤에 support/defense/greed rider 1장을 얹어, Act 2 빌드 정체성을 더 빨리 조립하게 만든다."
           : CONSOLIDATED_12_WAVE_ROUTE
-            ? forgeOptions.nextWave === 5
-              ? "Wave 4 돌파. 이번 정지는 주력 변이 하나와 버티는 답 하나만 남긴다. 판돈 갈림길은 Wave 5 proof lap 뒤, body break 정지에서 다시 연다."
-              : "웨이브 종료. 눈에 띄게 큰 한 장과 버티는 답 한 장만 남기고 바로 다음 전투로 이어진다."
+            ? getBaseRouteTransitionFeedCopy(state, {
+                phase: "forge",
+                nextWave: forgeOptions.nextWave,
+              }).text
             : "웨이브 종료. 먼저 headline 변신을 고르고, 이어서 작은 rider slot으로 support/defense/greed를 한 장 더 얹는다.",
       "FORGE"
     );
@@ -25986,11 +26044,7 @@
         setBanner("전장 정리", 0.9);
         pushCombatFeed(
           CONSOLIDATED_12_WAVE_ROUTE
-            ? state.wave.completesRun
-              ? state.wave.baseRouteVictoryLap
-                ? "적 반응 정지. 남은 고철을 회수하면 이번 런의 결과가 열린다."
-                : "적 반응 정지. 남은 고철을 회수하면 짧은 승리 랩 하나만 더 밀어붙인 뒤 이번 런이 닫힌다."
-              : `적 반응 정지. 남은 고철을 회수하면 ${nextPhaseLabel} 하나만 고른 뒤 바로 다음 시험으로 이어진다.`
+            ? getBaseRouteTransitionFeedCopy(state, { phase: "clear", nextWave }).text
             : `적 반응 정지. 남은 고철을 회수한 뒤 ${nextPhaseLabel}로 이어진다.`,
           "CLEAR"
         );
