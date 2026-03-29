@@ -994,7 +994,8 @@ const openingPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
 assert.ok(openingPauseSnapshotMarkup.includes("현재 선체"));
 assert.ok(openingPauseSnapshotMarkup.includes("빈 선체"));
 assert.ok(openingPauseSnapshotMarkup.includes("첫 도약 · Wave 3 무기 방향"));
-assert.ok(openingPauseSnapshotMarkup.includes("forge-context-spotlight"));
+assert.ok(openingPauseSnapshotMarkup.includes("pause-summary__hero-head"));
+assert.ok(openingPauseSnapshotMarkup.includes("pause-summary__pill-row"));
 assert.ok(openingPauseSnapshotMarkup.includes("폭주 지형 없음."));
 assert.ok(!openingPauseSnapshotMarkup.includes("summary-head"));
 assert.ok(!openingPauseSnapshotMarkup.includes("pause-summary__lanes"));
@@ -1009,12 +1010,12 @@ const supportPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   phase: "combat",
   paused: true,
 });
-assert.ok(supportPauseSnapshotMarkup.includes("forge-context-spotlight"));
-assert.ok(supportPauseSnapshotMarkup.includes("설치"));
-assert.ok(supportPauseSnapshotMarkup.includes("현재 머신"));
+assert.ok(supportPauseSnapshotMarkup.includes("pause-summary__hero-head"));
+assert.ok(supportPauseSnapshotMarkup.includes("현재 설치"));
+assert.ok(supportPauseSnapshotMarkup.includes(">지금<"));
 assert.ok(supportPauseSnapshotMarkup.includes("Aegis Halo"));
-assert.ok(supportPauseSnapshotMarkup.includes("설치 · Aegis Halo"));
-assert.ok(supportPauseSnapshotMarkup.indexOf("현재 머신") < supportPauseSnapshotMarkup.indexOf("설치 · Aegis Halo"));
+assert.ok(supportPauseSnapshotMarkup.includes("Ember Spindle -> Aegis Halo"));
+assert.ok(supportPauseSnapshotMarkup.indexOf("현재 설치") < supportPauseSnapshotMarkup.indexOf("Aegis Halo"));
 assert.ok(supportPauseSnapshotMarkup.includes("같은 seam으로 바로 재진입한다."));
 assert.ok(!supportPauseSnapshotMarkup.includes("summary-head"));
 assert.ok(!supportPauseSnapshotMarkup.includes("활성 보조"));
@@ -2107,6 +2108,11 @@ const pollutedPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
 assert.ok(!pollutedPauseSnapshotMarkup.includes("Afterburn"));
 assert.ok(!pollutedPauseSnapshotMarkup.includes("Wave 9"));
 assert.ok(!pollutedPauseSnapshotMarkup.includes("Cataclysm"));
+assert.ok(pollutedPauseSnapshotMarkup.includes("pause-summary__hero-head"));
+assert.ok(pollutedPauseSnapshotMarkup.includes("pause-summary__pill-row"));
+assert.ok(pollutedPauseSnapshotMarkup.includes(">지금<"));
+assert.ok(pollutedPauseSnapshotMarkup.includes(">다음 전투<"));
+assert.ok(!pollutedPauseSnapshotMarkup.includes("forge-context-spotlight--subline"));
 const pollutedFeedSummary = game.getShippingCombatFeedEntrySummary(
   {
     stamp: "DOM",

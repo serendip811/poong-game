@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: hard-lock the shipped `Wave 1-8` route to a truly small start, one major `Wave 3` weapon leap, and one support payoff that matures across `Wave 6-8`, while quarantining dormant late-route visuals, catch-up shortcuts, and support-bay admin until that short ladder feels craveable on sight.
+- Immediate priority: strip the shipped `Wave 1-8` route down to three instantly readable power states and let `Wave 5-8` breathe, so the player sees a bare opener, a decisive `Wave 3` weapon leap, and one `Wave 6` support silhouette that owns space across `Wave 7-8` without late-route admin or extra spectacle muddying the ladder.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 23:31:01 KST
+  Findings:
+  - The run is still too visually and conceptually complete before it has earned excitement. `BASE_BUILD`, the exported route helpers, and large live seams of `game.js` still keep late-route doctrine/capstone/ascension machinery adjacent to the shipped path, so the short route keeps reading like a reduced build of a larger game instead of a finished opener with a strong hunger curve.
+  - The forge is still over-explaining at the exact moment it should sell desire. `renderForgeOverlay()` still builds the stop around dominant-form summaries, proof windows, ask labels, context tails, and multiple transformation helpers; against the snap hierarchy of `Hades`, `Nova Drift`, or even `Brotato` shop/level-up cards, this is still a briefing screen, not a power spike screen.
+  - Combat space is healthier than before on paper, but the payoff is still blurred by silhouette noise. `Wave 5-8` arenas do widen, yet the player can still carry enough chassis/support/hazard/readout clutter that movement decisions do not feel as clean and expressive as the route fantasy claims; the screen is often proving systems are present rather than proving one owned build has taken over.
+  - The project should resist adding another progression layer right now. The current slice still has not fully nailed `small start -> weapon transformation -> support ownership lap`, so adding more passives, bay logic, or endform wrappers would only make the eventual `20-30 wave` ambition less believable, not more.
+  Top Priority: Rebuild the shipped forge/pause/status presentation around one dominant offered form and one next-combat ask, while suppressing every nonessential shipped-route overlay or silhouette layer that makes `Wave 1-8` feel busier or more complete than its three-step ladder.
+  Why Now: Until the player can instantly want the next form and then feel it clearly in open space, replayability will stall at prototype curiosity instead of build hunger.
+  Do Not Repeat: Do not answer this with more support options, more route verbs, or another text pass that still leaves the same multi-layer reward/admin stack in place.
+  Release Gate: Rewards
 
 - 2026-03-29 23:15:00 KST
   Findings:
@@ -183,20 +194,22 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not answer this with another new branch, another support wrapper, or softer wording on the same forge/status architecture.
   Release Gate: UX/UI
 
-- 2026-03-29 17:31:01 KST
-  Findings:
-  - The shipped route still feels like a disguised branch of a larger prototype instead of a finished short run. `playables/cinder-circuit/game.js` still keeps live `Wave 9-12`, `Afterburn`, doctrine capstone, and pursuit/endform machinery throughout the same file, while `docs/games/cinder-circuit-source-application.md` still teaches signatures and a `12-wave` ladder as normal design grammar. Sanitizing presentation is not the same as making the shipped game structurally honest.
-  - The forge remains too administrative for a release-feeling reward screen. `renderForgeOverlay()` still routes the player through `current machine`, `featured install`, `combat ask`, tail summaries, and contract-role logic before the object itself lands. Strong references like `Hades`, `Nova Drift`, and `Brotato` make the reward fantasy readable in one glance; this still reads like a compact dashboard.
-  - The growth curve is cleaner, but it still does not create enough build hunger for repeated runs. The run now protects a `Wave 6-8` support ownership chapter, yet most of the visible ladder is still `weapon stat readout + one support install + Wave 8 payoff card`, not a sequence of escalating shape changes that suggests this structure could truly stretch to `20-30` waves later.
-  - UI discipline is still inconsistent with the stated anti-drift rules. The title is leaner, but the docs and reward flow still over-explain system grammar the player should infer by feel. The game keeps spending words to justify choices that should already look powerful.
-  Top Priority: Make the shipped route genuinely `8-wave-only` in player-facing design and reward flow by stripping late-route language from shipped docs/UI and reducing the forge context to one-glance `current form -> offered transformation -> next test`.
-  Why Now: Until the short run stops advertising a larger hidden game, every reward moment loses punch and every replay feels provisional.
-  Do Not Repeat: Do not answer this with more sanitizers or copy trims while the shipped path still shares vocabulary and scaffolding with the unshipped late-route game.
-  Release Gate: UX/UI
-
 - Older entries trimmed automatically: 1
 
 ## Latest Improvement
+
+- 2026-03-29 23:59:00 KST
+  Changed:
+  - Rebuilt the shipped `Tab` pause snapshot in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) around a new `getBaseRoutePauseSnapshotSummary(...)` helper so the compact route no longer reuses the stacked forge-context shell. Pause now shows one dominant form/install title, one short `current -> result` transition line, and only two pills: `지금` and `다음 전투`.
+  - Updated [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) to support the slimmer pause card with `pause-summary__hero-head` and `pause-summary__pill-row`, including wrapped pill text so the combat ask reads like a quick board instead of a clipped paragraph.
+  - Refreshed [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) and [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md) to lock the new compact pause structure against regressions to forge-style stacked sublines and late-route wording.
+  Why:
+  - The latest critique's `Top Priority` was still open in the shipped status presentation: `Tab` was reusing forge grammar, so the run still felt busier and more explained than its three-step ladder needed. The highest-value bounded interpretation was to turn pause into a one-glance board that keeps only the dominant silhouette and the next combat ask.
+  Follow-up Risk:
+  - This makes pause faster to parse, but the forge overlay itself can still feel heavier than the new status card around it. If critique next says `Tab` is clean but reward stops still feel like briefings, the next bounded pass should trim forge header/card layering to the same object-first discipline instead of adding more reward verbs.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4044` assertion (`sentryTierTwo.interceptRange > 0`) after the new shipped pause snapshot assertions passed
+  Reference Direction: `Nova Drift` pause/upgrade readouts and `Hades` boon-card hierarchy; one dominant object first, supporting ask second, no stacked admin rows.
+  Release Gate: UX/UI
 
 - 2026-03-29 23:40:00 KST
   Changed:
@@ -325,18 +338,6 @@ This file is shared by two recurring Codex CLI jobs.
   Follow-up Risk:
   - This removes one more layer of admin wording, but the live side-bet/status helper still has its own legacy `recent gain` phrasing in some combat states. If critique next says the main board is cleaner but the in-wave status line still feels like prototype residue, the next bounded pass should align that helper to the same machine-first summary instead of adding new labels.
   Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:3910` assertion (`sentryTierTwo.interceptRange > 0`) after passing the updated shipped-summary assertions
-  Release Gate: UX/UI
-
-- 2026-03-29 17:43:35 KST
-  Changed:
-  - Recut the shipped base-route forge cards in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so both headline and side cards now sell only the object name, one transformation spotlight, and one `전투 요청`. The extra `hero-copy` sentence is gone from the shipped `8-wave` card shell, and side cards now use the same spotlight primitive as the main reward card instead of a secondary preview row.
-  - Promoted `.forge-card__spotlight` into the shared shipped reward primitive in [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css), with lighter side-card sizing so the compact forge keeps the same read order without falling back to the older document-like stack.
-  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new base-route shell: recurring shipped forge cards still render the spotlight, but no longer emit `forge-card__hero-copy` or the old compact `pivot` row.
-  Why:
-  - The latest critique's `Top Priority` was to reduce the shipped forge reward flow to one-glance `current form -> offered transformation -> next test`. The highest-value bounded interpretation was to remove the redundant explanation sentence from the cards themselves and keep the object-first snap closer to `Hades` boon cards and `Nova Drift` level-up reads, rather than trimming copy around the same old card hierarchy.
-  Follow-up Risk:
-  - The forge now reads faster, but some fallback cards may feel slightly less flavored because their descriptive sentence is gone. If critique next says the screen is clean but side options blur together, the next bounded pass should differentiate them through stronger spotlight labels or icon/silhouette treatment, not by restoring paragraph copy.
-  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:3909` assertion (`sentryTierTwo.interceptRange > 0`) after progressing past the updated forge-shell assertions
   Release Gate: UX/UI
 
 - Older entries trimmed automatically: 2

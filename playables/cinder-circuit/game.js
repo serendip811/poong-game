@@ -10800,6 +10800,50 @@
     });
   }
 
+  function getBaseRoutePauseSnapshotSummary(currentState = state) {
+    const activeState = currentState && typeof currentState === "object" ? currentState : state;
+    const machineSummary = getBaseRoutePauseHeroSummary(activeState);
+    if (!machineSummary) {
+      return null;
+    }
+    const waveNumber = clamp(
+      activeState.phase === "result"
+        ? activeState.stats?.wavesCleared || 1
+        : activeState.phase === "forge"
+          ? (activeState.waveIndex || 0) + 2
+          : (activeState.waveIndex || 0) + 1,
+      1,
+      DEFAULT_ROUTE_WAVE_COUNT
+    );
+    const build = activeState && activeState.build
+      ? getSanitizedConsolidatedPresentationBuild(activeState.build)
+      : null;
+    const supportInstall =
+      build && waveNumber >= SUPPORT_SYSTEM_START_WAVE
+        ? getBaseRouteInstalledSupportInstallSummary(build)
+        : null;
+    const spotlightTitle =
+      supportInstall && machineSummary.payoffValue
+        ? machineSummary.payoffValue
+        : machineSummary.machineValue || machineSummary.payoffValue || "빈 선체";
+    const eyebrow =
+      supportInstall && machineSummary.payoffValue
+        ? "현재 설치"
+        : machineSummary.machineLabel || "현재 선체";
+    const transition =
+      supportInstall && machineSummary.machineValue && machineSummary.payoffValue
+        ? `${machineSummary.machineValue} -> ${machineSummary.payoffValue}`
+        : machineSummary.payoffValue
+          ? `${machineSummary.payoffLabel} · ${machineSummary.payoffValue}`
+          : "";
+    return {
+      eyebrow,
+      spotlightTitle,
+      transition,
+      machineValue: machineSummary.machineValue || "빈 선체",
+    };
+  }
+
   function getBaseRouteBranchPayoffSummary({
     build,
     supportSystem = null,
@@ -11307,19 +11351,22 @@
         : getBaseRouteCombatAskForWave(build, waveNumber),
       "열린 공간을 남기고 자주 자리를 바꾼다."
     );
-    const machineSummary = getBaseRoutePauseHeroSummary(activeState);
+    const pauseSummary = getBaseRoutePauseSnapshotSummary(activeState);
     return `
       <div class="pause-summary__hero">
-        ${createBaseRouteForgeContextMarkup({
-          title: machineSummary?.machineValue || "",
-          eyebrow: machineSummary?.machineLabel || "현재 머신",
-          detail:
-            machineSummary && machineSummary.payoffValue
-              ? `${machineSummary.payoffLabel} · ${machineSummary.payoffValue}`
-              : "",
-          askLabel: "다음 전투",
-          askNote: combatAsk,
-        })}
+        <div class="pause-summary__hero-head">
+          <span class="forge-context-spotlight__eyebrow">${pauseSummary?.eyebrow || "현재 선체"}</span>
+          <strong class="pause-summary__hero-title">${pauseSummary?.spotlightTitle || "빈 선체"}</strong>
+          ${
+            pauseSummary?.transition
+              ? `<p class="pause-summary__hero-detail">${pauseSummary.transition}</p>`
+              : ""
+          }
+        </div>
+        <div class="mini-pill-row pause-summary__pill-row">
+          ${createMiniPill("지금", pauseSummary?.machineValue || "빈 선체", "hot")}
+          ${createMiniPill("다음 전투", combatAsk, "accent")}
+        </div>
       </div>
     `;
   }

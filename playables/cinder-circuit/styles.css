@@ -1555,31 +1555,35 @@ body[data-overdrive="true"] .backdrop__glow--right {
   overflow: hidden;
 }
 
-.pause-summary__hero .summary-head {
-  padding: 12px 14px 0;
-}
-
-.pause-summary__hero .forge-context-spotlight {
+.pause-summary__hero-head {
+  display: grid;
+  gap: 8px;
   padding: 14px 14px 10px;
 }
 
-.pause-summary__hero .forge-context-spotlight:last-child {
-  border-bottom: 0;
-  padding-bottom: 14px;
+.pause-summary__hero-title {
+  font-size: clamp(1.18rem, 2vw, 1.46rem);
+  line-height: 1.15;
 }
 
-.pause-summary__hero .route-contract__title {
-  padding: 0 14px;
-  max-width: none;
+.pause-summary__hero-detail {
+  margin: 0;
+  color: var(--muted-strong);
+  font-size: 0.9rem;
+  line-height: 1.4;
 }
 
-.pause-summary__hero .forge-focus__proof,
-.pause-summary__hero .mini-pill-row {
-  margin: 10px 14px 0;
+.pause-summary__pill-row {
+  margin: 0;
+  padding: 0 14px 14px;
 }
 
-.pause-summary__hero .mini-pill-row {
-  padding-bottom: 14px;
+.pause-summary__pill-row .mini-pill {
+  min-width: min(100%, 220px);
+}
+
+.pause-summary__pill-row .mini-pill strong {
+  white-space: normal;
 }
 
 .pause-summary__lanes {

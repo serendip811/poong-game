@@ -12,7 +12,7 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The focus is still consolidation, but the weak point has widened from reward grammar into the whole visible growth curve: the shipped route still feels too conceptually broad and too visually complete for an `8-wave` run that should begin small.
-- Most fragile gate is now `Builds`, with `Rewards` and `UX/UI` still attached. The next useful critique should keep asking whether the run shows one honest starter state, one weapon leap, and one support leap instead of shortcutting to fuller silhouettes.
-- Key structural problem: the game is still compensating for a not-yet-proven short ladder with late-route scaffolding, tier shortcuts, and dormant spectacle. The player should not feel doctrines, capstones, or late-form geometry hanging around before the shipped support chapter has earned them.
-- Repeated false solutions: solving this with more support tiers, more passive layers, more catch-up payoffs, or more explanatory forge framing instead of stripping the shipped path back to a smaller start and a clearer three-step transformation ladder.
+- The focus is still consolidation, but the sharpest weak point has shifted back to `Rewards`: the forge/pause/status stack still explains the build more than it sells the next form, so the run's desire curve remains softer than its system count.
+- Most fragile gate is now `Rewards`, with `Builds` and `Combat` attached. The next useful critique should keep checking whether the player sees one dominant offer, one immediate test, and enough breathing room for the new silhouette to feel different.
+- Key structural problem: the shipped route still carries too much adjacent late-route machinery and too much on-screen silhouette noise for an `8-wave` ladder that should start bare and transform in three big reads.
+- Repeated false solutions: answering this with more support branches, more passive layers, more route verbs, or more explanatory card grammar instead of reducing clutter and making the offered form itself do the selling.
