@@ -84,6 +84,45 @@ assert.equal(game.getCombatCacheChoicesForWave(game.createInitialBuild("rail_zea
 assert.equal(game.SUPPORT_SYSTEM_DEFS.ember_ring.forgeWaveMin, 6);
 assert.ok(!game.getVisibleSupportOfferSystemIds(game.createInitialBuild("rail_zeal"), 5).includes("ember_ring"));
 assert.ok(game.getVisibleSupportOfferSystemIds(game.createInitialBuild("rail_zeal"), 6).includes("ember_ring"));
+const wave8StormForkBuild = game.createInitialBuild("rail_zeal");
+wave8StormForkBuild.architectureForecastId = "storm_artillery";
+wave8StormForkBuild.bastionDoctrineId = "storm_artillery";
+wave8StormForkBuild.wave6ChassisBreakpoint = true;
+wave8StormForkBuild.supportBayCap = 2;
+wave8StormForkBuild.supportSystems = [{ id: "ember_ring", tier: 1 }];
+const deterministicForgeRng = () => 0.1;
+assert.equal(
+  JSON.stringify(game.getVisibleSupportOfferSystemIds(wave8StormForkBuild, 8)),
+  JSON.stringify(["ember_ring", "seeker_array", "aegis_halo"])
+);
+const wave8StormForkChoices = game.buildForgeChoices(wave8StormForkBuild, deterministicForgeRng, 999, {
+  nextWave: 8,
+  finalForge: false,
+});
+assert.equal(
+  JSON.stringify(
+    wave8StormForkChoices.slice(0, 2).map((choice) => [
+      choice.contractRole,
+      choice.contractLabel,
+      choice.systemId || choice.action || choice.id,
+    ])
+  ),
+  JSON.stringify([
+    ["headline", "설치", "ember_ring"],
+    ["rider", "분기", "seeker_array"],
+  ])
+);
+assert.equal(wave8StormForkChoices[2].contractRole, "gamble");
+const wave8KilnForkBuild = game.createInitialBuild("scrap_pact");
+wave8KilnForkBuild.architectureForecastId = "kiln_bastion";
+wave8KilnForkBuild.bastionDoctrineId = "kiln_bastion";
+wave8KilnForkBuild.wave6ChassisBreakpoint = true;
+wave8KilnForkBuild.supportBayCap = 2;
+wave8KilnForkBuild.supportSystems = [{ id: "kiln_sentry", tier: 1 }];
+assert.equal(
+  JSON.stringify(game.getVisibleSupportOfferSystemIds(wave8KilnForkBuild, 8)),
+  JSON.stringify(["kiln_sentry", "aegis_halo", "seeker_array"])
+);
 assert.ok(!game.SUPPORT_SYSTEM_DEFS.seeker_array.tiers[1].description.includes("Late Break Armory"));
 assert.ok(!game.SUPPORT_SYSTEM_DEFS.seeker_array.tiers[1].description.includes("Wave 9"));
 assert.ok(game.SUPPORT_SYSTEM_DEFS.seeker_array.tiers[1].description.includes("차체 잠금"));
@@ -515,7 +554,10 @@ assert.equal(game.getSupportBayCapacity(chassisBranchBuild), 2);
 assert.equal(chassisBranchBuild.supportSystems.length, 1);
 assert.equal(chassisBranchBuild.wave6ChassisBreakpoint, true);
 assert.equal(JSON.stringify(game.getVisibleSupportOfferSystemIds(chassisBranchBuild, 7)), JSON.stringify([]));
-assert.equal(JSON.stringify(game.getVisibleSupportOfferSystemIds(chassisBranchBuild, 8)), JSON.stringify(["seeker_array"]));
+assert.equal(
+  JSON.stringify(game.getVisibleSupportOfferSystemIds(chassisBranchBuild, 8)),
+  JSON.stringify(["ember_ring", "seeker_array", "aegis_halo"])
+);
 const wave8PayoffChoices = game.buildForgeChoices(chassisBranchBuild, () => 0, 999, {
   nextWave: 8,
   finalForge: false,
@@ -528,8 +570,9 @@ assert.equal(wave8PayoffHeadline?.systemId, "ember_ring");
 assert.equal(wave8PayoffHeadline?.systemTier, 2);
 assert.ok(wave8PayoffHeadline?.slotText.includes("기존 베이 증설"));
 assert.ok(!wave8PayoffHeadline?.description.includes("눈에 띄는 support silhouette"));
-assert.equal(wave8PayoffRider?.contractLabel, "주포");
-assert.notEqual(wave8PayoffRider?.type, "system");
+assert.equal(wave8PayoffRider?.contractLabel, "분기");
+assert.equal(wave8PayoffRider?.type, "system");
+assert.equal(wave8PayoffRider?.systemId, "seeker_array");
 const shippedLadderWave6 = game.getShippingLadderSteps(
   chassisBranchBuild,
   game.computeWeaponStats(chassisBranchBuild),
@@ -3294,13 +3337,13 @@ assert.equal(game.shouldSkipOwnershipAdminStop(architectureRun.build, 9), false)
 assert.equal(game.unlockLateSupportBay(architectureRun.build), true);
 assert.equal(game.getSupportBayCapacity(architectureRun.build), 3);
 assert.equal(game.doctrineAllowsSystemInstall(architectureRun.build, "seeker_array", 8), true);
-assert.equal(game.doctrineAllowsSystemInstall(architectureRun.build, "volt_drones", 8), false);
-assert.equal(game.doctrineAllowsSystemInstall(architectureRun.build, "aegis_halo"), false);
+assert.equal(game.doctrineAllowsSystemInstall(architectureRun.build, "volt_drones", 8), true);
+assert.equal(game.doctrineAllowsSystemInstall(architectureRun.build, "aegis_halo", 8), true);
 assert.equal(game.doctrineAllowsSystemInstall(architectureRun.build, "ember_ring", 8), false);
 assert.ok(game.doctrineAllowsSystemInstall(architectureRun.build, "seeker_array", 9));
 assert.equal(
   JSON.stringify(game.getVisibleSupportOfferSystemIds(architectureRun.build, 8).sort()),
-  JSON.stringify(["seeker_array"])
+  JSON.stringify(["aegis_halo", "seeker_array", "volt_drones"])
 );
 assert.equal(
   JSON.stringify(game.getVisibleSupportOfferSystemIds(architectureRun.build, 9).sort()),
@@ -3530,7 +3573,8 @@ assert.equal(artilleryDoctrineBuild.supportSystems.length, 1);
 assert.equal(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "seeker_array", 7), false);
 assert.equal(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "ember_ring", 7), false);
 assert.equal(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "seeker_array", 8), true);
-assert.equal(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "ember_ring", 8), false);
+assert.equal(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "ember_ring", 8), true);
+assert.equal(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "aegis_halo", 8), true);
 assert.equal(
   JSON.stringify(game.getVisibleSupportOfferSystemIds(artilleryDoctrineBuild, 7).sort()),
   JSON.stringify([])
@@ -3538,7 +3582,7 @@ assert.equal(
 assert.ok(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "seeker_array", 9));
 assert.equal(
   JSON.stringify(game.getVisibleSupportOfferSystemIds(artilleryDoctrineBuild, 8).sort()),
-  JSON.stringify(["seeker_array"])
+  JSON.stringify(["aegis_halo", "ember_ring", "seeker_array"])
 );
 assert.equal(
   JSON.stringify(game.getVisibleSupportOfferSystemIds(artilleryDoctrineBuild, 9).sort()),

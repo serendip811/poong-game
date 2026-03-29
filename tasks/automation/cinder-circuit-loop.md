@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop adding route wrappers; cut shipped-facing `signature / mission-board / Wave 9-12 / Afterburn` assumptions from docs and reward flow, quiet `Wave 1-3`, and make the first `Wave 6` support install visibly own `Wave 6-8`.
+- Immediate priority: stop selling fake branch breadth on top of a one-support back half; keep `Wave 1-3` quiet, then turn `Wave 6-8` into a real offense/defense/greed fork with visible ownership instead of `headline + rider` admin.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 13:00:54 KST
+  Findings:
+  - The run is still structurally too shallow to create repeat hunger even if the copy gets cleaner. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L5460) hard-caps the shipped route at `supportBayCap: 1`, so the back half cannot naturally grow into recognizable offense, defense, and greed identities with visible layering. That cap makes the current `20-30 wave` ambition read theoretical instead of scaffolded.
+  - The forge keeps packaging choice into the same narrow rhythm. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L14111) repeatedly reduces pre-`Wave 9` stops to `headline + rider` and often to a two-card contract, while [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20891) explicitly frames the stop as “one big card plus one survival answer.” That is not rich enough to make players fantasize about rerolling for a different run shape.
+  - The game still leaves open a failure state where the first obvious support silhouette arrives too late. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L6881) still special-cases the first tier-2 support reveal for `nextWave === DEFAULT_ROUTE_WAVE_COUNT`, and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L7864) still describes the `Wave 6` break as gun/body first with support following after. That keeps the supposed chapter break from becoming a reliable payoff.
+  - UI verbosity is still masking a systemic problem, not just a wording problem. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L25586) still spends the forge on `proof`, `rider`, `current machine`, and contextual wrappers, but the deeper issue is that the underlying offer set is too thin to justify that ceremony. Compared with `Hades`, `Nova Drift`, or `Brotato`, the game is still presenting prototype scaffolding around choices that are not dramatic enough.
+  Top Priority: Rebuild the shipped forge/reward structure so `Wave 6` always opens one clearly visible support/offense/utility fork and `Wave 7-8` let that fork own space, instead of capping the route at one support bay plus a mandatory `headline + rider` package.
+  Why Now: Replayable action roguelites live or die on anticipating the next run-defining fork, and the current back half still cannot produce that hunger reliably.
+  Do Not Repeat: Do not answer this with cleaner labels on the same two-card contract or with more late-form branch names on top of a one-support route.
+  Release Gate: Builds
 
 - 2026-03-29 16:10:00 KST
   Findings:
@@ -4499,6 +4510,18 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-29 17:05:00 KST
+  Changed:
+  - Reworked [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so shipped `Wave 8` doctrine runs with a live `Wave 6` support install no longer reopen only one support id. `getVisibleSupportOfferSystemIds(...)` now surfaces a bounded three-silhouette fork per doctrine, which keeps `Wave 8` offers on `current install upgrade + cross-build install + fallback defense/offense silhouette` instead of collapsing back to one reopened doctrine card.
+  - Updated the shipped base-route reward assembly in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so that when a support payoff is promoted to `headline`, `Wave 8` keeps a second support card in `rider` rather than pulling the weapon card back into that slot. The resulting late-break read is now `installed Mk.II payoff -> second support branch -> greed`, which makes the second bay matter as a real run-shaping fork.
+  - Expanded [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock representative `storm_artillery`, `mirror_hunt`, and `kiln_bastion` `Wave 8` support forks, plus the `headline/rider/gamble` contract roles after the new fork logic.
+  Why:
+  - The latest critique's `Top Priority` was to stop capping the shipped back half at one support silhouette plus a mandatory `headline + rider` rhythm. The highest-value bounded interpretation was to make `Wave 8` finally expose a real second-bay fork: upgrade what you already own, branch into a second autonomous toy, or cash out for greed.
+  Follow-up Risk:
+  - This gives `Wave 8` a clearer offense/defense/utility fork, but `Wave 6` chassis cards still pre-bake one doctrine-leaning support rather than showing three equally explicit fork labels up front. If critique still says the chapter break is too hidden, the next bounded pass should retune `buildWave6ChassisBreakpointChoices(...)` presentation, not add more late content.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Builds
 
 - 2026-03-29 16:35:00 KST
   Changed:

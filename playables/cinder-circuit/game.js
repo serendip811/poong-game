@@ -11784,6 +11784,53 @@
     return countDoctrineWildcardSystems(build, doctrine) < getDoctrineWildcardSystemAllowance(build);
   }
 
+  function getBaseRouteWave8SupportForkSystemIds(build) {
+    const fallbackIds = Object.keys(SUPPORT_SYSTEM_DEFS);
+    if (!CONSOLIDATED_12_WAVE_ROUTE || !build || !build.bastionDoctrineId) {
+      return fallbackIds;
+    }
+    const doctrine = getBastionDoctrineDef(build);
+    const installedSystems = getInstalledSupportSystems(build);
+    const installedIds = installedSystems.map((entry) => entry.id).filter(Boolean);
+    const supportBayCap = getSupportBayCapacity(build);
+    const preferredSystemIds = getDoctrinePreferredSystemIds(doctrine);
+    const doctrineId = doctrine ? doctrine.id : "";
+    const doctrineForkMap = {
+      mirror_hunt: ["volt_drones", "seeker_array", "aegis_halo"],
+      kiln_bastion: ["kiln_sentry", "aegis_halo", "seeker_array"],
+      storm_artillery: ["ember_ring", "seeker_array", "aegis_halo"],
+    };
+    const curatedIds = doctrineForkMap[doctrineId] || preferredSystemIds;
+    const next = [];
+    const seen = new Set();
+    const pushSystemId = (systemId) => {
+      if (!systemId || seen.has(systemId) || !SUPPORT_SYSTEM_DEFS[systemId]) {
+        return;
+      }
+      seen.add(systemId);
+      next.push(systemId);
+    };
+
+    installedIds.forEach(pushSystemId);
+    curatedIds.forEach(pushSystemId);
+    preferredSystemIds.forEach(pushSystemId);
+
+    if (supportBayCap > installedSystems.length) {
+      const oppositeLaneId = fallbackIds.find((systemId) => {
+        if (!SUPPORT_SYSTEM_DEFS[systemId] || seen.has(systemId)) {
+          return false;
+        }
+        return SUPPORT_SYSTEM_DEFS[systemId].forgeLane !== SUPPORT_SYSTEM_DEFS[next[0]]?.forgeLane;
+      });
+      pushSystemId(oppositeLaneId);
+    }
+
+    if (next.length < 3) {
+      fallbackIds.forEach(pushSystemId);
+    }
+    return next.slice(0, 3);
+  }
+
   function getVisibleSupportOfferSystemIds(build, nextWave = 0) {
     const allSystemIds = Object.keys(SUPPORT_SYSTEM_DEFS);
     const installedSystems = build ? getInstalledSupportSystems(build) : [];
@@ -11823,8 +11870,7 @@
       return [];
     }
     if (baseRouteWave8SupportPayoff) {
-      const payoffSystemId = getDoctrinePrimarySupportSystemId(build);
-      return payoffSystemId ? [payoffSystemId] : allSystemIds;
+      return getBaseRouteWave8SupportForkSystemIds(build);
     }
     if (nextWave < LATE_BREAK_ARMORY_WAVE) {
       const midrunSystemId = getDoctrineMidrunSupportSystemId(build);
@@ -14453,6 +14499,10 @@
       adaptiveRiderChoice.systemChoice;
     const shouldPromoteSupportHeadline =
       Boolean(promotedSupportHeadlineChoice) && !shouldHeadlineSupportInstall;
+    const shouldKeepWave8SupportFork =
+      strictBaseRouteRiderContract &&
+      shouldPromoteSupportHeadline &&
+      supportSystemChoices.length > 1;
     const headlineChoice = shouldHeadlineSupportInstall
       ? adaptiveRiderChoice
       : shouldPromoteSupportHeadline
@@ -14460,11 +14510,19 @@
         : adaptiveHeadlineChoice;
     const riderChoice = shouldHeadlineSupportInstall
       ? adaptiveHeadlineChoice
-      : shouldPromoteSupportHeadline
+      : shouldKeepWave8SupportFork
+        ? adaptiveRiderChoice || adaptiveHeadlineChoice
+        : shouldPromoteSupportHeadline
         ? adaptiveHeadlineChoice || adaptiveRiderChoice
         : adaptiveRiderChoice;
     const headlineLabel = shouldHeadlineSupportInstall || shouldPromoteSupportHeadline ? "설치" : "주력";
-    const riderLabel = shouldHeadlineSupportInstall || shouldPromoteSupportHeadline ? "주포" : "버팀";
+    const riderLabel = shouldHeadlineSupportInstall
+      ? "주포"
+      : shouldKeepWave8SupportFork
+        ? "분기"
+        : shouldPromoteSupportHeadline
+          ? "주포"
+          : "버팀";
     const choices = [
       markForgeContract(
         headlineChoice,
