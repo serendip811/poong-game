@@ -553,11 +553,20 @@ assert.equal(supportPayoff?.value, "근접 요격 + 외곽 소각");
 assert.equal(game.getSupportBayCapacity(chassisBranchBuild), 2);
 assert.equal(chassisBranchBuild.supportSystems.length, 1);
 assert.equal(chassisBranchBuild.wave6ChassisBreakpoint, true);
-assert.equal(JSON.stringify(game.getVisibleSupportOfferSystemIds(chassisBranchBuild, 7)), JSON.stringify([]));
+assert.equal(JSON.stringify(game.getVisibleSupportOfferSystemIds(chassisBranchBuild, 7)), JSON.stringify(["ember_ring"]));
 assert.equal(
   JSON.stringify(game.getVisibleSupportOfferSystemIds(chassisBranchBuild, 8)),
   JSON.stringify(["ember_ring", "seeker_array", "aegis_halo"])
 );
+const wave7BreakpointChoices = game.buildForgeChoices(chassisBranchBuild, () => 0, 999, {
+  nextWave: 7,
+  finalForge: false,
+  build: chassisBranchBuild,
+});
+const wave7BreakpointRider = wave7BreakpointChoices.find((choice) => choice.contractRole === "rider");
+assert.equal(wave7BreakpointRider?.type, "system");
+assert.equal(wave7BreakpointRider?.systemId, "ember_ring");
+assert.equal(wave7BreakpointRider?.systemTier, 2);
 const wave8PayoffChoices = game.buildForgeChoices(chassisBranchBuild, () => 0, 999, {
   nextWave: 8,
   finalForge: false,
@@ -2746,7 +2755,10 @@ assert.equal(chassisRun.build.supportBayCap, 2);
 assert.equal(chassisRun.build.supportSystems.length, 1);
 assert.equal(chassisRun.build.chassisId, vectorChassisChoice.chassisId);
 assert.equal(game.shouldSkipOwnershipAdminStop(chassisRun.build, 9), false);
-assert.equal(JSON.stringify(game.getVisibleSupportOfferSystemIds(chassisRun.build, 7)), JSON.stringify([]));
+assert.equal(
+  JSON.stringify(game.getVisibleSupportOfferSystemIds(chassisRun.build, 7)),
+  JSON.stringify(chassisRun.build.supportSystems.map((entry) => entry.id))
+);
 const delayedWave7GrantChoices = game.buildFieldGrantChoices(chassisRun.build, () => 0, 7);
 assert.equal(delayedWave7GrantChoices.find((choice) => choice.contractRole === "gamble"), undefined);
 const delayedWave7Rider = delayedWave7GrantChoices.find((choice) => choice.contractRole === "rider");
@@ -3571,13 +3583,13 @@ game.applyForgeChoice(
 );
 assert.equal(artilleryDoctrineBuild.supportSystems.length, 1);
 assert.equal(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "seeker_array", 7), false);
-assert.equal(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "ember_ring", 7), false);
+assert.equal(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "ember_ring", 7), true);
 assert.equal(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "seeker_array", 8), true);
 assert.equal(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "ember_ring", 8), true);
 assert.equal(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "aegis_halo", 8), true);
 assert.equal(
   JSON.stringify(game.getVisibleSupportOfferSystemIds(artilleryDoctrineBuild, 7).sort()),
-  JSON.stringify([])
+  JSON.stringify(["ember_ring"])
 );
 assert.ok(game.doctrineAllowsSystemInstall(artilleryDoctrineBuild, "seeker_array", 9));
 assert.equal(

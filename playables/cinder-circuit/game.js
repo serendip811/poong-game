@@ -6971,8 +6971,9 @@
       return false;
     }
     const nextWave = options && Number.isFinite(options.nextWave) ? options.nextWave : 0;
+    const installedSystems = getInstalledSupportSystems(build);
     if (shouldHoldWave6SingleAxisBreakpoint(build, nextWave)) {
-      return false;
+      return installedSystems.some((entry) => entry.tier < MAX_SUPPORT_SYSTEM_TIER);
     }
     const unlockedSupportExists = Object.keys(SUPPORT_SYSTEM_DEFS).some((systemId) =>
       isSupportSystemUnlocked(systemId, nextWave)
@@ -6980,7 +6981,6 @@
     if (!unlockedSupportExists) {
       return false;
     }
-    const installedSystems = getInstalledSupportSystems(build);
     const supportBayCap = getSupportBayCapacity(build);
     return (
       installedSystems.length < supportBayCap ||
@@ -11834,6 +11834,7 @@
   function getVisibleSupportOfferSystemIds(build, nextWave = 0) {
     const allSystemIds = Object.keys(SUPPORT_SYSTEM_DEFS);
     const installedSystems = build ? getInstalledSupportSystems(build) : [];
+    const installedSystemIds = installedSystems.map((entry) => entry.id).filter(Boolean);
     const baseRouteWave8SupportPayoff =
       CONSOLIDATED_12_WAVE_ROUTE &&
       build &&
@@ -11841,7 +11842,7 @@
       installedSystems.length > 0 &&
       nextWave === DEFAULT_ROUTE_WAVE_COUNT;
     if (shouldHoldWave6SingleAxisBreakpoint(build, nextWave)) {
-      return [];
+      return installedSystemIds;
     }
     if (
       CONSOLIDATED_12_WAVE_ROUTE &&

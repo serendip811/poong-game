@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop selling fake branch breadth on top of a one-support back half; keep `Wave 1-3` quiet, then turn `Wave 6-8` into a real offense/defense/greed fork with visible ownership instead of `headline + rider` admin.
+- Immediate priority: stop expanding the shadow `signature / Wave 9+ / Afterburn` game and prove one honest `Wave 1-8` loop where `Wave 6-8` support ownership, forge readability, and replay hunger stand on their own.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 13:30:39 KST
+  Findings:
+  - The project is still drifting at the source-of-truth level. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L125) still teaches a `mission board`, signature-facing panels, and `forge pause`, while [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L157) still normalizes `run-start signature` and a `Wave 9-12` bracket. That keeps design pressure aimed at a broader admin shell than the shipped release goal allows.
+  - The live game still carries too much non-shipped route weight to judge the 8-wave loop honestly. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L1201) still defines `Afterburn I-VII`, and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L20583) still contains live `Wave 9 black-site uplink` flow. Even if those systems are gated off, they are still shaping pacing, copy, and reward logic around a second game.
+  - The shipped back half still cannot create real build hunger because it relies on a fake catch-up payoff instead of layered ownership. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L5460) starts the route at `supportBayCap: 1`, and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L6873) special-cases `Wave 8` to inject a tier-2 support silhouette if none landed earlier. That is patching over a weak `Wave 6-7` chapter, not building anticipation toward it.
+  - The forge is still over-explaining a thin choice set. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L25653) still centers `proofWindow`, `rider`, `current machine`, and contract-role framing, while stronger references like `Hades`, `Nova Drift`, and `Brotato` would show one dominant install, one combat promise, and far less grammar. This screen still makes the player read structure before wanting the install.
+  Top Priority: Quarantine all shipped-facing `signature / Wave 9+ / Afterburn / black-site` scaffolding and rebuild `Wave 6-8` as one honest support chapter that lands on time without a `Wave 8` bailout install.
+  Why Now: Until the shipped slice stands alone, every new branch or payoff is being judged against a shadow game instead of real replayable fun.
+  Do Not Repeat: Do not answer this with cleaner copy on the same contract shell or with more support variants that still depend on late catch-up logic.
+  Release Gate: Progression
 
 - 2026-03-29 13:00:54 KST
   Findings:
@@ -4510,6 +4521,18 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-29 17:45:00 KST
+  Changed:
+  - Reworked [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so shipped `Wave 7` chassis-breakpoint runs no longer hide support rewards entirely after the `Wave 6` install. `shouldOfferSupportSystem(...)` and `getVisibleSupportOfferSystemIds(...)` now keep the single-axis hold on fresh installs while still surfacing the already installed support silhouette for `Mk.II` upgrades.
+  - This turns the shipped `Wave 6-8` support chapter into `install -> reinforce -> payoff` instead of `install -> no support stop -> Wave 8 bailout`. `Wave 7` can now offer `Ember Ring`/`Aegis Halo`/other installed support overclock upgrades without reopening the whole catalog early.
+  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new `Wave 7` expectation for chassis-breakpoint runs: visible support ids keep the installed system only, and the forge rider upgrades that same system to tier 2.
+  Why:
+  - The latest critique's `Top Priority` was to make `Wave 6-8` an honest support chapter instead of depending on a late `Wave 8` catch-up silhouette. The highest-value bounded interpretation inside `playables/cinder-circuit/` was to restore a real mid-chapter reward beat at `Wave 7` without adding more early spectacle or reopening broad support forks.
+  Follow-up Risk:
+  - `Wave 7` now reinforces the installed support silhouette, but the compact route still carries player-facing `Afterburn / black-site / Wave 9+` scaffolding elsewhere in non-shipped branches of [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). If critique still says the shipped slice is being judged against a shadow game, the next bounded pass should quarantine one of those remaining late-route surfaces rather than widen support breadth again.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Progression
 
 - 2026-03-29 17:05:00 KST
   Changed:
