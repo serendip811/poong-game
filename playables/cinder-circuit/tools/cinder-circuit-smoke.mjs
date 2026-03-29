@@ -743,6 +743,7 @@ assert.ok(wave8PayoffMarkup.includes("현재 설치"));
 assert.ok(wave8PayoffMarkup.includes("완성 형태"));
 assert.ok(wave8PayoffMarkup.includes("절단 고리 2기"));
 assert.ok(wave8PayoffMarkup.includes("다음 전투"));
+assert.ok(wave8PayoffMarkup.includes("forge-card__tag"));
 assert.ok(!wave8PayoffMarkup.includes("완성 시험"));
 const wave8ForgeContextMarkup = game.createBaseRouteForgeContextMarkup({
   title: "Ember Ring Mk.II",
@@ -754,8 +755,10 @@ const wave8ForgeContextMarkup = game.createBaseRouteForgeContextMarkup({
     wave8PayoffTransform.wave8SupportPayoff?.askText ||
     game.getBaseRouteForgeChoiceCombatAsk(wave8PayoffHeadline, 8),
 });
+assert.ok(wave8ForgeContextMarkup.includes("forge-context-rail"));
 assert.ok(wave8ForgeContextMarkup.includes("완성 형태"));
 assert.ok(wave8ForgeContextMarkup.includes("Ember Ring Mk.II"));
+assert.ok(wave8ForgeContextMarkup.includes("현재 머신"));
 assert.equal(wave8PayoffRider?.contractLabel, "주포");
 assert.ok(wave8PayoffRider?.type !== "system");
 const shippedLadderWave6 = game.getShippingLadderSteps(
@@ -1043,10 +1046,12 @@ const branchForgeContextMarkup = game.createBaseRouteForgeContextMarkup({
   title: "Dominion Sweep",
   currentLoadoutValue: "Twin Spine / Vector Thrusters",
 });
-assert.ok(branchForgeContextMarkup.includes("forge-context-spotlight"));
+assert.ok(branchForgeContextMarkup.includes("forge-context-rail"));
+assert.ok(branchForgeContextMarkup.includes("forge-context-rail__item"));
 assert.ok(branchForgeContextMarkup.includes("Dominion Sweep"));
 assert.ok(branchForgeContextMarkup.includes("Twin Spine / Vector Thrusters"));
-assert.ok(branchForgeContextMarkup.includes("지금 변신"));
+assert.ok(branchForgeContextMarkup.includes("현재 머신"));
+assert.ok(branchForgeContextMarkup.includes("forge-context-rail__item--accent"));
 assert.ok(
   branchForgeContextMarkup.includes("Twin Spine / Vector Thrusters -&gt; Dominion Sweep") ||
     branchForgeContextMarkup.includes("Twin Spine / Vector Thrusters -> Dominion Sweep")
@@ -1398,10 +1403,10 @@ const forgeContextMarkup = game.createBaseRouteForgeContextMarkup({
 });
 assert.ok(forgeContextMarkup.includes("Dominion Sweep"));
 assert.ok(!forgeContextMarkup.includes("다음 급등"));
-assert.ok(forgeContextMarkup.includes("forge-context-spotlight"));
-assert.ok(forgeContextMarkup.includes("forge-context-spotlight__value"));
+assert.ok(forgeContextMarkup.includes("forge-context-rail"));
+assert.ok(forgeContextMarkup.includes("forge-context-rail__value"));
 assert.ok(forgeContextMarkup.includes("Prism Crown"));
-assert.ok(forgeContextMarkup.includes("지금 변신"));
+assert.ok(forgeContextMarkup.includes("현재 머신"));
 assert.ok(
   forgeContextMarkup.includes("Prism Crown -&gt; Dominion Sweep") ||
     forgeContextMarkup.includes("Prism Crown -> Dominion Sweep")
@@ -1510,7 +1515,7 @@ const forgeHeadlineMarkup = game.createBaseRouteForgeContextMarkup({
 assert.ok(forgeHeadlineMarkup.includes("Payoff Run"));
 assert.ok(forgeHeadlineMarkup.includes("진화"));
 assert.ok(forgeHeadlineMarkup.includes("Afterglow"));
-assert.ok(forgeHeadlineMarkup.includes("forge-context-spotlight"));
+assert.ok(forgeHeadlineMarkup.includes("forge-context-rail"));
 assert.ok(!forgeHeadlineMarkup.includes("분기 보상"));
 const forgeHeadlineSpotlight = game.getBaseRouteForgeSpotlightSummary({
   choice: wave6HeadlineChoice,

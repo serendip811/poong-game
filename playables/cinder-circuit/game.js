@@ -11130,6 +11130,7 @@
         data-verb="${choice.verb}"
         ${disabled ? "disabled" : ""}
       >
+        <span class="forge-card__tag">${contractLabel || choice.contractLabel || "보조"}</span>
         <h3>${transformation.cardTitle || choice.title}</h3>
         ${createBaseRouteForgeSpotlightMarkup(transformation.previewLabel, transformation.previewValue)}
         ${createBaseRouteForgeBillMarkup(slotLabel)}
@@ -11159,6 +11160,7 @@
         data-verb="${choice.verb}"
         ${disabled ? "disabled" : ""}
       >
+        <span class="forge-card__tag">${contractLabel || choice.contractLabel || "주력"}</span>
         ${
           wave8SupportPayoff
             ? `
@@ -11482,16 +11484,20 @@
           ? featuredInstallValue
           : "");
     return `
-      <div class="forge-context-spotlight">
-        <span class="forge-context-spotlight__eyebrow">${eyebrow}</span>
-        <strong class="forge-context-spotlight__value">${dominantTitle}</strong>
+      <div class="forge-context-rail">
+        <article class="forge-context-rail__item">
+          <span class="forge-context-rail__label">현재 머신</span>
+          <strong class="forge-context-rail__value">${currentLoadoutValue || dominantTitle}</strong>
+        </article>
+        <article class="forge-context-rail__item forge-context-rail__item--accent">
+          <span class="forge-context-rail__label">${eyebrow}</span>
+          <strong class="forge-context-rail__value">${dominantTitle}</strong>
+        </article>
       </div>
       ${
         transitionDetail
           ? `
-            <div class="forge-context-spotlight forge-context-spotlight--subline">
-              <strong class="forge-context-spotlight__value forge-context-spotlight__value--subtle">${transitionDetail}</strong>
-            </div>
+            <p class="forge-context-rail__note">${transitionDetail}</p>
           `
           : ""
       }

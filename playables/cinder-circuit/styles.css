@@ -1706,6 +1706,49 @@ body[data-overdrive="true"] .backdrop__glow--right {
   grid-column: 1 / -1;
 }
 
+.forge-context-rail {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.forge-context-rail__item {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  padding: 11px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.forge-context-rail__item--accent {
+  border-color: rgba(255, 188, 122, 0.18);
+  background:
+    linear-gradient(180deg, rgba(255, 166, 92, 0.1), transparent 100%),
+    rgba(0, 0, 0, 0.2);
+}
+
+.forge-context-rail__label {
+  color: #ffd4b3;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.forge-context-rail__value {
+  color: var(--text);
+  font-size: 0.95rem;
+  line-height: 1.24;
+}
+
+.forge-context-rail__note {
+  margin: 10px 0 0;
+  color: #ffe7d1;
+  font-size: 0.84rem;
+  line-height: 1.42;
+}
+
 .forge-context-spotlight {
   display: grid;
   gap: 4px;
@@ -2239,22 +2282,30 @@ body[data-overdrive="true"] .backdrop__glow--right {
 
 .forge-card--contract-side {
   gap: 8px;
-  padding: 14px 15px;
+  padding: 12px 13px;
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: none;
 }
 
 .forge-card--contract-side h3 {
   margin-top: 0;
-  font-size: 0.98rem;
-  line-height: 1.22;
+  font-size: 0.9rem;
+  line-height: 1.18;
 }
 
 .forge-card--contract-side .forge-card__spotlight {
-  padding: 10px 12px;
-  border-radius: 15px;
+  gap: 4px;
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 13px;
+  border-color: rgba(255, 210, 165, 0.12);
+  background: rgba(255, 255, 255, 0.025);
 }
 
 .forge-card--contract-side .forge-card__spotlight-value {
-  font-size: 0.95rem;
+  font-size: 0.88rem;
+  color: #ffd9b4;
 }
 
 .forge-card--contract-side .forge-card__slot {
@@ -2277,6 +2328,18 @@ body[data-overdrive="true"] .backdrop__glow--right {
   margin-top: 0;
   font-size: 1.18rem;
   line-height: 1.16;
+}
+
+.forge-card--snap .forge-card__tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: rgba(255, 206, 156, 0.14);
+  color: #ffe0c2;
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .forge-card__spotlight {

@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: turn shipped `Wave 5-8` into a true two-beat escalation where `Wave 6` locks the big form and `Wave 8` mutates it again with a branch-owned closer, instead of peaking once and then coasting on smaller rider/admin payoff.
+- Immediate priority: consolidate readability and pacing so the stronger `Wave 6` / `Wave 8` branch payoffs are actually felt; strip opener/UI/support clutter before adding more route depth.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-30 06:01:02 KST
+  Findings:
+  - The shipped route now has better midrun and closing spikes, but the game still sells them through too much reading. The forge overlay is still a card-heavy explanation stack with context, proof, preview rows, pivot text, side notes, and slot labels, so the player is parsing the reward instead of wanting it instantly.
+  - Early growth is still too visually complete for a rerun-hungry roguelite. `fireWeapon()` and the live support render path can layer extra patterns, orbit frames, deployable fields, intercept rings, missiles, and drones quickly enough that the run starts feeling "already assembled" instead of hungry for later transformation.
+  - The minimal HUD idea is correct, but `Tab`/pause surfaces are still carrying status-board prose instead of acting like fast reference. That keeps the fantasy in admin mode longer than strong arena roguelite references, which usually hide detail until after the player already feels the build.
+  - The combat space is larger on paper, yet support spectacle still risks collapsing movement decisions into "kite inside your own effects." If the first support install does not create one obvious lane-control advantage, extra shapes just make the arena feel busier rather than more tactical.
+  Top Priority: Rebuild the shipped `Wave 1-6` readability pass around one dominant reward read at a time: one hero forge card, one short proof line, and support visuals that reveal only the primary payoff until higher tiers earn extra spectacle.
+  Why Now: The chapter finally has better payoff structure, so the next ceiling is whether players can feel and desire that power without reading through it.
+  Do Not Repeat: Do not answer this with another module family, more roadmap copy, or more simultaneous support effects before the opener and forge stop feeling clean.
+  Release Gate: UX/UI
 
 - 2026-03-30 05:30:51 KST
   Findings:
@@ -183,20 +194,22 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not answer this with new passives, new route brackets, or extra reward verbs before the current support payoff is readable at a glance.
   Release Gate: Builds
 
-- 2026-03-30 10:15:00 KST
-  Findings:
-  - The shipped run still reads like a preview build for a bigger game instead of a clean first chapter. Large live seams of `game.js` keep `Wave 10-12`, doctrine chase, capstone, and `Afterburn` grammar close to the shipped route, so the player is constantly feeling adjacent future scaffolding instead of a self-contained `Wave 1-8` appetite loop.
-  - The forge still explains too much relative to its payoff. `createForgePreviewRows()` and the surrounding forge presentation keep building multi-row context and route-preview logic where stronger references like `Hades`, `Nova Drift`, or `Brotato` usually win by showing one dramatic delta first and letting the next combat room do the proof.
-  - Early growth is still being diluted by concept density. Even with a leaner pause card, the shipped slice still carries too many nearby nouns and route concepts around support bays, doctrines, evolution, and greed, which makes the opener feel more like build administration than survival with a hungry transformation curve.
-  - The long-run ambition is not yet supported by a proven combat spine. Until `Wave 5-8` clearly becomes `one installed support silhouette opens real movement pockets and lane ownership`, talking about `20-30` waves risks becoming scope fantasy instead of believable progression design.
-  Top Priority: Make shipped `Wave 1-8` chapter-local across title, forge, and status surfaces by stripping non-shipped route previews and doctrine/endform foreshadowing, then present each reward as one visible change plus one immediate combat ask.
-  Why Now: A longer escalation curve starts by making the first chapter replayable and desire-driven, not by briefing the player on systems the current run cannot yet cash out.
-  Do Not Repeat: Do not answer this with another roadmap row, future-act preview, or named progression wrapper that leaves the `8-wave` run feeling like a teaser.
-  Release Gate: Progression
-
 - Older entries trimmed automatically: 1
 
 ## Latest Improvement
+
+- 2026-03-30 06:13:14 KST
+  Changed:
+  - Rebuilt the shipped forge context in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) around a slim `forge-context-rail` so base-route reward stops now open with two compact reads (`현재 머신`, current payoff lane) plus one optional transition note instead of a second oversized spotlight card competing with the reward.
+  - Updated the same base-route forge cards in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) so the headline offer carries the visible tag, title, and only `다음 전투` proof line, while side offers became quieter supporting cards with lighter spacing and smaller spotlight treatment.
+  - Refreshed [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) and [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md) to lock the new `status rail + hero card` hierarchy so future passes fail if forge drifts back to a multi-panel explanation stack.
+  Why:
+  - The latest critique's `Top Priority` asked for one dominant forge read at a time. The highest-value bounded interpretation was to demote the context shell so the player sees one obvious reward card first instead of parsing two large explanation surfaces before choosing.
+  Follow-up Risk:
+  - The reward moment is cleaner now, but `Wave 5` still shows three simultaneous options and the non-headline cards can still feel a bit busy on smaller screens. If critique next says the forge still reads too much like a card tray, the next bounded pass should compress side-card text density or grid layout rather than add new reward wrappers.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4219` assertion (`sentryTierTwo.interceptRange > 0`) after the new forge hierarchy assertions passed
+  Reference Direction: `Hades` boon/shop reward hierarchy and `Brotato` level-up restraint; keep the surrounding shell thin so one offer reads as the moment and the rest read as supporting alternatives.
+  Release Gate: UX/UI
 
 - 2026-03-30 05:44:11 KST
   Changed:
@@ -334,18 +347,6 @@ This file is shared by two recurring Codex CLI jobs.
   Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4057` assertion (`sentryTierTwo.interceptRange > 0`) after the new support-render assertions passed
   Reference Direction: `Nova Drift`-style silhouette-first orbitals and `Hades`-style effect restraint at first unlock; the install body should read first, guide geometry second.
   Release Gate: Builds
-
-- 2026-03-30 10:40:00 KST
-  Changed:
-  - Added `createBaseRouteMachinePanelMarkup(...)` in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so shipped `Wave 1-8` status/HUD surfaces now render one sanitized `현재 머신 + 다음 ask` card instead of rebuilding raw live summaries from the wider route state.
-  - Routed both the compact contract panel and in-combat `renderWaveTrack()` through that helper, which means the live machine panel now always carries one immediate combat ask under the visible form change and no longer risks leaking polluted late-route state into the shipped chapter.
-  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) and [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md) to lock the new machine panel against `Afterburn`, `Wave 9`, and `Cataclysm` leakage on polluted shipped builds.
-  Why:
-  - The latest critique's `Top Priority` still had an open gap on shipped status surfaces: title and forge were closer to `one visible change + one immediate ask`, but the live HUD card still stopped at loadout labels. The highest-value concrete interpretation was to make the machine panel itself chapter-local and ask-driven, so `Wave 1-8` reads like a complete first chapter even when broader route state exists in memory.
-  Follow-up Risk:
-  - The HUD/status card is now aligned with the compact forge/pause shell, but the forge header still computes more context than it finally shows. If critique next says the live panel is clean but reward stops still feel overbuilt, the next bounded pass should trim forge-header plumbing or preview-row dependency rather than add more route wrappers.
-  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4057` assertion (`sentryTierTwo.interceptRange > 0`) after the new shipped machine-panel assertions passed
-  Release Gate: Progression
 
 - Older entries trimmed automatically: 2
 
