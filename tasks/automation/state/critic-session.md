@@ -12,7 +12,7 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The focus is still consolidation, but the weakest gate has shifted from pure copy density to `Progression`: the surface is cleaner, yet the shipped run still lacks enough appetite shape and contested forks to feel replayable.
-- Most fragile gate is `Progression`, with `UX/UI` attached. The next useful critique should pressure a starved opener, one extra meaningful mid-run choice, and continued removal of shipped-visible `Wave 9+ / Afterburn` thinking.
-- Key structural problem: `Wave 1-8` still reads like `intro -> weapon beat -> support beat` more than a rerunnable action roguelite ladder. The chapter needs one more real branch point without making the opener busier.
-- Repeated false solutions: answering this with new endforms, more named layers, more future-route scaffolding, or copy-only cleanup that leaves the same two-beat reward ladder underneath.
+- The focus is still consolidation, but the weakest gate has shifted from raw `Progression` to `Builds`: the `Wave 5` fork exists now, yet the shipped chapter still does not let that branch echo hard enough through the rest of the run to create rerun desire.
+- Most fragile gate is `Builds`, with `Progression` attached. The next useful critique should pressure `Wave 5` payoff visibility across `Wave 6-8`, while keeping the opener quiet and resisting more shipped-visible `Wave 9+ / Afterburn` thinking.
+- Key structural problem: `Wave 1-8` still teaches `weapon jump -> support install -> proof` more clearly than it teaches `offense / defense / greed` as distinct run paths. The chapter needs branch consequences that are felt in combat space and remembered in summary surfaces.
+- Repeated false solutions: answering this with more late-route spectacle, more hidden branches, or more text cleanup before the shipped fork creates a visible mechanical scar on the run.

@@ -5471,6 +5471,7 @@
     lateFieldConvergenceId: null,
     lateBreakProfileId: null,
     arsenalBreakpointProfileId: null,
+    wave5FieldPathId: null,
     midrunGreedRouteUntilWave: 0,
     blackLedgerRaidWaves: 0,
     bastionPactDebtWaves: 0,
@@ -8592,6 +8593,7 @@
         lateFieldConvergenceId: BASE_BUILD.lateFieldConvergenceId,
         lateBreakProfileId: BASE_BUILD.lateBreakProfileId,
         arsenalBreakpointProfileId: BASE_BUILD.arsenalBreakpointProfileId,
+        wave5FieldPathId: BASE_BUILD.wave5FieldPathId,
         midrunGreedRouteUntilWave: BASE_BUILD.midrunGreedRouteUntilWave,
         blackLedgerRaidWaves: BASE_BUILD.blackLedgerRaidWaves,
         bastionPactDebtWaves: BASE_BUILD.bastionPactDebtWaves,
@@ -10878,6 +10880,100 @@
     };
   }
 
+  function inferBaseRouteWave5FieldPathId(choice) {
+    if (!choice) {
+      return null;
+    }
+    if (choice.contractRole === "headline") {
+      return "offense";
+    }
+    if (choice.contractRole === "rider") {
+      return "defense";
+    }
+    if (choice.contractRole === "gamble") {
+      return "greed";
+    }
+    if (choice.type === "utility" && choice.action === "field_greed") {
+      return "greed";
+    }
+    if (choice.type === "fallback" || isFieldGrantSurvivalChoice(choice)) {
+      return "defense";
+    }
+    return "offense";
+  }
+
+  function recordBaseRouteWave5FieldPath(run, choice) {
+    if (!CONSOLIDATED_12_WAVE_ROUTE || !run || !run.build || !choice) {
+      return;
+    }
+    const nextWave = Number.isFinite(run.waveIndex) ? run.waveIndex + 2 : 0;
+    if (nextWave !== EARLY_MUTATION_FORGE_WAVE) {
+      return;
+    }
+    const branchId = inferBaseRouteWave5FieldPathId(choice);
+    if (branchId) {
+      run.build.wave5FieldPathId = branchId;
+    }
+  }
+
+  function getBaseRouteWave5FieldPathSummary(build, waveNumber = 1) {
+    if (!CONSOLIDATED_12_WAVE_ROUTE || !build) {
+      return null;
+    }
+    const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
+    if (boundedWave < EARLY_MUTATION_FORGE_WAVE) {
+      return null;
+    }
+    const branchId =
+      build.wave5FieldPathId ||
+      (Number.isFinite(build.midrunGreedRouteUntilWave) && build.midrunGreedRouteUntilWave >= EARLY_MUTATION_FORGE_WAVE
+        ? "greed"
+        : null);
+    if (branchId === "offense") {
+      return {
+        id: "offense",
+        title: "공세 추적",
+        beatLabel: "공세 추적",
+        pillLabel: "공세 추적",
+        resultLead: "Wave 5 공세 추적으로 열린 입구를 더 오래 미는 길을 잠갔다.",
+        asks: {
+          6: "열린 입구 하나를 길게 찢는다.",
+          7: "뚫은 seam으로 다시 눌러 붙인다.",
+          8: "연 측면 하나를 끝까지 비운다.",
+        },
+      };
+    }
+    if (branchId === "defense") {
+      return {
+        id: "defense",
+        title: "방호 고정",
+        beatLabel: "방호 고정",
+        pillLabel: "방호 고정",
+        resultLead: "Wave 5 방호 고정으로 복귀 pocket 하나를 더 오래 버티는 길을 잠갔다.",
+        asks: {
+          6: "복귀 pocket 하나만 길게 붙든다.",
+          7: "같은 seam으로 재진입해 버틴다.",
+          8: "비워 둔 refuge 둘만 번갈아 쓴다.",
+        },
+      };
+    }
+    if (branchId === "greed") {
+      return {
+        id: "greed",
+        title: "판돈 급습",
+        beatLabel: "판돈 급습",
+        pillLabel: "판돈 급습",
+        resultLead: "Wave 5 판돈 급습으로 cash-out lane을 찍고 빠지는 길을 잠갔다.",
+        asks: {
+          6: "짧게 긁고 바로 외곽으로 빠진다.",
+          7: "금고 seam 하나만 물고 곧장 끊는다.",
+          8: "payout lane을 찍고 추격선 전에 벗어난다.",
+        },
+      };
+    }
+    return null;
+  }
+
   function getBaseRouteBranchPayoffSummary({
     build,
     supportSystem = null,
@@ -11047,6 +11143,7 @@
   function getBaseRouteCompactCombatAsk(waveNumber = 1, options = {}) {
     const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
     const wave = options.wave || null;
+    const branchSummary = getBaseRouteWave5FieldPathSummary(options.build || null, boundedWave);
     const hazardType =
       options.hazardType || (wave && wave.hazard && wave.hazard.type ? wave.hazard.type : "");
     if (boundedWave === 1) {
@@ -11060,6 +11157,9 @@
     }
     if (boundedWave === 4) {
       return "굵은 차단선 하나만 피해 간다.";
+    }
+    if (branchSummary && branchSummary.asks[boundedWave]) {
+      return branchSummary.asks[boundedWave];
     }
     if (hazardType === "territory") {
       return "먼 코어 하나부터 끊는다.";
@@ -11098,6 +11198,7 @@
                   `Wave ${boundedWave}`
                 );
     const proof = getBaseRouteCompactCombatAsk(boundedWave, {
+      build,
       wave: resolvedWave,
       hazardType: options.hazardType,
     });
@@ -11431,6 +11532,7 @@
     );
     const supportInstall =
       waveNumber >= SUPPORT_SYSTEM_START_WAVE ? getBaseRouteInstalledSupportInstallSummary(build) : null;
+    const branchSummary = getBaseRouteWave5FieldPathSummary(build, waveNumber);
     const combatAsk = trimInspectNote(
       supportInstall
         ? getBaseRouteSupportInstallCombatAsk(supportInstall.systemId, waveNumber)
@@ -11451,7 +11553,7 @@
         </div>
         <div class="mini-pill-row pause-summary__pill-row">
           ${createMiniPill("지금", pauseSummary?.machineValue || "빈 선체", "hot")}
-          ${createMiniPill("다음 전투", combatAsk, "accent")}
+          ${createMiniPill(branchSummary?.pillLabel || "다음 전투", combatAsk, "accent")}
         </div>
       </div>
     `;
@@ -11605,6 +11707,7 @@
     const wave = currentState && currentState.wave;
     if (CONSOLIDATED_12_WAVE_ROUTE && waveNumber <= DEFAULT_ROUTE_WAVE_COUNT) {
       return getBaseRouteCompactCombatAsk(waveNumber, {
+        build: currentState && currentState.build ? currentState.build : null,
         wave,
       });
     }
@@ -13911,10 +14014,11 @@
     const dominantForm = getDominantFormSummary(build, weapon, DEFAULT_ROUTE_WAVE_COUNT);
     const riderSummary = getBaseRouteInstalledRiderSummary(build, DEFAULT_ROUTE_WAVE_COUNT);
     const proofWindow = getPlayerFacingProofWindowSummary(build, DEFAULT_ROUTE_WAVE_COUNT);
+    const branchSummary = getBaseRouteWave5FieldPathSummary(build, DEFAULT_ROUTE_WAVE_COUNT);
     if (riderSummary) {
-      return `${dominantForm.label}로 완성 시험과 승리 랩을 닫았다. ${riderSummary.value}가 ${proofWindow.label} 내내 새 실루엣을 받쳤다.`;
+      return `${branchSummary ? `${branchSummary.resultLead} ` : ""}${dominantForm.label}로 완성 시험과 승리 랩을 닫았다. ${riderSummary.value}가 ${proofWindow.label} 내내 새 실루엣을 받쳤다.`;
     }
-    return `${dominantForm.label}로 완성 시험과 승리 랩을 닫았다. ${proofWindow.label} 동안 방금 잠근 실루엣을 끝까지 밀어붙였다.`;
+    return `${branchSummary ? `${branchSummary.resultLead} ` : ""}${dominantForm.label}로 완성 시험과 승리 랩을 닫았다. ${proofWindow.label} 동안 방금 잠근 실루엣을 끝까지 밀어붙였다.`;
   }
 
   function getBaseRouteResultRouteLabel(build, weapon = null) {
@@ -13944,6 +14048,10 @@
       return ["조용한 시작", "Wave 3 무기 방향", "Wave 8 완성 시험"];
     }
     const beats = ["조용한 시작", `Wave 3 ${getShippingWeaponMilestoneLabel(activeBuild, DEFAULT_ROUTE_WAVE_COUNT)}`];
+    const branchSummary = getBaseRouteWave5FieldPathSummary(activeBuild, DEFAULT_ROUTE_WAVE_COUNT);
+    if (branchSummary) {
+      beats.push(`Wave 5 ${branchSummary.beatLabel}`);
+    }
     const supportBeat = getBaseRouteInstalledSupportInstallSummary(activeBuild);
     if (supportBeat) {
       beats.push(`Wave 6 ${supportBeat.title}`);
@@ -18213,6 +18321,7 @@
     if (!run || !run.build || !choice) {
       return null;
     }
+    recordBaseRouteWave5FieldPath(run, choice);
 
     if (choice.type === "core") {
       const pivotFuelSpent =

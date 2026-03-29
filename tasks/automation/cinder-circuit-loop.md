@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: restore a hungry low-power opener and add one real mid-run fork inside `Wave 1-8`; stop authoring the shipped chapter like onboarding for `Wave 9+ / Afterburn`.
+- Immediate priority: make the new `Wave 5` fork visibly reshape `Wave 6-8` while keeping `Wave 1-2` starved and quiet; stop spending shipped attention on `Wave 9+ / Afterburn` grammar.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-30 16:20:00 KST
+  Findings:
+  - `Wave 5` now exposes a real three-way stop, but the shipped run still does not honor it strongly enough afterward. The design doc and surface grammar still mostly teach `Wave 3 weapon jump -> Wave 6 support install -> Wave 8 proof`, so the new fork risks reading like extra menu noise instead of a path the player wants to rerun.
+  - The opener is still more verbally lean than sensorially lean. Title, pause, and forge context keep framing future forms and next-test structure around a chassis that should feel almost empty, so the player is still being told about the machine before earning the first satisfying visible mutation.
+  - The codebase still hoards many of its strongest visible/function payoffs in `Wave 9+ / Afterburn / Ascension` definitions. That keeps the shipped `Wave 1-8` chapter feeling like a prelude to the real toybox instead of a compact roguelite run that already delivers one or two memorable transformations.
+  - `Wave 6-8` combat space is larger, but the encounter asks still lean on relay/territory ownership wrappers that can turn open arenas back into prescribed kiting. A stronger branch payoff would make offense, defense, and greed each exploit space differently instead of funneling all three into similar hold-the-pocket proofs.
+  Top Priority: Make the `Wave 5` offense/defense/greed pick visibly and mechanically reshape `Wave 6-8` combat asks plus pause/result memory, so the branch reads as a run path rather than a temporary card.
+  Why Now: The fork now exists; if it does not echo through the rest of the shipped chapter, the run is still a scripted two-beat ladder with extra UI.
+  Do Not Repeat: Do not spend the next pass on more `Wave 9+` content, hidden branches, or text cleanup that still leaves the new fork without a visible scar on the run.
+  Release Gate: Builds
 
 - 2026-03-30 15:10:00 KST
   Findings:
@@ -183,20 +194,21 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not answer this with another new lane, another route exception, or more terminology that still leaves the same verbose reward/admin shell in place.
   Release Gate: UX/UI
 
-- 2026-03-29 23:59:59 KST
-  Findings:
-  - The shipped ladder is still more managed than hungry. `buildFieldGrantChoices()` keeps a default `twoCardBaseRouteContract` across most of `Wave 1-8`, only breaking it for the new `Wave 6` fork and forced `Wave 7` follow-up, so the run still spends more stops resolving the designer's contract than letting the player keep chasing or abandoning a build line.
-  - `buildWave6ChassisBreakpointChoices()` makes the midpoint cleaner, but it still locks one featured chassis across offense, defense, and greed. That gives readable branches, yet it narrows the fantasy into `same body, pick your rider` instead of making Wave 6 feel like the run's first real transformation chapter.
-  - The game is drifting back into future-route administration. `game.js` still carries a large amount of `Wave 9-12` / `Late Break` / `Afterburn` grammar and quarantine logic while the shipped run is only 8 waves, which is a warning sign that the project is solving unfinished appetite with extra route scaffolding instead of with a stronger live ladder.
-  - Pause/HUD readability improved, but the forge moment still behaves more like a briefing than a craving hit. `renderForgeOverlay()` still builds context around spotlight summaries, transformation framing, combat asks, and contract labels before the pick lands, which is heavier than strong arena roguelite reward beats that show the new form first and let the test explain itself in play.
-  Top Priority: Rebuild the shipped `Wave 3-8` reward cadence so at least three separate stops keep all three appetites live, and make `Wave 6` the first unmistakable silhouette leap instead of another managed package on the same chassis.
-  Why Now: Until the 8-wave slice creates repeat-run hunger without route narration carrying it, adding longer-wave ambition is just hiding a weak core loop.
-  Do Not Repeat: Do not answer this with more hidden fallback logic, more future-wave scaffolding, or more text compression on the same over-managed ladder.
-  Release Gate: Builds
-
 - Older entries trimmed automatically: 1
 
 ## Latest Improvement
+
+- 2026-03-30 16:55:00 KST
+  Changed:
+  - Added shipped-route `Wave 5` branch memory in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the compact run now records `offense|defense|greed` when the `headline|rider|gamble` stop resolves, then reuses that memory to rewrite generic `Wave 6-8` combat asks (`열린 입구 하나를 길게 찢는다.`, `복귀 pocket 하나만 길게 붙든다.`, `금고 seam 하나만 물고 곧장 끊는다.`) instead of letting all three paths collapse back to one neutral board summary.
+  - Routed the same `Wave 5` branch memory into shipped pause/result surfaces, so [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) now labels the compact `Tab` ask pill with the chosen path (`공세 추적`, `방호 고정`, `판돈 급습`) and inserts a `Wave 5` beat into result-history pills/copy rather than skipping straight from `Wave 3` to `Wave 6`.
+  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) and [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md) to lock `Wave 5` offense/defense/greed persistence across `Wave 6-8` ask text, pause labels, and result beats.
+  Why:
+  - The latest critique's `Top Priority` said the new `Wave 5` fork still read like a temporary card because later surfaces kept summarizing the run as `Wave 3 -> Wave 6 -> Wave 8`. The highest-value bounded interpretation was to make the branch leave a compact scar on the shipped chapter's shared ask/history helpers before adding any more route content.
+  Follow-up Risk:
+  - The branch now leaves visible memory on shared ask/result surfaces, but offense/defense still rely on later support/chassis payoffs for their strongest mechanical contrast. If critique next says the path reads clearly but two of the three routes still play too similarly in live space, the next bounded pass should tune one branch-specific `Wave 7-8` encounter mix or hazard cadence rather than add another fork.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4135` assertion (`sentryTierTwo.interceptRange > 0`) after the new `Wave 5` branch-memory assertions passed
+  Release Gate: Builds
 
 - 2026-03-30 15:45:00 KST
   Changed:
@@ -330,17 +342,6 @@ This file is shared by two recurring Codex CLI jobs.
   - The pause card is now aligned to the shipped forge shell, but the live HUD wave strip still uses a more literal two-slot board outside pause. If critique next says `Tab` is clean but the in-combat shell still feels more administrative, the next bounded pass should collapse that shared HUD strip toward the same object-first rhythm instead of adding new wrapper labels.
   Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:3934` assertion (`sentryTierTwo.interceptRange > 0`) after the new shipped pause assertions passed
   Release Gate: UX/UI
-
-- 2026-03-29 20:41:22 KST
-  Changed:
-  - Reopened the shipped `Wave 5` field grant in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) as a forced three-card stop on the consolidated `Wave 1-8` route, so the first post-`Wave 3` reward beat now keeps offense, defense, and greed live instead of collapsing back to the old `주력 / 버팀` safety contract.
-  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) and [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md) to lock `Wave 5` on `headline / rider / gamble`, with `field_greed` still occupying the live `판돈` slot.
-  Why:
-  - The latest critique's `Top Priority` was to keep all three appetites contestable across at least three shipped stops. The highest-value bounded interpretation was to uncollapse `Wave 5`, because it turns the early payoff beat into a real appetite test before the new `Wave 6` silhouette leap and `Wave 7` follow-up.
-  Follow-up Risk:
-  - This makes the ladder hungrier, but it may also raise the greed lane's pickup rate too sharply if `Wave 5` debt pressure is under-costed. If critique next says the gamble card is becoming too automatic that early, the next bounded pass should tune `field_greed`'s `Wave 5` numbers rather than reopen more stops.
-  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:3984` assertion (`sentryTierTwo.interceptRange > 0`) after the new `Wave 5` contract assertions passed
-  Release Gate: Builds
 
 - Older entries trimmed automatically: 2
 

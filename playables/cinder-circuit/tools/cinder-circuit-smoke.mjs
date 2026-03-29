@@ -542,9 +542,10 @@ assert.equal(
 );
 const greedBuild = game.createInitialBuild("rail_zeal");
 game.applyForgeChoice(
-  { build: greedBuild, resources: { scrap: 999 }, stats: { scrapSpent: 0 }, feed: [] },
+  { build: greedBuild, resources: { scrap: 999 }, stats: { scrapSpent: 0 }, feed: [], waveIndex: 3 },
   game.createFieldGreedContractChoice(greedBuild, 5)
 );
+assert.equal(greedBuild.wave5FieldPathId, "greed");
 const greedPayoff = game.getBaseRouteBranchPayoffSummary({
   build: greedBuild,
   supportSystem: game.computeSupportSystemStats(greedBuild),
@@ -552,6 +553,44 @@ const greedPayoff = game.getBaseRouteBranchPayoffSummary({
 });
 assert.equal(greedPayoff?.label, "분기 보상");
 assert.equal(greedPayoff?.value, "Entry Vault");
+assert.equal(game.getImmediateProofWindowSummary(greedBuild, 7).detail, "금고 seam 하나만 물고 곧장 끊는다.");
+assert.ok(
+  game
+    .getBaseRouteResultCopy(greedBuild, game.computeWeaponStats(greedBuild), true)
+    .includes("Wave 5 판돈 급습")
+);
+assert.equal(
+  JSON.stringify(game.getBaseRouteResultBeatLabels(greedBuild, game.computeWeaponStats(greedBuild))),
+  JSON.stringify(["조용한 시작", "Wave 3 Ember Spindle", "Wave 5 판돈 급습", "Wave 8 완성 시험"])
+);
+const wave5OffenseChoices = game.buildFieldGrantChoices(game.createInitialBuild("rail_zeal"), () => 0, 5);
+const wave5OffenseChoice = wave5OffenseChoices.find((choice) => choice.contractRole === "headline");
+const wave5DefenseChoice = wave5OffenseChoices.find((choice) => choice.contractRole === "rider");
+assert.ok(wave5OffenseChoice);
+assert.ok(wave5DefenseChoice);
+const offenseBranchBuild = game.createInitialBuild("rail_zeal");
+game.applyForgeChoice(
+  { build: offenseBranchBuild, resources: { scrap: 999 }, stats: { scrapSpent: 0 }, feed: [], waveIndex: 3 },
+  wave5OffenseChoice
+);
+assert.equal(offenseBranchBuild.wave5FieldPathId, "offense");
+assert.equal(game.getImmediateProofWindowSummary(offenseBranchBuild, 6).detail, "열린 입구 하나를 길게 찢는다.");
+const defenseBranchBuild = game.createInitialBuild("rail_zeal");
+game.applyForgeChoice(
+  { build: defenseBranchBuild, resources: { scrap: 999 }, stats: { scrapSpent: 0 }, feed: [], waveIndex: 3 },
+  wave5DefenseChoice
+);
+assert.equal(defenseBranchBuild.wave5FieldPathId, "defense");
+const defensePauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
+  build: defenseBranchBuild,
+  weapon: game.computeWeaponStats(defenseBranchBuild),
+  supportSystem: game.computeSupportSystemStats(defenseBranchBuild),
+  waveIndex: 5,
+  phase: "combat",
+  paused: true,
+});
+assert.ok(defensePauseSnapshotMarkup.includes(">방호 고정<"));
+assert.ok(defensePauseSnapshotMarkup.includes("복귀 pocket 하나만 길게 붙든다."));
 const wave6PreviewBuild = game.createInitialBuild("rail_zeal");
 wave6PreviewBuild.architectureForecastId = "storm_artillery";
 const wave6Choices = game.buildWave6ChassisBreakpointChoices(wave6PreviewBuild, () => 0, 6);
