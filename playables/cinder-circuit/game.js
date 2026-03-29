@@ -10869,8 +10869,7 @@
         ${disabled ? "disabled" : ""}
       >
         <h3>${transformation.cardTitle || choice.title}</h3>
-        <p class="forge-card__hero-copy">${transformation.promise}</p>
-        ${createBaseRouteForgePreviewMarkup(transformation.previewLabel, transformation.previewValue)}
+        ${createBaseRouteForgeSpotlightMarkup(transformation.previewLabel, transformation.previewValue)}
         ${createBaseRouteForgeAskMarkup("전투 요청", combatAsk)}
         ${createBaseRouteForgeBillMarkup(slotLabel)}
       </button>
@@ -10927,7 +10926,6 @@
             : ""
         }
         <h3>${transformation.cardTitle || choice.title}</h3>
-        <p class="forge-card__hero-copy">${transformation.promise}</p>
         ${createBaseRouteForgeAskMarkup(wave8SupportPayoff ? wave8SupportPayoff.askLabel : "전투 요청", combatAsk)}
         ${createBaseRouteForgeBillMarkup(slotLabel)}
       </button>

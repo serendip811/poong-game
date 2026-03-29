@@ -12,7 +12,7 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The 8-wave slice is still blocked by split ambition: the shipped route says `lean release run`, but docs/code still preserve `signature / doctrine / wildcard / Wave 9-12 / Afterburn` skeletons that keep pulling attention toward a larger prototype.
-- Fragile gate to push next is `Builds`: after the support-chapter breathing-room pass, the biggest problem is not legibility alone but weak chase value. `Wave 8` still risks reading like a mild tier bump instead of a dramatic second-form payoff worth replaying for.
-- Keep judging against `Hades`, `Nova Drift`, and `Brotato`: strong references make upgrade desire immediate, while Cinder Circuit still routes the player through proof/rider/contract framing before payoff.
-- Repeated false solutions: trimming copy without removing wrapper scaffolding, calming Wave 6-8 pressure without adding a real Wave 8 payoff spike, or adding more hidden late-branch content instead of finishing the shipped growth ladder first.
+- The main drift is still split ambition. The shipped build claims a lean `Wave 1-8` route, but the docs and live code still normalize `signature / doctrine / Wave 9-12 / Afterburn` grammar, which makes the short run feel like a preview branch instead of a final loop.
+- Fragile gate to push next is `UX/UI`: the forge and surrounding reward presentation still behave like a compact admin surface instead of an object-first desire screen. The next critique should keep pressuring one-glance readability over explanation.
+- Keep judging against `Hades`, `Nova Drift`, and `Brotato`: they make rewards legible almost instantly, while Cinder Circuit still spends too much context on proof windows, contract roles, and transformation wrappers.
+- Repeated false solutions: hiding late-route state with sanitizers instead of truly quarantining it, trimming copy while preserving the same reward scaffolding, or adding more future-facing systems before the shipped `8-wave` route feels self-sufficient and replayable.

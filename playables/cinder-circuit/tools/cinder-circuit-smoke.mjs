@@ -1650,13 +1650,13 @@ const recurringWave3CardMarkup = game.createBaseRouteForgeHeadlineCardMarkup({
   disabled: false,
 });
 assert.ok(recurringWave3CardMarkup.includes("forge-card--snap"));
-assert.ok(recurringWave3CardMarkup.includes(recurringWave3HeadlineTransform.promise));
-assert.ok(recurringWave3CardMarkup.includes("forge-card__hero-copy"));
-assert.ok(!recurringWave3CardMarkup.includes("forge-card__proof"));
-assert.ok(!recurringWave3CardMarkup.includes(recurringWave3HeadlineTransform.proof));
 assert.ok(recurringWave3CardMarkup.includes("forge-card__spotlight"));
 assert.ok(recurringWave3CardMarkup.includes(recurringWave3HeadlineTransform.previewLabel));
 assert.ok(recurringWave3CardMarkup.includes(recurringWave3HeadlineTransform.previewValue));
+assert.ok(!recurringWave3CardMarkup.includes("forge-card__proof--ask"));
+assert.ok(!recurringWave3CardMarkup.includes("forge-card__hero-copy"));
+assert.ok(!recurringWave3CardMarkup.includes(recurringWave3HeadlineTransform.promise));
+assert.ok(!recurringWave3CardMarkup.includes(recurringWave3HeadlineTransform.proof));
 const recurringWave3RiderChoice =
   recurringWave3Choices.find((choice) => choice.contractRole === "rider") || recurringWave3Choices[1];
 const recurringWave3RiderTransform =
@@ -1675,12 +1675,13 @@ const recurringWave3RiderMarkup = game.createBaseRouteForgeCompactCardMarkup({
 });
 assert.ok(recurringWave3RiderMarkup.includes("forge-card--contract-side"));
 assert.ok(recurringWave3RiderMarkup.includes(recurringWave3RiderChoice.title));
-assert.ok(recurringWave3RiderMarkup.includes(recurringWave3RiderTransform.promise));
-assert.ok(recurringWave3RiderMarkup.includes("forge-card__hero-copy"));
-assert.ok(!recurringWave3RiderMarkup.includes("forge-card__proof"));
-assert.ok(recurringWave3RiderMarkup.includes("forge-card__pivot"));
+assert.ok(recurringWave3RiderMarkup.includes("forge-card__spotlight"));
 assert.ok(recurringWave3RiderMarkup.includes(recurringWave3RiderTransform.previewLabel));
 assert.ok(recurringWave3RiderMarkup.includes(recurringWave3RiderTransform.previewValue));
+assert.ok(!recurringWave3RiderMarkup.includes("forge-card__proof--ask"));
+assert.ok(!recurringWave3RiderMarkup.includes("forge-card__hero-copy"));
+assert.ok(!recurringWave3RiderMarkup.includes(recurringWave3RiderTransform.promise));
+assert.ok(!recurringWave3RiderMarkup.includes("forge-card__pivot"));
 const wave5MutationBuild = game.createInitialBuild("relay_oath");
 wave5MutationBuild.pendingCores = [];
 const recurringWave5Choices = game.buildForgeChoices(wave5MutationBuild, Math.random, 40, {

@@ -2222,15 +2222,13 @@ body[data-overdrive="true"] .backdrop__glow--right {
   line-height: 1.22;
 }
 
-.forge-card--contract-side .forge-card__pivot {
-  margin-top: 0;
+.forge-card--contract-side .forge-card__spotlight {
+  padding: 10px 12px;
+  border-radius: 15px;
 }
 
-.forge-card--contract-side .forge-card__hero-copy {
-  margin-top: 0;
-  color: var(--muted-strong);
-  font-size: 0.84rem;
-  line-height: 1.42;
+.forge-card--contract-side .forge-card__spotlight-value {
+  font-size: 0.95rem;
 }
 
 .forge-card--contract-side .forge-card__slot {
@@ -2255,17 +2253,33 @@ body[data-overdrive="true"] .backdrop__glow--right {
   line-height: 1.16;
 }
 
-.forge-card--snap .forge-card__spotlight {
+.forge-card__spotlight {
   display: grid;
   gap: 6px;
   align-self: start;
-  max-width: 20rem;
   padding: 12px 14px;
   border-radius: 18px;
   border: 1px solid rgba(255, 210, 165, 0.2);
   background:
     linear-gradient(180deg, rgba(255, 180, 117, 0.14), transparent 100%),
     rgba(255, 255, 255, 0.04);
+}
+
+.forge-card__spotlight-label {
+  color: var(--muted);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.forge-card__spotlight-value {
+  color: #ffe2c4;
+  font-size: 1rem;
+  line-height: 1.18;
+}
+
+.forge-card--snap .forge-card__spotlight {
+  max-width: 20rem;
 }
 
 .forge-card__evolution-kicker {
@@ -2322,38 +2336,14 @@ body[data-overdrive="true"] .backdrop__glow--right {
     rgba(255, 255, 255, 0.05);
 }
 
-.forge-card--snap .forge-card__spotlight-label {
-  color: var(--muted);
-  font-size: 0.68rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
 .forge-card--snap .forge-card__spotlight-value {
-  color: #ffe2c4;
   font-size: clamp(1.05rem, 2vw, 1.22rem);
-  line-height: 1.18;
-}
-
-.forge-card--snap .forge-card__hero-copy {
-  margin-top: 0;
-  color: var(--text);
-  font-size: 0.95rem;
-  line-height: 1.5;
 }
 
 .forge-card--snap .forge-card__pivot {
   margin-top: 4px;
   padding-top: 8px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.forge-card--snap .forge-card__hero-copy {
-  margin-top: 0;
-  color: var(--text);
-  font-size: 0.92rem;
-  line-height: 1.42;
-  max-width: 30rem;
 }
 
 .forge-card--snap .forge-card__slot {
