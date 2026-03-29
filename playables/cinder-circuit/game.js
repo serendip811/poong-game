@@ -10954,7 +10954,40 @@
     });
   }
 
-  function getShippingUpgradePresentationLabel(upgradeText) {
+  function getShippingWeaponMilestoneLabel(build, waveNumber = ARCHITECTURE_DRAFT_WAVE) {
+    const activeBuild = build ? getSanitizedConsolidatedPresentationBuild(build) : null;
+    if (!activeBuild) {
+      return "Wave 3 무기 방향";
+    }
+    const boundedWave = clamp(Math.round(waveNumber || ARCHITECTURE_DRAFT_WAVE), 1, DEFAULT_ROUTE_WAVE_COUNT);
+    const weapon = computeWeaponStats(activeBuild);
+    return (
+      getPresentationHeadlineLabel(weapon, boundedWave) ||
+      weapon.evolutionLabel ||
+      CORE_DEFS[activeBuild.coreId]?.label ||
+      "Wave 3 무기 방향"
+    );
+  }
+
+  function getShippingSupportMilestoneLabel(build, waveNumber = SUPPORT_SYSTEM_START_WAVE) {
+    const activeBuild = build ? getSanitizedConsolidatedPresentationBuild(build) : null;
+    if (!activeBuild) {
+      return "Wave 6 지원 설치";
+    }
+    const boundedWave = clamp(
+      Math.round(waveNumber || SUPPORT_SYSTEM_START_WAVE),
+      SUPPORT_SYSTEM_START_WAVE,
+      DEFAULT_ROUTE_WAVE_COUNT
+    );
+    const supportInstall = getBaseRouteInstalledSupportInstallSummary(activeBuild);
+    if (supportInstall && boundedWave >= SUPPORT_SYSTEM_START_WAVE) {
+      return supportInstall.title;
+    }
+    const chassis = getChassisBreakpointDef(activeBuild);
+    return (chassis && (chassis.label || chassis.title)) || "Wave 6 지원 설치";
+  }
+
+  function getShippingUpgradePresentationLabel(upgradeText, build = null, options = {}) {
     const source = String(upgradeText || "").replace(/\s+/g, " ").trim();
     if (!source) {
       return "";
@@ -10971,6 +11004,22 @@
     if (prefix === "Reforge") {
       return trimInspectNote(`벤치 ${value}`, value);
     }
+    if (prefix === "교리 채택") {
+      return build
+        ? trimInspectNote(
+            getShippingWeaponMilestoneLabel(build, options.waveNumber || ARCHITECTURE_DRAFT_WAVE),
+            value
+          )
+        : trimInspectNote(value, value);
+    }
+    if (prefix === "Wave 6 Ascension") {
+      return build
+        ? trimInspectNote(
+            getShippingSupportMilestoneLabel(build, options.waveNumber || SUPPORT_SYSTEM_START_WAVE),
+            value
+          )
+        : trimInspectNote(value, value);
+    }
     if (
       prefix === "주무장 진화" ||
       prefix === "Afterglow Mutation" ||
@@ -10980,12 +11029,12 @@
       prefix === "방호·보조 예열" ||
       prefix === "안정화" ||
       prefix === "비상 점화" ||
-      prefix === "교리 채택" ||
-      prefix === "교리 완성" ||
-      prefix === "Wave 3 무기 도약" ||
-      prefix === "Wave 6 Ascension"
+      prefix === "Wave 3 무기 도약"
     ) {
       return trimInspectNote(value, value);
+    }
+    if (prefix === "교리 완성") {
+      return "";
     }
     if (!/[가-힣]/.test(source) && !/[가-힣]/.test(value)) {
       return "";
@@ -10993,14 +11042,14 @@
     return trimInspectNote(value, value);
   }
 
-  function getShippingUpgradePresentationLabels(build, limit = 4) {
+  function getShippingUpgradePresentationLabels(build, limit = 4, options = {}) {
     if (!build || !Array.isArray(build.upgrades) || limit <= 0) {
       return [];
     }
     const labels = [];
     const seen = new Set();
     for (let index = build.upgrades.length - 1; index >= 0; index -= 1) {
-      const label = getShippingUpgradePresentationLabel(build.upgrades[index]);
+      const label = getShippingUpgradePresentationLabel(build.upgrades[index], build, options);
       if (!label || seen.has(label)) {
         continue;
       }
@@ -11013,8 +11062,8 @@
     return labels;
   }
 
-  function formatPauseRecentUpgradeLabel(upgradeText) {
-    return getShippingUpgradePresentationLabel(upgradeText);
+  function formatPauseRecentUpgradeLabel(upgradeText, build = null, waveNumber = 1) {
+    return getShippingUpgradePresentationLabel(upgradeText, build, { waveNumber });
   }
 
   function getBaseRoutePauseRecentGainSummary(build, supportSystem = null, waveNumber = 1) {
@@ -11023,7 +11072,7 @@
     }
     const upgrades = Array.isArray(build.upgrades) ? build.upgrades : [];
     for (let index = upgrades.length - 1; index >= 0; index -= 1) {
-      const formatted = formatPauseRecentUpgradeLabel(upgrades[index]);
+      const formatted = formatPauseRecentUpgradeLabel(upgrades[index], build, waveNumber);
       if (formatted) {
         return formatted;
       }
@@ -13687,6 +13736,43 @@
       return `${dominantForm.label}로 완성 시험과 승리 랩을 닫았다. ${riderSummary.value}가 ${proofWindow.label} 내내 새 실루엣을 받쳤다.`;
     }
     return `${dominantForm.label}로 완성 시험과 승리 랩을 닫았다. ${proofWindow.label} 동안 방금 잠근 실루엣을 끝까지 밀어붙였다.`;
+  }
+
+  function getBaseRouteResultRouteLabel(build, weapon = null) {
+    if (!CONSOLIDATED_12_WAVE_ROUTE) {
+      const doctrine = getBastionDoctrineDef(build);
+      return doctrine ? doctrine.label : "Bare Hull Run";
+    }
+    const activeBuild = build ? getSanitizedConsolidatedPresentationBuild(build) : null;
+    const currentWeapon = weapon || (activeBuild ? computeWeaponStats(activeBuild) : null);
+    if (!activeBuild || !currentWeapon) {
+      return "조용한 선체 -> Wave 3 무기 방향";
+    }
+    const weaponBeat = getShippingWeaponMilestoneLabel(activeBuild, DEFAULT_ROUTE_WAVE_COUNT);
+    const supportBeat = getBaseRouteInstalledSupportInstallSummary(activeBuild);
+    return supportBeat
+      ? `조용한 선체 -> ${weaponBeat} -> ${supportBeat.title}`
+      : `조용한 선체 -> ${weaponBeat}`;
+  }
+
+  function getBaseRouteResultBeatLabels(build, weapon = null) {
+    if (!CONSOLIDATED_12_WAVE_ROUTE) {
+      return [];
+    }
+    const activeBuild = build ? getSanitizedConsolidatedPresentationBuild(build) : null;
+    const currentWeapon = weapon || (activeBuild ? computeWeaponStats(activeBuild) : null);
+    if (!activeBuild || !currentWeapon) {
+      return ["조용한 시작", "Wave 3 무기 방향", "Wave 8 완성 시험"];
+    }
+    const beats = ["조용한 시작", `Wave 3 ${getShippingWeaponMilestoneLabel(activeBuild, DEFAULT_ROUTE_WAVE_COUNT)}`];
+    const supportBeat = getBaseRouteInstalledSupportInstallSummary(activeBuild);
+    if (supportBeat) {
+      beats.push(`Wave 6 ${supportBeat.title}`);
+    } else if (getChassisBreakpointDef(activeBuild)) {
+      beats.push(`Wave 6 ${getShippingSupportMilestoneLabel(activeBuild, DEFAULT_ROUTE_WAVE_COUNT)}`);
+    }
+    beats.push("Wave 8 완성 시험");
+    return beats;
   }
 
   function createDoctrineChaseSystemChoice(build, doctrine, options = null) {
@@ -18770,6 +18856,8 @@
     getSupportSystemSpotlight,
     getSupportSystemInstalledPayoff,
     getBaseRouteResultCopy,
+    getBaseRouteResultRouteLabel,
+    getBaseRouteResultBeatLabels,
     getForgeEraPlan,
     createForgeEraMarkup,
     createEraContractPanelMarkup,
@@ -18805,6 +18893,8 @@
     getBaseRoutePauseHeroSummary,
     createBaseRoutePauseSnapshotMarkup,
     createMinimalCombatAskMarkup,
+    getShippingWeaponMilestoneLabel,
+    getShippingSupportMilestoneLabel,
     getShippingUpgradePresentationLabel,
     getShippingUpgradePresentationLabels,
     getLiveSideBetSummary,
@@ -22077,9 +22167,9 @@
 
   function finishRun(victory) {
     quarantineShippedLateRouteState(state);
-    const doctrine = getBastionDoctrineDef(state.build);
     const benchEntries = getBenchEntries(state.build);
-    const runHistoryLabels = getShippingUpgradePresentationLabels(state.build, 4);
+    const runHistoryLabels = getBaseRouteResultBeatLabels(state.build, state.weapon);
+    const resultRouteLabel = getBaseRouteResultRouteLabel(state.build, state.weapon);
     state.screen = "result";
     state.phase = "result";
     state.pendingFinalForge = false;
@@ -22092,8 +22182,8 @@
       scrapSpent: Math.round(state.stats.scrapSpent),
       scrapBanked: Math.round(state.resources.scrap),
       overdrivesUsed: state.stats.overdrivesUsed,
-      route: doctrine ? doctrine.label : "Lean Start",
-      routeLabel: doctrine ? doctrine.label : "Bare Hull Run",
+      route: resultRouteLabel,
+      routeLabel: resultRouteLabel,
       core: CORE_DEFS[state.build.coreId].label,
       tier: state.weapon.tierLabel,
     };
@@ -22125,7 +22215,7 @@
         }</span>
       </div>
       <div class="mini-pill-row">
-        ${(runHistoryLabels.length ? runHistoryLabels : ["조용한 시작 -> Wave 3 굴절 -> Wave 6 증명"])
+        ${(runHistoryLabels.length ? runHistoryLabels : ["조용한 시작", "Wave 3 무기 방향", "Wave 8 완성 시험"])
           .map((upgrade) => createMiniPill("RUN", upgrade))
           .join("")}
       </div>

@@ -843,6 +843,14 @@ assert.ok(seekerResultCopy.includes("승리 랩"));
 assert.ok(seekerResultCopy.includes("Seeker Array"));
 assert.ok(!seekerResultCopy.includes("Wave 9"));
 assert.ok(!seekerResultCopy.includes("중반 보조 축"));
+assert.equal(
+  game.getBaseRouteResultRouteLabel(seekerProofBuild, game.computeWeaponStats(seekerProofBuild)),
+  "조용한 선체 -> Ember Spindle -> Seeker Array"
+);
+assert.equal(
+  JSON.stringify(game.getBaseRouteResultBeatLabels(seekerProofBuild, game.computeWeaponStats(seekerProofBuild))),
+  JSON.stringify(["조용한 시작", "Wave 3 Ember Spindle", "Wave 6 Seeker Array", "Wave 8 완성 시험"])
+);
 const droneProofBuild = game.createInitialBuild("scrap_pact");
 droneProofBuild.chassisId = "bulwark_treads";
 droneProofBuild.supportSystems = [{ id: "volt_drones", tier: 1 }];
@@ -2099,8 +2107,17 @@ assert.equal(game.getShippingUpgradePresentationLabel("Ascension Relay: Storm Fr
 assert.equal(game.getShippingUpgradePresentationLabel("Ownership Relay: Wave 8 bay uplink without armory stop"), "");
 assert.equal(game.getShippingUpgradePresentationLabel("Reforge: Ember + Lance"), "벤치 Ember + Lance");
 assert.equal(
+  game.getShippingUpgradePresentationLabel("교리 채택: Mirror Hunt Doctrine", seekerProofBuild, { waveNumber: 3 }),
+  "Ember Spindle"
+);
+assert.equal(
+  game.getShippingUpgradePresentationLabel("Wave 6 Ascension: 정상 기록", seekerProofBuild, { waveNumber: 6 }),
+  "Seeker Array"
+);
+assert.equal(
   JSON.stringify(
     game.getShippingUpgradePresentationLabels({
+      ...seekerProofBuild,
       upgrades: [
         "교리 채택: Mirror Hunt Doctrine",
         "Ascension Relay: Storm Frame 즉시 활성화",
@@ -2111,7 +2128,7 @@ assert.equal(
       ],
     })
   ),
-  JSON.stringify(["Aegis Halo", "정상 기록", "Mirror Hunt Doctrine"])
+  JSON.stringify(["Aegis Halo", "Seeker Array", "Ember Spindle"])
 );
 assert.equal(game.computeSupportSystemStats(pollutedShippingBuild), null);
 game.sanitizeConsolidatedBuildState(pollutedShippingBuild);

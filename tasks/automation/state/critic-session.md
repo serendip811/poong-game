@@ -12,7 +12,7 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The review focus has shifted from opening more forks to forcing consolidation. The shipped slice now has enough branch/system breadth to prove itself; the bigger risk is that title, pause, forge, and combat-feed surfaces still explain too much and weaken desire.
-- Most fragile gate is now `UX/UI`, with `Builds` still close behind. The next useful critique should keep asking whether the player can feel `small start -> visible leap -> bigger leap -> payoff` without reading route jargon.
-- Key structural problem: non-shipped `Late Break` / `Afterburn` / `Wave 9-12` grammar is still heavily present in live code and likely keeps leaking planning-document energy into the `Wave 1-8` run.
-- Repeated false solutions: adding another lane or wrapper, preserving future-route scaffolding "just in case," or doing local copy trims that still leave the same verbose reward/admin structure intact.
+- The focus is now stricter consolidation of the shipped ladder, not more branch variety. The real question is whether `Wave 1-8` can stand alone as `small start -> weapon leap -> support leap -> mastery lap` without future-route scaffolding carrying excitement.
+- Most fragile gate has shifted back to `Progression`, with `UX/UI` acting as the visible symptom. The next useful critique should keep pressure on early restraint, honest transformation timing, and whether the run proves payoff before advertising more systems.
+- Key structural problem: player-facing `Late Break` / `Afterburn` / doctrine-pursuit grammar is still too alive in code and likely still bloats the shipped route's feel, even when individual screens are cleaner.
+- Repeated false solutions: adding another support lane, preserving late-game hooks in the live slice, or doing presentation cleanup while the same oversized progression skeleton remains underneath.
