@@ -2020,6 +2020,29 @@ const pollutedPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
 assert.ok(!pollutedPauseSnapshotMarkup.includes("Afterburn"));
 assert.ok(!pollutedPauseSnapshotMarkup.includes("Wave 9"));
 assert.ok(!pollutedPauseSnapshotMarkup.includes("Cataclysm"));
+const pollutedFeedSummary = game.getShippingCombatFeedEntrySummary(
+  {
+    stamp: "DOM",
+    text: "Dominion Run 활성화. 이번 웨이브는 추가 캐시와 apex 목표를 잠시 걷어 내 새 endform을 억지 없이 누르는 승리 랩으로 열린다.",
+  },
+  {
+    build: pollutedShippingBuild,
+    weapon: game.computeWeaponStats(pollutedShippingBuild),
+    waveIndex: 4,
+    phase: "combat",
+    paused: true,
+    wave: null,
+    catalystCrucible: { active: false },
+    overcommit: { active: false },
+    doctrinePursuit: { active: false },
+  }
+);
+assert.equal(pollutedFeedSummary.stamp, "DOM");
+assert.ok(!pollutedFeedSummary.headline.includes("Dominion"));
+assert.ok(!pollutedFeedSummary.proof.includes("Afterburn"));
+assert.ok(!pollutedFeedSummary.proof.includes("Wave 9"));
+assert.ok(pollutedFeedSummary.headline.length > 0);
+assert.ok(pollutedFeedSummary.proof.length > 0);
 const sanitizedShippingBuild = game.getSanitizedConsolidatedPresentationBuild(pollutedShippingBuild);
 assert.equal(sanitizedShippingBuild.act3CatalystDraftSeen, false);
 assert.equal(sanitizedShippingBuild.catalystCapstoneId, null);

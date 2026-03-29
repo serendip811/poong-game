@@ -11236,6 +11236,16 @@
     );
   }
 
+  function shouldQuarantineShippingCombatFeedText(text) {
+    const source = String(text || "").trim();
+    if (!source) {
+      return false;
+    }
+    return /Afterburn|afterburn|Ascension|ascension|Act 4|Act4|Wave 9|Wave 10|Wave 11|Wave 12|Dominion Run|Dominion Break|ownership bracket|Late Break Armory|late wave|late route/i.test(
+      source
+    );
+  }
+
   function summarizeCombatFeedEntry(entry) {
     const stamp = entry && entry.stamp ? entry.stamp : "RUN";
     const source = entry && entry.text ? String(entry.text).replace(/\s+/g, " ").trim() : "";
@@ -11265,6 +11275,47 @@
       stamp,
       headline: `${source.slice(0, 85).trimEnd()}...`,
       proof: "",
+    };
+  }
+
+  function getShippingCombatFeedEntrySummary(entry, currentState = state) {
+    const summary = summarizeCombatFeedEntry(entry);
+    if (!CONSOLIDATED_12_WAVE_ROUTE) {
+      return summary;
+    }
+    const source = entry && entry.text ? String(entry.text).replace(/\s+/g, " ").trim() : "";
+    if (!source) {
+      return summary;
+    }
+    if (shouldQuarantineShippingCombatFeedText(source)) {
+      const waveNumber =
+        currentState && typeof currentState.waveIndex === "number"
+          ? clamp(currentState.waveIndex + (currentState.phase === "forge" ? 2 : 1), 1, DEFAULT_ROUTE_WAVE_COUNT)
+          : 1;
+      const build =
+        currentState && currentState.build
+          ? getSanitizedConsolidatedPresentationBuild(currentState.build)
+          : null;
+      const weapon = build ? computeWeaponStats(build) : null;
+      const machineSummary =
+        build && weapon
+          ? getBaseRouteStatusBoardSummary(build, weapon, waveNumber, {
+              supportSystem: currentState && currentState.supportSystem ? currentState.supportSystem : null,
+            })
+          : null;
+      return {
+        stamp: summary.stamp,
+        headline: machineSummary ? machineSummary.machineValue || "현재 머신" : "현재 머신",
+        proof: trimInspectNote(
+          getBaseRouteCombatAskForWave(build, waveNumber),
+          ""
+        ),
+      };
+    }
+    return {
+      stamp: summary.stamp,
+      headline: trimInspectNote(summary.headline, summary.headline),
+      proof: trimInspectNote(summary.proof, ""),
     };
   }
 
@@ -18613,6 +18664,7 @@
     getShippingUpgradePresentationLabels,
     getLiveSideBetSummary,
     summarizeCombatFeedEntry,
+    getShippingCombatFeedEntrySummary,
     getBaseRouteTransformationFocus,
     getShippedRoutePresentationBeats,
     getBaseRouteForgeChoiceTransformation,
@@ -19778,14 +19830,16 @@
           <article class="combat-feed__row">
             <span class="combat-feed__stamp">${entry.stamp}</span>
             <div class="combat-feed__text">${
-              expandedPauseFeed
-                ? `<strong class="combat-feed__headline">${entry.text}</strong>`
-                : (() => {
-                    const summary = summarizeCombatFeedEntry(entry);
-                    return `${summary.headline ? `<strong class="combat-feed__headline">${summary.headline}</strong>` : ""}${
-                      summary.proof ? `<span class="combat-feed__proof">${summary.proof}</span>` : ""
-                    }`;
-                  })()
+              (() => {
+                const summary =
+                  CONSOLIDATED_12_WAVE_ROUTE ? getShippingCombatFeedEntrySummary(entry, state) : summarizeCombatFeedEntry(entry);
+                if (expandedPauseFeed && !CONSOLIDATED_12_WAVE_ROUTE) {
+                  return `<strong class="combat-feed__headline">${entry.text}</strong>`;
+                }
+                return `${summary.headline ? `<strong class="combat-feed__headline">${summary.headline}</strong>` : ""}${
+                  summary.proof ? `<span class="combat-feed__proof">${summary.proof}</span>` : ""
+                }`;
+              })()
             }</div>
           </article>
         `
