@@ -2268,6 +2268,60 @@ body[data-overdrive="true"] .backdrop__glow--right {
     rgba(255, 255, 255, 0.04);
 }
 
+.forge-card__evolution-kicker {
+  display: grid;
+  gap: 5px;
+}
+
+.forge-card__evolution-badge {
+  color: #ffd8b0;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.forge-card__evolution-title {
+  color: #fff2df;
+  font-size: 0.92rem;
+  line-height: 1.25;
+}
+
+.forge-card__evolution {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.forge-card__evolution-slot {
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 220, 184, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.forge-card__evolution-slot span {
+  color: var(--muted);
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.forge-card__evolution-slot strong {
+  color: #fff0dc;
+  font-size: 0.94rem;
+  line-height: 1.22;
+}
+
+.forge-card__evolution-slot--next {
+  border-color: rgba(255, 197, 134, 0.28);
+  background:
+    linear-gradient(180deg, rgba(255, 184, 117, 0.12), transparent 100%),
+    rgba(255, 255, 255, 0.05);
+}
+
 .forge-card--snap .forge-card__spotlight-label {
   color: var(--muted);
   font-size: 0.68rem;

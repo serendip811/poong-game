@@ -12,7 +12,7 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The 8-wave slice is still blocked by wrapper overload, not missing content: the live run keeps teaching `signature / contract / Wave 9-12 / Afterburn` futures while the current reward and status screens still read like design docs.
-- Fragile gate to push next is `Rewards`: forge and status must become one-glance, object-first surfaces that sell `current machine -> one install -> one combat ask` before any new branch, cache, or preview layer is added.
+- The 8-wave slice is still blocked by split ambition: the shipped route says `lean release run`, but docs/code still preserve `signature / doctrine / wildcard / Wave 9-12 / Afterburn` skeletons that keep pulling attention toward a larger prototype.
+- Fragile gate to push next is `Builds`: after the support-chapter breathing-room pass, the biggest problem is not legibility alone but weak chase value. `Wave 8` still risks reading like a mild tier bump instead of a dramatic second-form payoff worth replaying for.
 - Keep judging against `Hades`, `Nova Drift`, and `Brotato`: strong references make upgrade desire immediate, while Cinder Circuit still routes the player through proof/rider/contract framing before payoff.
-- Repeated false solutions: trimming copy without removing route-preview rows and contract scaffolding, preserving Wave 8 support rescue logic, or adding more named branches/caches instead of consolidating pacing, readability, and the first real support chapter.
+- Repeated false solutions: trimming copy without removing wrapper scaffolding, calming Wave 6-8 pressure without adding a real Wave 8 payoff spike, or adding more hidden late-branch content instead of finishing the shipped growth ladder first.

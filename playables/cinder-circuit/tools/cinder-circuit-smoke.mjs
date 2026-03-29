@@ -577,6 +577,44 @@ assert.equal(wave8PayoffHeadline?.systemId, "ember_ring");
 assert.equal(wave8PayoffHeadline?.systemTier, 2);
 assert.ok(wave8PayoffHeadline?.slotText.includes("기존 베이 증설"));
 assert.ok(!wave8PayoffHeadline?.description.includes("눈에 띄는 support silhouette"));
+const wave8PayoffTransform = game.getBaseRouteForgeChoiceTransformation(
+  wave8PayoffHeadline,
+  chassisBranchBuild
+);
+assert.equal(wave8PayoffTransform.wave8SupportPayoff?.eyebrow, "완성 보상");
+assert.equal(wave8PayoffTransform.wave8SupportPayoff?.currentValue, "절단 고리");
+assert.equal(wave8PayoffTransform.wave8SupportPayoff?.payoffValue, "절단 고리 2기");
+assert.equal(wave8PayoffTransform.wave8SupportPayoff?.askLabel, "완성 시험");
+const wave8PayoffMarkup = game.createBaseRouteForgeHeadlineCardMarkup({
+  choice: wave8PayoffHeadline,
+  index: 0,
+  kind: wave8PayoffHeadline.action || wave8PayoffHeadline.type || "choice",
+  contractLabel: wave8PayoffHeadline.contractLabel,
+  transformation: wave8PayoffTransform,
+  combatAsk: game.getBaseRouteForgeChoiceCombatAsk(wave8PayoffHeadline, 8),
+  slotLabel: "고철 52",
+  disabled: false,
+});
+assert.ok(wave8PayoffMarkup.includes("forge-card__evolution"));
+assert.ok(wave8PayoffMarkup.includes("완성 보상"));
+assert.ok(wave8PayoffMarkup.includes("현재 설치"));
+assert.ok(wave8PayoffMarkup.includes("완성 형태"));
+assert.ok(wave8PayoffMarkup.includes("절단 고리 2기"));
+assert.ok(wave8PayoffMarkup.includes("완성 시험"));
+const wave8ForgeContextMarkup = game.createBaseRouteForgeContextMarkup({
+  title: "Ember Ring Mk.II",
+  currentLoadoutLabel: "현재 머신",
+  currentLoadoutValue: "Twin Spine",
+  featuredInstallLabel: wave8PayoffTransform.wave8SupportPayoff?.payoffLabel || "대표 설치",
+  featuredInstallValue: "Ember Ring Mk.II",
+  askLabel: wave8PayoffTransform.wave8SupportPayoff?.askLabel || "전투 요청",
+  askNote:
+    wave8PayoffTransform.wave8SupportPayoff?.askText ||
+    game.getBaseRouteForgeChoiceCombatAsk(wave8PayoffHeadline, 8),
+});
+assert.ok(wave8ForgeContextMarkup.includes("완성 형태"));
+assert.ok(wave8ForgeContextMarkup.includes("완성 시험"));
+assert.ok(wave8ForgeContextMarkup.includes("Ember Ring Mk.II"));
 assert.equal(wave8PayoffRider?.contractLabel, "주포");
 assert.ok(wave8PayoffRider?.type !== "system");
 const shippedLadderWave6 = game.getShippingLadderSteps(

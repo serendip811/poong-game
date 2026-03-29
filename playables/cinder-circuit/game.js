@@ -10390,6 +10390,7 @@
 
   function getBaseRouteForgeChoiceTransformation(choice, build = null) {
     const baseTransformation = getForgeChoiceTransformation(choice);
+    const wave8SupportPayoff = getBaseRouteWave8SupportPayoffSummary(choice, build);
     const supportInstallSpotlight =
       choice &&
       choice.type === "utility" &&
@@ -10457,6 +10458,7 @@
       ...baseTransformation,
       tone,
       promise,
+      wave8SupportPayoff,
       proof: trimInspectNote(localizeBaseRouteForgeText(proof), fallbackProof),
       cardTitle: supportInstallSpotlight
         ? choice.systemChoice?.title || supportInstallSpotlight.hudLabel
@@ -10885,6 +10887,7 @@
     slotLabel,
     disabled,
   }) {
+    const wave8SupportPayoff = transformation.wave8SupportPayoff || null;
     return `
       <button
         type="button"
@@ -10896,10 +10899,36 @@
         data-verb="${choice.verb}"
         ${disabled ? "disabled" : ""}
       >
+        ${
+          wave8SupportPayoff
+            ? `
+              <div class="forge-card__evolution-kicker">
+                <span class="forge-card__evolution-badge">${wave8SupportPayoff.eyebrow}</span>
+                <strong class="forge-card__evolution-title">${wave8SupportPayoff.headline}</strong>
+              </div>
+            `
+            : ""
+        }
         ${createBaseRouteForgeSpotlightMarkup(transformation.previewLabel, transformation.previewValue)}
+        ${
+          wave8SupportPayoff
+            ? `
+              <div class="forge-card__evolution">
+                <article class="forge-card__evolution-slot">
+                  <span>${wave8SupportPayoff.currentLabel}</span>
+                  <strong>${wave8SupportPayoff.currentValue}</strong>
+                </article>
+                <article class="forge-card__evolution-slot forge-card__evolution-slot--next">
+                  <span>${wave8SupportPayoff.payoffLabel}</span>
+                  <strong>${wave8SupportPayoff.payoffValue}</strong>
+                </article>
+              </div>
+            `
+            : ""
+        }
         <h3>${transformation.cardTitle || choice.title}</h3>
         <p class="forge-card__hero-copy">${transformation.promise}</p>
-        ${createBaseRouteForgeAskMarkup("전투 요청", combatAsk)}
+        ${createBaseRouteForgeAskMarkup(wave8SupportPayoff ? wave8SupportPayoff.askLabel : "전투 요청", combatAsk)}
         ${createBaseRouteForgeBillMarkup(slotLabel)}
       </button>
     `;
@@ -13394,6 +13423,56 @@
       };
     }
     return null;
+  }
+
+  function getSupportSystemGeometryStageLabel(systemId, targetTier = 1) {
+    const tier = Math.max(1, Math.round(targetTier || 1));
+    if (systemId === "ember_ring") {
+      return tier >= 3 ? "삼중 절단 고리" : tier === 2 ? "절단 고리 2기" : "절단 고리";
+    }
+    if (systemId === "aegis_halo") {
+      return tier >= 3 ? "삼각 방호진" : tier === 2 ? "방호 고리 2기" : "방호 고리";
+    }
+    if (systemId === "kiln_sentry") {
+      return tier >= 3 ? "릴레이 포탑선" : tier === 2 ? "교차 포탑선" : "전방 포탑";
+    }
+    if (systemId === "seeker_array") {
+      return tier >= 3 ? "삼중 미사일 고리" : tier === 2 ? "쌍미사일 랙" : "추적 미사일 랙";
+    }
+    if (systemId === "volt_drones") {
+      return tier >= 3 ? "과충전 드론망" : tier === 2 ? "드론 편대 3기" : "자율 드론 2기";
+    }
+    const tierDef = SUPPORT_SYSTEM_DEFS[systemId]?.tiers?.[tier];
+    return tierDef?.title || "지원 실루엣";
+  }
+
+  function getBaseRouteWave8SupportPayoffSummary(choice, build, waveNumber = DEFAULT_ROUTE_WAVE_COUNT) {
+    const boundedWave = clamp(Math.round(waveNumber || DEFAULT_ROUTE_WAVE_COUNT), 1, DEFAULT_ROUTE_WAVE_COUNT);
+    if (
+      !CONSOLIDATED_12_WAVE_ROUTE ||
+      boundedWave !== DEFAULT_ROUTE_WAVE_COUNT ||
+      !choice ||
+      choice.type !== "system" ||
+      choice.bayAction !== "upgrade" ||
+      !build
+    ) {
+      return null;
+    }
+    const installedEntry =
+      getInstalledSupportSystems(build).find((entry) => entry.id === choice.systemId) || null;
+    if (!installedEntry || installedEntry.tier >= (choice.systemTier || 1)) {
+      return null;
+    }
+    return {
+      eyebrow: "완성 보상",
+      headline: `${choice.title || "지원 업그레이드"} 승격`,
+      currentLabel: "현재 설치",
+      currentValue: getSupportSystemGeometryStageLabel(choice.systemId, installedEntry.tier),
+      payoffLabel: "완성 형태",
+      payoffValue: getSupportSystemGeometryStageLabel(choice.systemId, choice.systemTier || installedEntry.tier + 1),
+      askLabel: "완성 시험",
+      askText: getBaseRouteSupportInstallCombatAsk(choice.systemId, boundedWave),
+    };
   }
 
   function getSupportSystemInstalledPayoff(systemId, targetTier = 1) {
@@ -25860,6 +25939,10 @@
       proofWindowLabel: proofWindow.label,
       build: state.build,
     });
+    const spotlightTransformation =
+      useBaseRouteContract && spotlightChoice
+        ? getBaseRouteForgeChoiceTransformation(spotlightChoice, state.build)
+        : null;
     const dominantInstallHero =
       useBaseRouteContract && !state.pendingFinalForge
         ? getBaseRouteForgeDominantInstallHero({
@@ -25943,10 +26026,13 @@
               (spotlightChoice ? spotlightChoice.title || forgeSpotlightSummary.titleValue : dominantFormSummary.label),
             currentLoadoutLabel: dominantInstallHero?.currentLoadoutLabel || "현재 머신",
             currentLoadoutValue: dominantInstallHero?.currentFormLabel || dominantFormSummary.label || "",
-            featuredInstallLabel: dominantInstallHero ? "대표 설치" : forgeSpotlightSummary.titleLabel || "대표 설치",
+            featuredInstallLabel:
+              spotlightTransformation?.wave8SupportPayoff?.payoffLabel ||
+              (dominantInstallHero ? "대표 설치" : forgeSpotlightSummary.titleLabel || "대표 설치"),
             featuredInstallValue: dominantInstallHero?.title || forgeSpotlightSummary.titleValue || "",
-            askLabel: "전투 요청",
+            askLabel: spotlightTransformation?.wave8SupportPayoff?.askLabel || "전투 요청",
             askNote:
+              spotlightTransformation?.wave8SupportPayoff?.askText ||
               dominantInstallHero?.askNote ||
               (spotlightChoice
                 ? trimForgeCombatAsk(
@@ -25992,7 +26078,7 @@
           const kind =
             choice.type === "utility" ? choice.action || "utility" : choice.type || "choice";
           const transformation = useBaseRouteContract
-            ? getBaseRouteForgeChoiceTransformation(choice)
+            ? getBaseRouteForgeChoiceTransformation(choice, state.build)
             : getForgeChoiceTransformation(choice);
           const contractLabel = useBaseRouteContract
             ? getBaseRouteForgeContractLabel(choice.contractRole, choice, riderStep)
