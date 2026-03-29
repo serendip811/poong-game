@@ -11044,6 +11044,70 @@
     return `${source.slice(0, 51).trimEnd()}...`;
   }
 
+  function getBaseRouteCompactCombatAsk(waveNumber = 1, options = {}) {
+    const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
+    const wave = options.wave || null;
+    const hazardType =
+      options.hazardType || (wave && wave.hazard && wave.hazard.type ? wave.hazard.type : "");
+    if (boundedWave === 1) {
+      return "잔해 무리만 비운다.";
+    }
+    if (boundedWave === 2) {
+      return "두꺼운 전열부터 끊는다.";
+    }
+    if (boundedWave === 3) {
+      return "엘리트와 단일 surge만 읽는다.";
+    }
+    if (boundedWave === 4) {
+      return "굵은 차단선 하나만 피해 간다.";
+    }
+    if (hazardType === "territory") {
+      return "먼 코어 하나부터 끊는다.";
+    }
+    if (hazardType === "relay") {
+      return "먼 pylon부터 잘라 회랑을 연다.";
+    }
+    if (hazardType === "drift") {
+      return "추격 덩어리를 끊고 빈 pocket으로 돈다.";
+    }
+    if (hazardType === "salvage") {
+      return "금고 하나만 긁고 바로 빠진다.";
+    }
+    if (hazardType === "caravan") {
+      return "짧게 추격하고 열린 측면으로 복귀한다.";
+    }
+    return "열린 공간을 남기고 자주 자리를 바꾼다.";
+  }
+
+  function getBaseRouteWaveBriefingSummary(build, waveNumber = 1, options = {}) {
+    const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
+    const resolvedWave = options.wave || resolveWaveConfig(boundedWave - 1, build);
+    const headline =
+      boundedWave === 1
+        ? "외곽 워밍업"
+        : boundedWave === 2
+          ? "전열 절개"
+          : boundedWave === 3
+            ? "첫 도약 시험"
+            : boundedWave === 4
+              ? "사선 유지"
+              : trimInspectNote(
+                  resolvedWave && (resolvedWave.bandLabel || resolvedWave.label)
+                    ? String(resolvedWave.bandLabel || resolvedWave.label).replace(/^Wave \d+\s*·\s*/u, "")
+                    : `Wave ${boundedWave}`,
+                  `Wave ${boundedWave}`
+                );
+    const proof = getBaseRouteCompactCombatAsk(boundedWave, {
+      wave: resolvedWave,
+      hazardType: options.hazardType,
+    });
+    return {
+      headline,
+      proof,
+      text: `${headline}. ${proof}`,
+    };
+  }
+
   function getBaseRouteCombatAskForWave(build, waveNumber = 1) {
     const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
     return getBaseRouteCombatAsk({
@@ -11477,6 +11541,25 @@
         ),
       };
     }
+    const waveIntroStamp = entry && entry.stamp ? String(entry.stamp).match(/^W(\d+)$/u) : null;
+    const waveIntroText = source.match(/^Wave\s+(\d+)\b.*진입\./u);
+    const waveIntroNumber = clamp(
+      Number(waveIntroStamp ? waveIntroStamp[1] : waveIntroText ? waveIntroText[1] : 0) || 0,
+      0,
+      DEFAULT_ROUTE_WAVE_COUNT
+    );
+    if (waveIntroNumber >= 1 && waveIntroNumber <= DEFAULT_ROUTE_WAVE_COUNT) {
+      const build =
+        currentState && currentState.build
+          ? getSanitizedConsolidatedPresentationBuild(currentState.build)
+          : null;
+      const briefing = getBaseRouteWaveBriefingSummary(build, waveIntroNumber);
+      return {
+        stamp: summary.stamp,
+        headline: briefing.headline,
+        proof: briefing.proof,
+      };
+    }
     return {
       stamp: summary.stamp,
       headline: trimInspectNote(summary.headline, summary.headline),
@@ -11520,9 +11603,10 @@
         ? clamp(currentState.waveIndex + 1, 1, MAX_WAVES)
         : 1;
     const wave = currentState && currentState.wave;
-    const directive = wave && wave.directive ? String(wave.directive).replace(/\s+/g, " ").trim() : "";
-    if (directive) {
-      return directive;
+    if (CONSOLIDATED_12_WAVE_ROUTE && waveNumber <= DEFAULT_ROUTE_WAVE_COUNT) {
+      return getBaseRouteCompactCombatAsk(waveNumber, {
+        wave,
+      });
     }
     if (waveNumber === 1) {
       return "열린 외곽을 돌며 회피 각부터 익힌다.";
@@ -19355,6 +19439,13 @@
 
   function getImmediateProofWindowSummary(build, waveNumber = 1) {
     const boundedWave = clamp(Math.round(waveNumber || 1), 1, MAX_WAVES);
+    if (CONSOLIDATED_12_WAVE_ROUTE && boundedWave <= DEFAULT_ROUTE_WAVE_COUNT) {
+      const briefing = getBaseRouteWaveBriefingSummary(build, boundedWave);
+      return {
+        label: briefing.headline,
+        detail: briefing.proof,
+      };
+    }
     const lateRouteBeat = getStandardLateRouteBeatSummary(build, boundedWave);
     if (lateRouteBeat) {
       return {
@@ -21518,7 +21609,12 @@
     state.player.dashCooldownTimer = 0;
     state.supportSystem = computeSupportSystemStats(state.build, waveNumber);
     syncSupportSystemRuntime();
-    pushCombatFeed(`${config.label} 진입. ${config.directive || config.note}`, `W${index + 1}`);
+    pushCombatFeed(
+      CONSOLIDATED_12_WAVE_ROUTE && waveNumber <= DEFAULT_ROUTE_WAVE_COUNT
+        ? getBaseRouteWaveBriefingSummary(state.build, waveNumber, { wave: config }).text
+        : `${config.label} 진입. ${config.directive || config.note}`,
+      `W${index + 1}`
+    );
     if (blackLedgerRaidActive) {
       setBanner("Black Ledger Raid", 0.9);
     }

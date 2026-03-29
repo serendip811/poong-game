@@ -45,6 +45,13 @@ assert.equal(
   JSON.stringify(game.getPlayerFacingProofWindowSummary(playerFacingProofBuild, 11)),
   JSON.stringify(game.getImmediateProofWindowSummary(playerFacingProofBuild, 8))
 );
+assert.equal(
+  JSON.stringify(game.getImmediateProofWindowSummary(playerFacingProofBuild, 4)),
+  JSON.stringify({
+    label: "사선 유지",
+    detail: "굵은 차단선 하나만 피해 간다.",
+  })
+);
 const titleFocus = game.getBaseRouteTransformationFocus(1, { stage: "title" });
 assert.equal(titleFocus.eyebrow, "Bare Hull");
 assert.equal(titleFocus.windowLabel, "회로 투입");
@@ -406,7 +413,7 @@ const openingLiveStatus = game.getLiveSideBetSummary({
 });
 assert.equal(openingLiveStatus?.label, "빈 선체");
 assert.equal(openingLiveStatus?.status, "첫 포지 전");
-assert.ok(openingLiveStatus?.note.includes("폭주 지형 없음."));
+assert.equal(openingLiveStatus?.note, "잔해 무리만 비운다.");
 assert.ok(!/Wave 3|Wave 6|설치|변이/.test(openingLiveStatus?.note || ""));
 const midrunContractSummary = game.getShippingContractSummary(
   roadmapBuild,
@@ -939,7 +946,7 @@ assert.ok(hiddenPursuitStatus?.label.includes("Ember Spindle"));
 assert.equal(hiddenPursuitStatus?.status, "첫 포지 전");
 assert.equal(
   hiddenPursuitStatus?.note,
-  "가장 넓은 flank를 먼저 비우고 같은 gun/body lane 하나를 오래 붙들며 점유 시간을 늘린다."
+  "추격 덩어리를 끊고 빈 pocket으로 돈다."
 );
 const wave7FieldGrantChoices = game.buildFieldGrantChoices(chassisBranchBuild, () => 0, 7);
 assert.equal(wave7FieldGrantChoices.length, 3);
@@ -996,7 +1003,7 @@ assert.ok(openingPauseSnapshotMarkup.includes("빈 선체"));
 assert.ok(openingPauseSnapshotMarkup.includes("첫 도약 · Wave 3 무기 방향"));
 assert.ok(openingPauseSnapshotMarkup.includes("pause-summary__hero-head"));
 assert.ok(openingPauseSnapshotMarkup.includes("pause-summary__pill-row"));
-assert.ok(openingPauseSnapshotMarkup.includes("폭주 지형 없음."));
+assert.ok(openingPauseSnapshotMarkup.includes("두꺼운 전열부터 끊는다."));
 assert.ok(!openingPauseSnapshotMarkup.includes("summary-head"));
 assert.ok(!openingPauseSnapshotMarkup.includes("pause-summary__lanes"));
 assert.ok(!openingPauseSnapshotMarkup.includes("Bare Hull"));
@@ -1049,7 +1056,7 @@ const hiddenCombatCacheStatus = game.getLiveSideBetSummary({
 });
 assert.ok(!/Wave 6|설치/.test(hiddenCombatCacheStatus?.label || ""));
 assert.equal(hiddenCombatCacheStatus?.status, "첫 포지 전");
-assert.equal(hiddenCombatCacheStatus?.note, "가장 넓은 flank부터 비우고 열린 lane 둘 중 하나를 오래 붙든다.");
+assert.equal(hiddenCombatCacheStatus?.note, "열린 공간을 남기고 자주 자리를 바꾼다.");
 const liveCombatCacheStatus = game.getLiveSideBetSummary({
   build: game.createInitialBuild("rail_zeal"),
   waveIndex: 4,
@@ -1551,7 +1558,7 @@ const openingCombatAsk = game.getBaseRouteCombatAsk({
   waveIndex: 0,
   wave: { directive: "", hazard: null },
 });
-assert.equal(openingCombatAsk, "열린 외곽을 돌며 회피 각부터 익힌다.");
+assert.equal(openingCombatAsk, "잔해 무리만 비운다.");
 const relayCombatAsk = game.getBaseRouteCombatAsk({
   waveIndex: 5,
   wave: {
@@ -1559,7 +1566,7 @@ const relayCombatAsk = game.getBaseRouteCombatAsk({
     hazard: { type: "relay" },
   },
 });
-assert.equal(relayCombatAsk, "가장 먼 relay를 먼저 끊고 뚫린 corridor 하나를 길게 지킨다.");
+assert.equal(relayCombatAsk, "먼 pylon부터 잘라 회랑을 연다.");
 const genericWave7Build = game.createInitialBuild("rail_zeal");
 assert.deepEqual(
   Array.from(game.getVisibleSupportOfferSystemIds(genericWave7Build, 7)),
@@ -2152,6 +2159,27 @@ assert.ok(!pollutedFeedSummary.proof.includes("Afterburn"));
 assert.ok(!pollutedFeedSummary.proof.includes("Wave 9"));
 assert.ok(pollutedFeedSummary.headline.length > 0);
 assert.ok(pollutedFeedSummary.proof.length > 0);
+const verboseWaveIntroSummary = game.getShippingCombatFeedEntrySummary(
+  {
+    stamp: "W4",
+    text: "Wave 4 · Meltdown 진입. 첫 전투 구간의 결산이지만 더 이상 압축된 스트레스 테스트는 아니다. 넓어진 작업장에서 단일 폭주 축과 엘리트 돌파를 읽어 Wave 5 포지 욕심으로 이어지게 만든다.",
+  },
+  {
+    build: pollutedShippingBuild,
+    weapon: game.computeWeaponStats(pollutedShippingBuild),
+    waveIndex: 3,
+    phase: "wave",
+    paused: false,
+    wave: game.resolveWaveConfig(3, pollutedShippingBuild),
+    catalystCrucible: { active: false },
+    overcommit: { active: false },
+    doctrinePursuit: { active: false },
+  }
+);
+assert.equal(verboseWaveIntroSummary.headline, "사선 유지");
+assert.equal(verboseWaveIntroSummary.proof, "굵은 차단선 하나만 피해 간다.");
+assert.ok(!verboseWaveIntroSummary.proof.includes("Wave 5"));
+assert.ok(!verboseWaveIntroSummary.proof.includes("작업장"));
 const sanitizedShippingBuild = game.getSanitizedConsolidatedPresentationBuild(pollutedShippingBuild);
 assert.equal(sanitizedShippingBuild.act3CatalystDraftSeen, false);
 assert.equal(sanitizedShippingBuild.catalystCapstoneId, null);
