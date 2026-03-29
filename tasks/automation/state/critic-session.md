@@ -12,7 +12,7 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The focus is still consolidation, but the sharpest weak point has shifted back to `Rewards`: the forge/pause/status stack still explains the build more than it sells the next form, so the run's desire curve remains softer than its system count.
-- Most fragile gate is now `Rewards`, with `Builds` and `Combat` attached. The next useful critique should keep checking whether the player sees one dominant offer, one immediate test, and enough breathing room for the new silhouette to feel different.
-- Key structural problem: the shipped route still carries too much adjacent late-route machinery and too much on-screen silhouette noise for an `8-wave` ladder that should start bare and transform in three big reads.
-- Repeated false solutions: answering this with more support branches, more passive layers, more route verbs, or more explanatory card grammar instead of reducing clutter and making the offered form itself do the selling.
+- The focus is still consolidation, but the sharpest weak point is now `Progression`: the shipped `Wave 1-8` path still feels like a teaser for later acts because future-route doctrine/capstone/Afterburn scaffolding leaks into the live chapter.
+- Most fragile gate is `Progression`, with `Rewards` and `UX/UI` attached. The next useful critique should keep checking whether the current run stands on its own as a replayable first chapter before asking for more branches or longer structure.
+- Key structural problem: the game is still selling adjacent future systems before it has fully proved `bare opener -> Wave 3 weapon leap -> Wave 6 support install -> Wave 7-8 ownership lap` in breathable combat space.
+- Repeated false solutions: answering this with more roadmap/admin rows, more future-act previews, more support wrappers, or more named progression lanes instead of making the current chapter cleaner, clearer, and more hunger-driven.

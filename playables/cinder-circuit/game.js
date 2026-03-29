@@ -10079,20 +10079,7 @@
 
   function createEraContractPanelMarkup(build, weapon = null, supportSystem = null, waveNumber = 1) {
     if (CONSOLIDATED_12_WAVE_ROUTE) {
-      const machineSummary = getBaseRouteStatusBoardSummary(build, weapon, waveNumber, {
-        supportSystem,
-      });
-      const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
-      const compactCombatAsk = trimInspectNote(
-        supportSystem && supportSystem.id
-          ? getBaseRouteSupportInstallCombatAsk(supportSystem.id, boundedWave)
-          : getBaseRouteCombatAskForWave(build, boundedWave),
-        "열린 공간을 남기고 자주 자리를 바꾼다."
-      );
-      return `
-        ${createCurrentMachinePayoffMarkup(machineSummary)}
-        <p class="machine-payoff__note">${compactCombatAsk}</p>
-      `;
+      return createBaseRouteMachinePanelMarkup(build, weapon, supportSystem, waveNumber);
     }
     const eras = getForgeEraPlan(build, weapon, supportSystem, waveNumber);
     if (!eras || eras.length === 0) {
@@ -10588,6 +10575,28 @@
           <strong class="machine-payoff__value">${payoffValue}</strong>
         </article>
       </div>
+    `;
+  }
+
+  function createBaseRouteMachinePanelMarkup(build, weapon = null, supportSystem = null, waveNumber = 1) {
+    const activeBuild = build ? getSanitizedConsolidatedPresentationBuild(build) : null;
+    if (!activeBuild) {
+      return "";
+    }
+    const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
+    const activeWeapon = weapon && activeBuild === build ? weapon : computeWeaponStats(activeBuild);
+    const machineSummary = getBaseRouteStatusBoardSummary(activeBuild, activeWeapon, boundedWave, {
+      supportSystem,
+    });
+    const compactCombatAsk = trimInspectNote(
+      supportSystem && supportSystem.id
+        ? getBaseRouteSupportInstallCombatAsk(supportSystem.id, boundedWave)
+        : getBaseRouteCombatAskForWave(activeBuild, boundedWave),
+      "열린 공간을 남기고 자주 자리를 바꾼다."
+    );
+    return `
+      ${createCurrentMachinePayoffMarkup(machineSummary)}
+      <p class="machine-payoff__note">${compactCombatAsk}</p>
     `;
   }
 
@@ -19029,6 +19038,7 @@
     createBaseRouteForgePreviewMarkup,
     createBaseRouteForgeProofMarkup,
     createBaseRouteForgeBillMarkup,
+    createBaseRouteMachinePanelMarkup,
     resolveWaveConfig,
   };
 
@@ -20214,10 +20224,6 @@
         : state.phase === "result"
           ? clamp(state.stats.wavesCleared, 1, totalTrackWaves)
           : clamp(state.waveIndex + 1, 1, totalTrackWaves);
-    const currentWeapon = state.weapon || computeWeaponStats(state.build);
-    const machineSummary = getBaseRouteStatusBoardSummary(state.build, currentWeapon, trackWaveNumber, {
-      supportSystem: state.supportSystem || null,
-    });
     const label =
       state.phase === "forge"
         ? `FORGE W${trackWaveNumber}`
@@ -20227,12 +20233,12 @@
             ? "LAP"
             : `W${trackWaveNumber}`;
     elements.runTrackLabel.textContent = label;
-    elements.waveTrack.innerHTML = createCurrentMachinePayoffMarkup({
-      machineLabel: machineSummary.machineLabel,
-      machineValue: machineSummary.machineValue,
-      payoffLabel: machineSummary.payoffLabel,
-      payoffValue: machineSummary.payoffValue,
-    });
+    elements.waveTrack.innerHTML = createBaseRouteMachinePanelMarkup(
+      state.build,
+      null,
+      state.supportSystem || null,
+      trackWaveNumber
+    );
   }
 
   function renderPauseOverlay() {

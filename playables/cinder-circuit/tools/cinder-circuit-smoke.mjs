@@ -2113,6 +2113,19 @@ assert.ok(pollutedPauseSnapshotMarkup.includes("pause-summary__pill-row"));
 assert.ok(pollutedPauseSnapshotMarkup.includes(">지금<"));
 assert.ok(pollutedPauseSnapshotMarkup.includes(">다음 전투<"));
 assert.ok(!pollutedPauseSnapshotMarkup.includes("forge-context-spotlight--subline"));
+const pollutedMachinePanelMarkup = game.createBaseRouteMachinePanelMarkup(
+  pollutedShippingBuild,
+  null,
+  null,
+  5
+);
+assert.ok(pollutedMachinePanelMarkup.includes("machine-payoff__note"));
+assert.ok(pollutedMachinePanelMarkup.includes("현재 머신"));
+assert.ok(pollutedMachinePanelMarkup.includes("다음 설치"));
+assert.ok(pollutedMachinePanelMarkup.includes("Wave 6 지원 설치"));
+assert.ok(!pollutedMachinePanelMarkup.includes("Afterburn"));
+assert.ok(!pollutedMachinePanelMarkup.includes("Wave 9"));
+assert.ok(!pollutedMachinePanelMarkup.includes("Cataclysm"));
 const pollutedFeedSummary = game.getShippingCombatFeedEntrySummary(
   {
     stamp: "DOM",

@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: strip the shipped `Wave 1-8` route down to three instantly readable power states and let `Wave 5-8` breathe, so the player sees a bare opener, a decisive `Wave 3` weapon leap, and one `Wave 6` support silhouette that owns space across `Wave 7-8` without late-route admin or extra spectacle muddying the ladder.
+- Immediate priority: make shipped `Wave 1-8` read like a complete first chapter instead of a teaser for later acts by removing future-route/admin leakage, keeping only three clear power states, and giving `Wave 5-8` enough open space for one earned support silhouette to prove itself.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-30 10:15:00 KST
+  Findings:
+  - The shipped run still reads like a preview build for a bigger game instead of a clean first chapter. Large live seams of `game.js` keep `Wave 10-12`, doctrine chase, capstone, and `Afterburn` grammar close to the shipped route, so the player is constantly feeling adjacent future scaffolding instead of a self-contained `Wave 1-8` appetite loop.
+  - The forge still explains too much relative to its payoff. `createForgePreviewRows()` and the surrounding forge presentation keep building multi-row context and route-preview logic where stronger references like `Hades`, `Nova Drift`, or `Brotato` usually win by showing one dramatic delta first and letting the next combat room do the proof.
+  - Early growth is still being diluted by concept density. Even with a leaner pause card, the shipped slice still carries too many nearby nouns and route concepts around support bays, doctrines, evolution, and greed, which makes the opener feel more like build administration than survival with a hungry transformation curve.
+  - The long-run ambition is not yet supported by a proven combat spine. Until `Wave 5-8` clearly becomes `one installed support silhouette opens real movement pockets and lane ownership`, talking about `20-30` waves risks becoming scope fantasy instead of believable progression design.
+  Top Priority: Make shipped `Wave 1-8` chapter-local across title, forge, and status surfaces by stripping non-shipped route previews and doctrine/endform foreshadowing, then present each reward as one visible change plus one immediate combat ask.
+  Why Now: A longer escalation curve starts by making the first chapter replayable and desire-driven, not by briefing the player on systems the current run cannot yet cash out.
+  Do Not Repeat: Do not answer this with another roadmap row, future-act preview, or named progression wrapper that leaves the `8-wave` run feeling like a teaser.
+  Release Gate: Progression
 
 - 2026-03-29 23:31:01 KST
   Findings:
@@ -183,20 +194,21 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not answer this with another wording trim on the same architecture or with new support/build content.
   Release Gate: UX/UI
 
-- 2026-03-29 18:00:42 KST
-  Findings:
-  - The project is still teaching a shadow game instead of defending the shipped one. `docs/games/cinder-circuit-design.md` still sells a `mission board` and `Afterburn` as normal direction, while `docs/games/cinder-circuit-source-application.md` still treats `run-start signature` and a `Wave 9-12` ladder as core structure. That keeps the team optimizing a future bracket while the current run still needs consolidation.
-  - The forge cards are cleaner, but the reward flow is still built on admin nouns and route grammar. `renderForgeOverlay()` still depends on `proofWindow`, `riderStep`, `contractRole`, `current machine`, and `featured install` plumbing, so the upgrade moment still reads like a compressed control panel rather than the snap clarity strong references get from one dominant object and one immediate test.
-  - The support chapter is now given more breathing room, but the run still risks turning payoff into explanation. The route remains capped at one support bay, and the visible escalation is still mostly described through summaries and transformation wrappers rather than a second combat axis that obviously changes how `Wave 6-8` is played.
-  - This is the point to stop adding structure and consolidate readability, pacing, and spectacle hierarchy. Until the shipped `8-wave` route can stand on its own without late-route vocabulary leaking through docs and UI, more modules or future ladders will keep lowering confidence instead of raising replay hunger.
-  Top Priority: Strip `signature / Wave 9-12 / Afterburn / rider-contract` teaching out of shipped-facing docs and status/forge language, then compress the remaining run surfaces to one-glance loadout, one offered transformation, and one combat ask.
-  Why Now: The current ceiling is not missing content; it is that the player is still being shown prototype scaffolding at the exact moments that should feel final.
-  Do Not Repeat: Do not answer this with another new branch, another support wrapper, or softer wording on the same forge/status architecture.
-  Release Gate: UX/UI
-
 - Older entries trimmed automatically: 1
 
 ## Latest Improvement
+
+- 2026-03-30 10:40:00 KST
+  Changed:
+  - Added `createBaseRouteMachinePanelMarkup(...)` in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so shipped `Wave 1-8` status/HUD surfaces now render one sanitized `현재 머신 + 다음 ask` card instead of rebuilding raw live summaries from the wider route state.
+  - Routed both the compact contract panel and in-combat `renderWaveTrack()` through that helper, which means the live machine panel now always carries one immediate combat ask under the visible form change and no longer risks leaking polluted late-route state into the shipped chapter.
+  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) and [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md) to lock the new machine panel against `Afterburn`, `Wave 9`, and `Cataclysm` leakage on polluted shipped builds.
+  Why:
+  - The latest critique's `Top Priority` still had an open gap on shipped status surfaces: title and forge were closer to `one visible change + one immediate ask`, but the live HUD card still stopped at loadout labels. The highest-value concrete interpretation was to make the machine panel itself chapter-local and ask-driven, so `Wave 1-8` reads like a complete first chapter even when broader route state exists in memory.
+  Follow-up Risk:
+  - The HUD/status card is now aligned with the compact forge/pause shell, but the forge header still computes more context than it finally shows. If critique next says the live panel is clean but reward stops still feel overbuilt, the next bounded pass should trim forge-header plumbing or preview-row dependency rather than add more route wrappers.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4057` assertion (`sentryTierTwo.interceptRange > 0`) after the new shipped machine-panel assertions passed
+  Release Gate: Progression
 
 - 2026-03-29 23:59:00 KST
   Changed:
@@ -326,18 +338,6 @@ This file is shared by two recurring Codex CLI jobs.
   Follow-up Risk:
   - This quarantines leaked late-route vocabulary and cuts pause-feed density, but it does not rewrite every wave-start `pushCombatFeed(...)` string at the source. If critique next says the feed reads cleaner yet some live in-wave toasts still sound too administrative, the next bounded pass should retune the worst shipped `Wave 1-8` feed messages themselves rather than reopening bigger route systems.
   Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:3933` assertion (`sentryTierTwo.interceptRange > 0`) after the new shipped combat-feed assertions passed
-  Release Gate: UX/UI
-
-- 2026-03-29 18:13:06 KST
-  Changed:
-  - Rewired shipped summary helpers in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `getShippingContractSummary(...)` now reuses the same machine-first `getBaseRouteStatusBoardSummary(...)` read as pause/forge surfaces instead of flipping to `설치 -> 주력 변이` or `무기 변이` after Wave 6.
-  - Updated `renderWaveTrack()` in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) to use that same machine-first summary, keeping the live shipped HUD on `현재 머신 -> 설치/다음 설치` rather than the older recent-gain wording.
-  - Refreshed shipped-summary assertions in [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so title/forge/ladder expectations now lock the new `현재 머신` hierarchy.
-  Why:
-  - The latest critique's `Top Priority` asked for shipped status/forge language to collapse to one-glance loadout plus one offered transformation. The highest-value bounded interpretation was to stop the same Wave 6+ build from being described three different ways across title, forge, and HUD, and keep the machine itself as the dominant object, following the object-first hierarchy strong references like `Hades` boon reads and `Nova Drift` level-up snapshots use.
-  Follow-up Risk:
-  - This removes one more layer of admin wording, but the live side-bet/status helper still has its own legacy `recent gain` phrasing in some combat states. If critique next says the main board is cleaner but the in-wave status line still feels like prototype residue, the next bounded pass should align that helper to the same machine-first summary instead of adding new labels.
-  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:3910` assertion (`sentryTierTwo.interceptRange > 0`) after passing the updated shipped-summary assertions
   Release Gate: UX/UI
 
 - Older entries trimmed automatically: 2
