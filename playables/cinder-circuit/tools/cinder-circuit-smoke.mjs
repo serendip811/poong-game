@@ -639,7 +639,9 @@ assert.ok(greedFrameChoice?.wave6GreedFrame);
 const wave6PreviewRows = game.createForgePreviewRows(chassisOnlyChoice);
 assert.equal(wave6PreviewRows[0]?.label, "차체");
 assert.equal(wave6PreviewRows[1]?.label, "절단 고리");
-assert.equal(wave6PreviewRows[2]?.label, "즉시 변화");
+assert.equal(wave6PreviewRows[2]?.label, "형태");
+assert.equal(wave6PreviewRows[2]?.value, "Citadel Spindle");
+assert.equal(wave6PreviewRows[3]?.label, "즉시 변화");
 assert.ok(!wave6PreviewRows.some((row) => /빈 보조칸|후속 보조 선택|다음 방호/.test(row.label) || /빈 보조칸|후속 보조 선택|다음 방호/.test(row.value)));
 const wave6SingleAxisChoiceTransformation = game.getBaseRouteForgeChoiceTransformation(chassisOnlyChoice);
 assert.ok(!wave6SingleAxisChoiceTransformation.promise.includes("빈 보조칸"));
@@ -652,7 +654,7 @@ assert.ok(!chassisOnlyChoice.description.includes("Wave 9"));
 assert.ok(chassisOnlyChoice.description.includes("Wave 6"));
 assert.ok(!chassisOnlyChoice.description.includes("Wave 8"));
 assert.ok(!chassisOnlyChoice.description.includes("support bay"));
-assert.ok(chassisOnlyChoice.description.includes("버팀선"));
+assert.ok(chassisOnlyChoice.description.includes("Citadel Spindle"));
 const chassisBranchBuild = game.createInitialBuild("rail_zeal");
 chassisBranchBuild.architectureForecastId = "storm_artillery";
 game.applyForgeChoice(
@@ -1722,6 +1724,9 @@ const kilnBastionWave6Choices = game.buildWave6ChassisBreakpointChoices(
 assert.equal(kilnBastionWave6Choices[0]?.systemChoice?.systemId, "kiln_sentry");
 assert.equal(kilnBastionWave6Choices[1]?.systemChoice?.systemId, "aegis_halo");
 assert.equal(kilnBastionWave6Choices[2]?.action, "field_greed");
+assert.equal(kilnBastionWave6Choices[0]?.chassisId, "vector_thrusters");
+assert.equal(kilnBastionWave6Choices[1]?.chassisId, "bulwark_treads");
+assert.equal(kilnBastionWave6Choices[2]?.chassisId, "salvage_winch");
 const kilnWave6Spotlight = game.getBaseRouteForgeSpotlightSummary({
   choice: kilnBastionWave6Choices[1],
 });
@@ -2011,21 +2016,27 @@ assert.equal(wave6OffenseChoice.singleAxisBreakpoint, true);
 assert.equal(wave6OffenseChoice.systemChoice?.systemId, "seeker_array");
 assert.equal(wave6OffenseChoice.contractLabel, "주력");
 const wave6OffenseTransform = game.getBaseRouteForgeChoiceTransformation(wave6OffenseChoice);
-assert.equal(wave6OffenseTransform.cardTitle, "Seeker Array");
+assert.equal(wave6OffenseTransform.cardTitle, "Crownsplitter Array");
 assert.ok(wave6OffenseTransform.previewLabel.length > 0);
-assert.ok(/추적 랙|자동/.test(wave6OffenseTransform.promise));
-assert.ok(/다음 전투|열린 lane|외곽/.test(wave6OffenseTransform.proof));
-assert.ok(wave6OffenseTransform.accent.includes("추적 랙"));
+assert.equal(wave6OffenseTransform.previewValue, "Crownsplitter Array");
+assert.ok(/Crownsplitter Array|Anvil Prism|split wing|seed|lattice|breach/i.test(wave6OffenseTransform.promise));
+assert.ok(/Wave 6-8|열린 lan|외곽/.test(wave6OffenseTransform.proof));
+assert.ok(wave6OffenseTransform.accent.includes("Split-Wing Chassis"));
 assert.ok(!/proof|support 없이도/i.test(wave6OffenseTransform.proof));
 const wave6DefenseChoice = recurringWave6Choices.find((choice) => choice.contractRole === "rider");
 assert.ok(wave6DefenseChoice);
 assert.equal(wave6DefenseChoice.action, "bastion_bay_forge");
 assert.equal(wave6DefenseChoice.contractLabel, "버팀");
 assert.equal(wave6DefenseChoice.systemChoice?.systemId, "ember_ring");
+const wave6DefenseTransform = game.getBaseRouteForgeChoiceTransformation(wave6DefenseChoice);
+assert.equal(wave6DefenseTransform.cardTitle, "Citadel Spindle");
+assert.equal(wave6DefenseTransform.previewValue, "Citadel Spindle");
 const wave6GreedChoice = recurringWave6Choices.find((choice) => choice.contractRole === "gamble");
 assert.ok(wave6GreedChoice);
 assert.equal(wave6GreedChoice.action, "field_greed");
 assert.equal(wave6GreedChoice.contractLabel, "판돈");
+const wave6GreedTransform = game.getBaseRouteForgeChoiceTransformation(wave6GreedChoice);
+assert.equal(wave6GreedTransform.previewValue, "Towchain Reaver");
 const wave6HeadlineMarkup = game.createBaseRouteForgeHeadlineCardMarkup({
   choice: wave6OffenseChoice,
   index: 0,
@@ -2067,7 +2078,7 @@ assert.ok(
 );
 assert.ok(!wave6ForgeContextMarkup.includes("설치 · Ember Ring"));
 assert.ok(!wave6ForgeContextMarkup.includes("contract-shell"));
-assert.ok(wave6HeadlineMarkup.includes("Seeker Array"));
+assert.ok(wave6HeadlineMarkup.includes("Crownsplitter Array"));
 assert.ok(!wave6HeadlineMarkup.includes(game.getBaseRouteForgeChoiceTransformation(wave6DefenseChoice).proof));
 const crownfireBuild = game.createInitialBuild("rail_zeal");
 const crownfireWave5Choices = game.buildForgeChoices(crownfireBuild, () => 0.1, 999, {
@@ -3034,7 +3045,7 @@ assert.equal(siegePactChoice.debtWaves, 3);
 assert.match(siegePactChoice.description, /Siege Debt/);
 const wave6ChassisPackages = game.buildWave6ChassisBreakpointChoices(systemsForgeBuild, () => 0, 6);
 assert.equal(wave6ChassisPackages.length, 3);
-assert.equal(wave6ChassisPackages[0]?.chassisId, "salvage_winch");
+assert.equal(wave6ChassisPackages[0]?.chassisId, "vector_thrusters");
 assert.equal(wave6ChassisPackages[0]?.bayUnlock, false);
 assert.equal(wave6ChassisPackages[0]?.systemChoice?.systemTier, 1);
 assert.ok(wave6ChassisPackages[0]?.singleAxisBreakpoint);
@@ -3059,11 +3070,11 @@ const chassisRun = {
   player: { hp: 100, maxHp: 100, heat: 0, overheated: false },
 };
 chassisRun.build.bastionDoctrineId = "kiln_bastion";
-const featuredChassisChoice = wave6ChassisPackages.find((choice) => choice.chassisId === "salvage_winch");
+const featuredChassisChoice = wave6ChassisPackages.find((choice) => choice.action === "bastion_bay_forge");
 const greedChassisChoice = wave6ChassisPackages.find((choice) => choice.action === "field_greed");
 assert.ok(featuredChassisChoice);
 assert.ok(greedChassisChoice);
-assert.match(greedChassisChoice?.description || "", /금고 습격 프레임/);
+assert.match(greedChassisChoice?.description || "", /Towchain Reaver/);
 const wave6AscensionRun = {
   build: game.createInitialBuild("scrap_pact"),
   resources: { scrap: 0 },
@@ -3107,33 +3118,37 @@ assert.ok(
 const featuredWave6Proof = game.resolveWaveConfig(5, chassisRun.build);
 const featuredWave7Proof = game.resolveWaveConfig(6, chassisRun.build);
 const baseWave7Proof = game.resolveWaveConfig(6, game.createInitialBuild("scrap_pact"));
-assert.equal(featuredWave6Proof.chassisProof?.label, "Towchain Sweep");
-assert.equal(featuredWave7Proof.chassisProof?.label, "Towchain Reset");
-assert.match(featuredWave6Proof.directive, /relay|route|drop/);
+assert.equal(featuredWave6Proof.chassisProof?.label, "Slipstream Breach");
+assert.equal(featuredWave7Proof.chassisProof?.label, "Slipstream Pursuit");
+assert.match(featuredWave6Proof.directive, /relay|lane|breach/);
 assert.equal(featuredWave7Proof.hazard?.targetingProfile, "support_showcase");
 assert.ok(featuredWave7Proof.hazard?.driftSpeed <= baseWave7Proof.hazard?.driftSpeed);
 const bulwarkProofBuild = game.createInitialBuild("scrap_pact");
 bulwarkProofBuild.bastionDoctrineId = "storm_artillery";
-const bulwarkFeaturedChoice = game.buildWave6ChassisBreakpointChoices(bulwarkProofBuild, () => 0, 6)[0];
+const bulwarkFeaturedChoice = game
+  .buildWave6ChassisBreakpointChoices(bulwarkProofBuild, () => 0, 6)
+  .find((choice) => choice.chassisId === "bulwark_treads");
 game.applyForgeChoice(
   { build: bulwarkProofBuild, resources: { scrap: 0 }, stats: {}, player: null },
   bulwarkFeaturedChoice
 );
 const bulwarkWave7Proof = game.resolveWaveConfig(6, bulwarkProofBuild);
 assert.equal(bulwarkWave7Proof.chassisProof?.label, "Bulwark Refuge");
-assert.match(bulwarkWave7Proof.directive, /미사일|flank|교차선/);
+assert.match(bulwarkWave7Proof.directive, /절단 고리|재진입|seam/);
 assert.ok(bulwarkWave7Proof.hazard?.driftSpeed > 0);
 const salvageProofBuild = game.createInitialBuild("scrap_pact");
 salvageProofBuild.bastionDoctrineId = "kiln_bastion";
-const salvageFeaturedChoice = game.buildWave6ChassisBreakpointChoices(salvageProofBuild, () => 0, 6)[0];
+const salvageFeaturedChoice = game
+  .buildWave6ChassisBreakpointChoices(salvageProofBuild, () => 0, 6)
+  .find((choice) => choice.action === "field_greed");
 game.applyForgeChoice(
   { build: salvageProofBuild, resources: { scrap: 0 }, stats: {}, player: null },
   salvageFeaturedChoice
 );
 const salvageWave6Proof = game.resolveWaveConfig(5, salvageProofBuild);
-const baseWave6Proof = game.resolveWaveConfig(5, game.createInitialBuild("scrap_pact"));
-assert.equal(salvageWave6Proof.chassisProof?.label, "Towchain Sweep");
-assert.ok(salvageWave6Proof.driveGainFactor > baseWave6Proof.driveGainFactor);
+assert.equal(salvageWave6Proof.chassisProof, undefined);
+assert.equal(salvageProofBuild.lateFieldConvergenceId, "towchain_reaver");
+assert.ok((salvageProofBuild.midrunGreedRouteUntilWave || 0) >= 8);
 salvageProofBuild.midrunGreedRouteUntilWave = 8;
 assert.equal(game.resolveWaveConfig(5, salvageProofBuild).chassisProof, undefined);
 const predatorCacheChoices = game.buildFieldGrantChoices(predatorBaitRun.build, () => 0, 10);
@@ -3919,7 +3934,7 @@ const artilleryAscensionChoice = game
 assert.ok(artilleryAscensionChoice);
 assert.ok(artilleryAscensionChoice.description.includes("Wave 6"));
 assert.ok(!artilleryAscensionChoice.description.includes("Wave 8"));
-assert.ok(artilleryAscensionChoice.description.includes("버팀선"));
+assert.ok(artilleryAscensionChoice.description.includes("Citadel Spindle"));
 assert.equal(artilleryAscensionChoice.systemChoice?.systemId, "ember_ring");
 assert.ok(!artilleryAscensionChoice.description.includes("contraband salvage"));
 game.applyForgeChoice(

@@ -7680,6 +7680,7 @@
       const supportPayoff = choice.systemChoice
         ? getSupportSystemInstalledPayoff(choice.systemChoice.systemId, choice.systemChoice.systemTier)
         : null;
+      const packageSpotlight = getWave6BranchPackageSpotlight(choice);
       if (CONSOLIDATED_12_WAVE_ROUTE && choice.systemChoice) {
         return [
           {
@@ -7690,6 +7691,14 @@
             label: supportPayoff?.label || supportIdentity?.payoffLabel || "보조",
             value: choice.systemChoice.title,
           },
+          ...(packageSpotlight
+            ? [
+                {
+                  label: packageSpotlight.label,
+                  value: packageSpotlight.value,
+                },
+              ]
+            : []),
           {
             label: "즉시 변화",
             value:
@@ -7776,12 +7785,21 @@
       ];
     }
     if (choice.type === "utility" && choice.action === "field_greed" && choice.chassisTitle) {
+      const packageSpotlight = getWave6BranchPackageSpotlight(choice);
       return [
         { label: "형태", value: choice.chassisTitle },
         {
           label: "판돈",
           value: `고철 +${Math.max(0, choice.scrapGain || 0)} · 회수 +${Math.round((choice.scrapMultiplierGain || 0) * 100)}%`,
         },
+        ...(packageSpotlight
+          ? [
+              {
+                label: packageSpotlight.label,
+                value: packageSpotlight.value,
+              },
+            ]
+          : []),
         {
           label: "압박",
           value: `${Math.max(1, choice.debtWaves || 1)}웨이브 압박 빚`,
@@ -10411,6 +10429,7 @@
   function getBaseRouteForgeChoiceTransformation(choice, build = null) {
     const baseTransformation = getForgeChoiceTransformation(choice);
     const wave8SupportPayoff = getBaseRouteWave8SupportPayoffSummary(choice, build);
+    const wave6PackageSpotlight = getWave6BranchPackageSpotlight(choice);
     const supportInstallSpotlight =
       choice &&
       choice.type === "utility" &&
@@ -10434,18 +10453,24 @@
         : contractRole === "gamble"
           ? "greed"
           : baseTransformation.tone;
-    const previewLabel = supportInstallSpotlight
+    const previewLabel = wave6PackageSpotlight
+      ? wave6PackageSpotlight.label
+      : supportInstallSpotlight
       ? supportInstallSpotlight.hudLabel
       : lateBreakSupportSpotlight
         ? lateBreakSupportSpotlight.hudLabel
       : getBaseRouteForgePreviewLabel(choice, previewRow, tone);
-    const previewValue = supportInstallSpotlight
+    const previewValue = wave6PackageSpotlight
+      ? wave6PackageSpotlight.value
+      : supportInstallSpotlight
       ? supportInstallSpotlight.hudValue
       : lateBreakSupportSpotlight
         ? lateBreakSupportSummary.title
       : getBaseRouteForgePreviewValue(choice, previewRow, tone);
     const rawPromise =
-      supportInstallSpotlight
+      wave6PackageSpotlight && descriptionLines[0] && !BASE_ROUTE_FORGE_ADMIN_LEAK_PATTERN.test(descriptionLines[0])
+        ? descriptionLines[0]
+        : supportInstallSpotlight
         ? supportInstallSpotlight.promise
         : lateBreakSupportSpotlight && choice.lateBreakProfileId === "mutation"
           ? `${lateBreakSupportSummary.title}가 먼저 열린 seam을 붙들고 cataclysm fan이 바깥 lane 둘을 같이 찢는다.`
@@ -10462,7 +10487,9 @@
           : `${previewValue}로 주력 실루엣을 바로 바꾼다.`;
     const fallbackProof = getBaseRouteForgeFallbackProof(choice, tone, previewValue);
     const proof =
-      supportInstallSpotlight
+      wave6PackageSpotlight && descriptionLines[1] && !BASE_ROUTE_FORGE_ADMIN_LEAK_PATTERN.test(descriptionLines[1])
+        ? descriptionLines[1]
+        : supportInstallSpotlight
         ? supportInstallSpotlight.proof
         : lateBreakSupportSpotlight
           ? getBaseRouteWave8ClosureCopy(choice.lateBreakProfileId, build).proof
@@ -10480,7 +10507,9 @@
       promise,
       wave8SupportPayoff,
       proof: trimInspectNote(localizeBaseRouteForgeText(proof), fallbackProof),
-      cardTitle: supportInstallSpotlight
+      cardTitle: wave6PackageSpotlight
+        ? wave6PackageSpotlight.cardTitle
+        : supportInstallSpotlight
         ? choice.systemChoice?.title || supportInstallSpotlight.hudLabel
         : lateBreakSupportSpotlight
           ? choice && choice.title
@@ -10491,7 +10520,9 @@
           : baseTransformation.title,
       previewLabel,
       previewValue: localizeBaseRouteForgeText(previewValue),
-      accent: supportInstallSpotlight
+      accent: wave6PackageSpotlight
+        ? wave6PackageSpotlight.accent
+        : supportInstallSpotlight
         ? `${supportInstallSpotlight.hudLabel} · ${supportInstallSpotlight.hudValue}`
         : lateBreakSupportSpotlight
           ? `${lateBreakSupportSpotlight.hudLabel} · ${lateBreakSupportSummary.title}`
@@ -13946,6 +13977,53 @@
     };
   }
 
+  function getWave6RouteAscensionId(build) {
+    if (!build || !build.coreId) {
+      return "crownsplitter_array";
+    }
+    if (build.coreId === "scatter") {
+      return "slagburst_drive";
+    }
+    if (build.coreId === "lance") {
+      return "anvil_prism";
+    }
+    if (build.coreId === "ricochet") {
+      return "voltspine_lattice";
+    }
+    return "crownsplitter_array";
+  }
+
+  function getWave6BranchPackageSpotlight(choice) {
+    if (!choice) {
+      return null;
+    }
+    if (choice.lateAscensionId) {
+      const ascension = getLateAscensionDef(choice.lateAscensionId);
+      if (!ascension) {
+        return null;
+      }
+      return {
+        label: "형태",
+        value: ascension.title,
+        cardTitle: ascension.title,
+        accent: `${ascension.bodyLabel || ascension.title} · ${ascension.traitLabel}`,
+      };
+    }
+    if (choice.lateFieldConvergenceId) {
+      const convergence = getLateFieldConvergenceDef(choice.lateFieldConvergenceId);
+      if (!convergence) {
+        return null;
+      }
+      return {
+        label: choice.action === "field_greed" ? "보상" : "형태",
+        value: convergence.title,
+        cardTitle: convergence.title,
+        accent: `${convergence.title} · ${convergence.traitLabel}`,
+      };
+    }
+    return null;
+  }
+
   function createWave6ChassisInstallChoice({
     chassisDef,
     systemChoice,
@@ -13953,6 +14031,8 @@
     laneLabel = "대표 설치",
     forgeLaneLabel = laneLabel,
     wave6BranchRole = "support",
+    lateAscensionId = null,
+    lateFieldConvergenceId = null,
   }) {
     if (!chassisDef || !systemChoice) {
       return null;
@@ -13976,6 +14056,8 @@
       bayUnlock: false,
       singleAxisBreakpoint: CONSOLIDATED_12_WAVE_ROUTE,
       wave6BranchRole,
+      lateAscensionId,
+      lateFieldConvergenceId,
       systemChoice: {
         ...systemChoice,
         cost: 0,
@@ -13983,16 +14065,17 @@
     };
   }
 
-  function createWave6GreedFrameChoice(build, chassisDef, nextWave) {
+  function createWave6GreedFrameChoice(build, chassisDef, nextWave, lateFieldConvergenceId = null) {
     const greedChoice = createFieldGreedContractChoice(build, nextWave);
     if (!greedChoice || !chassisDef) {
       return null;
     }
+    const convergence = lateFieldConvergenceId ? getLateFieldConvergenceDef(lateFieldConvergenceId) : null;
     return {
       ...greedChoice,
       id: `utility:wave6_greed_frame:${chassisDef.id}:${nextWave}`,
       title: "Scrapline Raid Frame",
-      description: `${chassisDef.description} 이번 갈래는 ${chassisDef.title}를 금고 습격 프레임으로 묶어 고철 ${Math.max(0, greedChoice.scrapGain || 0)}과 회수 증폭을 바로 당긴다. 대신 다음 ${Math.max(1, greedChoice.debtWaves || 1)}웨이브는 압박 빚이 붙어 가장 거친 진입을 직접 버텨야 한다.`,
+      description: `이번 갈래는 ${convergence ? convergence.title : "raid fork package"}와 ${chassisDef.title}를 한 번에 묶어 payout lane을 긁는 tow fork 실루엣을 바로 켠다. 고철 ${Math.max(0, greedChoice.scrapGain || 0)}과 회수 증폭을 당기고, Wave 6-8은 회수선 자체가 전면 화망이 된다. ${chassisDef.description}`,
       slotText: `${chassisDef.title} · 고철 +${Math.max(0, greedChoice.scrapGain || 0)} · 회수 +${Math.round((greedChoice.scrapMultiplierGain || 0) * 100)}% · ${Math.max(1, greedChoice.debtWaves || 1)}웨이브 압박 빚`,
       laneLabel: "판돈 압박",
       forgeLaneLabel: "판돈 압박",
@@ -14000,6 +14083,7 @@
       chassisTitle: chassisDef.title,
       wave6GreedFrame: true,
       wave6BranchRole: "greed",
+      lateFieldConvergenceId,
     };
   }
 
@@ -17677,10 +17761,13 @@
       return [];
     }
     const doctrine = getBastionDoctrineDef(build);
-    const ascensionDef = doctrine ? WAVE6_ASCENSION_DEFS[doctrine.id] || null : null;
-    const featuredChassisDef =
-      (ascensionDef && getChassisBreakpointDef(ascensionDef.chassisId)) ||
-      CHASSIS_BREAKPOINT_DEFS.vector_thrusters;
+    const offenseChassisDef = CHASSIS_BREAKPOINT_DEFS.vector_thrusters;
+    const defenseChassisDef = CHASSIS_BREAKPOINT_DEFS.bulwark_treads;
+    const greedChassisDef = CHASSIS_BREAKPOINT_DEFS.salvage_winch;
+    const offenseAscensionId = getWave6RouteAscensionId(build);
+    const offenseAscension = getLateAscensionDef(offenseAscensionId);
+    const defenseConvergence = getLateFieldConvergenceDef("citadel_spindle");
+    const greedConvergence = getLateFieldConvergenceDef("towchain_reaver");
     const offenseSystemId = getDoctrinePrimarySupportSystemId(doctrine);
     const defenseSystemId =
       getDoctrineMidrunSupportSystemId(doctrine) ||
@@ -17698,28 +17785,37 @@
     if (offenseSystemChoice) {
       choices.push(
         createWave6ChassisInstallChoice({
-          chassisDef: featuredChassisDef,
+          chassisDef: offenseChassisDef,
           systemChoice: offenseSystemChoice,
-          description: `${featuredChassisDef.description} 이번 갈래는 ${offenseInstallSummary ? offenseInstallSummary.title : offenseSystemChoice.title}를 전면 화력용으로 바로 꽂아 ${offenseInstallSummary ? offenseInstallSummary.value : "새 공세선"}를 켠다. Wave 6-7은 이 실루엣으로 열린 lane을 먼저 길게 밀어붙인다.`,
+          description: `이번 갈래는 ${offenseAscension ? offenseAscension.title : "공세 endform"}와 ${offenseInstallSummary ? offenseInstallSummary.title : offenseSystemChoice.title}를 한 번에 꽂아 ${offenseInstallSummary ? offenseInstallSummary.value : "새 공세선"}를 전면에 붙인다. Wave 6-8은 split wing, seed, lattice, breach 실루엣 중 지금 코어에 맞는 한 형태가 바로 열린 lane을 길게 밀어붙인다. ${offenseChassisDef.description}`,
           laneLabel: "공세 설치",
           forgeLaneLabel: "공세 설치",
           wave6BranchRole: "offense",
+          lateAscensionId: offenseAscensionId,
         })
       );
     }
     if (defenseSystemChoice) {
       choices.push(
         createWave6ChassisInstallChoice({
-          chassisDef: featuredChassisDef,
+          chassisDef: defenseChassisDef,
           systemChoice: defenseSystemChoice,
-          description: `${featuredChassisDef.description} 이번 갈래는 ${defenseInstallSummary ? defenseInstallSummary.title : defenseSystemChoice.title}를 버팀선으로 바로 꽂아 ${defenseInstallSummary ? defenseInstallSummary.value : "새 방호선"}를 켠다. Wave 6-7은 복귀 pocket 하나를 더 오래 붙잡는 proof window가 된다.`,
+          description: `이번 갈래는 ${defenseConvergence ? defenseConvergence.title : "hold convergence"}와 ${defenseInstallSummary ? defenseInstallSummary.title : defenseSystemChoice.title}를 같이 고정해 ${defenseInstallSummary ? defenseInstallSummary.value : "새 방호선"}를 바로 켠다. Wave 6-8은 siege spindle과 복귀 보호선이 함께 붙어 refuge pocket 하나를 길게 버티는 실루엣이 된다. ${defenseChassisDef.description}`,
           laneLabel: "방호 설치",
           forgeLaneLabel: "방호 설치",
           wave6BranchRole: "defense",
+          lateFieldConvergenceId: defenseConvergence ? defenseConvergence.id : null,
         })
       );
     }
-    choices.push(createWave6GreedFrameChoice(build, featuredChassisDef, nextWave));
+    choices.push(
+      createWave6GreedFrameChoice(
+        build,
+        greedChassisDef,
+        nextWave,
+        greedConvergence ? greedConvergence.id : null
+      )
+    );
     return choices.filter(Boolean);
   }
 
@@ -18942,6 +19038,24 @@
           cost: 0,
         });
       }
+      if (choice.lateAscensionId && !run.build.lateAscensionId) {
+        applyForgeChoice(run, {
+          type: "utility",
+          action: "late_ascension",
+          lateAscensionId: choice.lateAscensionId,
+        });
+      }
+      if (choice.lateFieldConvergenceId && !run.build.lateFieldConvergenceId) {
+        applyForgeChoice(run, {
+          type: "utility",
+          action: "field_convergence",
+          lateFieldConvergenceId: choice.lateFieldConvergenceId,
+          title:
+            getLateFieldConvergenceDef(choice.lateFieldConvergenceId)?.title ||
+            choice.title ||
+            "Convergence Form",
+        });
+      }
       return choice;
     }
 
@@ -19241,6 +19355,17 @@
         }
         run.build.wave6ChassisBreakpoint = true;
         run.build.upgrades.push(`Raid Frame: ${choice.chassisTitle || choice.title || "Scrapline"}`);
+      }
+      if (choice.lateFieldConvergenceId && !run.build.lateFieldConvergenceId) {
+        applyForgeChoice(run, {
+          type: "utility",
+          action: "field_convergence",
+          lateFieldConvergenceId: choice.lateFieldConvergenceId,
+          title:
+            getLateFieldConvergenceDef(choice.lateFieldConvergenceId)?.title ||
+            choice.title ||
+            "Convergence Form",
+        });
       }
       if (run.resources) {
         run.resources.scrap += Math.max(0, choice.scrapGain || 0);
