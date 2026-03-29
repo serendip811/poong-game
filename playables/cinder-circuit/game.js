@@ -11238,8 +11238,16 @@
     const machineSummary = getBaseRoutePauseHeroSummary(activeState);
     return `
       <div class="pause-summary__hero">
-        ${createCurrentMachinePayoffMarkup(machineSummary)}
-        <p class="machine-payoff__note">${combatAsk}</p>
+        ${createBaseRouteForgeContextMarkup({
+          title: machineSummary?.machineValue || "",
+          eyebrow: machineSummary?.machineLabel || "현재 머신",
+          detail:
+            machineSummary && machineSummary.payoffValue
+              ? `${machineSummary.payoffLabel} · ${machineSummary.payoffValue}`
+              : "",
+          askLabel: "다음 전투",
+          askNote: combatAsk,
+        })}
       </div>
     `;
   }

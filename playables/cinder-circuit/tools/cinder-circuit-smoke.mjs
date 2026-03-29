@@ -929,8 +929,8 @@ const pauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   paused: true,
 });
 assert.ok(pauseSnapshotMarkup.includes("현재 머신"));
-assert.ok(pauseSnapshotMarkup.includes("다음 설치"));
-assert.ok(pauseSnapshotMarkup.includes("machine-payoff"));
+assert.ok(pauseSnapshotMarkup.includes("다음 설치 · Wave 6 지원 설치"));
+assert.ok(pauseSnapshotMarkup.includes("forge-context-spotlight"));
 assert.ok(!pauseSnapshotMarkup.includes("summary-head"));
 assert.ok(pauseSnapshotMarkup.includes("Wave 6 지원 설치"));
 assert.ok(!pauseSnapshotMarkup.includes("활성 판돈"));
@@ -948,9 +948,8 @@ const openingPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
 });
 assert.ok(openingPauseSnapshotMarkup.includes("현재 선체"));
 assert.ok(openingPauseSnapshotMarkup.includes("빈 선체"));
-assert.ok(openingPauseSnapshotMarkup.includes("첫 도약"));
-assert.ok(openingPauseSnapshotMarkup.includes("Wave 3 무기 방향"));
-assert.ok(openingPauseSnapshotMarkup.includes("machine-payoff"));
+assert.ok(openingPauseSnapshotMarkup.includes("첫 도약 · Wave 3 무기 방향"));
+assert.ok(openingPauseSnapshotMarkup.includes("forge-context-spotlight"));
 assert.ok(openingPauseSnapshotMarkup.includes("폭주 지형 없음."));
 assert.ok(!openingPauseSnapshotMarkup.includes("summary-head"));
 assert.ok(!openingPauseSnapshotMarkup.includes("pause-summary__lanes"));
@@ -965,11 +964,12 @@ const supportPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   phase: "combat",
   paused: true,
 });
-assert.ok(supportPauseSnapshotMarkup.includes("machine-payoff"));
+assert.ok(supportPauseSnapshotMarkup.includes("forge-context-spotlight"));
 assert.ok(supportPauseSnapshotMarkup.includes("설치"));
 assert.ok(supportPauseSnapshotMarkup.includes("현재 머신"));
 assert.ok(supportPauseSnapshotMarkup.includes("Aegis Halo"));
-assert.ok(supportPauseSnapshotMarkup.indexOf("현재 머신") < supportPauseSnapshotMarkup.indexOf("설치"));
+assert.ok(supportPauseSnapshotMarkup.includes("설치 · Aegis Halo"));
+assert.ok(supportPauseSnapshotMarkup.indexOf("현재 머신") < supportPauseSnapshotMarkup.indexOf("설치 · Aegis Halo"));
 assert.ok(supportPauseSnapshotMarkup.includes("같은 seam으로 바로 재진입한다."));
 assert.ok(!supportPauseSnapshotMarkup.includes("summary-head"));
 assert.ok(!supportPauseSnapshotMarkup.includes("활성 보조"));

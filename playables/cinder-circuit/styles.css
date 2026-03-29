@@ -1559,6 +1559,15 @@ body[data-overdrive="true"] .backdrop__glow--right {
   padding: 12px 14px 0;
 }
 
+.pause-summary__hero .forge-context-spotlight {
+  padding: 14px 14px 10px;
+}
+
+.pause-summary__hero .forge-context-spotlight:last-child {
+  border-bottom: 0;
+  padding-bottom: 14px;
+}
+
 .pause-summary__hero .route-contract__title {
   padding: 0 14px;
   max-width: none;
