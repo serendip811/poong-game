@@ -12,7 +12,7 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- Weakest gate is now `Builds`: shell readability improved enough that the bigger problem is payoff ceiling. The shipped 8-wave route still withholds too much of the game's best transformation fantasy in late-route/afterburn definitions.
-- Next useful critique should pressure self-contained run desire: `Wave 5` must lock a fantasy, not just an ask, and `Wave 6-8` should visibly cash out one larger offense, defense, or greed form worth rerunning for.
-- Current structural failure: the game previews synergy and spectacle better than it delivers them inside the shipped chapter, so the run reads like an introduction to stronger forms rather than a short action roguelite loop with its own memorable spikes.
-- Repeated false solutions: more HUD/copy thinning without stronger in-run payoffs, more quarantined late-route tech, or more branch naming that still leaves the shipped route with modest visual/functional transformation.
+- Weakest gate is now `Progression`: `Wave 6` improved, but the 8-wave route still behaves like one major spike followed by smaller support/admin follow-through.
+- Next useful critique should pressure the back half: `Wave 8` needs to be a branch-owned capstone mutation, not mostly proof language or a generic rider tier-up.
+- Current structural failure: offense, defense, and greed lock distinct midrun packages, then drift back toward shared support-system grammar instead of ending on clearly different run closers.
+- Repeated false solutions: more shell cleanup, more generic support tiers, or more proof/closure wording without adding a second real payoff beat inside the shipped chapter.

@@ -2135,8 +2135,21 @@ const crownfireWave8Choices = game.buildForgeChoices(crownfireBuild, () => 0.1, 
 const crownfireWave8Headline =
   crownfireWave8Choices.find((choice) => choice.contractRole === "headline") ||
   crownfireWave8Choices[0];
-assert.equal(crownfireWave8Headline.type, "evolution");
-assert.equal(crownfireWave8Headline.evolutionTier, 1);
+const crownfireWave8BranchId =
+  crownfireBuild.wave5FieldPathId ||
+  (Number.isFinite(crownfireBuild.midrunGreedRouteUntilWave) &&
+  crownfireBuild.midrunGreedRouteUntilWave >= 5
+    ? "greed"
+    : "offense");
+const crownfireExpectedWave8Title =
+  crownfireWave8BranchId === "greed"
+    ? "Black Ledger Heist"
+    : crownfireWave8BranchId === "defense"
+      ? "Warplate Halo"
+      : "Cataclysm Arsenal";
+assert.equal(crownfireWave8Headline.type, "utility");
+assert.equal(crownfireWave8Headline.title, crownfireExpectedWave8Title);
+assert.equal(crownfireWave8Headline.contractLabel, "완성");
 assert.equal(recurringWave3Choices.find((choice) => choice.contractRole === "gamble"), undefined);
 const actBreakCacheBuild = game.createInitialBuild("rail_zeal");
 const actBreakCacheChoices = game.getCombatCacheChoicesForWave(actBreakCacheBuild, 5, 12);
@@ -5210,6 +5223,56 @@ assert.equal(lateBreakDebt.stacks, 2);
 assert.ok(lateBreakDebt.enemySpeedMultiplier > 1);
 assert.ok(lateBreakDebt.hazardRateMultiplier > 1);
 assert.ok(lateBreakDebt.activeCapBonus >= 4);
+
+const makeWave8ClosureBuild = (pathId) => {
+  const build = game.createInitialBuild("scrap_pact");
+  build.pendingCores = [];
+  build.bastionDoctrineId = "kiln_bastion";
+  build.wave6ChassisBreakpoint = true;
+  build.wave5FieldPathId = pathId;
+  build.supportSystems = [{ id: "aegis_halo", tier: 1 }];
+  return build;
+};
+const offenseWave8Build = makeWave8ClosureBuild("offense");
+const offenseWave8Choices = game.buildForgeChoices(offenseWave8Build, () => 0, 999, {
+  nextWave: 8,
+  finalForge: false,
+});
+assert.equal(offenseWave8Choices.length, 2);
+assert.equal(offenseWave8Choices[0].contractLabel, "완성");
+assert.equal(offenseWave8Choices[0].title, "Cataclysm Arsenal");
+assert.ok(!offenseWave8Choices.some((choice) => choice.title === "Warplate Halo"));
+assert.ok(!offenseWave8Choices.some((choice) => choice.title === "Black Ledger Heist"));
+game.applyForgeChoice(
+  {
+    build: offenseWave8Build,
+    resources: { scrap: 0 },
+    stats: { scrapCollected: 0, scrapSpent: 0 },
+    player: { hp: 100, maxHp: 100, heat: 0, overheated: false },
+  },
+  offenseWave8Choices[0]
+);
+assert.equal(offenseWave8Build.lateBreakProfileId, "mutation");
+
+const defenseWave8Build = makeWave8ClosureBuild("defense");
+const defenseWave8Choices = game.buildForgeChoices(defenseWave8Build, () => 0, 999, {
+  nextWave: 8,
+  finalForge: false,
+});
+assert.equal(defenseWave8Choices[0].contractLabel, "완성");
+assert.equal(defenseWave8Choices[0].title, "Warplate Halo");
+assert.ok(!defenseWave8Choices.some((choice) => choice.title === "Cataclysm Arsenal"));
+assert.ok(!defenseWave8Choices.some((choice) => choice.title === "Black Ledger Heist"));
+
+const greedWave8Build = makeWave8ClosureBuild("greed");
+const greedWave8Choices = game.buildForgeChoices(greedWave8Build, () => 0, 999, {
+  nextWave: 8,
+  finalForge: false,
+});
+assert.equal(greedWave8Choices[0].contractLabel, "완성");
+assert.equal(greedWave8Choices[0].title, "Black Ledger Heist");
+assert.ok(!greedWave8Choices.some((choice) => choice.title === "Cataclysm Arsenal"));
+assert.ok(!greedWave8Choices.some((choice) => choice.title === "Warplate Halo"));
 
 console.log("cinder-circuit smoke ok");
 console.table(waveSummary);

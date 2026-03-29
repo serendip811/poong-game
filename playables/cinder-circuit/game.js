@@ -13993,6 +13993,38 @@
     return "crownsplitter_array";
   }
 
+  function isBaseRouteWave8ClosureWave(nextWave) {
+    return Boolean(
+      CONSOLIDATED_12_WAVE_ROUTE &&
+      Number.isFinite(nextWave) &&
+      nextWave === DEFAULT_ROUTE_WAVE_COUNT
+    );
+  }
+
+  function canOfferLateBreakClosureChoice(nextWave) {
+    return Boolean(
+      Number.isFinite(nextWave) &&
+      (nextWave >= LATE_BREAK_ARMORY_WAVE || isBaseRouteWave8ClosureWave(nextWave))
+    );
+  }
+
+  function getBaseRouteWave8CapstoneChoice(build, nextWave) {
+    if (!isBaseRouteWave8ClosureWave(nextWave) || !build) {
+      return null;
+    }
+    const branchSummary = getBaseRouteWave5FieldPathSummary(build, nextWave);
+    if (!branchSummary) {
+      return null;
+    }
+    if (branchSummary.id === "defense") {
+      return createLateBreakAegisChoice(build, nextWave);
+    }
+    if (branchSummary.id === "greed") {
+      return createLateBreakGreedContractChoice(build, nextWave);
+    }
+    return createLateBreakMutationChoice(build, nextWave);
+  }
+
   function getWave6BranchPackageSpotlight(choice) {
     if (!choice) {
       return null;
@@ -15236,6 +15268,9 @@
     const strictBaseRouteRiderContract =
       recurringBaseRouteContract &&
       nextWave === DEFAULT_ROUTE_WAVE_COUNT;
+    const forcedWave8CapstoneChoice = strictBaseRouteRiderContract
+      ? getBaseRouteWave8CapstoneChoice(build, nextWave)
+      : null;
     const allowWave8SupportPayoff =
       strictBaseRouteRiderContract &&
       build &&
@@ -15339,12 +15374,16 @@
       adaptiveRiderChoice.action === "bastion_bay_forge" &&
       adaptiveRiderChoice.systemChoice;
     const shouldPromoteSupportHeadline =
-      Boolean(promotedSupportHeadlineChoice) && !shouldHeadlineSupportInstall;
+      Boolean(promotedSupportHeadlineChoice) &&
+      !shouldHeadlineSupportInstall &&
+      !forcedWave8CapstoneChoice;
     const shouldKeepWave8SupportFork =
       strictBaseRouteRiderContract &&
       shouldPromoteSupportHeadline &&
       supportSystemChoices.length > 1;
-    const headlineChoice = shouldHeadlineSupportInstall
+    const headlineChoice = forcedWave8CapstoneChoice
+      ? forcedWave8CapstoneChoice
+      : shouldHeadlineSupportInstall
       ? adaptiveRiderChoice
       : shouldPromoteSupportHeadline
         ? promotedSupportHeadlineChoice
@@ -15358,7 +15397,11 @@
         : shouldPromoteSupportHeadline
         ? adaptiveHeadlineChoice || adaptiveRiderChoice
         : adaptiveRiderChoice;
-    const headlineLabel = shouldHeadlineSupportInstall || shouldPromoteSupportHeadline ? "설치" : "주력";
+    const headlineLabel = forcedWave8CapstoneChoice
+      ? "완성"
+      : shouldHeadlineSupportInstall || shouldPromoteSupportHeadline
+        ? "설치"
+        : "주력";
     const riderLabel = shouldHeadlineSupportInstall
       ? "버팀"
       : shouldKeepWave8SupportFork
@@ -16008,7 +16051,7 @@
   }
 
   function createLateBreakMutationChoice(build, nextWave) {
-    if (!build || !Number.isFinite(nextWave) || nextWave < LATE_BREAK_ARMORY_WAVE) {
+    if (!build || !canOfferLateBreakClosureChoice(nextWave)) {
       return null;
     }
     const nextLevel = Math.min(
@@ -16039,7 +16082,7 @@
   }
 
   function createLateBreakAegisChoice(build, nextWave) {
-    if (!build || !Number.isFinite(nextWave) || nextWave < LATE_BREAK_ARMORY_WAVE) {
+    if (!build || !canOfferLateBreakClosureChoice(nextWave)) {
       return null;
     }
     const nextLevel = Math.min(
@@ -16070,7 +16113,7 @@
   }
 
   function createLateBreakGreedContractChoice(build, nextWave) {
-    if (!build || !Number.isFinite(nextWave) || nextWave < LATE_BREAK_ARMORY_WAVE) {
+    if (!build || !canOfferLateBreakClosureChoice(nextWave)) {
       return null;
     }
     return {
@@ -23118,7 +23161,11 @@
       supportSpotlight ? supportSpotlight.feed : `${choice.tag} · ${choice.title} 적용.`,
       "FORGE"
     );
-    if (state.waveIndex + 2 === LATE_BREAK_ARMORY_WAVE && choice.lateBreakProfileId) {
+    if (
+      choice.lateBreakProfileId &&
+      (state.waveIndex + 2 === LATE_BREAK_ARMORY_WAVE ||
+        (CONSOLIDATED_12_WAVE_ROUTE && state.waveIndex + 2 === DEFAULT_ROUTE_WAVE_COUNT))
+    ) {
       const supportSummary = getBaseRouteLateBreakSupportSummary(state.build);
       pushCombatFeed(
         choice.lateBreakProfileId === "mutation"
