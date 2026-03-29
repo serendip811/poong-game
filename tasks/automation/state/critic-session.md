@@ -12,7 +12,7 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The loop is currently cycling on one unresolved problem: support breadth exists, but the shipped route still fails to deliver one clean `Wave 6-8` support ownership chapter without rescue logic, so new systems are low-value until that lands.
-- Fragile gate to push next is `Rewards`: forge/pause/HUD must read like one featured install plus one combat promise, not `proof / rider / roadmap / current machine` administration. Treat any of that shipped-facing shell, plus `mission board / signature / Wave 9-12 / Afterburn / black-site` framing, as drift.
-- Keep judging against `Hades`, `Nova Drift`, and `Brotato`: less text, clearer hierarchy, stronger object desire, and real onscreen payoff. The opener must stay quieter and visually incomplete enough that `Wave 6` still feels like the first true mutation.
-- Repeated false solutions: trimming wording without deleting the shell, adding more support branches or wildcard unlocks, or trying to prove future `20-30 wave` ambition before the first scalable chapter pattern is fun.
+- The loop is still blocked on the same chapter problem: support breadth already exists, but the shipped route still does not present `Wave 6-8` as one clean support-ownership chapter with immediate payoff, so new systems remain low-value.
+- Fragile gate to push next is `UX/UI`: shipped forge/status/HUD should collapse to `current loadout -> featured install -> combat ask`. Treat `proof / rider / 12-wave spine / current machine / roadmap` grammar as the current admin shell to delete, not trim.
+- Keep judging against `Hades`, `Nova Drift`, and `Brotato`: object-first reward reads, almost no route explanation, and a quieter opener that stays visually incomplete until `Wave 6` changes the silhouette.
+- Repeated false solutions: shortening copy without deleting the shell, keeping `mission board / signature / Wave 9-12 / Afterburn / black-site` framing alive in shipped-facing paths, or adding later-wave ambition before the first chapter is fun and legible.

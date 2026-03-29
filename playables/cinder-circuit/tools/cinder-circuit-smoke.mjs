@@ -1804,26 +1804,34 @@ const wave6HeadlineMarkup = game.createBaseRouteForgeHeadlineCardMarkup({
   kind: wave6DefenseChoice.action || wave6DefenseChoice.type || "choice",
   contractLabel: wave6DefenseChoice.contractLabel,
   transformation: wave6DefenseTransform,
+  combatAsk: game.getBaseRouteForgeChoiceCombatAsk(wave6DefenseChoice, 6),
   slotLabel: "무료",
   disabled: false,
 });
-assert.ok(!wave6HeadlineMarkup.includes("forge-card__proof"));
+assert.ok(wave6HeadlineMarkup.includes("forge-card__proof--ask"));
 assert.ok(wave6HeadlineMarkup.includes("forge-card__spotlight"));
 assert.ok(wave6HeadlineMarkup.includes(wave6DefenseTransform.previewLabel));
 assert.ok(wave6HeadlineMarkup.includes(wave6DefenseTransform.previewValue));
+assert.ok(wave6HeadlineMarkup.includes("전투 요청"));
+assert.ok(!wave6HeadlineMarkup.includes("다음 전투"));
 const wave6ForgeContextMarkup = game.createBaseRouteForgeContextMarkup({
   title: "Ember Ring",
   currentLoadoutLabel: "현재 머신",
   currentLoadoutValue: "Twin Spine",
+  featuredInstallLabel: "대표 설치",
+  featuredInstallValue: "Ember Ring",
+  askLabel: "전투 요청",
   askNote: game.getBaseRouteForgeChoiceCombatAsk(wave6DefenseChoice, 6),
 });
 assert.ok(wave6ForgeContextMarkup.includes("forge-context-spotlight__note"));
 assert.ok(wave6ForgeContextMarkup.includes("Ember Ring"));
 assert.ok(wave6ForgeContextMarkup.includes("Twin Spine"));
 assert.ok(wave6ForgeContextMarkup.includes("현재 머신"));
+assert.ok(wave6ForgeContextMarkup.includes("대표 설치"));
+assert.ok(wave6ForgeContextMarkup.includes("전투 요청"));
 assert.ok(wave6ForgeContextMarkup.includes("고리가 긁은 입구로 짧게 파고든다."));
 assert.ok(wave6ForgeContextMarkup.indexOf("Twin Spine") < wave6ForgeContextMarkup.indexOf("Ember Ring"));
-assert.ok(!wave6ForgeContextMarkup.includes("다음 전투"));
+assert.ok(!wave6ForgeContextMarkup.includes("설치 · Ember Ring"));
 assert.ok(!wave6ForgeContextMarkup.includes("contract-shell"));
 assert.ok(wave6HeadlineMarkup.includes("Ember Ring"));
 assert.ok(!wave6HeadlineMarkup.includes(wave6DefenseTransform.proof));

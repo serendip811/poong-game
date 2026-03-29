@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop adding route wrappers and prove one honest `Wave 6-8` support ownership chapter with a quiet forge/status read, two clean payoff fights, and no wildcard or bailout rescue.
+- Immediate priority: strip shipped-facing `12-wave/proof/rider/current machine` shell out of forge/status/HUD reads and prove one honest `Wave 6-8` support ownership chapter with two clean payoff fights and no wildcard or bailout rescue.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 17:05:00 KST
+  Findings:
+  - The forge is still reading like route administration instead of a reward hit. In `renderForgeOverlay()` the player is still being routed through `proofWindow`, `riderStep`, `12-wave spine`, and `current loadout/current machine` framing before the install fantasy lands, which is far denser than the object-first snap strong references use for boon/shop/upgrade moments.
+  - The game keeps saying `Wave 6` is the support chapter, but the surrounding UI language still treats that moment as a checkpoint inside a longer plan. `enterBastionDraft()` and related forge copy keep talking about what the install will prove later rather than just showing a bigger silhouette and one immediate combat behavior to try now.
+  - Drift is still alive in both docs and code. The design doc still preserves `mission board` framing, the source-application doc still normalizes `run-start signature` and `Wave 9-12`, and live copy still contains `Late Break cadence`/`Afterburn` scaffolding. That keeps contaminating the shipped slice with future-act grammar when the current red flags say the opener and status surfaces are already too wordy.
+  - This also weakens long-run ambition instead of supporting it. A real `20-30 wave` future needs chapter clarity, not more chapter names; if the first support chapter still cannot read as `loadout -> install -> arena ask`, then adding later brackets will only multiply confusion.
+  Top Priority: Recut every shipped-facing forge/status/HUD read so `Wave 6` shows only `current loadout`, `one featured install silhouette`, and `one combat ask`, while all `proof/rider/12-wave/Late Break/Afterburn` language is removed from the 8-wave path.
+  Why Now: Until the reward moment becomes instantly desirable and legible, the support chapter cannot create the build hunger the run depends on.
+  Do Not Repeat: Do not answer this with copy shortening on the same `proof/current machine/rider` shell.
+  Release Gate: UX/UI
 
 - 2026-03-29 16:45:00 KST
   Findings:
@@ -4543,6 +4554,18 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-29 19:25:00 KST
+  Changed:
+  - Recut the shipped compact forge header in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `renderForgeOverlay()` and `createBaseRouteForgeContextMarkup(...)` now force one object-first stack at `Wave 6-8`: `현재 머신 -> 대표 설치 -> 전투 요청`. The old inline `설치 · ...` subline is gone, and the combat prompt is now its own labeled row instead of reading like leftover route helper text.
+  - Updated the shipped base-route forge cards in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so both `createBaseRouteForgeHeadlineCardMarkup(...)` and `createBaseRouteForgeCompactCardMarkup(...)` surface a compact `전투 요청` strip per card. This keeps the player reading one silhouette and one immediate arena behavior instead of the older `proof/rider` grammar.
+  - Tuned the shipped forge styling in [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) and refreshed [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so smoke locks the new hierarchy and wording, then re-ran the existing smoke test.
+  Why:
+  - The latest critique's `Top Priority` was to make shipped forge/status/HUD reads show only current loadout, one featured install silhouette, and one combat ask. The highest-value bounded interpretation was to rebuild the `Wave 6` forge read order itself, using the object-first snap of `Hades` boon screens and `Nova Drift` upgrade cards as the reference direction, rather than doing another copy-trim pass on the same hidden `proof/rider` shell.
+  Follow-up Risk:
+  - The forge now reads faster, but the installed/fallback side cards still depend on small descriptive copy to communicate tradeoffs. If critique next says the reward moment is cleaner but the fallback lacks enough desire or clarity, the next bounded pass should differentiate that fallback through stronger silhouette or risk/payoff presentation, not by restoring route-admin labels.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: UX/UI
 
 - 2026-03-29 19:05:00 KST
   Changed:

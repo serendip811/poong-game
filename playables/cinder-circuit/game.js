@@ -10473,6 +10473,17 @@
     return `<p class="forge-card__proof forge-card__proof--compact"><span>다음 전투</span>${proof}</p>`;
   }
 
+  function createBaseRouteForgeAskMarkup(askLabel, askText) {
+    if (!askText) {
+      return "";
+    }
+    return `
+      <p class="forge-card__proof forge-card__proof--compact forge-card__proof--ask">
+        <span>${askLabel || "전투 요청"}</span>${askText}
+      </p>
+    `;
+  }
+
   function createBaseRouteForgeBillMarkup(slotLabel) {
     return `<span class="forge-card__slot">${slotLabel}</span>`;
   }
@@ -10810,6 +10821,7 @@
     kind,
     contractLabel,
     transformation,
+    combatAsk,
     slotLabel,
     disabled,
   }) {
@@ -10827,6 +10839,7 @@
         <h3>${transformation.cardTitle || choice.title}</h3>
         <p class="forge-card__hero-copy">${transformation.promise}</p>
         ${createBaseRouteForgePreviewMarkup(transformation.previewLabel, transformation.previewValue)}
+        ${createBaseRouteForgeAskMarkup("전투 요청", combatAsk)}
         ${createBaseRouteForgeBillMarkup(slotLabel)}
       </button>
     `;
@@ -10838,6 +10851,7 @@
     kind,
     contractLabel,
     transformation,
+    combatAsk,
     slotLabel,
     disabled,
   }) {
@@ -10855,6 +10869,7 @@
         ${createBaseRouteForgeSpotlightMarkup(transformation.previewLabel, transformation.previewValue)}
         <h3>${transformation.cardTitle || choice.title}</h3>
         <p class="forge-card__hero-copy">${transformation.promise}</p>
+        ${createBaseRouteForgeAskMarkup("전투 요청", combatAsk)}
         ${createBaseRouteForgeBillMarkup(slotLabel)}
       </button>
     `;
@@ -11006,23 +11021,36 @@
     title = "",
     currentLoadoutLabel = "현재 머신",
     currentLoadoutValue = "",
+    featuredInstallLabel = "대표 설치",
+    featuredInstallValue = "",
+    askLabel = "전투 요청",
     askNote = "",
   }) {
     const machineValue = currentLoadoutValue || title || "-";
-    const spotlightValue = title && title !== machineValue ? title : "";
+    const spotlightValue = featuredInstallValue || (title && title !== machineValue ? title : "");
     return `
       <div class="forge-context-spotlight">
         <span class="forge-context-spotlight__eyebrow">${currentLoadoutLabel}</span>
         <strong class="forge-context-spotlight__value">${machineValue}</strong>
-        ${
-          spotlightValue
-            ? `<span class="forge-context-spotlight__subvalue">설치 · ${spotlightValue}</span>`
-            : ""
-        }
       </div>
       ${
+        spotlightValue
+          ? `
+            <div class="forge-context-spotlight forge-context-spotlight--subline">
+              <span class="forge-context-spotlight__eyebrow">${featuredInstallLabel}</span>
+              <strong class="forge-context-spotlight__value forge-context-spotlight__value--subtle">${spotlightValue}</strong>
+            </div>
+          `
+          : ""
+      }
+      ${
         askNote
-          ? `<p class="forge-context-spotlight__note">${askNote}</p>`
+          ? `
+            <div class="forge-context-spotlight forge-context-spotlight--subline">
+              <span class="forge-context-spotlight__eyebrow">${askLabel}</span>
+              <p class="forge-context-spotlight__note">${askNote}</p>
+            </div>
+          `
           : ""
       }
     `;
@@ -25804,11 +25832,11 @@
             title:
               dominantInstallHero?.title ||
               (spotlightChoice ? spotlightChoice.title || forgeSpotlightSummary.titleValue : dominantFormSummary.label),
-            currentLoadoutLabel:
-              dominantInstallHero?.currentLoadoutLabel || forgeSpotlightSummary.titleLabel || "현재 머신",
-            currentLoadoutValue:
-              dominantInstallHero?.currentFormLabel ||
-              (dominantInstallHero ? "" : forgeSpotlightSummary.titleValue),
+            currentLoadoutLabel: dominantInstallHero?.currentLoadoutLabel || "현재 머신",
+            currentLoadoutValue: dominantInstallHero?.currentFormLabel || dominantFormSummary.label || "",
+            featuredInstallLabel: dominantInstallHero ? "대표 설치" : forgeSpotlightSummary.titleLabel || "대표 설치",
+            featuredInstallValue: dominantInstallHero?.title || forgeSpotlightSummary.titleValue || "",
+            askLabel: "전투 요청",
             askNote:
               dominantInstallHero?.askNote ||
               (spotlightChoice
@@ -25889,20 +25917,28 @@
                 index,
                 kind,
                 contractLabel,
-                transformation,
-                slotLabel,
-                disabled: state.resources.scrap < choice.cost,
-              });
-            }
-            return createBaseRouteForgeHeadlineCardMarkup({
-              choice,
-              index,
-              kind,
-              contractLabel,
               transformation,
+              combatAsk: trimForgeCombatAsk(
+                getBaseRouteForgeChoiceCombatAsk(choice, state.waveIndex + 2),
+                forgeCombatAsk
+              ),
               slotLabel,
               disabled: state.resources.scrap < choice.cost,
             });
+          }
+          return createBaseRouteForgeHeadlineCardMarkup({
+              choice,
+              index,
+              kind,
+            contractLabel,
+            transformation,
+            combatAsk: trimForgeCombatAsk(
+              getBaseRouteForgeChoiceCombatAsk(choice, state.waveIndex + 2),
+              forgeCombatAsk
+            ),
+            slotLabel,
+            disabled: state.resources.scrap < choice.cost,
+          });
           }
           const isFeaturedHeadline = !riderStep && index === featuredIndex;
           if (riderStep) {

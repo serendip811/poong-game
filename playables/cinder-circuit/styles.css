@@ -1687,6 +1687,10 @@ body[data-overdrive="true"] .backdrop__glow--right {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.forge-context-spotlight--subline {
+  padding-top: 8px;
+}
+
 .forge-context-spotlight__eyebrow {
   color: #ffd4b3;
   font-size: 0.68rem;
@@ -1699,14 +1703,13 @@ body[data-overdrive="true"] .backdrop__glow--right {
   font-size: clamp(1rem, 2vw, 1.2rem);
 }
 
-.forge-context-spotlight__subvalue {
-  color: var(--muted);
-  font-size: 0.78rem;
-  line-height: 1.4;
+.forge-context-spotlight__value--subtle {
+  font-size: 0.92rem;
+  color: #ffe7d1;
 }
 
 .forge-context-spotlight__note {
-  margin: 10px 0 0;
+  margin: 0;
   color: var(--muted-strong);
   font-size: 0.82rem;
   line-height: 1.42;
@@ -2475,6 +2478,10 @@ body[data-overdrive="true"] .backdrop__glow--right {
   margin-top: 2px;
   padding: 8px 10px;
   font-size: 0.8rem;
+}
+
+.forge-card__proof--ask {
+  margin-top: 8px;
 }
 
 .forge-card__proof--compact span {
