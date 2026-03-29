@@ -12835,6 +12835,40 @@
     return 160 + doctrineScore + costScore;
   }
 
+  function scoreBaseRouteSupportHeadlineChoice(choice, build, nextWave) {
+    if (!choice || choice.type !== "system") {
+      return -1;
+    }
+    const installedSystems = getInstalledSupportSystems(build);
+    const installedEntry = installedSystems.find((entry) => entry.id === choice.systemId) || null;
+    const doctrine = getBastionDoctrineDef(build);
+    const doctrineSupportId =
+      getDoctrineMidrunSupportSystemId(doctrine) || getDoctrinePrimarySupportSystemId(doctrine);
+    const spectacleBonus =
+      choice.systemId === "seeker_array"
+        ? 64
+        : choice.systemId === "volt_drones"
+          ? 58
+          : choice.systemId === "aegis_halo"
+            ? 52
+            : choice.systemId === "kiln_sentry"
+              ? 46
+              : 42;
+    const upgradeBonus = choice.bayAction === "upgrade" ? 260 : 0;
+    const installedBonus = installedEntry ? 180 : 0;
+    const doctrineBonus = doctrineSupportId === choice.systemId ? 96 : 0;
+    const latePayoffBonus = nextWave === DEFAULT_ROUTE_WAVE_COUNT ? 80 : 0;
+    return (
+      1320 +
+      spectacleBonus +
+      upgradeBonus +
+      installedBonus +
+      doctrineBonus +
+      latePayoffBonus +
+      (choice.systemTier || 1) * 34
+    );
+  }
+
   function createModChoice(modId) {
     const mod = MOD_DEFS[modId];
     return {
@@ -14367,6 +14401,19 @@
       nextWave >= 1 &&
       nextWave <= DEFAULT_ROUTE_WAVE_COUNT &&
       !openSecondaryBranch;
+    const shouldHeadlineSupportPayoff =
+      strictBaseRouteRiderContract &&
+      build &&
+      getInstalledSupportSystems(build).length > 0 &&
+      supportSystemChoices.length > 0;
+    const promotedSupportHeadlineChoice = shouldHeadlineSupportPayoff
+      ? takeBestScoredChoice(
+          supportSystemChoices,
+          takenIds,
+          "지원 설치",
+          (choice) => scoreBaseRouteSupportHeadlineChoice(choice, build, nextWave)
+        )
+      : null;
     const adaptiveHeadlineChoice =
       recurringBaseRouteContract && nextWave < LATE_BREAK_ARMORY_WAVE
         ? takeBestScoredChoice(headlinePool, takenIds, "주력 변신", (choice) =>
@@ -14404,10 +14451,20 @@
       adaptiveRiderChoice.type === "utility" &&
       adaptiveRiderChoice.action === "bastion_bay_forge" &&
       adaptiveRiderChoice.systemChoice;
-    const headlineChoice = shouldHeadlineSupportInstall ? adaptiveRiderChoice : adaptiveHeadlineChoice;
-    const riderChoice = shouldHeadlineSupportInstall ? adaptiveHeadlineChoice : adaptiveRiderChoice;
-    const headlineLabel = shouldHeadlineSupportInstall ? "설치" : "주력";
-    const riderLabel = shouldHeadlineSupportInstall ? "주포" : "버팀";
+    const shouldPromoteSupportHeadline =
+      Boolean(promotedSupportHeadlineChoice) && !shouldHeadlineSupportInstall;
+    const headlineChoice = shouldHeadlineSupportInstall
+      ? adaptiveRiderChoice
+      : shouldPromoteSupportHeadline
+        ? promotedSupportHeadlineChoice
+        : adaptiveHeadlineChoice;
+    const riderChoice = shouldHeadlineSupportInstall
+      ? adaptiveHeadlineChoice
+      : shouldPromoteSupportHeadline
+        ? adaptiveHeadlineChoice || adaptiveRiderChoice
+        : adaptiveRiderChoice;
+    const headlineLabel = shouldHeadlineSupportInstall || shouldPromoteSupportHeadline ? "설치" : "주력";
+    const riderLabel = shouldHeadlineSupportInstall || shouldPromoteSupportHeadline ? "주포" : "버팀";
     const choices = [
       markForgeContract(
         headlineChoice,

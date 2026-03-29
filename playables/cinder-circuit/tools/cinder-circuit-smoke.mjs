@@ -520,12 +520,16 @@ const wave8PayoffChoices = game.buildForgeChoices(chassisBranchBuild, () => 0, 9
   nextWave: 8,
   finalForge: false,
 });
+const wave8PayoffHeadline = wave8PayoffChoices.find((choice) => choice.contractRole === "headline");
 const wave8PayoffRider = wave8PayoffChoices.find((choice) => choice.contractRole === "rider");
-assert.equal(wave8PayoffRider?.type, "system");
-assert.equal(wave8PayoffRider?.systemId, "ember_ring");
-assert.equal(wave8PayoffRider?.systemTier, 2);
-assert.ok(wave8PayoffRider?.slotText.includes("기존 베이 증설"));
-assert.ok(!wave8PayoffRider?.description.includes("눈에 띄는 support silhouette"));
+assert.equal(wave8PayoffHeadline?.contractLabel, "설치");
+assert.equal(wave8PayoffHeadline?.type, "system");
+assert.equal(wave8PayoffHeadline?.systemId, "ember_ring");
+assert.equal(wave8PayoffHeadline?.systemTier, 2);
+assert.ok(wave8PayoffHeadline?.slotText.includes("기존 베이 증설"));
+assert.ok(!wave8PayoffHeadline?.description.includes("눈에 띄는 support silhouette"));
+assert.equal(wave8PayoffRider?.contractLabel, "주포");
+assert.notEqual(wave8PayoffRider?.type, "system");
 const shippedLadderWave6 = game.getShippingLadderSteps(
   chassisBranchBuild,
   game.computeWeaponStats(chassisBranchBuild),
@@ -1647,8 +1651,13 @@ const mirrorWave8Choices = game.buildForgeChoices(mirrorPrimerRun.build, Math.ra
   build: mirrorPrimerRun.build,
 });
 assert.equal(mirrorWave8Choices.length, 3);
+const mirrorWave8HeadlineChoice =
+  mirrorWave8Choices.find((choice) => choice.contractRole === "headline") || mirrorWave8Choices[0];
 const mirrorWave8RiderChoice =
   mirrorWave8Choices.find((choice) => choice.contractRole === "rider") || mirrorWave8Choices[1];
+assert.equal(mirrorWave8HeadlineChoice.type, "system");
+assert.equal(mirrorWave8HeadlineChoice.systemId, "volt_drones");
+assert.equal(mirrorWave8HeadlineChoice.systemTier, 2);
 assert.ok(mirrorWave8RiderChoice);
 assert.notEqual(mirrorWave8RiderChoice.type, "system");
 game.applyForgeChoice(mirrorPrimerRun, mirrorWave8RiderChoice);
