@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze expansion, cut live/player-facing `signature / mission board / contract / proof / Wave 9-12 / Afterburn / support 없이도` scaffolding, and make `Wave 6` deliver the first unmistakable support install instead of deferring that payoff to `Wave 8` or later.
+- Immediate priority: freeze expansion and turn `Wave 5-8` into a breathable ownership arc where `Wave 6` delivers one visible support install, then gives that install two waves of real space before extra route clutter piles back in.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 10:40:00 KST
+  Findings:
+  - `Wave 5-8` still tests survival by collapsing space, not by letting the new build own space. In [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), `Wave 6-8` already run relay/drift/territory hazards on short timers with `activeCap 17-19` and `spawnBudget 92-108`, and `chooseHazardSpawn()` keeps biasing those hazards onto the player’s projected route, elite path, and drop line. The result is constant route denial instead of meaningful pocket choice.
+  - The mid-run overlays keep stacking more asks onto the same short slice. `applyMidrunGreedRouteConfig()` and `applyChassisBreakpointEncounterConfig()` both add extra hazard/objective pressure to `Wave 5-7`, so the run keeps proving builds by stuffing more things into the arena instead of giving one install clear room to change movement and target priority.
+  - The forge still undersells agency for a rerunnable roguelite. `buildForgeChoices()` in the consolidated route repeatedly collapses the stop into a forced `headline / rider / gamble` shell, often only two cards, which is far less hunger-inducing than strong references where a between-wave stop can genuinely pivot offense, defense, greed, or utility.
+  - The project already contains enough support fantasies and post-capstone machinery. The current weakness is not lack of content; it is that the shipped slice burns those forms inside cramped proof conditions, so satellites, shields, sentries, and greed modules read like noise management instead of run-defining transformations.
+  Top Priority: Rebalance `Wave 5-8` around breathing room first: cut route-targeted hazard stacking and overlay clutter so one `Wave 6` install gets two fights of readable ownership before more complexity returns.
+  Why Now: If a new install never gets clean arena time, players cannot feel the payoff strongly enough to want the next run.
+  Do Not Repeat: Do not solve this by only enlarging arena numbers while the same hazard targeting and overlay stacking keep erasing that space.
+  Release Gate: Combat
 
 - 2026-03-29 10:05:00 KST
   Findings:
@@ -4410,6 +4421,18 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-29 09:12:42 KST
+  Changed:
+  - Added an `ownership_breathing` hazard targeting profile in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and assigned it to the shipped `Wave 6-8` relay/drift/territory hazards, so those fights stop heavily preferring the player's projected route, elite route, and drop line when placing hazards.
+  - Reworked the compact-route hazard candidate scoring in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the new profile opens flank and rear-flank anchors, reduces direct route/player-ring bias, and penalizes spawns that land too close to the player. This keeps pressure alive while leaving more readable ownership pockets for the new `Wave 6` install.
+  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert shipped `Wave 6-8` hazards and representative `Wave 6-7` chassis/support proof resolves keep the `ownership_breathing` profile, then re-ran the existing smoke test.
+  Why:
+  - The latest critique's `Top Priority` was to cut route-targeted hazard stacking before adding more systems. The highest-value bounded interpretation inside `playables/cinder-circuit/` was to change hazard targeting itself, because simply enlarging the arena would not matter while relay/drift/territory spawns still snapped onto the player's movement line and erased the install's ownership lap.
+  Follow-up Risk:
+  - This opens cleaner pockets for the `Wave 6-8` ownership band, but it does not yet reduce every extra overlay coming from greed/breakpoint encounter mods. If critique still says the mid-run is overstuffed, the next bounded combat pass should trim one of those overlay config stacks instead of adding new build content.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Combat
 
 - 2026-03-29 10:30:00 KST
   Changed:

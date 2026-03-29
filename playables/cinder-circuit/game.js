@@ -93,6 +93,24 @@
   const BLACK_LEDGER_DEBT_ACTIVE_CAP_STEP = 2;
   const BLACK_LEDGER_DEBT_HAZARD_RATE_STEP = 0.12;
   const BLACK_LEDGER_DEBT_SPAWN_INTERVAL_STEP = 0.05;
+  const HAZARD_TARGETING_PROFILES = {
+    ownership_breathing: {
+      routeCandidateWeightMultiplier: 0.34,
+      routeScoreMultiplier: 0.28,
+      playerRingScoreMultiplier: 0.42,
+      eliteWeightMultiplier: 0.42,
+      eliteRouteWeightMultiplier: 0.24,
+      coreDropWeightMultiplier: 0.18,
+      scrapDropWeightMultiplier: 0.12,
+      catalystDropWeightMultiplier: 0.2,
+      minPlayerDistanceMultiplier: 1.48,
+      minPlayerDistancePenalty: 2.2,
+      flankWeight: 4.7,
+      rearFlankWeight: 4.1,
+      flankOffsetMultiplier: 1.85,
+      rearOffsetMultiplier: 1.24,
+    },
+  };
   const ARSENAL_BREAKPOINT_ENCOUNTER_PROFILES = {
     mutation: {
       bandLabel: "Arsenal Overdrive",
@@ -504,6 +522,7 @@
       hazard: {
         label: "Breakline Relay",
         type: "relay",
+        targetingProfile: "ownership_breathing",
         interval: 11.4,
         count: 1,
         radius: 84,
@@ -547,6 +566,7 @@
       hazard: {
         label: "Crownfire Drift",
         type: "drift",
+        targetingProfile: "ownership_breathing",
         interval: 11.1,
         count: 1,
         radius: 90,
@@ -588,6 +608,7 @@
       hazard: {
         label: "Forgecross Pocket",
         type: "territory",
+        targetingProfile: "ownership_breathing",
         interval: 10.6,
         count: 1,
         radius: 92,
@@ -21874,6 +21895,10 @@
     const player = context.player || { x: ARENA_WIDTH / 2, y: ARENA_HEIGHT / 2 };
     const heading = getHazardHeading(context);
     const perpendicular = { x: -heading.y, y: heading.x };
+    const targetingProfile =
+      config && config.targetingProfile && HAZARD_TARGETING_PROFILES[config.targetingProfile]
+        ? HAZARD_TARGETING_PROFILES[config.targetingProfile]
+        : null;
     const routeDistance = clamp(config.radius * 0.9 + 42, 82, 148);
     const laneOffset = clamp(config.radius * 0.55, 24, 44);
     const projectedRoute = {
@@ -21884,22 +21909,60 @@
       {
         x: projectedRoute.x,
         y: projectedRoute.y,
-        weight: 5.8,
+        weight: 5.8 * (targetingProfile ? targetingProfile.routeCandidateWeightMultiplier || 1 : 1),
         tag: "route",
       },
       {
         x: projectedRoute.x + perpendicular.x * laneOffset,
         y: projectedRoute.y + perpendicular.y * laneOffset,
-        weight: 4.9,
+        weight: 4.9 * (targetingProfile ? targetingProfile.routeCandidateWeightMultiplier || 1 : 1),
         tag: "route-left",
       },
       {
         x: projectedRoute.x - perpendicular.x * laneOffset,
         y: projectedRoute.y - perpendicular.y * laneOffset,
-        weight: 4.9,
+        weight: 4.9 * (targetingProfile ? targetingProfile.routeCandidateWeightMultiplier || 1 : 1),
         tag: "route-right",
       },
     ];
+    if (targetingProfile) {
+      const flankOffset = clamp(
+        config.radius * (targetingProfile.flankOffsetMultiplier || 1.7),
+        72,
+        176
+      );
+      const rearOffset = clamp(
+        config.radius * (targetingProfile.rearOffsetMultiplier || 1.18),
+        64,
+        150
+      );
+      candidates.push(
+        {
+          x: player.x + perpendicular.x * flankOffset,
+          y: player.y + perpendicular.y * flankOffset,
+          weight: targetingProfile.flankWeight || 4.4,
+          tag: "flank-left",
+        },
+        {
+          x: player.x - perpendicular.x * flankOffset,
+          y: player.y - perpendicular.y * flankOffset,
+          weight: targetingProfile.flankWeight || 4.4,
+          tag: "flank-right",
+        },
+        {
+          x: player.x - heading.x * rearOffset + perpendicular.x * flankOffset * 0.7,
+          y: player.y - heading.y * rearOffset + perpendicular.y * flankOffset * 0.7,
+          weight: targetingProfile.rearFlankWeight || 3.9,
+          tag: "rear-flank-left",
+        },
+        {
+          x: player.x - heading.x * rearOffset - perpendicular.x * flankOffset * 0.7,
+          y: player.y - heading.y * rearOffset - perpendicular.y * flankOffset * 0.7,
+          weight: targetingProfile.rearFlankWeight || 3.9,
+          tag: "rear-flank-right",
+        }
+      );
+    }
 
     for (const enemy of context.enemies || []) {
       if (enemy.defeated || enemy.type !== "elite") {
@@ -21912,13 +21975,16 @@
       candidates.push({
         x: enemy.x,
         y: enemy.y,
-        weight: 7.1 - distance / 160,
+        weight:
+          (7.1 - distance / 160) * (targetingProfile ? targetingProfile.eliteWeightMultiplier || 1 : 1),
         tag: "elite",
       });
       candidates.push({
         x: (enemy.x + projectedRoute.x) / 2,
         y: (enemy.y + projectedRoute.y) / 2,
-        weight: 5.7 - distance / 220,
+        weight:
+          (5.7 - distance / 220) *
+          (targetingProfile ? targetingProfile.eliteRouteWeightMultiplier || 1 : 1),
         tag: "elite-route",
       });
     }
@@ -21939,7 +22005,15 @@
       candidates.push({
         x: drop.x,
         y: drop.y,
-        weight: (isCatalyst ? 7.1 : isCore ? 6.4 : 5.6) - distance / 180,
+        weight:
+          ((isCatalyst ? 7.1 : isCore ? 6.4 : 5.6) - distance / 180) *
+          (targetingProfile
+            ? isCatalyst
+              ? targetingProfile.catalystDropWeightMultiplier || 1
+              : isCore
+                ? targetingProfile.coreDropWeightMultiplier || 1
+                : targetingProfile.scrapDropWeightMultiplier || 1
+            : 1),
         tag: isCatalyst ? "catalyst-drop" : isCore ? "core-drop" : "scrap-drop",
       });
     }
@@ -21953,20 +22027,39 @@
   function scoreHazardCandidate(candidate, config, context) {
     const player = context.player || { x: ARENA_WIDTH / 2, y: ARENA_HEIGHT / 2 };
     const routeFocus = context.routeFocus || candidate;
+    const targetingProfile =
+      config && config.targetingProfile && HAZARD_TARGETING_PROFILES[config.targetingProfile]
+        ? HAZARD_TARGETING_PROFILES[config.targetingProfile]
+        : null;
     const distanceToPlayer = Math.hypot(candidate.x - player.x, candidate.y - player.y);
     const distanceToRoute = Math.hypot(candidate.x - routeFocus.x, candidate.y - routeFocus.y);
     let score = candidate.weight;
 
-    score += clamp(1.4 - distanceToRoute / 180, -1.8, 1.4);
-    score += clamp(1.1 - Math.abs(distanceToPlayer - config.radius * 1.1) / 140, -1.4, 1.1);
+    score +=
+      clamp(1.4 - distanceToRoute / 180, -1.8, 1.4) *
+      (targetingProfile ? targetingProfile.routeScoreMultiplier || 1 : 1);
+    score +=
+      clamp(1.1 - Math.abs(distanceToPlayer - config.radius * 1.1) / 140, -1.4, 1.1) *
+      (targetingProfile ? targetingProfile.playerRingScoreMultiplier || 1 : 1);
+    if (targetingProfile) {
+      const minimumPlayerDistance =
+        config.radius * (targetingProfile.minPlayerDistanceMultiplier || 1.35);
+      if (distanceToPlayer < minimumPlayerDistance) {
+        score -=
+          ((minimumPlayerDistance - distanceToPlayer) / Math.max(36, config.radius)) *
+          (targetingProfile.minPlayerDistancePenalty || 1.6);
+      }
+    }
     if (candidate.tag === "elite") {
-      score += 1.1;
+      score += 1.1 * (targetingProfile ? targetingProfile.eliteWeightMultiplier || 1 : 1);
     } else if (candidate.tag === "elite-route") {
-      score += 0.55;
+      score += 0.55 * (targetingProfile ? targetingProfile.eliteRouteWeightMultiplier || 1 : 1);
     } else if (candidate.tag === "core-drop") {
-      score += 0.95;
+      score += 0.95 * (targetingProfile ? targetingProfile.coreDropWeightMultiplier || 1 : 1);
     } else if (candidate.tag === "scrap-drop") {
-      score += 0.5;
+      score += 0.5 * (targetingProfile ? targetingProfile.scrapDropWeightMultiplier || 1 : 1);
+    } else if (candidate.tag === "catalyst-drop") {
+      score += 1.05 * (targetingProfile ? targetingProfile.catalystDropWeightMultiplier || 1 : 1);
     }
 
     for (const hazard of context.hazards || []) {

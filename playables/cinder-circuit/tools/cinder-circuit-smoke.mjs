@@ -4564,6 +4564,7 @@ const waveSummary = game.WAVE_CONFIG.map((wave) => ({
   spawnBudget: wave.spawnBudget,
   activeCap: wave.activeCap,
   hazard: wave.hazard ? wave.hazard.label : "none",
+  hazardTargeting: wave.hazard ? wave.hazard.targetingProfile || "default" : "none",
 }));
 
 const actTwoLadder = game.WAVE_CONFIG.slice(4, 8);
@@ -4583,6 +4584,21 @@ assert.ok(actTwoLadder[2].activeCap < actTwoLadder[3].activeCap);
 assert.ok(actTwoLadder[1].note.includes("shared breach cell"));
 assert.ok(actTwoLadder[2].note.includes("shared domination sweep cell"));
 assert.ok(actTwoLadder[3].note.includes("shared domination proof cell"));
+assert.equal(
+  actTwoLadder.map((wave) => (wave.hazard ? wave.hazard.targetingProfile || "default" : "none")).join("|"),
+  "none|ownership_breathing|ownership_breathing|ownership_breathing"
+);
+
+const chassisOwnershipBuild = game.createInitialBuild("scrap_pact");
+chassisOwnershipBuild.chassisId = "vector_thrusters";
+const wave6ChassisOwnership = game.resolveWaveConfig(5, chassisOwnershipBuild);
+assert.equal(wave6ChassisOwnership.hazard.targetingProfile, "ownership_breathing");
+
+const supportOwnershipBuild = game.createInitialBuild("scrap_pact");
+supportOwnershipBuild.supportBayCap = 1;
+supportOwnershipBuild.supportSystems = [{ id: "ember_ring", tier: 1 }];
+const wave7SupportOwnership = game.resolveWaveConfig(6, supportOwnershipBuild);
+assert.equal(wave7SupportOwnership.hazard.targetingProfile, "ownership_breathing");
 
 const lateBreakSmokeBuild = game.createInitialBuild("scrap_pact");
 lateBreakSmokeBuild.bastionDoctrineId = "kiln_bastion";
