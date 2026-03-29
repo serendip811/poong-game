@@ -5458,12 +5458,12 @@
       title: "Crownsplitter Array",
       traitLabel: "wing battery",
       description:
-        "주포 양옆에 분할 포대를 영구 증설해 발사마다 wing volley를 덧댄다. 기본 실루엣만으로도 열린 회랑 둘을 직접 찢고, support uplink는 이미 열린 날개의 빈틈만 다듬는다.",
-      slotText: "주포 split volley · 완성형 wing battery",
+        "주포 양옆에 분할 포대를 영구 증설해 발사마다 wing volley를 덧댄다. 열린 회랑 둘을 함께 긁기 시작하지만, 오래 붙드는 복귀선과 자동 마감은 support uplink가 와야 닫힌다.",
+      slotText: "주포 split volley · wing battery 시동",
       bodyLabel: "Split-Wing Chassis",
       bodyText: "측면 포대와 전방 가늠자가 붙어 주포가 직접 회랑을 찢는 추격 섀시다.",
       statusNote:
-        "주포가 split wing battery로 변해 support 없이도 넓은 정면 라인을 직접 찢는다. 추가 rider는 자동 처리보다 이 날개 화망의 틈을 메우는 보조선으로만 붙는다.",
+        "주포가 split wing battery로 변해 넓은 정면 라인을 벌리기 시작했다. 아직 열린 복귀선과 측면 마감은 남아 있어, 다음 rider가 이 날개 화망의 빈틈을 메우는 두 번째 축이 된다.",
       apply(build, run) {
         build.damageBonus += 4;
         build.pierceBonus += 1;
@@ -5507,12 +5507,12 @@
       title: "Slagburst Drive",
       traitLabel: "impact seed",
       description:
-        "주포에 slag seed를 박아 발사마다 폭압성 충격탄을 흘린다. 기본 포문만으로도 교전 지점에 폭발과 잔불 구획을 깔고, support uplink는 그 압착 폭만 더 두껍게 만든다.",
-      slotText: "slag seed 장착 · 완성형 impact seed",
+        "주포에 slag seed를 박아 발사마다 폭압성 충격탄을 흘린다. 교전 지점에 폭발과 잔불 구획을 깔기 시작하지만, 그 압착 폭을 오래 유지할 고정력은 support uplink가 와야 붙는다.",
+      slotText: "slag seed 장착 · impact seed 점화",
       bodyLabel: "Kiln-Drive Hull",
       bodyText: "복부 용광 코일이 달린 돌입 섀시로, 교전 지점에 직접 잔불 구획을 남긴다.",
       statusNote:
-        "주포가 slagburst drive로 바뀌어 support 없이도 발사 궤적 끝에 폭발과 잔불 구획을 남긴다. 추가 rider는 seed 수와 잔불 폭만 더해 이 몸체의 교전 장악력을 다듬는다.",
+        "주포가 slagburst drive로 바뀌어 발사 궤적 끝에 폭발과 잔불 구획을 남기기 시작했다. 아직 잔불을 오래 붙잡을 보조선은 비어 있어, 다음 rider가 seed 밀도와 버티는 폭을 함께 키운다.",
       apply(build, run) {
         build.damageBonus += 2;
         build.maxHpBonus += 6;
@@ -5552,12 +5552,12 @@
       title: "Voltspine Lattice",
       traitLabel: "arc spine",
       description:
-        "동체 위로 전극 spine을 영구 전개해 발사마다 전방 lattice arc를 덧댄다. 기본 lattice만으로도 후열을 전도성 그물로 묶고, support uplink는 그물의 길이와 밀도만 더 늘린다.",
-      slotText: "arc lattice salvo · 완성형 arc spine",
+        "동체 위로 전극 spine을 영구 전개해 발사마다 전방 lattice arc를 덧댄다. 후열을 전도성 그물로 묶기 시작하지만, 그물의 길이와 복귀 안전선은 support uplink가 와야 충분히 넓어진다.",
+      slotText: "arc lattice salvo · arc spine 예열",
       bodyLabel: "Stormspine Hull",
       bodyText: "등뼈형 전극 spine과 측면 방전 깃이 자라 후열을 직접 감전시키는 전도 섀시다.",
       statusNote:
-        "주포가 voltspine lattice로 변해 support 없이도 전방 lattice arc와 연쇄 범위로 후열을 직접 절단한다. 추가 rider는 spine 밀도와 연쇄 길이만 더 키운다.",
+        "주포가 voltspine lattice로 변해 전방 lattice arc와 연쇄 범위로 후열을 흔들기 시작했다. 아직 측면 정리와 연쇄 지속시간은 남아 있어, 다음 rider가 spine 밀도와 복귀 여유를 같이 키운다.",
       apply(build, run) {
         build.damageBonus += 1;
         build.moveSpeedBonus += 6;
@@ -5599,12 +5599,12 @@
       title: "Anvil Prism",
       traitLabel: "breach ram",
       description:
-        "주포 하부에 breach ram을 박아 발사마다 두꺼운 prism salvo를 밀어 넣는다. 기본 ram만으로도 brute/warden 전열을 비집고, support uplink는 열린 돌파선만 더 두껍게 고정한다.",
-      slotText: "breach prism salvo · 완성형 breach ram",
+        "주포 하부에 breach ram을 박아 발사마다 두꺼운 prism salvo를 밀어 넣는다. brute/warden 전열을 비집기 시작하지만, 열린 돌파선을 오래 고정할 버팀선은 support uplink가 와야 닫힌다.",
+      slotText: "breach prism salvo · breach ram 가동",
       bodyLabel: "Anvil-Ram Hull",
       bodyText: "전면 ram prong과 복부 냉각 지느러미가 돌출된 정면 돌파 섀시다.",
       statusNote:
-        "주포가 anvil prism으로 바뀌어 support 없이도 짧고 두꺼운 breach salvo를 겹쳐 밀어 넣는다. 추가 rider는 ram 포문과 관통 여유만 더 열어 전면 파쇄력을 보조한다.",
+        "주포가 anvil prism으로 바뀌어 짧고 두꺼운 breach salvo를 겹쳐 밀어 넣기 시작했다. 아직 전면 파쇄 뒤를 받칠 방호선은 남아 있어, 다음 rider가 ram 포문과 관통 여유를 함께 밀어 준다.",
       apply(build, run) {
         build.damageBonus += 5;
         build.maxHpBonus += 4;
@@ -7404,7 +7404,7 @@
       verb: "점화",
       tag: "OVERDRIVE",
       title: overdrive.title,
-      description: `${overdrive.description} 다음 전투는 support 없이도 방금 잠근 gun/body silhouette가 열린 lane 둘을 얼마나 오래 먹는지 바로 보여 준다.`,
+      description: `${overdrive.description} 다음 전투는 방금 잠근 gun/body silhouette가 열린 lane 둘을 얼마나 벌릴 수 있는지 먼저 보여 주고, 그 ownership를 오래 붙드는 마감선은 아직 다음 install에 남겨 둔다.`,
       slotText: overdrive.slotText,
       cost: overdrive.cost,
       laneLabel: "Main Weapon Mutation",

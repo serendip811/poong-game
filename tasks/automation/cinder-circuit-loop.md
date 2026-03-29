@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: make the shipped `Wave 1-8` route honest by removing live `Wave 9+ / Afterburn / contract-shell` leakage and preserving `Wave 6` as the first real support transformation instead of a garnish on an already-complete gun.
+- Immediate priority: make the shipped `Wave 1-8` route honest and quiet by removing live `Wave 9+ / Afterburn / signature / mission-board` leakage and restoring `Wave 6` as the first real support transformation instead of a garnish on an already-complete gun.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 13:00:00 KST
+  Findings:
+  - The project is still judging an `8-wave` shipped slice while keeping the larger prototype alive in active code and docs. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still contains live `Wave 9-12`, `Late Break cadence`, and `Afterburn` player-facing flow, while [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md) still teaches `run-start signature` and a `12-wave act ladder`. That makes replay judgment dishonest before balance even starts.
+  - The opening fantasy is still too wordy and too pre-briefed. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) still specifies a `mission board`, signature selection, side panels, and `forge pause`, which is the opposite of the loop's own red-flag rule that the player should read less and feel more in Waves `1-3`.
+  - The growth curve is still front-loaded into the gun text. The Wave 3 late-ascension weapon defs in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) repeatedly say the weapon dominates `support 없이도`, so the player is told the run's second pillar is optional before the first support install is even earned.
+  - Combat space still does not fully breathe because [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) `chooseHazardSpawn()` keeps building hazard anchors around the player's heading and recovery route. Bigger arenas help less than they should when the pressure logic still hunts the same escape lanes.
+  Top Priority: Remove shipped-facing `signature / mission-board / Wave 9+ / Afterburn` leakage, then rewrite Wave 3 payoff language so the gun feels strong-but-incomplete and Wave 6 support reads as the first true transformation.
+  Why Now: Until the opener is quieter and the midrun install is necessary, the run cannot generate real anticipation or honest replay hunger.
+  Do Not Repeat: Do not spend another pass polishing forge copy while the game still teaches signatures, 12-wave structure, and self-sufficient Wave 3 guns.
+  Release Gate: Progression
 
 - 2026-03-29 12:10:00 KST
   Findings:
@@ -4444,6 +4455,18 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-29 10:43:55 KST
+  Changed:
+  - Rewrote the shipped `Wave 3` late-ascension weapon copy in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Crownsplitter Array`, `Slagburst Drive`, `Voltspine Lattice`, and `Anvil Prism` no longer describe themselves as `support 없이도` or `완성형`; their `description`, `slotText`, and `statusNote` now sell a strong opening lane with a still-missing seam that Wave 6 support is meant to close.
+  - Recut the shipped `crownfire_overdrive` choice text in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the Wave 7 headline still reads like an ownership spike, but explicitly leaves the long hold/marshaling finish for the next install instead of implying a self-sufficient gun/body endpoint.
+  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert those shipped Wave 3-7 reward texts stay free of `support 없이도` and `완성형`, then re-ran the existing smoke test.
+  Why:
+  - The latest critique's `Top Priority` included rewriting Wave 3 payoff language so the gun feels strong-but-incomplete. The highest-value bounded interpretation inside `playables/cinder-circuit/` was to fix the concrete reward strings that were still teaching `self-sufficient gun first, support second`, because that copy directly flattened anticipation for the Wave 6 install.
+  Follow-up Risk:
+  - The early gun curve now reads more honestly, but player-facing `Wave 9+ / Afterburn` text still exists elsewhere in non-shipped branches and helper surfaces inside [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). The next progression pass should quarantine one of those late-route leaks instead of adding more reward wrappers.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Progression
 
 - 2026-03-29 10:13:29 KST
   Changed:

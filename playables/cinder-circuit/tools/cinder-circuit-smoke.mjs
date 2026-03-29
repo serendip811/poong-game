@@ -1760,6 +1760,7 @@ const crownfireWave7Transform = game.getBaseRouteForgeChoiceTransformation(crown
 assert.equal(crownfireWave7Transform.previewLabel, "형태");
 assert.ok(/점화 터빈|측면 점화 편대|ownership/.test(crownfireWave7Transform.promise));
 assert.ok(/mid-run ownership|측면 둘|pocket/.test(crownfireWave7Transform.proof));
+assert.doesNotMatch(crownfireWave7Headline.description, /support 없이도/);
 game.applyForgeChoice({ build: crownfireBuild, player: null }, crownfireWave7Headline);
 const crownfireWeapon = game.computeWeaponStats(crownfireBuild);
 assert.equal(crownfireWeapon.crownfireOverdriveLabel, "Crownflare Turbine");
@@ -2806,6 +2807,8 @@ const crownsplitterWeapon = game.computeWeaponStats(crownsplitterRun.build);
 assert.equal(crownsplitterWeapon.lateAscensionLabel, "Crownsplitter Array");
 assert.equal(crownsplitterWeapon.lateAscensionFirePattern.kind, "split_wing");
 assert.ok(crownsplitterWeapon.lateAscensionFirePattern.offsets.length >= 6);
+assert.doesNotMatch(crownsplitterChoice.slotText, /완성형|support 없이도/);
+assert.doesNotMatch(crownsplitterWeapon.lateAscensionStatusNote, /완성형|support 없이도/);
 const slagburstBuild = game.createInitialBuild("scrap_pact");
 slagburstBuild.supportBayCap = 3;
 slagburstBuild.supportSystems = [
@@ -2827,6 +2830,8 @@ const slagburstWeapon = game.computeWeaponStats(slagburstRun.build);
 assert.equal(slagburstWeapon.lateAscensionLabel, "Slagburst Drive");
 assert.equal(slagburstWeapon.lateAscensionFirePattern.kind, "slag_seed");
 assert.ok(slagburstWeapon.lateAscensionFirePattern.count >= 3);
+assert.doesNotMatch(slagburstChoice.slotText, /완성형|support 없이도/);
+assert.doesNotMatch(slagburstWeapon.lateAscensionStatusNote, /완성형|support 없이도/);
 const voltspineRun = {
   build: game.createInitialBuild("relay_oath"),
   resources: { scrap: 0 },
@@ -2849,6 +2854,8 @@ assert.equal(voltspineWeapon.lateAscensionLabel, "Voltspine Lattice");
 assert.equal(voltspineWeapon.lateAscensionFirePattern.kind, "split_wing");
 assert.ok(voltspineWeapon.lateAscensionFirePattern.offsets.length >= 8);
 assert.ok(voltspineWeapon.chain >= 2);
+assert.doesNotMatch(voltspineChoice.slotText, /완성형|support 없이도/);
+assert.doesNotMatch(voltspineWeapon.lateAscensionStatusNote, /완성형|support 없이도/);
 const anvilRun = {
   build: game.createInitialBuild("scrap_pact"),
   resources: { scrap: 0 },
@@ -2870,6 +2877,8 @@ assert.equal(anvilWeapon.lateAscensionLabel, "Anvil Prism");
 assert.equal(anvilWeapon.lateAscensionFirePattern.kind, "split_wing");
 assert.ok(anvilWeapon.lateAscensionFirePattern.offsets.length >= 5);
 assert.ok(anvilWeapon.damage > slagburstWeapon.damage);
+assert.doesNotMatch(anvilChoice.slotText, /완성형|support 없이도/);
+assert.doesNotMatch(anvilWeapon.lateAscensionStatusNote, /완성형|support 없이도/);
 const illegalOverclockBuild = game.createInitialBuild("relay_oath");
 const illegalOverclockChoices = game.createIllegalOverclockChoices(illegalOverclockBuild);
 assert.equal(illegalOverclockChoices.length, 0);
