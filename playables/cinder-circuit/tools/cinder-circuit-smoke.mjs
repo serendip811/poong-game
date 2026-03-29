@@ -555,7 +555,7 @@ const greedPayoff = game.getBaseRouteBranchPayoffSummary({
 });
 assert.equal(greedPayoff?.label, "분기 보상");
 assert.equal(greedPayoff?.value, "Entry Vault");
-assert.equal(game.getImmediateProofWindowSummary(greedBuild, 7).detail, "금고 seam 하나만 물고 곧장 끊는다.");
+assert.equal(game.getImmediateProofWindowSummary(greedBuild, 7).detail, "caravan hook만 물고 반대 flank로 끊는다.");
 assert.ok(
   game
     .getBaseRouteResultCopy(greedBuild, game.computeWeaponStats(greedBuild), true)
@@ -1211,13 +1211,22 @@ assert.ok(greedWave5.midrunGreedRoute);
 assert.equal(greedWave5.midrunGreedRoute?.label, "Entry Vault");
 assert.equal(greedWave6.hazard?.type, "salvage");
 assert.equal(greedWave6.midrunGreedRoute?.label, "Tow Fork");
+assert.equal(greedWave6.chassisProof?.label, "Entry Snap");
+assert.ok((greedWave6.arena?.width || 0) >= 1860);
+assert.ok((greedWave6.activeCap || 99) <= 15);
 assert.equal(greedWave7.hazard?.type, "caravan");
 assert.equal(greedWave7.midrunGreedRoute?.label, "Caravan Hook");
+assert.equal(greedWave7.chassisProof?.label, "Caravan Hook");
+assert.ok((greedWave7.hazard?.driftSpeed || 0) >= 178);
+assert.ok((greedWave7.arena?.width || 0) >= 1980);
 assert.equal(greedWave8.hazard?.type, "salvage");
 assert.ok(greedWave6.note.includes("Greed route"));
-assert.ok(greedWave7.directive.includes("caravan"));
+assert.ok(greedWave7.directive.includes("caravan hook"));
 assert.ok(greedWave8.midrunGreedRoute);
 assert.equal(greedWave8.midrunGreedRoute?.label, "Jackpot Fork");
+assert.equal(greedWave8.chassisProof?.label, "Jackpot Exit");
+assert.ok((greedWave8.hazard?.salvageScrap || 0) >= 54);
+assert.ok((greedWave8.activeCap || 99) <= 17);
 assert.equal(
   game.getBaseRouteBranchPayoffSummary({
     build: midrunGreedRun.build,

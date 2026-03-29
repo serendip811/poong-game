@@ -12,7 +12,7 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- Weakest gate is now `UX/UI`: payoff structure improved, but the game still explains too much at the forge and on status surfaces before the player feels desire.
-- Next useful critique should pressure readability and opener hunger: make `Wave 1-6` start smaller, hide secondary support spectacle, and let each reward sell one visible delta first.
-- Current structural failure: support installs and weapon patterns can make the run feel visually complete too early, which weakens anticipation for later orbit/shield/helper escalation.
-- Repeated false solutions: adding more modules, more route-preview language, or more simultaneous support visuals instead of simplifying the first chapter's reward read and combat silhouette.
+- Weakest gate is now `Combat`: UI cleanup helped, but `Wave 5-8` branch identity still lives more in labels/debrief than in distinct movement demands inside the arena.
+- Next useful critique should pressure branch-owned encounter design: offense needs repeatable kill-lane aggression, defense needs recoverable pocket rotation, greed needs risky scrap-dive tempo.
+- Current structural failure: first-support installs still steal too much attention in the same short chapter, making helpers/support silhouettes feel more memorable than the chosen path.
+- Repeated false solutions: adding more route labels, more capstone cards, or more module families instead of deepening the three shipped branch contracts and simplifying when support spectacle appears.

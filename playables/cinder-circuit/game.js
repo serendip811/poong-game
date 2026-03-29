@@ -11027,9 +11027,9 @@
         pillLabel: "판돈 급습",
         resultLead: "Wave 5 판돈 급습으로 cash-out lane을 찍고 빠지는 길을 잠갔다.",
         asks: {
-          6: "짧게 긁고 바로 외곽으로 빠진다.",
-          7: "금고 seam 하나만 물고 곧장 끊는다.",
-          8: "payout lane을 찍고 추격선 전에 벗어난다.",
+          6: "entry vault를 짧게 찢고 바로 튄다.",
+          7: "caravan hook만 물고 반대 flank로 끊는다.",
+          8: "jackpot pocket을 찍고 추격선 전에 벗어난다.",
         },
       };
     }
@@ -11565,7 +11565,7 @@
       return boundedWave >= 6 ? "복귀선 하나만 길게 붙든다." : "열린 복귀 각만 남긴다.";
     }
     if (tone === "greed") {
-      return boundedWave >= 6 ? "짧게 긁고 바로 외곽으로 빠진다." : "긁을 seam 하나만 고른다.";
+      return boundedWave >= 6 ? "entry pocket만 찢고 바로 외곽으로 튄다." : "긁을 seam 하나만 고른다.";
     }
     return boundedWave >= 6 ? "열린 입구 하나만 길게 찢는다." : "얇은 lane 하나만 밀어 연다.";
   }
@@ -16295,6 +16295,7 @@
           };
     const nextConfig = {
       ...config,
+      arena: config.arena ? { ...config.arena } : null,
       hazard,
       mix: blendEnemyMix(
         config.mix || {},
@@ -16303,11 +16304,26 @@
               skimmer: 0.2,
               shrike: 0.14,
             }
+          : waveNumber === 6
+          ? {
+              skimmer: 0.26,
+              shrike: 0.18,
+              lancer: 0.14,
+              brander: 0.08,
+            }
+          : waveNumber === 7
+          ? {
+              skimmer: 0.28,
+              shrike: 0.16,
+              brander: 0.18,
+              lancer: 0.12,
+            }
           : waveNumber >= 8
           ? {
-              skimmer: 0.24,
-              lancer: 0.14,
-              shrike: 0.1,
+              skimmer: 0.22,
+              lancer: 0.18,
+              shrike: 0.12,
+              brander: 0.14,
             }
           : {
               skimmer: 0.22,
@@ -16315,18 +16331,60 @@
             },
         waveNumber === 5 ? 0.14 : waveNumber >= 8 ? 0.24 : 0.18
       ),
+      driveGainFactor: Math.max(
+        config.driveGainFactor || 1,
+        waveNumber === 8 ? 1.4 : waveNumber === 7 ? 1.36 : waveNumber === 6 ? 1.32 : 1.16
+      ),
+      activeCap:
+        waveNumber >= 6
+          ? Math.max(
+              waveNumber === 8 ? 17 : 15,
+              (config.activeCap || 18) - (waveNumber === 8 ? 2 : 3)
+            )
+          : config.activeCap,
+      baseSpawnInterval:
+        waveNumber >= 6 ? (config.baseSpawnInterval || 0.6) * (waveNumber === 7 ? 1.12 : 1.08) : config.baseSpawnInterval,
+      spawnAcceleration:
+        waveNumber >= 6 ? Math.max(0.16, (config.spawnAcceleration || 0.18) - 0.018) : config.spawnAcceleration,
       note:
         waveNumber === 5
           ? `${config.note} Greed route가 첫 payoff lap부터 entry vault pocket을 끼워 넣어 열린 lane을 비우는 대신 payout core를 먼저 찍고 빠지게 만든다.`
+          : waveNumber === 6
+          ? `${config.note} Greed route가 첫 raid frame 시험을 entry vault snap으로 바꿔, 짧은 pocket dive 하나를 만든 뒤 바깥 slip lane으로 바로 이탈하는지 먼저 묻는다. 오래 머무르면 payout보다 퇴로가 먼저 닫힌다.`
           : salvageStage === "caravan"
-          ? `${config.note} Greed route가 외곽 caravan chase를 열어 회수 동선이 바로 도주선이 된다. payout을 따라 깊게 들어갈지, 얇아진 flank만 짧게 긁고 빠질지 계속 갈라진다.`
-          : `${config.note} Greed route가 scrap vault pocket을 끼워 넣어 열린 lane만 먹는 대신 cash-out pocket을 찍고 빠지는 운영을 요구한다.`,
+          ? `${config.note} Greed route가 외곽 caravan chase를 hook-and-cut 시험으로 바꿔, convoy를 짧게 물고 반대 flank로 즉시 탈출하는지를 계속 묻는다. chase를 길게 끌수록 돌아올 pocket이 먼저 닫힌다.`
+          : `${config.note} Greed route가 마지막 scrap vault를 jackpot snap으로 키워, 큰 payout pocket을 한 번 찍고 추격선이 덮치기 전에 exit lane을 갈아타게 만든다.`,
       directive:
         waveNumber === 5
           ? "가장 넓은 lane을 다 비우기 전에 entry vault pocket을 짧게 찢고 payout만 챙긴 뒤 바로 바깥 flank로 복귀한다."
+          : waveNumber === 6
+          ? "entry vault를 짧게 찢고 바깥 slip lane으로 바로 튄다. 첫 payout 뒤에 더 머무르기보다 외곽으로 빠져나가 다음 pocket angle을 다시 여는 편이 맞다."
           : salvageStage === "caravan"
-          ? "도주하는 caravan을 짧게 끊고 곧바로 열린 외곽으로 복귀한다. chase를 오래 끌수록 반대 flank가 먼저 무너진다."
-          : "열린 vault pocket을 빠르게 찢고 곧바로 바깥 lane으로 빠져나온다. payout 욕심이 길어질수록 퇴로가 먼저 닫힌다.",
+          ? "caravan hook만 짧게 물고 바로 반대 flank로 끊는다. convoy chase를 오래 잡으면 반대 exit lane이 먼저 닫힌다."
+          : "jackpot pocket을 한 번만 찍고 바로 다음 exit lane으로 갈아탄다. payout 욕심이 길어질수록 뒤를 닫는 추격선이 먼저 붙는다.",
+      chassisProof:
+        waveNumber === 5
+          ? null
+          : waveNumber === 6
+            ? {
+                label: "Entry Snap",
+                status: "vault dive exit",
+                note:
+                  "entry vault를 짧게 찢은 뒤 같은 pocket에 머물지 않고 외곽 slip lane으로 바로 빠져나와야 한다. 첫 payout 뒤 이탈 속도가 greed proof다.",
+              }
+            : waveNumber === 7
+              ? {
+                  label: "Caravan Hook",
+                  status: "hook-and-cut reset",
+                  note:
+                    "convoy를 길게 쫓지 말고 짧게 물어 payout만 챙긴 뒤 반대 flank로 끊어야 한다. hook 뒤 reset이 늦으면 greed line도 같이 닫힌다.",
+                }
+              : {
+                  label: "Jackpot Exit",
+                  status: "cashout escape chain",
+                  note:
+                    "큰 payout pocket을 찍은 뒤 바로 다른 exit lane으로 갈아타야 한다. jackpot 뒤 이탈 체인이 끊기면 막판 greed payoff도 무너진다.",
+                },
       midrunGreedRoute: {
         label: routeLabel,
         waveNumber,
@@ -16335,11 +16393,46 @@
         note:
           waveNumber === 5
             ? "첫 payoff lap부터 entry vault가 열린다. pocket payout을 먼저 찢으면 즉시 raid frame이 붙어 flank 복귀가 빨라진다."
+            : waveNumber === 6
+            ? "Entry Vault snap. pocket payout 하나만 뜯고 바로 slip lane으로 튀어야 다음 회수 각이 산다."
             : salvageStage === "caravan"
-            ? "Scrapline caravan이 외곽으로 달아난다. chase 각을 내면 payout은 크지만 복귀 flank가 급하게 얇아진다."
-            : "Scrapline vault가 크게 열린다. pocket을 빨리 찢고 빠질수록 greed payout이 깔끔하게 남는다.",
+            ? "Caravan hook. convoy를 짧게 물면 payout은 크지만, 바로 반대 flank로 끊지 못하면 복귀 pocket이 급하게 닫힌다."
+            : "Jackpot fork. 큰 vault pocket을 한 번만 찍고 exit lane으로 갈아탈수록 greed payout이 깔끔하게 남는다.",
       },
     };
+    if (waveNumber >= 6) {
+      nextConfig.arena = {
+        width: Math.max(waveNumber === 8 ? 2060 : waveNumber === 7 ? 1980 : 1860, nextConfig.arena?.width || 0),
+        height: Math.max(waveNumber === 8 ? 1160 : waveNumber === 7 ? 1120 : 1040, nextConfig.arena?.height || 0),
+      };
+      if (Number.isFinite(nextConfig.hazard.interval)) {
+        nextConfig.hazard.interval = Math.max(8.4, nextConfig.hazard.interval - (waveNumber === 7 ? 0.6 : 0.4));
+      }
+      if (Number.isFinite(nextConfig.hazard.telegraph)) {
+        nextConfig.hazard.telegraph = Math.max(0.64, nextConfig.hazard.telegraph - (waveNumber === 8 ? 0.08 : 0.06));
+      }
+      if (Number.isFinite(nextConfig.hazard.duration)) {
+        nextConfig.hazard.duration = Math.max(5.2, nextConfig.hazard.duration - (waveNumber === 7 ? 0.18 : 0.42));
+      }
+      if (Number.isFinite(nextConfig.hazard.coreHp)) {
+        nextConfig.hazard.coreHp += waveNumber === 8 ? 12 : 6;
+      }
+      if (Number.isFinite(nextConfig.hazard.salvageScrap)) {
+        nextConfig.hazard.salvageScrap += waveNumber === 8 ? 12 : waveNumber === 7 ? 8 : 6;
+      }
+      if (Number.isFinite(nextConfig.hazard.salvageBurstRadius)) {
+        nextConfig.hazard.salvageBurstRadius += waveNumber === 8 ? 16 : 10;
+      }
+      if (Number.isFinite(nextConfig.hazard.salvageDropLife)) {
+        nextConfig.hazard.salvageDropLife = Math.max(6.9, nextConfig.hazard.salvageDropLife - 0.7);
+      }
+      if (Number.isFinite(nextConfig.hazard.driftSpeed)) {
+        nextConfig.hazard.driftSpeed += waveNumber === 7 ? 22 : 12;
+      }
+      if (Number.isFinite(nextConfig.hazard.driftOrbit)) {
+        nextConfig.hazard.driftOrbit += waveNumber === 7 ? 0.04 : 0;
+      }
+    }
     return nextConfig;
   }
 
@@ -22088,9 +22181,7 @@
     }
     if (state.wave.midrunGreedRoute) {
       pushCombatFeed(
-        state.wave.midrunGreedRoute.hazardType === "caravan"
-          ? "Scrapline Route 활성화. caravan chase가 열려 payout을 쫓을수록 복귀 flank가 급하게 얇아진다."
-          : "Scrapline Route 활성화. vault pocket이 열려 greed line을 짧게 긁고 빠지는 운영을 직접 요구한다.",
+        `Scrapline Route 활성화. ${state.wave.midrunGreedRoute.note}`,
         "SCRAP"
       );
     } else if (state.wave.supportProof) {

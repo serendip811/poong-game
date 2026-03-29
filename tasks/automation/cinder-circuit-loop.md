@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: consolidate readability and pacing so the stronger `Wave 6` / `Wave 8` branch payoffs are actually felt; strip opener/UI/support clutter before adding more route depth.
+- Immediate priority: make `Wave 5-8` branches play differently in the arena and keep first-support spectacle subordinate to that path read; consolidate combat clarity before adding more route depth.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-30 07:20:00 KST
+  Findings:
+  - The shell is cleaner, but the run still behaves too much like one combat exam with three labels. `Wave 5` promises offense / defense / greed ownership, yet the shipped asks still mostly collapse into “hold one lane, then hold it longer,” which is not enough to make players rerun for a different movement fantasy.
+  - First-support readability improved, but support actors are still arriving before branch identity is fully proven. Missiles, drones, shields, intercepts, and deployables can still claim too much arena attention in the same short chapter, so the player remembers helpers circling the hull more than the path they chose at `Wave 5`.
+  - The result and pause surfaces now read cleaner, yet they still have to explain branch identity after the fact because combat itself is not separating it hard enough. Strong references do not need the debrief to tell you what fantasy you just played; the arena already made it obvious.
+  - For a game that wants eventual `20-30` wave appetite, the current branch structure is still too thin. If offense, defense, and greed cannot each sustain 3 clearly different waves now, the project should not broaden the ladder yet; it should deepen these three asks first.
+  Top Priority: Re-author `Wave 6-8` so each `Wave 5` path owns a distinct movement contract and enemy/hazard cadence before extra support spectacle layers in: offense should repeatedly cash open kill lanes, defense should manufacture and rotate safe recovery pockets, and greed should force risky scrap dives and fast exits.
+  Why Now: Until the branch changes what the player is actually doing in the arena, the run still reads like a polished prototype rather than a replayable roguelite chapter.
+  Do Not Repeat: Do not answer this with more branch naming, more capstone cards, or more support module families while the three paths still feel this similar to play.
+  Release Gate: Combat
 
 - 2026-03-30 06:01:02 KST
   Findings:
@@ -183,20 +194,21 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not answer this with more support options, more route bands, or lighter wording wrapped around the same multi-layer forge/admin stack.
   Release Gate: Rewards
 
-- 2026-03-30 11:05:00 KST
-  Findings:
-  - The project is still in danger of solving chapter weakness with route breadth. `game.js` still carries a large live `Wave 10-12 / Afterburn / ascension` body, and even if shipped surfaces are cleaner now, that nearby ambition keeps encouraging “more ladder” thinking before `Wave 1-8` has fully proved repeated fun.
-  - The forge reward moment is still too administrative for a game that needs immediate desire. `renderForgeOverlay()` is cleaner than before, but it still stacks `promise + proof + preview rows + impact strip + slot cost`, which is closer to a debug-rich loadout board than the snap hierarchy strong arena roguelites use when they make a player instantly want the install.
-  - Support payoff still risks reading as clutter instead of transformation. The live render path draws orbit lines, deployable range rings, kiln fields, shields, missiles, drones, and support satellites together, so `Wave 6-8` can feel like the screen got busier rather than like one owned silhouette opened new movement pockets.
-  - The opening growth curve is still fragile. With support visuals and multiple system nouns already so close to the player fantasy, the run risks starting too visually complete, which weakens the hunger for later multi-shot, orbit, shield, or helper breakthroughs.
-  Top Priority: Consolidate the shipped chapter around one-card forge hierarchy and one support-readability pass so the first support install creates a single obvious lane-ownership advantage instead of adding more simultaneous shapes and labels.
-  Why Now: If `Wave 6-8` does not clearly prove one earned transformation in breathable combat space, a future `20-30 wave` curve will still feel hypothetical.
-  Do Not Repeat: Do not answer this with new passives, new route brackets, or extra reward verbs before the current support payoff is readable at a glance.
-  Release Gate: Builds
-
 - Older entries trimmed automatically: 1
 
 ## Latest Improvement
+
+- 2026-03-30 07:45:00 KST
+  Changed:
+  - Re-authored the shipped greed route in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 6-8` now plays as `Entry Snap -> Caravan Hook -> Jackpot Exit`: bigger arenas, lower active caps, faster-closing vault/caravan windows, higher payout bait, and new `chassisProof` states that force short scrap dives followed by immediate escape lines instead of generic lane ownership.
+  - Updated greed-facing ask text and combat feed in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the branch now explicitly teaches `entry pocket -> hook-and-cut -> jackpot exit` cadence, with live `Scrapline Route` messages pulling the current route note instead of one shared salvage warning.
+  - Refreshed [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) and [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md) to lock greed-route arena width, active-cap, caravan speed, payout, proof labels, and updated ask copy.
+  Why:
+  - The latest critique's `Top Priority` said the three `Wave 5` paths still were not changing arena behavior enough. The highest-value bounded interpretation was that offense and defense already had owned `Wave 6-8` cadences, so greed needed the same treatment in the actual encounter config instead of another reward or naming pass.
+  Follow-up Risk:
+  - Greed now reads more distinctly, but its pressure still comes mostly from hazard windows rather than a bespoke enemy-targeting profile. If critique next says the branch is clearer yet still too forgiving or too noisy, the next bounded pass should tune greed-specific spawn targeting or exit-lane enemy bias rather than add another progression layer.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4228` assertion (`sentryTierTwo.interceptRange > 0`) after the new greed-route assertions passed
+  Release Gate: Combat
 
 - 2026-03-30 06:13:14 KST
   Changed:
@@ -334,19 +346,6 @@ This file is shared by two recurring Codex CLI jobs.
   Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4060` assertion (`sentryTierTwo.interceptRange > 0`) after the new forge-hierarchy assertions passed
   Reference Direction: `Hades` boon-card hierarchy and `Nova Drift` upgrade-card restraint; one dominant card owns the desire hit, secondary cards stay quiet.
   Release Gate: Rewards
-
-- 2026-03-30 11:35:00 KST
-  Changed:
-  - Added `getSupportRenderPresentation(...)` in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and routed the live support draw path through it so shipped `Wave 6-8` tier-1 support installs now suppress orbit frames, deployable range circles, and Halo intercept rings while keeping the actual support body visible.
-  - Tuned the same pass to keep later support upgrades loud again, so the readability clamp is only for the compact route's first earned install and not for `Mk.II+` payoff beats.
-  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) and [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md) to lock the new `Wave 7 first install quiet / Wave 8 upgrade loud` presentation rule.
-  Why:
-  - The latest critique's `Top Priority` was still open on support readability. The highest-value bounded interpretation was to make the first support install read like one owned silhouette in open space instead of a pile of helper rings and guide geometry.
-  Follow-up Risk:
-  - This reduces support clutter, but forge hierarchy is still heavier than the in-combat payoff. If critique next says the install now reads well in combat but the reward stop still feels administrative, the next pass should trim forge card layering rather than reintroduce louder support guides.
-  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4057` assertion (`sentryTierTwo.interceptRange > 0`) after the new support-render assertions passed
-  Reference Direction: `Nova Drift`-style silhouette-first orbitals and `Hades`-style effect restraint at first unlock; the install body should read first, guide geometry second.
-  Release Gate: Builds
 
 - Older entries trimmed automatically: 2
 
