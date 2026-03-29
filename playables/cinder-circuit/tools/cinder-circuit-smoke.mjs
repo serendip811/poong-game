@@ -121,6 +121,20 @@ assert.equal(
   JSON.stringify(game.getVisibleSupportOfferSystemIds(wave8KilnForkBuild, 8)),
   JSON.stringify(["kiln_sentry"])
 );
+const wave8SupportlessBuild = game.createInitialBuild("rail_zeal");
+wave8SupportlessBuild.architectureForecastId = "storm_artillery";
+wave8SupportlessBuild.bastionDoctrineId = "storm_artillery";
+wave8SupportlessBuild.wave6ChassisBreakpoint = true;
+assert.equal(JSON.stringify(game.getVisibleSupportOfferSystemIds(wave8SupportlessBuild, 8)), JSON.stringify([]));
+assert.equal(
+  game
+    .buildForgeChoices(wave8SupportlessBuild, deterministicForgeRng, 999, {
+      nextWave: 8,
+      finalForge: false,
+    })
+    .some((choice) => choice.type === "system"),
+  false
+);
 assert.ok(!game.SUPPORT_SYSTEM_DEFS.seeker_array.tiers[1].description.includes("Late Break Armory"));
 assert.ok(!game.SUPPORT_SYSTEM_DEFS.seeker_array.tiers[1].description.includes("Wave 9"));
 assert.ok(game.SUPPORT_SYSTEM_DEFS.seeker_array.tiers[1].description.includes("차체 잠금"));
@@ -445,8 +459,7 @@ const delayedWave8Choices = game.buildForgeChoices(delayedInstallBuild, () => 0,
   finalForge: false,
 });
 const delayedWave8SupportChoice = delayedWave8Choices.find((choice) => choice?.type === "system");
-assert.equal(delayedWave8SupportChoice?.systemId, "ember_ring");
-assert.equal(delayedWave8SupportChoice?.systemTier, 1);
+assert.equal(delayedWave8SupportChoice, undefined);
 const supportSurgeBuild = game.createInitialBuild("rail_zeal");
 supportSurgeBuild.wave6ChassisBreakpoint = true;
 supportSurgeBuild.supportSystems = [{ id: "seeker_array", tier: 1 }];
@@ -1553,7 +1566,7 @@ assert.deepEqual(
 );
 assert.deepEqual(
   Array.from(game.getVisibleSupportOfferSystemIds(genericWave7Build, 8)),
-  ["ember_ring", "aegis_halo", "kiln_sentry", "seeker_array", "volt_drones"]
+  []
 );
 const genericWave7Choices = game.buildForgeChoices(genericWave7Build, () => 0.1, 999, {
   nextWave: 7,
@@ -1568,7 +1581,7 @@ midrunSupportBuild.architectureForecastId = "mirror_hunt";
 midrunSupportBuild.bastionDoctrineId = "mirror_hunt";
 midrunSupportBuild.chassisId = "vector_thrusters";
 assert.deepEqual(Array.from(game.getVisibleSupportOfferSystemIds(midrunSupportBuild, 7)), ["volt_drones"]);
-assert.deepEqual(Array.from(game.getVisibleSupportOfferSystemIds(midrunSupportBuild, 8)), ["volt_drones"]);
+assert.deepEqual(Array.from(game.getVisibleSupportOfferSystemIds(midrunSupportBuild, 8)), []);
 assert.deepEqual(Array.from(game.getVisibleSupportOfferSystemIds(midrunSupportBuild, 9)), ["seeker_array"]);
 const wave7ForgeChoices = game.buildForgeChoices(midrunSupportBuild, () => 0.1, 999, {
   nextWave: 7,

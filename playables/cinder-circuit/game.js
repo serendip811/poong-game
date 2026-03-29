@@ -6985,11 +6985,28 @@
     return [...installChoices, ...upgradeChoices];
   }
 
+  function shouldBlockBaseRouteWave8SupportCatchup(build, nextWave = 0) {
+    if (
+      !(
+        CONSOLIDATED_12_WAVE_ROUTE &&
+        build &&
+        Number.isFinite(nextWave) &&
+        nextWave === DEFAULT_ROUTE_WAVE_COUNT
+      )
+    ) {
+      return false;
+    }
+    return getInstalledSupportSystems(build).length === 0;
+  }
+
   function shouldOfferSupportSystem(build, options) {
     if (!build || (options && options.finalForge)) {
       return false;
     }
     const nextWave = options && Number.isFinite(options.nextWave) ? options.nextWave : 0;
+    if (shouldBlockBaseRouteWave8SupportCatchup(build, nextWave)) {
+      return false;
+    }
     const installedSystems = getInstalledSupportSystems(build);
     if (shouldHoldWave6SingleAxisBreakpoint(build, nextWave)) {
       return installedSystems.some((entry) => entry.tier < MAX_SUPPORT_SYSTEM_TIER);
@@ -12030,6 +12047,9 @@
     const allSystemIds = Object.keys(SUPPORT_SYSTEM_DEFS);
     const installedSystems = build ? getInstalledSupportSystems(build) : [];
     const installedSystemIds = installedSystems.map((entry) => entry.id).filter(Boolean);
+    if (shouldBlockBaseRouteWave8SupportCatchup(build, nextWave)) {
+      return [];
+    }
     const baseRouteWave8SupportPayoff =
       CONSOLIDATED_12_WAVE_ROUTE &&
       build &&
