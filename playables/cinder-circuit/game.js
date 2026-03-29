@@ -7486,6 +7486,7 @@
     if (
       !build ||
       !Number.isFinite(nextWave) ||
+      (CONSOLIDATED_12_WAVE_ROUTE && nextWave <= DEFAULT_ROUTE_WAVE_COUNT) ||
       nextWave !== 7 ||
       build.crownfireOverdriveId ||
       !build.chassisId ||

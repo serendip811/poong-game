@@ -2128,21 +2128,19 @@ const crownfireWave7Choices = game.buildForgeChoices(crownfireBuild, () => 0.1, 
 const crownfireWave7Headline =
   crownfireWave7Choices.find((choice) => choice.contractRole === "headline") ||
   crownfireWave7Choices[0];
-assert.equal(crownfireWave7Headline.action, "crownfire_overdrive");
-assert.equal(crownfireWave7Headline.title, "Crownflare Turbine");
-assert.equal(crownfireWave7Headline.previewText, "측면 점화 편대 5줄");
+assert.equal(crownfireWave7Headline.type, "evolution");
+assert.equal(crownfireWave7Headline.title, "Fork Array");
+assert.equal(crownfireWave7Headline.previewText, "보조 총열 2기");
 const crownfireWave7Transform = game.getBaseRouteForgeChoiceTransformation(crownfireWave7Headline);
-assert.equal(crownfireWave7Transform.previewLabel, "형태");
-assert.ok(/점화 터빈|측면 점화 편대|ownership/.test(crownfireWave7Transform.promise));
-assert.ok(/mid-run ownership|측면 둘|pocket/.test(crownfireWave7Transform.proof));
+assert.equal(crownfireWave7Transform.previewLabel, "진화");
+assert.ok(/보조 점화 총열|주 총열 양옆/.test(crownfireWave7Transform.promise));
+assert.ok(/삼중 화선|측면 진입선/.test(crownfireWave7Transform.proof));
 assert.doesNotMatch(crownfireWave7Headline.description, /support 없이도/);
 game.applyForgeChoice({ build: crownfireBuild, player: null }, crownfireWave7Headline);
 const crownfireWeapon = game.computeWeaponStats(crownfireBuild);
-assert.equal(crownfireWeapon.crownfireOverdriveLabel, "Crownflare Turbine");
-assert.deepEqual(
-  Array.from(crownfireWeapon.crownfireOverdriveFirePattern.offsets),
-  [-0.42, -0.26, -0.1, 0.1, 0.26, 0.42]
-);
+assert.equal(crownfireBuild.crownfireOverdriveId, null);
+assert.equal(crownfireBuild.weaponEvolutions.ember, 1);
+assert.deepEqual(Array.from(crownfireWeapon.evolutionFirePattern.offsets), [-0.16, 0.16]);
 assert.equal(crownfireWeapon.pierce, 0);
 const crownfireWave8Choices = game.buildForgeChoices(crownfireBuild, () => 0.1, 999, {
   nextWave: 8,
