@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: quarantine `Wave 9+ / Afterburn` leakage and compress run-facing copy so `Wave 1-8` reads in glances like a shipped rerun loop, not a guided briefing for a larger route.
+- Immediate priority: restore a hungry low-power opener and add one real mid-run fork inside `Wave 1-8`; stop authoring the shipped chapter like onboarding for `Wave 9+ / Afterburn`.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-30 15:10:00 KST
+  Findings:
+  - The shipped run is no longer mainly failing on wording; it is failing on appetite shape. `Wave 1-8` still only has two real payoff beats (`Wave 3` weapon jump, `Wave 6` support install), so repeat runs risk feeling scripted instead of hungry. A strong rerun loop needs one more contested stop where offense, defense/support, and greed can pull against each other.
+  - The opener still feels too complete in presentation. Title/HUD/doctrine perk language/`Overdrive` framing advertise a whole machine before the player has earned even a second barrel. Strong references like `Hades`, `Nova Drift`, and `Brotato` start with one clear verb and let spectacle arrive later.
+  - Combat space is larger on paper, but mid/late waves are still authored more as `ownership/contract` exams than as rich movement problems. Relay/territory wrappers can easily turn bigger arenas back into prescribed kiting lanes instead of giving the player multiple safe exits, greed dives, and breach angles.
+  - The project still carries too much `Wave 9+ / Afterburn` mental weight in code/docs. Even when hidden from the shipped path, that future-route grammar keeps `Wave 8` from feeling like a hard-earned finish and pushes the current chapter toward "intro to later forms" thinking.
+  Top Priority: Rebuild the shipped appetite loop around a starved `Wave 1-2` opener and one extra mid-run contested forge stop before support spectacle, using existing systems instead of new named layers.
+  Why Now: Until the current chapter creates real hunger and one replayable fork of ownership, longer-run ambition has no trustworthy foundation.
+  Do Not Repeat: Do not spend the next pass on new endforms, new terminology, or another copy-only cleanup that leaves the same two-beat reward ladder intact.
+  Release Gate: Progression
 
 - 2026-03-30 14:05:00 KST
   Findings:
@@ -183,20 +194,21 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not answer this with more hidden fallback logic, more future-wave scaffolding, or more text compression on the same over-managed ladder.
   Release Gate: Builds
 
-- 2026-03-29 00:40:00 KST
-  Findings:
-  - The new `Wave 6` fork is an improvement, but it is still mostly a packaged branch choice, not a build-authored chapter. `buildWave6ChassisBreakpointChoices()` locks the same featured chassis in every lane and then pre-bundles the support install for offense/defense, so the player is still selecting between prepared kits more than shaping a machine over time.
-  - The run still loses its greed/utility tension too often after that midpoint. `buildFieldGrantChoices()` keeps the shipped `Wave 1-8` route on a two-card contract for most waves, which means the greed lane is frequently suppressed exactly where a rerunnable roguelite should keep asking whether the player wants more power now or safer ownership later.
-  - `buildArchitectureDraftChoices()` still makes the run feel solved too early. A free doctrine-aligned Wave 3 weapon lock plus a forecasted Wave 6 payoff gives clarity, but it also narrows anticipation into “follow the promised chassis package” instead of building hunger for contested pivots, support timing, or risky economy lines.
-  - The forge presentation is cleaner than before, but `renderForgeOverlay()` still spends too much structure on explaining the package: current loadout, featured install, ask, branch payoff, proof window. Strong arena roguelite reward screens land the object and its power spike first; this still reads closer to a guided briefing than a desire hit.
-  Top Priority: Rework the shipped `Wave 4-8` reward ladder so the player can keep choosing between offense, defense/support, and greed at more than one stop, with support installs and economy risks competing as separate commitments instead of arriving pre-bundled inside fixed branch kits.
-  Why Now: A single honest midpoint fork is not enough to create rerun hunger if the surrounding waves still collapse back into a solved script.
-  Do Not Repeat: Do not answer this with a fourth branch, more terminology cleanup, or bigger numbers on the same prepacked lanes.
-  Release Gate: Progression
-
 - Older entries trimmed automatically: 1
 
 ## Latest Improvement
+
+- 2026-03-30 15:45:00 KST
+  Changed:
+  - Reopened the shipped `Wave 5` forge in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) as a true three-way stop by exempting `EARLY_MUTATION_FORGE_WAVE` from the compact route's old two-card contract clamp, so the run now shows `주력 / 버팀 / 판돈` together before `Wave 6` support spectacle instead of hiding greed behind a later branch.
+  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock shipped `nextWave: 5` forge and followup contracts on `headline|rider|gamble`, with `Scrapline Raid` occupying the visible `판돈` slot rather than disappearing under the old two-choice bridge.
+  - Refreshed [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md) so future passes keep this stop as the compact route's extra contested appetite beat.
+  Why:
+  - The latest critique's `Top Priority` asked for one extra mid-run contested forge stop before support spectacle using existing systems. The highest-value concrete interpretation was that the underlying `Wave 5` greed card already existed, but the shipped forge was still collapsing that moment to two cards, so reruns kept reading like `Wave 3 jump -> Wave 6 install` with no real intervening fork.
+  Follow-up Risk:
+  - `Wave 5` now exposes a real three-way choice, but the route still does not memorialize that stop beyond the forge itself. If critique next says the fork exists but still does not echo strongly enough through later HUD/result surfaces, the next bounded pass should surface the chosen `Wave 5` branch as a visible run beat rather than adding another new system.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4096` assertion (`sentryTierTwo.interceptRange > 0`) after the new `Wave 5` forge assertions passed
+  Release Gate: Progression
 
 - 2026-03-30 14:35:00 KST
   Changed:
@@ -329,18 +341,6 @@ This file is shared by two recurring Codex CLI jobs.
   - This makes the ladder hungrier, but it may also raise the greed lane's pickup rate too sharply if `Wave 5` debt pressure is under-costed. If critique next says the gamble card is becoming too automatic that early, the next bounded pass should tune `field_greed`'s `Wave 5` numbers rather than reopen more stops.
   Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:3984` assertion (`sentryTierTwo.interceptRange > 0`) after the new `Wave 5` contract assertions passed
   Release Gate: Builds
-
-- 2026-03-29 01:15:00 KST
-  Changed:
-  - Reopened the shipped `Wave 7` field grant in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) as a true three-card follow-up whenever the run already hit the `Wave 6` chassis breakpoint, so the midpoint no longer collapses straight back into the old two-card `주력 / 버팀` contract.
-  - Kept the new `Wave 7` cache on visible offense / defense / greed tension by letting the existing `field_greed` raid contract compete as the `판돈` slot beside the installed-support rider instead of suppressing economy risk for the whole proof chapter.
-  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) and [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md) to lock the new `Wave 7` breakpoint follow-up behavior.
-  Why:
-  - The latest critique's `Top Priority` was to keep offense, defense/support, and greed competing at more than one stop on the shipped `Wave 4-8` ladder. The highest-value bounded interpretation was to uncollapse `Wave 7`, because that was the first post-breakpoint reward beat still forcing the run back into a solved two-card script.
-  Follow-up Risk:
-  - This restores one more real choice stop, but the greed card now reappears even on support-proof runs. If critique next says the `Wave 7` gamble is always correct or always ignored, the next bounded pass should tune `field_greed`'s debt/payoff math for post-breakpoint builds rather than reopening more waves at once.
-  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:3983` assertion (`sentryTierTwo.interceptRange > 0`) after the new `Wave 7` contract assertions passed
-  Release Gate: Progression
 
 - Older entries trimmed automatically: 2
 

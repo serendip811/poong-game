@@ -510,7 +510,7 @@ const wave5ForgeChoices = game.buildForgeChoices(roadmapBuild, Math.random, 999,
   nextWave: 5,
   finalForge: false,
 });
-assert.equal(wave5ForgeChoices.length, 2);
+assert.equal(wave5ForgeChoices.length, 3);
 assert.equal(wave5ForgeChoices.find((choice) => choice.contractRole === "headline")?.action, "afterglow_mutation");
 assert.equal(wave5ForgeChoices.find((choice) => choice.contractRole === "headline")?.type, "utility");
 const wave5RiderChoice = wave5ForgeChoices.find((choice) => choice.contractRole === "rider");
@@ -521,6 +521,9 @@ assert.ok(
         ["armor_mesh", "step_servos", "coolant_purge"].includes(wave5RiderChoice.modId)) ||
       wave5RiderChoice.type === "fallback")
 );
+const wave5GambleChoice = wave5ForgeChoices.find((choice) => choice.contractRole === "gamble");
+assert.equal(wave5GambleChoice?.action, "field_greed");
+assert.equal(wave5GambleChoice?.contractLabel, "판돈");
 assert.equal(
   game.getBaseRouteBranchPayoffSummary({
     build: roadmapBuild,
@@ -1074,8 +1077,8 @@ const liveCombatCacheStatus = game.getLiveSideBetSummary({
 assert.ok(!/Wave 6|설치/.test(liveCombatCacheStatus?.label || ""));
 assert.equal(liveCombatCacheStatus?.status, "첫 포지 전");
 assert.ok(!liveCombatCacheStatus?.note.includes("cache"));
-const wave5GambleChoice = wave5ForgeChoices.find((choice) => choice.contractRole === "gamble");
-assert.equal(wave5GambleChoice, undefined);
+const liveWave5GambleChoice = wave5ForgeChoices.find((choice) => choice.contractRole === "gamble");
+assert.equal(liveWave5GambleChoice?.action, "field_greed");
 const scriptedMidrunGreedChoice = game.createFieldGreedContractChoice(
   game.createInitialBuild("rail_zeal"),
   5
@@ -1778,15 +1781,19 @@ const recurringWave5Choices = game.buildForgeChoices(wave5MutationBuild, Math.ra
   finalForge: false,
   build: wave5MutationBuild,
 });
-assert.equal(recurringWave5Choices.length, 2);
+assert.equal(recurringWave5Choices.length, 3);
 assert.equal(
   recurringWave5Choices.map((choice) => choice.contractRole).join("|"),
-  "headline|rider"
+  "headline|rider|gamble"
 );
 const recurringWave5HeadlineChoice =
   recurringWave5Choices.find((choice) => choice.contractRole === "headline") ||
   recurringWave5Choices[0];
 assert.equal(recurringWave5HeadlineChoice.action, "afterglow_mutation");
+assert.equal(
+  recurringWave5Choices.find((choice) => choice.contractRole === "gamble")?.action,
+  "field_greed"
+);
 const recurringWave5Transform = game.getBaseRouteForgeChoiceTransformation(recurringWave5HeadlineChoice);
 assert.ok(/프리즘탄|날개|레일|산탄/.test(recurringWave5Transform.promise));
 assert.ok(/반사|lane|빈틈|전투/.test(recurringWave5Transform.proof));
@@ -1808,7 +1815,8 @@ const recurringWave5RiderTransform =
 assert.equal(recurringWave5RiderTransform.tone, "defense");
 const recurringWave5GambleChoice =
   recurringWave5Choices.find((choice) => choice.contractRole === "gamble");
-assert.equal(recurringWave5GambleChoice, undefined);
+assert.equal(recurringWave5GambleChoice?.action, "field_greed");
+assert.equal(recurringWave5GambleChoice?.contractLabel, "판돈");
 const mirrorPrimerBuild = game.createInitialBuild("relay_oath");
 mirrorPrimerBuild.pendingCores = [];
 mirrorPrimerBuild.bastionDoctrineId = "mirror_hunt";
@@ -2516,7 +2524,7 @@ const actBreakRiderChoices = game.buildForgeFollowupChoices(
 );
 assert.equal(
   actBreakRiderChoices.map((choice) => choice.contractRole).join("|"),
-  "headline|rider"
+  "headline|rider|gamble"
 );
 const packageProbeRun = { waveIndex: 7, pendingFinalForge: false };
 assert.equal(game.shouldOpenForgePackage(packageProbeRun, lateBreakChoices[0]), false);

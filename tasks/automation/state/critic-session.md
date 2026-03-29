@@ -12,7 +12,7 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The focus is still consolidation, but the fragile gate has shifted from forge hierarchy toward `UX/UI`: the reward stop is lighter, yet the run still reads like a guided brief because title/combat-feed/pause/forge context all carry too much sentence-level explanation.
-- Most fragile gate is `UX/UI`, with `Progression` attached. The next useful critique should keep pressure on glanceable labels, object-first hierarchy, and removing shipped-visible `Wave 9+ / Afterburn` language before asking for more systems or longer-run structure.
-- Key structural problem: the chapter still feels like a preview of a longer route. `Wave 1-8` needs to read as a complete appetite loop with `small start -> weapon leap -> support leap`, not as the onboarding layer for future escalation grammar.
-- Repeated false solutions: answering this with more branches, more support wrappers, more future-wave scaffolding, or “copy cleanup” that still leaves long notes/directives/admin text on the shipped surface.
+- The focus is still consolidation, but the weakest gate has shifted from pure copy density to `Progression`: the surface is cleaner, yet the shipped run still lacks enough appetite shape and contested forks to feel replayable.
+- Most fragile gate is `Progression`, with `UX/UI` attached. The next useful critique should pressure a starved opener, one extra meaningful mid-run choice, and continued removal of shipped-visible `Wave 9+ / Afterburn` thinking.
+- Key structural problem: `Wave 1-8` still reads like `intro -> weapon beat -> support beat` more than a rerunnable action roguelite ladder. The chapter needs one more real branch point without making the opener busier.
+- Repeated false solutions: answering this with new endforms, more named layers, more future-route scaffolding, or copy-only cleanup that leaves the same two-beat reward ladder underneath.

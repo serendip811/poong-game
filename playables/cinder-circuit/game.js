@@ -14997,6 +14997,9 @@
     const gamblePool = recurringBaseRouteContract
       ? unconstrainedGamblePool.filter((choice) => isBaseRouteGreedChoice(choice))
       : unconstrainedGamblePool;
+    const wave5ThreeWayFork =
+      recurringBaseRouteContract &&
+      nextWave === EARLY_MUTATION_FORGE_WAVE;
     const wave6ThreeWayFork =
       recurringBaseRouteContract &&
       nextWave === SUPPORT_SYSTEM_START_WAVE &&
@@ -15006,6 +15009,7 @@
       nextWave >= 1 &&
       nextWave <= DEFAULT_ROUTE_WAVE_COUNT &&
       !openSecondaryBranch &&
+      !wave5ThreeWayFork &&
       !wave6ThreeWayFork;
     const shouldHeadlineSupportPayoff =
       strictBaseRouteRiderContract &&
