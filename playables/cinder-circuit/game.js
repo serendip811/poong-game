@@ -9357,6 +9357,9 @@
     const dominantForm = getDominantFormSummary(build, currentWeapon, boundedWave);
     const chassis = getChassisBreakpointDef(build);
     const riderSummary = getBaseRouteInstalledRiderSummary(build, boundedWave);
+    const branchSummary =
+      getBaseRouteWave5FieldPathSummary(build, boundedWave) ||
+      (boundedWave >= EARLY_MUTATION_FORGE_WAVE ? getBaseRouteWave5FieldPathPreviewSummary() : null);
     const stageState = (start, end = start) => {
       if (boundedWave > end) {
         return "locked";
@@ -9373,7 +9376,7 @@
         state: boundedWave >= 3 ? "locked" : "live",
         detail:
           boundedWave >= 3
-            ? "빈 선체 구간은 끝났다. 아직 한 줄 주포만 선 상태라 바깥 lane은 비어 있고, Wave 6 설치 타이밍을 기다린다."
+            ? "빈 선체 구간은 끝났다. 아직 바깥 lane과 복귀선은 비어 있고, 다음 큰 기억은 Wave 5 경로 선택이다."
             : "처음 두 웨이브는 한 줄 화선으로 버틴다. 자동 연출은 닫아 두고 Wave 3 무기 도약에 힘을 모은다.",
       },
       {
@@ -9382,18 +9385,20 @@
         state: stageState(3),
         detail:
           boundedWave >= 3
-            ? `${dominantForm.label}이 첫 무기 방향으로 잠겼다. 아직 빈 측면과 복귀선은 남아 있고, 다음 큰 변화는 Wave 6 지원 설치다.`
+            ? `${dominantForm.label}이 첫 무기 방향으로 잠겼다. 아직 빈 측면과 복귀선은 남아 있고, 다음 큰 갈림길은 Wave 5 경로 선택이다.`
             : "Wave 3 한 장으로 첫 포문을 크게 벌린다. 작은 조율은 뒤로 숨기고 이 무기 변화만 먼저 또렷하게 읽히게 둔다.",
       },
       {
-        label: "INSTALL",
-        title: riderSummary ? riderSummary.value : chassis ? "Wave 6 지원 설치" : "Wave 6 지원 설치",
-        state: stageState(6),
-        detail: riderSummary
-          ? `${riderSummary.value}가 Wave 6에 붙었다. Wave 6-7은 이 설치가 빈 lane과 복귀 각을 어떻게 넓히는지 바로 즐기는 구간이다.`
-          : chassis
-            ? `${chassis.label} 차체가 먼저 잠기고 지원 설치가 곧 따라온다. Wave 6은 run silhouette가 두 번째로 커지는 지점이다.`
-            : "Wave 6에서 첫 지원 설치가 붙는다. 몸체 리듬 위에 새 버팀선이나 자동 화력이 올라간다.",
+        label: "ROUTE",
+        title: branchSummary ? branchSummary.title : "Wave 5 진로 선택",
+        state: stageState(EARLY_MUTATION_FORGE_WAVE),
+        detail: branchSummary
+          ? riderSummary
+            ? `${branchSummary.title}이(가) Wave 5에 잠겼고 ${riderSummary.value}는 그 안쪽에서 ${branchSummary.asks[Math.min(Math.max(boundedWave, 6), 8)] || "중반 ask"}를 오래 받쳐 준다.`
+            : chassis
+              ? `${branchSummary.title}이(가) 중반 경로를 정했다. ${chassis.label} 차체와 이후 설치는 이 path 안쪽에서 움직임을 더 선명하게 만든다.`
+              : `${branchSummary.title}이(가) 다음 세 웨이브의 움직임을 정한다. 공세, 방호, 판돈 중 하나를 고르면 Wave 6-8 ask가 그 길로 굳는다.`
+          : "Wave 5에서 공세, 방호, 판돈 중 하나로 중반 경로를 잠근다.",
       },
       {
         label: "LAP",
@@ -9402,7 +9407,7 @@
         detail:
           boundedWave >= 8
             ? "Wave 8은 새 설명 없이 지금까지 만든 machine rule을 한 번 더 오래 미는 마무리 랩이다."
-            : "Wave 8은 새 규칙을 더하지 않고, Wave 6에 붙인 설치를 오래 굴리는 숙련 랩으로 닫는다.",
+            : "Wave 8은 새 규칙을 더하지 않고, Wave 5에서 잠근 경로와 그 안쪽에 붙은 실루엣을 오래 굴리는 마감 랩으로 닫는다.",
       },
     ];
   }
@@ -9437,7 +9442,7 @@
     const openingContract = getShippingContractSummary(build, currentWeapon, 1, { phase: "title" });
     return {
       title: titleFocus.title,
-      detail: `처음 두 웨이브는 한 줄 화선으로 버틴다. 살아남으면 ${openingContract.leadValue}이 열린다.`,
+      detail: `처음 두 웨이브는 한 줄 화선으로 버틴다. 살아남으면 ${openingContract.leadValue}을(를) 먼저 붙이고, Wave 5에서 런 경로를 잠근다.`,
       hullLabel: "현재 선체",
       hullValue: "빈 선체",
       hookLabel: "첫 도약",
@@ -10737,6 +10742,18 @@
         payoffValue: "Wave 3 무기 방향",
       };
     }
+    const branchSummary =
+      boundedWave >= EARLY_MUTATION_FORGE_WAVE
+        ? getBaseRouteWave5FieldPathSummary(build, boundedWave) || getBaseRouteWave5FieldPathPreviewSummary()
+        : null;
+    if (branchSummary) {
+      return {
+        machineLabel: "현재 머신",
+        machineValue: activeWeaponLabel,
+        payoffLabel: boundedWave >= EARLY_MUTATION_FORGE_WAVE + 1 ? "Wave 5 경로" : "다음 경로",
+        payoffValue: branchSummary.title,
+      };
+    }
     if (featuredSupportInstall) {
       return {
         machineLabel: "현재 머신",
@@ -10870,16 +10887,18 @@
       build && waveNumber >= SUPPORT_SYSTEM_START_WAVE
         ? getBaseRouteInstalledSupportInstallSummary(build)
         : null;
+    const showInstalledSupportHero =
+      Boolean(supportInstall) && machineSummary.payoffLabel === "설치";
     const spotlightTitle =
-      supportInstall && machineSummary.payoffValue
+      showInstalledSupportHero && machineSummary.payoffValue
         ? machineSummary.payoffValue
         : machineSummary.machineValue || machineSummary.payoffValue || "빈 선체";
     const eyebrow =
-      supportInstall && machineSummary.payoffValue
+      showInstalledSupportHero && machineSummary.payoffValue
         ? "현재 설치"
         : machineSummary.machineLabel || "현재 선체";
     const transition =
-      supportInstall && machineSummary.machineValue && machineSummary.payoffValue
+      showInstalledSupportHero && machineSummary.machineValue && machineSummary.payoffValue
         ? `${machineSummary.machineValue} -> ${machineSummary.payoffValue}`
         : machineSummary.payoffValue
           ? `${machineSummary.payoffLabel} · ${machineSummary.payoffValue}`
@@ -10984,6 +11003,19 @@
       };
     }
     return null;
+  }
+
+  function getBaseRouteWave5FieldPathPreviewSummary() {
+    return {
+      id: "preview",
+      title: "Wave 5 진로 선택",
+      beatLabel: "진로 선택",
+      pillLabel: "진로 선택",
+      resultLead: "Wave 5에서 공세, 방호, 판돈 중 하나로 중반 경로를 잠근다.",
+      asks: {
+        5: "공세, 방호, 판돈 중 하나를 고른다.",
+      },
+    };
   }
 
   function getBaseRouteBranchPayoffSummary({
@@ -14028,9 +14060,9 @@
     const proofWindow = getPlayerFacingProofWindowSummary(build, DEFAULT_ROUTE_WAVE_COUNT);
     const branchSummary = getBaseRouteWave5FieldPathSummary(build, DEFAULT_ROUTE_WAVE_COUNT);
     if (riderSummary) {
-      return `${branchSummary ? `${branchSummary.resultLead} ` : ""}${dominantForm.label}로 완성 시험과 승리 랩을 닫았다. ${riderSummary.value}가 ${proofWindow.label} 내내 새 실루엣을 받쳤다.`;
+      return `${branchSummary ? `${branchSummary.resultLead} ` : ""}${dominantForm.label}로 Wave 8 완성 시험과 승리 랩을 닫았다. ${riderSummary.value}는 ${branchSummary ? `${branchSummary.title} 안쪽에서 ` : ""}${proofWindow.label} 내내 새 실루엣을 받쳤다.`;
     }
-    return `${branchSummary ? `${branchSummary.resultLead} ` : ""}${dominantForm.label}로 완성 시험과 승리 랩을 닫았다. ${proofWindow.label} 동안 방금 잠근 실루엣을 끝까지 밀어붙였다.`;
+    return `${branchSummary ? `${branchSummary.resultLead} ` : ""}${dominantForm.label}로 Wave 8 완성 시험과 승리 랩을 닫았다. ${proofWindow.label} 동안 Wave 5에 잠근 경로를 끝까지 밀어붙였다.`;
   }
 
   function getBaseRouteResultRouteLabel(build, weapon = null) {
@@ -14041,13 +14073,13 @@
     const activeBuild = build ? getSanitizedConsolidatedPresentationBuild(build) : null;
     const currentWeapon = weapon || (activeBuild ? computeWeaponStats(activeBuild) : null);
     if (!activeBuild || !currentWeapon) {
-      return "조용한 선체 -> Wave 3 무기 방향";
+      return "조용한 선체 -> Wave 3 무기 방향 -> Wave 5 진로 선택 -> Wave 8 완성 시험";
     }
     const weaponBeat = getShippingWeaponMilestoneLabel(activeBuild, DEFAULT_ROUTE_WAVE_COUNT);
-    const supportBeat = getBaseRouteInstalledSupportInstallSummary(activeBuild);
-    return supportBeat
-      ? `조용한 선체 -> ${weaponBeat} -> ${supportBeat.title}`
-      : `조용한 선체 -> ${weaponBeat}`;
+    const branchSummary =
+      getBaseRouteWave5FieldPathSummary(activeBuild, DEFAULT_ROUTE_WAVE_COUNT) ||
+      getBaseRouteWave5FieldPathPreviewSummary();
+    return `조용한 선체 -> ${weaponBeat} -> ${branchSummary.title} -> Wave 8 완성 시험`;
   }
 
   function getBaseRouteResultBeatLabels(build, weapon = null) {
@@ -14057,18 +14089,14 @@
     const activeBuild = build ? getSanitizedConsolidatedPresentationBuild(build) : null;
     const currentWeapon = weapon || (activeBuild ? computeWeaponStats(activeBuild) : null);
     if (!activeBuild || !currentWeapon) {
-      return ["조용한 시작", "Wave 3 무기 방향", "Wave 8 완성 시험"];
+      return ["조용한 시작", "Wave 3 무기 방향", "Wave 5 진로 선택", "Wave 8 완성 시험"];
     }
     const beats = ["조용한 시작", `Wave 3 ${getShippingWeaponMilestoneLabel(activeBuild, DEFAULT_ROUTE_WAVE_COUNT)}`];
     const branchSummary = getBaseRouteWave5FieldPathSummary(activeBuild, DEFAULT_ROUTE_WAVE_COUNT);
     if (branchSummary) {
       beats.push(`Wave 5 ${branchSummary.beatLabel}`);
-    }
-    const supportBeat = getBaseRouteInstalledSupportInstallSummary(activeBuild);
-    if (supportBeat) {
-      beats.push(`Wave 6 ${supportBeat.title}`);
-    } else if (getChassisBreakpointDef(activeBuild)) {
-      beats.push(`Wave 6 ${getShippingSupportMilestoneLabel(activeBuild, DEFAULT_ROUTE_WAVE_COUNT)}`);
+    } else {
+      beats.push("Wave 5 진로 선택");
     }
     beats.push("Wave 8 완성 시험");
     return beats;
@@ -26871,18 +26899,30 @@
               dominantInstallHero?.title ||
               (spotlightChoice ? spotlightChoice.title || forgeSpotlightSummary.titleValue : dominantFormSummary.label),
             eyebrow:
-              spotlightTransformation?.wave8SupportPayoff?.payoffLabel ||
-              (state.pendingFinalForge ? "마무리" : riderStep ? "지원 설치" : "주력 변이"),
+              state.waveIndex + 2 === EARLY_MUTATION_FORGE_WAVE && !state.pendingFinalForge
+                ? "Wave 5 경로"
+                : spotlightTransformation?.wave8SupportPayoff?.payoffLabel ||
+                  (state.pendingFinalForge ? "마무리" : riderStep ? "지원 설치" : "주력 변이"),
             detail:
-              dominantInstallHero?.currentFormLabel &&
-              dominantInstallHero.title &&
-              dominantInstallHero.currentFormLabel !== dominantInstallHero.title
-                ? `${dominantInstallHero.currentFormLabel} -> ${dominantInstallHero.title}`
-                : forgeSpotlightSummary.titleValue &&
-                    spotlightChoice?.title &&
-                    forgeSpotlightSummary.titleValue !== spotlightChoice.title
-                  ? `${forgeSpotlightSummary.titleValue} -> ${spotlightChoice.title}`
-                  : "",
+              state.waveIndex + 2 === EARLY_MUTATION_FORGE_WAVE && spotlightChoice
+                ? `${dominantFormSummary.label} -> ${
+                    getBaseRouteWave5FieldPathSummary(
+                      {
+                        ...state.build,
+                        wave5FieldPathId: inferBaseRouteWave5FieldPathId(spotlightChoice),
+                      },
+                      EARLY_MUTATION_FORGE_WAVE
+                    )?.title || (spotlightChoice.title || forgeSpotlightSummary.titleValue)
+                  }`
+                : dominantInstallHero?.currentFormLabel &&
+                    dominantInstallHero.title &&
+                    dominantInstallHero.currentFormLabel !== dominantInstallHero.title
+                  ? `${dominantInstallHero.currentFormLabel} -> ${dominantInstallHero.title}`
+                  : forgeSpotlightSummary.titleValue &&
+                      spotlightChoice?.title &&
+                      forgeSpotlightSummary.titleValue !== spotlightChoice.title
+                    ? `${forgeSpotlightSummary.titleValue} -> ${spotlightChoice.title}`
+                    : "",
             currentLoadoutValue: dominantInstallHero?.currentFormLabel || dominantFormSummary.label || "",
             featuredInstallValue: dominantInstallHero?.title || forgeSpotlightSummary.titleValue || "",
             branchPayoffLabel: forgeContextTail ? forgeContextTail.label : "",

@@ -379,7 +379,7 @@ const shippedLadder = game.getShippingLadderSteps(roadmapBuild, game.computeWeap
 assert.equal(shippedLadder.length, 4);
 assert.equal(
   JSON.stringify(shippedLadder.map((step) => step.label)),
-  JSON.stringify(["START", "THESIS", "INSTALL", "LAP"])
+  JSON.stringify(["START", "THESIS", "ROUTE", "LAP"])
 );
 const openingContractSummary = game.getShippingContractSummary(
   roadmapBuild,
@@ -421,15 +421,17 @@ const midrunContractSummary = game.getShippingContractSummary(
   5
 );
 assert.equal(midrunContractSummary.titleLabel, "현재 머신");
-assert.equal(midrunContractSummary.leadLabel, "다음 설치");
-assert.equal(midrunContractSummary.leadValue, "Wave 6 지원 설치");
+assert.equal(midrunContractSummary.leadLabel, "다음 경로");
+assert.equal(midrunContractSummary.leadValue, "Wave 5 진로 선택");
 const midrunLadderSteps = game.getShippingLadderSteps(
   roadmapBuild,
   game.computeWeaponStats(roadmapBuild),
   5
 );
-assert.match(midrunLadderSteps[0].detail, /바깥 lane은 비어 있고/);
-assert.match(midrunLadderSteps[1].detail, /빈 측면과 복귀선은 남아 있고/);
+assert.match(midrunLadderSteps[0].detail, /Wave 5 경로 선택/);
+assert.match(midrunLadderSteps[1].detail, /Wave 5 경로 선택/);
+assert.equal(midrunLadderSteps[2].label, "ROUTE");
+assert.equal(midrunLadderSteps[2].title, "Wave 5 진로 선택");
 const architectureChoice = game.buildArchitectureDraftChoices(roadmapBuild)[0];
 assert.ok(architectureChoice);
 assert.match(architectureChoice.description, /Wave 3 첫 주포 방향만 만든다/);
@@ -562,6 +564,10 @@ assert.ok(
 assert.equal(
   JSON.stringify(game.getBaseRouteResultBeatLabels(greedBuild, game.computeWeaponStats(greedBuild))),
   JSON.stringify(["조용한 시작", "Wave 3 Ember Spindle", "Wave 5 판돈 급습", "Wave 8 완성 시험"])
+);
+assert.equal(
+  game.getBaseRouteResultRouteLabel(greedBuild, game.computeWeaponStats(greedBuild)),
+  "조용한 선체 -> Ember Spindle -> 판돈 급습 -> Wave 8 완성 시험"
 );
 const wave5OffenseChoices = game.buildFieldGrantChoices(game.createInitialBuild("rail_zeal"), () => 0, 5);
 const wave5OffenseChoice = wave5OffenseChoices.find((choice) => choice.contractRole === "headline");
@@ -738,8 +744,8 @@ const shippedLadderWave6 = game.getShippingLadderSteps(
   game.computeWeaponStats(chassisBranchBuild),
   6
 );
-assert.equal(shippedLadderWave6[2].label, "INSTALL");
-assert.ok(shippedLadderWave6[2].detail.includes("Wave 6-7"));
+assert.equal(shippedLadderWave6[2].label, "ROUTE");
+assert.ok(shippedLadderWave6[2].detail.includes("Wave 5"));
 assert.ok(shippedLadderWave6[2].detail.includes("Ember Ring"));
 const shippedRoadmapWave6 = game.getBuildRoadmap(
   chassisBranchBuild,
@@ -753,7 +759,7 @@ const shippedRoadmapMarkup = game.createShippingLadderMarkup(
   game.computeWeaponStats(chassisBranchBuild),
   6
 );
-assert.ok(shippedRoadmapMarkup.includes("설치"));
+assert.ok(shippedRoadmapMarkup.includes("Wave 5 경로"));
 assert.ok(shippedRoadmapMarkup.includes("현재 머신"));
 assert.ok(!shippedRoadmapMarkup.includes("분기 보상"));
 assert.ok(shippedRoadmapMarkup.includes("route-contract--double"));
@@ -889,8 +895,8 @@ const supportContractSummary = game.getShippingContractSummary(
 );
 assert.equal(supportContractSummary.titleLabel, "현재 머신");
 assert.notEqual(supportContractSummary.titleValue, "Seeker Array");
-assert.equal(supportContractSummary.leadLabel, "설치");
-assert.equal(supportContractSummary.leadValue, "Seeker Array");
+assert.equal(supportContractSummary.leadLabel, "Wave 5 경로");
+assert.equal(supportContractSummary.leadValue, "Wave 5 진로 선택");
 assert.ok(supportContractSummary.leadValue.length > 0);
 const openingForgeBuild = game.createInitialBuild("rail_zeal");
 const openingForgeSummary = game.getShippingContractSummary(
@@ -910,8 +916,8 @@ const supportForgeSummary = game.getShippingContractSummary(
   { phase: "forge" }
 );
 assert.equal(supportForgeSummary.titleLabel, "현재 머신");
-assert.equal(supportForgeSummary.leadLabel, "설치");
-assert.equal(supportForgeSummary.leadValue, "Seeker Array");
+assert.equal(supportForgeSummary.leadLabel, "Wave 5 경로");
+assert.equal(supportForgeSummary.leadValue, "Wave 5 진로 선택");
 const closingForgeSummary = game.getShippingContractSummary(
   seekerProofBuild,
   game.computeWeaponStats(seekerProofBuild),
@@ -919,8 +925,8 @@ const closingForgeSummary = game.getShippingContractSummary(
   { phase: "forge" }
 );
 assert.equal(closingForgeSummary.titleLabel, "현재 머신");
-assert.equal(closingForgeSummary.leadLabel, "설치");
-assert.equal(closingForgeSummary.leadValue, "Seeker Array");
+assert.equal(closingForgeSummary.leadLabel, "Wave 5 경로");
+assert.equal(closingForgeSummary.leadValue, "Wave 5 진로 선택");
 const seekerDominantForm = game.getDominantFormSummary(
   seekerProofBuild,
   game.computeWeaponStats(seekerProofBuild),
@@ -932,7 +938,8 @@ const seekerShippedMarkup = game.createShippingLadderMarkup(
   game.computeWeaponStats(seekerProofBuild),
   7
 );
-assert.ok(seekerShippedMarkup.includes("Seeker Array"));
+assert.ok(seekerShippedMarkup.includes("Wave 5 경로"));
+assert.ok(seekerShippedMarkup.includes("Wave 5 진로 선택"));
 const seekerResultCopy = game.getBaseRouteResultCopy(
   seekerProofBuild,
   game.computeWeaponStats(seekerProofBuild),
@@ -945,11 +952,11 @@ assert.ok(!seekerResultCopy.includes("Wave 9"));
 assert.ok(!seekerResultCopy.includes("중반 보조 축"));
 assert.equal(
   game.getBaseRouteResultRouteLabel(seekerProofBuild, game.computeWeaponStats(seekerProofBuild)),
-  "조용한 선체 -> Ember Spindle -> Seeker Array"
+  "조용한 선체 -> Ember Spindle -> Wave 5 진로 선택 -> Wave 8 완성 시험"
 );
 assert.equal(
   JSON.stringify(game.getBaseRouteResultBeatLabels(seekerProofBuild, game.computeWeaponStats(seekerProofBuild))),
-  JSON.stringify(["조용한 시작", "Wave 3 Ember Spindle", "Wave 6 Seeker Array", "Wave 8 완성 시험"])
+  JSON.stringify(["조용한 시작", "Wave 3 Ember Spindle", "Wave 5 진로 선택", "Wave 8 완성 시험"])
 );
 const droneProofBuild = game.createInitialBuild("scrap_pact");
 droneProofBuild.chassisId = "bulwark_treads";
@@ -1037,10 +1044,10 @@ const pauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   paused: true,
 });
 assert.ok(pauseSnapshotMarkup.includes("현재 머신"));
-assert.ok(pauseSnapshotMarkup.includes("다음 설치 · Wave 6 지원 설치"));
+assert.ok(pauseSnapshotMarkup.includes("다음 경로 · 판돈 급습"));
 assert.ok(pauseSnapshotMarkup.includes("forge-context-spotlight"));
 assert.ok(!pauseSnapshotMarkup.includes("summary-head"));
-assert.ok(pauseSnapshotMarkup.includes("Wave 6 지원 설치"));
+assert.ok(pauseSnapshotMarkup.includes("판돈 급습"));
 assert.ok(!pauseSnapshotMarkup.includes("활성 판돈"));
 assert.ok(!pauseSnapshotMarkup.includes("Era III"));
 assert.ok(!pauseSnapshotMarkup.includes("주력 변이"));
@@ -1074,11 +1081,10 @@ const supportPauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   paused: true,
 });
 assert.ok(supportPauseSnapshotMarkup.includes("pause-summary__hero-head"));
-assert.ok(supportPauseSnapshotMarkup.includes("현재 설치"));
+assert.ok(supportPauseSnapshotMarkup.includes("현재 머신"));
 assert.ok(supportPauseSnapshotMarkup.includes(">지금<"));
-assert.ok(supportPauseSnapshotMarkup.includes("Aegis Halo"));
-assert.ok(supportPauseSnapshotMarkup.includes("Ember Spindle -> Aegis Halo"));
-assert.ok(supportPauseSnapshotMarkup.indexOf("현재 설치") < supportPauseSnapshotMarkup.indexOf("Aegis Halo"));
+assert.ok(supportPauseSnapshotMarkup.includes("Ember Spindle"));
+assert.ok(supportPauseSnapshotMarkup.includes("Wave 5 경로 · Wave 5 진로 선택"));
 assert.ok(supportPauseSnapshotMarkup.includes("같은 seam으로 바로 재진입한다."));
 assert.ok(!supportPauseSnapshotMarkup.includes("summary-head"));
 assert.ok(!supportPauseSnapshotMarkup.includes("활성 보조"));
@@ -1094,8 +1100,8 @@ const supportPauseHeroSummary = game.getBaseRoutePauseHeroSummary({
 });
 assert.equal(supportPauseHeroSummary.machineLabel, "현재 머신");
 assert.ok(supportPauseHeroSummary.machineValue.length > 0);
-assert.equal(supportPauseHeroSummary.payoffLabel, "설치");
-assert.equal(supportPauseHeroSummary.payoffValue, "Aegis Halo");
+assert.equal(supportPauseHeroSummary.payoffLabel, "Wave 5 경로");
+assert.equal(supportPauseHeroSummary.payoffValue, "Wave 5 진로 선택");
 const hiddenCombatCacheStatus = game.getLiveSideBetSummary({
   build: game.createInitialBuild("rail_zeal"),
   waveIndex: 4,
@@ -1334,7 +1340,7 @@ const compactEraPanelMarkup = game.createEraContractPanelMarkup(
 );
 assert.ok(compactEraPanelMarkup.includes("machine-payoff"));
 assert.ok(compactEraPanelMarkup.includes("현재 머신"));
-assert.ok(compactEraPanelMarkup.includes("다음 설치"));
+assert.ok(compactEraPanelMarkup.includes("Wave 5 경로"));
 assert.ok(compactEraPanelMarkup.includes("machine-payoff__note"));
 assert.ok(!compactEraPanelMarkup.includes("Era I"));
 assert.ok(!compactEraPanelMarkup.includes("Headline Form"));
@@ -1947,18 +1953,14 @@ assert.equal(supportTrackSnapshot.label, "Volt Drones");
 assert.ok(!/Bay Package|Wildcard Rail|Catalyst/.test(supportTrackSnapshot.label));
 const shippingLadderWave4 = game.getShippingLadderSteps(roadmapBuild, null, 4);
 assert.equal(shippingLadderWave4.length, 4);
-assert.equal(shippingLadderWave4.map((step) => step.label).join("|"), "START|THESIS|INSTALL|LAP");
-assert.ok(
-  !shippingLadderWave4.some(
-    (step) => /Wave 5|작은 변이|사격 조율/i.test(`${step.label} ${step.title} ${step.detail}`)
-  )
-);
+assert.equal(shippingLadderWave4.map((step) => step.label).join("|"), "START|THESIS|ROUTE|LAP");
+assert.ok(shippingLadderWave4[2].title.includes("Wave 5"));
 const shippingLadderFocusWave4 = game.getShippingLadderFocus(roadmapBuild, null, 4);
-assert.equal(shippingLadderFocusWave4.label, "INSTALL");
-assert.ok(/Wave 6|지원 설치|버팀선/.test(shippingLadderFocusWave4.detail));
+assert.equal(shippingLadderFocusWave4.label, "ROUTE");
+assert.ok(/Wave 5|공세|방호|판돈/.test(shippingLadderFocusWave4.detail));
 const shippingLadderWave7 = game.getShippingLadderSteps(seekerProofBuild, null, 7);
-const liveInstallStep = shippingLadderWave7.find((step) => step.label === "INSTALL");
-assert.equal(liveInstallStep?.title, "Seeker Array");
+const liveRouteStep = shippingLadderWave7.find((step) => step.label === "ROUTE");
+assert.equal(liveRouteStep?.title, "Wave 5 진로 선택");
 const recurringWave6Build = game.createInitialBuild("rail_zeal");
 recurringWave6Build.architectureForecastId = "storm_artillery";
 const recurringWave6Choices = game.buildForgeChoices(recurringWave6Build, Math.random, 40, {
@@ -2192,8 +2194,8 @@ const pollutedMachinePanelMarkup = game.createBaseRouteMachinePanelMarkup(
 );
 assert.ok(pollutedMachinePanelMarkup.includes("machine-payoff__note"));
 assert.ok(pollutedMachinePanelMarkup.includes("현재 머신"));
-assert.ok(pollutedMachinePanelMarkup.includes("다음 설치"));
-assert.ok(pollutedMachinePanelMarkup.includes("Wave 6 지원 설치"));
+assert.ok(pollutedMachinePanelMarkup.includes("다음 경로"));
+assert.ok(pollutedMachinePanelMarkup.includes("Wave 5 진로 선택"));
 assert.ok(!pollutedMachinePanelMarkup.includes("Afterburn"));
 assert.ok(!pollutedMachinePanelMarkup.includes("Wave 9"));
 assert.ok(!pollutedMachinePanelMarkup.includes("Cataclysm"));
