@@ -4656,6 +4656,8 @@ assert.equal(wave7SupportOwnership.hazard.targetingProfile, "ownership_breathing
 
 const lateBreakSmokeBuild = game.createInitialBuild("scrap_pact");
 lateBreakSmokeBuild.bastionDoctrineId = "kiln_bastion";
+lateBreakSmokeBuild.wave6ChassisBreakpoint = true;
+lateBreakSmokeBuild.supportSystems = [{ id: "aegis_halo", tier: 1 }];
 assert.equal(game.shouldUseFieldGrant({ nextWave: 10, finalForge: false }), false);
 assert.equal(game.getCombatCacheChoicesForWave(lateBreakSmokeBuild, 10).length, 0);
 const lateBreakSmokeChoices = game.buildForgeChoices(lateBreakSmokeBuild, () => 0, 999, {
@@ -4680,6 +4682,31 @@ const lateBreakGreedTransform = game.getForgeChoiceTransformation(lateBreakGreed
 assert.ok(lateBreakGreedTransform.promise.includes("tow fork"));
 assert.equal(lateBreakGreedTransform.proof, "payout lane 하나만 깊게 긁는다.");
 assert.ok(!lateBreakGreedTransform.proof.includes("Wave 9"));
+const lateBreakDefenseBaseTransform = game.getBaseRouteForgeChoiceTransformation(
+  lateBreakDefense,
+  lateBreakSmokeBuild
+);
+assert.equal(lateBreakDefenseBaseTransform.cardTitle, "Warplate Halo");
+assert.equal(lateBreakDefenseBaseTransform.previewLabel, "방호 고리");
+assert.equal(lateBreakDefenseBaseTransform.previewValue, "Aegis Halo");
+assert.ok(lateBreakDefenseBaseTransform.promise.includes("Aegis Halo"));
+assert.equal(lateBreakDefenseBaseTransform.proof, "한 pocket만 길게 붙든다.");
+const lateBreakDefenseSpotlight = game.getBaseRouteForgeSpotlightSummary({
+  choice: lateBreakDefense,
+  build: lateBreakSmokeBuild,
+});
+assert.equal(lateBreakDefenseSpotlight.titleLabel, "설치");
+assert.equal(lateBreakDefenseSpotlight.titleValue, "Aegis Halo");
+assert.equal(lateBreakDefenseSpotlight.leadValue, "한 pocket만 길게 붙든다.");
+const lateBreakDefenseHero = game.getBaseRouteForgeDominantInstallHero({
+  choice: lateBreakDefense,
+  dominantFormLabel: "Bulwark Treads",
+  waveNumber: 8,
+  build: lateBreakSmokeBuild,
+});
+assert.equal(lateBreakDefenseHero?.title, "Aegis Halo");
+assert.equal(lateBreakDefenseHero?.currentFormLabel, "Bulwark Treads");
+assert.equal(lateBreakDefenseHero?.askNote, "한 pocket만 길게 붙든다.");
 const lateBreakPreviewRows = game.createForgePreviewRows(lateBreakGreed);
 assert.equal(
   JSON.stringify(lateBreakPreviewRows),

@@ -2061,47 +2061,80 @@
     return LATE_BREAK_FOLLOWTHROUGH_PROFILES[build.lateBreakProfileId] || null;
   }
 
-  function getBaseRouteWave8ClosureCopy(profileId) {
+  function getBaseRouteLateBreakSupportSummary(build) {
+    if (!CONSOLIDATED_12_WAVE_ROUTE || !build) {
+      return null;
+    }
+    const supportInstall = getBaseRouteInstalledSupportInstallSummary(build);
+    if (!supportInstall) {
+      return null;
+    }
+    return {
+      ...supportInstall,
+      spotlight: getSupportSystemSpotlight(supportInstall.systemId, supportInstall.systemTier),
+    };
+  }
+
+  function getBaseRouteWave8ClosureCopy(profileId, build = null) {
+    const supportSummary = getBaseRouteLateBreakSupportSummary(build);
     if (profileId === "mutation") {
       return {
-        title: "Cataclysm Arsenal",
+        title: supportSummary ? supportSummary.title : "Cataclysm Arsenal",
         combatAsk: "열린 lane 둘만 오래 비운다.",
         cadenceDetail:
-          "Cataclysm Arsenal이 Wave 6 설치 위에 cataclysm fan을 덧댄다. 다음 전투는 열린 lane 둘만 오래 비운다.",
+          supportSummary
+            ? `${supportSummary.title}가 Wave 6 설치 ownership을 붙든 채 cataclysm fan을 받아 lane 둘을 같이 찢는다. 다음 전투는 열린 lane 둘만 오래 비운다.`
+            : "Cataclysm Arsenal이 Wave 6 설치 위에 cataclysm fan을 덧댄다. 다음 전투는 열린 lane 둘만 오래 비운다.",
         headlineDetail:
-          "Cataclysm Arsenal이 이미 깔린 설치 실루엣 위에 cataclysm fan을 겹친다. 열린 lane 둘만 오래 비운다.",
-        roadmapDetail: "Cataclysm Arsenal -> 열린 lane 둘 유지",
+          supportSummary
+            ? `${supportSummary.title}가 먼저 열린 seam을 붙들고 cataclysm fan이 그 바깥 lane 둘을 같이 연다. 열린 lane 둘만 오래 비운다.`
+            : "Cataclysm Arsenal이 이미 깔린 설치 실루엣 위에 cataclysm fan을 겹친다. 열린 lane 둘만 오래 비운다.",
+        roadmapDetail: `${supportSummary ? supportSummary.title : "Cataclysm Arsenal"} -> 열린 lane 둘 유지`,
         proof: "열린 lane 둘만 오래 비운다.",
         statusNote:
-          "Cataclysm Arsenal이 Wave 6 설치 위에 전면 cataclysm fan과 측면 포드를 덧댄다. 열린 lane 둘만 오래 비운다.",
+          supportSummary
+            ? `${supportSummary.title}가 pocket을 먼저 붙든 사이 cataclysm fan과 측면 포드가 바깥 lane 둘까지 같이 정리한다. 열린 lane 둘만 오래 비운다.`
+            : "Cataclysm Arsenal이 Wave 6 설치 위에 전면 cataclysm fan과 측면 포드를 덧댄다. 열린 lane 둘만 오래 비운다.",
       };
     }
     if (profileId === "aegis") {
       return {
-        title: "Warplate Halo",
+        title: supportSummary ? supportSummary.title : "Warplate Halo",
         combatAsk: "한 pocket만 길게 붙든다.",
         cadenceDetail:
-          "Warplate Halo가 몸체를 bastion hull로 바꾼다. 다음 전투는 한 pocket만 길게 붙든다.",
+          supportSummary
+            ? `${supportSummary.title}가 먼저 복귀 각을 열고 Warplate Halo가 그 pocket을 잠근다. 다음 전투는 한 pocket만 길게 붙든다.`
+            : "Warplate Halo가 몸체를 bastion hull로 바꾼다. 다음 전투는 한 pocket만 길게 붙든다.",
         headlineDetail:
-          "Warplate Halo가 재충전 warplate와 burst pulse를 얹는다. 한 pocket만 길게 붙든다.",
-        roadmapDetail: "Warplate Halo -> pocket hold",
+          supportSummary
+            ? `${supportSummary.title}가 pocket hold를 먼저 만들고 재충전 warplate가 그 자리에서 시간을 번다. 한 pocket만 길게 붙든다.`
+            : "Warplate Halo가 재충전 warplate와 burst pulse를 얹는다. 한 pocket만 길게 붙든다.",
+        roadmapDetail: `${supportSummary ? supportSummary.title : "Warplate Halo"} -> pocket hold`,
         proof: "한 pocket만 길게 붙든다.",
         statusNote:
-          "Warplate Halo가 재충전 warplate 두 겹과 burst pulse를 붙인다. 한 pocket만 길게 붙든다.",
+          supportSummary
+            ? `${supportSummary.title}가 연 복귀 pocket 위에 재충전 warplate 두 겹과 burst pulse가 겹쳐 붙는다. 한 pocket만 길게 붙든다.`
+            : "Warplate Halo가 재충전 warplate 두 겹과 burst pulse를 붙인다. 한 pocket만 길게 붙든다.",
       };
     }
     if (profileId === "ledger") {
       return {
-        title: "Black Ledger Heist",
+        title: supportSummary ? supportSummary.title : "Black Ledger Heist",
         combatAsk: "payout lane 하나만 깊게 긁는다.",
         cadenceDetail:
-          "Black Ledger Heist가 payout lane을 긁는 raid frame을 연다. 다음 전투는 payout lane 하나만 깊게 긁는다.",
+          supportSummary
+            ? `${supportSummary.title}가 복귀 lane을 붙들고 Black Ledger Heist가 payout fork를 연다. 다음 전투는 payout lane 하나만 깊게 긁는다.`
+            : "Black Ledger Heist가 payout lane을 긁는 raid frame을 연다. 다음 전투는 payout lane 하나만 깊게 긁는다.",
         headlineDetail:
-          "Black Ledger Heist가 twin tow fork를 덧대 raid frame을 만든다. payout lane 하나만 깊게 긁는다.",
-        roadmapDetail: "Black Ledger Heist -> payout lane raid",
+          supportSummary
+            ? `${supportSummary.title}가 빠질 seam을 붙드는 동안 twin tow fork가 payout lane을 깊게 긁는다. payout lane 하나만 깊게 긁는다.`
+            : "Black Ledger Heist가 twin tow fork를 덧대 raid frame을 만든다. payout lane 하나만 깊게 긁는다.",
+        roadmapDetail: `${supportSummary ? supportSummary.title : "Black Ledger Heist"} -> payout lane raid`,
         proof: "payout lane 하나만 깊게 긁는다.",
         statusNote:
-          "Black Ledger Heist가 주포 양옆에 twin tow fork를 열어 payout lane을 긁는 raid frame으로 바꾼다. payout lane 하나만 깊게 긁는다.",
+          supportSummary
+            ? `${supportSummary.title}가 빠질 복귀선을 받치고 twin tow fork가 payout lane을 끝까지 긁는다. payout lane 하나만 깊게 긁는다.`
+            : "Black Ledger Heist가 주포 양옆에 twin tow fork를 열어 payout lane을 긁는 raid frame으로 바꾼다. payout lane 하나만 깊게 긁는다.",
       };
     }
     return {
@@ -2153,18 +2186,11 @@
     };
   }
 
-  function getLateBreakHeadline(profileId) {
+  function getLateBreakHeadline(profileId, build = null) {
     if (CONSOLIDATED_12_WAVE_ROUTE) {
-      const closureCopy = getBaseRouteWave8ClosureCopy(profileId);
+      const closureCopy = getBaseRouteWave8ClosureCopy(profileId, build);
       return {
-        title:
-          profileId === "mutation"
-            ? "Cataclysm Arsenal"
-            : profileId === "aegis"
-              ? "Warplate Halo"
-              : profileId === "ledger"
-                ? "Black Ledger Heist"
-                : "완성 시험",
+        title: closureCopy.title || "완성 시험",
         detail: closureCopy.headlineDetail,
       };
     }
@@ -9102,7 +9128,7 @@
     const currentWeapon = weapon || computeWeaponStats(build);
     const doctrineBodyForm = getDoctrineBodyForm(build);
     const doctrineForm = currentWeapon && currentWeapon.doctrineFormLabel ? currentWeapon.doctrineFormLabel : null;
-    const lateBreakHeadline = getLateBreakHeadline(build && build.lateBreakProfileId);
+    const lateBreakHeadline = getLateBreakHeadline(build && build.lateBreakProfileId, build);
     const activeForm =
       getPresentationHeadlineLabel(currentWeapon, boundedWave) ||
       (currentWeapon && currentWeapon.lateFieldConvergenceLabel) ||
@@ -9836,7 +9862,7 @@
     const roadmap = getBuildRoadmap(build, currentWeapon, boundedWave);
     const doctrine = getBastionDoctrineDef(build);
     const supportTrack = getForgeSupportTrackSnapshot(build, supportSystem);
-    const lateBreakHeadline = getLateBreakHeadline(build && build.lateBreakProfileId);
+    const lateBreakHeadline = getLateBreakHeadline(build && build.lateBreakProfileId, build);
     const primaryOpenLabel =
       currentWeapon.doctrineFormLabel ||
       currentWeapon.evolutionLabel ||
@@ -10332,7 +10358,7 @@
     return previewRows[0];
   }
 
-  function getBaseRouteForgeChoiceTransformation(choice) {
+  function getBaseRouteForgeChoiceTransformation(choice, build = null) {
     const baseTransformation = getForgeChoiceTransformation(choice);
     const supportInstallSpotlight =
       choice &&
@@ -10341,6 +10367,13 @@
       choice.systemChoice
         ? getSupportSystemSpotlight(choice.systemChoice.systemId, choice.systemChoice.systemTier)
         : null;
+    const lateBreakSupportSummary =
+      choice &&
+      choice.type === "utility" &&
+      choice.lateBreakProfileId
+        ? getBaseRouteLateBreakSupportSummary(build)
+        : null;
+    const lateBreakSupportSpotlight = lateBreakSupportSummary ? lateBreakSupportSummary.spotlight : null;
     const previewRow = getBaseRouteForgePreviewRow(choice);
     const contractRole = choice && choice.contractRole ? choice.contractRole : "";
     const descriptionLines = getBaseRouteForgeDescriptionLines(choice);
@@ -10352,13 +10385,23 @@
           : baseTransformation.tone;
     const previewLabel = supportInstallSpotlight
       ? supportInstallSpotlight.hudLabel
+      : lateBreakSupportSpotlight
+        ? lateBreakSupportSpotlight.hudLabel
       : getBaseRouteForgePreviewLabel(choice, previewRow, tone);
     const previewValue = supportInstallSpotlight
       ? supportInstallSpotlight.hudValue
+      : lateBreakSupportSpotlight
+        ? lateBreakSupportSummary.title
       : getBaseRouteForgePreviewValue(choice, previewRow, tone);
     const rawPromise =
       supportInstallSpotlight
         ? supportInstallSpotlight.promise
+        : lateBreakSupportSpotlight && choice.lateBreakProfileId === "mutation"
+          ? `${lateBreakSupportSummary.title}가 먼저 열린 seam을 붙들고 cataclysm fan이 바깥 lane 둘을 같이 찢는다.`
+        : lateBreakSupportSpotlight && choice.lateBreakProfileId === "aegis"
+          ? `${lateBreakSupportSummary.title}가 복귀 pocket을 먼저 열고 재충전 warplate가 그 자리를 길게 잠근다.`
+        : lateBreakSupportSpotlight && choice.lateBreakProfileId === "ledger"
+          ? `${lateBreakSupportSummary.title}가 빠질 seam을 잡아 주는 동안 twin tow fork가 payout lane을 깊게 긁는다.`
         : descriptionLines[0] && !BASE_ROUTE_FORGE_ADMIN_LEAK_PATTERN.test(descriptionLines[0])
         ? descriptionLines[0]
         : tone === "defense"
@@ -10370,6 +10413,8 @@
     const proof =
       supportInstallSpotlight
         ? supportInstallSpotlight.proof
+        : lateBreakSupportSpotlight
+          ? getBaseRouteWave8ClosureCopy(choice.lateBreakProfileId, build).proof
         : descriptionLines[1] && !BASE_ROUTE_FORGE_ADMIN_LEAK_PATTERN.test(descriptionLines[1])
         ? descriptionLines[1]
         : baseTransformation.proof &&
@@ -10385,6 +10430,10 @@
       proof: trimInspectNote(localizeBaseRouteForgeText(proof), fallbackProof),
       cardTitle: supportInstallSpotlight
         ? choice.systemChoice?.title || supportInstallSpotlight.hudLabel
+        : lateBreakSupportSpotlight
+          ? choice && choice.title
+            ? choice.title
+            : baseTransformation.title
         : choice && choice.title
           ? choice.title
           : baseTransformation.title,
@@ -10392,6 +10441,8 @@
       previewValue: localizeBaseRouteForgeText(previewValue),
       accent: supportInstallSpotlight
         ? `${supportInstallSpotlight.hudLabel} · ${supportInstallSpotlight.hudValue}`
+        : lateBreakSupportSpotlight
+          ? `${lateBreakSupportSpotlight.hudLabel} · ${lateBreakSupportSummary.title}`
         : baseTransformation.accent,
     };
   }
@@ -10983,6 +11034,7 @@
     pendingFinalForge = false,
     dominantFormLabel = "",
     proofWindowLabel = "",
+    build = null,
   } = {}) {
     if (pendingFinalForge) {
       return {
@@ -10993,14 +11045,19 @@
       };
     }
 
-    const transformation = choice ? getBaseRouteForgeChoiceTransformation(choice) : null;
+    const transformation = choice ? getBaseRouteForgeChoiceTransformation(choice, build) : null;
     const supportInstall = getBaseRouteSupportInstallChoice(choice);
+    const lateBreakSupportSummary =
+      !supportInstall && choice && choice.lateBreakProfileId
+        ? getBaseRouteLateBreakSupportSummary(build)
+        : null;
     const titleLabel =
-      (supportInstall ? "설치" : "") ||
+      (supportInstall || lateBreakSupportSummary ? "설치" : "") ||
       (transformation && transformation.previewLabel) ||
       (riderStep ? "이번 설치" : "이번 도약");
     const titleValue =
       (supportInstall && supportInstall.title) ||
+      (lateBreakSupportSummary && lateBreakSupportSummary.title) ||
       (transformation && transformation.previewValue) ||
       (choice && (choice.chassisTitle || choice.systemChoice?.title || choice.title)) ||
       dominantFormLabel ||
@@ -11010,7 +11067,9 @@
       titleValue,
       leadLabel: "다음 전투",
       leadValue: choice
-        ? getBaseRouteForgeChoiceCombatAsk(choice, SUPPORT_SYSTEM_START_WAVE)
+        ? lateBreakSupportSummary && choice.lateBreakProfileId
+          ? getBaseRouteWave8ClosureCopy(choice.lateBreakProfileId, build).proof
+          : getBaseRouteForgeChoiceCombatAsk(choice, SUPPORT_SYSTEM_START_WAVE)
         : proofWindowLabel || "-",
     };
   }
@@ -11039,21 +11098,25 @@
     choice = null,
     dominantFormLabel = "",
     waveNumber = SUPPORT_SYSTEM_START_WAVE,
+    build = null,
   } = {}) {
     const supportInstall = getBaseRouteSupportInstallChoice(choice);
-    if (!supportInstall) {
+    const lateBreakSupportSummary =
+      !supportInstall && choice && choice.lateBreakProfileId
+        ? getBaseRouteLateBreakSupportSummary(build)
+        : null;
+    const featuredInstall = supportInstall || lateBreakSupportSummary;
+    if (!featuredInstall) {
       return null;
     }
-    const spotlight = getSupportSystemSpotlight(
-      supportInstall.systemId,
-      supportInstall.systemTier || 1
-    );
     return {
-      title: supportInstall.title || dominantFormLabel || "-",
+      title: featuredInstall.title || dominantFormLabel || "-",
       currentLoadoutLabel: "현재 머신",
       currentFormLabel: dominantFormLabel || "",
       askNote: trimForgeCombatAsk(
-        getBaseRouteSupportInstallCombatAsk(supportInstall.systemId, waveNumber),
+        supportInstall
+          ? getBaseRouteSupportInstallCombatAsk(supportInstall.systemId, waveNumber)
+          : getBaseRouteWave8ClosureCopy(choice.lateBreakProfileId, build).proof,
         "열린 공간을 남기고 자주 자리를 바꾼다."
       ),
     };
@@ -21723,12 +21786,13 @@
       "FORGE"
     );
     if (state.waveIndex + 2 === LATE_BREAK_ARMORY_WAVE && choice.lateBreakProfileId) {
+      const supportSummary = getBaseRouteLateBreakSupportSummary(state.build);
       pushCombatFeed(
         choice.lateBreakProfileId === "mutation"
-          ? "Cataclysm Arsenal 고정. Wave 9는 열린 lane 둘을 얼마나 오래 찢는지 바로 보는 첫 시험이다."
+          ? `${supportSummary ? supportSummary.title : "Cataclysm Arsenal"} ownership 고정. 다음 전투는 열린 lane 둘을 얼마나 오래 같이 비우는지 바로 본다.`
           : choice.lateBreakProfileId === "aegis"
-            ? "Warplate Halo 고정. Wave 9는 작은 pocket에 들어가 plate timing으로 버티는 첫 시험이다."
-            : "Black Ledger Heist 고정. Wave 9는 vaultline에서 얼마까지 긁고 빠질지 바로 가르는 첫 시험이다.",
+            ? `${supportSummary ? supportSummary.title : "Warplate Halo"} pocket hold 고정. 다음 전투는 한 pocket을 얼마나 길게 버티는지 바로 본다.`
+            : `${supportSummary ? supportSummary.title : "Black Ledger Heist"} payout raid 고정. 다음 전투는 payout lane을 얼마까지 긁고 빠질지 바로 가른다.`,
         "BREAK"
       );
     }
@@ -25549,6 +25613,7 @@
       pendingFinalForge: state.pendingFinalForge,
       dominantFormLabel: dominantFormSummary.label,
       proofWindowLabel: proofWindow.label,
+      build: state.build,
     });
     const dominantInstallHero =
       useBaseRouteContract && !state.pendingFinalForge
@@ -25556,6 +25621,7 @@
             choice: spotlightChoice,
             dominantFormLabel: dominantFormSummary.label,
             waveNumber: state.waveIndex + 2,
+            build: state.build,
           })
         : null;
     const forgeCombatAsk = trimForgeCombatAsk(

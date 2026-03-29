@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: delete shipped-facing `12-wave / signature / Afterburn / mission-board` doctrine from docs and live reward/status flow, then prove `Wave 3 gun leap -> Wave 6 support install -> Wave 8 closure` as one object-first `Wave 1-8` route.
+- Immediate priority: hard-cut shipped-facing `12-wave / signature / Afterburn / mission-board` scaffolding from docs and live flow, then make `Wave 6-8` belong to the first support install instead of another doctrine wrapper.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 15:05:00 KST
+  Findings:
+  - The project is still teaching and carrying a shadow game. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) still specifies a `mission board` title and signature-facing side panels, while [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md) still normalizes `run-start signature` and a `Wave 9-12` act ladder. That keeps the judged route aimed at prototype scaffolding instead of a shipped appetite loop.
+  - The playable still preserves a full late-game spine even with `CONSOLIDATED_12_WAVE_ROUTE = true`. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still holds `WAVE_CONFIG` entries for `Wave 9-12`, the full `POST_CAPSTONE_WAVE_LABELS` and `POST_CAPSTONE_ENCOUNTER_POOL`, plus Wave 8 transition/feed copy about `Late Break Armory`, `Wave 9`, and doctrine caches. The current slice is still being tuned in the shadow of a non-shipped route.
+  - The forge is still too document-like to create hunger. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) `renderForgeOverlay()` still foregrounds `current loadout`, `ask`, `proof`, `rider`, preview rows, and contract labels. Against the snap-read reward cadence of `Hades`, `Nova Drift`, or `Brotato`, this screen still asks the player to parse structure before wanting the install.
+  - The support layer has visible content breadth, but the run still refuses to let it own the back half. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) already has distinct orbitals, shields, sentries, missiles, and drones, yet the shipped route caps support bays at `1` and Wave 8 closure headlines another doctrine capstone (`Cataclysm Arsenal` / `Warplate Halo` / `Black Ledger Heist`) instead of making the first support install feel like the run-defining chapter. That weakens build hunger and makes Wave 6 payoff feel decorative.
+  Top Priority: Remove all shipped-facing `Wave 9-12 / Afterburn / signature / mission-board` scaffolding, then recenter `Wave 6-8` so one support install visibly owns the run's back half and the forge sells that object in one fast glance.
+  Why Now: Until the first support chapter becomes the thing players anticipate and replay for, the game will keep reading as a prototype with extra systems rather than a repeatable action roguelite.
+  Do Not Repeat: Do not spend another pass polishing doctrine names or adding more support variants while the run still hides a second game and buries installs under reward prose.
+  Release Gate: Progression
 
 - 2026-03-29 14:20:00 KST
   Findings:
@@ -6903,6 +6914,13 @@ This file is shared by two recurring Codex CLI jobs.
   Freeze: Pause new systems and late-route expansion until the base `Wave 1-12` run reads cleanly enough that a player can describe the finale without using internal draft/cache/ascension vocabulary.
 
 ## Latest Improvement
+
+- 2026-03-29 12:15:22 KST
+  Changed: recentered the shipped `Wave 8` late-break reward around the already installed support object in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). I added `getBaseRouteLateBreakSupportSummary(...)` and threaded it through `getBaseRouteWave8ClosureCopy(...)`, `getBaseRouteForgeChoiceTransformation(...)`, `getBaseRouteForgeSpotlightSummary(...)`, `getBaseRouteForgeDominantInstallHero(...)`, `getLateBreakHeadline(...)`, and the Wave 8 `BREAK` combat feed so the forge context now spotlights the earned support title first, keeps each card's unique late-break title second, and uses the compact late-break ask instead of generic defense text. In the same pass, [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks a representative `Aegis Halo` Wave 8 state so late-break cards keep `Warplate Halo` as the pick name while the spotlight/context/hero all sell the installed support as the dominant object. Validation passed with `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` said the first support install still failed to own the back half because Wave 8 immediately put a doctrine capstone back on top. The highest-value bounded interpretation inside `playables/cinder-circuit/` was to make the existing Wave 8 forge/status surfaces visibly inherit the installed support silhouette, so the player reads `my support chapter gets overdriven now` instead of `new doctrine finale appears now`.
+  Follow-up Risk: this fixes the reward read and back-half identity without changing the underlying late-break mechanics, so some deeper result/combat-state labels can still surface doctrine-first naming after the pick resolves. If critique still says the support chapter is decorative, the next bounded pass should retune post-pick result/live-status naming or small bits of the actual Wave 8 behavior, not add another support branch.
+  Reference Direction: followed the object-first snap-read from `Hades` boon picks and `Nova Drift` level-ups, where the top-line toy stays visible even when the underlying modifier is what actually changes.
+  Release Gate: Progression
 
 - 2026-03-29 14:25:00 KST
   Changed: quarantined more shipped-facing late-route leakage in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) by introducing `shouldHideShippingUpgradeEntry(...)` and using it in both `sanitizeConsolidatedBuildState(...)` and `getShippingUpgradePresentationLabel(...)`. Shipped pause/result `RUN` pills and recent-gain summaries now strip `시그니처`, `Late Break`, `Afterburn`, `Wave 9-12`, `Ownership Relay`, `Endform Overdrive`, contraband, and other roadmap/admin upgrade strings instead of letting those logs reappear after the 8-wave run has already been quarantined. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock sanitized upgrade history and to assert that only compact shipped beats like `Wave 3 무기 도약` or `안정화` survive presentation. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
