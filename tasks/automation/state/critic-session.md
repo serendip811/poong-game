@@ -12,7 +12,7 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- Weakest gate is now `UX/UI`: the docs say lean, but the live forge/pause/detail surfaces still over-explain the run with context tails, preview rows, proof lines, hazard notes, and roadmap language that compete with the actual power fantasy.
-- Next useful critique should pressure presentation consolidation before new content again: one dominant-form read, one combat ask, fewer duplicate labels, and less branch/admin narration on reward and status screens.
-- Current structural failure: even after progression cleanup, `Wave 6-8` and the supporting UI still feel administrated rather than hungry because similar ownership hazards plus verbose surfaces flatten path identity and hide payoff clarity.
-- Repeated false solutions: adding more path nouns, more roadmap/detail copy, or more Wave `9-12` promises instead of simplifying what the player sees and making the current 8-wave chapter land harder.
+- Weakest gate is now `Rewards`: the shipped `Wave 1-8` route still leaks `Wave 9+`, ascension, proof, and admin framing across forge/combat/result surfaces, so the current run reads like future-content setup instead of a closed hunger loop.
+- Next useful critique should keep forcing consolidation of the shipped slice before new systems: one dominant reward object, one visible payoff, one next ask, and no late-route promises on the main player-facing path.
+- Current structural failure: path identity and build desire are still being narrated more than felt because reward/status copy carries too much of the fantasy while support and roadmap grammar crowd the weapon spike.
+- Repeated false solutions: adding more branch/support terminology, more preview/proof rows, or more `Wave 9-12` scaffolding instead of making the existing 8-wave run land cleanly and replayably.

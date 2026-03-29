@@ -756,10 +756,10 @@ const wave8ForgeContextMarkup = game.createBaseRouteForgeContextMarkup({
     wave8PayoffTransform.wave8SupportPayoff?.askText ||
     game.getBaseRouteForgeChoiceCombatAsk(wave8PayoffHeadline, 8),
 });
-assert.ok(wave8ForgeContextMarkup.includes("forge-context-rail"));
+assert.ok(wave8ForgeContextMarkup.includes("compact-machine-read"));
 assert.ok(wave8ForgeContextMarkup.includes("완성 형태"));
 assert.ok(wave8ForgeContextMarkup.includes("Ember Ring Mk.II"));
-assert.ok(wave8ForgeContextMarkup.includes("현재 머신"));
+assert.ok(wave8ForgeContextMarkup.includes("완성 시험"));
 assert.equal(wave8PayoffRider?.contractLabel, "주포");
 assert.ok(wave8PayoffRider?.type !== "system");
 const shippedLadderWave6 = game.getShippingLadderSteps(
@@ -1046,13 +1046,13 @@ assert.equal(wave7FieldGrantRiderChoice?.systemTier, 2);
 const branchForgeContextMarkup = game.createBaseRouteForgeContextMarkup({
   title: "Dominion Sweep",
   currentLoadoutValue: "Twin Spine / Vector Thrusters",
+  askNote: "열린 lane 하나만 오래 민다.",
 });
-assert.ok(branchForgeContextMarkup.includes("forge-context-rail"));
-assert.ok(branchForgeContextMarkup.includes("forge-context-rail__item"));
+assert.ok(branchForgeContextMarkup.includes("compact-machine-read"));
+assert.ok(branchForgeContextMarkup.includes("compact-machine-read__ask"));
 assert.ok(branchForgeContextMarkup.includes("Dominion Sweep"));
 assert.ok(branchForgeContextMarkup.includes("Twin Spine / Vector Thrusters"));
-assert.ok(branchForgeContextMarkup.includes("현재 머신"));
-assert.ok(branchForgeContextMarkup.includes("forge-context-rail__item--accent"));
+assert.ok(branchForgeContextMarkup.includes("열린 lane 하나만 오래 민다."));
 assert.ok(
   branchForgeContextMarkup.includes("Twin Spine / Vector Thrusters -&gt; Dominion Sweep") ||
     branchForgeContextMarkup.includes("Twin Spine / Vector Thrusters -> Dominion Sweep")
@@ -1411,13 +1411,14 @@ assert.ok(!statusStripMarkup.includes("summary-head"));
 const forgeContextMarkup = game.createBaseRouteForgeContextMarkup({
   title: "Dominion Sweep",
   currentLoadoutValue: "Prism Crown",
+  askNote: "열린 lane 하나만 오래 민다.",
 });
 assert.ok(forgeContextMarkup.includes("Dominion Sweep"));
 assert.ok(!forgeContextMarkup.includes("다음 급등"));
-assert.ok(forgeContextMarkup.includes("forge-context-rail"));
-assert.ok(forgeContextMarkup.includes("forge-context-rail__value"));
+assert.ok(forgeContextMarkup.includes("compact-machine-read"));
+assert.ok(forgeContextMarkup.includes("compact-machine-read__ask"));
 assert.ok(forgeContextMarkup.includes("Prism Crown"));
-assert.ok(forgeContextMarkup.includes("현재 머신"));
+assert.ok(!forgeContextMarkup.includes("현재 머신"));
 assert.ok(
   forgeContextMarkup.includes("Prism Crown -&gt; Dominion Sweep") ||
     forgeContextMarkup.includes("Prism Crown -> Dominion Sweep")
@@ -1429,7 +1430,7 @@ assert.ok(!forgeContextMarkup.includes("forge-contract-strip"));
 assert.ok(!forgeContextMarkup.includes("contract-shell"));
 assert.ok(!forgeContextMarkup.includes("forge-card__pivot--bill"));
 assert.ok(!forgeContextMarkup.includes("세 장 중 하나만"));
-assert.ok(!forgeContextMarkup.includes("다음 시험"));
+assert.ok(forgeContextMarkup.includes("열린 lane 하나만 오래 민다."));
 assert.ok(!forgeContextMarkup.includes("보조 결"));
 assert.ok(!forgeContextMarkup.includes("forge-focus__hint"));
 assert.ok(
@@ -1522,11 +1523,13 @@ const forgeHeadlineMarkup = game.createBaseRouteForgeContextMarkup({
   title: "Payoff Run",
   eyebrow: "진화",
   currentLoadoutValue: "Afterglow",
+  askNote: "미사일이 연 측면부터 지운다.",
 });
 assert.ok(forgeHeadlineMarkup.includes("Payoff Run"));
 assert.ok(forgeHeadlineMarkup.includes("진화"));
 assert.ok(forgeHeadlineMarkup.includes("Afterglow"));
-assert.ok(forgeHeadlineMarkup.includes("forge-context-rail"));
+assert.ok(forgeHeadlineMarkup.includes("compact-machine-read"));
+assert.ok(forgeHeadlineMarkup.includes("미사일이 연 측면부터 지운다."));
 assert.ok(!forgeHeadlineMarkup.includes("분기 보상"));
 const forgeHeadlineSpotlight = game.getBaseRouteForgeSpotlightSummary({
   choice: wave6HeadlineChoice,
@@ -1563,12 +1566,12 @@ const dominantInstallContextMarkup = game.createBaseRouteForgeContextMarkup({
 assert.ok(dominantInstallContextMarkup.includes("Seeker Array"));
 assert.ok(dominantInstallContextMarkup.includes("Twin Spine"));
 assert.ok(dominantInstallContextMarkup.includes("주력 변이"));
-assert.ok(!dominantInstallContextMarkup.includes("미사일이 연 측면부터 지운다."));
+assert.ok(dominantInstallContextMarkup.includes("미사일이 연 측면부터 지운다."));
 assert.ok(
   dominantInstallContextMarkup.includes("Twin Spine -&gt; Seeker Array") ||
     dominantInstallContextMarkup.includes("Twin Spine -> Seeker Array")
 );
-assert.ok(!dominantInstallContextMarkup.includes("바로 다음 전투"));
+assert.ok(dominantInstallContextMarkup.includes("바로 다음 전투"));
 const forgeFinalSpotlight = game.getBaseRouteForgeSpotlightSummary({
   pendingFinalForge: true,
   dominantFormLabel: "Prism Crown",
@@ -2088,8 +2091,8 @@ assert.ok(
   wave6ForgeContextMarkup.includes("Twin Spine -&gt; Ember Ring") ||
     wave6ForgeContextMarkup.includes("Twin Spine -> Ember Ring")
 );
-assert.ok(!wave6ForgeContextMarkup.includes("바로 다음 전투"));
-assert.ok(!wave6ForgeContextMarkup.includes("고리가 긁은 입구로 짧게 파고든다."));
+assert.ok(wave6ForgeContextMarkup.includes("바로 다음 전투"));
+assert.ok(wave6ForgeContextMarkup.includes("고리가 긁은 입구로 짧게 파고든다."));
 assert.ok(
   wave6ForgeContextMarkup.includes("Twin Spine -&gt; Ember Ring") ||
     wave6ForgeContextMarkup.includes("Twin Spine -> Ember Ring")

@@ -11499,25 +11499,14 @@
         : featuredInstallValue && featuredInstallValue !== dominantTitle
           ? featuredInstallValue
           : "");
-    return `
-      <div class="forge-context-rail">
-        <article class="forge-context-rail__item">
-          <span class="forge-context-rail__label">현재 머신</span>
-          <strong class="forge-context-rail__value">${currentLoadoutValue || dominantTitle}</strong>
-        </article>
-        <article class="forge-context-rail__item forge-context-rail__item--accent">
-          <span class="forge-context-rail__label">${eyebrow}</span>
-          <strong class="forge-context-rail__value">${dominantTitle}</strong>
-        </article>
-      </div>
-      ${
-        transitionDetail
-          ? `
-            <p class="forge-context-rail__note">${transitionDetail}</p>
-          `
-          : ""
-      }
-    `;
+    return createCompactMachineReadMarkup({
+      eyebrow: eyebrow || "지금 변신",
+      title: dominantTitle,
+      detail: transitionDetail,
+      askLabel: askLabel || "다음 전투",
+      askValue: askNote || "바로 다음 전투 ask를 확인한다.",
+      modifier: "overlay",
+    });
   }
 
   function getBaseRouteForgeSpotlightSummary({
@@ -27262,8 +27251,20 @@
                     : "",
             currentLoadoutValue: dominantInstallHero?.currentFormLabel || dominantFormSummary.label || "",
             featuredInstallValue: dominantInstallHero?.title || forgeSpotlightSummary.titleValue || "",
-            branchPayoffLabel: forgeContextTail ? forgeContextTail.label : "",
-            branchPayoffValue: forgeContextTail ? forgeContextTail.value : "",
+            askLabel: "다음 전투",
+            askNote:
+              state.waveIndex + 2 === EARLY_MUTATION_FORGE_WAVE && spotlightChoice
+                ? trimForgeCombatAsk(
+                    getBaseRouteWave5FieldPathSummary(
+                      {
+                        ...state.build,
+                        wave5FieldPathId: inferBaseRouteWave5FieldPathId(spotlightChoice),
+                      },
+                      EARLY_MUTATION_FORGE_WAVE + 1
+                    )?.asks[EARLY_MUTATION_FORGE_WAVE + 1],
+                    forgeCombatAsk
+                  )
+                : forgeCombatAsk,
           })}
         </article>
       `
