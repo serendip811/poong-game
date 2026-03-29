@@ -8601,12 +8601,7 @@
     }
     if (Array.isArray(build.upgrades) && build.upgrades.length > 0) {
       build.upgrades = build.upgrades.filter(
-        (entry) =>
-          typeof entry !== "string" ||
-          (!entry.includes("교리 추격") &&
-            !entry.includes("Forge Pursuit") &&
-            !entry.includes("Contraband Overcommit") &&
-            !entry.startsWith("Ascension Relay:"))
+        (entry) => typeof entry !== "string" || !shouldHideShippingUpgradeEntry(entry)
       );
     }
     if (build.previewSupportSystemId) {
@@ -8691,6 +8686,51 @@
     build.doctrineCapstoneId = null;
     build.crownfireOverdriveId = null;
     return build;
+  }
+
+  function shouldHideShippingUpgradeEntry(upgradeText) {
+    const source = String(upgradeText || "").replace(/\s+/g, " ").trim();
+    if (!source) {
+      return false;
+    }
+    if (
+      source.includes("교리 추격") ||
+      source.includes("Forge Pursuit") ||
+      source.includes("Contraband Overcommit")
+    ) {
+      return true;
+    }
+    return (
+      source.includes("Afterburn") ||
+      source.includes("Late Break") ||
+      source.includes("Signature") ||
+      source.includes("시그니처") ||
+      source.includes("Live Ascension") ||
+      source.includes("Wave 9") ||
+      source.includes("Wave 10") ||
+      source.includes("Wave 11") ||
+      source.includes("Wave 12") ||
+      source.includes("roadmap") ||
+      source.includes("proof") ||
+      source.includes("Proof") ||
+      source.startsWith("Ascension Relay:") ||
+      source.startsWith("Ownership Relay:") ||
+      source.startsWith("Live Ascension Uplink:") ||
+      source.startsWith("Chassis Breakpoint:") ||
+      source.startsWith("Ascension Surge:") ||
+      source.startsWith("Ascension Core:") ||
+      source.startsWith("Endform Overdrive:") ||
+      source.startsWith("Dominion Break:") ||
+      source.startsWith("Field Arsenal MK ") ||
+      source.startsWith("Field Aegis MK ") ||
+      source.startsWith("Wildcard Protocol:") ||
+      source.startsWith("Predator Bait:") ||
+      source.startsWith("Predator Molt ") ||
+      source.startsWith("Dominant Mutation") ||
+      source.startsWith("불법 과투입:") ||
+      source.startsWith("금지 변이 ") ||
+      source.startsWith("Catalyst Molt:")
+    );
   }
 
   function getSanitizedConsolidatedBuild(build) {
@@ -10797,16 +10837,7 @@
     if (!source) {
       return "";
     }
-    if (
-      source.includes("교리 추격") ||
-      source.includes("Forge Pursuit") ||
-      source.includes("Contraband Overcommit") ||
-      source.startsWith("Ascension Relay:") ||
-      source.startsWith("Ownership Relay:") ||
-      source.startsWith("Live Ascension Uplink:") ||
-      source.startsWith("Chassis Breakpoint:") ||
-      source.startsWith("Ascension Surge:")
-    ) {
+    if (shouldHideShippingUpgradeEntry(source)) {
       return "";
     }
     const colonIndex = source.indexOf(":");

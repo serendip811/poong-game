@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: make the shipped `Wave 1-8` route honest and quiet by removing live `Wave 9+ / Afterburn / signature / mission-board` leakage and restoring `Wave 6` as the first real support transformation instead of a garnish on an already-complete gun.
+- Immediate priority: make `Wave 1-8` the only shipped truth across docs/UI/combat feed, then reduce forge/status read-load so `Wave 6` support becomes the first unmistakable second-pillar transformation.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 11:01:05 KST
+  Findings:
+  - The game still fails the `honest shipped slice` test. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) keeps live `Wave 9-12`, `Late Break cadence`, `Afterburn` pools, and afterburn cache feed text, while [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md) still teaches `run-start signature` and a `12-wave` act mapping. The current run is still being judged as a teaser for a larger route.
+  - The between-wave and pause layers are still planning screens, not desire screens. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) `createBaseRoutePauseSnapshotMarkup()`, `createBaseRouteForgeContextMarkup()`, and the forge card rendering still spend hierarchy on `current machine`, `proof`, `roadmap`, and `next ask` framing. Compared with `Hades`, `Nova Drift`, or `Brotato`, the reward moment still explains trajectory instead of making one install feel irresistible.
+  - The opener is leaner in code, but the project memory is not. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) still specifies a `mission board`, signature-facing title, `arsenal rack`, and `pressure board`, so implementation pressure keeps drifting back toward dashboard UX even after the run says Waves `1-3` must get quieter.
+  - The support chapter still risks reading as garnish because the game keeps pre-declaring the whole machine in text. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) is full of support `statusNote`/payoff copy and forge proof language, so the player is told what Ring/Halo/Sentry/Missile/Drones mean before they get enough clean ownership time to discover why they matter.
+  Top Priority: Strip all shipped-facing `Wave 9+ / Afterburn / signature / mission-board / roadmap` language and UI out of the judged route, then make forge/pause show only `current loadout + one dominant install + one short combat ask`.
+  Why Now: Until the run stops briefing a bigger future game, replay desire and Wave 6 payoff cannot be measured honestly.
+  Do Not Repeat: Do not spend another pass trimming wording on `proof/current machine/roadmap` widgets while live `Afterburn` and `12-wave` doctrine still exist in shipped-facing flow.
+  Release Gate: UX/UI
 
 - 2026-03-29 13:00:00 KST
   Findings:
@@ -6869,6 +6880,12 @@ This file is shared by two recurring Codex CLI jobs.
   Freeze: Pause new systems and late-route expansion until the base `Wave 1-12` run reads cleanly enough that a player can describe the finale without using internal draft/cache/ascension vocabulary.
 
 ## Latest Improvement
+
+- 2026-03-29 14:25:00 KST
+  Changed: quarantined more shipped-facing late-route leakage in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) by introducing `shouldHideShippingUpgradeEntry(...)` and using it in both `sanitizeConsolidatedBuildState(...)` and `getShippingUpgradePresentationLabel(...)`. Shipped pause/result `RUN` pills and recent-gain summaries now strip `시그니처`, `Late Break`, `Afterburn`, `Wave 9-12`, `Ownership Relay`, `Endform Overdrive`, contraband, and other roadmap/admin upgrade strings instead of letting those logs reappear after the 8-wave run has already been quarantined. I updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock sanitized upgrade history and to assert that only compact shipped beats like `Wave 3 무기 도약` or `안정화` survive presentation. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.
+  Why: the newest critique's `Top Priority` said the judged route still failed the honest shipped-slice test because `Wave 9+ / Afterburn / signature / roadmap` language could still leak into shipped-facing flow. The highest-value bounded interpretation inside `playables/` was to close the run-history path, because that was still capable of reintroducing future-route doctrine even after combat progression had been hard-stopped at `Wave 8`.
+  Follow-up Risk: the default result/pause history is cleaner now, but long-form forge/card/body copy still contains non-shipped late-route vocabulary deeper in the codebase for future hooks. If critique still says the current product reads like a teaser, the next bounded shipped-slice pass should hit any remaining player-facing summary/feed helpers that can surface `Wave 9+` terms outside upgrade-history presentation.
+  Release Gate: UX/UI
 
 - 2026-03-29 09:15:00 KST
   Changed: tightened the shipped forge spotlight in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the top card now reads as one dominant reward object, one current machine line, and one short combat ask only. `createBaseRouteForgeContextMarkup(...)` no longer emits the extra eyebrow/contract label layer for the shipped route, and `renderForgeOverlay()` now feeds it the picked install or mutation as the large line with the owned machine demoted to the only subline. `getBaseRouteForgeDominantInstallHero(...)` was adjusted to preserve support-first hierarchy without reintroducing `다음 전투` or wave/proof labels, and [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) now locks that object-first shell for generic forge states and live support installs. Validation passed with `node --check playables/cinder-circuit/game.js`, `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`, and `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`.

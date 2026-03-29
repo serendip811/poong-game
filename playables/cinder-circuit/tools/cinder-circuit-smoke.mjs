@@ -109,6 +109,13 @@ assert.equal(
 const quarantinedLateRun = game.quarantineShippedLateRouteState({
   build: {
     ...game.createInitialBuild("rail_zeal"),
+    upgrades: [
+      "Wave 3 무기 도약: Scatter Core",
+      "안정화: Ember Ring",
+      "Ownership Relay: Wave 8 bay uplink without armory stop",
+      "Endform Overdrive: Overheat Wake",
+      "Wave 11 final stand roadmap",
+    ],
     doctrineCapstoneId: "stormspire_needle",
     lateAscensionId: "crownsplitter_array",
     afterburnOverdriveId: "overheat_wake",
@@ -152,6 +159,28 @@ assert.equal(quarantinedLateRun.build.afterburnOverdriveId, null);
 assert.equal(quarantinedLateRun.build.afterburnDominionId, null);
 assert.equal(quarantinedLateRun.build.cashoutSupportId, null);
 assert.equal(quarantinedLateRun.build.lateFieldConvergenceId, null);
+assert.equal(
+  JSON.stringify(quarantinedLateRun.build.upgrades),
+  JSON.stringify(["Wave 3 무기 도약: Scatter Core", "안정화: Ember Ring"])
+);
+assert.equal(game.getShippingUpgradePresentationLabel("시그니처: Relay Oath"), "");
+assert.equal(game.getShippingUpgradePresentationLabel("Endform Overdrive: Overheat Wake"), "");
+assert.equal(game.getShippingUpgradePresentationLabel("Wave 11 final stand roadmap"), "");
+assert.equal(game.getShippingUpgradePresentationLabel("Wave 6 Ascension: Ember Ring"), "Ember Ring");
+assert.equal(
+  JSON.stringify(
+    game.getShippingUpgradePresentationLabels({
+      upgrades: [
+        "시그니처: Relay Oath",
+        "Wave 3 무기 도약: Scatter Core",
+        "Endform Overdrive: Overheat Wake",
+        "안정화: Ember Ring",
+        "Wave 11 final stand roadmap",
+      ],
+    })
+  ),
+  JSON.stringify(["Ember Ring", "Scatter Core"])
+);
 assert.ok(game.WAVE_CONFIG[0].spawnBudget < game.WAVE_CONFIG[2].spawnBudget);
 assert.equal(game.WAVE_CONFIG[0].activeCap, 12);
 assert.equal(game.WAVE_CONFIG[1].activeCap, 15);
