@@ -569,6 +569,23 @@ assert.equal(
   game.getBaseRouteResultRouteLabel(greedBuild, game.computeWeaponStats(greedBuild)),
   "조용한 선체 -> Ember Spindle -> 판돈 급습 -> Wave 8 완성 시험"
 );
+const greedResultMarkup = game.createBaseRouteResultBuildMarkup({
+  build: greedBuild,
+  weapon: game.computeWeaponStats(greedBuild),
+  result: {
+    routeLabel: game.getBaseRouteResultRouteLabel(greedBuild, game.computeWeaponStats(greedBuild)),
+    scrapBanked: 18,
+  },
+  grade: { grade: "A", note: "핵심 판단을 유지하며 회로를 닫은 러닝." },
+  runHistoryLabels: game.getBaseRouteResultBeatLabels(greedBuild, game.computeWeaponStats(greedBuild)),
+});
+assert.ok(greedResultMarkup.includes("RUN MEMORY"));
+assert.ok(greedResultMarkup.includes("Wave 5 판돈 급습"));
+assert.ok(greedResultMarkup.includes("최종 형태"));
+assert.ok(!greedResultMarkup.includes("FINAL FORM"));
+assert.ok(!greedResultMarkup.includes("Drive "));
+assert.ok(!greedResultMarkup.includes("속성 없음"));
+assert.ok(!greedResultMarkup.includes("보관 코어"));
 const wave5OffenseChoices = game.buildFieldGrantChoices(game.createInitialBuild("rail_zeal"), () => 0, 5);
 const wave5OffenseChoice = wave5OffenseChoices.find((choice) => choice.contractRole === "headline");
 const wave5DefenseChoice = wave5OffenseChoices.find((choice) => choice.contractRole === "rider");

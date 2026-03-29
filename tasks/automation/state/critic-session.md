@@ -12,7 +12,7 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- Weakest gate is now `UX/UI` in service of `Builds`: the `Wave 5` branch exists in combat, but shipped-facing docs/title/forge/result still teach `weapon jump -> support install -> proof` as the real run spine.
-- Next useful critique should pressure hierarchy consolidation, not more systems: `Bare Hull -> Wave 3 weapon -> Wave 5 path -> Wave 8 closure` needs to become the instantly readable story across title, forge, pause/result, and design docs.
-- Current structural failure: the game is still selling admin before desire. Forge and result surfaces over-explain current/loadout/payoff context instead of making one object and one payoff feel exciting at a glance.
-- Repeated false solutions: more late-run ambition, more support spectacle, or more local branch tech while the shipped run still summarizes itself with the wrong beats and too much terminology.
+- Weakest gate is now `Rewards`, with `UX/UI` still attached: the branch-first combat spine exists, but rerun-facing surfaces still package the game like a small systems dashboard instead of a hunger loop.
+- Next useful critique should keep pressuring hierarchy subtraction, not feature growth: title, forge, pause, and result need to remember only `Bare Hull -> Wave 3 weapon -> Wave 5 path -> Wave 8 closure`.
+- Current structural failure: the game still sells admin before desire and completion before transformation. `FINAL FORM`, `Overdrive`, support-install framing, affix chips, bench state, and preview/proof stacks make the 8-wave run sound more complete than it feels.
+- Repeated false solutions: adding more branch tech, support spectacle, endgame language, or result/pause metadata before the shipped shell is sparse, legible, and emotionally hungry.

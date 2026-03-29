@@ -14102,6 +14102,40 @@
     return beats;
   }
 
+  function createBaseRouteResultBuildMarkup({
+    build,
+    weapon,
+    result,
+    grade,
+    runHistoryLabels,
+  }) {
+    if (!build || !weapon || !result || !grade) {
+      return "";
+    }
+    const dominantForm = getDominantFormSummary(build, weapon, DEFAULT_ROUTE_WAVE_COUNT);
+    const finalFormLabel = dominantForm.label || `${CORE_DEFS[build.coreId].label} / ${weapon.tierLabel}`;
+    const finalFormDetail =
+      dominantForm.detail || `${CORE_DEFS[build.coreId].label} / ${weapon.tierLabel}`;
+    const finalRunHistory =
+      runHistoryLabels && runHistoryLabels.length
+        ? runHistoryLabels
+        : ["조용한 시작", "Wave 3 무기 방향", "Wave 8 완성 시험"];
+    return `
+      <p class="panel__eyebrow">RUN MEMORY</p>
+      <div class="result-build__grade">${grade.grade}</div>
+      <strong>${result.routeLabel}</strong>
+      <p>${grade.note}</p>
+      <div class="status-list">
+        ${createStatusRow("최종 형태", finalFormLabel)}
+        ${createStatusRow("무기 축", finalFormDetail)}
+        ${createStatusRow("잔여 고철", String(result.scrapBanked))}
+      </div>
+      <div class="mini-pill-row">
+        ${finalRunHistory.map((beat) => createMiniPill("RUN", beat)).join("")}
+      </div>
+    `;
+  }
+
   function createDoctrineChaseSystemChoice(build, doctrine, options = null) {
     if (!build || !doctrine) {
       return null;
@@ -19400,6 +19434,7 @@
     getBaseRouteResultCopy,
     getBaseRouteResultRouteLabel,
     getBaseRouteResultBeatLabels,
+    createBaseRouteResultBuildMarkup,
     getForgeEraPlan,
     createForgeEraMarkup,
     createEraContractPanelMarkup,
@@ -22730,7 +22765,6 @@
 
   function finishRun(victory) {
     quarantineShippedLateRouteState(state);
-    const benchEntries = getBenchEntries(state.build);
     const runHistoryLabels = getBaseRouteResultBeatLabels(state.build, state.weapon);
     const resultRouteLabel = getBaseRouteResultRouteLabel(state.build, state.weapon);
     state.screen = "result";
@@ -22760,33 +22794,15 @@
       createResultStat("Kills", String(state.result.kills)),
       createResultStat("고철+", String(state.result.scrapCollected)),
       createResultStat("Spent", String(state.result.scrapSpent)),
-      createResultStat("Drive", String(state.result.overdrivesUsed)),
-      createResultStat("Route", state.result.routeLabel),
-      createResultStat("Core", state.result.core),
+      createResultStat("Grade", grade.grade),
     ].join("");
-    elements.resultBuild.innerHTML = `
-      <p class="panel__eyebrow">FINAL FORM</p>
-      <div class="result-build__grade">${grade.grade}</div>
-      <strong>${state.result.routeLabel} / ${CORE_DEFS[state.build.coreId].label} / ${state.weapon.tierLabel}</strong>
-      <p>${grade.note}</p>
-      <div class="result-build__chips">
-        <span class="micro-chip">남은 고철 ${state.result.scrapBanked}</span>
-        <span class="micro-chip">Drive ${state.result.overdrivesUsed}회</span>
-        <span class="micro-chip">${state.weapon.affixLabels.join(" · ") || "속성 없음"}</span>
-        <span class="micro-chip">${
-          benchEntries.length ? summarizeBenchCoreIds(state.build.pendingCores) : "보관 코어 없음"
-        }</span>
-      </div>
-      <div class="mini-pill-row">
-        ${(runHistoryLabels.length ? runHistoryLabels : ["조용한 시작", "Wave 3 무기 방향", "Wave 8 완성 시험"])
-          .map((upgrade) => createMiniPill("RUN", upgrade))
-          .join("")}
-      </div>
-      <div class="status-list">
-        ${createStatusRow("잔여 고철", String(state.result.scrapBanked))}
-        ${createStatusRow("Overdrive", String(state.result.overdrivesUsed))}
-      </div>
-    `;
+    elements.resultBuild.innerHTML = createBaseRouteResultBuildMarkup({
+      build: state.build,
+      weapon: state.weapon,
+      result: state.result,
+      grade,
+      runHistoryLabels,
+    });
     pushCombatFeed(
       victory ? "최종 회로 봉인 성공. 전술 기록을 결과 패널로 이관한다." : "회로 붕괴. 손실 보고를 마친 뒤 재투입 가능.",
       victory ? "CLEAR" : "FAIL"
