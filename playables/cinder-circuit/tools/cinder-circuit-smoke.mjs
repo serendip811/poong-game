@@ -642,8 +642,8 @@ const aegisLiveStatus = game.getLiveSideBetSummary({
   overcommit: { active: false },
   doctrinePursuit: { active: false },
 });
-assert.equal(aegisLiveStatus?.label, "Aegis Halo");
-assert.ok(aegisLiveStatus?.status.includes("Ember Spindle"));
+assert.equal(aegisLiveStatus?.label, "Ember Spindle");
+assert.ok(aegisLiveStatus?.status.includes("Aegis Halo"));
 assert.equal(aegisLiveStatus?.note, "같은 seam으로 바로 재진입한다.");
 const aegisProofBuild = game.createInitialBuild("rail_zeal");
 aegisProofBuild.chassisId = "vector_thrusters";
@@ -859,6 +859,10 @@ assert.ok(branchForgeContextMarkup.includes("forge-context-spotlight"));
 assert.ok(branchForgeContextMarkup.includes("Dominion Sweep"));
 assert.ok(branchForgeContextMarkup.includes("Twin Spine / Vector Thrusters"));
 assert.ok(branchForgeContextMarkup.includes("현재 머신"));
+assert.ok(
+  branchForgeContextMarkup.indexOf("Twin Spine / Vector Thrusters") <
+    branchForgeContextMarkup.indexOf("Dominion Sweep")
+);
 assert.ok(!branchForgeContextMarkup.includes("분기 보상"));
 assert.ok(!branchForgeContextMarkup.includes("Scrapline Raid"));
 assert.ok(!branchForgeContextMarkup.includes("contract-shell"));
@@ -1218,6 +1222,7 @@ assert.ok(!forgeContextMarkup.includes("세 장 중 하나만"));
 assert.ok(!forgeContextMarkup.includes("다음 시험"));
 assert.ok(!forgeContextMarkup.includes("보조 결"));
 assert.ok(!forgeContextMarkup.includes("forge-focus__hint"));
+assert.ok(forgeContextMarkup.indexOf("Prism Crown") < forgeContextMarkup.indexOf("Dominion Sweep"));
 assert.ok(game.createBaseRouteForgeProofMarkup("열린 lane 하나만 오래 민다.").includes("다음 전투"));
 assert.ok(!game.createBaseRouteForgeProofMarkup("열린 lane 하나만 오래 민다.").includes("다음 시험"));
 assert.equal(
@@ -1346,6 +1351,7 @@ assert.ok(dominantInstallContextMarkup.includes("Ember Ring"));
 assert.ok(dominantInstallContextMarkup.includes("Twin Spine"));
 assert.ok(dominantInstallContextMarkup.includes("현재 머신"));
 assert.ok(dominantInstallContextMarkup.includes("고리가 긁은 입구로 짧게 파고든다."));
+assert.ok(dominantInstallContextMarkup.indexOf("Twin Spine") < dominantInstallContextMarkup.indexOf("Ember Ring"));
 assert.ok(!dominantInstallContextMarkup.includes("다음 전투"));
 const forgeFinalSpotlight = game.getBaseRouteForgeSpotlightSummary({
   pendingFinalForge: true,
@@ -1812,6 +1818,7 @@ assert.ok(wave6ForgeContextMarkup.includes("Ember Ring"));
 assert.ok(wave6ForgeContextMarkup.includes("Twin Spine"));
 assert.ok(wave6ForgeContextMarkup.includes("현재 머신"));
 assert.ok(wave6ForgeContextMarkup.includes("고리가 긁은 입구로 짧게 파고든다."));
+assert.ok(wave6ForgeContextMarkup.indexOf("Twin Spine") < wave6ForgeContextMarkup.indexOf("Ember Ring"));
 assert.ok(!wave6ForgeContextMarkup.includes("다음 전투"));
 assert.ok(!wave6ForgeContextMarkup.includes("contract-shell"));
 assert.ok(wave6HeadlineMarkup.includes("Ember Ring"));

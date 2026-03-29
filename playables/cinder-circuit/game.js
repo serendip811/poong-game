@@ -10576,10 +10576,10 @@
       boundedWave >= SUPPORT_SYSTEM_START_WAVE ? getBaseRouteInstalledSupportInstallSummary(build) : null;
     if (installedSupport) {
       return {
-        machineLabel: "설치",
-        machineValue: installedSupport.title,
-        payoffLabel: "현재 머신",
-        payoffValue: activeWeaponLabel,
+        machineLabel: "현재 머신",
+        machineValue: activeWeaponLabel,
+        payoffLabel: "설치",
+        payoffValue: installedSupport.title,
       };
     }
     if (boundedWave >= ARCHITECTURE_DRAFT_WAVE) {
@@ -11008,15 +11008,15 @@
     currentLoadoutValue = "",
     askNote = "",
   }) {
-    const spotlightValue = title || currentLoadoutValue || "-";
-    const secondaryValue =
-      currentLoadoutValue && currentLoadoutValue !== spotlightValue ? currentLoadoutValue : "";
+    const machineValue = currentLoadoutValue || title || "-";
+    const spotlightValue = title && title !== machineValue ? title : "";
     return `
       <div class="forge-context-spotlight">
-        <strong class="forge-context-spotlight__value">${spotlightValue}</strong>
+        <span class="forge-context-spotlight__eyebrow">${currentLoadoutLabel}</span>
+        <strong class="forge-context-spotlight__value">${machineValue}</strong>
         ${
-          secondaryValue
-            ? `<span class="forge-context-spotlight__subvalue">${currentLoadoutLabel} · ${secondaryValue}</span>`
+          spotlightValue
+            ? `<span class="forge-context-spotlight__subvalue">설치 · ${spotlightValue}</span>`
             : ""
         }
       </div>

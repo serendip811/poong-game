@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop expanding the shadow `signature / Wave 9+ / Afterburn` game and prove one honest `Wave 1-8` loop where `Wave 6-8` support ownership, forge readability, and replay hunger stand on their own.
+- Immediate priority: prove one honest `Wave 1-8` loop where `Wave 6` support ownership lands without `Wave 7` wildcard rescue or `Wave 8` bailout, and shipped-facing UI only sells current power plus one next ask.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 14:10:00 KST
+  Findings:
+  - The combat space is no longer the main blocker; `Wave 5-8` already expands the arena from `1520x860` up to `1920x1080` in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L480) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L587). The problem is that this breathing room is still being spent on proving the same gun/chassis lane instead of letting the player layer a second clear ownership axis.
+  - The shipped build layer still cannot create real run hunger because it withholds support breadth, then patches over the gap with rescue logic. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L5454) still starts the route at `supportBayCap: 1`, [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L6876) still forces a `Wave 8` tier-2 support payoff if none landed, and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3280) still lets a `Wave 7` wildcard suddenly unlock the full bay. That is not anticipation; it is emergency compensation.
+  - The run-start doctrine layer is still front-loading too much plan text for a game whose player feedback says the opening is already too busy. [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L157) still treats `run-start signature` as a principle, [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L125) still frames the title as a `mission board`, and live doctrine copy in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3629) still tells the player what support line should reopen at `Wave 8`. Stronger references do not ask the player to pre-read that much future routing before the first clean combat read.
+  - The forge/status shell still explains closure instead of selling transformation. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2084) keeps `roadmapDetail` and closure language alive, while [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L25735) still builds the forge around `proofWindow`, `current machine`, and repeated “next test” framing. Compared with `Hades`, `Nova Drift`, or `Brotato`, this is still too much tactical grammar for a reward moment that should mainly make the player want the install.
+  Top Priority: Replace the current `Wave 6-8` rescue structure with a guaranteed, visually obvious support chapter that starts at `Wave 6`, then strip shipped opener/forge/status surfaces down to current loadout, one dominant install, and one combat promise.
+  Why Now: Until the back half earns a real second-axis payoff on schedule, the run will keep feeling like a prototype that explains future depth instead of delivering present excitement.
+  Do Not Repeat: Do not answer this with more support variants, another wildcard, or shorter wording on the same doctrine/roadmap shell.
+  Release Gate: Builds
 
 - 2026-03-29 13:30:39 KST
   Findings:
@@ -4521,6 +4532,18 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-29 18:20:00 KST
+  Changed:
+  - Reworked the shipped compact machine board in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so live `Wave 6-8` HUD states stop promoting the installed support name to the main headline. `getBaseRouteOwnedPowerSummary(...)` now keeps support-owned reads on `현재 머신 -> 설치`, which makes the player read the active weapon/body first and the earned support silhouette second.
+  - Recut [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) `createBaseRouteForgeContextMarkup(...)` and the related [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) spotlight styling so compact forge context now uses the same order: owned machine as the large line, installed reward as the smaller secondary line, and one short combat ask beneath it.
+  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new hierarchy in both live status and forge context, then re-ran the existing smoke test.
+  Why:
+  - The latest critique's `Top Priority` was to strip shipped opener/forge/status surfaces down to current loadout, one dominant install, and one combat promise after the guaranteed `Wave 6` support chapter. The highest-value bounded interpretation already inside the shipped slice was to stop the compact route from flipping between `설치 우선` and `현재 머신 우선` depending on surface, because that inconsistency kept HUD/forge reading like route-admin shells instead of a single release-style board.
+  Follow-up Risk:
+  - This makes the shipped HUD/forge hierarchy more consistent, but the compact route still carries `proofWindow`/`current machine` plumbing in longer non-shipped branches and helper paths inside [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). If critique still says the reward shell is over-explained, the next bounded pass should remove one remaining hidden proof/helper layer rather than add more reward widgets.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: UX/UI
 
 - 2026-03-29 17:45:00 KST
   Changed:
