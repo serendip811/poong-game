@@ -9371,35 +9371,15 @@
 
   function getShippingContractSummary(build, weapon = null, waveNumber = 1, options = {}) {
     const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
-    const phase = options && options.phase ? options.phase : "combat";
     const currentWeapon = weapon || computeWeaponStats(build);
-    const dominantForm = getDominantFormSummary(build, currentWeapon, boundedWave);
-    const riderSummary = getBaseRouteInstalledRiderSummary(build, boundedWave);
-    const preBreakWindow = boundedWave < 3 && phase !== "result";
-    let titleLabel = preBreakWindow ? "현재 선체" : "현재 머신";
-    let titleValue = preBreakWindow ? "빈 선체" : dominantForm.label;
-    let leadLabel = phase === "forge" ? "다음 설치" : "다음 변이";
-    let leadValue = "Wave 3 무기 방향";
-    if (phase === "result") {
-      leadLabel = "마무리";
-      leadValue = "Wave 8 숙련 랩";
-    }
-    if (!preBreakWindow && boundedWave >= 3) {
-      titleLabel = boundedWave >= 6 && riderSummary ? "설치" : "무기 변이";
-      titleValue = boundedWave >= 6 && riderSummary ? riderSummary.value : dominantForm.label;
-    }
-    if (boundedWave >= 6 && riderSummary) {
-      leadLabel = phase === "result" ? "완성 변이" : "주력 변이";
-      leadValue = dominantForm.label;
-    } else if (boundedWave >= 3) {
-      leadLabel = "다음 설치";
-      leadValue = "Wave 6 지원 설치";
-    }
+    const machineSummary = getBaseRouteStatusBoardSummary(build, currentWeapon, boundedWave, {
+      supportSystem: options && options.supportSystem ? options.supportSystem : null,
+    });
     return {
-      titleLabel,
-      titleValue,
-      leadLabel,
-      leadValue,
+      titleLabel: machineSummary.machineLabel,
+      titleValue: machineSummary.machineValue,
+      leadLabel: machineSummary.payoffLabel,
+      leadValue: machineSummary.payoffValue,
     };
   }
 
@@ -19825,7 +19805,9 @@
           ? clamp(state.stats.wavesCleared, 1, totalTrackWaves)
           : clamp(state.waveIndex + 1, 1, totalTrackWaves);
     const currentWeapon = state.weapon || computeWeaponStats(state.build);
-    const machineSummary = getBaseRouteOwnedPowerSummary(state.build, currentWeapon, trackWaveNumber);
+    const machineSummary = getBaseRouteStatusBoardSummary(state.build, currentWeapon, trackWaveNumber, {
+      supportSystem: state.supportSystem || null,
+    });
     const label =
       state.phase === "forge"
         ? `FORGE W${trackWaveNumber}`

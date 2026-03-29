@@ -343,7 +343,7 @@ const openingContractSummary = game.getShippingContractSummary(
 );
 assert.equal(openingContractSummary.titleLabel, "현재 선체");
 assert.equal(openingContractSummary.titleValue, "빈 선체");
-assert.equal(openingContractSummary.leadLabel, "다음 변이");
+assert.equal(openingContractSummary.leadLabel, "첫 도약");
 assert.equal(openingContractSummary.leadValue, "Wave 3 무기 방향");
 const leanStartLaunchSummary = game.getLeanStartLaunchSummary(
   roadmapBuild,
@@ -375,7 +375,7 @@ const midrunContractSummary = game.getShippingContractSummary(
   game.computeWeaponStats(roadmapBuild),
   5
 );
-assert.equal(midrunContractSummary.titleLabel, "무기 변이");
+assert.equal(midrunContractSummary.titleLabel, "현재 머신");
 assert.equal(midrunContractSummary.leadLabel, "다음 설치");
 assert.equal(midrunContractSummary.leadValue, "Wave 6 지원 설치");
 const midrunLadderSteps = game.getShippingLadderSteps(
@@ -638,7 +638,7 @@ const shippedRoadmapMarkup = game.createShippingLadderMarkup(
   6
 );
 assert.ok(shippedRoadmapMarkup.includes("설치"));
-assert.ok(shippedRoadmapMarkup.includes("주력 변이"));
+assert.ok(shippedRoadmapMarkup.includes("현재 머신"));
 assert.ok(!shippedRoadmapMarkup.includes("분기 보상"));
 assert.ok(shippedRoadmapMarkup.includes("route-contract--double"));
 const aegisSpotlightBuild = game.createInitialBuild("rail_zeal");
@@ -771,9 +771,10 @@ const supportContractSummary = game.getShippingContractSummary(
   game.computeWeaponStats(seekerProofBuild),
   7
 );
-assert.equal(supportContractSummary.titleLabel, "설치");
-assert.equal(supportContractSummary.titleValue, "Seeker Array");
-assert.equal(supportContractSummary.leadLabel, "주력 변이");
+assert.equal(supportContractSummary.titleLabel, "현재 머신");
+assert.notEqual(supportContractSummary.titleValue, "Seeker Array");
+assert.equal(supportContractSummary.leadLabel, "설치");
+assert.equal(supportContractSummary.leadValue, "Seeker Array");
 assert.ok(supportContractSummary.leadValue.length > 0);
 const openingForgeBuild = game.createInitialBuild("rail_zeal");
 const openingForgeSummary = game.getShippingContractSummary(
@@ -784,7 +785,7 @@ const openingForgeSummary = game.getShippingContractSummary(
 );
 assert.equal(openingForgeSummary.titleLabel, "현재 선체");
 assert.equal(openingForgeSummary.titleValue, "빈 선체");
-assert.equal(openingForgeSummary.leadLabel, "다음 설치");
+assert.equal(openingForgeSummary.leadLabel, "첫 도약");
 assert.equal(openingForgeSummary.leadValue, "Wave 3 무기 방향");
 const supportForgeSummary = game.getShippingContractSummary(
   seekerProofBuild,
@@ -792,18 +793,18 @@ const supportForgeSummary = game.getShippingContractSummary(
   7,
   { phase: "forge" }
 );
-assert.equal(supportForgeSummary.titleLabel, "설치");
-assert.equal(supportForgeSummary.leadLabel, "주력 변이");
-assert.ok(supportForgeSummary.leadValue.length > 0);
+assert.equal(supportForgeSummary.titleLabel, "현재 머신");
+assert.equal(supportForgeSummary.leadLabel, "설치");
+assert.equal(supportForgeSummary.leadValue, "Seeker Array");
 const closingForgeSummary = game.getShippingContractSummary(
   seekerProofBuild,
   game.computeWeaponStats(seekerProofBuild),
   8,
   { phase: "forge" }
 );
-assert.equal(closingForgeSummary.titleLabel, "설치");
-assert.equal(closingForgeSummary.leadLabel, "주력 변이");
-assert.ok(closingForgeSummary.leadValue.length > 0);
+assert.equal(closingForgeSummary.titleLabel, "현재 머신");
+assert.equal(closingForgeSummary.leadLabel, "설치");
+assert.equal(closingForgeSummary.leadValue, "Seeker Array");
 const seekerDominantForm = game.getDominantFormSummary(
   seekerProofBuild,
   game.computeWeaponStats(seekerProofBuild),
