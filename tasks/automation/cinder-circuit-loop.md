@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop treating cleaner wording as enough and rebuild the shipped `Wave 3-8` forge path into a real build-authoring ladder, where offense, defense/support, and greed/utility forks can compete before more ceiling content is added.
+- Immediate priority: turn the new `Wave 6` fork into a real `Wave 3-8` ladder by keeping offense, defense/support, and greed/utility under pressure across multiple stops instead of collapsing back into auto-bundled installs and two-card scripted picks.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 00:40:00 KST
+  Findings:
+  - The new `Wave 6` fork is an improvement, but it is still mostly a packaged branch choice, not a build-authored chapter. `buildWave6ChassisBreakpointChoices()` locks the same featured chassis in every lane and then pre-bundles the support install for offense/defense, so the player is still selecting between prepared kits more than shaping a machine over time.
+  - The run still loses its greed/utility tension too often after that midpoint. `buildFieldGrantChoices()` keeps the shipped `Wave 1-8` route on a two-card contract for most waves, which means the greed lane is frequently suppressed exactly where a rerunnable roguelite should keep asking whether the player wants more power now or safer ownership later.
+  - `buildArchitectureDraftChoices()` still makes the run feel solved too early. A free doctrine-aligned Wave 3 weapon lock plus a forecasted Wave 6 payoff gives clarity, but it also narrows anticipation into “follow the promised chassis package” instead of building hunger for contested pivots, support timing, or risky economy lines.
+  - The forge presentation is cleaner than before, but `renderForgeOverlay()` still spends too much structure on explaining the package: current loadout, featured install, ask, branch payoff, proof window. Strong arena roguelite reward screens land the object and its power spike first; this still reads closer to a guided briefing than a desire hit.
+  Top Priority: Rework the shipped `Wave 4-8` reward ladder so the player can keep choosing between offense, defense/support, and greed at more than one stop, with support installs and economy risks competing as separate commitments instead of arriving pre-bundled inside fixed branch kits.
+  Why Now: A single honest midpoint fork is not enough to create rerun hunger if the surrounding waves still collapse back into a solved script.
+  Do Not Repeat: Do not answer this with a fourth branch, more terminology cleanup, or bigger numbers on the same prepacked lanes.
+  Release Gate: Progression
 
 - 2026-03-29 23:18:00 KST
   Findings:
@@ -183,20 +194,21 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass adding support content, wildcard unlocks, or softer wording on the same forge shell.
   Release Gate: Rewards
 
-- 2026-03-29 14:10:00 KST
-  Findings:
-  - The combat space is no longer the main blocker; `Wave 5-8` already expands the arena from `1520x860` up to `1920x1080` in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L480) and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L587). The problem is that this breathing room is still being spent on proving the same gun/chassis lane instead of letting the player layer a second clear ownership axis.
-  - The shipped build layer still cannot create real run hunger because it withholds support breadth, then patches over the gap with rescue logic. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L5454) still starts the route at `supportBayCap: 1`, [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L6876) still forces a `Wave 8` tier-2 support payoff if none landed, and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3280) still lets a `Wave 7` wildcard suddenly unlock the full bay. That is not anticipation; it is emergency compensation.
-  - The run-start doctrine layer is still front-loading too much plan text for a game whose player feedback says the opening is already too busy. [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md#L157) still treats `run-start signature` as a principle, [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md#L125) still frames the title as a `mission board`, and live doctrine copy in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L3629) still tells the player what support line should reopen at `Wave 8`. Stronger references do not ask the player to pre-read that much future routing before the first clean combat read.
-  - The forge/status shell still explains closure instead of selling transformation. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L2084) keeps `roadmapDetail` and closure language alive, while [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js#L25735) still builds the forge around `proofWindow`, `current machine`, and repeated “next test” framing. Compared with `Hades`, `Nova Drift`, or `Brotato`, this is still too much tactical grammar for a reward moment that should mainly make the player want the install.
-  Top Priority: Replace the current `Wave 6-8` rescue structure with a guaranteed, visually obvious support chapter that starts at `Wave 6`, then strip shipped opener/forge/status surfaces down to current loadout, one dominant install, and one combat promise.
-  Why Now: Until the back half earns a real second-axis payoff on schedule, the run will keep feeling like a prototype that explains future depth instead of delivering present excitement.
-  Do Not Repeat: Do not answer this with more support variants, another wildcard, or shorter wording on the same doctrine/roadmap shell.
-  Release Gate: Builds
-
 - Older entries trimmed automatically: 1
 
 ## Latest Improvement
+
+- 2026-03-29 01:15:00 KST
+  Changed:
+  - Reopened the shipped `Wave 7` field grant in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) as a true three-card follow-up whenever the run already hit the `Wave 6` chassis breakpoint, so the midpoint no longer collapses straight back into the old two-card `주력 / 버팀` contract.
+  - Kept the new `Wave 7` cache on visible offense / defense / greed tension by letting the existing `field_greed` raid contract compete as the `판돈` slot beside the installed-support rider instead of suppressing economy risk for the whole proof chapter.
+  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) and [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md) to lock the new `Wave 7` breakpoint follow-up behavior.
+  Why:
+  - The latest critique's `Top Priority` was to keep offense, defense/support, and greed competing at more than one stop on the shipped `Wave 4-8` ladder. The highest-value bounded interpretation was to uncollapse `Wave 7`, because that was the first post-breakpoint reward beat still forcing the run back into a solved two-card script.
+  Follow-up Risk:
+  - This restores one more real choice stop, but the greed card now reappears even on support-proof runs. If critique next says the `Wave 7` gamble is always correct or always ignored, the next bounded pass should tune `field_greed`'s debt/payoff math for post-breakpoint builds rather than reopening more waves at once.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:3983` assertion (`sentryTierTwo.interceptRange > 0`) after the new `Wave 7` contract assertions passed
+  Release Gate: Progression
 
 - 2026-03-29 23:59:00 KST
   Changed:
@@ -329,18 +341,6 @@ This file is shared by two recurring Codex CLI jobs.
   - This makes the `Wave 6` reward moment much clearer, but it also reduces local chassis choice at that stop to one doctrine-authored package. If critique next says the chapter is cleaner but too predetermined, the next bounded pass should add differentiation through the two ownership fights or the fallback's tradeoff, not by reopening three same-weight cards at the same forge.
   Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
   Release Gate: Rewards
-
-- 2026-03-29 18:20:00 KST
-  Changed:
-  - Reworked the shipped compact machine board in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so live `Wave 6-8` HUD states stop promoting the installed support name to the main headline. `getBaseRouteOwnedPowerSummary(...)` now keeps support-owned reads on `현재 머신 -> 설치`, which makes the player read the active weapon/body first and the earned support silhouette second.
-  - Recut [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) `createBaseRouteForgeContextMarkup(...)` and the related [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) spotlight styling so compact forge context now uses the same order: owned machine as the large line, installed reward as the smaller secondary line, and one short combat ask beneath it.
-  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new hierarchy in both live status and forge context, then re-ran the existing smoke test.
-  Why:
-  - The latest critique's `Top Priority` was to strip shipped opener/forge/status surfaces down to current loadout, one dominant install, and one combat promise after the guaranteed `Wave 6` support chapter. The highest-value bounded interpretation already inside the shipped slice was to stop the compact route from flipping between `설치 우선` and `현재 머신 우선` depending on surface, because that inconsistency kept HUD/forge reading like route-admin shells instead of a single release-style board.
-  Follow-up Risk:
-  - This makes the shipped HUD/forge hierarchy more consistent, but the compact route still carries `proofWindow`/`current machine` plumbing in longer non-shipped branches and helper paths inside [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). If critique still says the reward shell is over-explained, the next bounded pass should remove one remaining hidden proof/helper layer rather than add more reward widgets.
-  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
-  Release Gate: UX/UI
 
 - Older entries trimmed automatically: 2
 

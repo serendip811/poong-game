@@ -12,7 +12,7 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- The main blocker has shifted from shell wording to build authorship. Arena space and reward readability are improved enough that the shipped run can now be judged on whether players are actually making hungry decisions or just following a cleaned-up script.
-- Most fragile gate is now `Builds`, with `UX/UI` still important but no longer the sole ceiling. The next useful critique should test whether the shipped `Wave 3-8` ladder offers real offense/defense-greed tension and visible payoff targets.
-- Key structural problem: the shipped path still bundles or suppresses too many systems. `Wave 6` is close to a doctrine-confirm bundle, and base-route field grants still cut gamble/greed pressure too often, so replay desire stays lower than the amount of code/content implies.
-- Repeated false solutions: more copy cleanup on the same structure, more prepacked doctrine bundles disguised as choice, or adding new systems before one shipped build fork becomes truly contested and rerunnable.
+- The main blocker is no longer “there is no fork”; it is that the fork does not propagate into a longer authored ladder. `Wave 6` now branches, but surrounding rewards still collapse back into prepacked structure, so rerun hunger remains weaker than the game’s system count suggests.
+- Most fragile gate is now `Progression`, with `Builds` directly underneath it. The next useful critique should keep pressure on whether the shipped `Wave 3-8` route sustains offense/defense/greed tension across multiple beats instead of resolving it in one midpoint pick.
+- Key structural problem: the shipped route still suppresses greed/utility pressure and bundles support payoff too early. `buildFieldGrantChoices()` often removes the third lane, while architecture plus chassis forecasting still make the run feel partially solved by `Wave 3`.
+- Repeated false solutions: another packaged branch kit, more UI/copy trimming on top of the same scripted ladder, or extra content layers before the existing `Wave 4-8` ladder becomes contested and replayable.

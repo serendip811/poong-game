@@ -897,7 +897,10 @@ assert.equal(
   "가장 넓은 flank를 먼저 비우고 같은 gun/body lane 하나를 오래 붙들며 점유 시간을 늘린다."
 );
 const wave7FieldGrantChoices = game.buildFieldGrantChoices(chassisBranchBuild, () => 0, 7);
-assert.equal(wave7FieldGrantChoices.find((choice) => choice.contractRole === "gamble"), undefined);
+assert.equal(wave7FieldGrantChoices.length, 3);
+const wave7FieldGrantGambleChoice = wave7FieldGrantChoices.find((choice) => choice.contractRole === "gamble");
+assert.equal(wave7FieldGrantGambleChoice?.action, "field_greed");
+assert.equal(wave7FieldGrantGambleChoice?.contractLabel, "판돈");
 const wave7FieldGrantRiderChoice = wave7FieldGrantChoices.find((choice) => choice.contractRole === "rider");
 assert.equal(wave7FieldGrantRiderChoice?.type, "system");
 assert.equal(wave7FieldGrantRiderChoice?.systemId, "ember_ring");
@@ -2888,7 +2891,7 @@ assert.equal(
 );
 assert.equal(game.unlockLateSupportBay(chassisRun.build), false);
 const delayedWave7GrantChoices = game.buildFieldGrantChoices(chassisRun.build, () => 0, 7);
-assert.equal(delayedWave7GrantChoices.find((choice) => choice.contractRole === "gamble"), undefined);
+assert.equal(delayedWave7GrantChoices.find((choice) => choice.contractRole === "gamble")?.action, "field_greed");
 const delayedWave7Rider = delayedWave7GrantChoices.find((choice) => choice.contractRole === "rider");
 assert.ok(
   delayedWave7Rider &&

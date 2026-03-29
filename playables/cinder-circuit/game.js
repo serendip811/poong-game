@@ -17131,12 +17131,19 @@
 
   function buildFieldGrantChoices(build, rng, nextWave) {
     const wildcardChoice = createWildcardProtocolChoice(build, nextWave);
+    const shouldForceWave7ThreeWayFieldGrant =
+      CONSOLIDATED_12_WAVE_ROUTE &&
+      Number.isFinite(nextWave) &&
+      nextWave === 7 &&
+      build &&
+      build.wave6ChassisBreakpoint;
     const twoCardBaseRouteContract =
       CONSOLIDATED_12_WAVE_ROUTE &&
       Number.isFinite(nextWave) &&
       nextWave >= 1 &&
       nextWave <= DEFAULT_ROUTE_WAVE_COUNT &&
-      !shouldOpenBaseRouteSecondaryBranch(nextWave, build);
+      !shouldOpenBaseRouteSecondaryBranch(nextWave, build) &&
+      !shouldForceWave7ThreeWayFieldGrant;
     if (shouldUseLateFieldCache(nextWave)) {
       if (isArsenalBreakpointWave(nextWave)) {
         return [
