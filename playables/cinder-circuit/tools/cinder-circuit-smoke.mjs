@@ -4885,6 +4885,26 @@ assert.ok(wave7SupportOwnership.baseSpawnInterval > game.WAVE_CONFIG[6].baseSpaw
 assert.ok(wave7SupportOwnership.arena.width > game.WAVE_CONFIG[6].arena.width);
 assert.ok(wave7SupportOwnership.hazard.interval > game.WAVE_CONFIG[6].hazard.interval);
 assert.ok(wave7SupportOwnership.hazard.duration < game.WAVE_CONFIG[6].hazard.duration);
+const hazardContext = {
+  arenaWidth: wave7SupportOwnership.arena.width,
+  arenaHeight: wave7SupportOwnership.arena.height,
+  player: { x: wave7SupportOwnership.arena.width / 2, y: wave7SupportOwnership.arena.height / 2 },
+  moveVector: { x: 1, y: 0 },
+  aimVector: { x: 1, y: 0 },
+  enemies: [],
+  drops: [],
+  hazards: [],
+};
+const showcaseCandidates = game.buildHazardCandidates(wave7SupportOwnership.hazard, hazardContext);
+assert.ok(showcaseCandidates.some((candidate) => candidate.tag === "outer-flank-left"));
+assert.ok(showcaseCandidates.some((candidate) => candidate.tag === "outer-flank-right"));
+const showcaseSpawn = game.chooseHazardSpawn(wave7SupportOwnership.hazard, hazardContext, () => 0);
+const routeFocus = {
+  x: hazardContext.player.x + wave7SupportOwnership.hazard.radius * 0.9 + 42,
+  y: hazardContext.player.y,
+};
+assert.ok(Math.abs(showcaseSpawn.y - hazardContext.player.y) > wave7SupportOwnership.hazard.radius * 1.45);
+assert.ok(Math.hypot(showcaseSpawn.x - routeFocus.x, showcaseSpawn.y - routeFocus.y) > 150);
 
 const lateBreakSmokeBuild = game.createInitialBuild("scrap_pact");
 lateBreakSmokeBuild.bastionDoctrineId = "kiln_bastion";

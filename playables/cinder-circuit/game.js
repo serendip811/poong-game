@@ -125,6 +125,12 @@
       rearFlankWeight: 4.6,
       flankOffsetMultiplier: 2.05,
       rearOffsetMultiplier: 1.34,
+      routeDistanceMultiplier: 1.18,
+      routeTagPenalty: 1.1,
+      routeAvoidanceMultiplier: 1.35,
+      outerFlankWeight: 6.2,
+      outerFlankOffsetMultiplier: 2.7,
+      outerFlankForwardBiasMultiplier: 0.22,
     },
   };
   const ARSENAL_BREAKPOINT_ENCOUNTER_PROFILES = {
@@ -22645,7 +22651,11 @@
       config && config.targetingProfile && HAZARD_TARGETING_PROFILES[config.targetingProfile]
         ? HAZARD_TARGETING_PROFILES[config.targetingProfile]
         : null;
-    const routeDistance = clamp(config.radius * 0.9 + 42, 82, 148);
+    const routeDistance = clamp(
+      (config.radius * 0.9 + 42) * (targetingProfile?.routeDistanceMultiplier || 1),
+      82,
+      220
+    );
     const laneOffset = clamp(config.radius * 0.55, 24, 44);
     const projectedRoute = {
       x: player.x + heading.x * routeDistance,
@@ -22708,6 +22718,33 @@
           tag: "rear-flank-right",
         }
       );
+      if (Number.isFinite(targetingProfile.outerFlankWeight) && targetingProfile.outerFlankWeight > 0) {
+        const outerFlankOffset = clamp(
+          config.radius * (targetingProfile.outerFlankOffsetMultiplier || 2.3),
+          116,
+          248
+        );
+        const outerForwardBias =
+          clamp(
+            config.radius * (targetingProfile.outerFlankForwardBiasMultiplier || 0.18),
+            0,
+            42
+          );
+        candidates.push(
+          {
+            x: player.x + perpendicular.x * outerFlankOffset + heading.x * outerForwardBias,
+            y: player.y + perpendicular.y * outerFlankOffset + heading.y * outerForwardBias,
+            weight: targetingProfile.outerFlankWeight,
+            tag: "outer-flank-left",
+          },
+          {
+            x: player.x - perpendicular.x * outerFlankOffset + heading.x * outerForwardBias,
+            y: player.y - perpendicular.y * outerFlankOffset + heading.y * outerForwardBias,
+            weight: targetingProfile.outerFlankWeight,
+            tag: "outer-flank-right",
+          }
+        );
+      }
     }
 
     for (const enemy of context.enemies || []) {
@@ -22794,6 +22831,19 @@
         score -=
           ((minimumPlayerDistance - distanceToPlayer) / Math.max(36, config.radius)) *
           (targetingProfile.minPlayerDistancePenalty || 1.6);
+      }
+      if (Number.isFinite(targetingProfile.routeAvoidanceMultiplier) && targetingProfile.routeAvoidanceMultiplier > 0) {
+        score -=
+          clamp(1.14 - distanceToRoute / Math.max(92, config.radius * 1.28), 0, 1.14) *
+          targetingProfile.routeAvoidanceMultiplier;
+      }
+      if (
+        Number.isFinite(targetingProfile.routeTagPenalty) &&
+        targetingProfile.routeTagPenalty > 0 &&
+        typeof candidate.tag === "string" &&
+        candidate.tag.startsWith("route")
+      ) {
+        score -= targetingProfile.routeTagPenalty;
       }
     }
     if (candidate.tag === "elite") {

@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: cut the shipped run back to one honest `small start -> Wave 3 weapon leap -> Wave 6 support leap -> Wave 8 mastery lap` ladder, and quarantine all live `Late Break` / `Afterburn` / doctrine spillover until that slice feels replayable on its own.
+- Immediate priority: rebuild the shipped `Wave 5-8` stretch around breathing room and one owned support payoff, stripping live pressure-tax/side-objective spillover until the short `small start -> Wave 3 weapon leap -> Wave 6 support leap -> Wave 8 mastery lap` ladder is fun to rerun on its own.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 15:30:00 KST
+  Findings:
+  - The shipped run still plays too much like a managed stress test instead of a form-expression ladder. `beginWave()` can stack risk debt, greed raid, predator bait, combat cache, pursuit, and hazard amplification on top of the base wave, so even the supposed ownership band keeps inheriting prototype-style pressure clutter instead of letting one build identity breathe.
+  - Combat space is not yet tuned like a replayable arena shooter. Even where arena sizes grow, `Wave 6-8` keeps rising enemy variety, active bodies, and targeted hazard pressure together, and `chooseHazardSpawn()` deliberately leans hazards into the player's route focus. That creates constant lane denial, which weakens the feeling that movement choices or weapon shape are actually solving the fight.
+  - The support chapter still promises a wider system game than this slice can pay off. `createSupportSystemChoices()` is already talking in install/upgrade/bay language and even force-jumps to a tier-2 `Wave 8` payoff, so the player is being sold support administration before one clean support install has proven it can carry two fights by itself.
+  - Forge/HUD readability is cleaner than before, but the reward grammar still behaves more like a briefing card than a desire hit. `renderForgeOverlay()` is still assembled around spotlight/context/ask/bill logic, while stronger references land the object and the power spike first; this game is still closer to explaining the run than making the next pick feel irresistible.
+  Top Priority: Hard-quarantine all nonessential pressure taxes and side-objective overlays from the shipped `Wave 1-8` route, then retune `Wave 5-8` around larger breathing lanes, slightly lower live pressure, and exactly one support install that visibly owns two fights before any extra bay/upgrade/payoff logic returns.
+  Why Now: If the player never gets clear room to feel a build take over the arena, more systems will read as clutter instead of depth.
+  Do Not Repeat: Do not answer cramped combat with more support branches, more cache variants, or more descriptive forge framing.
+  Release Gate: Combat
 
 - 2026-03-29 14:35:00 KST
   Findings:
@@ -183,20 +194,20 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass adding named branches, cache variants, or preview rows before the existing 8-wave slice can be understood at a glance.
   Release Gate: Rewards
 
-- 2026-03-29 18:45:00 KST
-  Findings:
-  - The project is still shipping a split fantasy. `docs/games/cinder-circuit-design.md` still presents the title as a `mission board` with signature-facing side panels and still keeps `Afterburn` as a next-build target, while `docs/games/cinder-circuit-source-application.md` still teaches `run-start signature` and a `Wave 9-12` ladder. That keeps the opener aimed at taxonomy and future scope instead of a quiet, repeatable Wave 1-8 run.
-  - The live run is still structurally louder than the red flags allow. `BASE_BUILD` in `playables/cinder-circuit/game.js` still starts with `signatureId`, and `BASTION_DOCTRINE_DEFS` / doctrine pursuit text still frame Wave 6-8 around doctrine literacy, `support rider` reopen language, and shard chase instead of one simple support-install payoff the player can immediately feel.
-  - The support chapter is still being rescued instead of proven. Wildcard logic like `Nullplate Halo` raises `supportBayCap` to max on Wave 7, and Wave 6-8 pursuit rules still promise extra shard-based payoff, so the game keeps compensating for a weak middle chapter instead of forcing one install to carry two honest fights.
-  - The forge remains too process-heavy for a release-feeling reward hit. `renderForgeOverlay()` still runs through `proofWindow`, `riderStep`, `current machine`, and contract-role machinery before the install fantasy lands, which is far more explanatory than the object-first snap stronger upgrade screens use.
-  Top Priority: Remove shipped-facing signature/doctrine/future-route language from title, HUD, and forge-facing reads, then hard-lock Wave 6-8 to one visible support install with no shard pursuit or support-bay rescue logic.
-  Why Now: Until the opener is quieter and the first support chapter stands on its own, the run cannot generate real anticipation for a longer 20-30 wave future.
-  Do Not Repeat: Do not spend another pass just trimming copy while doctrine scaffolding and Wave 7-8 bailout growth still stay live.
-  Release Gate: Progression
-
 - Older entries trimmed automatically: 1
 
 ## Latest Improvement
+
+- 2026-03-29 16:20:00 KST
+  Changed:
+  - Retuned [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `support_showcase` hazards stop preferring the player’s forward route in the shipped `Wave 6-8` support chapter. The targeting profile now projects route candidates farther out, penalizes route-tag anchors, and adds heavier outer-flank candidates, which makes hazard spawns lean toward side pockets instead of repeatedly sealing the same approach lane.
+  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) and [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md) to lock deterministic support-showcase hazard behavior around off-route flank placement.
+  Why:
+  - The latest critique's `Top Priority` asked for `Wave 5-8` breathing lanes and less side-pressure clutter so one `Wave 6` support install can visibly own two fights. The highest-value bounded interpretation was that `chooseHazardSpawn(...)` was still leaning `support_showcase` hazards back into the player's route focus, so support-proof fights kept feeling lane-denial heavy even after earlier spawn/arena tuning.
+  Follow-up Risk:
+  - This gives the support chapter cleaner side-pocket hazards, but offensive or greed support paths may now get slightly too much central safety if their enemy mix remains unchanged. If critique next says support-proof fights are readable but too soft, the next bounded pass should tune branch-specific enemy mix or hazard count, not reintroduce forward-route hazard bias.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4001` assertion (`sentryTierTwo.interceptRange > 0`) after the new support-showcase hazard assertions were added
+  Release Gate: Combat
 
 - 2026-03-29 21:45:43 KST
   Changed:
@@ -328,18 +339,6 @@ This file is shared by two recurring Codex CLI jobs.
   - This makes the support chapter easier to read, but it may also leave some doctrine/support combinations slightly under-threatening if later support-proof surges keep growing. If critique next says the chapter is clearer but too soft, the next bounded pass should reintroduce pressure through support-specific enemy geometry, not by restoring direct route-targeted hazard denial.
   Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` failed on a pre-existing assertion at `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:3870` (`sentryTierTwo.interceptRange > 0`); targeted VM validation for the new `Wave 7` support-ownership config passed
   Release Gate: Combat
-
-- 2026-03-29 20:05:00 KST
-  Changed:
-  - Hardened the shipped compact-route state cleanup in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `sanitizeConsolidatedBuildState(...)` now force-resets polluted `Wave 6-8` runs back to one-bay support ownership. Any carried `auxiliaryJunctionLevel`, wildcard residue, or doctrine-pursuit progress is stripped and `supportBayCap` is clamped straight back to the lean shipped value of `1`.
-  - Closed one more leaked rescue path in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) by making the consolidated `BASE_BUILD` start with `signatureId = null` and by returning early from `shouldRunDoctrinePursuitWave(...)` on the shipped route. This keeps polluted compact states from reactivating shard-chase framing or hidden route identity inside the supposed single-install chapter.
-  - Extended [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) with explicit dirty-build assertions for `auxiliaryJunctionLevel` and `supportBayCap`, then re-ran the existing smoke plus a targeted VM check for the new compact-route lock.
-  Why:
-  - The latest critique's `Top Priority` called for hard-locking `Wave 6-8` to one visible support install with no shard pursuit or support-bay rescue logic. The highest-value bounded interpretation here was to stop relying only on choice-generation guards and make the shipped route resilient even if older or polluted build state sneaks through.
-  Follow-up Risk:
-  - The compact route is now structurally safer, but this does not yet remove every remaining doctrine/signature noun from title/HUD/forge helper text. If critique next says the chapter is honest but still too taxonomic, the next bounded pass should target one shipped-facing text surface directly rather than widening support content again.
-  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` failed on a pre-existing assertion at `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:3870` (`sentryTierTwo.interceptRange > 0`); targeted VM validation for the new compact-route lock passed
-  Release Gate: Progression
 
 - Older entries trimmed automatically: 2
 
