@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: strip the shipped shell down to `Bare Hull -> Wave 3 weapon -> Wave 5 path -> Wave 8 closure`, remove `FINAL FORM` / `Wave 6 support install` / admin-heavy wording from docs and result-pause-forge surfaces, and protect `Wave 1-2` as a sparse readable opening.
+- Immediate priority: align docs, title/HUD, forge, and result around `Bare Hull -> Wave 3 weapon -> Wave 5 path -> Wave 8 closure`, collapse `Tab` into a true quick status board, and stop shipped-facing surfaces from reading like a 12-wave admin dashboard.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-30 04:30:37 KST
+  Findings:
+  - The project is still drifting in its source-of-truth surfaces. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) still says the title is a `Wave 3 -> Wave 6 -> Wave 8` ladder and that forge should show current core/bench first, which directly contradicts the active branch-first 8-wave shell and keeps reintroducing the wrong hierarchy.
+  - The in-run HUD is still carrying prototype dashboard weight. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still renders roadmap cards, contract strips, machine panels, and era tracks around the arena, and [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) shows the non-`Tab` state is mostly a compressed version of that same package, not a genuinely thin combat HUD. Strong references keep the arena dominant and make the detailed build board opt-in, not ever-present.
+  - Forge is still too eager to explain the machine. The current `forge-focus`, context tails, preview rows, proof labels, and branch-payoff callouts in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) are better framed than before, but they still ask the player to parse a mini spec sheet before feeling desire for one obvious spike.
+  - This matters beyond wording because the opening fantasy is still being front-loaded with system completeness. If the player can already read route contract, support track, proof window, bench logic, and overdrive framing before the first strong mutation lands, later growth loses surprise and the run stops building hunger.
+  Top Priority: Strip the default combat shell to one dominant wave ask, one survival resource cluster, and one compact weapon/path read; move roadmap/contract/machine detail fully behind `Tab`, then rewrite the design doc UI section to match that shipped hierarchy exactly.
+  Why Now: Until the arena gets visual breathing room and the documentation stops teaching the old dashboard shape, every new build or wave idea will keep landing inside a shell that makes the run feel smaller and busier than it is.
+  Do Not Repeat: Do not answer this with more overlay categories, more card metadata, or another late-wave branch while the default play view still behaves like a compressed debug console.
+  Release Gate: UX/UI
 
 - 2026-03-30 18:45:00 KST
   Findings:
@@ -183,20 +194,22 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not answer this with more support tiers, more passive layers, or more forge copy on top of the same over-complete silhouette stack.
   Release Gate: Builds
 
-- 2026-03-29 22:30:57 KST
-  Findings:
-  - The shipped slice is still not structurally honest about being an `8-wave` game. `docs/games/cinder-circuit-source-application.md` still teaches `Wave 10-12` cadence and `playables/cinder-circuit/game.js` still carries large live seams of `Late Break`, `Afterburn`, and post-`Wave 8` support-bay language, so the player is still feeling roadmap leakage instead of a finished short run.
-  - Reward readability is still below strong arena roguelite standards. Compared with the object-first snap of `Hades`, `Nova Drift`, or `Brotato`, `renderForgeOverlay()`, `createBaseRouteForgeContextMarkup()`, and `createBaseRoutePauseSnapshotMarkup()` still lead with `current machine / ask / proof / install` framing instead of landing the offered form and visible delta first.
-  - The support chapter still reads too much like system administration. `createSupportSystemChoices()` is still built around install/upgrade/bay grammar and can still fast-track a tier-2 `Wave 8` support payoff, which front-loads completeness and weakens the feeling that the player is earning a bigger visual/function leap over time.
-  - The run keeps narrating itself at the exact moments that should feel immediate. `maybeAdvancePhase()` and `enterForge()` still push a lot of explicit transition copy about what the next stop means, so the player is reading run management instead of feeling a clean `fight -> pick a power spike -> test it` rhythm.
-  Top Priority: Collapse all shipped `Wave 1-8` reward and status surfaces to `current form -> offered leap -> next combat ask`, and fully quarantine all `Wave 9-12` / `Late Break` / support-bay admin language from the shipped docs, pause snapshot, combat-feed transitions, and forge framing.
-  Why Now: Until the short run is instantly readable and desirable, more systems or tuning passes will keep landing as prototype overhead instead of replay hunger.
-  Do Not Repeat: Do not answer this with more branch wrappers, more support-bay logic, or softer wording on the same multi-panel reward grammar.
-  Release Gate: Rewards
-
 - Older entries trimmed automatically: 1
 
 ## Latest Improvement
+
+- 2026-03-30 04:47:39 KST
+  Changed:
+  - Rewired the shipped combat HUD in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so live `Wave 1-8` combat now defaults to one right-side `combat ask` card built from `createMinimalCombatAskMarkup(...)`, while `Tab` temporarily opens the hidden detail board by flipping `hudDetailOpen` and restoring `Wave / Dash / Time / Scrap` plus the recent feed stack.
+  - Added the matching thin-shell selectors in [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) so `.combat-feed--minimal-ask` stays visible in the default arena view instead of disappearing with the old stack-list rule, keeping the arena on `survival cluster + compact machine read + one wave ask`.
+  - Rewrote the shipped UI truth in [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md), refreshed [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new `Tab`/minimal-HUD behavior, and updated [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md) so future passes do not drift back toward a default dashboard shell.
+  Why:
+  - The latest critique's `Top Priority` still said the default combat shell was carrying too much panel weight and that detail needed to move fully behind `Tab`. The highest-value bounded interpretation was to give the arena one dominant ask card in live play and make `Tab` finally behave like the deferred detail layer instead of a dead key.
+  Follow-up Risk:
+  - `Tab` now reveals feed/detail timing, but the left machine panel is still intentionally compact even in detail mode. If critique next says the hidden board still is not enough of a true status board, the next bounded pass should expand only the `Tab` state with one additional run-memory row rather than re-thickening the live combat shell.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4186` assertion (`sentryTierTwo.interceptRange > 0`) after the new HUD/detail assertions passed
+  Reference Direction: `Hades` combat HUD restraint and `Nova Drift`'s arena-first readability; keep one immediate ask visible in combat and defer build-history/detail reads until the player intentionally inspects them.
+  Release Gate: UX/UI
 
 - 2026-03-30 19:05:00 KST
   Changed:
@@ -334,17 +347,6 @@ This file is shared by two recurring Codex CLI jobs.
   - This makes the compact ladder more honest, but supportless greed or doctrine-commit runs may now feel intentionally sparse if their non-support payoff at `Wave 8` is not exciting enough. If critique next says the shortcut is gone but those endings feel flat, the next bounded pass should strengthen the non-support `Wave 8` payoff card rather than reopening late support installs.
   Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4038` assertion (`sentryTierTwo.interceptRange > 0`) after the new shipped `Wave 8` support-gating assertions passed
   Release Gate: Builds
-
-- 2026-03-29 22:44:36 KST
-  Changed:
-  - Rebuilt shipped `wave clear -> forge/victory lap` combat-feed transitions in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) around a new `getBaseRouteTransitionFeedCopy(...)` helper, then routed the consolidated `Wave 1-8` branches in `maybeAdvancePhase()` and `enterForge()` through it so they now speak in one compact `current form -> offered leap -> next ask` sentence instead of wave-specific admin narration.
-  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) and [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md) to lock those shipped transition summaries against regressions to `Late Break`, `Afterburn`, `support bay`, or `Wave 9-10` wording.
-  Why:
-  - The latest critique's `Top Priority` was still open in the moment-to-moment transition feed, because even after pause/result cleanup the shipped route kept narrating `Wave 4` and `Wave 8` stops like management steps. The highest-value bounded interpretation was to collapse the shared clear/forge feed grammar itself so the player sees one readable reward rhythm everywhere: current form first, the next leap second, the next combat ask last.
-  Follow-up Risk:
-  - The feed is now much cleaner, but the actual forge card body can still carry more explanatory copy than the new transitions around it. If critique next says the stop opens cleanly but the card stack still feels wordy, the next bounded pass should trim forge-card body copy to match this same object-first cadence instead of reopening more progression branches.
-  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4025` assertion (`sentryTierTwo.interceptRange > 0`) after the new shipped transition assertions passed
-  Release Gate: Rewards
 
 - Older entries trimmed automatically: 2
 

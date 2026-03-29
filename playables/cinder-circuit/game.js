@@ -11398,14 +11398,25 @@
     return Boolean(run && CONSOLIDATED_12_WAVE_ROUTE && run.phase !== "forge" && run.phase !== "result");
   }
 
+  function shouldShowBaseRouteHudDetail(run = state) {
+    return Boolean(
+      run &&
+        shouldUseMinimalBaseRouteHud(run) &&
+        run.phase === "wave" &&
+        !run.paused &&
+        run.hudDetailOpen
+    );
+  }
+
   function getMinimalBaseRouteHudVisibility(run = state) {
     const minimal = shouldUseMinimalBaseRouteHud(run);
+    const detailOpen = shouldShowBaseRouteHudDetail(run);
     return {
       minimal,
-      showWave: !minimal,
-      showDash: !minimal,
-      showTimer: !minimal,
-      showScrap: !minimal,
+      showWave: !minimal || detailOpen,
+      showDash: !minimal || detailOpen,
+      showTimer: !minimal || detailOpen,
+      showScrap: !minimal || detailOpen,
       showBench: !minimal,
       showRoadmap: !minimal,
       showUpgradeList: !minimal,
@@ -20182,6 +20193,7 @@
       shake: 0,
       result: null,
       paused: false,
+      hudDetailOpen: false,
       feed: [],
       overcommit: {
         active: false,
@@ -20617,7 +20629,7 @@
     }
     elements.arenaStage.classList.toggle(
       "arena-stage--hud-detail",
-      state.paused && !shouldUseMinimalBaseRouteHud(state)
+      shouldShowBaseRouteHudDetail(state) || (state.paused && !shouldUseMinimalBaseRouteHud(state))
     );
   }
 
@@ -20641,11 +20653,30 @@
     if (!elements.combatFeed) {
       return;
     }
+    const showBaseRouteHudDetail = shouldShowBaseRouteHudDetail(state);
+    const showMinimalCombatAsk =
+      CONSOLIDATED_12_WAVE_ROUTE &&
+      shouldUseMinimalBaseRouteHud(state) &&
+      state.phase === "wave" &&
+      !showBaseRouteHudDetail;
+    if (showMinimalCombatAsk) {
+      const waveNumber = clamp(state.waveIndex + 1, 1, DEFAULT_ROUTE_WAVE_COUNT);
+      const hazardStatus = describeHazardState(state);
+      const focus = getBaseRouteTransformationFocus(waveNumber, { stage: "combat" });
+      elements.combatFeed.classList.add("combat-feed--minimal-ask");
+      elements.combatFeed.innerHTML = createMinimalCombatAskMarkup({
+        focus,
+        waveAsk: getBaseRouteCombatAsk(state, null, hazardStatus),
+        hazardStatus,
+      });
+      return;
+    }
+    elements.combatFeed.classList.remove("combat-feed--minimal-ask");
     const items = state.feed.length
       ? state.feed
       : [{ stamp: "BOOT", text: "전투 중에는 가장 최근 전개 하나만 남는다." }];
     const expandedPauseFeed = state.paused && !shouldUseMinimalBaseRouteHud(state);
-    const visibleItems = expandedPauseFeed ? items : [items[0]];
+    const visibleItems = expandedPauseFeed || showBaseRouteHudDetail ? items : [items[0]];
     elements.combatFeed.innerHTML = visibleItems
       .map(
         (entry) => `
@@ -20655,7 +20686,7 @@
               (() => {
                 const summary =
                   CONSOLIDATED_12_WAVE_ROUTE ? getShippingCombatFeedEntrySummary(entry, state) : summarizeCombatFeedEntry(entry);
-                if (expandedPauseFeed && !CONSOLIDATED_12_WAVE_ROUTE) {
+                if ((expandedPauseFeed || showBaseRouteHudDetail) && !CONSOLIDATED_12_WAVE_ROUTE) {
                   return `<strong class="combat-feed__headline">${entry.text}</strong>`;
                 }
                 return `${summary.headline ? `<strong class="combat-feed__headline">${summary.headline}</strong>` : ""}${
@@ -20712,6 +20743,9 @@
       return;
     }
     state.paused = typeof force === "boolean" ? force : !state.paused;
+    if (state.paused) {
+      state.hudDetailOpen = false;
+    }
     if (state.paused) {
       input.keys.clear();
       input.pointer.inside = false;
@@ -29313,6 +29347,16 @@
     }
     if (event.code === "Tab") {
       event.preventDefault();
+      if (
+        state.screen === "game" &&
+        shouldUseMinimalBaseRouteHud(state) &&
+        state.phase === "wave" &&
+        !state.paused &&
+        !state.hudDetailOpen
+      ) {
+        state.hudDetailOpen = true;
+        render();
+      }
       return;
     }
     if (event.code === "KeyF" && !event.repeat) {
@@ -29340,7 +29384,19 @@
   });
 
   document.addEventListener("keyup", (event) => {
+    if (event.code === "Tab" && state.hudDetailOpen) {
+      state.hudDetailOpen = false;
+      render();
+    }
     input.keys.delete(event.code);
+  });
+
+  window.addEventListener("blur", () => {
+    input.keys.clear();
+    if (state.hudDetailOpen) {
+      state.hudDetailOpen = false;
+      render();
+    }
   });
 
   renderTitleLaunchPanel();

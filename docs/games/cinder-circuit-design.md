@@ -122,19 +122,19 @@
 
 ## UI Layout
 
-- Title: 좌측은 게임 판타지와 러닝 루프, 우측은 `Wave 3 -> Wave 6 -> Wave 8` 변신 계단과 시작 액션만 남긴 launch panel 구성
-- Top bar: 웨이브 지시문과 `Hull / Heat / Drive` 3연속 미터, `Dash / Time / Scrap` 보조 칩을 묶은 `command deck`
-- Left panel: 시그니처, 활성 코어, 벤치, 누적 보강을 차례로 보여 주는 `arsenal rack`
-- Center play space: 상단 `arena feed`와 활성 회로 요약, 중앙 캔버스, 하단 컨트롤 레일을 둔 아레나 프레임
-- Right panel: 웨이브 목표와 실시간 텔레메트리, 짧은 입력 힌트만 남긴 `pressure board`
-- Overlay: 현재 코어/벤치 상태를 먼저 보여 주고 그 아래 3장 카드를 크게 제시하는 `forge pause`
-- End screen: 등급, 핵심 통계, 최종 로드아웃 요약을 함께 보여 주는 `debrief card`
+- Title: 좌측은 게임 판타지와 러닝 루프, 우측은 `Bare Hull -> Wave 3 무기 -> Wave 5 경로 -> Wave 8 마감`만 남긴 launch panel 구성
+- Top bar: 기본 전투 중에는 `Hull / Heat / Drive`만 먼저 보이고, `Wave / Dash / Time / Scrap`은 `Tab` 상세 보드에서 잠깐 확인한다.
+- Bottom left: 현재 무기/경로와 바로 다음 전투를 한 번에 읽는 compact `machine read`
+- Bottom right: 현재 웨이브 ask와 위험 타이머만 남기는 single `combat ask` 카드
+- Detail board: `Tab`을 누르는 동안만 숨겨 둔 wave/timer/scrap/dash와 최근 combat feed를 펼쳐 확인한다.
+- Overlay: 포지는 큰 headline 카드 하나와 짧은 proof line 위주로 보여 주고, pause는 빠른 status board만 남긴다.
+- End screen: 결과는 route memory와 짧은 최종 형태 read를 먼저 남기는 `debrief card`
 
 ## UI Direction
 
 - 목표 톤은 `industrial command deck`이다. 웹 대시보드가 아니라, 제련 설비를 조작하는 전술 콘솔처럼 읽혀야 한다.
 - 정보는 긴 설명문보다 `미터`, `칩`, `짧은 상태 행`을 우선한다. 문장은 페이즈당 한두 곳만 남기고 나머지는 숫자와 라벨로 축약한다.
-- 전투 중 가장 먼저 읽혀야 하는 순서는 `생존 자원 -> 현재 웨이브 지시 -> 활성 무기 성격 -> 포지/벤치 상태`다.
+- 전투 중 가장 먼저 읽혀야 하는 순서는 `생존 자원 -> 현재 웨이브 ask -> 활성 무기/경로 read`다. 나머지 진행 상세는 `Tab` 뒤로 숨긴다.
 - 포지와 결과 화면은 전투 HUD와 시각적으로 분리한다. 전투는 얇고 빠른 HUD, 선택 화면은 큰 카드와 넓은 여백으로 상태 전환이 분명해야 한다.
 - 데스크톱 기준으로는 한 화면에서 전투가 끊기지 않게 유지하고, 좁은 폭에서는 `아레나 -> 좌패널 -> 우패널` 순으로 자연스럽게 스택된다.
 

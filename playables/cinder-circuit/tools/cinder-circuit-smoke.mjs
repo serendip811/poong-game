@@ -1633,6 +1633,24 @@ assert.equal(pausedHudVisibility.showWave, false);
 assert.equal(pausedHudVisibility.showDash, false);
 assert.equal(pausedHudVisibility.showTimer, false);
 assert.equal(pausedHudVisibility.showRoadmap, false);
+const detailHudVisibility = game.getMinimalBaseRouteHudVisibility({
+  paused: false,
+  phase: "wave",
+  hudDetailOpen: true,
+});
+assert.equal(detailHudVisibility.minimal, true);
+assert.equal(detailHudVisibility.showWave, true);
+assert.equal(detailHudVisibility.showDash, true);
+assert.equal(detailHudVisibility.showTimer, true);
+assert.equal(detailHudVisibility.showScrap, true);
+const stylesPath = path.join(repoRoot, "styles.css");
+const stylesMarkup = fs.readFileSync(stylesPath, "utf8");
+assert.ok(stylesMarkup.includes(".combat-feed--minimal-ask"));
+assert.ok(stylesMarkup.includes(".stack-list--overlay.combat-feed--minimal-ask"));
+const designDocPath = path.join(repoRoot, "..", "..", "docs", "games", "cinder-circuit-design.md");
+const designDocMarkup = fs.readFileSync(designDocPath, "utf8");
+assert.ok(designDocMarkup.includes("Bottom right: 현재 웨이브 ask와 위험 타이머만 남기는 single `combat ask` 카드"));
+assert.ok(designDocMarkup.includes("Detail board: `Tab`을 누르는 동안만 숨겨 둔 wave/timer/scrap/dash와 최근 combat feed를 펼쳐 확인한다."));
 const openingCombatAsk = game.getBaseRouteCombatAsk({
   waveIndex: 0,
   wave: { directive: "", hazard: null },

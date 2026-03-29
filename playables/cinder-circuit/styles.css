@@ -1064,6 +1064,10 @@ body[data-overdrive="true"] .backdrop__glow--right {
   display: none;
 }
 
+.arena-stage:not(.arena-stage--hud-detail) .stack-list--overlay.combat-feed--minimal-ask {
+  display: grid;
+}
+
 .arena-stage:not(.arena-stage--hud-detail) .core-summary--overlay .status-list,
 .arena-stage:not(.arena-stage--hud-detail) .core-summary--overlay .mini-pill-row,
 .arena-stage:not(.arena-stage--hud-detail) .core-summary--overlay .summary-note,
@@ -1141,6 +1145,15 @@ body[data-overdrive="true"] .backdrop__glow--right {
 .hud-overlay--bottom-minimal .build-panel--right {
   justify-items: end;
   width: min(100%, 360px);
+}
+
+.hud-overlay--bottom-minimal .combat-feed--minimal-ask {
+  width: min(100%, 320px);
+  padding: 0;
+  border-color: rgba(121, 213, 223, 0.14);
+  background:
+    linear-gradient(180deg, rgba(121, 213, 223, 0.1), transparent 100%),
+    rgba(11, 10, 9, 0.74);
 }
 
 .hud-overlay--bottom-minimal .status-card--overlay {
@@ -2698,6 +2711,10 @@ body[data-overdrive="true"] .backdrop__glow--right {
   gap: 8px;
 }
 
+.combat-feed--minimal-ask {
+  gap: 0;
+}
+
 .combat-feed__row {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
@@ -2735,6 +2752,10 @@ body[data-overdrive="true"] .backdrop__glow--right {
   color: var(--muted);
   font-size: 0.74rem;
   line-height: 1.32;
+}
+
+.combat-feed--minimal-ask .combat-ask-card__threat:last-child {
+  color: var(--text);
 }
 
 @media (max-width: 900px) {
