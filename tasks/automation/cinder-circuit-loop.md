@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: strip shipped-facing `12-wave/proof/rider/current machine` shell out of forge/status/HUD reads and prove one honest `Wave 6-8` support ownership chapter with two clean payoff fights and no wildcard or bailout rescue.
+- Immediate priority: freeze the shipped slice around one honest `Wave 6-8` support ownership chapter by deleting `mission board / signature / Wave 9-12 / proof-rider` teaching from shipped-facing reads and removing bailout support unlocks from that path.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 18:10:00 KST
+  Findings:
+  - The project is still teaching a larger, noisier game than the shipped slice can support. `docs/games/cinder-circuit-design.md` still sells the title as a `mission board` and keeps `Afterburn` in the next-build target, while `docs/games/cinder-circuit-source-application.md` still normalizes `run-start signature` and a `Wave 9-12` act ladder. That directly violates the current red-flag instruction to simplify the opener before adding more structure.
+  - The live forge still is not a clean reward hit. `renderForgeOverlay()` may now expose `current loadout -> featured install -> combat ask`, but it is still built on `proofWindow`, `riderStep`, `current machine`, and contract-role routing, so the player is still reading system administration underneath the surface instead of just feeling a desirable install and one immediate test.
+  - The support chapter is still padded with rescue logic instead of being honestly earned. The build still starts with `supportBayCap: 1`, but Wave 7/8 pathing can reopen extra support capacity or bypass the stop entirely through wildcard/admin-relay style logic, which means the run still compensates for weak chapter design instead of making one support install carry two real fights.
+  - The opener is still too strategically complete for the transformation fantasy it wants later. Live doctrine/signature definitions keep biasing the run around predefined pursuit/fort/siege routes and even talk about the `first support rider` reopening at `Wave 8`, which front-loads route literacy when player feedback is already asking for a quieter, less wordy start.
+  Top Priority: Remove shipped-facing `mission board / signature / Wave 9-12 / proof-rider` framing from docs and Wave 1-8 UI language, then lock `Wave 6-8` to one support install chapter with no wildcard, relay-skip, or bailout bay expansion.
+  Why Now: Until the first support chapter is both quiet and honest, the run cannot build replay hunger for later layers.
+  Do Not Repeat: Do not spend another pass only shortening forge copy while the same rescue structure and future-route grammar stay live.
+  Release Gate: Progression
 
 - 2026-03-29 17:05:00 KST
   Findings:
@@ -4554,6 +4565,18 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-29 19:40:00 KST
+  Changed:
+  - Locked the shipped `Wave 6-8` support chapter in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `buildWave6ChassisBreakpointChoices(...)` no longer opens an extra support bay or uses hidden admin-skip framing when the compact route installs its featured support. The Wave 6 featured chassis card now lands as one installed support silhouette on a single-axis breakpoint, not as a bay-expansion rescue package.
+  - Removed the compact-route bailout bay expansion in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) by making `unlockLateSupportBay(...)` a no-op for the shipped route and narrowing `getVisibleSupportOfferSystemIds(...)` so `Wave 8` only re-offers the already installed support system for an upgrade. The back half now keeps one owned support install instead of reopening second-install forks as compensation.
+  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the compact route stays at `supportBayCap = 1`, that Wave 6 chassis packages use `singleAxisBreakpoint` without `bayUnlock`, and that Wave 8 support visibility collapses to the installed system rather than a three-way fork. Re-ran the existing smoke test.
+  Why:
+  - The latest critique's `Top Priority` called for locking `Wave 6-8` to one honest support install chapter with no wildcard, relay-skip, or bailout bay expansion. The highest-value bounded interpretation in code was to stop the shipped route from reopening support capacity at the exact moments meant to prove one install can carry the back half.
+  Follow-up Risk:
+  - This makes the shipped support chapter more honest, but it also removes the compact route's secondary support fork at Wave 8. If critique next says the back half is cleaner but not exciting enough, the next bounded pass should make the installed support's Mk.II upgrade more dramatic in combat read or spectacle, not reopen extra bays.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Progression
 
 - 2026-03-29 19:25:00 KST
   Changed:

@@ -7237,6 +7237,9 @@
     if (!build) {
       return false;
     }
+    if (CONSOLIDATED_12_WAVE_ROUTE) {
+      return false;
+    }
     const targetCap = getOwnershipSupportBayCapacityTarget(build);
     if (getSupportBayCapacity(build) >= targetCap) {
       return false;
@@ -11899,7 +11902,7 @@
       return [];
     }
     if (baseRouteWave8SupportPayoff) {
-      return getBaseRouteWave8SupportForkSystemIds(build);
+      return installedSystemIds;
     }
     if (nextWave < LATE_BREAK_ARMORY_WAVE) {
       const midrunSystemId = getDoctrineMidrunSupportSystemId(build);
@@ -16756,8 +16759,9 @@
       forgeLaneLabel: "대표 설치",
       chassisId: featuredChassisDef.id,
       chassisTitle: featuredChassisDef.title,
-      skipNextAdminStop: true,
-      bayUnlock: Boolean(preferredSystemChoice),
+      skipNextAdminStop: false,
+      bayUnlock: false,
+      singleAxisBreakpoint: CONSOLIDATED_12_WAVE_ROUTE && Boolean(preferredSystemChoice),
       systemChoice: preferredSystemChoice
         ? {
             ...preferredSystemChoice,
