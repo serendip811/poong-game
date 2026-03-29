@@ -4744,9 +4744,16 @@ assert.equal(wave6ChassisOwnership.hazard.targetingProfile, "ownership_breathing
 
 const supportOwnershipBuild = game.createInitialBuild("scrap_pact");
 supportOwnershipBuild.supportBayCap = 1;
+supportOwnershipBuild.wave6ChassisBreakpoint = true;
 supportOwnershipBuild.supportSystems = [{ id: "ember_ring", tier: 1 }];
 const wave7SupportOwnership = game.resolveWaveConfig(6, supportOwnershipBuild);
-assert.equal(wave7SupportOwnership.hazard.targetingProfile, "ownership_breathing");
+assert.equal(wave7SupportOwnership.hazard.targetingProfile, "support_showcase");
+assert.ok(wave7SupportOwnership.spawnBudget < game.WAVE_CONFIG[6].spawnBudget);
+assert.ok(wave7SupportOwnership.activeCap < game.WAVE_CONFIG[6].activeCap);
+assert.ok(wave7SupportOwnership.baseSpawnInterval > game.WAVE_CONFIG[6].baseSpawnInterval);
+assert.ok(wave7SupportOwnership.arena.width > game.WAVE_CONFIG[6].arena.width);
+assert.ok(wave7SupportOwnership.hazard.interval > game.WAVE_CONFIG[6].hazard.interval);
+assert.ok(wave7SupportOwnership.hazard.duration < game.WAVE_CONFIG[6].hazard.duration);
 
 const lateBreakSmokeBuild = game.createInitialBuild("scrap_pact");
 lateBreakSmokeBuild.bastionDoctrineId = "kiln_bastion";

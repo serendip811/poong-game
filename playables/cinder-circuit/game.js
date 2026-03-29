@@ -110,6 +110,22 @@
       flankOffsetMultiplier: 1.85,
       rearOffsetMultiplier: 1.24,
     },
+    support_showcase: {
+      routeCandidateWeightMultiplier: 0.16,
+      routeScoreMultiplier: 0.14,
+      playerRingScoreMultiplier: 0.26,
+      eliteWeightMultiplier: 0.34,
+      eliteRouteWeightMultiplier: 0.16,
+      coreDropWeightMultiplier: 0.1,
+      scrapDropWeightMultiplier: 0.08,
+      catalystDropWeightMultiplier: 0.12,
+      minPlayerDistanceMultiplier: 1.62,
+      minPlayerDistancePenalty: 2.6,
+      flankWeight: 5.2,
+      rearFlankWeight: 4.6,
+      flankOffsetMultiplier: 2.05,
+      rearOffsetMultiplier: 1.34,
+    },
   };
   const ARSENAL_BREAKPOINT_ENCOUNTER_PROFILES = {
     mutation: {
@@ -2268,9 +2284,13 @@
   function resolveWaveConfig(index, build = null) {
     const baseConfig = WAVE_CONFIG[clamp(index, 0, MAX_WAVES - 1)];
     if (!baseConfig || index < LATE_BREAK_ARMORY_WAVE - 1 || !build) {
-      return applySupportProofEncounterConfig(
-        applyChassisBreakpointEncounterConfig(
-          applyEncounterPressureFamily(baseConfig),
+      return applySupportChapterBreathingRoom(
+        applySupportProofEncounterConfig(
+          applyChassisBreakpointEncounterConfig(
+            applyEncounterPressureFamily(baseConfig),
+            build,
+            index + 1
+          ),
           build,
           index + 1
         ),
@@ -2282,9 +2302,13 @@
     const override =
       directLateBreakOverride || SHARED_LATE_ACT_ENCOUNTER_POOL[index] || null;
     if (!override) {
-      return applySupportProofEncounterConfig(
-        applyChassisBreakpointEncounterConfig(
-          applyEncounterPressureFamily(baseConfig),
+      return applySupportChapterBreathingRoom(
+        applySupportProofEncounterConfig(
+          applyChassisBreakpointEncounterConfig(
+            applyEncounterPressureFamily(baseConfig),
+            build,
+            index + 1
+          ),
           build,
           index + 1
         ),
@@ -2297,9 +2321,13 @@
     if (arsenalBreakpointProfile) {
       config = applyEncounterOverride(config, arsenalBreakpointProfile);
     }
-    return applySupportProofEncounterConfig(
-      applyChassisBreakpointEncounterConfig(
-        applyEncounterPressureFamily(config),
+    return applySupportChapterBreathingRoom(
+      applySupportProofEncounterConfig(
+        applyChassisBreakpointEncounterConfig(
+          applyEncounterPressureFamily(config),
+          build,
+          index + 1
+        ),
         build,
         index + 1
       ),
@@ -16181,6 +16209,81 @@
       return nextConfig;
     }
     return config;
+  }
+
+  function shouldUseSupportChapterBreathingRoom(build, waveNumber) {
+    return Boolean(
+      CONSOLIDATED_12_WAVE_ROUTE &&
+      build &&
+      build.wave6ChassisBreakpoint &&
+      Number.isFinite(waveNumber) &&
+      waveNumber >= 6 &&
+      waveNumber <= 8 &&
+      getInstalledSupportSystems(build).length > 0
+    );
+  }
+
+  function applySupportChapterBreathingRoom(config, build, waveNumber) {
+    if (!config || !shouldUseSupportChapterBreathingRoom(build, waveNumber)) {
+      return config;
+    }
+    const nextConfig = {
+      ...config,
+      arena: config.arena ? { ...config.arena } : null,
+      hazard: config.hazard ? { ...config.hazard } : null,
+    };
+    const lateStep = waveNumber === 8;
+    if (Number.isFinite(nextConfig.spawnBudget)) {
+      nextConfig.spawnBudget = Math.max(
+        lateStep ? 96 : 78,
+        nextConfig.spawnBudget - (lateStep ? 8 : 12)
+      );
+    }
+    if (Number.isFinite(nextConfig.activeCap)) {
+      nextConfig.activeCap = Math.max(
+        lateStep ? 17 : 15,
+        nextConfig.activeCap - (lateStep ? 1 : 2)
+      );
+    }
+    if (Number.isFinite(nextConfig.baseSpawnInterval)) {
+      nextConfig.baseSpawnInterval *= lateStep ? 1.04 : 1.08;
+    }
+    if (nextConfig.arena) {
+      nextConfig.arena.width += lateStep ? 40 : 80;
+      nextConfig.arena.height += lateStep ? 30 : 60;
+    }
+    if (nextConfig.hazard) {
+      nextConfig.hazard.targetingProfile = "support_showcase";
+      if (Number.isFinite(nextConfig.hazard.interval)) {
+        nextConfig.hazard.interval *= lateStep ? 1.08 : 1.14;
+      }
+      if (Number.isFinite(nextConfig.hazard.telegraph)) {
+        nextConfig.hazard.telegraph *= lateStep ? 1.04 : 1.1;
+      }
+      if (Number.isFinite(nextConfig.hazard.duration)) {
+        nextConfig.hazard.duration = Math.max(3.9, nextConfig.hazard.duration - (lateStep ? 0.18 : 0.32));
+      }
+      if (Number.isFinite(nextConfig.hazard.relayRange)) {
+        nextConfig.hazard.relayRange = Math.max(300, nextConfig.hazard.relayRange - (lateStep ? 16 : 28));
+      }
+      if (Number.isFinite(nextConfig.hazard.driftSpeed)) {
+        nextConfig.hazard.driftSpeed = Math.max(84, nextConfig.hazard.driftSpeed - (lateStep ? 6 : 12));
+      }
+      if (Number.isFinite(nextConfig.hazard.driftOrbit)) {
+        nextConfig.hazard.driftOrbit = Math.max(0.18, nextConfig.hazard.driftOrbit - (lateStep ? 0.02 : 0.04));
+      }
+      if (Number.isFinite(nextConfig.hazard.enemyPullRadius)) {
+        nextConfig.hazard.enemyPullRadius = Math.max(
+          112,
+          nextConfig.hazard.enemyPullRadius - (lateStep ? 8 : 18)
+        );
+      }
+      if (Number.isFinite(nextConfig.hazard.turretInterval)) {
+        nextConfig.hazard.turretInterval += lateStep ? 0.08 : 0.12;
+      }
+    }
+    nextConfig.note = `${nextConfig.note} 지원 설치를 막 잠근 구간이라 hazard를 바깥 pocket 위주로 밀어, 두 전투 동안은 새 실루엣이 lane을 여는 감각부터 먼저 읽히게 눌렀다.`;
+    return nextConfig;
   }
 
   function shouldEnableBlackLedgerDebt(build, waveNumber) {

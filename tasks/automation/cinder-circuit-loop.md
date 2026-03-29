@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: strip shipped-facing `mission board / signature / Wave 9-12 / Afterburn / proof-rider` grammar and lock `Wave 6-8` to one earned support-install chapter with no wildcard, shard-chase, relay-skip, or bailout bay expansion.
+- Immediate priority: freeze new branch/UI wrapper growth and make `Wave 1-8` read as one quiet, object-first reward loop: no shipped-facing `signature / Wave 9-12 / Afterburn` leakage, no `Wave 6-8` rescue logic, and no document-like forge/status screens.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 19:20:00 KST
+  Findings:
+  - The run still feels like a roadmap for a bigger game instead of a finished 8-wave slice. `docs/games/cinder-circuit-design.md` still frames the title as a `mission board`, `docs/games/cinder-circuit-source-application.md` still normalizes `run-start signature` and a `12-wave act ladder`, and `playables/cinder-circuit/game.js` still exposes `Wave 9-12` / `Afterburn` route language in shipped-facing preview text.
+  - The forge is still too document-shaped to create build hunger. `renderForgeOverlay()` is still built around `proofWindow`, `riderStep`, `current machine`, `featured install`, `combat ask`, and contract-role scaffolding, while `createForgePreviewRows()` can still surface route-preview rows. Compared with the object-first snap of strong reward screens like `Hades`, `Nova Drift`, or `Brotato`, this is still too much explanation before desire.
+  - `Wave 6-8` still rescues the support chapter instead of proving it. `createSupportSystemChoices()` still special-cases a `Wave 8` support silhouette payoff, and `Nullplate Halo` / support-bay growth logic still lets the run widen the system shell instead of making one earned install carry two honest fights.
+  - Combat pressure is still layered like a stress test, not a payoff showcase. `beginWave()` stacks extra spawn budget, active cap, and hazard tempo through greed/debt/predator modifiers, and `chooseHazardSpawn()` still biases hazards toward the player route, so new installs keep getting judged inside the same squeezed movement lanes instead of creating clear ownership pockets.
+  Top Priority: Stop adding branch wrappers and rebuild the shipped `Wave 1-8` loop around one one-glance forge reward plus one guaranteed `Wave 6` support install that owns two cleaner fights before any extra lane/cap/bay expansion returns.
+  Why Now: Until the short run becomes immediately readable and desirable, more systems only hide the transformation fantasy instead of strengthening it.
+  Do Not Repeat: Do not spend another pass adding named branches, cache variants, or preview rows before the existing 8-wave slice can be understood at a glance.
+  Release Gate: Rewards
 
 - 2026-03-29 18:45:00 KST
   Findings:
@@ -4576,6 +4587,18 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-29 20:35:00 KST
+  Changed:
+  - Added a compact-route `Wave 6-8` breathing-room pass in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) with `applySupportChapterBreathingRoom(...)`, applied from `resolveWaveConfig(...)` only when the shipped run has actually locked in its `Wave 6` support install. The chapter now trims spawn budget and active cap for those ownership fights instead of judging the new install inside the same stress-test density.
+  - Added the new `support_showcase` hazard targeting profile in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and retuned the same support chapter so hazards spawn less aggressively on the player route, telegraph a little longer, and give slightly wider arenas during the first two install fights. This keeps `Wave 6-8` focused on what the installed ring/halo/sentry/missile/drone silhouette actually opens, not on constant route denial.
+  - Extended [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert representative `Wave 7` support-ownership configs now use `support_showcase` and lower pressure values than the base ladder.
+  Why:
+  - The latest critique's `Top Priority` asked for one guaranteed `Wave 6` support install that owns two cleaner fights before extra lane/cap/bay expansion returns. The highest-value bounded interpretation was to keep the installed support chapter but stop stacking the same route-targeted pressure on top of it, so the player can actually feel that new second axis for two waves.
+  Follow-up Risk:
+  - This makes the support chapter easier to read, but it may also leave some doctrine/support combinations slightly under-threatening if later support-proof surges keep growing. If critique next says the chapter is clearer but too soft, the next bounded pass should reintroduce pressure through support-specific enemy geometry, not by restoring direct route-targeted hazard denial.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` failed on a pre-existing assertion at `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:3870` (`sentryTierTwo.interceptRange > 0`); targeted VM validation for the new `Wave 7` support-ownership config passed
+  Release Gate: Combat
 
 - 2026-03-29 20:05:00 KST
   Changed:
