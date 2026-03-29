@@ -13,6 +13,7 @@ PROMPT_FILE="$TASK_DIR/cinder-circuit-critique-prompt.md"
 LAST_FILE="$LOG_DIR/critique-last.txt"
 LOG_FILE="$LOG_DIR/critique.log"
 WEBHOOK_URL="https://discordapp.com/api/webhooks/1484556495533248802/YWP20Wt-tOoPs9mKEHNM6e7Qm4BPAYOXDMVSgd_HNHIYcoZ4QpEl-wqKargyN-iB1hCl"
+COMPACT_LOOP_BIN="$TASK_DIR/compact-cinder-loop.py"
 
 mkdir -p "$LOG_DIR"
 
@@ -54,6 +55,7 @@ PY
   printf '\n[%s] critique start\n' "$(date '+%Y-%m-%d %H:%M:%S')"
   notify "start" "loop started"
   cat "$PROMPT_FILE" | "$CODEX_BIN" exec --full-auto -C "$ROOT" -o "$LAST_FILE" -
+  /usr/bin/python3 "$COMPACT_LOOP_BIN"
   printf '[%s] critique done\n' "$(date '+%Y-%m-%d %H:%M:%S')"
   notify "done" "$(summary_text)"
 } >> "$LOG_FILE" 2>&1

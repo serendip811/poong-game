@@ -15,6 +15,7 @@ PROMPT_FILE="$TASK_DIR/cinder-circuit-release-review-prompt.md"
 LAST_FILE="$LOG_DIR/release-review-last.txt"
 LOG_FILE="$LOG_DIR/release-review.log"
 WEBHOOK_URL="https://discordapp.com/api/webhooks/1484556495533248802/YWP20Wt-tOoPs9mKEHNM6e7Qm4BPAYOXDMVSgd_HNHIYcoZ4QpEl-wqKargyN-iB1hCl"
+COMPACT_LOOP_BIN="$TASK_DIR/compact-cinder-loop.py"
 
 mkdir -p "$LOG_DIR"
 
@@ -60,6 +61,7 @@ trap on_error ERR
   printf '\n[%s] release-review start\n' "$(date '+%Y-%m-%d %H:%M:%S')"
   notify "start" "루프 시작"
   cat "$PROMPT_FILE" | "$CODEX_BIN" exec --full-auto -C "$ROOT" -o "$LAST_FILE" -
+  /usr/bin/python3 "$COMPACT_LOOP_BIN"
   printf '[%s] release-review done\n' "$(date '+%Y-%m-%d %H:%M:%S')"
   notify "done" "$(summary_text)"
 } >> "$LOG_FILE" 2>&1

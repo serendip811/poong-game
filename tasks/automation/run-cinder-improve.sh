@@ -14,6 +14,7 @@ PROMPT_FILE="$TASK_DIR/cinder-circuit-improve-prompt.md"
 LAST_FILE="$LOG_DIR/improve-last.txt"
 LOG_FILE="$LOG_DIR/improve.log"
 WEBHOOK_URL="https://discordapp.com/api/webhooks/1484556495533248802/YWP20Wt-tOoPs9mKEHNM6e7Qm4BPAYOXDMVSgd_HNHIYcoZ4QpEl-wqKargyN-iB1hCl"
+COMPACT_LOOP_BIN="$TASK_DIR/compact-cinder-loop.py"
 
 mkdir -p "$LOG_DIR"
 
@@ -71,6 +72,7 @@ PY
 
 auto_commit_only() {
   local status_output commit_message
+  /usr/bin/python3 "$COMPACT_LOOP_BIN"
   status_output=$(/usr/bin/git -C "$ROOT" status --short)
   if [ -z "$status_output" ]; then
     return 0
@@ -83,6 +85,7 @@ auto_commit_only() {
 
   /usr/bin/git -C "$ROOT" add -A
   /usr/bin/git -C "$ROOT" commit -m "$commit_message"
+  /usr/bin/git -C "$ROOT" gc --auto || true
 }
 
 {

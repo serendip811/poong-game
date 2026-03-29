@@ -11,6 +11,7 @@ Working rules:
 - Only update `tasks/automation/cinder-circuit-loop.md` and `tasks/automation/state/release-review-session.md`.
 - Read `## Release Goal`, `## Current Stage`, `## Release Gates`, and `## Anti-Drift Rules` first.
 - If needed, rewrite the 1-line item under `## Current Stage` so the whole loop aims at the correct next shipping problem.
+- Keep the loop entry compact; the wrapper trims old entries automatically.
 
 Your loop entry must be prepended under `## Latest Release Review` and include:
 1. Timestamp

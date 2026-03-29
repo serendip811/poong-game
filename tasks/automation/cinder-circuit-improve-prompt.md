@@ -26,6 +26,7 @@ Working rules:
 - Run the existing smoke test if your change touches gameplay or UI logic.
 - Do not run `git add`, `git commit`, or `git push` yourself; the wrapper script handles the commit after you finish.
 - If the work includes UI/UX changes, explicitly mention which reference direction or comparable game UI pattern informed the change in the loop entry.
+- Keep the loop entry compact; the wrapper trims history automatically, so do not duplicate long old context.
 
 Constraints:
 - Keep the improvement bounded. One coherent change per run.

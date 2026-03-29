@@ -22,6 +22,7 @@ Working rules:
 - Read the existing loop file first and prepend a new critique entry under `## Latest Critique`.
 - Read `tasks/automation/state/critic-session.md` first and refresh it after your critique so the role keeps memory across runs.
 - Keep the entry concise but specific.
+- Do not preserve huge historical detail inside the loop file; write only the newest useful critique because the wrapper will keep recent entries and trim older ones.
 - Treat `## Release Goal`, `## Current Stage`, `## Release Gates`, and `## Anti-Drift Rules` as active constraints, not decorative notes.
 - Treat `## Player Feedback Rules` and `## Current Red Flags` as highest-priority reality checks.
 - If the project is drifting, update `## Current Stage` with a better 1-line immediate priority before writing the critique entry.
