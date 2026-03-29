@@ -1657,14 +1657,6 @@ body[data-overdrive="true"] .backdrop__glow--right {
     rgba(28, 21, 18, 0.96);
 }
 
-.forge-overlay__panel--contract {
-  width: min(1020px, 100%);
-  padding-top: 20px;
-  background:
-    linear-gradient(180deg, rgba(255, 145, 88, 0.06), transparent 14%),
-    rgba(24, 19, 16, 0.97);
-}
-
 .forge-overlay__header h2 {
   margin: 8px 0 10px;
   font-size: clamp(1.9rem, 3.2vw, 2.5rem);
@@ -1675,11 +1667,6 @@ body[data-overdrive="true"] .backdrop__glow--right {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
   margin-top: 18px;
-}
-
-.forge-context--contract {
-  grid-template-columns: 1fr;
-  margin-top: 0;
 }
 
 .forge-context__card {
@@ -1693,47 +1680,25 @@ body[data-overdrive="true"] .backdrop__glow--right {
   grid-column: 1 / -1;
 }
 
-.forge-context--contract .forge-context__card--span-two {
-  padding: 6px 0 0;
-  background: transparent;
-  border: 0;
-}
-
-.forge-context__card--contract-shell {
-  padding: 0;
-}
-
-.forge-ask-shell__eyebrow {
-  margin: 0 0 8px;
-  color: var(--muted);
-  font-size: 0.68rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.forge-ask-shell {
+.forge-context-spotlight {
   display: grid;
   gap: 4px;
-  padding: 0 0 6px;
+  padding: 0 0 10px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.forge-ask-shell__value {
+.forge-context-spotlight__value {
   color: var(--text);
   font-size: clamp(1rem, 2vw, 1.2rem);
 }
 
-.forge-ask-shell__value--solo {
-  text-align: left;
-}
-
-.forge-ask-shell__subvalue {
+.forge-context-spotlight__subvalue {
   color: var(--muted);
   font-size: 0.78rem;
   line-height: 1.4;
 }
 
-.forge-ask-shell__note {
+.forge-context-spotlight__note {
   margin: 10px 0 0;
   color: var(--muted-strong);
   font-size: 0.82rem;
@@ -2168,13 +2133,6 @@ body[data-overdrive="true"] .backdrop__glow--right {
   align-items: start;
 }
 
-.forge-cards--contract {
-  grid-template-columns: minmax(0, 1.18fr) minmax(0, 1.18fr) minmax(220px, 0.82fr);
-  gap: 12px;
-  margin-top: 12px;
-  align-items: stretch;
-}
-
 .forge-contract-strip {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -2339,28 +2297,10 @@ body[data-overdrive="true"] .backdrop__glow--right {
 }
 
 @media (max-width: 900px) {
-  .forge-cards--contract {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .forge-card--contract[data-contract="headline"] {
-    grid-column: 1 / -1;
-  }
-
-  .forge-ask-shell,
-  .forge-ask-shell__note {
+  .forge-context-spotlight,
+  .forge-context-spotlight__note {
     align-items: flex-start;
     flex-direction: column;
-  }
-}
-
-@media (max-width: 640px) {
-  .forge-cards--contract {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .forge-card--contract[data-contract="headline"] {
-    grid-column: auto;
   }
 }
 
@@ -2611,13 +2551,6 @@ body[data-overdrive="true"] .backdrop__glow--right {
   font-size: 0.72rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-}
-
-.forge-context--contract .route-contract__title {
-  margin-top: 0;
-  font-size: clamp(1.42rem, 2.2vw, 1.92rem);
-  line-height: 1.04;
-  max-width: 12ch;
 }
 
 .wave-track {

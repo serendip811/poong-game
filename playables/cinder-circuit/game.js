@@ -10922,17 +10922,17 @@
     const secondaryValue =
       currentLoadoutValue && currentLoadoutValue !== spotlightValue ? currentLoadoutValue : "";
     return `
-      <div class="forge-ask-shell">
-        <strong class="forge-ask-shell__value forge-ask-shell__value--solo">${spotlightValue}</strong>
+      <div class="forge-context-spotlight">
+        <strong class="forge-context-spotlight__value">${spotlightValue}</strong>
         ${
           secondaryValue
-            ? `<span class="forge-ask-shell__subvalue">${currentLoadoutLabel} · ${secondaryValue}</span>`
+            ? `<span class="forge-context-spotlight__subvalue">${currentLoadoutLabel} · ${secondaryValue}</span>`
             : ""
         }
       </div>
       ${
         askNote
-          ? `<p class="forge-ask-shell__note">${askNote}</p>`
+          ? `<p class="forge-context-spotlight__note">${askNote}</p>`
           : ""
       }
     `;
@@ -25560,16 +25560,16 @@
         ? `${dominantFormSummary.label} 위에 rider 한 장만 얹고 바로 다음 전투 ask를 버틴다.`
           : `${dominantFormSummary.label} 다음에 가장 크게 전장을 바꿀 변이 하나만 먼저 고른다.`;
     if (elements.forgePanel) {
-      elements.forgePanel.classList.toggle("forge-overlay__panel--contract", useBaseRouteContract);
+      elements.forgePanel.classList.remove("forge-overlay__panel--contract");
     }
     if (elements.forgeHeader) {
       elements.forgeHeader.classList.toggle("hidden", useBaseRouteContract);
     }
     if (elements.forgeContext) {
-      elements.forgeContext.classList.toggle("forge-context--contract", useBaseRouteContract);
+      elements.forgeContext.classList.remove("forge-context--contract");
     }
     if (elements.forgeCards) {
-      elements.forgeCards.classList.toggle("forge-cards--contract", useBaseRouteContract);
+      elements.forgeCards.classList.remove("forge-cards--contract");
     }
     if (elements.forgeEyebrow) {
       elements.forgeEyebrow.classList.toggle("hidden", useBaseRouteContract);
@@ -25586,7 +25586,7 @@
     }
     elements.forgeContext.innerHTML = useBaseRouteContract
       ? `
-        <article class="forge-context__card forge-context__card--span-two forge-context__card--contract-shell">
+        <article class="forge-context__card forge-context__card--span-two">
           ${createBaseRouteForgeContextMarkup({
             title:
               dominantInstallHero?.title ||

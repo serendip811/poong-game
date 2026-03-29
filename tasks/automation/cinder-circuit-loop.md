@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: freeze expansion and strip the shipped `Wave 1-8` route down to a fast-read release shell where forge/status/title surfaces sell one install and one combat ask instead of contract/proof/admin language.
+- Immediate priority: make the shipped `Wave 1-8` route honest by removing live `Wave 9+ / Afterburn / contract-shell` leakage and preserving `Wave 6` as the first real support transformation instead of a garnish on an already-complete gun.
 
 ## Release Gates
 
@@ -61,6 +61,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-29 12:10:00 KST
+  Findings:
+  - The run is still not honestly shippable as an `8-wave` slice because [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) keeps live `Afterburn`, `Late Break`, `Wave 9-12`, support-bay unlock, and ascension messaging inside active player-facing flow. A player is still being taught a larger future ladder while the project claims it is judging a short rerunnable route.
+  - The forge remains structurally administrative even where wording improved. `renderForgeOverlay()`, `createEraContractPanelMarkup()`, and the base-route helpers still organize the stop around `contractRole`, `contractLabel`, `contract-shell`, `current machine`, branch payoff tails, and proof/ask framing, so the between-wave moment still reads like run management rather than a snap `take this thing and feel stronger now` reward beat.
+  - The early growth curve is still being sabotaged by the weapon copy itself. Multiple Wave 3 breakpoints in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still describe the gun as dominating `support 없이도`, which makes the Wave 6 helper/shield/drone layer sound optional instead of like the next chapter the player should crave.
+  - Combat space still risks collapsing back into route denial because `chooseHazardSpawn()` in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) explicitly biases hazards toward the player heading, elite-route line, and drop path. Even with a larger arena, that logic keeps steering pressure onto the same recovery lanes instead of letting a new install hold space for a while.
+  - The docs are still preserving the same drift. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) still specifies a `mission board`, signature-facing title, and `forge pause`, and [docs/games/cinder-circuit-source-application.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-application.md) still normalizes `run-start signature` and a `12-wave act ladder`, so the project keeps re-importing prototype scope into shipped-facing judgment.
+  Top Priority: Make the shipped build honest first: cut player-facing `Wave 9+ / Afterburn / signature / contract-shell` leakage and rewrite the Wave 3 weapon payoff so Wave 6 support is the first unmistakable second-pillar transformation.
+  Why Now: Until the short run stops feeling like a partial demo of a bigger plan, replay desire and build hunger cannot be judged cleanly.
+  Do Not Repeat: Do not spend another pass “simplifying” the same contract shell while leaving live `Wave 9+` escalation and `support 없이도` messaging in place.
+  Release Gate: Progression
 
 - 2026-03-29 11:05:00 KST
   Findings:
@@ -4432,6 +4444,18 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on HUD wording or status chips before the forge creates harder decisions.
 
 ## Latest Improvement
+
+- 2026-03-29 10:13:29 KST
+  Changed:
+  - Removed the shipped compact forge's remaining dedicated `contract-shell` presentation in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) by keeping the base-route reward context inside the normal forge panel/grid and rendering it as one neutral spotlight card instead of a separate contract-styled shell.
+  - Renamed the shipped forge context markup in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) to `forge-context-spotlight`, deleting the remaining compact-route `forge-overlay__panel--contract`, `forge-context--contract`, `forge-cards--contract`, and `forge-context__card--contract-shell` styling so the reward beat reads like a direct install card instead of a roadmap wrapper.
+  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the shipped forge context uses the neutral spotlight markup and stays free of `contract-shell`, then re-ran the existing smoke test.
+  Why:
+  - The latest critique's `Top Priority` explicitly said not to keep “simplifying” the same shell while `contract-shell` leakage remained live. The highest-value bounded interpretation inside `playables/cinder-circuit/` was to remove that shipped shell outright, because the compact forge was still structurally presenting the 8-wave reward stop like a trimmed planning surface instead of `take this thing and go back to combat`.
+  Follow-up Risk:
+  - The base-route forge header now reads cleaner, but player-facing late-route strings still exist in non-shipped helpers and long-route branches inside [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). If critique still says the build feels like a partial demo of a bigger plan, the next bounded progression pass should quarantine one of those remaining `Wave 9+ / Afterburn` text surfaces instead of adding content.
+  Validation: `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`
+  Release Gate: Progression
 
 - 2026-03-29 11:35:00 KST
   Changed:

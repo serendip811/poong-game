@@ -770,12 +770,13 @@ const branchForgeContextMarkup = game.createBaseRouteForgeContextMarkup({
   currentLoadoutLabel: "현재 머신",
   currentLoadoutValue: "Twin Spine / Vector Thrusters",
 });
-assert.ok(branchForgeContextMarkup.includes("forge-ask-shell"));
+assert.ok(branchForgeContextMarkup.includes("forge-context-spotlight"));
 assert.ok(branchForgeContextMarkup.includes("Dominion Sweep"));
 assert.ok(branchForgeContextMarkup.includes("Twin Spine / Vector Thrusters"));
 assert.ok(branchForgeContextMarkup.includes("현재 머신"));
 assert.ok(!branchForgeContextMarkup.includes("분기 보상"));
 assert.ok(!branchForgeContextMarkup.includes("Scrapline Raid"));
+assert.ok(!branchForgeContextMarkup.includes("contract-shell"));
 const pauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   build: greedBuild,
   weapon: game.computeWeaponStats(greedBuild),
@@ -1118,14 +1119,15 @@ const forgeContextMarkup = game.createBaseRouteForgeContextMarkup({
 });
 assert.ok(forgeContextMarkup.includes("Dominion Sweep"));
 assert.ok(!forgeContextMarkup.includes("다음 급등"));
-assert.ok(forgeContextMarkup.includes("forge-ask-shell"));
-assert.ok(forgeContextMarkup.includes("forge-ask-shell__value"));
+assert.ok(forgeContextMarkup.includes("forge-context-spotlight"));
+assert.ok(forgeContextMarkup.includes("forge-context-spotlight__value"));
 assert.ok(forgeContextMarkup.includes("Prism Crown"));
 assert.ok(forgeContextMarkup.includes("현재 머신"));
 assert.ok(!forgeContextMarkup.includes("summary-head"));
 assert.ok(!forgeContextMarkup.includes("Next Proof"));
 assert.ok(!forgeContextMarkup.includes("Route Payoff"));
 assert.ok(!forgeContextMarkup.includes("forge-contract-strip"));
+assert.ok(!forgeContextMarkup.includes("contract-shell"));
 assert.ok(!forgeContextMarkup.includes("forge-card__pivot--bill"));
 assert.ok(!forgeContextMarkup.includes("세 장 중 하나만"));
 assert.ok(!forgeContextMarkup.includes("다음 시험"));
@@ -1219,7 +1221,7 @@ const forgeHeadlineMarkup = game.createBaseRouteForgeContextMarkup({
 assert.ok(forgeHeadlineMarkup.includes("Payoff Run"));
 assert.ok(forgeHeadlineMarkup.includes("진화"));
 assert.ok(forgeHeadlineMarkup.includes("Afterglow"));
-assert.ok(forgeHeadlineMarkup.includes("forge-ask-shell"));
+assert.ok(forgeHeadlineMarkup.includes("forge-context-spotlight"));
 assert.ok(!forgeHeadlineMarkup.includes("분기 보상"));
 const forgeHeadlineSpotlight = game.getBaseRouteForgeSpotlightSummary({
   choice: wave6HeadlineChoice,
@@ -1711,12 +1713,13 @@ const wave6ForgeContextMarkup = game.createBaseRouteForgeContextMarkup({
   currentLoadoutValue: "Twin Spine",
   askNote: game.getBaseRouteForgeChoiceCombatAsk(wave6DefenseChoice, 6),
 });
-assert.ok(wave6ForgeContextMarkup.includes("forge-ask-shell__note"));
+assert.ok(wave6ForgeContextMarkup.includes("forge-context-spotlight__note"));
 assert.ok(wave6ForgeContextMarkup.includes("Ember Ring"));
 assert.ok(wave6ForgeContextMarkup.includes("Twin Spine"));
 assert.ok(wave6ForgeContextMarkup.includes("현재 머신"));
 assert.ok(wave6ForgeContextMarkup.includes("고리가 긁은 입구로 짧게 파고든다."));
 assert.ok(!wave6ForgeContextMarkup.includes("다음 전투"));
+assert.ok(!wave6ForgeContextMarkup.includes("contract-shell"));
 assert.ok(wave6HeadlineMarkup.includes("Ember Ring"));
 assert.ok(!wave6HeadlineMarkup.includes(wave6DefenseTransform.proof));
 const crownfireBuild = game.createInitialBuild("rail_zeal");
