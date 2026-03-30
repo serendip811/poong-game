@@ -10013,7 +10013,7 @@
       }
       return boundedWave >= 5
         ? {
-            eyebrow: "버팀",
+            eyebrow: "차체",
             title: "첫 차체 잠금",
             detail: "몸체 리듬이 처음 갈라진다.",
             windowLabel: "지금 선택",
@@ -15777,9 +15777,21 @@
         createFieldGrantCard(createFieldGreedContractChoice(build, nextWave)) ||
         null;
       return [
-        markForgeContract(headlineWave6Choice, "headline", "주력"),
-        markForgeContract(riderWave6Choice, "rider", "버팀"),
-        markForgeContract(gambleWave6Choice, "gamble", "판돈"),
+        markForgeContract(
+          headlineWave6Choice,
+          "headline",
+          (headlineWave6Choice && headlineWave6Choice.forgeLaneLabel) || "공세 잠금"
+        ),
+        markForgeContract(
+          riderWave6Choice,
+          "rider",
+          (riderWave6Choice && riderWave6Choice.forgeLaneLabel) || "방호 잠금"
+        ),
+        markForgeContract(
+          gambleWave6Choice,
+          "gamble",
+          (gambleWave6Choice && gambleWave6Choice.forgeLaneLabel) || "판돈 압박"
+        ),
       ].filter(Boolean);
     }
 
@@ -19104,7 +19116,7 @@
     setBanner(
       CONSOLIDATED_12_WAVE_ROUTE
         ? wave6ChassisDraft
-          ? "방호·보조"
+          ? "차체 잠금"
           : "주력 변이"
         : wave6AscensionDraft
           ? "Ascension Draft"
@@ -19196,7 +19208,7 @@
       return { id: "core_lock", label: "주력 변이" };
     }
     if (shouldUseConsolidatedWave6ChassisDraft(run.build, upcomingWave)) {
-      return { id: "chassis_break", label: "방호·보조" };
+      return { id: "chassis_break", label: "차체 잠금" };
     }
     if (shouldUseConsolidatedEarlyMutationForge({ nextWave: upcomingWave, finalForge: false })) {
       return { id: "field_break", label: "주력 변이" };
@@ -19221,6 +19233,18 @@
   }
 
   function getBaseRouteForgeContractLabel(role, choice, riderStep = false) {
+    if (
+      choice &&
+      ((choice.type === "utility" &&
+        choice.action === "bastion_bay_forge" &&
+        choice.singleAxisBreakpoint) ||
+        (choice.type === "utility" &&
+          choice.action === "field_greed" &&
+          choice.chassisTitle &&
+          choice.wave6BranchRole === "greed"))
+    ) {
+      return choice.contractLabel || choice.forgeLaneLabel || choice.laneLabel || "차체";
+    }
     if (riderStep) {
       return "버팀";
     }

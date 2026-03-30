@@ -12,7 +12,7 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- Weakest gate is now `UX/UI`, with `Progression` still tied to it: the game claims a lean start, but the default title/HUD/forge surfaces still expose contract and status detail too early.
-- Sharpest failure: docs still sell an `8웨이브` shipped slice while the playable carries `Wave 9-12` scaffolding, and the live HUD ignores its own `Tab` hierarchy by showing `Wave / Dash / Time / Scrap` all the time.
-- Next useful critique should keep pushing opening simplicity and one unanimous `Wave 1-12` contract first, then judge whether the later escalation actually earns replay desire.
-- Repeated false solutions: answering clarity problems with more labels, more act/roadmap framing, more support-side copy, or more helper systems instead of making the opening quieter and the route promise singular.
+- Weakest gate is now `Builds`, with `Progression` attached: the playable has strong forms and modules, but the run still packages too much identity into a forced `Wave 6` preset instead of a layered build ladder.
+- Sharpest failure: docs still anchor the game to an `8웨이브` prototype slice while [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) ships a `12-wave` route, and the forge still hard-frames midrun choice as three preassembled branch bundles.
+- Next useful critique should push one authoritative `Wave 1-12` contract and verify that power arrives in stages: modest gun break first, route lock second, visible support/utility later, route-exclusive endform last.
+- Repeated false solutions: solving replay hunger with more copy cleanup, more named modules, or more branch wrappers instead of redistributing when power appears and how much of the machine the player authors step by step.
