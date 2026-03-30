@@ -9166,24 +9166,24 @@
         currentWeapon.doctrineFormLabel ||
         currentWeapon.evolutionLabel ||
         CORE_DEFS[build.coreId].label;
-    const finalTitle = boundedWave >= DEFAULT_ROUTE_WAVE_COUNT ? "짧은 승리 랩" : "완성 시험";
+    const finalTitle = "마감 랩";
     if (boundedWave >= DEFAULT_ROUTE_WAVE_COUNT) {
       return {
         title: finalTitle,
-        detail: `${dominantFormLabel}이(가) 런의 마지막 실루엣으로 잠겼다. 남은 건 새 갈림길이 아니라 Wave 8 proof 뒤 짧은 승리 랩에서 이 형태가 lane을 얼마나 넓게 쓸어 담는지 직접 누르는 일뿐이다.`,
+        detail: `${dominantFormLabel}이(가) 런의 마지막 실루엣으로 잠겼다. 남은 건 새 갈림길이 아니라 이 형태 하나로 lane을 더 넓게 쓸어 담는 일뿐이다.`,
         state: "live",
       };
     }
     if (boundedWave >= DEFAULT_ROUTE_WAVE_COUNT - 1) {
       return {
         title: finalTitle,
-        detail: `다음 정지는 새 시대 예고가 아니라 완성 시험이다. Wave 8에서 잠긴 gun/body line을 바로 증명하고, 끝나면 짧은 승리 랩 하나로 이번 실루엣을 더 오래 몰아본다.`,
+        detail: "다음 정지는 새 시대 예고가 아니라 마감 랩이다. 지금 잠근 gun/body line을 바로 오래 밀어붙인다.",
         state: "primed",
       };
     }
     return {
       title: finalTitle,
-      detail: "첫 무기 도약과 차체 잠금을 지나면 남는 약속은 하나다. Wave 8에서 잠긴 실루엣을 증명하고, 결과 직전 짧은 승리 랩으로 sweep 폭을 직접 누른다.",
+      detail: "첫 무기 도약과 차체 잠금을 지나면 남는 약속은 하나다. 마지막에는 잠근 실루엣 하나로 sweep 폭을 직접 누른다.",
       state: "planned",
     };
   }
@@ -9246,7 +9246,7 @@
     const prompt =
       nextStep && nextStep.state !== "locked"
         ? `${pathLabel}. 다음 큰 점프는 ${nextStep.title}이며, ${nextStep.detail}`
-        : `${pathLabel}. gun/body 실루엣이 모두 잠겨 남은 구간은 Wave 8 proof와 짧은 승리 랩에서 이 형태를 오래 증명하는 일뿐이다.`;
+        : `${pathLabel}. gun/body 실루엣이 모두 잠겨 남은 구간은 마감 랩에서 이 형태를 오래 미는 일뿐이다.`;
     return {
       pathLabel,
       activeForm,
@@ -14257,13 +14257,8 @@
       return "마지막 형태와 보강 조합은 아래에 기록된다.";
     }
     const dominantForm = getDominantFormSummary(build, weapon, DEFAULT_ROUTE_WAVE_COUNT);
-    const riderSummary = getBaseRouteInstalledRiderSummary(build, DEFAULT_ROUTE_WAVE_COUNT);
-    const proofWindow = getPlayerFacingProofWindowSummary(build, DEFAULT_ROUTE_WAVE_COUNT);
     const branchSummary = getBaseRouteWave5FieldPathSummary(build, DEFAULT_ROUTE_WAVE_COUNT);
-    if (riderSummary) {
-      return `${branchSummary ? `${branchSummary.resultLead} ` : ""}${dominantForm.label}로 Wave 8 완성 시험과 승리 랩을 닫았다. ${riderSummary.value}는 ${branchSummary ? `${branchSummary.title} 안쪽에서 ` : ""}${proofWindow.label} 내내 새 실루엣을 받쳤다.`;
-    }
-    return `${branchSummary ? `${branchSummary.resultLead} ` : ""}${dominantForm.label}로 Wave 8 완성 시험과 승리 랩을 닫았다. ${proofWindow.label} 동안 Wave 5에 잠근 경로를 끝까지 밀어붙였다.`;
+    return `${branchSummary ? `${branchSummary.resultLead} ` : ""}${dominantForm.label}로 런을 닫았다. ${branchSummary ? `${branchSummary.title} ask를 끝까지 밀어붙였다.` : "잠근 실루엣 하나로 마지막 랩을 밀어붙였다."}`;
   }
 
   function getBaseRouteResultRouteLabel(build, weapon = null) {
@@ -14274,13 +14269,13 @@
     const activeBuild = build ? getSanitizedConsolidatedPresentationBuild(build) : null;
     const currentWeapon = weapon || (activeBuild ? computeWeaponStats(activeBuild) : null);
     if (!activeBuild || !currentWeapon) {
-      return "조용한 선체 -> Wave 3 무기 방향 -> Wave 5 진로 선택 -> Wave 8 완성 시험";
+      return "조용한 선체 -> Wave 3 무기 방향 -> Wave 5 진로 선택 -> 마감 랩";
     }
     const weaponBeat = getShippingWeaponMilestoneLabel(activeBuild, DEFAULT_ROUTE_WAVE_COUNT);
     const branchSummary =
       getBaseRouteWave5FieldPathSummary(activeBuild, DEFAULT_ROUTE_WAVE_COUNT) ||
       getBaseRouteWave5FieldPathPreviewSummary();
-    return `조용한 선체 -> ${weaponBeat} -> ${branchSummary.title} -> Wave 8 완성 시험`;
+    return `조용한 선체 -> ${weaponBeat} -> ${branchSummary.title} -> 마감 랩`;
   }
 
   function getBaseRouteResultBeatLabels(build, weapon = null) {
@@ -14290,7 +14285,7 @@
     const activeBuild = build ? getSanitizedConsolidatedPresentationBuild(build) : null;
     const currentWeapon = weapon || (activeBuild ? computeWeaponStats(activeBuild) : null);
     if (!activeBuild || !currentWeapon) {
-      return ["조용한 시작", "Wave 3 무기 방향", "Wave 5 진로 선택", "Wave 8 완성 시험"];
+      return ["조용한 시작", "Wave 3 무기 방향", "Wave 5 진로 선택", "마감 랩"];
     }
     const beats = ["조용한 시작", `Wave 3 ${getShippingWeaponMilestoneLabel(activeBuild, DEFAULT_ROUTE_WAVE_COUNT)}`];
     const branchSummary = getBaseRouteWave5FieldPathSummary(activeBuild, DEFAULT_ROUTE_WAVE_COUNT);
@@ -14299,7 +14294,7 @@
     } else {
       beats.push("Wave 5 진로 선택");
     }
-    beats.push("Wave 8 완성 시험");
+    beats.push("마감 랩");
     return beats;
   }
 
@@ -14320,9 +14315,9 @@
     const finalRunHistory =
       runHistoryLabels && runHistoryLabels.length
         ? runHistoryLabels
-        : ["조용한 시작", "Wave 3 무기 방향", "Wave 8 완성 시험"];
+        : ["조용한 시작", "Wave 3 무기 방향", "마감 랩"];
     return `
-      <p class="panel__eyebrow">RUN MEMORY</p>
+      <p class="panel__eyebrow">RUN</p>
       <div class="result-build__grade">${grade.grade}</div>
       <strong>${result.routeLabel}</strong>
       <p>${grade.note}</p>

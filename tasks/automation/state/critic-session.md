@@ -12,7 +12,7 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- Weakest gate is now `Rewards`: combat route separation is improving, but the run still sells itself through forge/spec-sheet language instead of a craveable transformation beat.
-- Next useful critique should keep pressure on one linked fix: make `Wave 3 / 5 / 8` read as headline weapon/chassis spikes first, while support becomes background reinforcement and the default forge view loses most contract/proof/install text.
-- Current structural failure: docs, doctrine copy, and forge overlay still teach support rider expectation and system taxonomy, so the player reads about the machine longer than they feel it.
-- Repeated false solutions: more support families, more terminology cleanup, or more future-run scaffolding that leaves the shipped reward screens verbose and appetite-poor.
+- Weakest gate is now `UX/UI`: the shipped route still explains itself through title/forge/detail/roadmap surfaces instead of letting one transformation and one combat ask dominate each beat.
+- Next useful critique should pressure full default-view consolidation across `Wave 3 / 5 / 8`: one form spike first, one immediate ask second, with support and future-route text hidden unless the player explicitly opens detail.
+- Current structural failure: docs and live player-facing copy still leak support payoff language plus `Wave 9-12` scaffolding, so the 8-wave run reads like a briefing for a bigger game instead of a rerunnable chapter.
+- Repeated false solutions: more naming cleanup, more card framing, or more late-run/admin scaffolding that still leaves the shipped surfaces verbose and appetite-poor.

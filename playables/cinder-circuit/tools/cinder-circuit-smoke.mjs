@@ -563,11 +563,11 @@ assert.ok(
 );
 assert.equal(
   JSON.stringify(game.getBaseRouteResultBeatLabels(greedBuild, game.computeWeaponStats(greedBuild))),
-  JSON.stringify(["조용한 시작", "Wave 3 Ember Spindle", "Wave 5 판돈 급습", "Wave 8 완성 시험"])
+  JSON.stringify(["조용한 시작", "Wave 3 Ember Spindle", "Wave 5 판돈 급습", "마감 랩"])
 );
 assert.equal(
   game.getBaseRouteResultRouteLabel(greedBuild, game.computeWeaponStats(greedBuild)),
-  "조용한 선체 -> Ember Spindle -> 판돈 급습 -> Wave 8 완성 시험"
+  "조용한 선체 -> Ember Spindle -> 판돈 급습 -> 마감 랩"
 );
 const greedResultMarkup = game.createBaseRouteResultBuildMarkup({
   build: greedBuild,
@@ -579,7 +579,7 @@ const greedResultMarkup = game.createBaseRouteResultBuildMarkup({
   grade: { grade: "A", note: "핵심 판단을 유지하며 회로를 닫은 러닝." },
   runHistoryLabels: game.getBaseRouteResultBeatLabels(greedBuild, game.computeWeaponStats(greedBuild)),
 });
-assert.ok(greedResultMarkup.includes("RUN MEMORY"));
+assert.ok(greedResultMarkup.includes('panel__eyebrow">RUN<'));
 assert.ok(greedResultMarkup.includes("Wave 5 판돈 급습"));
 assert.ok(greedResultMarkup.includes("최종 형태"));
 assert.ok(!greedResultMarkup.includes("FINAL FORM"));
@@ -981,18 +981,17 @@ const seekerResultCopy = game.getBaseRouteResultCopy(
   game.computeWeaponStats(seekerProofBuild),
   true
 );
-assert.ok(seekerResultCopy.includes("완성 시험"));
-assert.ok(seekerResultCopy.includes("승리 랩"));
-assert.ok(seekerResultCopy.includes("Seeker Array"));
+assert.ok(seekerResultCopy.includes("런을 닫았다"));
+assert.ok(seekerResultCopy.includes("마지막 랩"));
 assert.ok(!seekerResultCopy.includes("Wave 9"));
 assert.ok(!seekerResultCopy.includes("중반 보조 축"));
 assert.equal(
   game.getBaseRouteResultRouteLabel(seekerProofBuild, game.computeWeaponStats(seekerProofBuild)),
-  "조용한 선체 -> Ember Spindle -> Wave 5 진로 선택 -> Wave 8 완성 시험"
+  "조용한 선체 -> Ember Spindle -> Wave 5 진로 선택 -> 마감 랩"
 );
 assert.equal(
   JSON.stringify(game.getBaseRouteResultBeatLabels(seekerProofBuild, game.computeWeaponStats(seekerProofBuild))),
-  JSON.stringify(["조용한 시작", "Wave 3 Ember Spindle", "Wave 5 진로 선택", "Wave 8 완성 시험"])
+  JSON.stringify(["조용한 시작", "Wave 3 Ember Spindle", "Wave 5 진로 선택", "마감 랩"])
 );
 const droneProofBuild = game.createInitialBuild("scrap_pact");
 droneProofBuild.chassisId = "bulwark_treads";
@@ -1331,8 +1330,8 @@ assert.equal(earlyRoadmap.steps[0].title, "첫 무기 도약");
 assert.equal(earlyRoadmap.steps[1].title, "첫 차체 잠금");
 assert.ok(earlyRoadmap.steps[1].detail.includes("Wave 6"));
 assert.ok(earlyRoadmap.steps[1].detail.includes("차체"));
-assert.equal(earlyRoadmap.steps[2].title, "완성 시험");
-assert.ok(earlyRoadmap.steps[2].detail.includes("Wave 8"));
+assert.equal(earlyRoadmap.steps[2].title, "마감 랩");
+assert.ok(earlyRoadmap.steps[2].detail.includes("마지막"));
 assert.ok(!earlyRoadmap.prompt.includes("Lance"));
 assert.ok(!earlyRoadmap.note.includes("Lance"));
 roadmapBuild.bastionDoctrineId = "storm_artillery";
@@ -1348,14 +1347,14 @@ assert.equal(primedRoadmap.steps[1].title, "Bulwark Treads");
 assert.equal(primedRoadmap.steps[1].state, "primed");
 assert.ok(primedRoadmap.steps[1].detail.includes("Wave 6"));
 assert.ok(primedRoadmap.steps[1].detail.includes("identity"));
-assert.equal(primedRoadmap.steps[2].title, "완성 시험");
+assert.equal(primedRoadmap.steps[2].title, "마감 랩");
 roadmapBuild.lateBreakProfileId = "mutation";
 const consolidatedLateRoadmap = game.getBuildRoadmap(
   roadmapBuild,
   game.computeWeaponStats(roadmapBuild),
   9
 );
-assert.ok(consolidatedLateRoadmap.steps[2].detail.includes("짧은 승리 랩"));
+assert.ok(consolidatedLateRoadmap.steps[2].detail.includes("lane을 더 넓게"));
 assert.ok(!consolidatedLateRoadmap.steps[2].detail.includes("Wave 9-12"));
 assert.ok(!consolidatedLateRoadmap.steps[2].detail.includes("Afterburn"));
 assert.ok(!consolidatedLateRoadmap.steps[2].detail.includes("live ascension"));
