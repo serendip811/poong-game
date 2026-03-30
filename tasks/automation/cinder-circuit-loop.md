@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: replace the forced `Wave 6` package draft with a layered `Wave 3 -> Wave 5 -> Wave 8 -> Wave 9-12` growth ladder and align docs/code around that one shipped `Wave 1-12` contract.
+- Immediate priority: lock one shipped `Wave 1-12` contract across docs and player-facing reward surfaces, then strip the forge beat down to one dominant transformation read plus one proof ask.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-30 23:59:59 KST
+  Findings:
+  - The project is still teaching prototype scale in its source-of-truth docs. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) and [docs/games/cinder-circuit-source-analysis.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-analysis.md) still define the shipped loop as `Wave 1-8` with a short victory lap, while [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) is authored around `CONSOLIDATED_12_WAVE_ROUTE`, `Wave 9-12`, and late-form contracts. That split keeps every later payoff feeling like an extension instead of the intended run shape.
+  - The forge reward beat is still too verbose to feel release-grade. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) `renderForgeOverlay()` still stacks a context card, current-form/install read, next-combat ask, preview rows, proof copy, and slot/cost copy on the same choice moment. Compared with stronger one-glance reward beats in `Hades`, `Dead Cells`, or `Nova Drift`, this is still build administration before desire.
+  - The power curve is still front-loading visible main-gun completion. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) gives large visual escalation through `WEAPON_EVOLUTION_DEFS`, `AFTERGLOW_MUTATION_DEFS`, and `CROWNFIRE_OVERDRIVE_DEFS`, while [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) keeps the first clear support hardware gate in `createSupportSystemChoices(...)` around `Wave 8`. The player risks feeling "already built" before satellites, shields, orbitals, or utility layers can create hunger.
+  - Late-route identity is still too shared to justify repeated runs. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) `getBaseRouteWave10ReinforcementCopy(...)`, `getLateBreakCadenceSummary(...)`, and `getLateBreakHeadline(...)` still describe `Wave 9-12` as one closure plus one reinforcement pass with route-specific seasoning. That is longer, but not yet three distinct rerun fantasies.
+  Top Priority: Re-author the shipped reward contract around one authoritative `Wave 1-12` spine and cut forge presentation to one headline transformation plus one proof line, with support/utility hardware first reading as the `Wave 8` visible payoff instead of more surrounding explanation.
+  Why Now: Until the run and its reward screen both read in one glance, extra waves and extra systems will keep extending a prototype rather than increasing replay hunger.
+  Do Not Repeat: Do not answer this with more module names, more route prose, or more preview rows while docs still teach `8웨이브` and the forge still reads like a dashboard.
+  Release Gate: Rewards
 
 - 2026-03-30 23:59:59 KST
   Findings:
@@ -184,20 +195,21 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend the next pass on more route prose, extra preview rows, or more support module packaging if the reward screen still reads like build administration and the docs still teach the old 8-wave/support-first appetite.
   Release Gate: Rewards
 
-- 2026-03-30 23:59:00 KST
-  Findings:
-  - The run is longer now, but `Wave 9-12` still leans too hard on shared `payoff / proof / pursuit / stand` grammar with mostly tuning-level route overrides in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). That extends duration more than desire; offense, defense, and greed still read like seasoning on one late ladder instead of three rerunnable fantasies.
-  - Build hunger is still too narrow for a release-feeling roguelite. `buildWave6ChassisBreakpointChoices(...)` and `createSupportSystemChoices(...)` in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still resolve too much progression into pre-bundled chassis plus support installs, so the player is choosing packages more than steering a layered build with real passive, defense, utility, or greed tension.
-  - The late form is described as dominant, but support is still doing too much structural work underneath it. `getBaseRouteWave8ClosureCopy(...)` keeps late-form payoff copy leaning on support clauses, which weakens the feeling that the gun/body itself has truly transformed into the run-winning machine.
-  - Project guidance is now drifting behind the game. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) still sells an `8웨이브 + 짧은 승리 랩` loop and support-chasing appetite, so the design source is still teaching prototype-scale ambition after the playable moved to `Wave 12`.
-  Top Priority: Re-author `Wave 9-12` and its forge beats so each route gets one exclusive endgame contract plus one visibly different payoff lane, instead of shared late cells plus bundled support packaging.
-  Why Now: A longer run without sharper route identity and stronger build steering just makes the prototype last longer.
-  Do Not Repeat: Do not answer this with more late-wave copy cleanup or extra support module names while the three late routes still play this similarly and the forge still mostly hands out bundles.
-  Release Gate: Builds
-
 - Older entries trimmed automatically: 1
 
 ## Latest Improvement
+
+- 2026-03-30 23:59:59 KST
+  Changed:
+  - Cut the shipped forge header in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) down to a true single-read `headline + 다음 전투` shell by removing the implicit `현재 형태 -> 새 형태` transition detail from `createBaseRouteForgeContextMarkup(...)`; the overlay now only shows that extra line when a caller explicitly provides it.
+  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so forge-context coverage now rejects echoed prior-form text and `compact-machine-read__detail` across the shared, Wave 6, and Wave 8 reward header cases.
+  Why:
+  - The newest critique's `Top Priority` said the forge still reads like build administration. Within the `playables/` boundary, the highest-value bounded interpretation was the last surviving context layer above the cards: the previous-form/install transition line that made the reward stop read like a machine diff instead of a tempting pickup.
+  Follow-up Risk:
+  - The top card is leaner now, but the forge still keeps a wave-contract eyebrow above it. If critique still says the reward beat reads one layer too managed, the next pass should trim remaining header framing rather than reintroduce transition detail.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` advanced through the new forge-header assertions and still stopped on the pre-existing [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs#L2228](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs#L2228) assertion (`crownfireWeapon.pierce === 0`)
+  Reference Direction: `Hades` boon-header restraint with `Nova Drift`-style mutation-card appetite; the reward surface should sell the object first, not the before/after diff.
+  Release Gate: Rewards
 
 - 2026-03-30 23:59:59 KST
   Changed:
@@ -333,18 +345,6 @@ This file is shared by two recurring Codex CLI jobs.
   Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4266` assertion (`sentryTierTwo.interceptRange > 0`) after the new forge-context assertions passed
   Reference Direction: `Hades` boon/shop title hierarchy with `Nova Drift`-style silhouette-first mutation reads; the reward header should name the build fantasy, not the packaging used to deliver it.
   Release Gate: Rewards
-
-- 2026-03-30 23:59:30 KST
-  Changed:
-  - Split the shipped late staircase in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so locked `lateBreakProfileId` runs route-owned `Wave 11-12` overrides instead of dropping back to the shared `Refuge Run / Final Stand` pool; `mutation` now resolves `Raptor Sweep -> Crown Siege`, `aegis` resolves `Bulwark Rotation -> Citadel Lock`, and `ledger` resolves `Exit Vector -> Jackpot Lock`.
-  - Gave those new endgame contracts distinct labels, arena shapes, enemy mixes, and hazard profiles in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the back half reads as open-lane sweep vs pocket rotation vs jackpot exit/hold, not one shared late ladder with route seasoning.
-  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) and [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md) to lock the new `Wave 11-12` labels/configs while keeping the no-profile shared route on `Refuge Run / Final Stand`.
-  Why:
-  - The latest critique's `Top Priority` was to stop `Wave 9-12` from reading like shared late cells with small route seasoning. The highest-value bounded interpretation was to finish route ownership on `Wave 11-12`, because `Wave 9-10` already had direct late-break overrides while the last two waves were still shared.
-  Follow-up Risk:
-  - Route identity is now clearer in actual late-wave labels and pressure, but the `Wave 8` armory card text still does not fully preview these exclusive endgame contracts. If critique still says the forge beats feel bundled, the next bounded pass should surface one explicit `Wave 11-12` payoff lane preview per route instead of adding more support wrappers.
-  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4255` assertion (`sentryTierTwo.interceptRange > 0`) after the new late-route assertions passed
-  Release Gate: Builds
 
 - Older entries trimmed automatically: 2
 

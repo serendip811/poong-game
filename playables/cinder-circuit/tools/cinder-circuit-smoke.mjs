@@ -852,6 +852,8 @@ const wave8ForgeContextMarkup = game.createBaseRouteForgeContextMarkup({
 assert.ok(wave8ForgeContextMarkup.includes("compact-machine-read"));
 assert.ok(wave8ForgeContextMarkup.includes("Ember Ring Mk.II"));
 assert.ok(wave8ForgeContextMarkup.includes("완성 시험"));
+assert.ok(!wave8ForgeContextMarkup.includes("Twin Spine"));
+assert.ok(!wave8ForgeContextMarkup.includes("compact-machine-read__detail"));
 assert.equal(wave8PayoffRider?.contractLabel, "버팀");
 assert.equal(wave8PayoffRider?.type, "system");
 const shippedLadderWave6 = game.getShippingLadderSteps(
@@ -1140,12 +1142,9 @@ const branchForgeContextMarkup = game.createBaseRouteForgeContextMarkup({
 assert.ok(branchForgeContextMarkup.includes("compact-machine-read"));
 assert.ok(branchForgeContextMarkup.includes("compact-machine-read__ask"));
 assert.ok(branchForgeContextMarkup.includes("Dominion Sweep"));
-assert.ok(branchForgeContextMarkup.includes("Twin Spine / Vector Thrusters"));
 assert.ok(branchForgeContextMarkup.includes("열린 lane 하나만 오래 민다."));
-assert.ok(
-  branchForgeContextMarkup.includes("Twin Spine / Vector Thrusters -&gt; Dominion Sweep") ||
-    branchForgeContextMarkup.includes("Twin Spine / Vector Thrusters -> Dominion Sweep")
-);
+assert.ok(!branchForgeContextMarkup.includes("Twin Spine / Vector Thrusters"));
+assert.ok(!branchForgeContextMarkup.includes("compact-machine-read__detail"));
 assert.ok(!branchForgeContextMarkup.includes("분기 보상"));
 assert.ok(!branchForgeContextMarkup.includes("Scrapline Raid"));
 assert.ok(!branchForgeContextMarkup.includes("contract-shell"));
@@ -1512,12 +1511,9 @@ assert.ok(forgeContextMarkup.includes("Dominion Sweep"));
 assert.ok(!forgeContextMarkup.includes("다음 급등"));
 assert.ok(forgeContextMarkup.includes("compact-machine-read"));
 assert.ok(forgeContextMarkup.includes("compact-machine-read__ask"));
-assert.ok(forgeContextMarkup.includes("Prism Crown"));
 assert.ok(!forgeContextMarkup.includes("현재 머신"));
-assert.ok(
-  forgeContextMarkup.includes("Prism Crown -&gt; Dominion Sweep") ||
-    forgeContextMarkup.includes("Prism Crown -> Dominion Sweep")
-);
+assert.ok(!forgeContextMarkup.includes("Prism Crown"));
+assert.ok(!forgeContextMarkup.includes("compact-machine-read__detail"));
 assert.ok(!forgeContextMarkup.includes("summary-head"));
 assert.ok(!forgeContextMarkup.includes("Next Proof"));
 assert.ok(!forgeContextMarkup.includes("Route Payoff"));
@@ -1528,10 +1524,6 @@ assert.ok(!forgeContextMarkup.includes("세 장 중 하나만"));
 assert.ok(forgeContextMarkup.includes("열린 lane 하나만 오래 민다."));
 assert.ok(!forgeContextMarkup.includes("보조 결"));
 assert.ok(!forgeContextMarkup.includes("forge-focus__hint"));
-assert.ok(
-  forgeContextMarkup.includes("Prism Crown -&gt; Dominion Sweep") ||
-    forgeContextMarkup.includes("Prism Crown -> Dominion Sweep")
-);
 assert.ok(game.createBaseRouteForgeProofMarkup("열린 lane 하나만 오래 민다.").includes("다음 전투"));
 assert.ok(!game.createBaseRouteForgeProofMarkup("열린 lane 하나만 오래 민다.").includes("다음 시험"));
 assert.equal(
@@ -1622,9 +1614,10 @@ const forgeHeadlineMarkup = game.createBaseRouteForgeContextMarkup({
 });
 assert.ok(forgeHeadlineMarkup.includes("Payoff Run"));
 assert.ok(forgeHeadlineMarkup.includes("진화"));
-assert.ok(forgeHeadlineMarkup.includes("Afterglow"));
 assert.ok(forgeHeadlineMarkup.includes("compact-machine-read"));
 assert.ok(forgeHeadlineMarkup.includes("미사일이 연 측면부터 지운다."));
+assert.ok(!forgeHeadlineMarkup.includes("Afterglow"));
+assert.ok(!forgeHeadlineMarkup.includes("compact-machine-read__detail"));
 assert.ok(!forgeHeadlineMarkup.includes("분기 보상"));
 const forgeHeadlineSpotlight = game.getBaseRouteForgeSpotlightSummary({
   choice: wave6HeadlineChoice,
@@ -2179,18 +2172,11 @@ const wave6ForgeContextMarkup = game.createBaseRouteForgeContextMarkup({
 });
 assert.ok(!wave6ForgeContextMarkup.includes("forge-context-spotlight__note"));
 assert.ok(wave6ForgeContextMarkup.includes("Ember Ring"));
-assert.ok(wave6ForgeContextMarkup.includes("Twin Spine"));
+assert.ok(!wave6ForgeContextMarkup.includes("Twin Spine"));
 assert.ok(wave6ForgeContextMarkup.includes("지원 설치"));
-assert.ok(
-  wave6ForgeContextMarkup.includes("Twin Spine -&gt; Ember Ring") ||
-    wave6ForgeContextMarkup.includes("Twin Spine -> Ember Ring")
-);
+assert.ok(!wave6ForgeContextMarkup.includes("compact-machine-read__detail"));
 assert.ok(wave6ForgeContextMarkup.includes("바로 다음 전투"));
 assert.ok(wave6ForgeContextMarkup.includes("복귀선 하나만 길게 붙든다."));
-assert.ok(
-  wave6ForgeContextMarkup.includes("Twin Spine -&gt; Ember Ring") ||
-    wave6ForgeContextMarkup.includes("Twin Spine -> Ember Ring")
-);
 assert.ok(!wave6ForgeContextMarkup.includes("설치 · Ember Ring"));
 assert.ok(!wave6ForgeContextMarkup.includes("contract-shell"));
 assert.ok(wave6HeadlineMarkup.includes("Crownsplitter Array"));

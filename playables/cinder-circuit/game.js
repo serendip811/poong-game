@@ -11987,17 +11987,10 @@
     askNote = "",
   }) {
     const dominantTitle = title || featuredInstallValue || currentLoadoutValue || "-";
-    const transitionDetail =
-      detail ||
-      (currentLoadoutValue && currentLoadoutValue !== dominantTitle
-        ? `${currentLoadoutValue} -> ${dominantTitle}`
-        : featuredInstallValue && featuredInstallValue !== dominantTitle
-          ? featuredInstallValue
-          : "");
     return createCompactMachineReadMarkup({
       eyebrow: eyebrow || "지금 변신",
       title: dominantTitle,
-      detail: transitionDetail,
+      detail: detail || "",
       askLabel: askLabel || "다음 전투",
       askValue: askNote || "바로 다음 전투 ask를 확인한다.",
       modifier: "overlay",
