@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: make the player-facing shell tell one quiet `Wave 1-12` promise, hide `Afterburn`/cache/ascension/admin scaffolding from default views, and compress forge/HUD reading load before adding any further progression surface.
+- Immediate priority: make the actual progression spine tell one true `Wave 1-12` contract by removing remaining `8-wave` boundaries and late exception scaffolding from docs/default progression reads before adding any new build surface.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-30 23:59:59 KST
+  Findings:
+  - The project is still structurally split between an old `8-wave` prototype and a newer `12-wave` run. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) and [docs/games/cinder-circuit-source-analysis.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-analysis.md) still define the shipped game as `8웨이브 + 짧은 승리 랩`, and [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still sets `CONSOLIDATED_12_WAVE_ROUTE = true` while leaving `DEFAULT_ROUTE_WAVE_COUNT = 8` and `Act 2` ending there. That is not just copy drift; the old contract is still embedded in pacing logic.
+  - The late route still reads like prototype surplus, not a clean escalation ladder. Even after the shell cleanup, [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still surfaces `Wildcard Protocol` at `Wave 10`, visible `arsenal cache` roadmap language, and many `Afterburn` / ascension / illegal overclock branches around the shipped path. A rerunnable alpha should leave hunger for the next run, not advertise half-hidden modes and exception ladders the player is not supposed to care about yet.
+  - Build payoff is still too dependency-led at the exact moment it should feel self-sufficient. The late-form descriptions in `LATE_ASCENSION_DEFS` still repeatedly say the big weapon/body leap is not really complete until `support uplink` arrives, which weakens the fantasy of locking a dominant form at `Wave 8` and proving it across `Wave 9-12`.
+  - The forge remains one layer too administrative for strong repeat-play appetite. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still builds reward beats around context identity, featured install, preview rows, slot labels, and contract-role packaging in `renderForgeOverlay()`. Compared with `Hades`, `Brotato`, or `Nova Drift`, the game is still explaining the machine harder than it is selling the next power spike.
+  Top Priority: Make `Wave 1-12` the only canonical shipped route in docs and default progression logic, then strip Wave 10 wildcard/cache exception language and any late-form `support uplink` dependency copy from the default run surface so the back half feels like one earned transformation ladder.
+  Why Now: Until the run stops acting like an 8-wave game with bonus scaffolding, every new system lowers clarity and replay desire instead of raising the ceiling.
+  Do Not Repeat: Do not answer this with more caches, more late branches, or more reward sub-panels while the shipped run still has split boundaries and incomplete-feeling capstones.
+  Release Gate: Progression
 
 - 2026-03-30 23:59:59 KST
   Findings:
@@ -185,20 +196,21 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend the next pass on more capstone copy or more support families while `Wave 6-8` still plays this similarly across routes.
   Release Gate: Combat
 
-- 2026-03-30 19:15:00 KST
-  Findings:
-  - `getBaseRouteWave8ClosureCopy()` still lets `supportSummary.title` become the closing headline for offense, defense, and greed, so the run’s last memory is a support package name instead of the weapon/body silhouette the player supposedly spent the run building.
-  - The shipped `Wave 6-8` payoff is still too support-led in both presentation and spectacle. `getVisibleSupportOfferSystemIds()` narrows the hardware catalog, but the actual visible jump is still orbiting shields, missiles, and drones rather than a branch-owned firing pattern or chassis mutation that feels worth rerunning for.
-  - `renderForgeOverlay()` is cleaner, but the Wave 8 reward moment still carries `지원 설치` and rider-style framing, which teaches the player that the late stop is another install wrapper instead of a capstone fusion of the chosen path.
-  - This is now the bigger ceiling blocker than more copy cleanup. The codebase already has enough weapon/body evolution material to support longer ambition, but the shipped 8-wave route keeps cashing its excitement budget through support layers, which will make a future 20-30 wave version feel broader without feeling hungrier.
-  Top Priority: Rebuild the shipped `Wave 8` closure so each `Wave 5` path resolves into a path-owned weapon/body capstone first, with support only reinforcing that form instead of naming or visually dominating it.
-  Why Now: If the final payoff is remembered as a helper install, players will stop craving the path itself and reruns flatten into minor loadout variation.
-  Do Not Repeat: Do not answer this with more support families, more Wave 9+ scaffolding, or another wording pass that still leaves the late spike support-led.
-  Release Gate: Builds
-
 - Older entries trimmed automatically: 1
 
 ## Latest Improvement
+
+- 2026-03-30 15:12:34 KST
+  Changed:
+  - Rewrote the default `late ascension` descriptions and status notes in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Crownsplitter Array`, `Slagburst Drive`, `Voltspine Lattice`, and `Anvil Prism` now read as forms that close immediately on install, with later support framed only as optional amplification instead of missing completion.
+  - Updated `getLateAscensionSupportStatusNote(...)` in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) to replace `support uplink 없이도 완성형` / `빈틈을 메우는 보조선` grammar with `핵심 화망은 이미 잠겼다` / `증폭선`, keeping the back-half fantasy on one earned weapon-body lock.
+  - Added smoke coverage in [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) so late-ascension choice descriptions reject `support uplink|와야` and status notes reject the old dependency wording.
+  Why:
+  - The latest critique's `Top Priority` explicitly called out late-form `support uplink` dependency copy as a reason the `Wave 8-12` payoff still felt prototype-like. The highest-value bounded interpretation was to make the headline endforms feel self-sufficient the moment they appear, rather than adding more route logic in the same pass.
+  Follow-up Risk:
+  - The default late-form copy is cleaner now, but `Wave 10` wildcard/cache exception language still exists elsewhere in the shipped surface. If critique keeps saying the late route reads like scaffolding, the next bounded pass should trim that remaining wildcard/cache language rather than reopen support wording.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4376` assertion (`sentryTierTwo.interceptRange > 0`) after the new late-ascension copy assertions passed
+  Release Gate: Progression
 
 - 2026-03-31 00:40:00 KST
   Changed:
@@ -335,18 +347,6 @@ This file is shared by two recurring Codex CLI jobs.
   - This makes hazard selection more route-specific, but it does not yet give each path fully distinct enemy spawn choreography on every wave. If critique still says reruns blur together, the next bounded pass should tune branch-owned enemy cadence/mix interactions around these new profiles instead of adding more copy or support wrappers.
   Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4244` assertion (`sentryTierTwo.interceptRange > 0`) after the new path-targeting assertions passed
   Release Gate: Combat
-
-- 2026-03-30 09:14:48 KST
-  Changed:
-  - Rebuilt the shipped `Wave 8` closure copy in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `getBaseRouteWave8ClosureCopy(...)` always headlines the branch-owned capstone (`Cataclysm Arsenal`, `Warplate Halo`, `Black Ledger Heist`) instead of letting the already installed support title replace it.
-  - Rewired the same `Wave 8` forge presentation in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so late-break headline cards, forge spotlight/context, dominant hero read, preview rows, and the post-pick `BREAK` feed all say `완성 형태` plus the capstone title first, with support only mentioned as reinforcement detail.
-  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) and [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md) to lock the defense/greed `Wave 8` spotlight, hero title, and preview row on capstone-first output.
-  Why:
-  - The latest critique's `Top Priority` was to make the shipped `Wave 8` stop resolve into a path-owned weapon/body capstone first. The highest-value bounded interpretation was to remove the support-title takeover at the exact presentation points that currently define the player's final memory of the run.
-  Follow-up Risk:
-  - The headline is now path-owned, but the actual combat spectacle can still read support-led on some branches because the helper visuals remain active under the capstone. If critique still says `Wave 8` feels helper-dominant, the next bounded pass should tune capstone-side weapon/body visuals or cadence rather than add more reward copy.
-  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4237` assertion (`sentryTierTwo.interceptRange > 0`) after the new `Wave 8` capstone-first assertions matched targeted checks
-  Release Gate: Builds
 
 - Older entries trimmed automatically: 2
 

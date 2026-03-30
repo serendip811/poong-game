@@ -5957,12 +5957,12 @@
       title: "Crownsplitter Array",
       traitLabel: "wing battery",
       description:
-        "주포 양옆에 분할 포대를 영구 증설해 발사마다 wing volley를 덧댄다. 열린 회랑 둘을 함께 긁기 시작하지만, 오래 붙드는 복귀선과 자동 마감은 support uplink가 와야 닫힌다.",
+        "주포 양옆에 분할 포대를 영구 증설해 발사마다 wing volley를 덧댄다. 열린 회랑 둘을 동시에 긁는 추격 화망이 바로 닫히고, 이후 support는 그 폭과 복귀 여유만 더 넓힌다.",
       slotText: "주포 split volley · wing battery 시동",
       bodyLabel: "Split-Wing Chassis",
       bodyText: "측면 포대와 전방 가늠자가 붙어 주포가 직접 회랑을 찢는 추격 섀시다.",
       statusNote:
-        "주포가 split wing battery로 변해 넓은 정면 라인을 벌리기 시작했다. 아직 열린 복귀선과 측면 마감은 남아 있어, 다음 rider가 이 날개 화망의 빈틈을 메우는 두 번째 축이 된다.",
+        "주포가 split wing battery로 변해 넓은 정면 라인을 바로 벌렸다. 이후 rider는 이 날개 화망의 폭과 복귀 여유를 더 키우는 증폭선으로만 붙는다.",
       apply(build, run) {
         build.damageBonus += 4;
         build.pierceBonus += 1;
@@ -6006,12 +6006,12 @@
       title: "Slagburst Drive",
       traitLabel: "impact seed",
       description:
-        "주포에 slag seed를 박아 발사마다 폭압성 충격탄을 흘린다. 교전 지점에 폭발과 잔불 구획을 깔기 시작하지만, 그 압착 폭을 오래 유지할 고정력은 support uplink가 와야 붙는다.",
+        "주포에 slag seed를 박아 발사마다 폭압성 충격탄을 흘린다. 교전 지점에 폭발과 잔불 구획이 즉시 깔리고, 이후 support는 그 압착 폭과 체류 시간을 더 키운다.",
       slotText: "slag seed 장착 · impact seed 점화",
       bodyLabel: "Kiln-Drive Hull",
       bodyText: "복부 용광 코일이 달린 돌입 섀시로, 교전 지점에 직접 잔불 구획을 남긴다.",
       statusNote:
-        "주포가 slagburst drive로 바뀌어 발사 궤적 끝에 폭발과 잔불 구획을 남기기 시작했다. 아직 잔불을 오래 붙잡을 보조선은 비어 있어, 다음 rider가 seed 밀도와 버티는 폭을 함께 키운다.",
+        "주포가 slagburst drive로 바뀌어 발사 궤적 끝에 폭발과 잔불 구획을 바로 남긴다. 이후 rider는 seed 밀도와 버티는 폭을 더 키우는 증폭선으로만 붙는다.",
       apply(build, run) {
         build.damageBonus += 2;
         build.maxHpBonus += 6;
@@ -6051,12 +6051,12 @@
       title: "Voltspine Lattice",
       traitLabel: "arc spine",
       description:
-        "동체 위로 전극 spine을 영구 전개해 발사마다 전방 lattice arc를 덧댄다. 후열을 전도성 그물로 묶기 시작하지만, 그물의 길이와 복귀 안전선은 support uplink가 와야 충분히 넓어진다.",
+        "동체 위로 전극 spine을 영구 전개해 발사마다 전방 lattice arc를 덧댄다. 후열을 묶는 전도성 그물이 바로 깔리고, 이후 support는 그물 길이와 복귀 안전선만 더 넓힌다.",
       slotText: "arc lattice salvo · arc spine 예열",
       bodyLabel: "Stormspine Hull",
       bodyText: "등뼈형 전극 spine과 측면 방전 깃이 자라 후열을 직접 감전시키는 전도 섀시다.",
       statusNote:
-        "주포가 voltspine lattice로 변해 전방 lattice arc와 연쇄 범위로 후열을 흔들기 시작했다. 아직 측면 정리와 연쇄 지속시간은 남아 있어, 다음 rider가 spine 밀도와 복귀 여유를 같이 키운다.",
+        "주포가 voltspine lattice로 변해 전방 lattice arc와 연쇄 범위로 후열을 바로 흔든다. 이후 rider는 spine 밀도와 복귀 여유를 더 키우는 증폭선으로만 붙는다.",
       apply(build, run) {
         build.damageBonus += 1;
         build.moveSpeedBonus += 6;
@@ -6098,12 +6098,12 @@
       title: "Anvil Prism",
       traitLabel: "breach ram",
       description:
-        "주포 하부에 breach ram을 박아 발사마다 두꺼운 prism salvo를 밀어 넣는다. brute/warden 전열을 비집기 시작하지만, 열린 돌파선을 오래 고정할 버팀선은 support uplink가 와야 닫힌다.",
+        "주포 하부에 breach ram을 박아 발사마다 두꺼운 prism salvo를 밀어 넣는다. brute/warden 전열을 즉시 비집는 돌파선이 닫히고, 이후 support는 그 버팀선과 관통 여유만 더 키운다.",
       slotText: "breach prism salvo · breach ram 가동",
       bodyLabel: "Anvil-Ram Hull",
       bodyText: "전면 ram prong과 복부 냉각 지느러미가 돌출된 정면 돌파 섀시다.",
       statusNote:
-        "주포가 anvil prism으로 바뀌어 짧고 두꺼운 breach salvo를 겹쳐 밀어 넣기 시작했다. 아직 전면 파쇄 뒤를 받칠 방호선은 남아 있어, 다음 rider가 ram 포문과 관통 여유를 함께 밀어 준다.",
+        "주포가 anvil prism으로 바뀌어 짧고 두꺼운 breach salvo를 바로 겹쳐 밀어 넣는다. 이후 rider는 ram 포문과 관통 여유를 더 키우는 증폭선으로만 붙는다.",
       apply(build, run) {
         build.damageBonus += 5;
         build.maxHpBonus += 4;
@@ -12592,9 +12592,9 @@
       return "";
     }
     if (supportLevel <= 0) {
-      return `${lateAscension.statusNote} 현재 ${headlineTierLabel} ascension form은 support uplink 없이도 완성형으로 고정되어 있다.`;
+      return `${lateAscension.statusNote} 현재 ${headlineTierLabel} ascension form의 핵심 화망은 이미 잠겼고, 이후 support는 선택적 증폭선으로만 따라온다.`;
     }
-    return `${lateAscension.statusNote} 현재 support uplink ${supportLevel}칸은 ${headlineTierLabel} ascension form의 빈틈을 메우는 보조선으로만 붙어 있다.`;
+    return `${lateAscension.statusNote} 현재 support ${supportLevel}칸은 ${headlineTierLabel} ascension form의 폭과 안전선을 더 밀어 주는 증폭선으로만 붙어 있다.`;
   }
 
   function getHeadlineFormTier(build) {

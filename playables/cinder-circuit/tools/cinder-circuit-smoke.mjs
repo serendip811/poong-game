@@ -3148,13 +3148,13 @@ const headlineAscensionWeapon = game.computeWeaponStats(headlineAscensionBuild);
 assert.equal(headlineAscensionWeapon.headlineFormLabel, "FORM 2 · Crownsplitter Array");
 assert.match(headlineAscensionWeapon.lateAscensionTraitLabel, /^FORM 2 · .* · CORE ENDFORM$/);
 assert.ok(headlineAscensionWeapon.lateAscensionFirePattern.offsets.length >= 6);
-assert.match(headlineAscensionWeapon.lateAscensionStatusNote, /보조선/);
+assert.match(headlineAscensionWeapon.lateAscensionStatusNote, /증폭선/);
 const unsupportedAscensionBuild = game.createInitialBuild("rail_zeal");
 unsupportedAscensionBuild.lateAscensionId = "crownsplitter_array";
 const unsupportedAscensionWeapon = game.computeWeaponStats(unsupportedAscensionBuild);
 assert.equal(unsupportedAscensionWeapon.lateAscensionFirePattern.kind, "split_wing");
 assert.ok(unsupportedAscensionWeapon.lateAscensionFirePattern.offsets.length >= 6);
-assert.match(unsupportedAscensionWeapon.lateAscensionStatusNote, /support uplink 없이도 완성형/);
+assert.match(unsupportedAscensionWeapon.lateAscensionStatusNote, /핵심 화망은 이미 잠겼/);
 const biasedLeanStartBuild = game.createInitialBuild("scrap_pact", {
   leanStartBiasDoctrineId: "storm_artillery",
 });
@@ -3433,8 +3433,9 @@ const crownsplitterWeapon = game.computeWeaponStats(crownsplitterRun.build);
 assert.equal(crownsplitterWeapon.lateAscensionLabel, "Crownsplitter Array");
 assert.equal(crownsplitterWeapon.lateAscensionFirePattern.kind, "split_wing");
 assert.ok(crownsplitterWeapon.lateAscensionFirePattern.offsets.length >= 6);
+assert.doesNotMatch(crownsplitterChoice.description, /support uplink|와야/i);
 assert.doesNotMatch(crownsplitterChoice.slotText, /완성형|support 없이도/);
-assert.doesNotMatch(crownsplitterWeapon.lateAscensionStatusNote, /완성형|support 없이도/);
+assert.doesNotMatch(crownsplitterWeapon.lateAscensionStatusNote, /완성형|support 없이도|빈틈을 메우|support uplink/i);
 const slagburstBuild = game.createInitialBuild("scrap_pact");
 slagburstBuild.supportBayCap = 3;
 slagburstBuild.supportSystems = [
@@ -3456,8 +3457,9 @@ const slagburstWeapon = game.computeWeaponStats(slagburstRun.build);
 assert.equal(slagburstWeapon.lateAscensionLabel, "Slagburst Drive");
 assert.equal(slagburstWeapon.lateAscensionFirePattern.kind, "slag_seed");
 assert.ok(slagburstWeapon.lateAscensionFirePattern.count >= 3);
+assert.doesNotMatch(slagburstChoice.description, /support uplink|와야/i);
 assert.doesNotMatch(slagburstChoice.slotText, /완성형|support 없이도/);
-assert.doesNotMatch(slagburstWeapon.lateAscensionStatusNote, /완성형|support 없이도/);
+assert.doesNotMatch(slagburstWeapon.lateAscensionStatusNote, /완성형|support 없이도|빈틈을 메우|support uplink/i);
 const voltspineRun = {
   build: game.createInitialBuild("relay_oath"),
   resources: { scrap: 0 },
@@ -3480,8 +3482,9 @@ assert.equal(voltspineWeapon.lateAscensionLabel, "Voltspine Lattice");
 assert.equal(voltspineWeapon.lateAscensionFirePattern.kind, "split_wing");
 assert.ok(voltspineWeapon.lateAscensionFirePattern.offsets.length >= 8);
 assert.ok(voltspineWeapon.chain >= 2);
+assert.doesNotMatch(voltspineChoice.description, /support uplink|와야/i);
 assert.doesNotMatch(voltspineChoice.slotText, /완성형|support 없이도/);
-assert.doesNotMatch(voltspineWeapon.lateAscensionStatusNote, /완성형|support 없이도/);
+assert.doesNotMatch(voltspineWeapon.lateAscensionStatusNote, /완성형|support 없이도|빈틈을 메우|support uplink/i);
 const anvilRun = {
   build: game.createInitialBuild("scrap_pact"),
   resources: { scrap: 0 },
@@ -3503,8 +3506,9 @@ assert.equal(anvilWeapon.lateAscensionLabel, "Anvil Prism");
 assert.equal(anvilWeapon.lateAscensionFirePattern.kind, "split_wing");
 assert.ok(anvilWeapon.lateAscensionFirePattern.offsets.length >= 5);
 assert.ok(anvilWeapon.damage > slagburstWeapon.damage);
+assert.doesNotMatch(anvilChoice.description, /support uplink|와야/i);
 assert.doesNotMatch(anvilChoice.slotText, /완성형|support 없이도/);
-assert.doesNotMatch(anvilWeapon.lateAscensionStatusNote, /완성형|support 없이도/);
+assert.doesNotMatch(anvilWeapon.lateAscensionStatusNote, /완성형|support 없이도|빈틈을 메우|support uplink/i);
 const illegalOverclockBuild = game.createInitialBuild("relay_oath");
 const illegalOverclockChoices = game.createIllegalOverclockChoices(illegalOverclockBuild);
 assert.equal(illegalOverclockChoices.length, 0);
