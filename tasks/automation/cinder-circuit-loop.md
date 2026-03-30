@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: stop treating the new `Wave 9-12` stretch as shared filler and turn it into route-owned endgame proof, while broadening forge hunger beyond bundled chassis+support packages into clearly different offense/defense/greed/utility payoffs.
+- Immediate priority: turn `Wave 5-12` growth into a form-first build ladder with distinct offense/defense/greed/utility payoffs, and stop support-bay/package/admin language from being the main way late power is sold.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-30 23:59:59 KST
+  Findings:
+  - `Wave 11-12` route ownership is stronger now, but the run still sells growth like a package assembler instead of a hungry roguelite build. `createSupportSystemChoices(...)`, `createForgePreviewRows(...)`, and `getForgeChoiceTransformation(...)` in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still keep too much value inside chassis+support bundles, bay unlocks, rider plans, and deferred package logic, so the player is still steering wrappers more than chasing one visible weapon/body fantasy plus one meaningful side layer.
+  - The forge is still too verbose for a release-feeling reward beat. Compared with the one-dominant-offer hierarchy in `Hades`, the brutal brevity of `Brotato` level-ups, or the silhouette-first mutation hunger in `Nova Drift`, `renderForgeOverlay()` in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still asks the player to parse context cards, title swaps, preview rows, proof labels, slot labels, and rider framing when the screen should just make one transformation feel irresistible.
+  - Late-form copy is still structurally support-led. `getBaseRouteWave8ClosureCopy(...)` in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still injects support clauses into `Cataclysm Arsenal / Warplate Halo / Black Ledger Heist`, which weakens the sense that the gun/body itself became the run-winning machine and makes the payoff feel assisted instead of earned.
+  - The project docs are still actively teaching prototype ambition. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) and [docs/games/cinder-circuit-source-analysis.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-analysis.md) still frame the shipped slice as `8웨이브 + 짧은 승리 랩` with support-chasing appetite, so the source-of-truth still points future work back toward an obsolete, smaller fantasy.
+  Top Priority: Rebuild the forge/reward contract so each stop presents one dominant weapon/body leap first and only one secondary layer after it, while separating offense, defense, and greed into visibly different long-horizon payoffs instead of bundled chassis+support packages.
+  Why Now: The late route is longer, but without cleaner reward hierarchy and stronger build steering, the extra waves still do not create enough anticipation to sustain reruns.
+  Do Not Repeat: Do not spend the next pass on more route prose, extra preview rows, or more support module packaging if the reward screen still reads like build administration and the docs still teach the old 8-wave/support-first appetite.
+  Release Gate: Rewards
 
 - 2026-03-30 23:59:00 KST
   Findings:
@@ -184,20 +195,21 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not answer this with more module families, more frame names, or more late-route scaffolding while the shipped loop still front-loads system identity faster than weapon hunger.
   Release Gate: Builds
 
-- 2026-03-30 07:20:00 KST
-  Findings:
-  - The shell is cleaner, but the run still behaves too much like one combat exam with three labels. `Wave 5` promises offense / defense / greed ownership, yet the shipped asks still mostly collapse into “hold one lane, then hold it longer,” which is not enough to make players rerun for a different movement fantasy.
-  - First-support readability improved, but support actors are still arriving before branch identity is fully proven. Missiles, drones, shields, intercepts, and deployables can still claim too much arena attention in the same short chapter, so the player remembers helpers circling the hull more than the path they chose at `Wave 5`.
-  - The result and pause surfaces now read cleaner, yet they still have to explain branch identity after the fact because combat itself is not separating it hard enough. Strong references do not need the debrief to tell you what fantasy you just played; the arena already made it obvious.
-  - For a game that wants eventual `20-30` wave appetite, the current branch structure is still too thin. If offense, defense, and greed cannot each sustain 3 clearly different waves now, the project should not broaden the ladder yet; it should deepen these three asks first.
-  Top Priority: Re-author `Wave 6-8` so each `Wave 5` path owns a distinct movement contract and enemy/hazard cadence before extra support spectacle layers in: offense should repeatedly cash open kill lanes, defense should manufacture and rotate safe recovery pockets, and greed should force risky scrap dives and fast exits.
-  Why Now: Until the branch changes what the player is actually doing in the arena, the run still reads like a polished prototype rather than a replayable roguelite chapter.
-  Do Not Repeat: Do not answer this with more branch naming, more capstone cards, or more support module families while the three paths still feel this similar to play.
-  Release Gate: Combat
-
 - Older entries trimmed automatically: 1
 
 ## Latest Improvement
+
+- 2026-03-31 00:10:00 KST
+  Changed:
+  - Added `getBaseRouteForgeContextIdentity(...)` in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and rewired `renderForgeOverlay()` to build the compact forge context header/detail from payoff-owned `titleValue` / `transformation.cardTitle` instead of raw `choice.title`, so `Wave 6` route picks now headline `Crownsplitter Array`-style long-horizon forms even when the underlying card is a chassis package.
+  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) and [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md) to lock the new context identity on `Twin Spine -> Crownsplitter Array` and fail if forge context drifts back to the package title.
+  Why:
+  - The latest critique's `Top Priority` was to make each reward stop sell one dominant weapon/body leap first. The highest-value bounded interpretation was to fix the forge surface that still let compact context cards prefer wrapper labels over the actual form payoff, because that undercut the cleaner card hierarchy already in place.
+  Follow-up Risk:
+  - The forge header now stays on the right payoff title, but some underlying support/system descriptions still carry bay/package wording deeper in the option data. If critique still says rewards read like admin, the next bounded pass should trim those secondary descriptions rather than reopen the top-level hierarchy.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4266` assertion (`sentryTierTwo.interceptRange > 0`) after the new forge-context assertions passed
+  Reference Direction: `Hades` boon/shop title hierarchy with `Nova Drift`-style silhouette-first mutation reads; the reward header should name the build fantasy, not the packaging used to deliver it.
+  Release Gate: Rewards
 
 - 2026-03-30 23:59:30 KST
   Changed:
@@ -334,18 +346,6 @@ This file is shared by two recurring Codex CLI jobs.
   - This makes the midrun appetite curve cleaner, but defense in particular now leans harder on chassis/convergence reads during `Wave 6-7`. If critique next says the branch fantasy is clearer yet too quiet, the next bounded pass should strengthen branch-owned gun/body tells in those two waves rather than waking support spectacle early again.
   Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4236` assertion (`sentryTierTwo.interceptRange > 0`) after the new staged-support assertions passed
   Release Gate: Builds
-
-- 2026-03-30 07:45:00 KST
-  Changed:
-  - Re-authored the shipped greed route in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 6-8` now plays as `Entry Snap -> Caravan Hook -> Jackpot Exit`: bigger arenas, lower active caps, faster-closing vault/caravan windows, higher payout bait, and new `chassisProof` states that force short scrap dives followed by immediate escape lines instead of generic lane ownership.
-  - Updated greed-facing ask text and combat feed in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the branch now explicitly teaches `entry pocket -> hook-and-cut -> jackpot exit` cadence, with live `Scrapline Route` messages pulling the current route note instead of one shared salvage warning.
-  - Refreshed [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) and [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md) to lock greed-route arena width, active-cap, caravan speed, payout, proof labels, and updated ask copy.
-  Why:
-  - The latest critique's `Top Priority` said the three `Wave 5` paths still were not changing arena behavior enough. The highest-value bounded interpretation was that offense and defense already had owned `Wave 6-8` cadences, so greed needed the same treatment in the actual encounter config instead of another reward or naming pass.
-  Follow-up Risk:
-  - Greed now reads more distinctly, but its pressure still comes mostly from hazard windows rather than a bespoke enemy-targeting profile. If critique next says the branch is clearer yet still too forgiving or too noisy, the next bounded pass should tune greed-specific spawn targeting or exit-lane enemy bias rather than add another progression layer.
-  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4228` assertion (`sentryTierTwo.interceptRange > 0`) after the new greed-route assertions passed
-  Release Gate: Combat
 
 - Older entries trimmed automatically: 2
 

@@ -11981,6 +11981,44 @@
     };
   }
 
+  function getBaseRouteForgeContextIdentity({
+    choice = null,
+    dominantFormLabel = "",
+    waveNumber = SUPPORT_SYSTEM_START_WAVE,
+    build = null,
+  } = {}) {
+    const spotlightSummary = getBaseRouteForgeSpotlightSummary({
+      choice,
+      dominantFormLabel,
+      proofWindowLabel: "",
+      build,
+    });
+    const dominantInstallHero = getBaseRouteForgeDominantInstallHero({
+      choice,
+      dominantFormLabel,
+      waveNumber,
+      build,
+    });
+    const transformation = choice ? getBaseRouteForgeChoiceTransformation(choice, build) : null;
+    const title =
+      dominantInstallHero?.title ||
+      spotlightSummary.titleValue ||
+      transformation?.cardTitle ||
+      choice?.title ||
+      dominantFormLabel ||
+      "-";
+    const currentFormLabel = dominantInstallHero?.currentFormLabel || dominantFormLabel || "";
+    return {
+      title,
+      detail:
+        currentFormLabel && title && currentFormLabel !== title
+          ? `${currentFormLabel} -> ${title}`
+          : "",
+      currentFormLabel,
+      featuredInstallValue: title,
+    };
+  }
+
   function getBaseRouteForgeContextTailSummary({
     riderStep = false,
     branchPreviewPayoff = null,
@@ -20119,6 +20157,7 @@
     getBaseRouteForgeSpotlightSummary,
     getBaseRouteForgeChoiceCombatAsk,
     getBaseRouteForgeDominantInstallHero,
+    getBaseRouteForgeContextIdentity,
     createBaseRouteForgeContextMarkup,
     getBaseRoutePauseHeroSummary,
     createBaseRoutePauseSnapshotMarkup,
@@ -27520,6 +27559,15 @@
             build: state.build,
           })
         : null;
+    const forgeContextIdentity =
+      useBaseRouteContract && spotlightChoice
+        ? getBaseRouteForgeContextIdentity({
+            choice: spotlightChoice,
+            dominantFormLabel: dominantFormSummary.label,
+            waveNumber: state.waveIndex + 2,
+            build: state.build,
+          })
+        : null;
     const forgeCombatAsk = trimForgeCombatAsk(
       getBaseRouteCombatAskForWave(state.build, state.waveIndex + 2),
       "열린 공간을 남기고 자주 자리를 바꾼다."
@@ -27590,8 +27638,10 @@
         <article class="forge-context__card forge-context__card--span-two">
           ${createBaseRouteForgeContextMarkup({
             title:
+              forgeContextIdentity?.title ||
               dominantInstallHero?.title ||
-              (spotlightChoice ? spotlightChoice.title || forgeSpotlightSummary.titleValue : dominantFormSummary.label),
+              forgeSpotlightSummary.titleValue ||
+              dominantFormSummary.label,
             eyebrow:
               state.waveIndex + 2 === EARLY_MUTATION_FORGE_WAVE && !state.pendingFinalForge
                 ? "Wave 5 경로"
@@ -27611,19 +27661,20 @@
                         wave5FieldPathId: inferBaseRouteWave5FieldPathId(spotlightChoice),
                       },
                       EARLY_MUTATION_FORGE_WAVE
-                    )?.title || (spotlightChoice.title || forgeSpotlightSummary.titleValue)
+                    )?.title ||
+                    forgeContextIdentity?.title ||
+                    forgeSpotlightSummary.titleValue
                   }`
-                : dominantInstallHero?.currentFormLabel &&
-                    dominantInstallHero.title &&
-                    dominantInstallHero.currentFormLabel !== dominantInstallHero.title
-                  ? `${dominantInstallHero.currentFormLabel} -> ${dominantInstallHero.title}`
-                  : forgeSpotlightSummary.titleValue &&
-                      spotlightChoice?.title &&
-                      forgeSpotlightSummary.titleValue !== spotlightChoice.title
-                    ? `${forgeSpotlightSummary.titleValue} -> ${spotlightChoice.title}`
+                : forgeContextIdentity?.detail
+                  ? forgeContextIdentity.detail
                     : "",
-            currentLoadoutValue: dominantInstallHero?.currentFormLabel || dominantFormSummary.label || "",
-            featuredInstallValue: dominantInstallHero?.title || forgeSpotlightSummary.titleValue || "",
+            currentLoadoutValue:
+              forgeContextIdentity?.currentFormLabel || dominantFormSummary.label || "",
+            featuredInstallValue:
+              forgeContextIdentity?.featuredInstallValue ||
+              dominantInstallHero?.title ||
+              forgeSpotlightSummary.titleValue ||
+              "",
             askLabel: "다음 전투",
             askNote:
               state.waveIndex + 2 === EARLY_MUTATION_FORGE_WAVE && spotlightChoice

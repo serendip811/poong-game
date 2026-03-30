@@ -2093,6 +2093,17 @@ assert.ok(wave6HeadlineMarkup.includes(wave6OffenseTransform.previewLabel));
 assert.ok(wave6HeadlineMarkup.includes(wave6OffenseTransform.previewValue));
 assert.ok(wave6HeadlineMarkup.includes("다음 전투"));
 assert.ok(!wave6HeadlineMarkup.includes("전투 요청"));
+const wave6ContextIdentity = game.getBaseRouteForgeContextIdentity({
+  choice: wave6OffenseChoice,
+  dominantFormLabel: "Twin Spine",
+  waveNumber: 6,
+  build: recurringWave6Build,
+});
+assert.equal(wave6ContextIdentity.title, "Crownsplitter Array");
+assert.equal(wave6ContextIdentity.currentFormLabel, "Twin Spine");
+assert.equal(wave6ContextIdentity.detail, "Twin Spine -> Crownsplitter Array");
+assert.equal(wave6ContextIdentity.featuredInstallValue, "Crownsplitter Array");
+assert.notEqual(wave6ContextIdentity.title, wave6OffenseChoice.title);
 const wave6ForgeContextMarkup = game.createBaseRouteForgeContextMarkup({
   title: "Ember Ring",
   eyebrow: "지원 설치",
