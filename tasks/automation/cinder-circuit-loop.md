@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: make the shipped `Wave 1-12` run the only visible contract across docs and player-facing UI, then tune act pacing against that single promise.
+- Immediate priority: make `Wave 1-3` and the default HUD/title/forge obey one lean `Wave 1-12` contract, with nonessential route/admin data hidden behind `Tab` or pause.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-30 23:59:59 KST
+  Findings:
+  - The game still fails its own lean-start rule on the first live screen. [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html) permanently shows `Wave / Dash / Time / Scrap` in the top HUD even though [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) says those should sit behind `Tab`; compared with the stronger priority discipline in `Hades`, `Brotato`, or `Nova Drift`, this opening spends player attention on bookkeeping before danger, weapon feel, and movement reads are established.
+  - The shipped route promise is still split between documents and code. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) and [docs/games/cinder-circuit-source-analysis.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-analysis.md) still define an `8웨이브` slice, while [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) is already staging `Wave 9-12` reinforcement language and victory-lap scaffolding. That keeps the run from feeling like one authored escalation spine.
+  - The title and machine-contract surfaces still explain the run too much for how little the player has done. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still builds launch/contract messaging around route summary panels and `8-Wave Contract` wording, so the game sounds like a spec sheet instead of a chassis that starts small and earns complexity.
+  - The forge is cleaner than before, but [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still keeps a full context card above the choices with current form, featured install, and next-combat framing. That is still one information layer too many for a reward beat that should hit more like a single tempting boon/object pickup.
+  Top Priority: Make the shipped opening truly lean by hiding `Wave / Dash / Time / Scrap` and any contract/admin wording from the default combat/title surface, then present the route as one clean `Wave 1-12` act spine only when the player asks for detail.
+  Why Now: If the first minute already feels like reading the run instead of surviving it, later build depth and spectacle will not convert into replay hunger.
+  Do Not Repeat: Do not answer this with more roadmap copy, act labels, or helper systems while the opening HUD and launch panel still over-explain the fantasy.
+  Release Gate: UX/UI
 
 - 2026-03-30 23:59:59 KST
   Findings:
@@ -185,20 +196,22 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend the next loop on more copy trimming, card chrome, or support naming if `Wave 8` is still the effective finale and route differentiation still depends this much on text scaffolding.
   Release Gate: Progression
 
-- 2026-03-30 11:01:00 KST
-  Findings:
-  - The project is still teaching the wrong appetite loop in its own design source. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) still tells the player loop to chase `더 강한 지원 설치` and still frames `Wave 5-8` as path ownership with an inner support payoff, which keeps helper-first desire alive even after recent route cleanup.
-  - The live shipped reward text is still leaking that same fantasy. `createSupportSystemChoices(...)` in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still sells `Wave 8 완성 시험 직전 ... support silhouette`, and `getBaseRouteWave8ClosureCopy(...)` still injects support clauses into the capstone read, so the late memory is not yet brutally form-first.
-  - The default forge surface is still carrying too much hierarchy for a game that wants instant hunger. Compared with the one-dominant-offer discipline in `Hades`, `Brotato`, or the cleaner status reads in `Nova Drift`, `renderForgeOverlay()` and its helpers in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still stack title, transformation delta, current loadout, featured install, next ask, proof text, preview rows, and slot labels where one hero mutation plus one consequence should win the screen.
-  - The shipped route also still sounds like a prelude to a larger game. Roadmap/detail helpers in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) keep surfacing `Wave 9-12`, `Late Break`, `crownline`, and extra step-detail language, which makes the current 8-wave run feel documented rather than complete and pushes the player into reading future scaffolding instead of wanting another run now.
-  Top Priority: Collapse title, forge, `Tab` detail, roadmap, and result language for the shipped route to one dominant transformation plus one immediate combat ask, with support/admin/future-run text removed from the default view.
-  Why Now: Until the current run stops reading like a spec sheet for later content, stronger combat and branch payoff still will not convert into repeat-run desire.
-  Do Not Repeat: Do not spend another pass on new card chrome, more roadmap rows, or more support bay naming while the shipped surfaces still over-explain the run.
-  Release Gate: UX/UI
-
 - Older entries trimmed automatically: 1
 
 ## Latest Improvement
+
+- 2026-03-30 23:59:59 KST
+  Changed:
+  - Hid the default top-HUD `Wave / Dash / Time / Scrap` chips at the raw markup level in [playables/cinder-circuit/index.html](/Users/seren/workspace/poong-game/playables/cinder-circuit/index.html) so the shipped combat shell now opens on hull/heat/drive plus the bottom machine/feed read, with those admin counters only coming back when the existing detail view asks for them.
+  - Reworked the title launch shell in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) and [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) so `getLeanStartLaunchSummary(...)` now sells only the immediate survive-first fantasy and `createLeanTitleLaunchPanelMarkup(...)` renders one hook line instead of the old two-box status strip.
+  - Extended [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new lean opening: title detail rejects `Wave 5/12` roadmap text, launch markup rejects the status strip, and the default HUD chips ship hidden in `index.html`.
+  Why:
+  - The latest critique's `Top Priority` was to make the shipped opening truly lean by removing default admin wording and hiding `Wave / Dash / Time / Scrap` unless the player asks for detail. The highest-value bounded interpretation was the first live surfaces themselves: the raw combat HUD and title launch panel.
+  Follow-up Risk:
+  - The opening reads cleaner now, but other default-facing strings can still reintroduce route/admin phrasing if later title or forge passes bypass the same lean-start discipline. If critique still says the shell feels over-explained, the next bounded pass should trim remaining launch/forge copy layers instead of adding new route framing.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs#L2242](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs#L2242) assertion (`crownfireWeapon.pierce === 0`) after the new lean-opening assertions passed
+  Reference Direction: `Hades` title/boon restraint with `Brotato`-style opening economy; the first live shell should present one fantasy hook, not a bookkeeping strip.
+  Release Gate: UX/UI
 
 - 2026-03-30 23:59:59 KST
   Changed:
@@ -333,19 +346,6 @@ This file is shared by two recurring Codex CLI jobs.
   - This makes the second half playable, but many branch/payoff summary helpers still use `Wave 1-8` wording and shared late-wave asks. If critique still says the back half feels under-differentiated, the next bounded pass should split `Wave 9-12` payoff language and combat asks harder by route rather than reintroducing wrapper text.
   Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4255` assertion (`sentryTierTwo.interceptRange > 0`) after the new late-staircase assertions passed
   Release Gate: Progression
-
-- 2026-03-30 23:05:00 KST
-  Changed:
-  - Rewrote the shipped-route finale naming in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `getBaseRouteFinaleRoadmap(...)` and the consolidated roadmap no longer headline `Wave 8 완성 시험` / `짧은 승리 랩`; the default final step is now one compact `마감 랩` with shorter detail about pushing the locked form, not reading the stage structure.
-  - Simplified the shipped result memory in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) by trimming `getBaseRouteResultCopy(...)`, `getBaseRouteResultRouteLabel(...)`, `getBaseRouteResultBeatLabels(...)`, and `createBaseRouteResultBuildMarkup(...)` down to `조용한 선체 -> 무기 -> 경로 -> 마감 랩` plus a one-line closure, while removing the old support-rider recap and `RUN MEMORY` header from the default result card.
-  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) and [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md) to lock the shipped roadmap/result defaults onto `마감 랩` / `RUN` and fail if `Wave 8 완성 시험` or `RUN MEMORY` drift back into the compact route surfaces.
-  Why:
-  - The latest critique's `Top Priority` was to collapse shipped title/forge/Tab/roadmap/result language to one dominant transformation plus one immediate combat ask. The highest-value bounded interpretation still inside `playables/` was the roadmap/result layer, because it was leaving the run with stage-spec phrasing and support recap even after forge and pause had already been compacted.
-  Follow-up Risk:
-  - The result and roadmap are less document-like now, but some forge/support offer descriptions still mention `완성 시험` or support silhouette wording deeper in the card text. If critique still says the shipped route reads like a spec sheet, the next bounded pass should trim those remaining secondary reward sentences rather than add more chrome.
-  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4255` assertion (`sentryTierTwo.interceptRange > 0`) after the new roadmap/result assertions passed
-  Reference Direction: `Hades` result/boon recap restraint plus `Nova Drift`-style one-glance build memory; default post-run surfaces should leave one silhouette and one route memory, not a stage checklist.
-  Release Gate: UX/UI
 
 - Older entries trimmed automatically: 2
 

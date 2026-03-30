@@ -9921,12 +9921,39 @@
     const openingContract = getShippingContractSummary(build, currentWeapon, 1, { phase: "title" });
     return {
       title: titleFocus.title,
-      detail: `처음 두 웨이브는 한 줄 화선으로 버틴다. 살아남으면 ${openingContract.leadValue}을(를) 먼저 붙이고, Wave 5 진로 선택 뒤 Wave 12까지 한 실루엣을 키운다.`,
+      detail: "처음 두 웨이브는 빈 선체와 얇은 화선만으로 버틴다.",
       hullLabel: "현재 선체",
       hullValue: "빈 선체",
       hookLabel: "첫 도약",
       hookValue: openingContract.leadValue,
     };
+  }
+
+  function createLeanTitleLaunchPanelMarkup(summary) {
+    if (!summary) {
+      return "";
+    }
+    return `
+      <section class="title-launch-shell title-launch-shell--lean">
+        <div class="title-launch-shell__frame" aria-hidden="true">
+          <div class="title-launch-shell__silhouette">
+            <span class="title-launch-shell__nose"></span>
+            <span class="title-launch-shell__wing title-launch-shell__wing--left"></span>
+            <span class="title-launch-shell__wing title-launch-shell__wing--right"></span>
+            <span class="title-launch-shell__core"></span>
+            <span class="title-launch-shell__trail"></span>
+          </div>
+        </div>
+        <div class="title-launch-shell__copy title-launch-shell__copy--lean">
+          <strong class="title-launch-shell__headline title-launch-shell__headline--solo">${summary.title}</strong>
+          <p class="title-launch-shell__detail">${summary.detail}</p>
+          <p class="title-launch-shell__hook">
+            <span>${summary.hookLabel}</span>
+            <strong>${summary.hookValue}</strong>
+          </p>
+        </div>
+      </section>
+    `;
   }
 
   function createShippingLadderMarkup(build, weapon = null, waveNumber = 1) {
@@ -20279,6 +20306,7 @@
     getShippingLadderFocus,
     getShippingContractSummary,
     getLeanStartLaunchSummary,
+    createLeanTitleLaunchPanelMarkup,
     createShippingLadderMarkup,
     getDominantFormSummary,
     getImmediateProofWindowSummary,
@@ -22469,33 +22497,7 @@
     }
     const titleBuild = createInitialBuild(DEFAULT_SIGNATURE_ID);
     const titleLaunchSummary = getLeanStartLaunchSummary(titleBuild);
-    elements.titleLaunchPanel.innerHTML = `
-      <section class="title-launch-shell title-launch-shell--lean">
-        <div class="title-launch-shell__frame" aria-hidden="true">
-          <div class="title-launch-shell__silhouette">
-            <span class="title-launch-shell__nose"></span>
-            <span class="title-launch-shell__wing title-launch-shell__wing--left"></span>
-            <span class="title-launch-shell__wing title-launch-shell__wing--right"></span>
-            <span class="title-launch-shell__core"></span>
-            <span class="title-launch-shell__trail"></span>
-          </div>
-        </div>
-        <div class="title-launch-shell__copy title-launch-shell__copy--lean">
-          <strong class="title-launch-shell__headline title-launch-shell__headline--solo">${titleLaunchSummary.title}</strong>
-          <p class="title-launch-shell__detail">${titleLaunchSummary.detail}</p>
-          <div class="title-launch-shell__status-strip">
-            <div class="title-launch-shell__status">
-              <span>${titleLaunchSummary.hullLabel}</span>
-              <strong>${titleLaunchSummary.hullValue}</strong>
-            </div>
-            <div class="title-launch-shell__status title-launch-shell__status--hot">
-              <span>${titleLaunchSummary.hookLabel}</span>
-              <strong>${titleLaunchSummary.hookValue}</strong>
-            </div>
-          </div>
-        </div>
-      </section>
-    `;
+    elements.titleLaunchPanel.innerHTML = createLeanTitleLaunchPanelMarkup(titleLaunchSummary);
   }
 
   function startRun() {

@@ -65,8 +65,12 @@ const railTitleLaunchSummary = game.getLeanStartLaunchSummary(game.createInitial
 assert.equal(JSON.stringify(relayTitleLaunchSummary), JSON.stringify(railTitleLaunchSummary));
 assert.equal(relayTitleLaunchSummary.hullValue, "빈 선체");
 assert.equal(relayTitleLaunchSummary.hookValue, "Wave 3 무기 방향");
-assert.ok(!/시그니처|Signature|Wave 6|Wave 8/.test(relayTitleLaunchSummary.detail));
-assert.ok(relayTitleLaunchSummary.detail.includes("Wave 12"));
+assert.ok(!/시그니처|Signature|Wave 5|Wave 6|Wave 8|Wave 12/.test(relayTitleLaunchSummary.detail));
+const leanTitleLaunchMarkup = game.createLeanTitleLaunchPanelMarkup(relayTitleLaunchSummary);
+assert.ok(leanTitleLaunchMarkup.includes("title-launch-shell__hook"));
+assert.ok(leanTitleLaunchMarkup.includes("Wave 3 무기 방향"));
+assert.ok(!leanTitleLaunchMarkup.includes("title-launch-shell__status-strip"));
+assert.ok(!leanTitleLaunchMarkup.includes("현재 선체"));
 const shippedPresentationBeats = game.getShippedRoutePresentationBeats();
 assert.equal(shippedPresentationBeats.length, 12);
 assert.equal(
@@ -446,14 +450,15 @@ const leanStartLaunchSummary = game.getLeanStartLaunchSummary(
   game.computeWeaponStats(roadmapBuild)
 );
 assert.equal(leanStartLaunchSummary.title, "빈 선체 돌입");
-assert.ok(leanStartLaunchSummary.detail.includes("Wave 3 무기 방향"));
+assert.equal(leanStartLaunchSummary.detail, "처음 두 웨이브는 빈 선체와 얇은 화선만으로 버틴다.");
 assert.equal(leanStartLaunchSummary.hullLabel, "현재 선체");
 assert.equal(leanStartLaunchSummary.hullValue, "빈 선체");
 assert.equal(leanStartLaunchSummary.hookLabel, "첫 도약");
 assert.equal(leanStartLaunchSummary.hookValue, "Wave 3 무기 방향");
+assert.ok(!leanStartLaunchSummary.detail.includes("Wave 3"));
 assert.ok(!leanStartLaunchSummary.detail.includes("Wave 6"));
 assert.ok(!leanStartLaunchSummary.detail.includes("Wave 8"));
-assert.ok(leanStartLaunchSummary.detail.includes("Wave 12"));
+assert.ok(!leanStartLaunchSummary.detail.includes("Wave 12"));
 const openingLiveStatus = game.getLiveSideBetSummary({
   build: roadmapBuild,
   waveIndex: 0,
@@ -1717,6 +1722,8 @@ assert.ok(indexMarkup.includes('id="wave-track"'));
 assert.ok(indexMarkup.includes('id="combat-feed"'));
 assert.ok(indexMarkup.includes('id="pause-summary"'));
 assert.ok(indexMarkup.includes('machine-panel machine-panel--overlay'));
+assert.ok(indexMarkup.includes('stat-chip stat-chip--overlay stat-chip--wave hidden'));
+assert.ok(indexMarkup.includes('<div class="stat-chip stat-chip--overlay hidden">'));
 assert.ok(!indexMarkup.includes('roadmap-card roadmap-card--contract'));
 const minimalHudVisibility = game.getMinimalBaseRouteHudVisibility({
   paused: false,
@@ -1750,6 +1757,7 @@ const stylesPath = path.join(repoRoot, "styles.css");
 const stylesMarkup = fs.readFileSync(stylesPath, "utf8");
 assert.ok(stylesMarkup.includes(".combat-feed--minimal-ask"));
 assert.ok(stylesMarkup.includes(".stack-list--overlay.combat-feed--minimal-ask"));
+assert.ok(stylesMarkup.includes(".title-launch-shell__hook"));
 const designDocPath = path.join(repoRoot, "..", "..", "docs", "games", "cinder-circuit-design.md");
 const designDocMarkup = fs.readFileSync(designDocPath, "utf8");
 assert.ok(designDocMarkup.includes("Bottom right: 현재 웨이브 ask와 위험 타이머만 남기는 single `combat ask` 카드"));

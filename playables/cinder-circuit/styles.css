@@ -389,6 +389,24 @@ body[data-overdrive="true"] .backdrop__glow--right {
   line-height: 1.42;
 }
 
+.title-launch-shell__hook {
+  display: grid;
+  gap: 4px;
+  margin: 2px 0 0;
+}
+
+.title-launch-shell__hook span {
+  color: var(--muted);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.title-launch-shell__hook strong {
+  font-size: 0.96rem;
+  color: #ffe1c4;
+}
+
 .title-launch-shell__status-strip {
   display: flex;
   flex-wrap: wrap;
