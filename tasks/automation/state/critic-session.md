@@ -12,7 +12,7 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- Weakest gate is now `Progression`: the project still sells an `8-wave` closure even though the codebase already contains a stronger `Wave 9-12` grammar, so rerun hunger still flattens too early.
-- Next useful critique should pressure structural consolidation around a shipped `Wave 1-12` spine, with `Wave 8` acting as a late-form lock and `Wave 9-12` proving distinct offense/defense/greed fantasies.
-- Current structural failure: docs and live route framing still teach helper-payoff plus short-run-finale thinking, while branch identity depends too much on shared cells and text overlays instead of clearly different endgame contracts.
-- Repeated false solutions: more UI copy cleanup, more reward-card hierarchy tweaks, or more support naming passes that avoid fixing the shallow escalation curve underneath.
+- Weakest gate is now `Builds`: the route is longer, but the player is still mostly handed bundled chassis+support packages instead of steering a layered offense/defense/greed/utility machine with visible late payoff.
+- Next useful critique should keep pressuring `Wave 9-12` to become route-owned endgame proof rather than shared late-ladder filler with tuning tweaks.
+- Current structural failure: offense/defense/greed still share too much encounter grammar, while late-form payoff copy and support packaging keep the run from feeling like the gun/body itself truly transformed.
+- Repeated false solutions: more UI trimming, more route prose, or more support/module naming passes that avoid splitting the late contracts and broadening build-shaping choices.

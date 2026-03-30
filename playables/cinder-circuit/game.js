@@ -1261,6 +1261,309 @@
     }),
   };
 
+  const LATE_BREAK_ENDGAME_PROFILES = {
+    mutation: {
+      10: buildLateBreakLadderWave(10, {
+        id: "late_break_mutation_raptor_sweep",
+        waveNumber: 11,
+        cellId: "pursuit",
+        labelSuffix: "",
+        stageText: "Wave 11도 branch chase 관광을 열지 않고 같은 cataclysm contract를 slipstream sweep으로 더 세게 미는",
+        focusText: "cataclysm form이",
+        tuning: {
+          label: "Wave 11 · Raptor Sweep",
+          bandId: "raptor_sweep",
+          bandLabel: "Raptor Sweep",
+          bandFocusId: "late_form",
+          arena: {
+            width: 1880,
+            height: 1060,
+          },
+          activeCap: 29,
+          spawnBudget: 178,
+          baseSpawnInterval: 0.388,
+          spawnIntervalMin: 0.116,
+          eliteEvery: 4,
+          mix: {
+            scuttler: 0.04,
+            brute: 0.14,
+            shrike: 0.22,
+            skimmer: 0.14,
+            lancer: 0.24,
+            binder: 0.08,
+            brander: 0.08,
+            mortar: 0.02,
+            warden: 0.04,
+          },
+          mixWeight: 0.58,
+          hazard: {
+            label: "Raptor Slipstream",
+            type: "drift",
+            interval: 8.8,
+            count: 2,
+            radius: 98,
+            telegraph: 0.78,
+            duration: 4.8,
+            damage: 13,
+            driftSpeed: 134,
+            driftOrbit: 0.42,
+          },
+        },
+      }),
+      11: buildLateBreakLadderWave(11, {
+        id: "late_break_mutation_crown_siege",
+        waveNumber: 12,
+        cellId: "stand",
+        labelSuffix: "",
+        stageText: "Wave 12도 finale wrapper 대신 열린 외곽을 끝까지 비우는 cataclysm siege로 닫는",
+        focusText: "cataclysm form이",
+        tuning: {
+          label: "Wave 12 · Crown Siege",
+          bandId: "crown_siege",
+          bandLabel: "Crown Siege",
+          bandFocusId: "late_form",
+          arena: {
+            width: 1820,
+            height: 1020,
+          },
+          activeCap: 34,
+          spawnBudget: 192,
+          baseSpawnInterval: 0.348,
+          spawnIntervalMin: 0.106,
+          eliteEvery: 4,
+          mix: {
+            scuttler: 0.04,
+            brute: 0.2,
+            shrike: 0.16,
+            skimmer: 0.08,
+            lancer: 0.22,
+            binder: 0.06,
+            brander: 0.08,
+            mortar: 0.02,
+            warden: 0.14,
+          },
+          mixWeight: 0.56,
+          hazard: {
+            label: "Crown Siege Pocket",
+            type: "territory",
+            interval: 7.8,
+            count: 2,
+            radius: 104,
+            telegraph: 0.78,
+            duration: 7.4,
+            damage: 15,
+            coreHp: 78,
+            coreRadius: 18,
+            turretInterval: 0.88,
+            turretDamage: 11,
+            turretSpeed: 252,
+            enemyPullRadius: 150,
+          },
+        },
+      }),
+    },
+    aegis: {
+      10: buildLateBreakLadderWave(10, {
+        id: "late_break_aegis_bulwark_rotation",
+        waveNumber: 11,
+        cellId: "pursuit",
+        labelSuffix: "",
+        stageText: "Wave 11도 branch bastion tour가 아니라 refuge pocket 교대를 끝까지 묻는",
+        focusText: "warplate form이",
+        tuning: {
+          label: "Wave 11 · Bulwark Rotation",
+          bandId: "bulwark_rotation",
+          bandLabel: "Bulwark Rotation",
+          bandFocusId: "late_form",
+          arena: {
+            width: 1660,
+            height: 980,
+          },
+          activeCap: 27,
+          spawnBudget: 174,
+          baseSpawnInterval: 0.402,
+          spawnIntervalMin: 0.118,
+          eliteEvery: 4,
+          mix: {
+            scuttler: 0.04,
+            brute: 0.2,
+            shrike: 0.12,
+            skimmer: 0.04,
+            lancer: 0.12,
+            binder: 0.14,
+            brander: 0.1,
+            mortar: 0.04,
+            warden: 0.2,
+          },
+          mixWeight: 0.54,
+          hazard: {
+            label: "Bulwark Drift",
+            type: "drift",
+            interval: 9.2,
+            count: 2,
+            radius: 104,
+            telegraph: 0.84,
+            duration: 5.4,
+            damage: 13,
+            driftSpeed: 104,
+            driftOrbit: 0.28,
+          },
+        },
+      }),
+      11: buildLateBreakLadderWave(11, {
+        id: "late_break_aegis_citadel_lock",
+        waveNumber: 12,
+        cellId: "stand",
+        labelSuffix: "",
+        stageText: "Wave 12도 다른 bastion gimmick 없이 plate pocket 하나를 끝까지 고정하는 citadel lock으로 닫는",
+        focusText: "warplate form이",
+        tuning: {
+          label: "Wave 12 · Citadel Lock",
+          bandId: "citadel_lock",
+          bandLabel: "Citadel Lock",
+          bandFocusId: "late_form",
+          arena: {
+            width: 1600,
+            height: 940,
+          },
+          activeCap: 32,
+          spawnBudget: 190,
+          baseSpawnInterval: 0.364,
+          spawnIntervalMin: 0.108,
+          eliteEvery: 4,
+          mix: {
+            scuttler: 0.04,
+            brute: 0.24,
+            shrike: 0.12,
+            skimmer: 0.02,
+            lancer: 0.12,
+            binder: 0.14,
+            brander: 0.08,
+            mortar: 0.04,
+            warden: 0.2,
+          },
+          mixWeight: 0.52,
+          hazard: {
+            label: "Citadel Lock Pocket",
+            type: "territory",
+            interval: 8,
+            count: 2,
+            radius: 110,
+            telegraph: 0.82,
+            duration: 8,
+            damage: 15,
+            coreHp: 86,
+            coreRadius: 20,
+            turretInterval: 0.9,
+            turretDamage: 11,
+            turretSpeed: 242,
+            enemyPullRadius: 172,
+          },
+        },
+      }),
+    },
+    ledger: {
+      10: buildLateBreakLadderWave(10, {
+        id: "late_break_ledger_exit_vector",
+        waveNumber: 11,
+        cellId: "pursuit",
+        labelSuffix: "",
+        stageText: "Wave 11도 caravan 관광지가 아니라 jackpot 직후 빠질 seam을 계속 고르게 만드는",
+        focusText: "raid frame이",
+        tuning: {
+          label: "Wave 11 · Exit Vector",
+          bandId: "exit_vector",
+          bandLabel: "Exit Vector",
+          bandFocusId: "late_form",
+          arena: {
+            width: 1900,
+            height: 1040,
+          },
+          activeCap: 30,
+          spawnBudget: 184,
+          baseSpawnInterval: 0.38,
+          spawnIntervalMin: 0.114,
+          eliteEvery: 4,
+          mix: {
+            scuttler: 0.04,
+            brute: 0.12,
+            shrike: 0.14,
+            skimmer: 0.12,
+            lancer: 0.18,
+            binder: 0.1,
+            brander: 0.18,
+            mortar: 0.06,
+            warden: 0.06,
+          },
+          mixWeight: 0.58,
+          hazard: {
+            label: "Exit Wake",
+            type: "drift",
+            interval: 8.6,
+            count: 2,
+            radius: 94,
+            telegraph: 0.8,
+            duration: 4.9,
+            damage: 13,
+            driftSpeed: 140,
+            driftOrbit: 0.38,
+          },
+        },
+      }),
+      11: buildLateBreakLadderWave(11, {
+        id: "late_break_ledger_jackpot_lock",
+        waveNumber: 12,
+        cellId: "stand",
+        labelSuffix: "",
+        stageText: "Wave 12도 greed spectacle 대신 payout pocket을 얼마나 오래 버틸지로 닫는 jackpot lock이다.",
+        focusText: "raid frame이",
+        tuning: {
+          label: "Wave 12 · Jackpot Lock",
+          bandId: "jackpot_lock",
+          bandLabel: "Jackpot Lock",
+          bandFocusId: "late_form",
+          arena: {
+            width: 1760,
+            height: 980,
+          },
+          activeCap: 35,
+          spawnBudget: 196,
+          baseSpawnInterval: 0.344,
+          spawnIntervalMin: 0.104,
+          eliteEvery: 4,
+          mix: {
+            scuttler: 0.04,
+            brute: 0.18,
+            shrike: 0.12,
+            skimmer: 0.08,
+            lancer: 0.18,
+            binder: 0.1,
+            brander: 0.16,
+            mortar: 0.08,
+            warden: 0.06,
+          },
+          mixWeight: 0.58,
+          hazard: {
+            label: "Jackpot Hold",
+            type: "territory",
+            interval: 7.6,
+            count: 2,
+            radius: 100,
+            telegraph: 0.78,
+            duration: 7.2,
+            damage: 15,
+            coreHp: 80,
+            coreRadius: 18,
+            turretInterval: 0.86,
+            turretDamage: 11,
+            turretSpeed: 248,
+            enemyPullRadius: 156,
+          },
+        },
+      }),
+    },
+  };
+
   const MAX_WAVES = WAVE_CONFIG.length;
   const POST_WAVE_LOOT_GRACE = 2.4;
   const COMBAT_CACHE_DROP_LIFE = 14;
@@ -2121,6 +2424,17 @@
     return LATE_BREAK_FOLLOWTHROUGH_PROFILES[build.lateBreakProfileId] || null;
   }
 
+  function getLateBreakEndgameProfile(build, index) {
+    if (!build || !build.lateBreakProfileId) {
+      return null;
+    }
+    const branchProfiles = LATE_BREAK_ENDGAME_PROFILES[build.lateBreakProfileId];
+    if (!branchProfiles) {
+      return null;
+    }
+    return branchProfiles[index] || null;
+  }
+
   function getBaseRouteLateBreakSupportSummary(build) {
     if (!CONSOLIDATED_12_WAVE_ROUTE || !build) {
       return null;
@@ -2316,7 +2630,7 @@
     if (index === LATE_BREAK_ARMORY_WAVE) {
       return getLateBreakFollowthroughProfile(build);
     }
-    return null;
+    return getLateBreakEndgameProfile(build, index);
   }
 
   function resolveWaveConfig(index, build = null) {
@@ -20180,13 +20494,13 @@
       }
       if (boundedWave === 11) {
         return {
-          label: "Refuge Run",
-          detail: `${ladderLead}${bandLabel}에서 cataclysm form으로 pursuit 덩어리를 먼저 찢고, 비워 낸 refuge pocket 사이를 갈아타는 cadence를 증명한다.`,
+          label: "Raptor Sweep",
+          detail: `${ladderLead}${bandLabel}에서 cataclysm form으로 pursuit 덩어리를 먼저 찢고, 열린 slip lane 둘을 오래 유지한 채 바깥 pocket을 연속으로 갈아탄다.`,
         };
       }
       return {
-        label: "Final Stand",
-        detail: `${ladderLead}${bandLabel}에서 cataclysm form이 한 pocket을 열고 버리며 final stand 점유 시간을 얼마나 늘리는지 결산한다.`,
+        label: "Crown Siege",
+        detail: `${ladderLead}${bandLabel}에서 cataclysm form이 열린 외곽 둘을 끝까지 비우며 crown pocket 점유 시간을 얼마나 늘리는지 결산한다.`,
       };
     }
     if (profileId === "aegis") {
@@ -20204,13 +20518,13 @@
       }
       if (boundedWave === 11) {
         return {
-          label: "Refuge Run",
-          detail: `${ladderLead}${bandLabel}에서 locked form으로 pursuit 덩어리를 먼저 찢고 refuge pocket 사이를 갈아타는 cadence를 증명한다.`,
+          label: "Bulwark Rotation",
+          detail: `${ladderLead}${bandLabel}에서 locked form으로 refuge pocket 둘을 교대하며 plate 복귀 타이밍을 얼마나 오래 살리는지 증명한다.`,
         };
       }
       return {
-        label: "Final Stand",
-        detail: `${ladderLead}${bandLabel}에서 warplate hull로 어느 bastion pocket을 열고 버릴지 직접 결산하며 final stand를 닫는다.`,
+        label: "Citadel Lock",
+        detail: `${ladderLead}${bandLabel}에서 warplate hull로 bastion pocket 하나를 끝까지 잠그며 citadel hold를 직접 결산한다.`,
       };
     }
     if (profileId === "ledger") {
@@ -20228,13 +20542,13 @@
       }
       if (boundedWave === 11) {
         return {
-          label: "Refuge Run",
-          detail: `${ladderLead}${bandLabel}에서 raid frame으로 pursuit 덩어리를 먼저 찢고, greed line을 짧게 긁은 뒤 refuge pocket으로 이탈하는 cadence를 증명한다.`,
+          label: "Exit Vector",
+          detail: `${ladderLead}${bandLabel}에서 raid frame으로 jackpot 직후 빠질 seam을 고르며 greed line을 짧게 긁고 바로 외곽 exit로 갈아탄다.`,
         };
       }
       return {
-        label: "Final Stand",
-        detail: `${ladderLead}${bandLabel}에서 raid frame이 마지막 pocket rotation 안에서도 greed line을 얼마나 오래 지키는지 결산한다.`,
+        label: "Jackpot Lock",
+        detail: `${ladderLead}${bandLabel}에서 raid frame이 마지막 payout pocket을 얼마나 오래 지키며 jackpot hold를 버틸지 결산한다.`,
       };
     }
     if (boundedWave <= 10) {
