@@ -7456,6 +7456,9 @@
     ) {
       return false;
     }
+    if (build.wave6ChassisBreakpoint) {
+      return false;
+    }
     return getInstalledSupportSystems(build).length === 0;
   }
 
@@ -11319,7 +11322,7 @@
       machineLabel: "현재 머신",
       machineValue: activeWeaponLabel,
       payoffLabel: "다음 설치",
-      payoffValue: "Wave 6 지원 설치",
+      payoffValue: "Wave 8 지원 설치",
     };
   }
 
@@ -11783,7 +11786,7 @@
   function getShippingSupportMilestoneLabel(build, waveNumber = SUPPORT_SYSTEM_START_WAVE) {
     const activeBuild = build ? getSanitizedConsolidatedPresentationBuild(build) : null;
     if (!activeBuild) {
-      return "Wave 6 지원 설치";
+      return "Wave 8 지원 설치";
     }
     const boundedWave = clamp(
       Math.round(waveNumber || SUPPORT_SYSTEM_START_WAVE),
@@ -11795,7 +11798,7 @@
       return supportInstall.title;
     }
     const chassis = getChassisBreakpointDef(activeBuild);
-    return (chassis && (chassis.label || chassis.title)) || "Wave 6 지원 설치";
+    return (chassis && (chassis.label || chassis.title)) || "Wave 8 지원 설치";
   }
 
   function getShippingUpgradePresentationLabel(upgradeText, build = null, options = {}) {
@@ -12936,6 +12939,16 @@
       nextWave === DEFAULT_ROUTE_WAVE_COUNT;
     if (shouldHoldWave6SingleAxisBreakpoint(build, nextWave)) {
       return installedSystemIds;
+    }
+    if (
+      CONSOLIDATED_12_WAVE_ROUTE &&
+      build &&
+      build.wave6ChassisBreakpoint &&
+      installedSystems.length === 0 &&
+      Number.isFinite(nextWave) &&
+      nextWave < DEFAULT_ROUTE_WAVE_COUNT
+    ) {
+      return [];
     }
     if (
       CONSOLIDATED_12_WAVE_ROUTE &&
@@ -14602,7 +14615,7 @@
 
   function createWave6ChassisInstallChoice({
     chassisDef,
-    systemChoice,
+    systemChoice = null,
     description,
     laneLabel = "대표 설치",
     forgeLaneLabel = laneLabel,
@@ -14610,7 +14623,7 @@
     lateAscensionId = null,
     lateFieldConvergenceId = null,
   }) {
-    if (!chassisDef || !systemChoice) {
+    if (!chassisDef) {
       return null;
     }
     const installSummary = getWave6BreakpointInstallSummary(systemChoice);
@@ -14619,12 +14632,14 @@
     return {
       type: "utility",
       action: "bastion_bay_forge",
-      id: `utility:bastion_chassis_break:${chassisDef.id}:${systemChoice.systemId}:${wave6BranchRole}`,
+      id: `utility:bastion_chassis_break:${chassisDef.id}:${systemChoice ? systemChoice.systemId : "chassis_only"}:${wave6BranchRole}`,
       verb: "접합",
       tag: chassisDef.tag,
       title: chassisDef.title,
       description,
-      slotText: `${laneLabel} · ${installSummary ? installSummary.title : systemChoice.title} · ${chassisDef.slotText}`,
+      slotText: systemChoice
+        ? `${laneLabel} · ${installSummary ? installSummary.title : systemChoice.title} · ${chassisDef.slotText}`
+        : `${laneLabel} · ${chassisDef.slotText}`,
       cost: 0,
       laneLabel,
       forgeLaneLabel,
@@ -14636,11 +14651,13 @@
       wave6BranchRole,
       lateAscensionId,
       lateFieldConvergenceId,
-      systemChoice: {
-        ...systemChoice,
-        cost: 0,
-        activationWave: quietInstallActivationWave,
-      },
+      systemChoice: systemChoice
+        ? {
+            ...systemChoice,
+            cost: 0,
+            activationWave: quietInstallActivationWave,
+          }
+        : null,
     };
   }
 
@@ -18086,7 +18103,7 @@
       tag: "DOCTRINE",
       title: doctrine.label,
       description:
-        `${doctrine.description} 즉시 ${weaponChoice.title}을(를) 할인 장착해 core gun lock을 먼저 굳히고, 이어지는 Chassis Breakpoint에서 body plan과 첫 support install을 함께 잠근다. opening은 lean하게 두되 Wave 6부터는 드론·헤일로·미사일 같은 visible hardware가 바로 화면을 먹게 둔다.${forecastConfirmed ? " Wave 3 forecast와 맞아 더 싸게 확정된다." : ""}${
+        `${doctrine.description} 즉시 ${weaponChoice.title}을(를) 할인 장착해 core gun lock을 먼저 굳히고, 이어지는 Chassis Breakpoint에서는 body plan만 먼저 잠근다. opening은 lean하게 두고 Wave 6-7은 새 gun/body silhouette만 증명한 뒤, 첫 visible hardware는 Wave 8에서 늦게 붙인다.${forecastConfirmed ? " Wave 3 forecast와 맞아 더 싸게 확정된다." : ""}${
           !CONSOLIDATED_12_WAVE_ROUTE && lateCapstoneLabel
             ? ` 이후 Wave 6-8 marked elite shard를 모으는 장기 forge pursuit가 열리고, 완성 시 ${lateCapstoneLabel} 계열 교리 monster form이 즉시 잠긴다.`
             : ""
@@ -18274,7 +18291,7 @@
       tag: "ARCH",
       title: weaponChoice.title,
       description:
-        `${weaponChoice.title}을(를) 지금 바로 붙여 Wave 3 첫 주포 방향만 만든다. 이번 pick은 support나 운영 패키지가 아니라 lean gun break 하나를 먼저 세우는 선택이다. 바깥 lane과 복귀선은 아직 비워 두고, Wave 6에서는 ${chassis ? chassis.title : "차체 break"} 위에 첫 지원 설치를 얹어 그 빈 seam을 실제 machine silhouette로 메운다.`,
+        `${weaponChoice.title}을(를) 지금 바로 붙여 Wave 3 첫 주포 방향만 만든다. 이번 pick은 support나 운영 패키지가 아니라 lean gun break 하나를 먼저 세우는 선택이다. 바깥 lane과 복귀선은 아직 비워 두고, Wave 6에서는 ${chassis ? chassis.title : "차체 break"}만 잠가 몸체 리듬을 먼저 바꾼다. 첫 지원 설치는 Wave 8에 붙여 그 빈 seam을 늦게 메운다.`,
       slotText: `${weaponChoice.title} · ${weaponChoice.slotText || "첫 주포 도약"}`,
       cost: 0,
       laneLabel: "주력 변이",
@@ -18425,46 +18442,27 @@
     const offenseAscension = getLateAscensionDef(offenseAscensionId);
     const defenseConvergence = getLateFieldConvergenceDef("citadel_spindle");
     const greedConvergence = getLateFieldConvergenceDef("towchain_reaver");
-    const offenseSystemId = getDoctrinePrimarySupportSystemId(doctrine);
-    const defenseSystemId =
-      getDoctrineMidrunSupportSystemId(doctrine) ||
-      getDoctrinePrimarySupportSystemId(doctrine);
-    const offenseSystemChoice = offenseSystemId
-      ? createSupportSystemTierChoice(offenseSystemId, 1)
-      : null;
-    const defenseSystemChoice =
-      defenseSystemId && defenseSystemId !== offenseSystemId
-        ? createSupportSystemTierChoice(defenseSystemId, 1)
-        : null;
-    const offenseInstallSummary = getWave6BreakpointInstallSummary(offenseSystemChoice);
-    const defenseInstallSummary = getWave6BreakpointInstallSummary(defenseSystemChoice);
     const choices = [];
-    if (offenseSystemChoice) {
-      choices.push(
-        createWave6ChassisInstallChoice({
-          chassisDef: offenseChassisDef,
-          systemChoice: offenseSystemChoice,
-          description: `이번 갈래는 ${offenseAscension ? offenseAscension.title : "공세 endform"}를 먼저 전면으로 끌어올리고, ${offenseInstallSummary ? offenseInstallSummary.title : offenseSystemChoice.title}는 Wave 8까지 조용한 증폭 회로로 접어 둔다. Wave 6-7은 split wing, seed, lattice, breach 실루엣 중 지금 코어에 맞는 한 형태가 열린 lane을 길게 밀어붙이는 데만 예산을 쓴다. ${offenseChassisDef.description}`,
-          laneLabel: "공세 설치",
-          forgeLaneLabel: "공세 설치",
-          wave6BranchRole: "offense",
-          lateAscensionId: offenseAscensionId,
-        })
-      );
-    }
-    if (defenseSystemChoice) {
-      choices.push(
-        createWave6ChassisInstallChoice({
-          chassisDef: defenseChassisDef,
-          systemChoice: defenseSystemChoice,
-          description: `이번 갈래는 ${defenseConvergence ? defenseConvergence.title : "hold convergence"}를 먼저 몸체에 고정하고, ${defenseInstallSummary ? defenseInstallSummary.title : defenseSystemChoice.title}는 Wave 8까지 잠복 증폭 회로로 남긴다. Wave 6-7은 siege spindle과 복귀 보호선이 refuge pocket 하나를 길게 버티는 실루엣부터 증명한다. ${defenseChassisDef.description}`,
-          laneLabel: "방호 설치",
-          forgeLaneLabel: "방호 설치",
-          wave6BranchRole: "defense",
-          lateFieldConvergenceId: defenseConvergence ? defenseConvergence.id : null,
-        })
-      );
-    }
+    choices.push(
+      createWave6ChassisInstallChoice({
+        chassisDef: offenseChassisDef,
+        description: `이번 갈래는 ${offenseAscension ? offenseAscension.title : "공세 endform"}를 먼저 전면으로 끌어올리고 Wave 6-7 예산을 열린 lane sweep에만 쓴다. split wing, seed, lattice, breach 실루엣 중 지금 코어에 맞는 한 형태가 corridor 둘을 길게 비우고, 첫 보조 하드웨어는 Wave 8까지 뒤로 민다. ${offenseChassisDef.description}`,
+        laneLabel: "공세 잠금",
+        forgeLaneLabel: "공세 잠금",
+        wave6BranchRole: "offense",
+        lateAscensionId: offenseAscensionId,
+      })
+    );
+    choices.push(
+      createWave6ChassisInstallChoice({
+        chassisDef: defenseChassisDef,
+        description: `이번 갈래는 ${defenseConvergence ? defenseConvergence.title : "hold convergence"}를 먼저 몸체에 고정하고 refuge pocket 하나를 오래 버티는 리듬부터 잠근다. Wave 6-7은 siege spindle과 복귀 보호선이 같은 seam을 반복해 되찾는지만 시험하고, 첫 보조 하드웨어는 Wave 8까지 잠복한다. ${defenseChassisDef.description}`,
+        laneLabel: "방호 잠금",
+        forgeLaneLabel: "방호 잠금",
+        wave6BranchRole: "defense",
+        lateFieldConvergenceId: defenseConvergence ? defenseConvergence.id : null,
+      })
+    );
     choices.push(
       createWave6GreedFrameChoice(
         build,
@@ -18735,8 +18733,8 @@
     state.forgeChoices = buildArchitectureDraftChoices(state.build);
     pushCombatFeed(
       CONSOLIDATED_12_WAVE_ROUTE
-        ? "주력 변이 선택 개시. 이번 정지에서는 전장을 가장 크게 바꿀 한 장만 먼저 고른다. 차체 점프와 첫 support install은 Wave 6에 붙여 mid-run silhouette를 바로 두껍게 만들고, opening만 lean하게 유지한다."
-        : "Architecture Draft 개시. 이제 Wave 3에서는 세 장기 교리 중 하나를 골라 주포 mutation만 먼저 잠근다. utility chassis와 첫 support 하드웨어는 Wave 6에 함께 붙여 opening run만 과하게 완성되지 않게 둔다.",
+        ? "주력 변이 선택 개시. 이번 정지에서는 전장을 가장 크게 바꿀 한 장만 먼저 고른다. Wave 6에는 차체 점프만 붙여 mid-run silhouette를 lean하게 세우고, 첫 support install은 Wave 8까지 뒤로 민다."
+        : "Architecture Draft 개시. 이제 Wave 3에서는 세 장기 교리 중 하나를 골라 주포 mutation만 먼저 잠근다. utility chassis는 Wave 6에 먼저 붙이고 첫 support 하드웨어는 Wave 8까지 늦춰 opening run이 과하게 완성되지 않게 둔다.",
       "ARCH"
     );
     setBanner(CONSOLIDATED_12_WAVE_ROUTE ? "주력 변이" : "Architecture Draft", 0.95);
@@ -19044,9 +19042,9 @@
     pushCombatFeed(
       CONSOLIDATED_12_WAVE_ROUTE
         ? wave6ChassisDraft
-          ? "중반 분기 선택 개시. 이번 정지는 세 갈래만 뜬다. 몸체 위에 화력을 얹는 공세 설치, 버팀 pocket을 여는 방호 설치, 고철을 먼저 당기는 판돈 압박 중 하나로 Wave 6-8 실루엣을 고른다."
+          ? "중반 분기 선택 개시. 이번 정지는 세 갈래만 뜬다. 열린 lane을 미는 공세 잠금, refuge pocket을 여는 방호 잠금, 고철을 먼저 당기는 판돈 압박 중 하나로 Wave 6-8 실루엣을 고른다."
           : wave6AscensionDraft
-            ? "주력 변이 선택 개시. 이번 정지는 오래 끌 몸체 하나를 고르고, 그 프레임 안쪽에 첫 support install까지 함께 잠근다. Wave 6부터 몸과 보조선이 같이 켜져 mid-run silhouette가 바로 커진다."
+            ? "주력 변이 선택 개시. 이번 정지는 오래 끌 몸체 하나만 고른다. Wave 6부터는 새 chassis rhythm으로 corridor와 복귀 각만 먼저 바꾸고, 첫 support install은 Wave 8에서 늦게 붙인다."
           : "변이 선택 개시. 이번 정지는 크게 바꾸는 한 장, 버티는 한 장, 판돈을 거는 한 장 중 하나만 고른다."
         : wave6AscensionDraft
           ? "Wave 6 Ascension Draft 개시. 세 장기 교리 중 하나를 irreversible form으로 잠그면 주포 mutation, utility chassis, 첫 support install을 함께 굳힌다. mid-run 실루엣은 여기서 바로 두 번째 chapter로 넘어간다."
@@ -23722,7 +23720,7 @@
       pushCombatFeed(
         state.forgeDraftType === "architecture_draft"
           ? choice.action === "architecture_forecast"
-            ? `${choice.weaponChoice ? choice.weaponChoice.title : choice.title} 장착. Wave 3부터 주포 발사각이 바로 꺾인다. 아직 빈 측면과 복귀선은 남겨 두고 ${choice.breakpointLabel || "Wave 6 차체 break"}와 첫 지원 설치는 다음 정지에서 붙인다.`
+            ? `${choice.weaponChoice ? choice.weaponChoice.title : choice.title} 장착. Wave 3부터 주포 발사각이 바로 꺾인다. 아직 빈 측면과 복귀선은 남겨 두고 ${choice.breakpointLabel || "Wave 6 차체 break"}만 다음 정지에서 잠근다. 첫 지원 설치는 Wave 8까지 미뤄 둔다.`
             : `${grantLabel} 적용. 아키텍처 방향을 기울인 채 다음 웨이브를 연다.`
         : state.forgeDraftType === "bastion_draft"
           ? choice.type === "fallback"

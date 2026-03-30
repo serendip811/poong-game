@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: align the shipped game around one clean `Wave 1-12` contract and a faster appetite-first forge read before adding more build branches or late wrappers.
+- Immediate priority: protect the early growth curve and make the shipped `Wave 1-12` contract unanimous before adding more support layers, branch wrappers, or future-mode residue.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-30 23:59:59 KST
+  Findings:
+  - The shipped promise is still split in half. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) and [docs/games/cinder-circuit-source-analysis.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-analysis.md) still teach an `8웨이브` run and acceptance bar, while [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) is already built around a `Wave 1-12` route. That kills anticipation because the game still sounds like a short prototype wearing a longer tail.
+  - The early growth curve is getting spent too soon. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) starts support offers at `Wave 6` and already brings in orbitals, shield satellites, sentries, missiles, and drones. A strong roguelite run should still feel visually incomplete there; right now the player can look "fully assembled" before the back half has earned any real spectacle.
+  - The forge is leaner than before, but it still reads one layer too much like a machine panel. `renderForgeOverlay()` in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still stacks context identity, featured install value, combat ask, contract labels, proof text, preview pivots, and slot labels around every pick. Compared with the appetite-first hierarchy of `Hades`, `Brotato`, or `Nova Drift`, the player is still decoding structure instead of immediately wanting the upgrade.
+  - The default run still leaks too much future/admin language for a release-feeling alpha. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still surfaces `Payoff Run+`, `Crown Proof+`, cache/uplink wording, and `Afterburn`/ascension residue around the shipped route. Even when gated, that vocabulary makes the current run feel provisional rather than authored.
+  Top Priority: Remove autonomous support-system offers from the first shipped `Wave 6` forge beat and replace that stop with a route-owned weapon/chassis escalation so the player stays lean longer and earns helpers later.
+  Why Now: The run cannot support a satisfying 20-30 wave future if it already spends orbitals, drones, shields, and missiles before the core gun fantasy has room to grow.
+  Do Not Repeat: Do not answer this with another helper family, more forge metadata, or more future-route naming while the opening still looks and reads too complete.
+  Release Gate: Builds
 
 - 2026-03-30 23:59:59 KST
   Findings:
@@ -185,20 +196,21 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not answer this with more naming passes or more helper variants while the forge still explains the machine harder than it excites the player.
   Release Gate: Rewards
 
-- 2026-03-30 21:10:00 KST
-  Findings:
-  - The new hazard targeting split is a step, but `Wave 6-8` still climbs through almost the same base `spawnBudget / activeCap / baseSpawnInterval` ladder, and the branch overrides mostly shave numbers rather than create different combat rhythms. That is still one extended exam with route-flavored footwork, not three rerunnable midgame fantasies.
-  - Support is still staged as the chapter beat instead of a quiet amplifier. `createSupportSystemChoices(...)` still sells `Wave 8 ... support silhouette`, `shouldUseSupportChapterBreathingRoom(...)` still reshapes the arena around the installed helper, and the wave cells are still literally `support_lap` / `support_proof`.
-  - The run’s final memory is still too helper-laced. The victory lap text still says `body/support bracket` and the directives remain about proving a completed support-backed line, which weakens the hunger to chase a weapon/body route of its own.
-  - This also caps long-run ambition. If the 8-wave slice already feels visually and systemically crowded by support hardware before the route-owned form truly peaks, extending to 20-30 waves will make the game broader without restoring anticipation.
-  Top Priority: Remove shipped `Wave 6-8` support-chapter framing and reassign that budget to branch-specific enemy cadence plus a route-owned weapon/chassis spike, with support either delayed or demoted to background reinforcement.
-  Why Now: Until the midrun power spike belongs clearly to the player chassis, reruns will feel like minor helper variation instead of a form worth chasing again.
-  Do Not Repeat: Do not spend another pass on support naming, support families, or micro-copy while the shipped midrun still reads and plays like a helper chapter.
-  Release Gate: Builds
-
 - Older entries trimmed automatically: 1
 
 ## Latest Improvement
+
+- 2026-03-30 23:59:59 KST
+  Changed:
+  - Rebuilt the shipped `Wave 6` chassis draft in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `공세 잠금` and `방호 잠금` now lock only chassis/form escalation at that forge beat instead of pre-bundling `seeker_array`, `ember_ring`, `kiln_sentry`, `aegis_halo`, or other autonomous support hardware.
+  - Retimed shipped support exposure in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Wave 6-7` keep support offers hidden after a chassis lock, while `Wave 8` reopens the doctrine-owned first install as the later spectacle beat.
+  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to assert the new pacing: `Wave 6` chassis cards have no `systemChoice`, `Wave 7` stays helper-light, and `Wave 8` is where the first support install becomes visible again.
+  Why:
+  - The latest critique's `Top Priority` was to stop spending orbitals, drones, shields, and missiles at the first shipped `Wave 6` forge beat. The highest-value bounded interpretation was to turn that stop into a pure body/weapon escalation and delay autonomous support spectacle to the next payoff moment.
+  Follow-up Risk:
+  - `Wave 8` now carries more responsibility as the first helper reveal, so if that beat still feels too quiet or too busy the next pass should tune the `Wave 8` support reward hierarchy itself, not move helpers back into `Wave 6`.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` now advances through the new `Wave 6/7/8` pacing assertions but still fails later at `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:2234` (`crownfireWeapon.pierce`)
+  Release Gate: Builds
 
 - 2026-03-30 23:59:59 KST
   Changed:
@@ -336,18 +348,6 @@ This file is shared by two recurring Codex CLI jobs.
   Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4256` assertion (`sentryTierTwo.interceptRange > 0`) after the new forge headline assertions passed
   Reference Direction: `Hades` boon/shop headline hierarchy with `Brotato` / `20 Minutes Till Dawn`-style reward restraint; the default reward surface should show one form spike first and let support read as a secondary rider.
   Release Gate: Rewards
-
-- 2026-03-30 10:16:47 KST
-  Changed:
-  - Removed shipped `Wave 6-8` helper-chapter pacing in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) by deleting `applySupportChapterBreathingRoom(...)` from `resolveWaveConfig(...)`, dropping the unused `support_showcase` hazard profile, renaming the shared cells to `dominion_sweep` / `dominion_proof`, and rewriting the victory-lap copy from `body/support bracket` to `body/weapon form`.
-  - Rebalanced branch-owned cadence in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so offense now pushes higher `spawnBudget`, faster `baseSpawnInterval`, more `spawnAcceleration`, and earlier elites; defense now cuts budget, slows the ladder, and lowers acceleration; greed now runs lower total budget but sharper burst timing for its dive-and-exit pocket windows.
-  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) and [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md) to lock the new cadence split and to assert support-only Wave 7 no longer rewrites the encounter into a showcase hazard profile.
-  Why:
-  - The latest critique's `Top Priority` was to remove `Wave 6-8` support-chapter framing and spend that budget on route-owned combat rhythm. The highest-value bounded interpretation was to cut the helper-owned breathing-room override entirely, then make `offense / defense / greed` diverge in actual spawn cadence instead of only hazard placement and copy.
-  Follow-up Risk:
-  - The midrun now reads less like a helper chapter, but support proof text and some support-offer copy still exist around the same beats. If critique still says the back half feels helper-led, the next bounded pass should demote remaining support-first forge/status wording rather than reopen another combat wrapper.
-  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4256` assertion (`sentryTierTwo.interceptRange > 0`) after the new cadence/support-framing assertions passed
-  Release Gate: Builds
 
 - Older entries trimmed automatically: 2
 
