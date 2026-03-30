@@ -601,9 +601,11 @@ assert.equal(game.getImmediateProofWindowSummary(offenseBranchBuild, 6).detail, 
 const offenseWave6Config = game.resolveWaveConfig(5, offenseBranchBuild);
 const offenseWave7Config = game.resolveWaveConfig(6, offenseBranchBuild);
 assert.equal(offenseWave6Config.hazard?.label, "Killline Relay");
+assert.equal(offenseWave6Config.hazard?.targetingProfile, "offense_killlane");
 assert.ok(offenseWave6Config.directive.includes("kill-lane"));
 assert.ok((offenseWave6Config.activeCap || 0) <= 16);
 assert.equal(offenseWave7Config.chassisProof?.label, "Seam Chase");
+assert.equal(offenseWave7Config.hazard?.targetingProfile, "offense_killlane");
 assert.ok((offenseWave7Config.arena?.width || 0) >= 1880);
 const defenseBranchBuild = game.createInitialBuild("rail_zeal");
 game.applyForgeChoice(
@@ -614,9 +616,11 @@ assert.equal(defenseBranchBuild.wave5FieldPathId, "defense");
 const defenseWave6Config = game.resolveWaveConfig(5, defenseBranchBuild);
 const defenseWave8Config = game.resolveWaveConfig(7, defenseBranchBuild);
 assert.equal(defenseWave6Config.hazard?.label, "Refuge Relay");
+assert.equal(defenseWave6Config.hazard?.targetingProfile, "defense_refuge");
 assert.ok(defenseWave6Config.directive.includes("relay corridor"));
 assert.ok((defenseWave6Config.activeCap || 99) <= 13);
 assert.equal(defenseWave8Config.chassisProof?.label, "Safe Pocket Chain");
+assert.equal(defenseWave8Config.hazard?.targetingProfile, "defense_refuge");
 assert.ok((defenseWave8Config.hazard?.enemyPullRadius || 0) >= 162);
 const defensePauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   build: defenseBranchBuild,
@@ -1214,11 +1218,13 @@ assert.equal(greedWave5.midrunGreedRoute?.label, "Entry Vault");
 assert.equal(greedWave6.hazard?.type, "salvage");
 assert.equal(greedWave6.midrunGreedRoute?.label, "Tow Fork");
 assert.equal(greedWave6.chassisProof?.label, "Entry Snap");
+assert.equal(greedWave6.hazard?.targetingProfile, "greed_dive_exit");
 assert.ok((greedWave6.arena?.width || 0) >= 1860);
 assert.ok((greedWave6.activeCap || 99) <= 15);
 assert.equal(greedWave7.hazard?.type, "caravan");
 assert.equal(greedWave7.midrunGreedRoute?.label, "Caravan Hook");
 assert.equal(greedWave7.chassisProof?.label, "Caravan Hook");
+assert.equal(greedWave7.hazard?.targetingProfile, "greed_dive_exit");
 assert.ok((greedWave7.hazard?.driftSpeed || 0) >= 178);
 assert.ok((greedWave7.arena?.width || 0) >= 1980);
 assert.equal(greedWave8.hazard?.type, "salvage");
@@ -1227,6 +1233,7 @@ assert.ok(greedWave7.directive.includes("caravan hook"));
 assert.ok(greedWave8.midrunGreedRoute);
 assert.equal(greedWave8.midrunGreedRoute?.label, "Jackpot Fork");
 assert.equal(greedWave8.chassisProof?.label, "Jackpot Exit");
+assert.equal(greedWave8.hazard?.targetingProfile, "greed_dive_exit");
 assert.ok((greedWave8.hazard?.salvageScrap || 0) >= 54);
 assert.ok((greedWave8.activeCap || 99) <= 17);
 assert.equal(

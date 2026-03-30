@@ -110,6 +110,66 @@
       flankOffsetMultiplier: 1.85,
       rearOffsetMultiplier: 1.24,
     },
+    offense_killlane: {
+      routeCandidateWeightMultiplier: 0.22,
+      routeScoreMultiplier: 0.2,
+      playerRingScoreMultiplier: 0.3,
+      eliteWeightMultiplier: 0.5,
+      eliteRouteWeightMultiplier: 0.36,
+      coreDropWeightMultiplier: 0.1,
+      scrapDropWeightMultiplier: 0.08,
+      catalystDropWeightMultiplier: 0.12,
+      minPlayerDistanceMultiplier: 1.68,
+      minPlayerDistancePenalty: 2.8,
+      flankWeight: 5.6,
+      rearFlankWeight: 4.8,
+      flankOffsetMultiplier: 2.18,
+      rearOffsetMultiplier: 1.42,
+      routeDistanceMultiplier: 1.14,
+      routeAvoidanceMultiplier: 1.28,
+      outerFlankWeight: 6.6,
+      outerFlankOffsetMultiplier: 2.86,
+      outerFlankForwardBiasMultiplier: 0.28,
+    },
+    defense_refuge: {
+      routeCandidateWeightMultiplier: 0.52,
+      routeScoreMultiplier: 0.44,
+      playerRingScoreMultiplier: 0.56,
+      eliteWeightMultiplier: 0.38,
+      eliteRouteWeightMultiplier: 0.22,
+      coreDropWeightMultiplier: 0.26,
+      scrapDropWeightMultiplier: 0.14,
+      catalystDropWeightMultiplier: 0.24,
+      minPlayerDistanceMultiplier: 1.26,
+      minPlayerDistancePenalty: 1.5,
+      flankWeight: 3.6,
+      rearFlankWeight: 3.2,
+      flankOffsetMultiplier: 1.44,
+      rearOffsetMultiplier: 1.06,
+      routeDistanceMultiplier: 0.88,
+      routeTagPenalty: 0.55,
+    },
+    greed_dive_exit: {
+      routeCandidateWeightMultiplier: 0.18,
+      routeScoreMultiplier: 0.16,
+      playerRingScoreMultiplier: 0.22,
+      eliteWeightMultiplier: 0.32,
+      eliteRouteWeightMultiplier: 0.16,
+      coreDropWeightMultiplier: 1.28,
+      scrapDropWeightMultiplier: 1.4,
+      catalystDropWeightMultiplier: 0.92,
+      minPlayerDistanceMultiplier: 1.72,
+      minPlayerDistancePenalty: 3.1,
+      flankWeight: 5.9,
+      rearFlankWeight: 5.1,
+      flankOffsetMultiplier: 2.24,
+      rearOffsetMultiplier: 1.54,
+      routeDistanceMultiplier: 1.18,
+      routeAvoidanceMultiplier: 1.42,
+      outerFlankWeight: 7.1,
+      outerFlankOffsetMultiplier: 3.02,
+      outerFlankForwardBiasMultiplier: 0.2,
+    },
     support_showcase: {
       routeCandidateWeightMultiplier: 0.16,
       routeScoreMultiplier: 0.14,
@@ -16432,6 +16492,9 @@
             : "Jackpot fork. 큰 vault pocket을 한 번만 찍고 exit lane으로 갈아탈수록 greed payout이 깔끔하게 남는다.",
       },
     };
+    if (nextConfig.hazard) {
+      nextConfig.hazard.targetingProfile = "greed_dive_exit";
+    }
     if (waveNumber >= 6) {
       nextConfig.arena = {
         width: Math.max(waveNumber === 8 ? 2060 : waveNumber === 7 ? 1980 : 1860, nextConfig.arena?.width || 0),
@@ -16511,6 +16574,7 @@
       if (nextConfig.hazard) {
         nextConfig.hazard.label =
           waveNumber === 6 ? "Killline Relay" : waveNumber === 7 ? "Cinder Chase" : "Breach Pocket";
+        nextConfig.hazard.targetingProfile = "offense_killlane";
         if (Number.isFinite(nextConfig.hazard.interval)) {
           nextConfig.hazard.interval *= waveNumber === 8 ? 0.96 : 0.92;
         }
@@ -16581,6 +16645,7 @@
     if (nextConfig.hazard) {
       nextConfig.hazard.label =
         waveNumber === 6 ? "Refuge Relay" : waveNumber === 7 ? "Breather Drift" : "Holdfast Pocket";
+      nextConfig.hazard.targetingProfile = "defense_refuge";
       if (Number.isFinite(nextConfig.hazard.interval)) {
         nextConfig.hazard.interval *= waveNumber === 8 ? 1.08 : 1.14;
       }

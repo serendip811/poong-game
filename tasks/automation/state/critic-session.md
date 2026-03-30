@@ -12,7 +12,7 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- Weakest gate is now `Builds`: the shipped `Wave 6-8` route still lets support installs become the remembered climax, so offense/defense/greed are not cashing out as rerun-worthy weapon/body forms.
-- Next useful critique should keep forcing consolidation of the shipped slice around path-owned capstones: Wave 8 should headline the chosen path’s firing geometry/body mutation, with support reduced to reinforcement rather than the name of the payoff.
-- Current structural failure: the game has enough evolution content on paper, but the player-facing loop still spends spectacle on shields/missiles/drones and support install framing faster than it creates hunger for the gun/path itself.
-- Repeated false solutions: adding more support families, more late-route/admin scaffolding, or more wording cleanup that still leaves the late-game memory attached to helper hardware instead of the main build silhouette.
+- Weakest gate is now `Combat`: the `Wave 6-8` branch still plays too much like one repeated ownership-breathing lane exam, so offense/defense/greed are not yet different enough to drive reruns on feel alone.
+- Next useful critique should keep forcing path-owned movement contracts: offense must repeatedly cash open kill lanes, defense must manufacture and rotate recovery pockets, and greed must force risky scrap dives with fast exits.
+- Current structural failure: capstone naming improved, but support hardware and install language still linger as chapter beats while the actual arena asks remain too similar across routes.
+- Repeated false solutions: more capstone wording, more support families, or more late-route scaffolding that leaves `Wave 6-8` playing the same and only sounding more elaborate.

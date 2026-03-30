@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: make the shipped `Wave 6-8` close on a path-owned weapon/body capstone and demote support installs back to amplifier status so the `Wave 1-8` route is remembered for build transformation, not helper packaging.
+- Immediate priority: re-author shipped `Wave 6-8` into truly path-owned combat contracts with distinct arena/hazard/spawn cadence so `offense / defense / greed` change what the player is doing, not just what the payoff is called.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-30 20:05:00 KST
+  Findings:
+  - The `Wave 8` capstone naming is better, but the actual `Wave 6-8` fights still lean too hard on one repeated ownership exam. `afterglow -> breakline -> crownfire -> forgecross` keeps describing the same lane/pocket hold ladder, and all three later hazards still share the `ownership_breathing` targeting profile, so reruns risk feeling like the same kite test with different nouns.
+  - Arena scale is finally larger, but the combat ask still does not breathe enough because branch identity is being expressed through copy and reward wrappers more than through different movement contracts. A player should immediately feel `open kill lanes` vs `safe-pocket rotation` vs `scrap dive and escape`; right now the code still mostly asks them to hold one favorable seam longer.
+  - Support is still too present as a shipped milestone even after the headline fix. `SUPPORT_SYSTEM_START_WAVE = 6`, `Wave 8 완성 시험 직전 ... support silhouette`, and status summaries like `Wave 6 지원 설치` keep teaching support hardware as a chapter beat instead of a quiet amplifier under the path-owned form.
+  - The first-install visual reduction is cosmetic, not structural. `getSupportRenderPresentation()` hides orbit/range helpers, but missiles, drones, shields, deployables, and their combat logic still arrive intact, so the machine can still feel visually complete before the branch-owned weapon/body pattern has fully earned the screen.
+  Top Priority: Rebuild `Wave 6-8` so each `Wave 5` path has its own movement contract, hazard targeting profile, and enemy cadence, with support installs restricted to reinforcing that contract instead of defining the chapter beat.
+  Why Now: If the branch still does not change what the player is actually doing in the arena, replay desire will flatten no matter how strong the capstone names become.
+  Do Not Repeat: Do not spend the next pass on more capstone copy or more support families while `Wave 6-8` still plays this similarly across routes.
+  Release Gate: Combat
 
 - 2026-03-30 19:15:00 KST
   Findings:
@@ -183,20 +194,21 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not answer this with more branch content, more support payoff variants, or more result stats while the current shell still over-explains and over-completes the run fantasy.
   Release Gate: Rewards
 
-- 2026-03-30 18:10:00 KST
-  Findings:
-  - The new `Wave 5` branch now affects combat, but the game still presents itself like the old prototype. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) and title/result surfaces in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still teach `Wave 3 weapon jump -> Wave 6 support install -> Wave 8 proof` more loudly than `offense / defense / greed` as the rerun-defining fork.
-  - The result screen is still memorializing the wrong thing. `getBaseRouteResultRouteLabel()` reduces the run to `조용한 선체 -> weapon beat -> support beat`, so a player can finish an offense or greed route and still get told the real identity was the support install instead of the `Wave 5` decision.
-  - The forge stop is still too admin-heavy for a game that should sell hunger in under a second. `renderForgeOverlay()` still stacks current-loadout, featured-install, branch-payoff, proof, preview, and contract framing where stronger references like `Hades`, `Nova Drift`, and `Brotato` lead with one dominant object and one obvious payoff, not a mini design brief.
-  - The opener is quieter than before, but the run still leaks too much completed-system language too early. `Overdrive`, `FINAL FORM`, support-track framing, and branch/payoff labels keep making the machine sound more complete than it looks, which blunts the emotional jump from tiny starter gun to earned spectacle.
-  Top Priority: Rewrite shipped-facing title/forge/result hierarchy so the run is remembered as `Bare Hull -> Wave 3 weapon -> Wave 5 offense|defense|greed -> Wave 8 closure`, with `Wave 6` support treated as a payoff detail inside that path instead of the headline.
-  Why Now: The mechanical branch exists; until the UI and docs teach that structure instantly, players still read the run as a short scripted ladder instead of a replayable build path.
-  Do Not Repeat: Do not spend another pass inventing late-run forms or more branch tech while the shipped surfaces still summarize the run with the wrong beats.
-  Release Gate: UX/UI
-
 - Older entries trimmed automatically: 1
 
 ## Latest Improvement
+
+- 2026-03-30 20:35:00 KST
+  Changed:
+  - Added route-owned `Wave 6-8` hazard targeting profiles in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so offense now places danger as `offense_killlane`, defense as `defense_refuge`, and greed salvage/caravan dives as `greed_dive_exit` instead of all three inheriting the same shared `ownership_breathing` placement logic.
+  - Wired the same branch configs in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) through `applyWave5FieldPathEncounterConfig(...)` and `applyMidrunGreedRouteConfig(...)`, which makes the route fork affect actual hazard placement/selection behavior in addition to labels, arena size, and copy.
+  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) and [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md) to lock the new `offense_killlane` / `defense_refuge` / `greed_dive_exit` profiles on the shipped route.
+  Why:
+  - The latest critique's `Top Priority` was to make `Wave 6-8` path-owned in actual arena behavior, not just in reward/copy framing. The highest-value bounded interpretation was to split hazard targeting itself, because all three routes were still sharing the same placement brain even after their labels and pacing diverged.
+  Follow-up Risk:
+  - This makes hazard selection more route-specific, but it does not yet give each path fully distinct enemy spawn choreography on every wave. If critique still says reruns blur together, the next bounded pass should tune branch-owned enemy cadence/mix interactions around these new profiles instead of adding more copy or support wrappers.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4244` assertion (`sentryTierTwo.interceptRange > 0`) after the new path-targeting assertions passed
+  Release Gate: Combat
 
 - 2026-03-30 09:14:48 KST
   Changed:
@@ -334,19 +346,6 @@ This file is shared by two recurring Codex CLI jobs.
   Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4168` assertion (`sentryTierTwo.interceptRange > 0`) after the new result-card assertions passed
   Reference Direction: `Hades` death recap hierarchy and `Nova Drift` end-of-wave restraint; lead with the run-defining route memory and one owned form read, not a loadout audit.
   Release Gate: Rewards
-
-- 2026-03-30 03:48:13 KST
-  Changed:
-  - Rewrote the shipped run-memory helpers in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so title/status/result hierarchy now remembers `조용한 선체 -> Wave 3 무기 -> Wave 5 경로 -> Wave 8 완성 시험`; `getBaseRouteStatusBoardSummary(...)`, `getShippingLadderSteps(...)`, `getBaseRouteResultRouteLabel(...)`, and `getBaseRouteResultBeatLabels(...)` no longer headline `Wave 6 지원 설치` as the second core beat.
-  - Retuned the compact forge context in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so the `Wave 5` stop brands itself as `Wave 5 경로` and shows the current form flowing into `공세 추적 / 방호 고정 / 판돈 급습`, while pause snapshots only use `현재 설치` when the shared payoff label is truly an install.
-  - Updated shipped-facing expectations in [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs), refreshed the source-facing promise in [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md), and recorded the new branch-first rule in [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md).
-  Why:
-  - The latest critique's `Top Priority` said the mechanical `Wave 5` fork already exists but shipped surfaces still teach the old `Wave 3 -> Wave 6 -> Wave 8` ladder. The highest-value bounded interpretation was to rewrite the shared memory shell so the route-defining fork becomes the thing the player sees, remembers, and reruns for.
-  Follow-up Risk:
-  - Shared UI memory is now branch-first, but the result build card still carries `FINAL FORM` / `Overdrive` language and some branchless support-only states fall back to generic `Wave 5 진로 선택` preview text. If critique next says the route reads cleaner but the end panel still sounds too complete, the next bounded pass should rewrite that result-card copy rather than add more branch content.
-  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4151` assertion (`sentryTierTwo.interceptRange > 0`) after the new branch-memory assertions passed
-  Reference Direction: `Hades` boon/result hierarchy and `Nova Drift` upgrade memory; lead with one route-defining beat and let support spectacle read as the payoff inside that path, not the chapter headline.
-  Release Gate: UX/UI
 
 - Older entries trimmed automatically: 2
 
