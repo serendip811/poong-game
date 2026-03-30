@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: strip admin-heavy reward/opening language and front-loaded support clutter so `Wave 1-12` reads as a lean gun/body transformation ladder first, with support/utility as secondary payoff instead of the main fantasy.
+- Immediate priority: consolidate the shipped `Wave 1-12` contract into one readable escalation spine and strip late exception branches/copy so the run grows like a clean gun/body ladder instead of a pile of prototype wrappers.
 
 ## Release Gates
 
@@ -61,6 +61,18 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-30 23:59:59 KST
+  Findings:
+  - The project is drifting at the contract level: [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) and [docs/games/cinder-circuit-source-analysis.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-analysis.md) still teach an `8웨이브 + 짧은 승리 랩` game, while [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) now ships a `Wave 1-12` ladder. That mismatch makes the run feel like a prototype that accidentally grew sideways instead of a game built for repeatable escalation.
+  - `Wave 8-12` is carrying too many exception systems for a route that still needs cleaner hunger. In [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), live ascension, illegal overclock, afterburn ascension, dominion, wildcard caches, and pursuit shards all compete to become the “real” late-game payoff, so the player is managing wrappers instead of anticipating one big form and one support layer.
+  - The late-form fantasy is still undercut by dependency language. `LATE_ASCENSION_DEFS` in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) keeps describing headline gun/body evolutions as incomplete until `support uplink` arrives, which weakens the release-feeling payoff a rerunnable action roguelite needs from its signature transformations.
+  - Combat space is better than before in the midgame, but the climax still trends toward squeeze-over-mastery. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) ramps `Wave 12` to `activeCap: 33` with binder/warden territory pressure while shrinking the arena back down from the larger `Wave 8` footprint, which risks ending runs in cramped hold spam rather than readable high-skill movement.
+  - UI discipline is improving at the shell level, but the information payload is still verbose. Even with the minimal HUD, combat-feed and route/result strings in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still push long admin-heavy lines (`cache`, `uplink`, `armory`, `live ascension`, `afterburn`) where strong references would surface one payoff noun and one immediate ask.
+  Top Priority: Collapse the shipped late route into one clean `Wave 8` form lock plus one `Wave 10` reinforcement beat, and remove the other late exception drops/branches from the player-facing run until offense/defense/greed each read as a single hungry build fantasy.
+  Why Now: A 12-wave run that already feels over-explained and structurally crowded has no room to grow into a satisfying 20-30 wave game.
+  Do Not Repeat: Do not answer this with more late caches, more branch wrappers, or another passive family before the current route can breathe.
+  Release Gate: Progression
 
 - 2026-03-30 23:59:59 KST
   Findings:
@@ -184,20 +196,21 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend the next pass on more path nouns, roadmap copy, or additional Wave 9+ promises while the current reward/HUD stack still over-explains the shipped run.
   Release Gate: UX/UI
 
-- 2026-03-30 10:00:00 KST
-  Findings:
-  - The delayed `Wave 8` support wake helps, but the shipped slice still spends too much progression grammar too quickly: `Wave 3` weapon break, `Wave 5` path lock, `Wave 6` chassis breakpoint, `Wave 7` overdrive, `Wave 6-8` shard/chase/admin layers. By `Wave 7`, the machine already feels too explained and too complete for a rerun-driven roguelite.
-  - The forge remains richer on paper than it feels in the hand. Strong references such as `Hades` boon screens or `Brotato` level-ups keep the reward read brutally short and desire-first; here preview rows, lane labels, forge verbs, and route wrappers still make the player parse structure when they should just want the next spike.
-  - Weapon evolution content exists, but the shipped route still behaves more like authored package delivery than a hungry build recipe. A longer action roguelite curve needs the player to live with one form long enough to crave the next barrel, beam split, orbit, or shield layer, not get a new wrapper almost every stop.
-  - This is now the structural blocker for `20-30` wave ambition. If the current `8-wave` run already burns through mutation, chassis, support, pursuit, and closure language, future expansion will either bloat the UI further or feel like stat-only padding.
-  Top Priority: Strip the shipped `Wave 6-8` loop down to fewer decision verbs so the base run is mostly `weapon evolution + one route commitment + one late payoff`, with secondary mutation/overdrive/chase layers deferred or heavily thinned until the core ladder can breathe.
-  Why Now: A short run that already feels near-complete by `Wave 7` leaves no anticipation budget for replayable long-form escalation.
-  Do Not Repeat: Do not answer this with `Wave 9-12` scaffolding, more capstone labels, or more support/admin nouns while the shipped route still front-loads this much structure.
-  Release Gate: Progression
-
 - Older entries trimmed automatically: 1
 
 ## Latest Improvement
+
+- 2026-03-30 13:46:36 KST
+  Changed:
+  - Added a single automatic `Wave 10` reinforcement beat in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) for consolidated late-form runs: `Cataclysm Arsenal` upgrades into `Siege Feeders`, `Warplate Halo` into `Fortress Pulse`, and `Black Ledger Heist` into `Jackpot Tow` the first time the run enters `Wave 10`, instead of leaving the back half on a flatter `Wave 8` lock with late exception systems still implied.
+  - Rewrote the consolidated late-route roadmap/headline/cadence strings in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `getBaseRouteWave8ClosureCopy(...)`, `getLateBreakCadenceSummary(...)`, `getLateBreakHeadline(...)`, `getShippingRouteLateFinaleRoadmap(...)`, and `getCombatBandState(...)` now sell one clean memory: `Wave 8` form lock, `Wave 10` reinforcement, then `Wave 11-12` proof on the same route-owned fantasy.
+  - Added smoke coverage in [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) for the new reinforcement titles, roadmap details, mutation/ledger reinforcement effects, and quarantine reset of `lateBreakReinforcementApplied`.
+  Why:
+  - The latest critique's `Top Priority` was to collapse the late route into one `Wave 8` form lock plus one `Wave 10` reinforcement beat and remove extra late-route wrapper feeling. The highest-value bounded interpretation inside `playables/` was to make that second beat real and automatic, rather than adding another choice screen or more caches.
+  Follow-up Risk:
+  - The route spine is cleaner now, but `Wave 11-12` still keep some shared fallback language and `Wave 10` reinforcement is automatic rather than a player-selected branch. If critique still says the back half feels crowded, the next bounded pass should trim remaining shared/admin late text before inventing any new late rewards.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4302` assertion (`sentryTierTwo.interceptRange > 0`) after the new late-route reinforcement assertions passed
+  Release Gate: Progression
 
 - 2026-03-31 00:25:00 KST
   Changed:
@@ -335,18 +348,6 @@ This file is shared by two recurring Codex CLI jobs.
   Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4234` assertion (`sentryTierTwo.interceptRange > 0`) after the new compact-status assertions passed
   Reference Direction: `Hades` pause/boon hierarchy and `Nova Drift` compact status reads; keep one silhouette dominant, push route/admin context into a quiet subline, and let the actionable ask own the second beat.
   Release Gate: UX/UI
-
-- 2026-03-30 10:30:00 KST
-  Changed:
-  - Cut `Crownfire Overdrive` out of the shipped `Wave 7` base-route forge in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), so the compact `Wave 1-8` run no longer spends a separate overdrive verb between the `Wave 6` chassis lock and the `Wave 8` payoff.
-  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock `Wave 7` back onto a visible main-weapon evolution and fail if the shipped route starts applying `crownfireOverdriveId` again.
-  - Refreshed [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md) so future passes keep the compact ladder on `weapon evolution -> route proof -> late payoff` instead of reopening a midrun overdrive wrapper.
-  Why:
-  - The latest critique's `Top Priority` asked to strip `Wave 6-8` down to fewer decision verbs. The highest-value concrete interpretation was to remove the extra `Wave 7` overdrive layer, because it was the clearest case where the shipped route was feeling authored and nearly complete before the final payoff arrived.
-  Follow-up Risk:
-  - `Wave 7` now breathes better, but some signatures may need stronger tier-2 evolution copy or visuals if critique next says the stop became too quiet. The next bounded pass should strengthen second-weapon-spike spectacle itself rather than reintroduce another named wrapper.
-  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4234` assertion (`sentryTierTwo.interceptRange > 0`) after the new `Wave 7` forge assertions passed
-  Release Gate: Progression
 
 - Older entries trimmed automatically: 2
 

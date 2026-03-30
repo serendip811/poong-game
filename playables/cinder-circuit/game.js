@@ -2450,40 +2450,62 @@
   }
 
   function getBaseRouteWave8ClosureCopy(profileId, build = null) {
+    const reinforced = Boolean(build && build.lateBreakReinforcementApplied);
     if (profileId === "mutation") {
       const title = "Cataclysm Arsenal";
+      const reinforcement = getBaseRouteWave10ReinforcementCopy(profileId);
       return {
         title,
         combatAsk: "열린 lane 둘만 오래 비운다.",
-        cadenceDetail: `${title}가 바깥 lane 둘까지 같이 찢는다. 열린 lane 둘만 오래 비운다.`,
-        headlineDetail: `${title}로 화면 바깥 둘까지 연다. 열린 lane 둘만 오래 비운다.`,
-        roadmapDetail: `${title} 완성`,
+        cadenceDetail: reinforced
+          ? `${title}가 ${reinforcement.title}와 함께 breach lane까지 넓어진다. 열린 lane 둘만 오래 비운다.`
+          : `${title}가 바깥 lane 둘까지 같이 찢는다. 열린 lane 둘만 오래 비운다.`,
+        headlineDetail: reinforced
+          ? `${title} 위에 ${reinforcement.title}가 얹혀 breach lane까지 같이 찢는다. 열린 lane 둘만 오래 비운다.`
+          : `${title}로 화면 바깥 둘까지 연다. 열린 lane 둘만 오래 비운다.`,
+        roadmapDetail: `${title} 잠금 -> Wave 10 ${reinforcement.title}`,
         proof: "열린 lane 둘만 오래 비운다.",
-        statusNote: `${title}가 열린 lane 둘을 같이 정리한다. 열린 lane 둘만 오래 비운다.`,
+        statusNote: reinforced
+          ? `${title}에 ${reinforcement.title}가 더 붙어 열린 lane 둘과 breach seam을 같이 정리한다. 열린 lane 둘만 오래 비운다.`
+          : `${title}가 열린 lane 둘을 같이 정리한다. 열린 lane 둘만 오래 비운다.`,
       };
     }
     if (profileId === "aegis") {
       const title = "Warplate Halo";
+      const reinforcement = getBaseRouteWave10ReinforcementCopy(profileId);
       return {
         title,
         combatAsk: "한 pocket만 길게 붙든다.",
-        cadenceDetail: `${title}가 pocket 하나를 끝까지 잠근다. 한 pocket만 길게 붙든다.`,
-        headlineDetail: `${title}로 복귀 pocket 하나를 굳힌다. 한 pocket만 길게 붙든다.`,
-        roadmapDetail: `${title} 완성`,
+        cadenceDetail: reinforced
+          ? `${title}가 ${reinforcement.title}와 함께 pocket 복귀를 더 길게 봉합한다. 한 pocket만 길게 붙든다.`
+          : `${title}가 pocket 하나를 끝까지 잠근다. 한 pocket만 길게 붙든다.`,
+        headlineDetail: reinforced
+          ? `${title} 위에 ${reinforcement.title}가 얹혀 pocket 복귀를 더 길게 봉합한다. 한 pocket만 길게 붙든다.`
+          : `${title}로 복귀 pocket 하나를 굳힌다. 한 pocket만 길게 붙든다.`,
+        roadmapDetail: `${title} 잠금 -> Wave 10 ${reinforcement.title}`,
         proof: "한 pocket만 길게 붙든다.",
-        statusNote: `${title}가 복귀 pocket 하나를 길게 받친다. 한 pocket만 길게 붙든다.`,
+        statusNote: reinforced
+          ? `${title}에 ${reinforcement.title}가 더 붙어 복귀 pocket 하나를 더 길게 봉합한다. 한 pocket만 길게 붙든다.`
+          : `${title}가 복귀 pocket 하나를 길게 받친다. 한 pocket만 길게 붙든다.`,
       };
     }
     if (profileId === "ledger") {
       const title = "Black Ledger Heist";
+      const reinforcement = getBaseRouteWave10ReinforcementCopy(profileId);
       return {
         title,
         combatAsk: "payout lane 하나만 깊게 긁는다.",
-        cadenceDetail: `${title}가 payout lane 하나를 끝까지 긁는다. payout lane 하나만 깊게 긁는다.`,
-        headlineDetail: `${title}로 payout lane 하나를 깊게 찢는다. payout lane 하나만 깊게 긁는다.`,
-        roadmapDetail: `${title} 완성`,
+        cadenceDetail: reinforced
+          ? `${title}가 ${reinforcement.title}와 함께 payout lane을 더 오래 끌고 간다. payout lane 하나만 깊게 긁는다.`
+          : `${title}가 payout lane 하나를 끝까지 긁는다. payout lane 하나만 깊게 긁는다.`,
+        headlineDetail: reinforced
+          ? `${title} 위에 ${reinforcement.title}가 얹혀 payout lane을 더 길게 끌고 간다. payout lane 하나만 깊게 긁는다.`
+          : `${title}로 payout lane 하나를 깊게 찢는다. payout lane 하나만 깊게 긁는다.`,
+        roadmapDetail: `${title} 잠금 -> Wave 10 ${reinforcement.title}`,
         proof: "payout lane 하나만 깊게 긁는다.",
-        statusNote: `${title}가 payout lane 하나를 깊게 긁어 연다. payout lane 하나만 깊게 긁는다.`,
+        statusNote: reinforced
+          ? `${title}에 ${reinforcement.title}가 더 붙어 payout lane 하나를 더 길게 끌고 간다. payout lane 하나만 깊게 긁는다.`
+          : `${title}가 payout lane 하나를 깊게 긁어 연다. payout lane 하나만 깊게 긁는다.`,
       };
     }
     return {
@@ -2500,11 +2522,73 @@
     };
   }
 
+  function getBaseRouteWave10ReinforcementCopy(profileId) {
+    if (profileId === "mutation") {
+      return {
+        title: "Siege Feeders",
+        detail: "Wave 10에서 cataclysm fan이 한 번 더 벌어져 breach lane을 더 길게 찢는다.",
+      };
+    }
+    if (profileId === "aegis") {
+      return {
+        title: "Fortress Pulse",
+        detail: "Wave 10에서 warplate pulse가 두터워져 pocket 복귀를 한 번 더 안전하게 봉합한다.",
+      };
+    }
+    if (profileId === "ledger") {
+      return {
+        title: "Jackpot Tow",
+        detail: "Wave 10에서 twin tow fork가 더 길게 벌어져 payout lane을 끊지 않고 더 깊게 긁는다.",
+      };
+    }
+    return {
+      title: "Reinforcement",
+      detail: "Wave 10에서 잠근 형태가 한 번 더 밀려 올라간다.",
+    };
+  }
+
+  function shouldApplyBaseRouteWave10Reinforcement(build, waveNumber) {
+    return Boolean(
+      CONSOLIDATED_12_WAVE_ROUTE &&
+        build &&
+        build.lateBreakProfileId &&
+        Number.isFinite(waveNumber) &&
+        waveNumber >= 10 &&
+        !build.lateBreakReinforcementApplied
+    );
+  }
+
+  function applyBaseRouteWave10Reinforcement(build, run = null) {
+    if (!shouldApplyBaseRouteWave10Reinforcement(build, 10)) {
+      return null;
+    }
+    const profileId = build.lateBreakProfileId;
+    const reinforcement = getBaseRouteWave10ReinforcementCopy(profileId);
+    build.lateBreakReinforcementApplied = true;
+    if (profileId === "mutation") {
+      build.lateFieldMutationLevel = Math.max(getLateFieldMutationLevel(build), 5);
+    } else if (profileId === "aegis") {
+      build.lateFieldAegisLevel = Math.max(getLateFieldAegisLevel(build), 3);
+    } else if (profileId === "ledger") {
+      build.pickupBonus += 8;
+      build.scrapMultiplier += 0.06;
+      build.blackLedgerRaidWaves = Math.max(build.blackLedgerRaidWaves || 0, 3);
+    }
+    if (Array.isArray(build.upgrades)) {
+      build.upgrades.push(`Wave 10 Reinforcement: ${reinforcement.title}`);
+    }
+    if (run && typeof pushCombatFeed === "function") {
+      pushCombatFeed(`${reinforcement.title} 활성화. ${reinforcement.detail}`, "W10");
+    }
+    return reinforcement;
+  }
+
   function getLateBreakCadenceSummary(profileId) {
     if (CONSOLIDATED_12_WAVE_ROUTE) {
+      const reinforcement = getBaseRouteWave10ReinforcementCopy(profileId);
       return {
         label: "완성 계약",
-        detail: getBaseRouteWave8ClosureCopy(profileId).cadenceDetail,
+        detail: `${getBaseRouteWave8ClosureCopy(profileId).cadenceDetail} Wave 10에서는 ${reinforcement.title} 한 번만 더 붙는다.`,
       };
     }
     if (profileId === "mutation") {
@@ -2538,9 +2622,10 @@
   function getLateBreakHeadline(profileId, build = null) {
     if (CONSOLIDATED_12_WAVE_ROUTE) {
       const closureCopy = getBaseRouteWave8ClosureCopy(profileId, build);
+      const reinforcement = getBaseRouteWave10ReinforcementCopy(profileId);
       return {
         title: closureCopy.title || "완성 시험",
-        detail: closureCopy.headlineDetail,
+        detail: `${closureCopy.headlineDetail} Wave 10에서는 ${reinforcement.title}만 더 붙는다.`,
       };
     }
     if (profileId === "mutation") {
@@ -5812,6 +5897,7 @@
     lateFieldAegisLevel: 0,
     lateFieldConvergenceId: null,
     lateBreakProfileId: null,
+    lateBreakReinforcementApplied: false,
     arsenalBreakpointProfileId: null,
     wave5FieldPathId: null,
     midrunGreedRouteUntilWave: 0,
@@ -8967,6 +9053,7 @@
         lateFieldAegisLevel: BASE_BUILD.lateFieldAegisLevel,
         lateFieldConvergenceId: BASE_BUILD.lateFieldConvergenceId,
         lateBreakProfileId: BASE_BUILD.lateBreakProfileId,
+        lateBreakReinforcementApplied: BASE_BUILD.lateBreakReinforcementApplied,
         arsenalBreakpointProfileId: BASE_BUILD.arsenalBreakpointProfileId,
         wave5FieldPathId: BASE_BUILD.wave5FieldPathId,
         midrunGreedRouteUntilWave: BASE_BUILD.midrunGreedRouteUntilWave,
@@ -9091,6 +9178,9 @@
     }
     if (build.lateBreakProfileId) {
       build.lateBreakProfileId = null;
+    }
+    if (build.lateBreakReinforcementApplied) {
+      build.lateBreakReinforcementApplied = false;
     }
     if (build.lateAscensionId) {
       build.lateAscensionId = null;
@@ -9434,9 +9524,10 @@
       };
     }
     if (lateBreakHeadline) {
+      const reinforcement = getBaseRouteWave10ReinforcementCopy(build && build.lateBreakProfileId);
       return {
         title: stageThreeTitle,
-        detail: `${lateBreakHeadline.detail} Wave 9-12는 이 후반 판타지 하나만 증명하는 고정 finale다.`,
+        detail: `${lateBreakHeadline.detail} Wave 10에서는 ${reinforcement.title} 한 번만 더 붙고, Wave 11-12는 이 후반 판타지 하나만 그대로 민다.`,
         state:
           boundedWave >= MAX_WAVES
             ? "locked"
@@ -9448,7 +9539,7 @@
     return {
       title: stageThreeTitle,
       detail:
-        "Wave 8에서 하나의 후반 형태를 고르면 Wave 9 payoff, Wave 10 proof, Wave 11 cadence, Wave 12 final stand로 바로 닫힌다.",
+        "Wave 8에서 하나의 후반 형태를 잠그고, Wave 10에서 그 형태를 한 번 더 증폭한 뒤, Wave 11-12는 같은 계약만 끝까지 민다.",
       state: boundedWave >= LATE_BREAK_ARMORY_WAVE ? "primed" : "planned",
     };
   }
@@ -12271,16 +12362,16 @@
       }
       return build && build.doctrineCapstoneId
         ? {
-            label: "Breakpoint Proof",
+            label: "Reinforcement Proof",
             headline: lockedTitle,
             detail:
-              "Wave 10은 caravan chase가 아니라 single crownline proof다. relay crown 하나를 찢고 열린 breach lane을 오래 붙잡아야 하므로, 방금 잠근 doctrine form이 실제로 얼마나 긴 ownership window를 만드는지 바로 확인하게 만든다.",
+              "Wave 10은 detour 없는 reinforcement proof다. relay crown 하나를 찢는 동안 잠근 형태에 마지막 보강 한 겹만 더 얹혀, 열린 breach lane을 얼마나 더 오래 ownership으로 바꿨는지 바로 드러난다.",
           }
         : {
-            label: "Breakpoint Proof",
+            label: "Reinforcement Proof",
             headline: capstoneTitle,
             detail:
-              "Wave 10은 capstone 직전 single crownline proof다. open-lane payoff에서 벌어 둔 공간을 relay breach hold로 바꾸며, marked elite cache를 챙길 마지막 창을 어느 flank에서 열지 직접 골라야 한다.",
+              "Wave 10은 detour 없는 reinforcement proof다. open-lane payoff에서 벌어 둔 공간을 relay breach hold로 바꾸며, 마지막 보강 한 겹이 붙을 자리를 어느 flank에서 열지 직접 골라야 한다.",
           };
     }
     if (build && build.lateBreakProfileId) {
@@ -13327,7 +13418,7 @@
         stats.lateFieldMutationTraitLabel = `Cataclysm Arsenal · MK ${lateFieldMutationLevel}`;
         stats.headlineFormLabel = "Cataclysm Arsenal";
         stats.lateBreakStatusNote = CONSOLIDATED_12_WAVE_ROUTE
-          ? getBaseRouteWave8ClosureCopy("mutation").statusNote
+          ? getBaseRouteWave8ClosureCopy("mutation", build).statusNote
           : "Wave 8 Cataclysm Arsenal이 전면 cataclysm fan과 측면 포드를 한 번에 잠가 주포 실루엣을 갈아엎었다. Wave 9 open-lane에서 이 화망이 flank 둘을 동시에 오래 비우는지 바로 증명한다.";
         stats.lateFieldMutationStatusNote = stats.lateBreakStatusNote;
         stats.lateBreakCataclysmFirePattern = {
@@ -13365,7 +13456,7 @@
     if (build.lateBreakProfileId === "aegis" && lateFieldAegisLevel >= 2) {
       stats.headlineFormLabel = "Warplate Halo";
       stats.lateBreakStatusNote = CONSOLIDATED_12_WAVE_ROUTE
-        ? getBaseRouteWave8ClosureCopy("aegis").statusNote
+        ? getBaseRouteWave8ClosureCopy("aegis", build).statusNote
         : "Wave 8 Warplate Halo가 재충전 warplate 두 겹과 burst pulse를 붙여 몸체를 bastion hull로 바꿨다. Wave 9 pocket fight에서 plate timing으로 얼마나 깊게 들어갔다가 살아 나오는지 바로 드러난다.";
       stats.maxHp += 6;
       stats.moveSpeed += 6;
@@ -13374,7 +13465,7 @@
     if (build.lateBreakProfileId === "ledger" && (build.blackLedgerRaidWaves || 0) > 0) {
       stats.headlineFormLabel = "Black Ledger Heist";
       stats.lateBreakStatusNote = CONSOLIDATED_12_WAVE_ROUTE
-        ? getBaseRouteWave8ClosureCopy("ledger").statusNote
+        ? getBaseRouteWave8ClosureCopy("ledger", build).statusNote
         : "Wave 8 Black Ledger Heist가 주포 양옆에 twin tow fork를 열어 payout lane을 긁는 raid frame으로 바꿨다. Wave 9 vaultline에서 더 긁을지 끊고 살아남을지 바로 갈라진다.";
       stats.lateBreakLedgerFirePattern = {
         kind: "late_break_ledger",
@@ -20151,6 +20242,9 @@
     summarizeCombatFeedEntry,
     getShippingCombatFeedEntrySummary,
     getBaseRouteTransformationFocus,
+    getBaseRouteWave8ClosureCopy,
+    getBaseRouteWave10ReinforcementCopy,
+    applyBaseRouteWave10Reinforcement,
     getShippedRoutePresentationBeats,
     getBaseRouteForgeChoiceTransformation,
     createBaseRouteForgeCompactCardMarkup,
@@ -22410,6 +22504,10 @@
       }
       return;
     }
+    const waveNumber = index + 1;
+    const wave10Reinforcement = shouldApplyBaseRouteWave10Reinforcement(state.build, waveNumber)
+      ? applyBaseRouteWave10Reinforcement(state.build, state)
+      : null;
     const resolvedConfig = resolveWaveConfig(index, state.build);
     let config = applyRiskMutationPressureTax(
       {
@@ -22418,7 +22516,6 @@
       },
       state.build
     );
-    const waveNumber = index + 1;
     config = applyMidrunGreedRouteConfig(config, state.build, waveNumber);
     config = applyBlackLedgerRaidConfig(config, state.build, waveNumber);
     const arena = getArenaSize(config);
@@ -22662,6 +22759,9 @@
     );
     if (blackLedgerRaidActive) {
       setBanner("Black Ledger Raid", 0.9);
+    }
+    if (wave10Reinforcement) {
+      setBanner(wave10Reinforcement.title, 0.95);
     }
     if (state.wave.combatCache) {
       pushCombatFeed(

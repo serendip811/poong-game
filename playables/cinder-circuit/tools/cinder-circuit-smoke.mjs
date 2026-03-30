@@ -199,6 +199,26 @@ const shippedMidForgeTransition = game.getBaseRouteTransitionFeedCopy(
 assert.ok(shippedMidForgeTransition.headline.includes("정비"));
 assert.ok(shippedMidForgeTransition.proof.includes("하나를 고른 뒤"));
 assert.ok(!/현재 형태는|support|rider slot|armory/i.test(shippedMidForgeTransition.text));
+assert.equal(game.getBaseRouteWave10ReinforcementCopy("mutation").title, "Siege Feeders");
+const wave10MutationBuild = game.createInitialBuild("rail_zeal");
+wave10MutationBuild.lateBreakProfileId = "mutation";
+wave10MutationBuild.lateFieldMutationLevel = 4;
+const preWave10MutationStats = game.computeWeaponStats(wave10MutationBuild);
+game.applyBaseRouteWave10Reinforcement(wave10MutationBuild);
+const postWave10MutationStats = game.computeWeaponStats(wave10MutationBuild);
+assert.equal(wave10MutationBuild.lateBreakReinforcementApplied, true);
+assert.equal(wave10MutationBuild.lateFieldMutationLevel, 5);
+assert.ok(game.getBaseRouteWave8ClosureCopy("mutation", wave10MutationBuild).roadmapDetail.includes("Wave 10 Siege Feeders"));
+assert.ok(postWave10MutationStats.damage > preWave10MutationStats.damage);
+const wave10LedgerBuild = game.createInitialBuild("scrap_pact");
+wave10LedgerBuild.lateBreakProfileId = "ledger";
+wave10LedgerBuild.blackLedgerRaidWaves = 1;
+game.applyBaseRouteWave10Reinforcement(wave10LedgerBuild);
+assert.equal(wave10LedgerBuild.lateBreakReinforcementApplied, true);
+assert.equal(wave10LedgerBuild.blackLedgerRaidWaves, 3);
+assert.equal(wave10LedgerBuild.pickupBonus, 8);
+assert.ok(wave10LedgerBuild.scrapMultiplier > 1);
+assert.ok(game.getBaseRouteWave8ClosureCopy("ledger", wave10LedgerBuild).roadmapDetail.includes("Wave 10 Jackpot Tow"));
 const quarantinedLateRun = game.quarantineShippedLateRouteState({
   build: {
     ...game.createInitialBuild("rail_zeal"),
@@ -220,6 +240,7 @@ const quarantinedLateRun = game.quarantineShippedLateRouteState({
     wildcardProtocolIds: ["shardsplice"],
     overcommitUnlocked: true,
     doctrinePursuitCommitted: true,
+    lateBreakReinforcementApplied: true,
   },
   pendingFinalForge: true,
   postCapstone: { active: true, stageIndex: 3, total: game.POST_CAPSTONE_WAVE_COUNT },
@@ -248,6 +269,7 @@ assert.equal(quarantinedLateRun.wave.lateAscension, null);
 assert.equal(quarantinedLateRun.wave.afterburnDominion, null);
 assert.equal(quarantinedLateRun.build.doctrineCapstoneId, null);
 assert.equal(quarantinedLateRun.build.lateAscensionId, null);
+assert.equal(quarantinedLateRun.build.lateBreakReinforcementApplied, false);
 assert.equal(quarantinedLateRun.build.afterburnOverdriveId, null);
 assert.equal(quarantinedLateRun.build.afterburnDominionId, null);
 assert.equal(quarantinedLateRun.build.cashoutSupportId, null);
@@ -2525,7 +2547,7 @@ const cataclysmChoice = mutationLateBreakChoices.find((choice) => choice.action 
 assert.ok(cataclysmChoice);
 assert.equal(cataclysmChoice.title, "Cataclysm Arsenal");
 assert.equal(cataclysmChoice.lateFieldMutationLevel, 4);
-assert.equal(cataclysmChoice.roadmapDetail, "Cataclysm Arsenal 완성");
+assert.equal(cataclysmChoice.roadmapDetail, "Cataclysm Arsenal 잠금 -> Wave 10 Siege Feeders");
 assert.match(cataclysmChoice.description, /Wave 6 설치 위에 새 화망/);
 assert.doesNotMatch(cataclysmChoice.description, /support 없이도|완성형/);
 assert.doesNotMatch(cataclysmChoice.description, /proof|짧은 승리 랩|완성 시험/i);
@@ -2621,13 +2643,16 @@ const lateBreakArmoryChoices = game.buildForgeChoices(lateCacheBuild, Math.rando
 assert.equal(lateBreakArmoryChoices.length, 3);
 assert.ok(
   lateBreakArmoryChoices.every((choice) =>
-    ["Cataclysm Arsenal 완성", "Warplate Halo 완성", "Black Ledger Heist 완성"].includes(
+    [
+      "Cataclysm Arsenal 잠금 -> Wave 10 Siege Feeders",
+      "Warplate Halo 잠금 -> Wave 10 Fortress Pulse",
+      "Black Ledger Heist 잠금 -> Wave 10 Jackpot Tow",
+    ].includes(
       choice.roadmapDetail
     )
   )
 );
 assert.ok(lateBreakArmoryChoices.every((choice) => !choice.roadmapDetail?.includes("Wave 9")));
-assert.ok(lateBreakArmoryChoices.every((choice) => !choice.roadmapDetail?.includes("Wave 10")));
 assert.ok(lateBreakArmoryChoices.every((choice) => !choice.roadmapDetail?.includes("Wave 11")));
 assert.ok(lateBreakArmoryChoices.every((choice) => !choice.roadmapDetail?.includes("Wave 12")));
 assert.ok(lateBreakArmoryChoices.every((choice) => !/proof|완성 시험/i.test(choice.roadmapDetail)));
