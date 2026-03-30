@@ -155,7 +155,7 @@ assert.equal(
 );
 assert.equal(
   game.getBaseRoutePostWaveTransition({ waveIndex: 7, wave: { completesRun: true } }, 9).action,
-  "victory_lap"
+  "result"
 );
 assert.equal(
   game.getBaseRoutePostWaveTransition(
@@ -185,8 +185,8 @@ const shippedForgeTransition = game.getBaseRouteTransitionFeedCopy(
   },
   { phase: "forge", nextWave: 9 }
 );
-assert.ok(shippedForgeTransition.headline.includes("유지"));
-assert.ok(shippedForgeTransition.proof.includes("짧은 승리 랩"));
+assert.ok(shippedForgeTransition.headline.includes("마감"));
+assert.ok(shippedForgeTransition.proof.includes("남은 고철만 회수"));
 assert.ok(!/Late Break|Afterburn|support bay|Wave 9|Wave 10/i.test(shippedForgeTransition.text));
 const quarantinedLateRun = game.quarantineShippedLateRouteState({
   build: {
@@ -5297,6 +5297,17 @@ game.applyForgeChoice(
   offenseWave8Choices[0]
 );
 assert.equal(offenseWave8Build.lateBreakProfileId, "mutation");
+assert.equal(game.getBaseRoutePlayableWaveCount(offenseWave8Build), 12);
+assert.equal(
+  game.getBaseRoutePostWaveTransition({ build: offenseWave8Build, waveIndex: 7 }, 9).action,
+  "continue_wave"
+);
+assert.ok(
+  game
+    .getBaseRouteTransitionFeedCopy({ build: offenseWave8Build, waveIndex: 7 }, { phase: "clear", nextWave: 9 })
+    .text.includes("정지 없이")
+);
+assert.ok(game.getBaseRouteCombatAskForWave(offenseWave8Build, 9).includes("열린 lane"));
 
 const defenseWave8Build = makeWave8ClosureBuild("defense");
 const defenseWave8Choices = game.buildForgeChoices(defenseWave8Build, () => 0, 999, {

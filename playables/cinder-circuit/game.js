@@ -10717,7 +10717,7 @@
     if (!activeBuild) {
       return "";
     }
-    const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
+    const boundedWave = clamp(Math.round(waveNumber || 1), 1, getBaseRoutePlayableWaveCount(activeBuild));
     const activeWeapon = weapon && activeBuild === build ? weapon : computeWeaponStats(activeBuild);
     const machineSummary = getBaseRouteStatusBoardSummary(activeBuild, activeWeapon, boundedWave, {
       supportSystem,
@@ -11348,7 +11348,7 @@
   }
 
   function getBaseRouteCombatAskForWave(build, waveNumber = 1) {
-    const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
+    const boundedWave = clamp(Math.round(waveNumber || 1), 1, getBaseRoutePlayableWaveCount(build));
     return getBaseRouteCombatAsk({
       build,
       waveIndex: boundedWave - 1,
@@ -11689,7 +11689,7 @@
           ? (activeState.waveIndex || 0) + 2
           : (activeState.waveIndex || 0) + 1,
       1,
-      DEFAULT_ROUTE_WAVE_COUNT
+      getBaseRoutePlayableWaveCount(build)
     );
     const supportInstall =
       waveNumber >= SUPPORT_SYSTEM_START_WAVE ? getBaseRouteInstalledSupportInstallSummary(build) : null;
@@ -11776,9 +11776,10 @@
       return summary;
     }
     if (shouldQuarantineShippingCombatFeedText(source)) {
+      const routeWaveCap = getBaseRoutePlayableWaveCount(currentState && currentState.build);
       const waveNumber =
         currentState && typeof currentState.waveIndex === "number"
-          ? clamp(currentState.waveIndex + (currentState.phase === "forge" ? 2 : 1), 1, DEFAULT_ROUTE_WAVE_COUNT)
+          ? clamp(currentState.waveIndex + (currentState.phase === "forge" ? 2 : 1), 1, routeWaveCap)
           : 1;
       const build =
         currentState && currentState.build
@@ -11805,9 +11806,9 @@
     const waveIntroNumber = clamp(
       Number(waveIntroStamp ? waveIntroStamp[1] : waveIntroText ? waveIntroText[1] : 0) || 0,
       0,
-      DEFAULT_ROUTE_WAVE_COUNT
+      getBaseRoutePlayableWaveCount(currentState && currentState.build)
     );
-    if (waveIntroNumber >= 1 && waveIntroNumber <= DEFAULT_ROUTE_WAVE_COUNT) {
+    if (waveIntroNumber >= 1) {
       const build =
         currentState && currentState.build
           ? getSanitizedConsolidatedPresentationBuild(currentState.build)
@@ -14077,6 +14078,14 @@
       Number.isFinite(nextWave) &&
       (nextWave >= LATE_BREAK_ARMORY_WAVE || isBaseRouteWave8ClosureWave(nextWave))
     );
+  }
+
+  function isBaseRouteLateStaircaseActive(build) {
+    return Boolean(CONSOLIDATED_12_WAVE_ROUTE && build && build.lateBreakProfileId);
+  }
+
+  function getBaseRoutePlayableWaveCount(build = null) {
+    return isBaseRouteLateStaircaseActive(build) ? MAX_WAVES : DEFAULT_ROUTE_WAVE_COUNT;
   }
 
   function getBaseRouteWave8CapstoneChoice(build, nextWave) {
@@ -18719,12 +18728,19 @@
 
   function getBaseRoutePostWaveTransition(run = state, nextWave = null) {
     const upcomingWave = Number.isFinite(nextWave) ? nextWave : run ? run.waveIndex + 2 : 0;
+    const routeWaveCap = getBaseRoutePlayableWaveCount(run && run.build);
     if (run && run.wave && run.wave.completesRun) {
-      return run.wave.baseRouteVictoryLap
-        ? { id: "result_panel", label: "결과 패널", action: "result" }
-        : { id: "victory_lap", label: "승리 랩", action: "victory_lap" };
+      return { id: "result_panel", label: "결과 패널", action: "result" };
     }
-    if (CONSOLIDATED_12_WAVE_ROUTE && upcomingWave > DEFAULT_ROUTE_WAVE_COUNT) {
+    if (
+      CONSOLIDATED_12_WAVE_ROUTE &&
+      isBaseRouteLateStaircaseActive(run && run.build) &&
+      upcomingWave > DEFAULT_ROUTE_WAVE_COUNT &&
+      upcomingWave <= routeWaveCap
+    ) {
+      return { id: "late_staircase", label: `Wave ${upcomingWave}`, action: "continue_wave" };
+    }
+    if (CONSOLIDATED_12_WAVE_ROUTE && upcomingWave > routeWaveCap) {
       return { id: "victory_lap", label: "승리 랩", action: "victory_lap" };
     }
     return {
@@ -18741,7 +18757,10 @@
       return null;
     }
     const nextWave = Number.isFinite(options.nextWave) ? options.nextWave : run ? run.waveIndex + 2 : 1;
-    const currentWave = run && Number.isFinite(run.waveIndex) ? clamp(run.waveIndex + 1, 1, DEFAULT_ROUTE_WAVE_COUNT) : 1;
+    const currentWave =
+      run && Number.isFinite(run.waveIndex)
+        ? clamp(run.waveIndex + 1, 1, getBaseRoutePlayableWaveCount(run && run.build))
+        : 1;
     const activeBuild =
       run && run.build ? getSanitizedConsolidatedPresentationBuild(run.build) : null;
     const weapon = activeBuild ? computeWeaponStats(activeBuild) : null;
@@ -18765,6 +18784,18 @@
         headline: `${dominantForm} 유지`,
         proof,
         text: `${dominantForm} 유지. ${proof}`,
+      };
+    }
+    if (transition.action === "continue_wave") {
+      const proofWindow = trimInspectNote(
+        getPlayerFacingProofWindowSummary(activeBuild, nextWave).label,
+        "다음 전투"
+      );
+      const proof = `정지 없이 ${proofWindow}로 바로 이어진다.`;
+      return {
+        headline: `${dominantForm} 추격`,
+        proof,
+        text: `${dominantForm} 추격. ${proof}`,
       };
     }
     const forgeFocus = getBaseRouteTransformationFocus(nextWave, {
@@ -19769,6 +19800,7 @@
     getBaseRouteForgeStage,
     getBaseRoutePostWaveTransition,
     getBaseRouteTransitionFeedCopy,
+    getBaseRoutePlayableWaveCount,
     getBaseRouteForgeContextTailSummary,
     getBaseRouteForgeSpotlightSummary,
     getBaseRouteForgeChoiceCombatAsk,
@@ -20227,6 +20259,7 @@
     if (CONSOLIDATED_12_WAVE_ROUTE && currentState.waveIndex + 1 >= MAX_WAVES) {
       return null;
     }
+    const routeWaveCap = getBaseRoutePlayableWaveCount(currentState && currentState.build);
     const liveWaveNumber =
       currentState && typeof currentState.waveIndex === "number"
         ? clamp(
@@ -20236,7 +20269,7 @@
                 ? currentState.waveIndex + 2
                 : currentState.waveIndex + 1,
             1,
-            DEFAULT_ROUTE_WAVE_COUNT
+            routeWaveCap
           )
         : 1;
     if (currentState.phase === "wave" && currentState.wave && currentState.wave.supportProof) {
@@ -20999,7 +21032,7 @@
     if (!elements.waveTrack || !elements.runTrackLabel) {
       return;
     }
-    const totalTrackWaves = DEFAULT_ROUTE_WAVE_COUNT;
+    const totalTrackWaves = getBaseRoutePlayableWaveCount(state.build);
     const trackWaveNumber =
       state.phase === "forge"
         ? clamp(state.waveIndex + 2, 1, totalTrackWaves)
@@ -22114,7 +22147,7 @@
       awaitingForge: false,
       completesRun:
         Boolean(config.completesRun) ||
-        (CONSOLIDATED_12_WAVE_ROUTE && waveNumber >= DEFAULT_ROUTE_WAVE_COUNT),
+        (CONSOLIDATED_12_WAVE_ROUTE && waveNumber >= getBaseRoutePlayableWaveCount(state.build)),
       driveGainFactor: config.driveGainFactor || 1,
       hazard: config.hazard,
       hazardTimer: config.hazard ? config.hazard.interval * 0.8 : Number.POSITIVE_INFINITY,
@@ -26902,15 +26935,13 @@
       state.waveClearTimer = Math.max(0, state.waveClearTimer - dt);
       if (state.waveClearTimer <= 0) {
         if (state.wave.completesRun) {
-          if (CONSOLIDATED_12_WAVE_ROUTE && !state.wave.baseRouteVictoryLap) {
-            beginBaseRouteVictoryLap();
-          } else {
-            finishRun(true);
-          }
+          finishRun(true);
         } else if (CONSOLIDATED_12_WAVE_ROUTE) {
           const nextBaseRouteTransition = getBaseRoutePostWaveTransition(state, state.waveIndex + 2);
           if (nextBaseRouteTransition.action === "field_grant") {
             enterFieldGrant();
+          } else if (nextBaseRouteTransition.action === "continue_wave") {
+            beginWave(state.waveIndex + 1);
           } else {
             enterForge();
           }
