@@ -11611,6 +11611,7 @@
     kind,
     contractLabel,
     transformation,
+    combatAsk,
     slotLabel,
     disabled,
   }) {
@@ -11627,7 +11628,7 @@
       >
         <span class="forge-card__tag">${contractLabel || choice.contractLabel || "보조"}</span>
         <h3>${transformation.cardTitle || choice.title}</h3>
-        ${createBaseRouteForgeSpotlightMarkup(transformation.previewLabel, transformation.previewValue)}
+        ${createBaseRouteForgeProofMarkup(combatAsk)}
         ${createBaseRouteForgeBillMarkup(slotLabel)}
       </button>
     `;
@@ -11656,33 +11657,7 @@
         ${disabled ? "disabled" : ""}
       >
         <span class="forge-card__tag">${contractLabel || choice.contractLabel || "주력"}</span>
-        ${
-          wave8SupportPayoff
-            ? `
-              <div class="forge-card__evolution-kicker">
-                <span class="forge-card__evolution-badge">${wave8SupportPayoff.eyebrow}</span>
-                <strong class="forge-card__evolution-title">${wave8SupportPayoff.headline}</strong>
-              </div>
-            `
-            : ""
-        }
-        ${createBaseRouteForgeSpotlightMarkup(transformation.previewLabel, transformation.previewValue)}
-        ${
-          wave8SupportPayoff
-            ? `
-              <div class="forge-card__evolution">
-                <article class="forge-card__evolution-slot">
-                  <span>${wave8SupportPayoff.currentLabel}</span>
-                  <strong>${wave8SupportPayoff.currentValue}</strong>
-                </article>
-                <article class="forge-card__evolution-slot forge-card__evolution-slot--next">
-                  <span>${wave8SupportPayoff.payoffLabel}</span>
-                  <strong>${wave8SupportPayoff.payoffValue}</strong>
-                </article>
-              </div>
-            `
-            : ""
-        }
+        ${wave8SupportPayoff ? `<span class="forge-card__badge">${wave8SupportPayoff.eyebrow}</span>` : ""}
         <h3>${transformation.cardTitle || choice.title}</h3>
         ${createBaseRouteForgeProofMarkup(combatAsk)}
         ${createBaseRouteForgeBillMarkup(slotLabel)}
@@ -11986,6 +11961,23 @@
       askValue: askNote || "바로 다음 전투 ask를 확인한다.",
       modifier: "overlay",
     });
+  }
+
+  function getBaseRouteForgeContractEyebrow(build, waveNumber = 1, options = {}) {
+    const routeWaveCap = CONSOLIDATED_12_WAVE_ROUTE
+      ? MAX_WAVES
+      : getBaseRoutePlayableWaveCount(build);
+    const boundedWave = clamp(Math.round(waveNumber || 1), 1, routeWaveCap);
+    if (options.pendingFinalForge) {
+      return `Wave ${boundedWave} / ${routeWaveCap} 마감`;
+    }
+    if (boundedWave === EARLY_MUTATION_FORGE_WAVE) {
+      return `Wave ${boundedWave} / ${routeWaveCap} 경로 포지`;
+    }
+    if (boundedWave >= DEFAULT_ROUTE_WAVE_COUNT && isBaseRouteLateStaircaseActive(build)) {
+      return `Wave ${boundedWave} / ${routeWaveCap} 증폭 포지`;
+    }
+    return `Wave ${boundedWave} / ${routeWaveCap} 포지`;
   }
 
   function getBaseRouteForgeSpotlightSummary({
@@ -20293,6 +20285,7 @@
     getBaseRouteForgeChoiceCombatAsk,
     getBaseRouteForgeDominantInstallHero,
     getBaseRouteForgeContextIdentity,
+    getBaseRouteForgeContractEyebrow,
     createBaseRouteForgeContextMarkup,
     getBaseRoutePauseHeroSummary,
     createBaseRoutePauseSnapshotMarkup,
@@ -27782,32 +27775,10 @@
               dominantInstallHero?.title ||
               forgeSpotlightSummary.titleValue ||
               dominantFormSummary.label,
-            eyebrow:
-              state.waveIndex + 2 === EARLY_MUTATION_FORGE_WAVE && !state.pendingFinalForge
-                ? "Wave 5 경로"
-                : spotlightChoice?.lateBreakProfileId
-                  ? "완성 형태"
-                  : state.pendingFinalForge
-                    ? "마무리"
-                    : riderStep
-                      ? "버팀 변화"
-                      : "주력 변이",
-            detail:
-              state.waveIndex + 2 === EARLY_MUTATION_FORGE_WAVE && spotlightChoice
-                ? `${dominantFormSummary.label} -> ${
-                    getBaseRouteWave5FieldPathSummary(
-                      {
-                        ...state.build,
-                        wave5FieldPathId: inferBaseRouteWave5FieldPathId(spotlightChoice),
-                      },
-                      EARLY_MUTATION_FORGE_WAVE
-                    )?.title ||
-                    forgeContextIdentity?.title ||
-                    forgeSpotlightSummary.titleValue
-                  }`
-                : forgeContextIdentity?.detail
-                  ? forgeContextIdentity.detail
-                    : "",
+            eyebrow: getBaseRouteForgeContractEyebrow(state.build, state.waveIndex + 2, {
+              pendingFinalForge: state.pendingFinalForge,
+            }),
+            detail: "",
             currentLoadoutValue:
               forgeContextIdentity?.currentFormLabel || dominantFormSummary.label || "",
             featuredInstallValue:
@@ -27900,23 +27871,27 @@
                 kind,
                 contractLabel,
                 transformation,
-              slotLabel,
-              disabled: state.resources.scrap < choice.cost,
-            });
-          }
-          return createBaseRouteForgeHeadlineCardMarkup({
+                combatAsk: trimForgeCombatAsk(
+                  getBaseRouteForgeChoiceCombatAsk(choice, state.waveIndex + 2),
+                  forgeCombatAsk
+                ),
+                slotLabel,
+                disabled: state.resources.scrap < choice.cost,
+              });
+            }
+            return createBaseRouteForgeHeadlineCardMarkup({
               choice,
               index,
               kind,
-            contractLabel,
-            transformation,
-            combatAsk: trimForgeCombatAsk(
-              getBaseRouteForgeChoiceCombatAsk(choice, state.waveIndex + 2),
-              forgeCombatAsk
-            ),
-            slotLabel,
-            disabled: state.resources.scrap < choice.cost,
-          });
+              contractLabel,
+              transformation,
+              combatAsk: trimForgeCombatAsk(
+                getBaseRouteForgeChoiceCombatAsk(choice, state.waveIndex + 2),
+                forgeCombatAsk
+              ),
+              slotLabel,
+              disabled: state.resources.scrap < choice.cost,
+            });
           }
           const isFeaturedHeadline = !riderStep && index === featuredIndex;
           if (riderStep) {

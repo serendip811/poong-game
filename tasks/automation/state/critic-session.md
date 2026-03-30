@@ -12,7 +12,7 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- Weakest gate is back to `Progression`: the main problem is no longer just shell wording, but that the shipped route still has `8-wave` boundaries and prototype late scaffolding embedded in the progression model.
-- Sharpest failure: docs still promise `8웨이브`, `DEFAULT_ROUTE_WAVE_COUNT` still sits at `8` under the consolidated route, and Wave 10+ still leaks wildcard/cache/Afterburn/ascension exception ambition into what should read as one canonical `Wave 1-12` ladder.
-- Next useful critique should keep pushing consolidation over expansion: make the default run end-to-end legible as one earned form lock plus reinforcement beat, then judge whether the forge and capstone copy still undersell self-sufficient weapon/body payoff.
-- Repeated false solutions: adding more late branches, field caches, support bays, or UI explanation instead of deleting stale boundaries and making the existing back half feel complete.
+- Weakest gate is now `Rewards`, with `Progression` still close behind: the run contract and the reward surface are both competing for attention, so the player still reads structure harder than they feel appetite.
+- Sharpest failure: docs still promise `8웨이브`, the code still exposes a lot of `Afterburn`/ascension/support-bay future residue, and the forge overlay still piles context, proof, preview, and slot language onto what should be a fast desire-first pick.
+- Next useful critique should pressure simplification before expansion: make the shipped `Wave 1-12` contract unanimous, then judge whether the forge can be reduced to one dominant payoff plus one short proof read.
+- Repeated false solutions: adding more support systems, side branches, caches, or explanatory UI instead of preserving early emptiness and making existing upgrades look and feel more transformative.

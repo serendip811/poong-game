@@ -826,11 +826,10 @@ const wave8PayoffMarkup = game.createBaseRouteForgeHeadlineCardMarkup({
   slotLabel: "고철 52",
   disabled: false,
 });
-assert.ok(wave8PayoffMarkup.includes("forge-card__evolution"));
+assert.ok(!wave8PayoffMarkup.includes("forge-card__evolution"));
+assert.ok(wave8PayoffMarkup.includes("forge-card__badge"));
 assert.ok(wave8PayoffMarkup.includes("완성 보상"));
-assert.ok(wave8PayoffMarkup.includes("현재 설치"));
-assert.ok(wave8PayoffMarkup.includes("완성 형태"));
-assert.ok(wave8PayoffMarkup.includes("절단 고리 2기"));
+assert.ok(wave8PayoffMarkup.includes(wave8PayoffTransform.cardTitle));
 assert.ok(wave8PayoffMarkup.includes("다음 전투"));
 assert.ok(wave8PayoffMarkup.includes("forge-card__tag"));
 assert.ok(!wave8PayoffMarkup.includes("완성 시험"));
@@ -1674,6 +1673,16 @@ assert.equal(forgeFinalSpotlight.titleLabel, "형태 고정");
 assert.equal(forgeFinalSpotlight.titleValue, "Prism Crown");
 assert.equal(forgeFinalSpotlight.leadLabel, "마무리");
 assert.equal(forgeFinalSpotlight.leadValue, "짧은 마감 랩");
+const contractEyebrowBuild = game.createInitialBuild("rail_zeal");
+assert.equal(game.getBaseRouteForgeContractEyebrow(contractEyebrowBuild, 5), "Wave 5 / 12 경로 포지");
+assert.equal(game.getBaseRouteForgeContractEyebrow(contractEyebrowBuild, 6), "Wave 6 / 12 포지");
+const lateContractBuild = game.createInitialBuild("rail_zeal");
+lateContractBuild.lateBreakProfileId = "mutation";
+assert.equal(game.getBaseRouteForgeContractEyebrow(lateContractBuild, 10), "Wave 10 / 12 증폭 포지");
+assert.equal(
+  game.getBaseRouteForgeContractEyebrow(lateContractBuild, 12, { pendingFinalForge: true }),
+  "Wave 12 / 12 마감"
+);
 const summarizedFeed = game.summarizeCombatFeedEntry({
   stamp: "W6",
   text: "Wave 6 진입. 가장 먼 relay를 먼저 끊고 뚫린 corridor 하나를 길게 지킨다.",
@@ -1947,17 +1956,16 @@ const recurringWave3CardMarkup = game.createBaseRouteForgeHeadlineCardMarkup({
       : recurringWave3Choices[0].type || "choice",
   contractLabel: recurringWave3Choices[0].contractLabel,
   transformation: recurringWave3HeadlineTransform,
+  combatAsk: game.getBaseRouteForgeChoiceCombatAsk(recurringWave3Choices[0], 3),
   slotLabel: "고철 18",
   disabled: false,
 });
 assert.ok(recurringWave3CardMarkup.includes("forge-card--snap"));
-assert.ok(recurringWave3CardMarkup.includes("forge-card__spotlight"));
-assert.ok(recurringWave3CardMarkup.includes(recurringWave3HeadlineTransform.previewLabel));
-assert.ok(recurringWave3CardMarkup.includes(recurringWave3HeadlineTransform.previewValue));
-assert.ok(!recurringWave3CardMarkup.includes("forge-card__proof--ask"));
+assert.ok(recurringWave3CardMarkup.includes("forge-card__proof--compact"));
+assert.ok(recurringWave3CardMarkup.includes("다음 전투"));
 assert.ok(!recurringWave3CardMarkup.includes("forge-card__hero-copy"));
 assert.ok(!recurringWave3CardMarkup.includes(recurringWave3HeadlineTransform.promise));
-assert.ok(!recurringWave3CardMarkup.includes(recurringWave3HeadlineTransform.proof));
+assert.ok(!recurringWave3CardMarkup.includes("forge-card__spotlight"));
 const recurringWave3RiderChoice =
   recurringWave3Choices.find((choice) => choice.contractRole === "rider") || recurringWave3Choices[1];
 const recurringWave3RiderTransform =
@@ -1971,20 +1979,18 @@ const recurringWave3RiderMarkup = game.createBaseRouteForgeCompactCardMarkup({
       : recurringWave3RiderChoice.type || "choice",
   contractLabel: recurringWave3RiderChoice.contractLabel,
   transformation: recurringWave3RiderTransform,
-  combatAsk: "이 문장은 보이면 안 된다.",
+  combatAsk: "열린 lane 하나만 오래 민다.",
   slotLabel: "고철 12",
   disabled: false,
 });
 assert.ok(recurringWave3RiderMarkup.includes("forge-card--contract-side"));
-assert.ok(recurringWave3RiderMarkup.includes(recurringWave3RiderChoice.title));
-assert.ok(recurringWave3RiderMarkup.includes("forge-card__spotlight"));
-assert.ok(recurringWave3RiderMarkup.includes(recurringWave3RiderTransform.previewLabel));
-assert.ok(recurringWave3RiderMarkup.includes(recurringWave3RiderTransform.previewValue));
-assert.ok(!recurringWave3RiderMarkup.includes("forge-card__proof--ask"));
-assert.ok(!recurringWave3RiderMarkup.includes("이 문장은 보이면 안 된다."));
+assert.ok(recurringWave3RiderMarkup.includes(recurringWave3RiderTransform.cardTitle));
+assert.ok(recurringWave3RiderMarkup.includes("forge-card__proof--compact"));
+assert.ok(recurringWave3RiderMarkup.includes("열린 lane 하나만 오래 민다."));
 assert.ok(!recurringWave3RiderMarkup.includes("forge-card__hero-copy"));
 assert.ok(!recurringWave3RiderMarkup.includes(recurringWave3RiderTransform.promise));
 assert.ok(!recurringWave3RiderMarkup.includes("forge-card__pivot"));
+assert.ok(!recurringWave3RiderMarkup.includes("forge-card__spotlight"));
 const wave5MutationBuild = game.createInitialBuild("relay_oath");
 wave5MutationBuild.pendingCores = [];
 const recurringWave5Choices = game.buildForgeChoices(wave5MutationBuild, Math.random, 40, {
@@ -2163,9 +2169,7 @@ const wave6HeadlineMarkup = game.createBaseRouteForgeHeadlineCardMarkup({
 });
 assert.ok(wave6HeadlineMarkup.includes("forge-card__proof--compact"));
 assert.ok(!wave6HeadlineMarkup.includes("forge-card__proof--ask"));
-assert.ok(wave6HeadlineMarkup.includes("forge-card__spotlight"));
-assert.ok(wave6HeadlineMarkup.includes(wave6OffenseTransform.previewLabel));
-assert.ok(wave6HeadlineMarkup.includes(wave6OffenseTransform.previewValue));
+assert.ok(!wave6HeadlineMarkup.includes("forge-card__spotlight"));
 assert.ok(wave6HeadlineMarkup.includes("다음 전투"));
 assert.ok(!wave6HeadlineMarkup.includes("전투 요청"));
 const wave6ContextIdentity = game.getBaseRouteForgeContextIdentity({
