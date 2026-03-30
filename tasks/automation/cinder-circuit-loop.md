@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: consolidate the shipped `Wave 1-12` contract into one readable escalation spine and strip late exception branches/copy so the run grows like a clean gun/body ladder instead of a pile of prototype wrappers.
+- Immediate priority: make `Wave 1-12` the only clearly promised run, hide post-capstone/endurance scaffolding from the main contract, and reopen late-wave space/readability before adding any further progression surface.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-30 23:59:59 KST
+  Findings:
+  - The run contract is still not disciplined enough to feel shippable. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) and [docs/games/cinder-circuit-source-analysis.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-analysis.md) still present `8웨이브 + 짧은 승리 랩`, while [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) already defines `Wave 1-12` plus `Afterburn I-VII`. That makes the game read like three different scopes fighting each other instead of one rerunnable ladder.
+  - The back half is still over-promising more than it is paying off. Even after the Wave 10 reinforcement cleanup, [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) keeps visible scaffolding for late ascension, illegal overclock, dominion, caches, and seven post-capstone encounters, so the player fantasy is still surrounded by prototype future-tense instead of a clean “I want one more run” finish.
+  - Combat space tightens in the wrong direction at the climax. `Wave 8` gets a roomy `1920x1080` proof arena, but `Wave 11-12` drop to `1760x1020` and `1680x980` while `activeCap` climbs to `28` and `33` with binder/warden pressure and territory hazards in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js). That risks turning the finale into congestion management instead of confident late-build expression.
+  - The forge is cleaner than before, but it still carries too much contract UI for a game that needs stronger appetite. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still builds context identity, proof windows, preview rows, slot labels, and combat asks into the same reward surface; compared with `Hades`, `Brotato`, or `Nova Drift`, it is still one layer too explainy for how often the player is asked to decide fast.
+  Top Priority: Make the shipped product speak one truth: `Wave 1-12` is the full run, post-win `Afterburn`/cache/ascension scaffolding stays out of the main player-facing contract, and late-wave arenas/density get retuned so the finale feels wider and more expressive than Wave 8, not more cramped.
+  Why Now: Until the game ends on a clean, breathable 12-wave payoff, extra progression ambition only makes the current run feel less complete.
+  Do Not Repeat: Do not answer this by adding Wave 13+, new cache families, or more reward copy before the existing finale is readable and worth replaying.
+  Release Gate: Progression
 
 - 2026-03-30 23:59:59 KST
   Findings:
@@ -185,20 +196,21 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not answer this with more branch layers, more late-wave scaffolding, or another terminology pass that still leaves the shipped route talking like a 12-wave game.
   Release Gate: Rewards
 
-- 2026-03-30 17:20:00 KST
-  Findings:
-  - The game is drifting from the active red flags: `renderForgeOverlay()` is still packed with context cards, transition rows, branch payoff tails, preview rows, proof copy, slot labels, and contract wrappers, so the reward moment reads closer to a systems briefing than the instant object-first hunger strong references like `Hades`, `Brotato`, or `Nova Drift` create.
-  - `Wave 6-8` still leans on the same `ownership_breathing` hazard profile across relay, drift, and territory variants. Even with larger arenas, offense/defense/greed risk collapsing back into one long hold-and-kite exam because the player keeps solving similar space problems with different nouns.
-  - The status surfaces are still too wordy for a run that is supposed to feel lean early. Pause/status summaries, proof windows, hazard notes, and route/result language repeatedly restate the build contract instead of showing one dominant silhouette plus one current ask, which hides the fantasy behind admin text.
-  - The opening growth discipline is still fragile because the codebase keeps many future-form and support-rich promises visible in roadmap/detail logic. That weakens the emotional jump from bare starter gun to first real mutation and makes the current 8-wave slice feel like a preface to later content rather than a satisfying compact run.
-  Top Priority: Collapse forge, pause, and detail-board presentation to a single dominant form read plus a single next-combat ask, and cut duplicate preview/proof/roadmap copy before adding any more branch or support content.
-  Why Now: If reward and status screens still require reading through structure, the player cannot feel the transformation spikes cleanly enough for reruns to become hungry.
-  Do Not Repeat: Do not spend the next pass on more path nouns, roadmap copy, or additional Wave 9+ promises while the current reward/HUD stack still over-explains the shipped run.
-  Release Gate: UX/UI
-
 - Older entries trimmed automatically: 1
 
 ## Latest Improvement
+
+- 2026-03-30 23:59:59 KST
+  Changed:
+  - Retuned the route-owned `Wave 11-12` late-break profiles in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `Raptor Sweep -> Crown Siege`, `Bulwark Rotation -> Citadel Lock`, and `Exit Vector -> Jackpot Lock` now all open into arenas larger than `Wave 8`, instead of collapsing back into smaller finale footprints.
+  - Lowered late-route `activeCap`, `spawnBudget`, and spawn tempo in those same profiles so binder/warden-heavy end fights stop reading like congestion spikes and leave more room for the locked `Wave 8` form plus `Wave 10` reinforcement to actually express themselves.
+  - Added smoke assertions in [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new late-wave arena sizes, require each route's `Wave 11` to be wider than `Wave 8`, require `Wave 12` to open further still, and cap the retuned finale density.
+  Why:
+  - The latest critique's `Top Priority` still explicitly called out cramped `Wave 11-12` space as the main blocker to a breathable `Wave 1-12` payoff. The highest-value bounded interpretation was to retune the route-owned finale profiles already in the shipped run rather than add more late systems or more explanatory UI.
+  Follow-up Risk:
+  - The route-owned climax is more breathable now, but the shared no-profile `Refuge Run / Final Stand` fallback and visible post-win scaffolding still exist elsewhere in the code. If critique keeps saying the shipped contract feels split, the next bounded pass should hide or demote those player-facing leftovers instead of reopening density.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4311` assertion (`sentryTierTwo.interceptRange > 0`) after the new late-wave arena/density assertions passed
+  Release Gate: Combat
 
 - 2026-03-30 13:46:36 KST
   Changed:
@@ -335,19 +347,6 @@ This file is shared by two recurring Codex CLI jobs.
   Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4237` assertion (`sentryTierTwo.interceptRange > 0`) after the new forge-context assertions passed
   Reference Direction: `Hades` boon header restraint and `Nova Drift` one-glance build reads; let one reward silhouette lead, keep transition context quiet, and surface one immediate combat ask instead of route/admin scaffolding.
   Release Gate: Rewards
-
-- 2026-03-30 18:05:00 KST
-  Changed:
-  - Rebuilt the shipped pause snapshot and `Tab` detail board in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) around one shared `createCompactMachineReadMarkup(...)` shell, so both surfaces now lead with one dominant machine title, demote route/install context to a muted subline, and end on one explicit `다음 전투` ask instead of equal-weight pills plus spotlight fragments.
-  - Added the matching `.compact-machine-read*` treatment in [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) so pause and overlay reads keep the same restrained hierarchy without reopening a dashboard grid.
-  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) and [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md) to lock `compact-machine-read__ask` on shipped pause/detail markup and fail if `pause-summary__pill-row` returns.
-  Why:
-  - The latest critique's `Top Priority` called for forge, pause, and detail surfaces to collapse to one dominant form read plus one next-combat ask. The highest-value bounded interpretation was to finish that collapse on the two most repeatedly opened status surfaces, because they were still splitting attention between object read, path label, and duplicated proof pills.
-  Follow-up Risk:
-  - The shared status shell is leaner now, but the forge reward tray can still feel busier than pause/detail on three-card stops. If critique next says reward moments remain the main reading burden, the next bounded pass should compress non-headline forge card copy or side-card density rather than re-thicken pause or `Tab`.
-  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4234` assertion (`sentryTierTwo.interceptRange > 0`) after the new compact-status assertions passed
-  Reference Direction: `Hades` pause/boon hierarchy and `Nova Drift` compact status reads; keep one silhouette dominant, push route/admin context into a quiet subline, and let the actionable ask own the second beat.
-  Release Gate: UX/UI
 
 - Older entries trimmed automatically: 2
 

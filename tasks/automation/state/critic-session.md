@@ -12,7 +12,7 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- Weakest gate is now `Progression`: the code has a 12-wave ladder, but the docs and plenty of player-facing text still teach an 8-wave proof loop while the late run piles on exception branches.
-- Next useful critique should keep forcing consolidation over expansion: make `Wave 8-12` read as one clean late-form staircase with one reinforcement beat, not a contest between ascension/cache/afterburn/illegal side systems.
-- Current structural failure: offense/defense/greed still do not own three simple rerun fantasies because too many late wrappers compete to be the payoff, and some headline forms are still written as incomplete without support.
-- Repeated false solutions: adding more late caches, more passive families, more route wrappers, or more UI summary layers before the shipped 12-wave route becomes shorter, clearer, and easier to anticipate.
+- Weakest gate remains `Progression`, but the sharper failure is contract ambiguity: docs still sell `8웨이브`, code ships `12웨이브`, and the same file also advertises `Afterburn I-VII`, caches, and ascension layers the main run does not yet justify.
+- Next useful critique should keep forcing consolidation over expansion: make the shipped player-facing promise a single breathable `Wave 1-12` run, then pressure-test whether `Wave 11-12` need more space/readability instead of more systems.
+- Current structural failure: the finale risks feeling narrower and busier than the midgame, which kills rerun hunger even if the build taxonomy keeps growing.
+- Repeated false solutions: adding more post-capstone content, more cache/ascension families, more route wrappers, or more explanatory forge UI before the ending of the existing run feels clean and desirable.
