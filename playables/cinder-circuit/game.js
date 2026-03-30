@@ -2547,6 +2547,23 @@
     };
   }
 
+  function getBaseRouteLateContractTitle(build, waveNumber = DEFAULT_ROUTE_WAVE_COUNT) {
+    if (!build || !build.lateBreakProfileId) {
+      return waveNumber >= MAX_WAVES ? "회로 마감" : "형태 고정";
+    }
+    const boundedWave = clamp(Math.round(waveNumber || DEFAULT_ROUTE_WAVE_COUNT), 8, MAX_WAVES);
+    if (boundedWave >= 12) {
+      return getLateBreakEndgameProfile(build, 11)?.bandLabel || "회로 마감";
+    }
+    if (boundedWave >= 11) {
+      return getLateBreakEndgameProfile(build, 10)?.bandLabel || "후반 구간";
+    }
+    if (boundedWave >= 10) {
+      return getBaseRouteWave10ReinforcementCopy(build.lateBreakProfileId).title;
+    }
+    return getBaseRouteWave8ClosureCopy(build.lateBreakProfileId, build).title;
+  }
+
   function shouldApplyBaseRouteWave10Reinforcement(build, waveNumber) {
     return Boolean(
       CONSOLIDATED_12_WAVE_ROUTE &&
@@ -9176,12 +9193,6 @@
     if (build.auxiliaryJunctionLevel) {
       build.auxiliaryJunctionLevel = 0;
     }
-    if (build.lateBreakProfileId) {
-      build.lateBreakProfileId = null;
-    }
-    if (build.lateBreakReinforcementApplied) {
-      build.lateBreakReinforcementApplied = false;
-    }
     if (build.lateAscensionId) {
       build.lateAscensionId = null;
     }
@@ -9896,7 +9907,7 @@
     const openingContract = getShippingContractSummary(build, currentWeapon, 1, { phase: "title" });
     return {
       title: titleFocus.title,
-      detail: `처음 두 웨이브는 한 줄 화선으로 버틴다. 살아남으면 ${openingContract.leadValue}을(를) 먼저 붙이고, Wave 5에서 런 경로를 잠근다.`,
+      detail: `처음 두 웨이브는 한 줄 화선으로 버틴다. 살아남으면 ${openingContract.leadValue}을(를) 먼저 붙이고, Wave 5 진로 선택 뒤 Wave 12까지 한 실루엣을 키운다.`,
       hullLabel: "현재 선체",
       hullValue: "빈 선체",
       hookLabel: "첫 도약",
@@ -10002,10 +10013,14 @@
       { waveNumber: 2, shortLabel: "HOLD", title: "버티기" },
       { waveNumber: 3, shortLabel: "BREAK", title: "무장 도약" },
       { waveNumber: 4, shortLabel: "PRESS", title: "도약 시험" },
-      { waveNumber: 5, shortLabel: "SPIKE", title: "주포 폭주" },
+      { waveNumber: 5, shortLabel: "ROUTE", title: "진로 선택" },
       { waveNumber: 6, shortLabel: "LOCK", title: "차체 잠금" },
       { waveNumber: 7, shortLabel: "LAP", title: "지배 연장" },
-      { waveNumber: 8, shortLabel: "FINISH", title: "완성 시험" },
+      { waveNumber: 8, shortLabel: "FORM", title: "형태 고정" },
+      { waveNumber: 9, shortLabel: "LATE", title: "후반 진입" },
+      { waveNumber: 10, shortLabel: "SPIKE", title: "증폭 고정" },
+      { waveNumber: 11, shortLabel: "SWEEP", title: "생존선 시험" },
+      { waveNumber: 12, shortLabel: "CLEAR", title: "회로 마감" },
     ];
   }
 
@@ -11227,7 +11242,8 @@
         payoffValue: "Wave 3 무기 방향",
       };
     }
-    const boundedWave = clamp(Math.round(waveNumber || 1), 1, DEFAULT_ROUTE_WAVE_COUNT);
+    const routeWaveCap = getBaseRoutePlayableWaveCount(build);
+    const boundedWave = clamp(Math.round(waveNumber || 1), 1, routeWaveCap);
     const currentWeapon = weapon || computeWeaponStats(build);
     const activeWeaponLabel = getBaseRouteWeaponOwnershipLabel(build, currentWeapon, boundedWave);
     const featuredSupportInstall =
@@ -11239,6 +11255,38 @@
         : boundedWave >= SUPPORT_SYSTEM_START_WAVE
           ? getBaseRouteInstalledSupportInstallSummary(build)
           : null;
+    if (isBaseRouteLateStaircaseActive(build) && boundedWave >= DEFAULT_ROUTE_WAVE_COUNT) {
+      if (boundedWave >= MAX_WAVES) {
+        return {
+          machineLabel: "잠긴 형태",
+          machineValue: activeWeaponLabel,
+          payoffLabel: "런 마감",
+          payoffValue: getBaseRouteLateContractTitle(build, boundedWave),
+        };
+      }
+      if (boundedWave >= 11) {
+        return {
+          machineLabel: "잠긴 형태",
+          machineValue: activeWeaponLabel,
+          payoffLabel: "지금 구간",
+          payoffValue: getBaseRouteLateContractTitle(build, boundedWave),
+        };
+      }
+      if (boundedWave >= 10) {
+        return {
+          machineLabel: "잠긴 형태",
+          machineValue: activeWeaponLabel,
+          payoffLabel: "지금 증폭",
+          payoffValue: getBaseRouteLateContractTitle(build, boundedWave),
+        };
+      }
+      return {
+        machineLabel: "잠긴 형태",
+        machineValue: activeWeaponLabel,
+        payoffLabel: "형태 고정",
+        payoffValue: getBaseRouteLateContractTitle(build, boundedWave),
+      };
+    }
     if (boundedWave < ARCHITECTURE_DRAFT_WAVE) {
       return {
         machineLabel: "현재 선체",
@@ -14689,8 +14737,14 @@
     if (!CONSOLIDATED_12_WAVE_ROUTE) {
       return "마지막 형태와 보강 조합은 아래에 기록된다.";
     }
-    const dominantForm = getDominantFormSummary(build, weapon, DEFAULT_ROUTE_WAVE_COUNT);
     const branchSummary = getBaseRouteWave5FieldPathSummary(build, DEFAULT_ROUTE_WAVE_COUNT);
+    if (isBaseRouteLateStaircaseActive(build)) {
+      const closureTitle = getBaseRouteLateContractTitle(build, 8);
+      const reinforcementTitle = getBaseRouteLateContractTitle(build, 10);
+      const finaleTitle = getBaseRouteLateContractTitle(build, 12);
+      return `${branchSummary ? `${branchSummary.resultLead} ` : ""}${closureTitle}를 잠근 뒤 ${reinforcementTitle}와 ${finaleTitle}까지 밀어붙였다.`;
+    }
+    const dominantForm = getDominantFormSummary(build, weapon, DEFAULT_ROUTE_WAVE_COUNT);
     return `${branchSummary ? `${branchSummary.resultLead} ` : ""}${dominantForm.label}로 런을 닫았다. ${branchSummary ? `${branchSummary.title} ask를 끝까지 밀어붙였다.` : "잠근 실루엣 하나로 마지막 랩을 밀어붙였다."}`;
   }
 
@@ -14708,6 +14762,9 @@
     const branchSummary =
       getBaseRouteWave5FieldPathSummary(activeBuild, DEFAULT_ROUTE_WAVE_COUNT) ||
       getBaseRouteWave5FieldPathPreviewSummary();
+    if (isBaseRouteLateStaircaseActive(activeBuild)) {
+      return `조용한 선체 -> ${weaponBeat} -> ${branchSummary.title} -> ${getBaseRouteLateContractTitle(activeBuild, 8)} -> ${getBaseRouteLateContractTitle(activeBuild, 10)} -> ${getBaseRouteLateContractTitle(activeBuild, 12)}`;
+    }
     return `조용한 선체 -> ${weaponBeat} -> ${branchSummary.title} -> 마감 랩`;
   }
 
@@ -14726,6 +14783,12 @@
       beats.push(`Wave 5 ${branchSummary.beatLabel}`);
     } else {
       beats.push("Wave 5 진로 선택");
+    }
+    if (isBaseRouteLateStaircaseActive(activeBuild)) {
+      beats.push(`Wave 8 ${getBaseRouteLateContractTitle(activeBuild, 8)}`);
+      beats.push(`Wave 10 ${getBaseRouteLateContractTitle(activeBuild, 10)}`);
+      beats.push(`Wave 12 ${getBaseRouteLateContractTitle(activeBuild, 12)}`);
+      return beats;
     }
     beats.push("마감 랩");
     return beats;

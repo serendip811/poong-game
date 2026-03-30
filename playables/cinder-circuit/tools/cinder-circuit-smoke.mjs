@@ -66,11 +66,25 @@ assert.equal(JSON.stringify(relayTitleLaunchSummary), JSON.stringify(railTitleLa
 assert.equal(relayTitleLaunchSummary.hullValue, "빈 선체");
 assert.equal(relayTitleLaunchSummary.hookValue, "Wave 3 무기 방향");
 assert.ok(!/시그니처|Signature|Wave 6|Wave 8/.test(relayTitleLaunchSummary.detail));
+assert.ok(relayTitleLaunchSummary.detail.includes("Wave 12"));
 const shippedPresentationBeats = game.getShippedRoutePresentationBeats();
-assert.equal(shippedPresentationBeats.length, 8);
+assert.equal(shippedPresentationBeats.length, 12);
 assert.equal(
   JSON.stringify(shippedPresentationBeats.map((entry) => entry.title)),
-  JSON.stringify(["Ember Hull", "버티기", "무장 도약", "도약 시험", "주포 폭주", "차체 잠금", "지배 연장", "완성 시험"])
+  JSON.stringify([
+    "Ember Hull",
+    "버티기",
+    "무장 도약",
+    "도약 시험",
+    "진로 선택",
+    "차체 잠금",
+    "지배 연장",
+    "형태 고정",
+    "후반 진입",
+    "증폭 고정",
+    "생존선 시험",
+    "회로 마감",
+  ])
 );
 assert.equal(game.POST_CAPSTONE_WAVE_COUNT, 7);
 assert.equal(game.shouldAllowCombatRewardDrops(), false);
@@ -269,7 +283,8 @@ assert.equal(quarantinedLateRun.wave.lateAscension, null);
 assert.equal(quarantinedLateRun.wave.afterburnDominion, null);
 assert.equal(quarantinedLateRun.build.doctrineCapstoneId, null);
 assert.equal(quarantinedLateRun.build.lateAscensionId, null);
-assert.equal(quarantinedLateRun.build.lateBreakReinforcementApplied, false);
+assert.equal(quarantinedLateRun.build.lateBreakProfileId, null);
+assert.equal(quarantinedLateRun.build.lateBreakReinforcementApplied, true);
 assert.equal(quarantinedLateRun.build.afterburnOverdriveId, null);
 assert.equal(quarantinedLateRun.build.afterburnDominionId, null);
 assert.equal(quarantinedLateRun.build.cashoutSupportId, null);
@@ -435,6 +450,7 @@ assert.equal(leanStartLaunchSummary.hookLabel, "첫 도약");
 assert.equal(leanStartLaunchSummary.hookValue, "Wave 3 무기 방향");
 assert.ok(!leanStartLaunchSummary.detail.includes("Wave 6"));
 assert.ok(!leanStartLaunchSummary.detail.includes("Wave 8"));
+assert.ok(leanStartLaunchSummary.detail.includes("Wave 12"));
 const openingLiveStatus = game.getLiveSideBetSummary({
   build: roadmapBuild,
   waveIndex: 0,
@@ -619,6 +635,32 @@ assert.ok(!greedResultMarkup.includes("FINAL FORM"));
 assert.ok(!greedResultMarkup.includes("Drive "));
 assert.ok(!greedResultMarkup.includes("속성 없음"));
 assert.ok(!greedResultMarkup.includes("보관 코어"));
+const lateLedgerBuild = game.createInitialBuild("rail_zeal");
+game.applyForgeChoice(
+  { build: lateLedgerBuild, resources: { scrap: 999 }, stats: { scrapSpent: 0 }, feed: [], waveIndex: 3 },
+  game.createFieldGreedContractChoice(lateLedgerBuild, 5)
+);
+lateLedgerBuild.lateBreakProfileId = "ledger";
+lateLedgerBuild.lateBreakReinforcementApplied = true;
+assert.equal(
+  game.getBaseRouteResultCopy(lateLedgerBuild, game.computeWeaponStats(lateLedgerBuild), true),
+  "Wave 5 판돈 급습으로 cash-out lane을 찍고 빠지는 길을 잠갔다. Black Ledger Heist를 잠근 뒤 Jackpot Tow와 Jackpot Lock까지 밀어붙였다."
+);
+assert.equal(
+  game.getBaseRouteResultRouteLabel(lateLedgerBuild, game.computeWeaponStats(lateLedgerBuild)),
+  "조용한 선체 -> Ember Spindle -> 판돈 급습 -> Black Ledger Heist -> Jackpot Tow -> Jackpot Lock"
+);
+assert.equal(
+  JSON.stringify(game.getBaseRouteResultBeatLabels(lateLedgerBuild, game.computeWeaponStats(lateLedgerBuild))),
+  JSON.stringify([
+    "조용한 시작",
+    "Wave 3 Ember Spindle",
+    "Wave 5 판돈 급습",
+    "Wave 8 Black Ledger Heist",
+    "Wave 10 Jackpot Tow",
+    "Wave 12 Jackpot Lock",
+  ])
+);
 const wave5OffenseChoices = game.buildFieldGrantChoices(game.createInitialBuild("rail_zeal"), () => 0, 5);
 const wave5OffenseChoice = wave5OffenseChoices.find((choice) => choice.contractRole === "headline");
 const wave5DefenseChoice = wave5OffenseChoices.find((choice) => choice.contractRole === "rider");
@@ -2338,6 +2380,25 @@ assert.ok(pollutedMachinePanelMarkup.includes("Wave 5 진로 선택"));
 assert.ok(!pollutedMachinePanelMarkup.includes("Afterburn"));
 assert.ok(!pollutedMachinePanelMarkup.includes("Wave 9"));
 assert.ok(!pollutedMachinePanelMarkup.includes("Cataclysm"));
+const lateLedgerMachinePanelMarkup = game.createBaseRouteMachinePanelMarkup(
+  lateLedgerBuild,
+  null,
+  null,
+  10
+);
+assert.ok(lateLedgerMachinePanelMarkup.includes("잠긴 형태"));
+assert.ok(lateLedgerMachinePanelMarkup.includes("지금 증폭"));
+assert.ok(lateLedgerMachinePanelMarkup.includes("Jackpot Tow"));
+assert.ok(!lateLedgerMachinePanelMarkup.includes("Afterburn"));
+const lateLedgerFinalPanelMarkup = game.createBaseRouteMachinePanelMarkup(
+  lateLedgerBuild,
+  null,
+  null,
+  12
+);
+assert.ok(lateLedgerFinalPanelMarkup.includes("런 마감"));
+assert.ok(lateLedgerFinalPanelMarkup.includes("Jackpot Lock"));
+assert.ok(!lateLedgerFinalPanelMarkup.includes("Afterburn"));
 const pollutedFeedSummary = game.getShippingCombatFeedEntrySummary(
   {
     stamp: "DOM",
