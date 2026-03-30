@@ -188,6 +188,17 @@ const shippedForgeTransition = game.getBaseRouteTransitionFeedCopy(
 assert.ok(shippedForgeTransition.headline.includes("마감"));
 assert.ok(shippedForgeTransition.proof.includes("남은 고철만 회수"));
 assert.ok(!/Late Break|Afterburn|support bay|Wave 9|Wave 10/i.test(shippedForgeTransition.text));
+const shippedMidForgeTransition = game.getBaseRouteTransitionFeedCopy(
+  {
+    build: game.createInitialBuild("rail_zeal"),
+    waveIndex: 5,
+    wave: { completesRun: false },
+  },
+  { phase: "forge", nextWave: 7 }
+);
+assert.ok(shippedMidForgeTransition.headline.includes("정비"));
+assert.ok(shippedMidForgeTransition.proof.includes("하나를 고른 뒤"));
+assert.ok(!/현재 형태는|support|rider slot|armory/i.test(shippedMidForgeTransition.text));
 const quarantinedLateRun = game.quarantineShippedLateRouteState({
   build: {
     ...game.createInitialBuild("rail_zeal"),
@@ -5313,12 +5324,20 @@ assert.equal(
   game.getBaseRoutePostWaveTransition({ build: offenseWave8Build, waveIndex: 7 }, 9).action,
   "continue_wave"
 );
-assert.ok(
-  game
-    .getBaseRouteTransitionFeedCopy({ build: offenseWave8Build, waveIndex: 7 }, { phase: "clear", nextWave: 9 })
-    .text.includes("정지 없이")
+const offenseLateTransition = game.getBaseRouteTransitionFeedCopy(
+  { build: offenseWave8Build, waveIndex: 7 },
+  { phase: "clear", nextWave: 9 }
 );
+assert.ok(offenseLateTransition.text.includes("정지 없이"));
+assert.ok(!/Aegis Halo|Ember Ring|Seeker Array|support/i.test(offenseLateTransition.text));
 assert.ok(game.getBaseRouteCombatAskForWave(offenseWave8Build, 9).includes("열린 lane"));
+const offenseWave8Transformation = game.getBaseRouteForgeChoiceTransformation(
+  offenseWave8Choices[0],
+  offenseWave8Build
+);
+assert.equal(offenseWave8Transformation.cardTitle, "Cataclysm Arsenal");
+assert.ok(!/Aegis Halo|support/i.test(offenseWave8Transformation.promise));
+assert.ok(!/Aegis Halo|support/i.test(offenseWave8Transformation.proof));
 
 const defenseWave8Build = makeWave8ClosureBuild("defense");
 const defenseWave8Choices = game.buildForgeChoices(defenseWave8Build, () => 0, 999, {

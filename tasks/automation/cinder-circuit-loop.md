@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: turn `Wave 5-12` growth into a form-first build ladder with distinct offense/defense/greed/utility payoffs, and stop support-bay/package/admin language from being the main way late power is sold.
+- Immediate priority: strip admin-heavy reward/opening language and front-loaded support clutter so `Wave 1-12` reads as a lean gun/body transformation ladder first, with support/utility as secondary payoff instead of the main fantasy.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-30 23:59:59 KST
+  Findings:
+  - The project is still teaching prototype ambition. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) and [docs/games/cinder-circuit-source-analysis.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-analysis.md) still define the shipped contract as `8웨이브 + 짧은 승리 랩`, so the source-of-truth is actively pulling future work away from the stated release goal of a rerunnable `Wave 1-12` spine that can later stretch toward `20-30` waves.
+  - Reward and transition language is still too administrative at the exact moments that should create hunger. `renderForgeOverlay()` and the surrounding combat-feed/transition copy in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still surface `support bay`, `flex lane`, `uplink`, `armory`, `cache`, and similar wrapper terms too often; compared with the instant-read hierarchy of `Hades`, `Brotato`, or `Nova Drift`, the game is still asking the player to parse logistics before desire.
+  - The weapon fantasy is still sold as incomplete until support arrives. `LATE_ASCENSION_DEFS` and `getBaseRouteWave8ClosureCopy(...)` in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) keep telling the player that the big gun/body leap only truly closes once `support uplink` or support clauses fill the gap, which weakens the payoff of the headline form and front-loads complexity the current red flags already warn against.
+  - The system catalog is getting broader faster than the run is getting cleaner. Orbitals, shields, missiles, greed contracts, field caches, live ascension, and other branches already give enough raw ingredients in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js); the problem is not lack of options, it is that offense/defense/greed still do not read as three clean rerun fantasies with simple hierarchy and visible anticipation.
+  Top Priority: Rewrite the design/source docs and the next layer of forge/combat-feed copy around one rule: the player should first read one dominant gun/body transformation, one immediate combat ask, and only then any secondary support or utility consequence.
+  Why Now: Until the game stops explaining its scaffolding, every new branch increases reading load faster than replay desire.
+  Do Not Repeat: Do not answer this pass with more routes, more support families, or more wrapper vocabulary while the opening and reward moments still read like build administration.
+  Release Gate: UX/UI
 
 - 2026-03-30 23:59:59 KST
   Findings:
@@ -184,20 +195,22 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not answer this with `Wave 9-12` scaffolding, more capstone labels, or more support/admin nouns while the shipped route still front-loads this much structure.
   Release Gate: Progression
 
-- 2026-03-30 08:35:00 KST
-  Findings:
-  - `Wave 5-8` path identity is clearer than before, but the run still spends too much of its payoff budget on chassis/support packages by `Wave 6`. The player is being asked to absorb gun mutation, path lock, support install, chassis identity, and greed/admin grammar in one short chapter, which blunts anticipation instead of extending it.
-  - The code now contains real weapon evolution ladders, but the shipped appetite curve still does not make them the emotional spine of the run. A strong arena roguelite should make the player crave the next barrel, volley shape, or beam width first; here the more memorable promise is still often the helper/frame wrapper around the gun.
-  - Between-wave choice grammar is broader on paper than the actual feeling of choice. `Infuse / Improve / Reforge / Recycle`, path contracts, support systems, and mutations exist, yet the shipped route still cashes many of them as authored package beats rather than letting the player feel like they are assembling a recipe with offense, defense, and utility layers over time.
-  - This matters for the eventual `20-30` wave target: a longer run cannot be sustained by adding more support families or branch labels if the current 8-wave slice already front-loads too much system completeness. The opening and midrun need more hunger and less "machine already assembled" energy.
-  Top Priority: Rebuild the shipped forge cadence so `Wave 1-8` guarantees at least two clearly visible main-weapon growth spikes before first-support spectacle becomes dominant, and demote support/chassis picks to amplifiers of the chosen gun/path rather than the primary emotional payoff.
-  Why Now: If the player remembers the helper package more than the gun they grew, replay desire stays prototype-shallow.
-  Do Not Repeat: Do not answer this with more module families, more frame names, or more late-route scaffolding while the shipped loop still front-loads system identity faster than weapon hunger.
-  Release Gate: Builds
-
 - Older entries trimmed automatically: 1
 
 ## Latest Improvement
+
+- 2026-03-31 00:25:00 KST
+  Changed:
+  - Simplified `Wave 8` closure text in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `getBaseRouteWave8ClosureCopy(...)` now sells only the locked form (`Cataclysm Arsenal / Warplate Halo / Black Ledger Heist`) plus its immediate combat ask, without secondary support clauses in the default payoff copy.
+  - Rewrote the shipped forge transition/feed lines in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `getBaseRouteTransitionFeedCopy(...)` uses a shorter `정비/정리` read and `handleForgeSelection(...)` no longer opens package followups with `rider slot`, `support/defense/greed`, or support-led late-break recap wording.
+  - Added smoke assertions in [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock mid-forge transition text away from `현재 형태는`, `support`, and `rider slot`, and to keep the `Wave 8` offense payoff text off installed support names.
+  Why:
+  - The latest critique's `Top Priority` was to make the next layer of forge/combat-feed copy read as one dominant gun/body transformation first, one immediate combat ask second. The highest-value bounded interpretation inside `playables/` was to strip remaining support/admin scaffolding from the reward-transition sentences the player reads immediately after making a pick.
+  Follow-up Risk:
+  - The first-read reward beat is cleaner now, but deeper card descriptions and some non-shipped route cache text still carry admin vocabulary. If critique still says reward moments feel logistical, the next bounded pass should trim those secondary descriptions instead of adding more wrappers.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4277` assertion (`sentryTierTwo.interceptRange > 0`) after the new reward-copy assertions passed
+  Reference Direction: `Hades` boon pickup brevity with `Brotato`-style level-up restraint; the default reward beat should name the form and the next ask, not the packaging.
+  Release Gate: UX/UI
 
 - 2026-03-31 00:10:00 KST
   Changed:
@@ -334,18 +347,6 @@ This file is shared by two recurring Codex CLI jobs.
   - `Wave 7` now breathes better, but some signatures may need stronger tier-2 evolution copy or visuals if critique next says the stop became too quiet. The next bounded pass should strengthen second-weapon-spike spectacle itself rather than reintroduce another named wrapper.
   Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4234` assertion (`sentryTierTwo.interceptRange > 0`) after the new `Wave 7` forge assertions passed
   Release Gate: Progression
-
-- 2026-03-30 09:05:00 KST
-  Changed:
-  - Re-staged the shipped `Wave 6` offense/defense breakpoint bundles in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so their bundled support installs now carry `activationWave: 8`; the chassis + late-form mutation still apply immediately, but live support stats stay offline through `Wave 6-7` and only wake for the final lap.
-  - Updated the same `Wave 6` card/feed copy in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) to tell the player the support hardware is a folded amplifier, not the headline payoff, so the proof window sells the new gun/body silhouette first.
-  - Refreshed [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) and [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md) to lock `activationWave: 8` on those packages and assert `Wave 7` stays support-quiet while `Wave 8` reactivates the staged install.
-  Why:
-  - The latest critique's `Top Priority` asked for two visible main-weapon growth spikes before first-support spectacle dominates. The highest-value bounded interpretation was to keep the existing `Wave 6` branch packages, but delay their helper visuals so the player actually feels `Wave 3 weapon break -> Wave 6 weapon/body mutation -> Wave 8 support wake + closure` instead of one crowded midrun spike.
-  Follow-up Risk:
-  - This makes the midrun appetite curve cleaner, but defense in particular now leans harder on chassis/convergence reads during `Wave 6-7`. If critique next says the branch fantasy is clearer yet too quiet, the next bounded pass should strengthen branch-owned gun/body tells in those two waves rather than waking support spectacle early again.
-  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4236` assertion (`sentryTierTwo.interceptRange > 0`) after the new staged-support assertions passed
-  Release Gate: Builds
 
 - Older entries trimmed automatically: 2
 

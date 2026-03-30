@@ -2450,59 +2450,40 @@
   }
 
   function getBaseRouteWave8ClosureCopy(profileId, build = null) {
-    const supportSummary = getBaseRouteLateBreakSupportSummary(build);
     if (profileId === "mutation") {
       const title = "Cataclysm Arsenal";
-      const supportClause = supportSummary
-        ? `${supportSummary.title}는 열린 seam을 붙들어 fan이 오래 돌게 받친다. `
-        : "";
       return {
         title,
         combatAsk: "열린 lane 둘만 오래 비운다.",
-        cadenceDetail:
-          `${title}가 바깥 lane 둘까지 같이 찢는다. ${supportClause}열린 lane 둘만 오래 비운다.`,
-        headlineDetail:
-          `${title}로 화면 바깥 둘까지 연다. ${supportClause}열린 lane 둘만 오래 비운다.`,
+        cadenceDetail: `${title}가 바깥 lane 둘까지 같이 찢는다. 열린 lane 둘만 오래 비운다.`,
+        headlineDetail: `${title}로 화면 바깥 둘까지 연다. 열린 lane 둘만 오래 비운다.`,
         roadmapDetail: `${title} 완성`,
         proof: "열린 lane 둘만 오래 비운다.",
-        statusNote:
-          `${title}가 열린 lane 둘을 같이 정리한다. ${supportClause}열린 lane 둘만 오래 비운다.`,
+        statusNote: `${title}가 열린 lane 둘을 같이 정리한다. 열린 lane 둘만 오래 비운다.`,
       };
     }
     if (profileId === "aegis") {
       const title = "Warplate Halo";
-      const supportClause = supportSummary
-        ? `${supportSummary.title}는 pocket 가장자리를 지켜 plate 복귀를 이어 준다. `
-        : "";
       return {
         title,
         combatAsk: "한 pocket만 길게 붙든다.",
-        cadenceDetail:
-          `${title}가 pocket 하나를 끝까지 잠근다. ${supportClause}한 pocket만 길게 붙든다.`,
-        headlineDetail:
-          `${title}로 복귀 pocket 하나를 굳힌다. ${supportClause}한 pocket만 길게 붙든다.`,
+        cadenceDetail: `${title}가 pocket 하나를 끝까지 잠근다. 한 pocket만 길게 붙든다.`,
+        headlineDetail: `${title}로 복귀 pocket 하나를 굳힌다. 한 pocket만 길게 붙든다.`,
         roadmapDetail: `${title} 완성`,
         proof: "한 pocket만 길게 붙든다.",
-        statusNote:
-          `${title}가 복귀 pocket 하나를 길게 받친다. ${supportClause}한 pocket만 길게 붙든다.`,
+        statusNote: `${title}가 복귀 pocket 하나를 길게 받친다. 한 pocket만 길게 붙든다.`,
       };
     }
     if (profileId === "ledger") {
       const title = "Black Ledger Heist";
-      const supportClause = supportSummary
-        ? `${supportSummary.title}는 빠질 seam을 잡아 tow fork가 더 깊게 긁게 만든다. `
-        : "";
       return {
         title,
         combatAsk: "payout lane 하나만 깊게 긁는다.",
-        cadenceDetail:
-          `${title}가 payout lane 하나를 끝까지 긁는다. ${supportClause}payout lane 하나만 깊게 긁는다.`,
-        headlineDetail:
-          `${title}로 payout lane 하나를 깊게 찢는다. ${supportClause}payout lane 하나만 깊게 긁는다.`,
+        cadenceDetail: `${title}가 payout lane 하나를 끝까지 긁는다. payout lane 하나만 깊게 긁는다.`,
+        headlineDetail: `${title}로 payout lane 하나를 깊게 찢는다. payout lane 하나만 깊게 긁는다.`,
         roadmapDetail: `${title} 완성`,
         proof: "payout lane 하나만 깊게 긁는다.",
-        statusNote:
-          `${title}가 payout lane 하나를 깊게 긁어 연다. ${supportClause}payout lane 하나만 깊게 긁는다.`,
+        statusNote: `${title}가 payout lane 하나를 깊게 긁어 연다. payout lane 하나만 깊게 긁는다.`,
       };
     }
     return {
@@ -19160,9 +19141,9 @@
     );
     const proof = `${forgeFocus.title} 하나를 고른 뒤 ${proofWindow}로 바로 간다.`;
     return {
-      headline: phase === "forge" ? `현재 형태 · ${dominantForm}` : `${dominantForm} 정리`,
+      headline: phase === "forge" ? `${dominantForm} 정비` : `${dominantForm} 정리`,
       proof,
-      text: `${phase === "forge" ? `현재 형태는 ${dominantForm}` : `${dominantForm} 정리`}. ${proof}`,
+      text: `${phase === "forge" ? `${dominantForm} 정비` : `${dominantForm} 정리`}. ${proof}`,
     };
   }
 
@@ -23655,8 +23636,8 @@
       );
       pushCombatFeed(
         state.forgeDraftType === "armory"
-          ? `${choice.tag} · ${choice.title} 적용. ${getArmoryLabel({ nextWave: state.waveIndex + 2 })} rider slot에서 support, defense, greed 중 소형 카드 1장을 더 고른다.`
-          : `${choice.tag} · ${choice.title} 적용. rider slot에서 support, defense, greed 중 하나를 얹어 다음 웨이브 intent를 마감한다.`,
+          ? `${choice.tag} · ${choice.title} 적용. ${getArmoryLabel({ nextWave: state.waveIndex + 2 })}에서 작은 보강 하나만 더 고른다.`
+          : `${choice.tag} · ${choice.title} 적용. 작은 보강 하나만 더 얹고 다음 전투로 간다.`,
         "FORGE"
       );
       refreshDerivedStats(false);
@@ -23679,13 +23660,9 @@
       (state.waveIndex + 2 === LATE_BREAK_ARMORY_WAVE ||
         (CONSOLIDATED_12_WAVE_ROUTE && state.waveIndex + 2 === DEFAULT_ROUTE_WAVE_COUNT))
     ) {
-      const supportSummary = getBaseRouteLateBreakSupportSummary(state.build);
+      const closureCopy = getBaseRouteWave8ClosureCopy(choice.lateBreakProfileId, state.build);
       pushCombatFeed(
-        choice.lateBreakProfileId === "mutation"
-          ? `Cataclysm Arsenal 고정. ${supportSummary ? `${supportSummary.title}는 seam을 받치고, ` : ""}다음 전투는 열린 lane 둘을 얼마나 오래 같이 비우는지 바로 본다.`
-          : choice.lateBreakProfileId === "aegis"
-            ? `Warplate Halo 고정. ${supportSummary ? `${supportSummary.title}는 pocket 가장자리를 받치고, ` : ""}다음 전투는 한 pocket을 얼마나 길게 버티는지 바로 본다.`
-            : `Black Ledger Heist 고정. ${supportSummary ? `${supportSummary.title}는 빠질 seam을 잡아 주고, ` : ""}다음 전투는 payout lane을 얼마까지 긁고 빠질지 바로 가른다.`,
+        `${closureCopy.title} 고정. ${closureCopy.proof}`,
         "BREAK"
       );
     }

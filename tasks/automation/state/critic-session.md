@@ -12,7 +12,7 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- Weakest gate is now `Rewards`: route-owned late waves are improving, but forge/reward screens still sell growth as package management instead of one irresistible weapon/body leap plus one clear consequence.
-- Next useful critique should keep pressure on form-first build hunger: offense, defense, and greed need visibly different long-horizon payoff lanes, not more chassis+support bundle logic.
-- Current structural failure: late-form copy and preview structure still let support clauses, bay unlocks, and rider/admin language dominate the emotional read of progression.
-- Repeated false solutions: more route prose, more preview/proof rows, or more support naming that leaves the reward hierarchy and outdated 8-wave/support-first docs intact.
+- Weakest gate is now `UX/UI`: the game has enough raw systems for an alpha, but opening/reward/transition surfaces still explain scaffolding instead of selling power.
+- Next useful critique should keep pushing consolidation over expansion: rewrite docs and player-facing copy so the run reads as one dominant weapon/body ladder with offense/defense/greed as clear rerun fantasies.
+- Current structural failure: the docs still teach an `8웨이브 + 짧은 승리 랩` appetite loop while the code still leans on support-bay/uplink/cache/admin vocabulary at key payoff moments.
+- Repeated false solutions: adding more routes, more support families, more preview rows, or more progression wrappers before the opening and forge become shorter, cleaner, and more desire-first.
