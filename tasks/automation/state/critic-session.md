@@ -12,7 +12,7 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- Weakest gate is now `Rewards`: the shipped `Wave 1-8` route still leaks `Wave 9+`, ascension, proof, and admin framing across forge/combat/result surfaces, so the current run reads like future-content setup instead of a closed hunger loop.
-- Next useful critique should keep forcing consolidation of the shipped slice before new systems: one dominant reward object, one visible payoff, one next ask, and no late-route promises on the main player-facing path.
-- Current structural failure: path identity and build desire are still being narrated more than felt because reward/status copy carries too much of the fantasy while support and roadmap grammar crowd the weapon spike.
-- Repeated false solutions: adding more branch/support terminology, more preview/proof rows, or more `Wave 9-12` scaffolding instead of making the existing 8-wave run land cleanly and replayably.
+- Weakest gate is now `Builds`: the shipped `Wave 6-8` route still lets support installs become the remembered climax, so offense/defense/greed are not cashing out as rerun-worthy weapon/body forms.
+- Next useful critique should keep forcing consolidation of the shipped slice around path-owned capstones: Wave 8 should headline the chosen path’s firing geometry/body mutation, with support reduced to reinforcement rather than the name of the payoff.
+- Current structural failure: the game has enough evolution content on paper, but the player-facing loop still spends spectacle on shields/missiles/drones and support install framing faster than it creates hunger for the gun/path itself.
+- Repeated false solutions: adding more support families, more late-route/admin scaffolding, or more wording cleanup that still leaves the late-game memory attached to helper hardware instead of the main build silhouette.

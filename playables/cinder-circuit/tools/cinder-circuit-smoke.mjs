@@ -5200,8 +5200,11 @@ const lateBreakDefenseSpotlight = game.getBaseRouteForgeSpotlightSummary({
   choice: lateBreakDefense,
   build: lateBreakSmokeBuild,
 });
-assert.equal(lateBreakDefenseSpotlight.titleLabel, "설치");
-assert.equal(lateBreakDefenseSpotlight.titleValue, "Aegis Halo");
+const lateBreakDefenseTransform = game.getBaseRouteForgeChoiceTransformation(lateBreakDefense, lateBreakSmokeBuild);
+assert.equal(lateBreakDefenseTransform.previewLabel, "완성 형태");
+assert.equal(lateBreakDefenseTransform.previewValue, "Warplate Halo");
+assert.equal(lateBreakDefenseSpotlight.titleLabel, "완성 형태");
+assert.equal(lateBreakDefenseSpotlight.titleValue, "Warplate Halo");
 assert.equal(lateBreakDefenseSpotlight.leadValue, "한 pocket만 길게 붙든다.");
 const lateBreakDefenseHero = game.getBaseRouteForgeDominantInstallHero({
   choice: lateBreakDefense,
@@ -5209,7 +5212,7 @@ const lateBreakDefenseHero = game.getBaseRouteForgeDominantInstallHero({
   waveNumber: 8,
   build: lateBreakSmokeBuild,
 });
-assert.equal(lateBreakDefenseHero?.title, "Aegis Halo");
+assert.equal(lateBreakDefenseHero?.title, "Warplate Halo");
 assert.equal(lateBreakDefenseHero?.currentFormLabel, "Bulwark Treads");
 assert.equal(lateBreakDefenseHero?.askNote, "한 pocket만 길게 붙든다.");
 const lateBreakPreviewRows = game.createForgePreviewRows(lateBreakGreed);
@@ -5217,7 +5220,7 @@ assert.equal(
   JSON.stringify(lateBreakPreviewRows),
   JSON.stringify([
     { label: "분기", value: "Greed Contract" },
-    { label: "설치", value: "Black Ledger Heist" },
+    { label: "완성 형태", value: "Black Ledger Heist" },
     { label: "다음 전투", value: "payout lane 하나만 깊게 긁는다." },
   ])
 );
