@@ -4637,7 +4637,8 @@
   const ACT_BREAK_ARMORY_WAVE = 5;
   const LATE_BREAK_ARMORY_WAVE = 9;
   const CONSOLIDATED_12_WAVE_ROUTE = true;
-  const DEFAULT_ROUTE_WAVE_COUNT = CONSOLIDATED_12_WAVE_ROUTE ? 8 : MAX_WAVES;
+  const BASE_ROUTE_CLOSURE_WAVE = 8;
+  const DEFAULT_ROUTE_WAVE_COUNT = MAX_WAVES;
   const ACT3_CATALYST_DRAFT_WAVE = 10;
   const OVERCOMMIT_TRIAL_WAVE = 5;
   const OVERCOMMIT_SALVAGE_REQUIRED = 3;
@@ -6977,7 +6978,7 @@
     if (installedSystems.length !== 1 || installedSystems[0].id !== systemEntry.id) {
       return null;
     }
-    const stage = boundedWave >= DEFAULT_ROUTE_WAVE_COUNT ? 3 : boundedWave === 7 ? 2 : 1;
+    const stage = boundedWave >= BASE_ROUTE_CLOSURE_WAVE ? 3 : boundedWave === 7 ? 2 : 1;
     const countBonus =
       systemEntry.tier <= 1 && systemEntry.id !== "aegis_halo"
         ? 1
@@ -7357,7 +7358,7 @@
       CONSOLIDATED_12_WAVE_ROUTE &&
       build.wave6ChassisBreakpoint &&
       installedSystems.length > 0 &&
-      nextWave === DEFAULT_ROUTE_WAVE_COUNT;
+      isBaseRouteWave8ClosureWave(nextWave);
     const supportBayCap = getSupportBayCapacity(build);
     const installedMap = new Map(installedSystems.map((entry) => [entry.id, entry]));
     const doctrine = build && build.bastionDoctrineId ? getBastionDoctrineDef(build) : null;
@@ -7451,7 +7452,7 @@
         CONSOLIDATED_12_WAVE_ROUTE &&
         build &&
         Number.isFinite(nextWave) &&
-        nextWave === DEFAULT_ROUTE_WAVE_COUNT
+        isBaseRouteWave8ClosureWave(nextWave)
       )
     ) {
       return false;
@@ -10621,12 +10622,12 @@
     const act = getPlayerFacingActLabelForWave(clamp(Math.round(waveNumber || 1), 1, MAX_WAVES));
     return `
       <div class="summary-head">
-        <strong>${CONSOLIDATED_12_WAVE_ROUTE ? "8-Wave Contract" : "12-Wave Contract"}</strong>
+        <strong>${CONSOLIDATED_12_WAVE_ROUTE ? "12-Wave Contract" : "19-Wave Contract"}</strong>
         <span class="summary-chip ${currentEra.state === "live" ? "summary-chip--hot" : ""}">${act.shortLabel}</span>
       </div>
       <p class="summary-copy roadmap-card__path">${
         CONSOLIDATED_12_WAVE_ROUTE
-          ? "기본 런은 Wave 8 proof와 짧은 승리 랩까지 한 실루엣만 판다."
+          ? "기본 런은 Wave 12까지 한 실루엣을 잠그고, Wave 8-10-12에서 같은 형태를 더 깊게 증명한다."
           : "세 시대 모두 form 하나, rider 하나, proof 하나만 먼저 판다."
       }</p>
       <div class="status-list">
@@ -12979,7 +12980,7 @@
       build &&
       build.wave6ChassisBreakpoint &&
       installedSystems.length > 0 &&
-      nextWave === DEFAULT_ROUTE_WAVE_COUNT;
+      isBaseRouteWave8ClosureWave(nextWave);
     if (shouldHoldWave6SingleAxisBreakpoint(build, nextWave)) {
       return installedSystemIds;
     }
@@ -12989,7 +12990,7 @@
       build.wave6ChassisBreakpoint &&
       installedSystems.length === 0 &&
       Number.isFinite(nextWave) &&
-      nextWave < DEFAULT_ROUTE_WAVE_COUNT
+      nextWave < BASE_ROUTE_CLOSURE_WAVE
     ) {
       return [];
     }
@@ -13868,7 +13869,7 @@
       return false;
     }
     if (choice.type === "system") {
-      return nextWave === DEFAULT_ROUTE_WAVE_COUNT;
+      return isBaseRouteWave8ClosureWave(nextWave);
     }
     if (choice.type === "fallback") {
       return true;
@@ -13901,7 +13902,7 @@
                 ? 40
                 : 36;
       const tierBonus = (choice.systemTier || 1) * 28;
-      return nextWave === DEFAULT_ROUTE_WAVE_COUNT ? 420 + spectacleBonus + tierBonus : 150;
+      return isBaseRouteWave8ClosureWave(nextWave) ? 420 + spectacleBonus + tierBonus : 150;
     }
     if (choice.type === "utility" && choice.action === "bastion_bay_forge") {
       return nextWave === 6 ? 320 : 80;
@@ -13954,7 +13955,7 @@
       getInstalledSupportSystems(build).length > 0 &&
       Number.isFinite(nextWave) &&
       nextWave > 6 &&
-      nextWave < DEFAULT_ROUTE_WAVE_COUNT
+      nextWave < BASE_ROUTE_CLOSURE_WAVE
     );
   }
 
@@ -13963,7 +13964,7 @@
       CONSOLIDATED_12_WAVE_ROUTE &&
       Number.isFinite(nextWave) &&
       !shouldHoldWave6SingleAxisBreakpoint(build, nextWave) &&
-      nextWave >= DEFAULT_ROUTE_WAVE_COUNT &&
+      nextWave >= BASE_ROUTE_CLOSURE_WAVE &&
       nextWave < LATE_BREAK_ARMORY_WAVE
     );
   }
@@ -14053,7 +14054,7 @@
     const upgradeBonus = choice.bayAction === "upgrade" ? 260 : 0;
     const installedBonus = installedEntry ? 180 : 0;
     const doctrineBonus = doctrineSupportId === choice.systemId ? 96 : 0;
-    const latePayoffBonus = nextWave === DEFAULT_ROUTE_WAVE_COUNT ? 80 : 0;
+    const latePayoffBonus = isBaseRouteWave8ClosureWave(nextWave) ? 80 : 0;
     return (
       1320 +
       spectacleBonus +
@@ -14508,11 +14509,11 @@
     return tierDef?.title || "지원 실루엣";
   }
 
-  function getBaseRouteWave8SupportPayoffSummary(choice, build, waveNumber = DEFAULT_ROUTE_WAVE_COUNT) {
-    const boundedWave = clamp(Math.round(waveNumber || DEFAULT_ROUTE_WAVE_COUNT), 1, DEFAULT_ROUTE_WAVE_COUNT);
+  function getBaseRouteWave8SupportPayoffSummary(choice, build, waveNumber = BASE_ROUTE_CLOSURE_WAVE) {
+    const boundedWave = clamp(Math.round(waveNumber || BASE_ROUTE_CLOSURE_WAVE), 1, DEFAULT_ROUTE_WAVE_COUNT);
     if (
       !CONSOLIDATED_12_WAVE_ROUTE ||
-      boundedWave !== DEFAULT_ROUTE_WAVE_COUNT ||
+      boundedWave !== BASE_ROUTE_CLOSURE_WAVE ||
       !choice ||
       choice.type !== "system" ||
       choice.bayAction !== "upgrade" ||
@@ -14589,7 +14590,7 @@
     return Boolean(
       CONSOLIDATED_12_WAVE_ROUTE &&
       Number.isFinite(nextWave) &&
-      nextWave === DEFAULT_ROUTE_WAVE_COUNT
+      nextWave === BASE_ROUTE_CLOSURE_WAVE
     );
   }
 
@@ -15896,7 +15897,7 @@
     const openSecondaryBranch = shouldOpenBaseRouteSecondaryBranch(nextWave, build);
     const strictBaseRouteRiderContract =
       recurringBaseRouteContract &&
-      nextWave === DEFAULT_ROUTE_WAVE_COUNT;
+      isBaseRouteWave8ClosureWave(nextWave);
     const forcedWave8CapstoneChoice = strictBaseRouteRiderContract
       ? getBaseRouteWave8CapstoneChoice(build, nextWave)
       : null;

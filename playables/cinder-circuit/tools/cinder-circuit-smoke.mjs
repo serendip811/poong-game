@@ -23,7 +23,7 @@ const game = sandbox.module.exports;
 
 assert.equal(game.GAME_TITLE, "Cinder Circuit");
 assert.equal(game.MAX_WAVES, 12);
-assert.equal(game.DEFAULT_ROUTE_WAVE_COUNT, 8);
+assert.equal(game.DEFAULT_ROUTE_WAVE_COUNT, 12);
 assert.equal(game.WAVE_CONFIG.length, 12);
 assert.equal(game.ACT_BREAK_ARMORY_WAVE, 5);
 assert.equal(game.LATE_BREAK_ARMORY_WAVE, 9);
@@ -38,12 +38,12 @@ assert.equal(game.getPlayerFacingActLabelForWave(9).shortLabel, "Act 2");
 assert.equal(game.getPlayerFacingActLabelForWave(13).shortLabel, "Act 2");
 assert.equal(game.getPlayerFacingActLabelForWave(19).shortLabel, "Act 2");
 assert.equal(game.getPlayerFacingWaveNumber(6), 6);
-assert.equal(game.getPlayerFacingWaveNumber(9), 8);
-assert.equal(game.getPlayerFacingWaveNumber(19), 8);
+assert.equal(game.getPlayerFacingWaveNumber(9), 9);
+assert.equal(game.getPlayerFacingWaveNumber(19), 12);
 const playerFacingProofBuild = game.createInitialBuild("rail_zeal");
 assert.equal(
   JSON.stringify(game.getPlayerFacingProofWindowSummary(playerFacingProofBuild, 11)),
-  JSON.stringify(game.getImmediateProofWindowSummary(playerFacingProofBuild, 8))
+  JSON.stringify(game.getImmediateProofWindowSummary(playerFacingProofBuild, 11))
 );
 assert.equal(
   JSON.stringify(game.getImmediateProofWindowSummary(playerFacingProofBuild, 4)),
@@ -172,7 +172,7 @@ assert.equal(
 );
 assert.equal(
   game.getBaseRoutePostWaveTransition({ waveIndex: 8, wave: { completesRun: false } }, 10).action,
-  "victory_lap"
+  "forge"
 );
 assert.equal(
   game.getBaseRoutePostWaveTransition({ waveIndex: 7, wave: { completesRun: true } }, 9).action,
@@ -794,7 +794,7 @@ assert.equal(greedFrameRun.build.wave6ChassisBreakpoint, true);
 assert.equal(greedFrameRun.build.supportSystems.length, 0);
 assert.equal(greedFrameRun.resources.scrap, 34);
 assert.equal(greedFrameRun.build.bastionPactDebtWaves, 1);
-assert.equal(greedFrameRun.build.midrunGreedRouteUntilWave, 8);
+assert.equal(greedFrameRun.build.midrunGreedRouteUntilWave, 12);
 const wave7BreakpointChoices = game.buildForgeChoices(chassisBranchBuild, () => 0, 999, {
   nextWave: 7,
   finalForge: false,
@@ -1256,7 +1256,7 @@ const scriptedMidrunGreedChoice = game.createFieldGreedContractChoice(
   game.createInitialBuild("rail_zeal"),
   5
 );
-assert.equal(scriptedMidrunGreedChoice.midrunGreedRouteUntilWave, 8);
+assert.equal(scriptedMidrunGreedChoice.midrunGreedRouteUntilWave, 12);
 assert.equal(scriptedMidrunGreedChoice.title, "Scrapline Raid");
 assert.match(scriptedMidrunGreedChoice.slotText, /twin tow fork/i);
 const midrunGreedBuild = game.createInitialBuild("rail_zeal");
@@ -1267,7 +1267,7 @@ const midrunGreedRun = {
   player: { hp: 100, maxHp: 100, heat: 18, overheated: false },
 };
 game.applyForgeChoice(midrunGreedRun, scriptedMidrunGreedChoice);
-assert.equal(midrunGreedRun.build.midrunGreedRouteUntilWave, 8);
+assert.equal(midrunGreedRun.build.midrunGreedRouteUntilWave, 12);
 assert.equal(game.isMidrunGreedRaidFrameActive(midrunGreedRun.build, 5), true);
 assert.equal(game.isMidrunGreedRaidFrameActive(midrunGreedRun.build, 6), true);
 assert.equal(game.isMidrunGreedRaidFrameActive(midrunGreedRun.build, 8), true);
@@ -1430,7 +1430,7 @@ const consolidatedLateRoadmap = game.getBuildRoadmap(
   game.computeWeaponStats(roadmapBuild),
   9
 );
-assert.ok(consolidatedLateRoadmap.steps[2].detail.includes("lane을 더 넓게"));
+assert.ok(consolidatedLateRoadmap.steps[2].detail.includes("sweep 폭"));
 assert.ok(!consolidatedLateRoadmap.steps[2].detail.includes("Wave 9-12"));
 assert.ok(!consolidatedLateRoadmap.steps[2].detail.includes("Afterburn"));
 assert.ok(!consolidatedLateRoadmap.steps[2].detail.includes("live ascension"));
@@ -1458,7 +1458,7 @@ assert.ok(eraOnePlan[0].proofLabel.length > 0);
 const eraThreePlan = game.getForgeEraPlan(roadmapBuild, game.computeWeaponStats(roadmapBuild), null, 9);
 assert.equal(eraThreePlan.length, 1);
 assert.equal(eraThreePlan[0].state, "live");
-assert.equal(eraThreePlan[0].waveLabel, "Wave 8");
+assert.equal(eraThreePlan[0].waveLabel, "Wave 9");
 assert.equal(eraThreePlan[0].proofLabel, "전투 ask");
 assert.ok(eraThreePlan[0].proofDetail.length > 0);
 const compactEraPanelMarkup = game.createEraContractPanelMarkup(
@@ -1656,7 +1656,7 @@ assert.equal(game.getBaseRouteForgeContractEyebrow(contractEyebrowBuild, 5), "Wa
 assert.equal(game.getBaseRouteForgeContractEyebrow(contractEyebrowBuild, 6), "Wave 6 / 12 포지");
 const lateContractBuild = game.createInitialBuild("rail_zeal");
 lateContractBuild.lateBreakProfileId = "mutation";
-assert.equal(game.getBaseRouteForgeContractEyebrow(lateContractBuild, 10), "Wave 10 / 12 증폭 포지");
+assert.equal(game.getBaseRouteForgeContractEyebrow(lateContractBuild, 10), "Wave 10 / 12 포지");
 assert.equal(
   game.getBaseRouteForgeContractEyebrow(lateContractBuild, 12, { pendingFinalForge: true }),
   "Wave 12 / 12 마감"
@@ -1858,7 +1858,7 @@ const driftFallbackAsk = game.getBaseRouteCombatAsk({
   waveIndex: 10,
   wave: { directive: "", hazard: { type: "drift" } },
 });
-assert.equal(driftFallbackAsk, "추격 덩어리를 자르고 빈 pocket으로 갈아탄다.");
+assert.equal(driftFallbackAsk, "추격 덩어리를 끊고 빈 pocket으로 돈다.");
 assert.equal(
   game.shouldUseConsolidatedLateFormForge({ nextWave: 9, finalForge: false }),
   true
@@ -1893,7 +1893,7 @@ assert.equal(
     { waveIndex: 7, wave: { completesRun: false } },
     9
   ).action,
-  "victory_lap"
+  "forge"
 );
 assert.equal(game.shouldUseFieldGrant({ nextWave: 6, finalForge: false, build: roadmapBuild }), false);
 const recurringWave3Choices = game.buildForgeChoices(roadmapBuild, Math.random, 40, {

@@ -5,15 +5,15 @@
 - Working title: `Cinder Circuit`
 - Genre: 탑다운 아레나 슈터 + 웨이브 로그라이트
 - Platform: Desktop-first Canvas browser game
-- Session length: shipped slice 기준 `8웨이브 + 짧은 승리 랩`, `8~10분` 내외
-- Core promise: 현재 shipped 러닝은 `빈 선체 -> Wave 3 무기 도약 -> Wave 5 경로 선택 -> Wave 8 완성 시험`의 짧은 실루엣을 반복해서 타며, 매번 다른 무기/경로 조합이 전장을 어떻게 다시 읽게 만드는지 바로 체감하게 한다.
+- Session length: shipped slice 기준 `12웨이브`, `12~14분` 내외
+- Core promise: 현재 shipped 러닝은 `빈 선체 -> Wave 3 무기 도약 -> Wave 5 경로 선택 -> Wave 8 형태 고정 -> Wave 10 증폭 -> Wave 12 마감` 계약을 반복해서 타며, 매번 다른 무기/경로 조합이 후반 전장을 어떻게 다시 읽게 만드는지 체감하게 한다.
 
 ## Pillars
 
 - 읽히는 회피: 플레이어는 항상 무엇을 피해야 하고 어디로 빠져야 하는지 즉시 알아야 한다.
 - 변신의 갈증: 다음 세 웨이브 안에 기계가 얼마나 달라질지 기대하게 만들어야 한다.
 - 드랍의 가치: 웨이브 중 얻은 코어와 스크랩이 다음 포지의 무기 도약이나 지원 설치를 흔들어야 한다.
-- 단계 구조: `Wave 1-4`는 lean start와 첫 무기 도약, `Wave 5-8`은 공세/방호/판돈 중 하나로 정한 경로를 자기 것으로 만드는 ownership lap을 맡고 지원 실루엣은 그 안쪽 payoff로 붙는다.
+- 단계 구조: `Wave 1-4`는 lean start와 첫 무기 도약, `Wave 5-8`은 공세/방호/판돈 중 하나로 정한 경로와 차체를 자기 것으로 만드는 ownership lap, `Wave 9-12`는 잠근 형태를 증폭하고 마감하는 후반 staircase를 맡는다.
 
 ## Core Fantasy
 
@@ -26,16 +26,17 @@
 3. `Wave 3` 포지에서 무기 도약 하나를 골라 주포 실루엣을 바꾼다.
 4. `Wave 5` 포지에서 `공세 / 방호 / 판돈` 중 하나를 골라 이번 런의 중반 경로를 잠근다.
 5. `Wave 6` 전후 payoff는 그 경로 안쪽에서 붙는 차체/지원 실루엣으로 lane, pocket, 복귀 각을 더 오래 열게 만든다.
-6. `Wave 8`과 짧은 승리 랩을 닫으면 한 번의 shipped run을 끝내고, 다른 무기/경로 조합을 다시 노린다.
+6. `Wave 8`에서 후반 형태를 잠그고 `Wave 10` 증폭을 지난 뒤 `Wave 12`를 닫으면 한 번의 shipped run을 끝내고, 다른 무기/경로 조합을 다시 노린다.
 
 ## Match Structure
 
-- shipped route는 총 `Wave 1-8`와 웨이브 사이 포지로 이루어진 한 번의 닫힌 러닝이다.
+- shipped route는 총 `Wave 1-12`와 웨이브 사이 포지/후반 전환으로 이루어진 한 번의 닫힌 러닝이다.
 - `Wave 1-4`: 기본 코어로 버티며 첫 무기 도약을 만든다.
-- `Wave 5-6`: 주무장 도약 뒤 `공세 / 방호 / 판돈` 중 하나로 경로를 잠그고, 차체와 지원 payoff를 그 경로 안쪽에 붙인다.
-- `Wave 7-8`: 방금 잠근 path와 그 안쪽의 gun/body/support 조합으로 같은 ownership ask를 더 오래 밀어붙인다.
+- `Wave 5-8`: 주무장 도약 뒤 `공세 / 방호 / 판돈` 중 하나로 경로를 잠그고, 차체와 첫 support payoff를 그 경로 안쪽에 붙인다.
+- `Wave 9-10`: `Wave 8`에서 잠근 형태를 route-owned late contract로 증폭한다.
+- `Wave 11-12`: 같은 late contract를 더 넓은 전장과 더 높은 압박 속에서 끝까지 증명한다.
 - 각 웨이브는 대체로 `50~75초` 내외, 밴드에 따라 아레나 크기와 압박 리듬이 달라진다.
-- Wave 8 숙련 랩과 짧은 승리 랩 종료 후 생존 시 승리
+- Wave 12 종료 후 생존 시 승리
 - HP가 0이 되면 즉시 패배
 
 ## Controls
@@ -97,7 +98,7 @@
 - 초반은 `Scuttler` 위주로 회피를 익힌다.
 - 중반부터 느리지만 버티는 `Brute`와 흔들리는 진입선을 만드는 `Shrike`가 섞이며 첫 ownership window를 시험한다.
 - 각 웨이브마다 엘리트가 끼어들어 코어 드랍 기회를 만든다.
-- 현재 shipped slice는 `Wave 3` 무기 도약과 `Wave 5` 경로 선택이 바로 run identity를 바꾸는지 증명해야 하며, 이후 `20-30웨이브` 구조 확장은 이 8-wave appetite loop가 먼저 반복 플레이 가능한지 확인한 뒤 연다.
+- 현재 shipped slice는 `Wave 3` 무기 도약, `Wave 5` 경로 선택, `Wave 8` 형태 고정, `Wave 10` 증폭이 바로 run identity를 바꾸는지 증명해야 하며, 이후 `20-30웨이브` 구조 확장은 이 12-wave shipped spine이 먼저 반복 플레이 가능한지 확인한 뒤 연다.
 
 ## Content Scope
 
@@ -122,7 +123,7 @@
 
 ## UI Layout
 
-- Title: 좌측은 게임 판타지와 러닝 루프, 우측은 `Bare Hull -> Wave 3 무기 -> Wave 5 경로 -> Wave 8 마감`만 남긴 launch panel 구성
+- Title: 좌측은 게임 판타지와 러닝 루프, 우측은 `Bare Hull -> Wave 3 무기 -> Wave 5 경로 -> Wave 8 형태 고정 -> Wave 12 마감`만 남긴 launch panel 구성
 - Top bar: 기본 전투 중에는 `Hull / Heat / Drive`만 먼저 보이고, `Wave / Dash / Time / Scrap`은 `Tab` 상세 보드에서 잠깐 확인한다.
 - Bottom left: 현재 무기/경로와 바로 다음 전투를 한 번에 읽는 compact `machine read`
 - Bottom right: 현재 웨이브 ask와 위험 타이머만 남기는 single `combat ask` 카드
@@ -160,7 +161,7 @@
 ## Alpha Slice Acceptance Criteria
 
 - [ ] 시작, 플레이, 결과 흐름이 끊기지 않는다.
-- [ ] `8웨이브 + 짧은 승리 랩` 루프가 완주된다.
+- [ ] `12웨이브` 루프가 완주된다.
 - [ ] `주력 변이`, `방호·보조`, `판돈·유틸` 중 적어도 한 실제 분기가 `Wave 5-8` 구간에서 즉시 읽힌다.
 - [ ] 최소 3가지 이상 다른 주무장/차체 변신 감각이 실제로 체감된다.
 - [ ] 과열과 대시가 단순 장식이 아니라 생존 판단에 영향을 준다.
@@ -188,9 +189,9 @@
 
 ## Next Build Target
 
-현재 구현 목표는 `반복 플레이 가능한 8웨이브 shipped 알파 슬라이스`다.
+현재 구현 목표는 `반복 플레이 가능한 12웨이브 shipped 알파 슬라이스`다.
 
-- 필수: 타이틀, `Wave 1-8`, 반복 포지 계약, 4종 이상 적, 코어/차체/지원 계열 빌드 변화, 드라이브, 폭주 지형, 결과 화면
-- 선택: 화면 흔들림, 파편 파티클, 최소한의 합성 사운드, shipped `8-wave` appetite loop를 더 선명하게 만드는 후속 검증
+- 필수: 타이틀, `Wave 1-12`, 반복 포지 계약, 4종 이상 적, 코어/차체/지원 계열 빌드 변화, 드라이브, 폭주 지형, 결과 화면
+- 선택: 화면 흔들림, 파편 파티클, 최소한의 합성 사운드, shipped `12-wave` spine을 더 선명하게 만드는 후속 검증
 
 세부 적용 원칙과 밸런스 계획은 [cinder-circuit-source-application.md](/Users/seren.kim/work_personal/poong_game/docs/games/cinder-circuit-source-application.md#L1)에 정리한다.
