@@ -800,47 +800,43 @@
       id: "final_stand",
       waveNumber: 12,
       cellId: "stand",
-      stageText: "Wave 12도 다른 finale wrapper를 열지 않고 같은 route grammar를 pocket rotation으로 닫는",
+      stageText: "Wave 12도 다른 finale wrapper를 열지 않고 열린 mastery lane 하나를 끝까지 비우는",
       focusText: "완성된 form이",
       duration: 104,
       spawnBudget: 184,
-      activeCap: 33,
-      baseSpawnInterval: 0.356,
-      spawnIntervalMin: 0.108,
-      spawnAcceleration: 0.298,
+      activeCap: 30,
+      baseSpawnInterval: 0.374,
+      spawnIntervalMin: 0.112,
+      spawnAcceleration: 0.286,
       eliteEvery: 5,
       mix: {
         scuttler: 0.06,
-        brute: 0.2,
-        shrike: 0.16,
-        skimmer: 0.06,
-        lancer: 0.14,
+        brute: 0.18,
+        shrike: 0.18,
+        skimmer: 0.08,
+        lancer: 0.18,
         brander: 0.08,
-        binder: 0.1,
+        binder: 0.06,
         mortar: 0.02,
         warden: 0.18,
       },
       driveGainFactor: 1.52,
       arena: {
-        width: 1680,
-        height: 980,
+        width: 2040,
+        height: 1160,
       },
       ascensionCarrierType: "binder",
       hazard: {
-        label: "Final Stand Pocket",
-        type: "territory",
-        interval: 8.2,
-        count: 1,
-        radius: 98,
-        telegraph: 0.82,
-        duration: 7.8,
+        label: "Final Stand Drift",
+        type: "drift",
+        interval: 8.8,
+        count: 2,
+        radius: 108,
+        telegraph: 0.8,
+        duration: 5.4,
         damage: 15,
-        coreHp: 74,
-        coreRadius: 18,
-        turretInterval: 0.94,
-        turretDamage: 11,
-        turretSpeed: 246,
-        enemyPullRadius: 158,
+        driftSpeed: 132,
+        driftOrbit: 0.32,
       },
       completesRun: true,
     }),
@@ -12476,7 +12472,7 @@
           detail:
             boundedWave === 11
               ? "Wave 11은 late-break 분기라도 shared pursuit/refuge run으로 접힌다. branch마다 pressure seasoning은 남기되, headline form으로 pursuit 덩어리를 먼저 찢고 다음 refuge pocket으로 갈아타는 리듬 자체가 전면에 남아야 한다."
-              : "Wave 12는 late-break 분기라도 rotating final stand로 닫힌다. branch flavor는 남겨도 마지막 결산은 한 pocket을 열고 버리며 방금 완성한 form이 점유 시간을 얼마나 늘리는지 보여 주는 데 집중한다.",
+              : "Wave 12는 late-break 분기라도 rotating final stand로 닫힌다. branch flavor는 남겨도 마지막 결산은 가장 넓은 lane에서 방금 완성한 form이 추격 덩어리를 얼마나 오래 지워 내는지 보여 주는 데 집중한다.",
         };
       }
     }
@@ -12495,7 +12491,7 @@
         detail:
           boundedWave === 11
             ? "Wave 11은 late ascension split 직후의 pursuit/refuge run이다. drift furnace와 재진입 압박을 비껴 돌며 첫 elite split cache를 회수하고, headline body jump로 비운 pocket 사이를 얼마나 깔끔하게 갈아타는지 먼저 느끼게 만든다."
-            : "Wave 12는 headline target을 Ascension Core 하나로 좁힌 rotating final stand다. 작은 bastion pocket을 짧게 열고 binder pinch가 닫히기 전에 다른 refuge lane으로 갈아타야 한다.",
+            : "Wave 12는 headline target을 Ascension Core 하나로 좁힌 rotating final stand다. 가장 넓은 mastery lane에서 binder pinch를 크게 휘감아 끊어 내며, 완성한 body jump가 pursuit line을 얼마나 오래 비우는지 보여 줘야 한다.",
       };
     }
     if (boundedWave === 11) {
@@ -12516,7 +12512,7 @@
         (currentWeapon && currentWeapon.capstoneLabel) ||
         "Late Form",
       detail:
-        "Wave 12는 headline late form의 rotating final stand다. 짧게 열리는 bastion pocket 사이를 갈아타며, 방금 완성한 form과 rider 생존축이 pocket 소유 시간을 얼마나 늘리는지 더 또렷하게 드러난다.",
+        "Wave 12는 headline late form의 rotating final stand다. 가장 넓은 mastery lane에서 drift 압박을 길게 끊어 내며, 방금 완성한 form이 pursuit line을 얼마나 오래 비우는지 더 또렷하게 드러난다.",
     };
   }
 
@@ -20802,7 +20798,7 @@
     }
     return {
       label: "Finale",
-      detail: `${ladderLead}${bandLabel}에서 이번 run의 마지막 pocket rotation과 stand discipline을 결산한다.`,
+      detail: `${ladderLead}${bandLabel}에서 이번 run의 가장 넓은 mastery lane과 final stand discipline을 결산한다.`,
     };
   }
 
