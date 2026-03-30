@@ -2404,6 +2404,28 @@ assert.ok(!pollutedFeedSummary.proof.includes("Afterburn"));
 assert.ok(!pollutedFeedSummary.proof.includes("Wave 9"));
 assert.ok(pollutedFeedSummary.headline.length > 0);
 assert.ok(pollutedFeedSummary.proof.length > 0);
+const cacheLeakFeedSummary = game.getShippingCombatFeedEntrySummary(
+  {
+    stamp: "RUN",
+    text: "cache live. support uplink가 열려 다음 armory split이 바로 이어진다.",
+  },
+  {
+    build: pollutedShippingBuild,
+    weapon: game.computeWeaponStats(pollutedShippingBuild),
+    waveIndex: 4,
+    phase: "combat",
+    paused: false,
+    wave: null,
+    catalystCrucible: { active: false },
+    overcommit: { active: false },
+    doctrinePursuit: { active: false },
+  }
+);
+assert.ok(!cacheLeakFeedSummary.headline.includes("cache"));
+assert.ok(!cacheLeakFeedSummary.proof.includes("uplink"));
+assert.ok(!cacheLeakFeedSummary.proof.includes("armory"));
+assert.ok(cacheLeakFeedSummary.headline.length > 0);
+assert.ok(cacheLeakFeedSummary.proof.length > 0);
 const verboseWaveIntroSummary = game.getShippingCombatFeedEntrySummary(
   {
     stamp: "W4",
@@ -2437,6 +2459,8 @@ assert.equal(sanitizedShippingBuild.supportBayCap, 1);
 assert.equal(game.getShippingUpgradePresentationLabel("Wave 6 Ascension: 정상 기록"), "정상 기록");
 assert.equal(game.getShippingUpgradePresentationLabel("Ascension Relay: Storm Frame 즉시 활성화"), "");
 assert.equal(game.getShippingUpgradePresentationLabel("Ownership Relay: Wave 8 bay uplink without armory stop"), "");
+assert.equal(game.getShippingUpgradePresentationLabel("cache live: split core uplink"), "");
+assert.equal(game.getShippingUpgradePresentationLabel("support uplink 확보"), "");
 assert.equal(game.getShippingUpgradePresentationLabel("Reforge: Ember + Lance"), "벤치 Ember + Lance");
 assert.equal(
   game.getShippingUpgradePresentationLabel("교리 채택: Mirror Hunt Doctrine", seekerProofBuild, { waveNumber: 3 }),

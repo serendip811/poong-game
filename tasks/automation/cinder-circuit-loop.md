@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: protect the early growth curve and make the shipped `Wave 1-12` contract unanimous before adding more support layers, branch wrappers, or future-mode residue.
+- Immediate priority: make the shipped `Wave 1-12` run the only visible contract across docs and player-facing UI, then tune act pacing against that single promise.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-30 23:59:59 KST
+  Findings:
+  - The project still teaches two different games. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) and [docs/games/cinder-circuit-source-analysis.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-source-analysis.md) still sell an `8웨이브` shipped slice with support-first payoff language, while [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) is authored around a `Wave 1-12` route plus victory lap.
+  - Because that contract is split, the longer route still risks reading like prototype overhang instead of authored escalation. The bigger arena bands and later reinforcements in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) do give combat more room, but the game still does not present Act 1, 2, and 3 as one clean appetite curve the player can anticipate and chase.
+  - Default-facing language is still carrying too much admin/future residue for a release-feeling run. `Afterburn`, `ascension`, `cache`, `uplink`, and other late-route terms remain spread through player-facing feed/result/transition text in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js), so the run keeps sounding like a branch wrapper system instead of a finished action loop.
+  - The forge and HUD architecture are still explanation-biased even after simplification. `renderForgeOverlay()` and the base-route helper stack in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still revolve around identity/context/proof plumbing, which makes it too easy for every future reward pass to drift back toward readable-on-paper rather than instantly desirable-in-play.
+  Top Priority: Rewrite the shipped run contract everywhere around one authored `Wave 1-12` spine with clear act beats, and suppress `Afterburn`/cache/uplink/ascension language from all default player-facing surfaces until that route is complete and satisfying on its own.
+  Why Now: Replay hunger will stay soft if the player cannot tell whether the current run is the real game or just a prelude to some later mode.
+  Do Not Repeat: Do not answer this with more late-wave wrappers, roadmap jargon, or support-side terminology while the shipped route still lacks one unanimous promise.
+  Release Gate: Progression
 
 - 2026-03-30 23:59:59 KST
   Findings:
@@ -185,20 +196,20 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass on new card chrome, more roadmap rows, or more support bay naming while the shipped surfaces still over-explain the run.
   Release Gate: UX/UI
 
-- 2026-03-30 22:05:00 KST
-  Findings:
-  - The project is still teaching the wrong run fantasy in its source-of-truth docs. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) still frames `Wave 5-8` as ownership plus an inner support payoff and still tells the player loop to chase stronger support installs, which keeps reintroducing helper-led thinking even after combat cadence started to separate by route.
-  - The live doctrine text still points late desire at support hardware. `supportDoctrineText` in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) explicitly promises the first `Wave 8` support rider for all three doctrine lines, so the route fork still reads like a preface before the “real” toy arrives.
-  - Forge is still too document-like for a release-feeling reward screen. Compared with strong upgrade beats in games like `Hades`, `Brotato`, or `20 Minutes Till Dawn`, [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) is still asking the player to parse proof windows, rider contracts, preview rows, install summaries, and context tails before one obvious power spike takes over the screen.
-  - The same verbosity keeps leaking into transition copy and closure copy. `headline -> rider slot`, `support/defense/greed`, and support clauses in the `Wave 8` closure text keep naming the system plumbing instead of leaving the player with a simple memory of “my gun/body just became this.”
-  Top Priority: Rebuild the shipped forge/title/progression language so each stop sells one dominant weapon/chassis transformation first, with support reduced to a quiet secondary rider and most contract/spec-sheet text removed from the default view.
-  Why Now: If the reward moments still feel like reading an ops panel, players will not build rerun hunger even when the underlying combat routes improve.
-  Do Not Repeat: Do not answer this with more naming passes or more helper variants while the forge still explains the machine harder than it excites the player.
-  Release Gate: Rewards
-
 - Older entries trimmed automatically: 1
 
 ## Latest Improvement
+
+- 2026-03-30 23:59:59 KST
+  Changed:
+  - Tightened the shipped-route default-surface quarantine in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `shouldSuppressShippingAdminSurfaceText(...)` now catches raw `cache / uplink / Afterburn / Ascension` residue, `getShippingCombatFeedEntrySummary(...)` collapses those feed lines back to route-owned machine/next-fight summaries, and `shouldHideShippingUpgradeEntry(...)` also hides generic `cache` / `uplink` upgrade log entries before they reach pause/result history.
+  - Added coverage in [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) for a `cache live / support uplink / armory split` feed line and generic `cache live: split core uplink` history entries so the shipped shell fails if those admin words leak back onto default-facing surfaces.
+  Why:
+  - The latest critique's `Top Priority` was to make the shipped `Wave 1-12` run read like one authored route and suppress `Afterburn` / cache / uplink / ascension language on default player-facing surfaces. With docs out of scope for this bounded pass, the highest-value concrete interpretation inside `playables/` was to harden the shared feed/history sanitizers the player actually sees every run.
+  Follow-up Risk:
+  - Feed/history now hide more admin residue, but title/forge helper copy can still drift if later passes add new route plumbing without routing it through the same quarantine layer. If critique still says the shell sounds provisional, the next bounded pass should apply this same suppression rule to remaining default forge/launch strings rather than add content.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs#L2234](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs#L2234) assertion (`crownfireWeapon.pierce === 0`) before reaching the suite end; targeted VM validation for the new feed/history quarantine passed
+  Release Gate: Progression
 
 - 2026-03-30 23:59:59 KST
   Changed:
@@ -335,19 +346,6 @@ This file is shared by two recurring Codex CLI jobs.
   Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4255` assertion (`sentryTierTwo.interceptRange > 0`) after the new roadmap/result assertions passed
   Reference Direction: `Hades` result/boon recap restraint plus `Nova Drift`-style one-glance build memory; default post-run surfaces should leave one silhouette and one route memory, not a stage checklist.
   Release Gate: UX/UI
-
-- 2026-03-30 10:43:59 KST
-  Changed:
-  - Rewired the shipped forge headline in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `getBaseRouteForgeSpotlightSummary(...)`, `getBaseRouteForgeDominantInstallHero(...)`, and the default `renderForgeOverlay()` context now foreground the branch-owned transformation (`Crownsplitter Array`, `Citadel Spindle`, etc.) instead of bundled support install names on `Wave 6` breakpoint cards.
-  - Rewrote the three doctrine `supportDoctrineText` strings in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) to frame `Wave 8` support as a quiet amplifier that reinforces an already locked form, not the late-run toy the player is supposed to crave.
-  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) and [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md) to lock the new form-first forge spotlight/context outputs for shipped `Wave 6` packages.
-  Why:
-  - The latest critique's `Top Priority` was to make reward stops sell one dominant weapon/chassis transformation first. The highest-value bounded interpretation inside `playables/` was to change the default forge hero/context and doctrine late-copy, because those were still teaching support hardware as the real payoff even after the underlying path forms existed.
-  Follow-up Risk:
-  - The default reward read is cleaner now, but some support-focused descriptions and `Wave 8` closure lines still mention system plumbing. If critique still says the reward stop reads like an ops panel, the next bounded pass should trim those remaining secondary sentences rather than add another naming layer.
-  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4256` assertion (`sentryTierTwo.interceptRange > 0`) after the new forge headline assertions passed
-  Reference Direction: `Hades` boon/shop headline hierarchy with `Brotato` / `20 Minutes Till Dawn`-style reward restraint; the default reward surface should show one form spike first and let support read as a secondary rider.
-  Release Gate: Rewards
 
 - Older entries trimmed automatically: 2
 

@@ -12,7 +12,7 @@ Keep this short and overwrite stale thinking when the game changes.
 
 ## Current Memory
 
-- Weakest gate is now `Builds`, with `Rewards` still close behind: the run is front-loading too much visible power, so later transformation loses hunger even before balance questions matter.
-- Sharpest failure: docs still promise `8웨이브`, the shipped route still leaks `Afterburn`/ascension/cache/uplink residue, and `Wave 6` already offers orbitals, shields, sentries, missiles, and drones before the core weapon/body line has properly peaked.
-- Next useful critique should keep pressuring simplification and pacing discipline: preserve early emptiness, delay helper spectacle, and only then judge whether the remaining forge language is lean enough.
-- Repeated false solutions: answering pacing problems with more support families, more forge metadata, more branch wrappers, or more future-mode naming instead of making current upgrades arrive later and hit harder.
+- Weakest gate is now `Progression`, with `UX/UI` still close behind: the build curve improved, but the shipped run still presents an `8웨이브` prototype promise and a `Wave 1-12` live route at the same time.
+- Sharpest failure: docs and default-facing text still fracture the run fantasy with support-first phrasing and `Afterburn`/ascension/cache/uplink residue, so the longer route reads like extra wrapper content instead of an authored three-act escalation.
+- Next useful critique should keep pressuring one unanimous shipped contract first, then judge balance and payoff against that cleaner `Wave 1-12` spine.
+- Repeated false solutions: answering contract confusion with more late-wave systems, more roadmap jargon, more support terminology, or more future-mode wrappers instead of clarifying the current run and making it feel complete.

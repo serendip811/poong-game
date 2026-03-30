@@ -9292,6 +9292,8 @@
       source.includes("roadmap") ||
       source.includes("proof") ||
       source.includes("Proof") ||
+      source.includes(" cache") ||
+      source.includes(" uplink") ||
       source.startsWith("Ascension Relay:") ||
       source.startsWith("Ownership Relay:") ||
       source.startsWith("Live Ascension Uplink:") ||
@@ -9300,6 +9302,15 @@
       source.startsWith("Ascension Core:") ||
       source.startsWith("Endform Overdrive:") ||
       source.startsWith("Dominion Break:") ||
+      source.startsWith("Act 4") ||
+      source.startsWith("support uplink") ||
+      source.startsWith("Support Uplink") ||
+      source.startsWith("support bay") ||
+      source.startsWith("Support Bay") ||
+      source.startsWith("arsenal cache") ||
+      source.startsWith("Arsenal Cache") ||
+      source.startsWith("cache") ||
+      source.startsWith("Cache") ||
       source.startsWith("Field Arsenal MK ") ||
       source.startsWith("Field Aegis MK ") ||
       source.startsWith("Wildcard Protocol:") ||
@@ -12191,14 +12202,22 @@
     );
   }
 
+  function shouldSuppressShippingAdminSurfaceText(text) {
+    const source = String(text || "").replace(/\s+/g, " ").trim();
+    if (!source) {
+      return false;
+    }
+    return /Afterburn|afterburn|Ascension Relay|Live Ascension|ascension core|split core|support uplink|support bay|Late Break Armory|cache|uplink|Dominion Run|Dominion Break|ownership bracket|late wave|late route|arsenal cache|wildcard|overcommit|Act 4|Act4/i.test(
+      source
+    );
+  }
+
   function shouldQuarantineShippingCombatFeedText(text) {
     const source = String(text || "").trim();
     if (!source) {
       return false;
     }
-    return /Afterburn|afterburn|Ascension|ascension|Act 4|Act4|Wave 9|Wave 10|Wave 11|Wave 12|Dominion Run|Dominion Break|ownership bracket|Late Break Armory|late wave|late route/i.test(
-      source
-    );
+    return shouldSuppressShippingAdminSurfaceText(source) || /Wave 9|Wave 10|Wave 11|Wave 12/i.test(source);
   }
 
   function summarizeCombatFeedEntry(entry) {
@@ -12242,7 +12261,11 @@
     if (!source) {
       return summary;
     }
-    if (shouldQuarantineShippingCombatFeedText(source)) {
+    if (
+      shouldQuarantineShippingCombatFeedText(source) ||
+      shouldSuppressShippingAdminSurfaceText(summary.headline) ||
+      shouldSuppressShippingAdminSurfaceText(summary.proof)
+    ) {
       const routeWaveCap = getBaseRoutePlayableWaveCount(currentState && currentState.build);
       const waveNumber =
         currentState && typeof currentState.waveIndex === "number"
