@@ -600,13 +600,19 @@ assert.equal(offenseBranchBuild.wave5FieldPathId, "offense");
 assert.equal(game.getImmediateProofWindowSummary(offenseBranchBuild, 6).detail, "열린 입구 하나를 길게 찢는다.");
 const offenseWave6Config = game.resolveWaveConfig(5, offenseBranchBuild);
 const offenseWave7Config = game.resolveWaveConfig(6, offenseBranchBuild);
+const baseWave6Config = game.WAVE_CONFIG[5];
+const baseWave7Config = game.WAVE_CONFIG[6];
+const baseWave8Config = game.WAVE_CONFIG[7];
 assert.equal(offenseWave6Config.hazard?.label, "Killline Relay");
 assert.equal(offenseWave6Config.hazard?.targetingProfile, "offense_killlane");
 assert.ok(offenseWave6Config.directive.includes("kill-lane"));
 assert.ok((offenseWave6Config.activeCap || 0) <= 16);
+assert.ok((offenseWave6Config.spawnBudget || 0) > baseWave6Config.spawnBudget);
+assert.ok((offenseWave6Config.baseSpawnInterval || 9) < baseWave6Config.baseSpawnInterval);
 assert.equal(offenseWave7Config.chassisProof?.label, "Seam Chase");
 assert.equal(offenseWave7Config.hazard?.targetingProfile, "offense_killlane");
 assert.ok((offenseWave7Config.arena?.width || 0) >= 1880);
+assert.ok((offenseWave7Config.spawnAcceleration || 0) > baseWave7Config.spawnAcceleration);
 const defenseBranchBuild = game.createInitialBuild("rail_zeal");
 game.applyForgeChoice(
   { build: defenseBranchBuild, resources: { scrap: 999 }, stats: { scrapSpent: 0 }, feed: [], waveIndex: 3 },
@@ -619,9 +625,12 @@ assert.equal(defenseWave6Config.hazard?.label, "Refuge Relay");
 assert.equal(defenseWave6Config.hazard?.targetingProfile, "defense_refuge");
 assert.ok(defenseWave6Config.directive.includes("relay corridor"));
 assert.ok((defenseWave6Config.activeCap || 99) <= 13);
+assert.ok((defenseWave6Config.spawnBudget || 999) < baseWave6Config.spawnBudget);
+assert.ok((defenseWave6Config.baseSpawnInterval || 0) > baseWave6Config.baseSpawnInterval);
 assert.equal(defenseWave8Config.chassisProof?.label, "Safe Pocket Chain");
 assert.equal(defenseWave8Config.hazard?.targetingProfile, "defense_refuge");
 assert.ok((defenseWave8Config.hazard?.enemyPullRadius || 0) >= 162);
+assert.ok((defenseWave8Config.spawnBudget || 999) < baseWave8Config.spawnBudget);
 const defensePauseSnapshotMarkup = game.createBaseRoutePauseSnapshotMarkup({
   build: defenseBranchBuild,
   weapon: game.computeWeaponStats(defenseBranchBuild),
@@ -1221,12 +1230,15 @@ assert.equal(greedWave6.chassisProof?.label, "Entry Snap");
 assert.equal(greedWave6.hazard?.targetingProfile, "greed_dive_exit");
 assert.ok((greedWave6.arena?.width || 0) >= 1860);
 assert.ok((greedWave6.activeCap || 99) <= 15);
+assert.ok((greedWave6.spawnBudget || 999) < baseWave6Config.spawnBudget);
+assert.ok((greedWave6.baseSpawnInterval || 9) < baseWave6Config.baseSpawnInterval);
 assert.equal(greedWave7.hazard?.type, "caravan");
 assert.equal(greedWave7.midrunGreedRoute?.label, "Caravan Hook");
 assert.equal(greedWave7.chassisProof?.label, "Caravan Hook");
 assert.equal(greedWave7.hazard?.targetingProfile, "greed_dive_exit");
 assert.ok((greedWave7.hazard?.driftSpeed || 0) >= 178);
 assert.ok((greedWave7.arena?.width || 0) >= 1980);
+assert.ok((greedWave7.spawnAcceleration || 0) > baseWave7Config.spawnAcceleration);
 assert.equal(greedWave8.hazard?.type, "salvage");
 assert.ok(greedWave6.note.includes("Greed route"));
 assert.ok(greedWave7.directive.includes("caravan hook"));
@@ -3163,8 +3175,8 @@ const baseWave7Proof = game.resolveWaveConfig(6, game.createInitialBuild("scrap_
 assert.equal(featuredWave6Proof.chassisProof?.label, "Slipstream Breach");
 assert.equal(featuredWave7Proof.chassisProof?.label, "Slipstream Pursuit");
 assert.match(featuredWave6Proof.directive, /relay|lane|breach/);
-assert.equal(featuredWave7Proof.hazard?.targetingProfile, "support_showcase");
-assert.ok(featuredWave7Proof.hazard?.driftSpeed <= baseWave7Proof.hazard?.driftSpeed);
+assert.equal(featuredWave7Proof.hazard?.targetingProfile, "ownership_breathing");
+assert.ok((featuredWave7Proof.hazard?.driftSpeed || 0) > 0);
 const bulwarkProofBuild = game.createInitialBuild("scrap_pact");
 bulwarkProofBuild.bastionDoctrineId = "storm_artillery";
 const bulwarkFeaturedChoice = game
@@ -5130,13 +5142,13 @@ assert.equal(supportOwnershipPresentation.showOrbitFrames, false);
 assert.equal(supportOwnershipPresentation.showDeployableRanges, false);
 assert.equal(supportOwnershipPresentation.showInterceptRings, false);
 const wave7SupportOwnership = game.resolveWaveConfig(6, supportOwnershipBuild);
-assert.equal(wave7SupportOwnership.hazard.targetingProfile, "support_showcase");
-assert.ok(wave7SupportOwnership.spawnBudget < game.WAVE_CONFIG[6].spawnBudget);
-assert.ok(wave7SupportOwnership.activeCap < game.WAVE_CONFIG[6].activeCap);
-assert.ok(wave7SupportOwnership.baseSpawnInterval > game.WAVE_CONFIG[6].baseSpawnInterval);
-assert.ok(wave7SupportOwnership.arena.width > game.WAVE_CONFIG[6].arena.width);
-assert.ok(wave7SupportOwnership.hazard.interval > game.WAVE_CONFIG[6].hazard.interval);
-assert.ok(wave7SupportOwnership.hazard.duration < game.WAVE_CONFIG[6].hazard.duration);
+assert.equal(wave7SupportOwnership.hazard.targetingProfile, "ownership_breathing");
+assert.equal(wave7SupportOwnership.spawnBudget, game.WAVE_CONFIG[6].spawnBudget);
+assert.equal(wave7SupportOwnership.activeCap, game.WAVE_CONFIG[6].activeCap);
+assert.equal(wave7SupportOwnership.baseSpawnInterval, game.WAVE_CONFIG[6].baseSpawnInterval);
+assert.equal(wave7SupportOwnership.arena.width, game.WAVE_CONFIG[6].arena.width);
+assert.equal(wave7SupportOwnership.hazard.interval, game.WAVE_CONFIG[6].hazard.interval);
+assert.equal(wave7SupportOwnership.hazard.duration, game.WAVE_CONFIG[6].hazard.duration);
 const hazardContext = {
   arenaWidth: wave7SupportOwnership.arena.width,
   arenaHeight: wave7SupportOwnership.arena.height,
@@ -5148,14 +5160,14 @@ const hazardContext = {
   hazards: [],
 };
 const showcaseCandidates = game.buildHazardCandidates(wave7SupportOwnership.hazard, hazardContext);
-assert.ok(showcaseCandidates.some((candidate) => candidate.tag === "outer-flank-left"));
-assert.ok(showcaseCandidates.some((candidate) => candidate.tag === "outer-flank-right"));
+assert.ok(!showcaseCandidates.some((candidate) => candidate.tag === "outer-flank-left"));
+assert.ok(!showcaseCandidates.some((candidate) => candidate.tag === "outer-flank-right"));
 const showcaseSpawn = game.chooseHazardSpawn(wave7SupportOwnership.hazard, hazardContext, () => 0);
 const routeFocus = {
   x: hazardContext.player.x + wave7SupportOwnership.hazard.radius * 0.9 + 42,
   y: hazardContext.player.y,
 };
-assert.ok(Math.abs(showcaseSpawn.y - hazardContext.player.y) > wave7SupportOwnership.hazard.radius * 1.45);
+assert.ok(Math.hypot(showcaseSpawn.x - hazardContext.player.x, showcaseSpawn.y - hazardContext.player.y) > wave7SupportOwnership.hazard.radius);
 assert.ok(Math.hypot(showcaseSpawn.x - routeFocus.x, showcaseSpawn.y - routeFocus.y) > 150);
 supportOwnershipBuild.supportSystems = [{ id: "ember_ring", tier: 2 }];
 const supportOwnershipUpgradePresentation = game.getSupportRenderPresentation(

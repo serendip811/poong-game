@@ -170,28 +170,6 @@
       outerFlankOffsetMultiplier: 3.02,
       outerFlankForwardBiasMultiplier: 0.2,
     },
-    support_showcase: {
-      routeCandidateWeightMultiplier: 0.16,
-      routeScoreMultiplier: 0.14,
-      playerRingScoreMultiplier: 0.26,
-      eliteWeightMultiplier: 0.34,
-      eliteRouteWeightMultiplier: 0.16,
-      coreDropWeightMultiplier: 0.1,
-      scrapDropWeightMultiplier: 0.08,
-      catalystDropWeightMultiplier: 0.12,
-      minPlayerDistanceMultiplier: 1.62,
-      minPlayerDistancePenalty: 2.6,
-      flankWeight: 5.2,
-      rearFlankWeight: 4.6,
-      flankOffsetMultiplier: 2.05,
-      rearOffsetMultiplier: 1.34,
-      routeDistanceMultiplier: 1.18,
-      routeTagPenalty: 1.1,
-      routeAvoidanceMultiplier: 1.35,
-      outerFlankWeight: 6.2,
-      outerFlankOffsetMultiplier: 2.7,
-      outerFlankForwardBiasMultiplier: 0.22,
-    },
   };
   const ARSENAL_BREAKPOINT_ENCOUNTER_PROFILES = {
     mutation: {
@@ -357,7 +335,7 @@
       directive:
         "한 flank를 먼저 비운 뒤 반대 lane으로 짧게 갈아타며 sweep 폭을 유지한다.",
     },
-    support_lap: {
+    dominion_sweep: {
       title: "Dominion Sweep",
       ladderStepId: "claim_space",
       ladderStepLabel: "Claim Space",
@@ -367,13 +345,13 @@
       directive:
         "가장 넓은 flank를 먼저 비우고 같은 gun/body lane 하나를 오래 붙들며 점유 시간을 늘린다.",
     },
-    support_proof: {
+    dominion_proof: {
       title: "Dominion Proof",
       ladderStepId: "claim_space",
       ladderStepLabel: "Claim Space",
       pressureFamily: "domination",
       note: (stageText, focusText) =>
-        `${stageText} 첫 support rider를 얹기 직전 같은 dominance contract를 크게 결산하는 shared domination proof cell이다. relay upkeep와 tether tax를 비워 두고 열린 외곽을 길게 남겨, ${focusText} 같은 lane을 오래 지배하는지 마지막으로 확인한다.`,
+        `${stageText} 같은 dominance contract를 크게 결산하는 shared domination proof cell이다. relay upkeep와 tether tax를 비워 두고 열린 외곽을 길게 남겨, ${focusText} 같은 lane을 오래 지배하는지 마지막으로 확인한다.`,
       directive:
         "가장 넓은 외곽 lane을 먼저 비우고 같은 gun/body 화선을 끝까지 밀어 점유 시간을 늘린다.",
     },
@@ -621,7 +599,7 @@
     buildRecurringCombatWave({
       id: "crownfire",
       waveNumber: 7,
-      cellId: "support_lap",
+      cellId: "dominion_sweep",
       stageText: "Wave 7은 막 잠근 gun/body line을 같은 ownership ladder로 한 번 더 늘려 보는",
       focusText: "방금 잠근 form이",
       duration: 90,
@@ -662,7 +640,7 @@
     buildRecurringCombatWave({
       id: "forgecross",
       waveNumber: 8,
-      cellId: "support_proof",
+      cellId: "dominion_proof",
       stageText: "Wave 8 결산은 막 잠근 gun/body ownership을 같은 lane 시험으로 끝까지 증명하는",
       focusText: "막 잠근 gun/body ownership이",
       duration: 96,
@@ -2344,14 +2322,10 @@
   function resolveWaveConfig(index, build = null) {
     const baseConfig = WAVE_CONFIG[clamp(index, 0, MAX_WAVES - 1)];
     if (!baseConfig || index < LATE_BREAK_ARMORY_WAVE - 1 || !build) {
-      return applySupportChapterBreathingRoom(
-        applySupportProofEncounterConfig(
-          applyWave5FieldPathEncounterConfig(
-            applyChassisBreakpointEncounterConfig(
-              applyEncounterPressureFamily(baseConfig),
-              build,
-              index + 1
-            ),
+      return applySupportProofEncounterConfig(
+        applyWave5FieldPathEncounterConfig(
+          applyChassisBreakpointEncounterConfig(
+            applyEncounterPressureFamily(baseConfig),
             build,
             index + 1
           ),
@@ -2366,14 +2340,10 @@
     const override =
       directLateBreakOverride || SHARED_LATE_ACT_ENCOUNTER_POOL[index] || null;
     if (!override) {
-      return applySupportChapterBreathingRoom(
-        applySupportProofEncounterConfig(
-          applyWave5FieldPathEncounterConfig(
-            applyChassisBreakpointEncounterConfig(
-              applyEncounterPressureFamily(baseConfig),
-              build,
-              index + 1
-            ),
+      return applySupportProofEncounterConfig(
+        applyWave5FieldPathEncounterConfig(
+          applyChassisBreakpointEncounterConfig(
+            applyEncounterPressureFamily(baseConfig),
             build,
             index + 1
           ),
@@ -2389,14 +2359,10 @@
     if (arsenalBreakpointProfile) {
       config = applyEncounterOverride(config, arsenalBreakpointProfile);
     }
-    return applySupportChapterBreathingRoom(
-      applySupportProofEncounterConfig(
-        applyWave5FieldPathEncounterConfig(
-          applyChassisBreakpointEncounterConfig(
-            applyEncounterPressureFamily(config),
-            build,
-            index + 1
-          ),
+    return applySupportProofEncounterConfig(
+      applyWave5FieldPathEncounterConfig(
+        applyChassisBreakpointEncounterConfig(
+          applyEncounterPressureFamily(config),
           build,
           index + 1
         ),
@@ -16427,6 +16393,13 @@
         config.driveGainFactor || 1,
         waveNumber === 8 ? 1.4 : waveNumber === 7 ? 1.36 : waveNumber === 6 ? 1.32 : 1.16
       ),
+      spawnBudget:
+        waveNumber >= 6
+          ? Math.max(
+              waveNumber === 8 ? 92 : waveNumber === 7 ? 88 : 84,
+              (config.spawnBudget || 0) - (waveNumber === 8 ? 8 : waveNumber === 7 ? 14 : 10)
+            )
+          : config.spawnBudget,
       activeCap:
         waveNumber >= 6
           ? Math.max(
@@ -16435,9 +16408,13 @@
             )
           : config.activeCap,
       baseSpawnInterval:
-        waveNumber >= 6 ? (config.baseSpawnInterval || 0.6) * (waveNumber === 7 ? 1.12 : 1.08) : config.baseSpawnInterval,
+        waveNumber >= 6
+          ? (config.baseSpawnInterval || 0.6) * (waveNumber === 8 ? 0.98 : waveNumber === 7 ? 0.94 : 0.96)
+          : config.baseSpawnInterval,
       spawnAcceleration:
-        waveNumber >= 6 ? Math.max(0.16, (config.spawnAcceleration || 0.18) - 0.018) : config.spawnAcceleration,
+        waveNumber >= 6
+          ? Math.max(0.17, (config.spawnAcceleration || 0.18) + (waveNumber === 8 ? 0.02 : 0.014))
+          : config.spawnAcceleration,
       note:
         waveNumber === 5
           ? `${config.note} Greed route가 첫 payoff lap부터 entry vault pocket을 끼워 넣어 열린 lane을 비우는 대신 payout core를 먼저 찍고 빠지게 만든다.`
@@ -16570,7 +16547,20 @@
         nextConfig.driveGainFactor || 1,
         waveNumber === 8 ? 1.36 : waveNumber === 7 ? 1.33 : 1.29
       );
+      nextConfig.spawnBudget = Math.max(
+        waveNumber === 8 ? 116 : waveNumber === 7 ? 108 : 98,
+        (nextConfig.spawnBudget || 0) + (waveNumber === 8 ? 18 : waveNumber === 7 ? 14 : 10)
+      );
       nextConfig.activeCap = Math.max(16, (nextConfig.activeCap || 18) - 1);
+      nextConfig.baseSpawnInterval = Math.max(
+        nextConfig.spawnIntervalMin || 0.16,
+        (nextConfig.baseSpawnInterval || 0.6) * (waveNumber === 8 ? 0.84 : waveNumber === 7 ? 0.88 : 0.92)
+      );
+      nextConfig.spawnAcceleration = Math.max(
+        0.2,
+        (nextConfig.spawnAcceleration || 0.18) + (waveNumber === 8 ? 0.028 : waveNumber === 7 ? 0.022 : 0.016)
+      );
+      nextConfig.eliteEvery = Math.max(6, (nextConfig.eliteEvery || 9) - 1);
       if (nextConfig.hazard) {
         nextConfig.hazard.label =
           waveNumber === 6 ? "Killline Relay" : waveNumber === 7 ? "Cinder Chase" : "Breach Pocket";
@@ -16641,7 +16631,17 @@
       nextConfig.driveGainFactor || 1,
       waveNumber === 8 ? 1.3 : waveNumber === 7 ? 1.27 : 1.24
     );
+    nextConfig.spawnBudget = Math.max(
+      waveNumber === 8 ? 88 : waveNumber === 7 ? 82 : 78,
+      (nextConfig.spawnBudget || 0) - (waveNumber === 8 ? 16 : waveNumber === 7 ? 18 : 14)
+    );
     nextConfig.activeCap = Math.max(13, (nextConfig.activeCap || 18) - (waveNumber === 8 ? 3 : 4));
+    nextConfig.baseSpawnInterval = (nextConfig.baseSpawnInterval || 0.6) * (waveNumber === 8 ? 1.18 : 1.14);
+    nextConfig.spawnAcceleration = Math.max(
+      0.16,
+      (nextConfig.spawnAcceleration || 0.18) - (waveNumber === 8 ? 0.01 : 0.018)
+    );
+    nextConfig.eliteEvery = (nextConfig.eliteEvery || 8) + 1;
     if (nextConfig.hazard) {
       nextConfig.hazard.label =
         waveNumber === 6 ? "Refuge Relay" : waveNumber === 7 ? "Breather Drift" : "Holdfast Pocket";
@@ -17376,81 +17376,6 @@
       return nextConfig;
     }
     return config;
-  }
-
-  function shouldUseSupportChapterBreathingRoom(build, waveNumber) {
-    return Boolean(
-      CONSOLIDATED_12_WAVE_ROUTE &&
-      build &&
-      build.wave6ChassisBreakpoint &&
-      Number.isFinite(waveNumber) &&
-      waveNumber >= 6 &&
-      waveNumber <= 8 &&
-      getInstalledSupportSystems(build).length > 0
-    );
-  }
-
-  function applySupportChapterBreathingRoom(config, build, waveNumber) {
-    if (!config || !shouldUseSupportChapterBreathingRoom(build, waveNumber)) {
-      return config;
-    }
-    const nextConfig = {
-      ...config,
-      arena: config.arena ? { ...config.arena } : null,
-      hazard: config.hazard ? { ...config.hazard } : null,
-    };
-    const lateStep = waveNumber === 8;
-    if (Number.isFinite(nextConfig.spawnBudget)) {
-      nextConfig.spawnBudget = Math.max(
-        lateStep ? 96 : 78,
-        nextConfig.spawnBudget - (lateStep ? 8 : 12)
-      );
-    }
-    if (Number.isFinite(nextConfig.activeCap)) {
-      nextConfig.activeCap = Math.max(
-        lateStep ? 17 : 15,
-        nextConfig.activeCap - (lateStep ? 1 : 2)
-      );
-    }
-    if (Number.isFinite(nextConfig.baseSpawnInterval)) {
-      nextConfig.baseSpawnInterval *= lateStep ? 1.04 : 1.08;
-    }
-    if (nextConfig.arena) {
-      nextConfig.arena.width += lateStep ? 40 : 80;
-      nextConfig.arena.height += lateStep ? 30 : 60;
-    }
-    if (nextConfig.hazard) {
-      nextConfig.hazard.targetingProfile = "support_showcase";
-      if (Number.isFinite(nextConfig.hazard.interval)) {
-        nextConfig.hazard.interval *= lateStep ? 1.08 : 1.14;
-      }
-      if (Number.isFinite(nextConfig.hazard.telegraph)) {
-        nextConfig.hazard.telegraph *= lateStep ? 1.04 : 1.1;
-      }
-      if (Number.isFinite(nextConfig.hazard.duration)) {
-        nextConfig.hazard.duration = Math.max(3.9, nextConfig.hazard.duration - (lateStep ? 0.18 : 0.32));
-      }
-      if (Number.isFinite(nextConfig.hazard.relayRange)) {
-        nextConfig.hazard.relayRange = Math.max(300, nextConfig.hazard.relayRange - (lateStep ? 16 : 28));
-      }
-      if (Number.isFinite(nextConfig.hazard.driftSpeed)) {
-        nextConfig.hazard.driftSpeed = Math.max(84, nextConfig.hazard.driftSpeed - (lateStep ? 6 : 12));
-      }
-      if (Number.isFinite(nextConfig.hazard.driftOrbit)) {
-        nextConfig.hazard.driftOrbit = Math.max(0.18, nextConfig.hazard.driftOrbit - (lateStep ? 0.02 : 0.04));
-      }
-      if (Number.isFinite(nextConfig.hazard.enemyPullRadius)) {
-        nextConfig.hazard.enemyPullRadius = Math.max(
-          112,
-          nextConfig.hazard.enemyPullRadius - (lateStep ? 8 : 18)
-        );
-      }
-      if (Number.isFinite(nextConfig.hazard.turretInterval)) {
-        nextConfig.hazard.turretInterval += lateStep ? 0.08 : 0.12;
-      }
-    }
-    nextConfig.note = `${nextConfig.note} 지원 설치를 막 잠근 구간이라 hazard를 바깥 pocket 위주로 밀어, 두 전투 동안은 새 실루엣이 lane을 여는 감각부터 먼저 읽히게 눌렀다.`;
-    return nextConfig;
   }
 
   function shouldEnableBlackLedgerDebt(build, waveNumber) {
@@ -22971,8 +22896,8 @@
       id: "base_route_victory_lap",
       label: "Victory Lap · Dominion Run",
       bannerLabel: "Victory Lap",
-      note: "Wave 8까지 키운 body/support bracket을 바로 써보는 짧은 domination window. 추가 포지나 목표 세금 없이 열린 lane을 훑으며 완성 직전 형태를 직접 누르게 만든다.",
-      directive: "가장 넓게 열린 flank를 먼저 비우고, 반대 lane으로 짧게 갈아타며 잠긴 body/support line의 sweep 폭을 끝까지 유지한다.",
+      note: "Wave 8까지 키운 body/weapon form을 바로 써보는 짧은 domination window. 추가 포지나 목표 세금 없이 열린 lane을 훑으며 완성 직전 형태를 직접 누르게 만든다.",
+      directive: "가장 넓게 열린 flank를 먼저 비우고, 반대 lane으로 짧게 갈아타며 잠긴 body/weapon line의 sweep 폭을 끝까지 유지한다.",
       duration: 38,
       spawnBudget: 66,
       activeCap: 18,
