@@ -1554,8 +1554,8 @@ const forgeHeadlineSpotlight = game.getBaseRouteForgeSpotlightSummary({
   choice: wave6HeadlineChoice,
   proofWindowLabel: "Payoff Run",
 });
-assert.ok(forgeHeadlineSpotlight.titleLabel.length > 0);
-assert.ok(forgeHeadlineSpotlight.titleValue.length > 0);
+assert.equal(forgeHeadlineSpotlight.titleLabel, "형태");
+assert.equal(forgeHeadlineSpotlight.titleValue, "Crownsplitter Array");
 assert.equal(forgeHeadlineSpotlight.leadLabel, "다음 전투");
 assert.equal(forgeHeadlineSpotlight.leadValue, "미사일이 연 측면부터 지운다.");
 const forgeRiderSpotlight = game.getBaseRouteForgeSpotlightSummary({
@@ -1563,8 +1563,8 @@ const forgeRiderSpotlight = game.getBaseRouteForgeSpotlightSummary({
   riderStep: true,
   proofWindowLabel: "Dominion Sweep",
 });
-assert.ok(forgeRiderSpotlight.titleLabel.length > 0);
-assert.ok(forgeRiderSpotlight.titleValue.length > 0);
+assert.equal(forgeRiderSpotlight.titleLabel, "형태");
+assert.equal(forgeRiderSpotlight.titleValue, "Citadel Spindle");
 assert.equal(forgeRiderSpotlight.leadLabel, "다음 전투");
 assert.equal(forgeRiderSpotlight.leadValue, "고리가 긁은 입구로 짧게 파고든다.");
 const forgeDominantInstallHero = game.getBaseRouteForgeDominantInstallHero({
@@ -1572,7 +1572,7 @@ const forgeDominantInstallHero = game.getBaseRouteForgeDominantInstallHero({
   dominantFormLabel: "Twin Spine",
   waveNumber: 6,
 });
-assert.equal(forgeDominantInstallHero?.title, "Seeker Array");
+assert.equal(forgeDominantInstallHero?.title, "Crownsplitter Array");
 assert.equal(forgeDominantInstallHero?.currentLoadoutLabel, "현재 머신");
 assert.equal(forgeDominantInstallHero?.currentFormLabel, "Twin Spine");
 assert.equal(forgeDominantInstallHero?.askNote, "미사일이 연 측면부터 지운다.");
@@ -1582,13 +1582,13 @@ const dominantInstallContextMarkup = game.createBaseRouteForgeContextMarkup({
   currentLoadoutValue: forgeDominantInstallHero?.currentFormLabel,
   askNote: forgeDominantInstallHero?.askNote,
 });
-assert.ok(dominantInstallContextMarkup.includes("Seeker Array"));
+assert.ok(dominantInstallContextMarkup.includes("Crownsplitter Array"));
 assert.ok(dominantInstallContextMarkup.includes("Twin Spine"));
 assert.ok(dominantInstallContextMarkup.includes("주력 변이"));
 assert.ok(dominantInstallContextMarkup.includes("미사일이 연 측면부터 지운다."));
 assert.ok(
-  dominantInstallContextMarkup.includes("Twin Spine -&gt; Seeker Array") ||
-    dominantInstallContextMarkup.includes("Twin Spine -> Seeker Array")
+  dominantInstallContextMarkup.includes("Twin Spine -&gt; Crownsplitter Array") ||
+    dominantInstallContextMarkup.includes("Twin Spine -> Crownsplitter Array")
 );
 assert.ok(dominantInstallContextMarkup.includes("바로 다음 전투"));
 const forgeFinalSpotlight = game.getBaseRouteForgeSpotlightSummary({
@@ -1768,8 +1768,8 @@ assert.equal(kilnBastionWave6Choices[2]?.chassisId, "salvage_winch");
 const kilnWave6Spotlight = game.getBaseRouteForgeSpotlightSummary({
   choice: kilnBastionWave6Choices[1],
 });
-assert.equal(kilnWave6Spotlight.titleLabel, "설치");
-assert.equal(kilnWave6Spotlight.titleValue, "Aegis Halo");
+assert.equal(kilnWave6Spotlight.titleLabel, "형태");
+assert.equal(kilnWave6Spotlight.titleValue, "Citadel Spindle");
 assert.equal(kilnWave6Spotlight.leadValue, "탄선이 갈라진 틈으로 찢어 들어간다.");
 const stormArtilleryWave6Choices = game.buildWave6ChassisBreakpointChoices(
   { ...game.createInitialBuild("rail_zeal"), bastionDoctrineId: "storm_artillery" },

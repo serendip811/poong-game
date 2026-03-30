@@ -3706,7 +3706,7 @@
       preferredModIds: ["drive_sync", "arc_array", "step_servos"],
       preferredAffixIds: ["arc_link", "overclock"],
       supportDoctrineText:
-        "Wave 8에서 첫 support rider가 다시 열리면 추적/공세 하드웨어를 우선 받아 pursuit form을 두껍게 만든다.",
+        "Wave 8에서는 pursuit form을 끝까지 미는 보강선만 얹는다. support는 빈 측면을 메우는 조용한 증폭기로 남긴다.",
       favoredCoreId: "ricochet",
       lateCapstoneId: "relay_storm_lattice",
       apply(build) {
@@ -3728,7 +3728,7 @@
       preferredModIds: ["armor_mesh", "magnet_rig", "reactor_cap"],
       preferredAffixIds: ["salvage_link", "thermal_weave"],
       supportDoctrineText:
-        "Wave 8에서 첫 support rider가 다시 열리면 포탑/방호 회로를 우선 받아 pocket 유지력을 더 오래 끌어낸다.",
+        "Wave 8에서는 bastion form 주위에 버팀선만 한 겹 더 얹는다. support는 pocket 복귀 각을 받치는 조용한 증폭기로 남긴다.",
       favoredCoreId: "scatter",
       lateCapstoneId: "bulwark_foundry",
       apply(build) {
@@ -3750,7 +3750,7 @@
       preferredModIds: ["rail_sleeve", "arc_array", "heat_sink"],
       preferredAffixIds: ["phase_rounds", "arc_link"],
       supportDoctrineText:
-        "Wave 8에서 첫 support rider가 다시 열리면 포격/근접 방호 보강을 우선 받아 긴 사선을 끝까지 유지하게 만든다.",
+        "Wave 8에서는 siege form을 끝까지 유지하게 만드는 보강선만 얹는다. support는 긴 사선을 지키는 조용한 증폭기로 남긴다.",
       favoredCoreId: "lance",
       lateCapstoneIds: ["sky_lance_battery", "stormspire_needle"],
       apply(build) {
@@ -11582,11 +11582,15 @@
         ? getBaseRouteWave8ClosureCopy(choice.lateBreakProfileId, build)
         : null;
     const titleLabel =
-      (wave8ClosureCopy ? "완성 형태" : supportInstall || lateBreakSupportSummary ? "설치" : "") ||
+      (wave8ClosureCopy ? "완성 형태" : "") ||
+      (transformation &&
+      (transformation.previewLabel ||
+        (choice && choice.contractRole === "rider" ? "버팀 변화" : "형태 변화"))) ||
       (transformation && transformation.previewLabel) ||
       (riderStep ? "이번 설치" : "이번 도약");
     const titleValue =
       (wave8ClosureCopy && wave8ClosureCopy.title) ||
+      (transformation && (transformation.cardTitle || transformation.previewValue)) ||
       (supportInstall && supportInstall.title) ||
       (lateBreakSupportSummary && lateBreakSupportSummary.title) ||
       (transformation && transformation.previewValue) ||
@@ -11640,12 +11644,18 @@
       !supportInstall && choice && choice.lateBreakProfileId
         ? getBaseRouteWave8ClosureCopy(choice.lateBreakProfileId, build)
         : null;
+    const transformation = choice ? getBaseRouteForgeChoiceTransformation(choice, build) : null;
     const featuredInstall = supportInstall || wave8ClosureCopy || lateBreakSupportSummary;
     if (!featuredInstall) {
       return null;
     }
     return {
-      title: featuredInstall.title || dominantFormLabel || "-",
+      title:
+        (wave8ClosureCopy && wave8ClosureCopy.title) ||
+        (transformation && (transformation.cardTitle || transformation.previewValue)) ||
+        featuredInstall.title ||
+        dominantFormLabel ||
+        "-",
       currentLoadoutLabel: "현재 머신",
       currentFormLabel: dominantFormLabel || "",
       askNote: trimForgeCombatAsk(
@@ -27247,8 +27257,11 @@
                 ? "Wave 5 경로"
                 : spotlightChoice?.lateBreakProfileId
                   ? "완성 형태"
-                : spotlightTransformation?.wave8SupportPayoff?.payoffLabel ||
-                  (state.pendingFinalForge ? "마무리" : riderStep ? "지원 설치" : "주력 변이"),
+                  : state.pendingFinalForge
+                    ? "마무리"
+                    : riderStep
+                      ? "버팀 변화"
+                      : "주력 변이",
             detail:
               state.waveIndex + 2 === EARLY_MUTATION_FORGE_WAVE && spotlightChoice
                 ? `${dominantFormSummary.label} -> ${

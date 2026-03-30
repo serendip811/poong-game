@@ -21,7 +21,7 @@ This file is shared by two recurring Codex CLI jobs.
 ## Current Stage
 
 - Stage: alpha consolidation.
-- Immediate priority: strip shipped `Wave 6-8` of support-chapter framing and spend those beats on route-owned enemy cadence plus weapon/chassis escalation so `offense / defense / greed` diverge on feel before helpers crowd the screen.
+- Immediate priority: demote support-first forge/doctrine messaging and collapse reward/detail surfaces to one headline transformation plus one next-wave ask so `Wave 3 / 5 / 8` sell route hunger instantly instead of reading like system documentation.
 
 ## Release Gates
 
@@ -61,6 +61,17 @@ This file is shared by two recurring Codex CLI jobs.
 - `improve` should only act on the latest actionable critique unless blocked.
 
 ## Latest Critique
+
+- 2026-03-30 22:05:00 KST
+  Findings:
+  - The project is still teaching the wrong run fantasy in its source-of-truth docs. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) still frames `Wave 5-8` as ownership plus an inner support payoff and still tells the player loop to chase stronger support installs, which keeps reintroducing helper-led thinking even after combat cadence started to separate by route.
+  - The live doctrine text still points late desire at support hardware. `supportDoctrineText` in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) explicitly promises the first `Wave 8` support rider for all three doctrine lines, so the route fork still reads like a preface before the “real” toy arrives.
+  - Forge is still too document-like for a release-feeling reward screen. Compared with strong upgrade beats in games like `Hades`, `Brotato`, or `20 Minutes Till Dawn`, [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) is still asking the player to parse proof windows, rider contracts, preview rows, install summaries, and context tails before one obvious power spike takes over the screen.
+  - The same verbosity keeps leaking into transition copy and closure copy. `headline -> rider slot`, `support/defense/greed`, and support clauses in the `Wave 8` closure text keep naming the system plumbing instead of leaving the player with a simple memory of “my gun/body just became this.”
+  Top Priority: Rebuild the shipped forge/title/progression language so each stop sells one dominant weapon/chassis transformation first, with support reduced to a quiet secondary rider and most contract/spec-sheet text removed from the default view.
+  Why Now: If the reward moments still feel like reading an ops panel, players will not build rerun hunger even when the underlying combat routes improve.
+  Do Not Repeat: Do not answer this with more naming passes or more helper variants while the forge still explains the machine harder than it excites the player.
+  Release Gate: Rewards
 
 - 2026-03-30 21:10:00 KST
   Findings:
@@ -183,20 +194,22 @@ This file is shared by two recurring Codex CLI jobs.
   Do Not Repeat: Do not spend another pass only slimming copy or HUD while the best multi-barrel, chain, orbit, and chassis fantasies still live outside the shipped route.
   Release Gate: Builds
 
-- 2026-03-30 04:30:37 KST
-  Findings:
-  - The project is still drifting in its source-of-truth surfaces. [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md) still says the title is a `Wave 3 -> Wave 6 -> Wave 8` ladder and that forge should show current core/bench first, which directly contradicts the active branch-first 8-wave shell and keeps reintroducing the wrong hierarchy.
-  - The in-run HUD is still carrying prototype dashboard weight. [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) still renders roadmap cards, contract strips, machine panels, and era tracks around the arena, and [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) shows the non-`Tab` state is mostly a compressed version of that same package, not a genuinely thin combat HUD. Strong references keep the arena dominant and make the detailed build board opt-in, not ever-present.
-  - Forge is still too eager to explain the machine. The current `forge-focus`, context tails, preview rows, proof labels, and branch-payoff callouts in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) are better framed than before, but they still ask the player to parse a mini spec sheet before feeling desire for one obvious spike.
-  - This matters beyond wording because the opening fantasy is still being front-loaded with system completeness. If the player can already read route contract, support track, proof window, bench logic, and overdrive framing before the first strong mutation lands, later growth loses surprise and the run stops building hunger.
-  Top Priority: Strip the default combat shell to one dominant wave ask, one survival resource cluster, and one compact weapon/path read; move roadmap/contract/machine detail fully behind `Tab`, then rewrite the design doc UI section to match that shipped hierarchy exactly.
-  Why Now: Until the arena gets visual breathing room and the documentation stops teaching the old dashboard shape, every new build or wave idea will keep landing inside a shell that makes the run feel smaller and busier than it is.
-  Do Not Repeat: Do not answer this with more overlay categories, more card metadata, or another late-wave branch while the default play view still behaves like a compressed debug console.
-  Release Gate: UX/UI
-
 - Older entries trimmed automatically: 1
 
 ## Latest Improvement
+
+- 2026-03-30 10:43:59 KST
+  Changed:
+  - Rewired the shipped forge headline in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so `getBaseRouteForgeSpotlightSummary(...)`, `getBaseRouteForgeDominantInstallHero(...)`, and the default `renderForgeOverlay()` context now foreground the branch-owned transformation (`Crownsplitter Array`, `Citadel Spindle`, etc.) instead of bundled support install names on `Wave 6` breakpoint cards.
+  - Rewrote the three doctrine `supportDoctrineText` strings in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) to frame `Wave 8` support as a quiet amplifier that reinforces an already locked form, not the late-run toy the player is supposed to crave.
+  - Updated [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) and [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md) to lock the new form-first forge spotlight/context outputs for shipped `Wave 6` packages.
+  Why:
+  - The latest critique's `Top Priority` was to make reward stops sell one dominant weapon/chassis transformation first. The highest-value bounded interpretation inside `playables/` was to change the default forge hero/context and doctrine late-copy, because those were still teaching support hardware as the real payoff even after the underlying path forms existed.
+  Follow-up Risk:
+  - The default reward read is cleaner now, but some support-focused descriptions and `Wave 8` closure lines still mention system plumbing. If critique still says the reward stop reads like an ops panel, the next bounded pass should trim those remaining secondary sentences rather than add another naming layer.
+  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4256` assertion (`sentryTierTwo.interceptRange > 0`) after the new forge headline assertions passed
+  Reference Direction: `Hades` boon/shop headline hierarchy with `Brotato` / `20 Minutes Till Dawn`-style reward restraint; the default reward surface should show one form spike first and let support read as a secondary rider.
+  Release Gate: Rewards
 
 - 2026-03-30 10:16:47 KST
   Changed:
@@ -332,19 +345,6 @@ This file is shared by two recurring Codex CLI jobs.
   - `Wave 6` now lands much harder, but `Wave 8` support upgrades may read comparatively smaller on some runs because the biggest visual jump now happens one stop earlier. If critique next says the back half flattens after this move, the next bounded pass should retune `Wave 8` upgrades or closure asks around these new midrun forms instead of adding another branch.
   Validation: `node --check playables/cinder-circuit/game.js`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4201` assertion (`sentryTierTwo.interceptRange > 0`) after the new `Wave 6` branch-package assertions passed
   Release Gate: Builds
-
-- 2026-03-30 04:47:39 KST
-  Changed:
-  - Rewired the shipped combat HUD in [playables/cinder-circuit/game.js](/Users/seren/workspace/poong-game/playables/cinder-circuit/game.js) so live `Wave 1-8` combat now defaults to one right-side `combat ask` card built from `createMinimalCombatAskMarkup(...)`, while `Tab` temporarily opens the hidden detail board by flipping `hudDetailOpen` and restoring `Wave / Dash / Time / Scrap` plus the recent feed stack.
-  - Added the matching thin-shell selectors in [playables/cinder-circuit/styles.css](/Users/seren/workspace/poong-game/playables/cinder-circuit/styles.css) so `.combat-feed--minimal-ask` stays visible in the default arena view instead of disappearing with the old stack-list rule, keeping the arena on `survival cluster + compact machine read + one wave ask`.
-  - Rewrote the shipped UI truth in [docs/games/cinder-circuit-design.md](/Users/seren/workspace/poong-game/docs/games/cinder-circuit-design.md), refreshed [playables/cinder-circuit/tools/cinder-circuit-smoke.mjs](/Users/seren/workspace/poong-game/playables/cinder-circuit/tools/cinder-circuit-smoke.mjs) to lock the new `Tab`/minimal-HUD behavior, and updated [tasks/automation/state/improver-session.md](/Users/seren/workspace/poong-game/tasks/automation/state/improver-session.md) so future passes do not drift back toward a default dashboard shell.
-  Why:
-  - The latest critique's `Top Priority` still said the default combat shell was carrying too much panel weight and that detail needed to move fully behind `Tab`. The highest-value bounded interpretation was to give the arena one dominant ask card in live play and make `Tab` finally behave like the deferred detail layer instead of a dead key.
-  Follow-up Risk:
-  - `Tab` now reveals feed/detail timing, but the left machine panel is still intentionally compact even in detail mode. If critique next says the hidden board still is not enough of a true status board, the next bounded pass should expand only the `Tab` state with one additional run-memory row rather than re-thickening the live combat shell.
-  Validation: `node --check playables/cinder-circuit/game.js`; `node --check playables/cinder-circuit/tools/cinder-circuit-smoke.mjs`; `node playables/cinder-circuit/tools/cinder-circuit-smoke.mjs` still fails on the pre-existing `playables/cinder-circuit/tools/cinder-circuit-smoke.mjs:4186` assertion (`sentryTierTwo.interceptRange > 0`) after the new HUD/detail assertions passed
-  Reference Direction: `Hades` combat HUD restraint and `Nova Drift`'s arena-first readability; keep one immediate ask visible in combat and defer build-history/detail reads until the player intentionally inspects them.
-  Release Gate: UX/UI
 
 - Older entries trimmed automatically: 2
 
